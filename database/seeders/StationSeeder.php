@@ -7,6 +7,8 @@ use App\Models\Station;
 use App\Models\Regime;
 use Spatie\Permission\Models\Role;
 use App\Models\User;
+use App\Models\Brand;
+
 use Illuminate\Support\Facades\Hash;
 
 class StationSeeder extends Seeder
@@ -61,6 +63,34 @@ class StationSeeder extends Seeder
         Station::create([
             'name' => 'Acne & Eye Care (Eye Check)',
             'required'=>false
+        ]);
+
+        Brand::create([
+            'name' => 'Hada Labo',
+        ]);
+
+        Brand::create([
+            'name' => 'Selson Blue',
+        ]);
+
+        Brand::create([
+            'name' => 'Rohto',
+        ]);
+
+        Brand::create([
+            'name' => 'Mentholatum',
+        ]);
+
+        Brand::create([
+            'name' => 'OXY',
+        ]);
+
+        Brand::create([
+            'name' => '50 Megumi',
+        ]);
+
+        Brand::create([
+            'name' => 'Sunplay',
         ]);
 
         $role = Role::create(['name' => 'client']);

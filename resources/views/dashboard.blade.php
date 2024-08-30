@@ -42,4 +42,10 @@
         </div>
     </div>
 </div>
+
+<script>
+    function gotoStation(id){
+        console.log(id);
+    }
+</script>
 </x-app-layout>

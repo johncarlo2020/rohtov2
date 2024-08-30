@@ -1,17 +1,30 @@
 <x-guest-layout>
     <div class="login">
-        <h1>LOGIN</h1>
+        <div class="col-12 d-flex justify-content-center mt-5">
+            @include('components.branding')
+        </div>
+        <h1 class="login-heading">LOGIN</h1>
         <!-- Session Status -->
         <x-auth-session-status class="mb-4" :status="session('status')" />
 
         <form method="POST" action="{{ route('login') }}">
             @csrf
+            <div class="row mb-2">
+                <div class="col-12">
+                <label class="text-left" for="">Email Address</label>
 
-            <div>
-                <x-input-label for="email" :value="__('Email')" />
-                <x-text-input id="email" class="block w-full mt-1" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-                <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                    <input id="email" placeholder="example@email.com" type="email"
+                        class="input-text form-control @error('email') is-invalid @enderror" name="email"
+                        value="{{ old('email') }}" required autocomplete="email">
+
+                    @error('email')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
             </div>
+
 
             <!-- Password -->
             <x-text-input id="password" class="block w-full mt-1"
@@ -23,7 +36,7 @@
                 <x-input-error :messages="$errors->get('password')" class="mt-2" />
 
             <div class="flex items-center justify-end mt-4">
-                <x-primary-button class="button">
+                <x-primary-button class="main-btn btn btn-primary">
                     {{ __('LOGIN') }}
                 </x-primary-button>
             </div>

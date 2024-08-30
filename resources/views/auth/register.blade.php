@@ -54,7 +54,7 @@
                             @enderror
                         </div>
                     </div>
-                    
+
                     <div class="row mb-2">
                         <div class="col-12">
                         <label for="">Email Address</label>
@@ -128,6 +128,10 @@
                             <button id="submitButton" type="submit" class="main-btn btn btn-primary">
                                 {{ __('SUBMIT') }}
                             </button>
+                           <div class="bottom-text">
+                            <p class="already-register">Already Registered</p>
+                            <p class="already-register">Please Login <a href="{{ route('login') }}" class="">here</a></p>
+                           </div>
                         </div>
                     </div>
                 </form>
@@ -186,6 +190,6 @@
 
 
 
-   
+
 });
 </script>

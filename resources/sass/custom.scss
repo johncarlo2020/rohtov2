@@ -8,10 +8,91 @@ html {
     overflow: hidden;
 }
 
+html,body {
+    font-family: "Nunito", sans-serif;
+}
+
 .home {
     height: 100%;
     width: 100%;
     background: $normal-gradient;
+
+    .content-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        height: 100%;
+        width: 100%;
+
+        .branding .logo  {
+            width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+    }
+
+    .heading {
+        font-size: 20px;
+        color: #0C5A40;
+        text-align: center;
+    }
+
+    .text-content {
+        font-size: 14px;
+        font-weight: 300px;
+        color: #0C5A40;
+    }
+    .welcome {
+        .heading {
+            font-size: 32px;
+            font-weight: 800;
+            line-height: 1.2;
+            text-align: center;
+            color: $primary;
+            margin-bottom: 15px;
+        }
+        .sub-heading {
+            font-size: 22px;
+            color: #0C5A40;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        .date {
+            width: max-content;
+            font-size: 16px;
+            line-height: 1.2;
+            font-weight: 600;
+            color: #0C5A40;
+            margin: 0 auto;
+            margin-bottom: 20px;
+
+            &.with-border {
+                padding-bottom: 20px;
+                border-bottom: 1px solid #fff;
+            }
+        }
+        p {
+            font-size: 22px;
+            color: #0C5A40;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .already-register {
+            font-size: 16px;
+            color: #303030;
+            text-align: center;
+            font-weight: 400;
+            margin: 0;
+
+            a {
+                color: $primary;
+                font-weight: 700;
+            }
+        }
+    }
 }
 
 .date {
@@ -19,6 +100,14 @@ html {
     line-height: 1.2;
     font-weight: 600;
     color: $black;
+}
+
+.btn {
+    &:hover,&:focus,&:active {
+        opacity: 0.8;
+        background-color: $primary;
+        color: #fff;
+    }
 }
 
 .heading {
@@ -46,7 +135,7 @@ html {
     min-width: 300px;
     height: 40px;
     text-transform: uppercase;
-    font-family: "Inter", sans-serif;
+    font-family: $font-family;
     letter-spacing: 1px;
     padding-top: 8px;
 
@@ -68,7 +157,7 @@ html {
     width: 100%;
     height: 40px;
     text-transform: uppercase;
-    font-family: "Inter", sans-serif;
+    font-family: $font-family;
     letter-spacing: 1px;
     padding-top: 8px;
 
@@ -96,7 +185,7 @@ html {
     min-width: 193px;
     height: 40px;
     text-transform: uppercase;
-    font-family: "Inter", sans-serif;
+    font-family: $font-family;
     letter-spacing: 1px;
     padding-top: 8px;
 }
@@ -106,7 +195,7 @@ html {
     line-height: 1.2;
     font-weight: 600;
     letter-spacing: 1px;
-    font-family: "Roboto", sans-serif;
+    font-family: $font-family;
     color: $black;
     margin-top: 40px;
     margin-bottom: 10px;
@@ -114,7 +203,7 @@ html {
 }
 
 body {
-    font-family: "Montserrat", sans-serif;
+    font-family: $font-family;
     font-size: 16px;
     color: $text;
     padding: 0;
@@ -160,7 +249,7 @@ div {
     width: 100%;
     height: 100%;
     box-sizing: border-box;
-    font-family: "Montserrat", sans-serif;
+    font-family: $font-family;
     font-size: 16px;
     color: $text;
     padding-top: 40px;
@@ -345,6 +434,7 @@ a:active {
     box-sizing: border-box;
     text-align: center;
     padding-top: 30px;
+    background: linear-gradient(to top, #ffffff 0%, #d3eefd 100%);
 
     .branding-container {
         box-sizing: border-box;
@@ -361,6 +451,16 @@ a:active {
             text-align: center;
             font-size: 24px;
             font-weight: 600;
+        }
+
+        .login-heading {
+            font-size: 24px;
+            font-weight: 800;
+            color: $primary;
+            margin-bottom: 20px;
+        }
+        label {
+            text-align: left;
         }
 
         .button {
@@ -579,6 +679,12 @@ a:active {
         height: 100vh;
         overflow: auto;
         padding-bottom: 30px;
+
+        .login-text {
+            font-size: 24px;
+            font-weight: 800;
+            color: $primary;
+        }
     }
 }
 
@@ -625,7 +731,7 @@ a:active {
         label {
             letter-spacing: 0;
             font-size: 16px;
-            color: #3c727a;
+            color: $primary;
         }
 
         h1 {
@@ -846,6 +952,91 @@ a:active {
                     }
                 }
             }
+        }
+    }
+}
+
+.input-text {
+    border: 1px solid #AFB1B6;
+    height: 48px;
+    border-radius: 6px;
+    background-color: #fff;
+}
+
+
+$form-check-color: #AFB1B6;
+$form-check-hover-shadow: rgba(0, 123, 255, 0.5);
+
+.form-check {
+    display: flex;
+    align-items: flex-start; // Align items to the top
+    margin-bottom: 1rem;
+    padding-left: 0;
+
+    &-input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+
+        &:focus + .form-check-label::before {
+            outline: 2px solid $form-check-color;
+            outline-offset: 2px;
+        }
+
+        &:checked + .form-check-label::after {
+            display: block;
+        }
+    }
+
+    &-label {
+        position: relative;
+        padding-left: 30px; // Adjust padding to align with the checkbox
+        cursor: pointer;
+        font-size: 12px;
+        color: #333;
+
+        &::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0; // Align to the top
+            width: 20px;
+            height: 20px;
+            border: 1px solid $form-check-color;
+            border-radius: 4px;
+            background-color: #fff;
+        }
+
+        &::after {
+            content: '';
+            position: absolute;
+            left: 6px;
+            top: 4px; // Adjust to align the checkmark within the box
+            transform: rotate(45deg);
+            width: 6px;
+            height: 12px;
+            border: solid $form-check-color;
+            border-width: 0 2px 2px 0;
+            display: none;
+        }
+    }
+}
+
+.bottom-text {
+    text-align: center;
+    margin-top: 20px;
+    .already-register {
+        font-size: 16px;
+        color: #303030;
+        font-weight: 400;
+        margin: 0;
+        line-height: 1.2;
+        margin-bottom: 5px;
+
+        a {
+            color: $primary;
+            font-weight: 800;
+            text-decoration: underline;
         }
     }
 }

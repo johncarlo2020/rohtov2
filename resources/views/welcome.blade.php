@@ -11,8 +11,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
 
 </head>
 <style>
@@ -44,16 +43,19 @@
             <div class="col-12 d-flex justify-content-center align-items-center">
                 @include('components.branding')
             </div>
-            <div class="col-12 mt-3 text-content text-center">
-                <h1 class="heading mt-5">Mentholatum 
+            <div class="col-12 mt-3 text-content text-center welcome">
+                <h1 class="heading mt-5">Mentholatum
                 135th Anniversary Roadshow</h1>
-                <p class="date">26 August 2024 - 1 Sept 2024</p>
-                <a href="{{ route('register') }}" class="mt-3 home-btn btn rounded-pill">Sign Up</a>
+                <h2 class="sub-heading">Queensbay Mall, Penang</h2>
+                <p class="date with-border">26 August 2024 - 1 Sept 2024</p>
+                <p class="sub-heading">Sunway Pyramid, KL</p>
+                <p class="date">28 Oct - 3 Nov 2024</p>
+                <a href="{{ route('register') }}" class="mt-5 mb-5 home-btn btn rounded-pill">Sign Up</a>
                 <p class="already-register">Already Registered</p>
-               Please Login <a href="{{ route('login') }}" class="">here</a>
+                <p class="already-register">Please Login <a href="{{ route('login') }}" class="">here</a></p>
             </div>
         </div>
-        
+
     </div>
     <footer>
             <a href="https://wowsome.com.my/">Powered by WOWSOME®2024</a>

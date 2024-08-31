@@ -44,8 +44,11 @@
 </div>
 
 <script>
-    function gotoStation(id){
-        console.log(id);
-    }
+   function gotoStation(id) {
+    // Construct the URL with the 'id' parameter dynamically
+    var url = "{{ route('station', ['station' => ':id']) }}".replace(':id', id);
+    // Redirect to the generated URL
+    window.location.href = url;
+}
 </script>
 </x-app-layout>

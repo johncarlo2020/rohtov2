@@ -1,13 +1,36 @@
 <x-app-layout>
-<div class="container-fluid start home">
+<div class="container-fluid start home dashboard">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="col-12 d-flex justify-content-center mt-5">
+            <div class="col-12 d-flex justify-content-center">
                 @include('components.branding')
             </div>
-            <div class="col-12 mt-3 text-content text-center">
-
-                <img class="w-100 mt-5"  src="{{ asset('images/banner.png') }}" alt="">
+            <div class="heading-main">
+                <h1>
+                    Start your <span>Journey</span> now
+                </h1>
+            </div>
+            <div class="icon-girl">
+                <img class=""  src="{{ asset('images/girlIcon.png') }}" alt="">
+            </div>
+            <p class="station-progress-heading">Station Progress</p>
+            <div class="badge-container">
+                @for ($i = 1; $i <= 7; $i++)
+                    @if($i != 7)
+                        <div class="badge {{ $i <= $stationDone ? 'completed' : '' }}">
+                            <span>?</span>
+                            <img src="{{ asset('images/badge1.png') }}" alt="">
+                        </div>
+                    @else
+                        <div class="badge with-img completed {{ $i <= $stationDone ? 'completed' : '' }}">
+                            <span>
+                                <img src="{{ asset('images/gift.png') }}" alt="">
+                            </span>
+                        </div>
+                    @endif
+                @endfor
+            </div>
+            <div class="mt-3 text-center col-12 text-content">
                 <div class="map">
                     <img class="path-image" src="{{ asset('images/map.png') }}" alt="Station Image">
                     @foreach ($stations as $station)

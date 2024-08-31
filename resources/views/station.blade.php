@@ -42,13 +42,19 @@
           <img src="{{ asset('images/station' . $station->id . 'main.jpg') }}" alt="">
 
         </div>
-        @if( $user == false )
+
+        @if( $user == false && $station->id != 1)
         <div class="scanner-button">
           <button id="scan-btn" class="scan-btn">
               <img src="{{ asset('images/camera.png') }}">
           </button>
           <p>Scan the QR Code at the station to proceed</p>
         </div>
+        @else
+        <div class="scanner-button">
+          <a  href="{{ route('station.extension', ['station' => $station->id]) }}" class="button">
+              BEGIN
+          </a>
         @endif
       </div>
       <div id="scannerContainer" class="scanner-container d-none">

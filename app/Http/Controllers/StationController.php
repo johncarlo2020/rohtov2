@@ -19,6 +19,10 @@ class StationController extends Controller
 
         return view('station',compact('station','user'));
     }
+    public function extension(Station $station)
+    {
+        return view('extension');
+    }
 
     public function welcome()
     {

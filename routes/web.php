@@ -52,6 +52,7 @@ Route::group(['middleware' => ['client']], function () {
     Route::get('/station/{station}', 'App\Http\Controllers\StationController@index')->name('station');
     Route::get('/dashboard', 'App\Http\Controllers\StationController@welcome')->name('dashboard');
     Route::post('/process_qr_code', 'App\Http\Controllers\StationController@scan')->name('process_qr_code');
+    Route::get('/station/{station}/extension', 'App\Http\Controllers\StationController@extension')->name('station.extension');
 });
 
 require __DIR__.'/auth.php';

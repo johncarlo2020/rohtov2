@@ -38,13 +38,13 @@
     </style>
 
 <body class="antialiased home">
-    <div class="container-fluid py-5 ">
+    <div class="py-5 container-fluid ">
         <div class="row">
             <div class="col-12 d-flex justify-content-center align-items-center">
                 @include('components.branding')
             </div>
-            <div class="col-12 mt-3 text-content text-center welcome">
-                <h1 class="heading mt-5">Mentholatum
+            <div class="mt-3 text-center col-12 text-content welcome">
+                <h1 class="mt-5 heading">Mentholatum
                 135th Anniversary Roadshow</h1>
                 <h2 class="sub-heading">Queensbay Mall, Penang</h2>
                 <p class="date with-border">26 August 2024 - 1 Sept 2024</p>

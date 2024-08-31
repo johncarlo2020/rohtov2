@@ -16,7 +16,7 @@ body {
 .home {
     height: 100%;
     width: 100%;
-    background: $normal-gradient;
+    background: linear-gradient(to right, #D5EEEB 100%, #8ACED0 100%);
 
     .content-wrapper {
         display: flex;
@@ -834,7 +834,6 @@ a:active {
 }
 
 .map {
-    margin-top: 40px;
     position: relative;
     width: 100%;
     height: auto;
@@ -1226,4 +1225,108 @@ $form-check-hover-shadow: rgba(0, 123, 255, 0.5);
             text-decoration: underline;
         }
     }
+}
+.dashboard {
+    .heading-main {
+        font-size: 32px;
+        font-weight: 800 !important;
+        color: $primary;
+        margin-bottom: 20px;
+        text-align: center;
+        line-height: 1.2;
+        color: $primary;
+        margin-top: 20px;
+
+        span {
+            color: #8BC28C;
+        }
+    }
+
+    .icon-girl {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        img {
+            margin: 0 auto;
+            height: 83px;
+            width: auto;
+            object-fit: contain;
+        }
+    }
+    .station-progress-heading {
+        text-align: center;
+        color: #303030;
+        margin-bottom: 20px;
+        font-weight: 600;
+        margin-top: 10px;
+    }
+}
+
+.badge-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    .badge {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+       img {
+        display: none;
+       }
+
+        &.completed {
+           span {
+            display: none;
+           }
+        }
+
+        &.with-img {
+            span {
+                display: block;
+            }
+        }
+
+        &:nth-child(-n + 4) {
+            background-color: $primary;
+        }
+
+        &:nth-child(5),
+        &:nth-child(6) {
+            background-color: #FFFF77;
+            color: $primary;
+        }
+        &:nth-child(7) {
+            background-color: $primary;
+            position: relative;
+            span {
+                img {
+                    display: block !important;
+                }
+            }
+
+            &.completed {
+               &:before {
+                    content: "";
+                    position: absolute;
+                    width: 10px;
+                    height: 10px;
+                    background-color: red;
+                    border-radius: 50%;
+                    z-index: 10;
+                    top: 0;
+                    right: -5px;
+                }
+            }
+        }
+    }
+}
+
+.question-page {
+    background: linear-gradient(to right, #D5EEEB 100%, #8ACED0 100%) !important;
+
 }

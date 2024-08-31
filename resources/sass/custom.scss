@@ -8,7 +8,8 @@ html {
     overflow: hidden;
 }
 
-html,body {
+html,
+body {
     font-family: "Nunito", sans-serif;
 }
 
@@ -25,7 +26,7 @@ html,body {
         height: 100%;
         width: 100%;
 
-        .branding .logo  {
+        .branding .logo {
             width: 100%;
             height: auto;
             margin-bottom: 20px;
@@ -34,14 +35,14 @@ html,body {
 
     .heading {
         font-size: 20px;
-        color: #0C5A40;
+        color: #0c5a40;
         text-align: center;
     }
 
     .text-content {
         font-size: 14px;
         font-weight: 300px;
-        color: #0C5A40;
+        color: #0c5a40;
     }
     .welcome {
         .heading {
@@ -54,7 +55,7 @@ html,body {
         }
         .sub-heading {
             font-size: 22px;
-            color: #0C5A40;
+            color: #0c5a40;
             text-align: center;
             margin-bottom: 20px;
             font-weight: 700;
@@ -64,7 +65,7 @@ html,body {
             font-size: 16px;
             line-height: 1.2;
             font-weight: 600;
-            color: #0C5A40;
+            color: #0c5a40;
             margin: 0 auto;
             margin-bottom: 20px;
 
@@ -75,7 +76,7 @@ html,body {
         }
         p {
             font-size: 22px;
-            color: #0C5A40;
+            color: #0c5a40;
             text-align: center;
             margin-bottom: 20px;
         }
@@ -103,7 +104,9 @@ html,body {
 }
 
 .btn {
-    &:hover,&:focus,&:active {
+    &:hover,
+    &:focus,
+    &:active {
         opacity: 0.8;
         background-color: $primary;
         color: #fff;
@@ -893,18 +896,17 @@ a:active {
 
         &__1 {
             position: absolute;
-            left: 51%;
-            bottom: 37%;
-            width: 35%;
-            height: 40%;
-
+            left: 70%;
+            bottom: 65%;
+            width: 14%;
+            height: 13%;
             .boot-img {
                 position: absolute;
                 right: 0;
                 top: 0;
-                width: 39%;
+                width: 100%;
                 height: auto;
-                z-index: 1;
+                z-index: 2;
             }
 
             .details-container {
@@ -926,9 +928,40 @@ a:active {
         &__2 {
             position: absolute;
             left: 80%;
-            bottom: 30%;
+            bottom: 56%;
             width: 14%;
-            height: 40%;
+            height: 13%;
+            .boot-img {
+                position: absolute;
+                right: 0;
+                top: 0;
+                width: 100%;
+                height: auto;
+                z-index: 3;
+            }
+
+            .details-container {
+                width: 100%;
+                height: 30%;
+                bottom: 0;
+                position: absolute;
+                left: 0;
+                .details {
+                    .step-number {
+                        top: -255%;
+                        right: -10%;
+                        z-index: 2;
+                    }
+                }
+            }
+        }
+
+        &__3 {
+            position: absolute;
+            left: 65%;
+            bottom: 23%;
+            width: 11%;
+            height: 13%;
             .boot-img {
                 position: absolute;
                 right: 0;
@@ -947,7 +980,162 @@ a:active {
                 .details {
                     .step-number {
                         top: -255%;
-                        right: -10%;
+                        right: 61%;
+                        z-index: 2;
+                    }
+                }
+            }
+        }
+
+        &__4 {
+            position: absolute;
+            left: 15%;
+            bottom: 67%;
+            width: 19%;
+            height: 13%;
+            .boot-img {
+                position: absolute;
+                right: 0;
+                top: 0;
+                width: 100%;
+                height: auto;
+                z-index: 1;
+            }
+
+            .details-container {
+                width: 100%;
+                height: 30%;
+                bottom: 0;
+                position: absolute;
+                left: 0;
+                .details {
+                    .step-number {
+                        top: -177%;
+                        right: 52%;
+                        z-index: 2;
+                    }
+                }
+            }
+        }
+
+        &__5 {
+            position: absolute;
+            left: 15%;
+            bottom: 67%;
+            width: 19%;
+            height: 13%;
+            .boot-img {
+                position: absolute;
+                right: 0;
+                top: 0;
+                width: 100%;
+                height: auto;
+                z-index: 1;
+            }
+
+            .details-container {
+                width: 100%;
+                height: 30%;
+                bottom: 0;
+                position: absolute;
+                left: 0;
+                .details {
+                    .step-number {
+                        top: -177%;
+                        right: 52%;
+                        z-index: 2;
+                    }
+                }
+            }
+        }
+
+        &__6 {
+            position: absolute;
+            left: 85%;
+            bottom: 35%;
+            width: 10%;
+            height: 13%;
+            .boot-img {
+                position: absolute;
+                right: 0;
+                top: 0;
+                width: 100%;
+                height: auto;
+                z-index: 1;
+            }
+
+            .details-container {
+                width: 100%;
+                height: 30%;
+                bottom: 0;
+                position: absolute;
+                left: 0;
+                .details {
+                    .step-number {
+                        top: -283%;
+                        right: -19%;
+                        z-index: 2;
+                    }
+                }
+            }
+        }
+
+        &__7 {
+            position: absolute;
+            left: 7%;
+            bottom: 40%;
+            width: 15%;
+            height: 13%;
+            .boot-img {
+                position: absolute;
+                right: 0;
+                top: 0;
+                width: 100%;
+                height: auto;
+                z-index: 1;
+            }
+
+            .details-container {
+                width: 100%;
+                height: 30%;
+                bottom: 0;
+                position: absolute;
+                left: 0;
+                .details {
+                    .step-number {
+                        top: -285%;
+                        right: 68%;
+                        z-index: 2;
+                    }
+                }
+            }
+        }
+
+        &__8 {
+            position: absolute;
+            left: 18%;
+            bottom: 25%;
+            width: 9%;
+            height: 13%;
+            .boot-img {
+                position: absolute;
+                right: 0;
+                top: 0;
+                width: 100%;
+                height: auto;
+                z-index: 1;
+            }
+
+            .details-container {
+                width: 100%;
+                height: 30%;
+                bottom: 0;
+                position: absolute;
+                left: 0;
+                .details {
+                    .step-number {
+                        top: -285%;
+                        right: -12%;
                         z-index: 2;
                     }
                 }
@@ -957,14 +1145,13 @@ a:active {
 }
 
 .input-text {
-    border: 1px solid #AFB1B6;
+    border: 1px solid #afb1b6;
     height: 48px;
     border-radius: 6px;
     background-color: #fff;
 }
 
-
-$form-check-color: #AFB1B6;
+$form-check-color: #afb1b6;
 $form-check-hover-shadow: rgba(0, 123, 255, 0.5);
 
 .form-check {
@@ -996,7 +1183,7 @@ $form-check-hover-shadow: rgba(0, 123, 255, 0.5);
         color: #333;
 
         &::before {
-            content: '';
+            content: "";
             position: absolute;
             left: 0;
             top: 0; // Align to the top
@@ -1008,7 +1195,7 @@ $form-check-hover-shadow: rgba(0, 123, 255, 0.5);
         }
 
         &::after {
-            content: '';
+            content: "";
             position: absolute;
             left: 6px;
             top: 4px; // Adjust to align the checkmark within the box

@@ -75,21 +75,72 @@
 
     </style>
 
-    <h1 class="heading-question">Question <span id="question">1</span></h1>
+    <h1 class="heading-question">Question <span id="question-number">1</span></h1>
     <div class="question-description">
         <div class="question-img">
             <img src="" alt="">
         </div>
-        <p id="question">In which year
-            Mentholatum Trademark
-            was registered?</p>
+        <p id="question"></p>
     </div>
     <div class="answers">
-        <button class="item">
-            asdsd
-        </button>
-        <button class="item active">
-            asdsd
-        </button>
+        <!-- Answer buttons will be dynamically inserted here -->
     </div>
 </div>
+
+<script>
+const questions = [
+    {
+        question: "In which year Mentholatum Trademark was registered?",
+        choices: ["1889", "1895", "2009"],
+        correctAnswer: "1895"
+    },
+    {
+        question: "Mentholatum celebrates its ______ anniversary in year 2024",
+        choices: ["135th", "133rd", "100th"],
+        correctAnswer: "135th"
+    },
+    {
+        question: "Rohto Mentholatum Malaysia (RMM) launched the first skincare product _____ in year 2009",
+        choices: ["Sunplay", "OXY", "Hada Labo"],
+        correctAnswer: "Hada Labo"
+    }
+];
+
+let currentQuestionIndex = 0;
+
+function renderQuestion() {
+    const questionElement = document.getElementById('question');
+    const answersElement = document.querySelector('.answers');
+
+    // Clear previous answers
+    answersElement.innerHTML = '';
+
+    // Set question text
+    questionElement.textContent = questions[currentQuestionIndex].question;
+
+    // Create answer buttons
+    questions[currentQuestionIndex].choices.forEach(choice => {
+        const button = document.createElement('button');
+        button.classList.add('item');
+        button.textContent = choice;
+        button.addEventListener('click', () => checkAnswer(choice));
+        answersElement.appendChild(button);
+    });
+}
+
+function checkAnswer(selectedAnswer) {
+    if (selectedAnswer === questions[currentQuestionIndex].correctAnswer) {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < questions.length) {
+            renderQuestion();
+        } else {
+            alert('You have completed the quiz!');
+        }
+    } else {
+        alert('Wrong answer. Try again.');
+    }
+}
+
+// Initialize the first question
+document.addEventListener('DOMContentLoaded', renderQuestion);
+</script>

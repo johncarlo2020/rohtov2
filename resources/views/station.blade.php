@@ -23,83 +23,71 @@
             </div>
         </div>
     </div>
-    <div id="stationPage" class="station-page main main-bg">
+    <div id="stationPage" class="station-page home ">
         <div class="mb-3 branding-container">
             @include('components.branding')
         </div>
-    <div id="mainContent" class="text-center text-content">
-
-        <div class="content">
-          <h1 class="station-number">0{{$station->id}}</h1>
-          <h2 class="station-name">{{$station->name}}</h2>
-          <p class="tag-line">{{$station->description}}</p>
-          @if($station->id == 5)
-          <p class="tag-line">
-            And experience revolutionary Personalised RoboSkin to get tailor-made skin solutions for your specific skin needs.</p>
-          @endif
-        </div>
-        <div class="station-img">
-          <img src="{{ asset('images/station' . $station->id . 'main.jpg') }}" alt="">
-
-        </div>
-
-        @if( $user == false && $station->id != 1)
-        <div class="scanner-button">
-          <button id="scan-btn" class="scan-btn">
-              <img src="{{ asset('images/camera.png') }}">
-          </button>
-          <p>Scan the QR Code at the station to proceed</p>
-        </div>
-        @else
-        <div class="scanner-button">
-          <a  href="{{ route('station.extension', ['station' => $station->id]) }}" class="button">
-              BEGIN
-          </a>
-        @endif
-      </div>
-      <div id="scannerContainer" class="scanner-container d-none">
-                <!-- <button id="close" class="mx-auto mt-4 camera-btn">x</button> -->
-                <div id="reader"></div>
-                <div class="p-3 mt-3">
-                    <p class="px-4 text-center bottom-text">Find the QR code & Scan to check in the station</p>
+        <div id="mainContent" class="col-12 mt-3 text-content text-center">
+                <div id="{{ $user ? '' : 'forceQr' }}" class="icon-container mt-4">
+                    <img class="icon-bg" src="{{ asset('images/icon-bg.svg') }}" alt="Lock Image">
+                    <img class="icon" src="{{ asset('images/station3icon.svg') }}" alt="Lock Image">
                 </div>
+                <h1 class="station-heading mt-4">
+                    @if ($station->id == 6)
+                        Gift House
+                    @else
+                        Station {{ $station->id }}
+                    @endif
+                </h1>
+                <h2 class="station-subheading">{{ $station->name }}</h2>
+                <img class="mt-5 station-image" src="{{ asset('images/step/step-img-' . $station->id . '.png') }}"
+                    alt="Station Image">
+                @if ($user != true)
+                    <button id="start-scanner" class="camera-btn mx-auto mt-4"><img src="{{ asset('images/camera.svg') }}"
+                            alt=""></button>
+                    <p class="bottom-text px-4 mt-3">Scan the QR code at the station to proceed</p>
+                @else
+                    <p class="bottom-text px-4 mt-3">Already Completed</p>
+                @endif
 
-                <div class="button" id="btn-back">Back</div>
+        </div>
+        <div id="scannerContainer" class="scanner-container d-none">
+                <!-- <button id="close" class="camera-btn mx-auto mt-4">x</button> -->
+                <div id="reader"></div>
+                <div class="mt-3 p-3">
+                    <p class="bottom-text px-4 text-center">Find the QR code & Scan to check in the station</p>
+                </div>
+            </div>
     </div>
-    </div>
+
+        
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
     <script>
-
         const mainContent = document.getElementById('mainContent');
         const scannerContainer = document.getElementById('scannerContainer');
-        document.getElementById('btn-back').addEventListener('click', function(event) {
-            event.preventDefault();
-            mainContent.classList.remove('d-none');
-            scannerContainer.classList.add('d-none');
-        });
-
-      document.getElementById('scan-btn').addEventListener('click', function(event) {
+        var message = '';
+        var count = 0;
+        var lastClick = 0;
+        document.getElementById('start-scanner').addEventListener('click', function(event) {
             event.preventDefault();
 
             mainContent.classList.add('d-none');
             scannerContainer.classList.remove('d-none');
-            const isLandscape = window.innerWidth > window.innerHeight;
+
             //get permission to use camera dont start qr scanner until permission is granted
 
             const html5QrCode = new Html5Qrcode("reader");
 
             html5QrCode.start({
-            facingMode: "environment",
-        }, {
-            fps: 10,
-            qrbox: { width: 200, height: 250 },
-            aspectRatio: isLandscape ? 3 / 4 : 4 / 3
-
-        },
+                        facingMode: "environment"
+                    }, {
+                        fps: 10,
+                        qrbox: 150,
+                        aspectRatio: 9 / 16 // Set the aspect ratio to 16:9
+                    },
                     qrCodeMessage => {
-                        console.log(`${qrCodeMessage}`);
-                         sendMessage(`${qrCodeMessage}`);
+                        sendMessage(`${qrCodeMessage}`);
                         html5QrCode.stop();
 
                     },
@@ -111,6 +99,7 @@
                 });
 
         });
+
         function sendMessage(message) {
             // Fetch the CSRF token from the meta tag
             var csrfToken = $('meta[name="csrf-token"]').attr('content');
@@ -129,42 +118,70 @@
                 success: function(response) {
                     console.log('QR Code message sent successfully:', response);
                     // Handle success response if needed
-
                     const trimmedMessage = message.trim();
                     // Get the last character of the QR code message
                     const lastCharacter = trimmedMessage.charAt(trimmedMessage.length - 1);
-                    $('.station_id').html(lastCharacter);
 
 
-                    $('.check').addClass('fa-circle-check text-success');
+                    if (lastCharacter != 6) {
+                        $('.station_id').html(lastCharacter);
+                    } else {
+                        // $('.station_id').html('Gift House');
+                        $('.station-text').html('Gift House');
 
-                    $('#scanCompleteModal').modal('show');
+                    }
+                    $(scanCompleteModal).modal('show');
+
                 },
                 error: function(xhr, status, error) {
                     console.error('Error sending QR Code message:', error);
                     $('.station-text').html('Failed');
                     $('.message').html('Invalid QR code. Please try again.');
-                    $('.check').addClass('fa-circle-xmark text-danger');
-
-                    $('#scanCompleteModal').modal('show');
-
+                    $('.check').attr('src', '{{ asset('images/error.svg') }}');
+                    $(scanCompleteModal).modal('show');
 
                 }
             });
         }
-        function isSafari() {
-            const userAgent = window.navigator.userAgent;
-            const isChrome = userAgent.indexOf('Chrome') > -1;
-            const isChromium = userAgent.indexOf('Chromium') > -1;
-            const isSafari = userAgent.indexOf('Safari') > -1;
 
-            return isSafari && !isChrome && !isChromium;
-        }
+        document.getElementById('btn_manual').addEventListener('click', function() {
+            var password = $('#password').val();
 
-        if(isSafari()){
-            const scannerContainer = document.getElementById('stationPage');
-            scannerContainer.classList.add('safari-padding');
-            console.log(isSafari());
-        }
+            if (password == 8888) {
+                sendMessage({{ $station->id }});
+                $('#manualQR').modal('hide');
+            } else {
+                $('#manualQR').modal('hide');
+                $('#password').val('');
+                alert('wrong password');
+            }
+            console.log(password);
+        });
+
+        document.getElementById('forceQr').addEventListener('click', function() {
+            console.log('clicked');
+            var now = new Date().getTime();
+            if (now - lastClick < 500) {
+                count++;
+                if (count === 3) {
+                    console.log('asdad');
+                    $('#manualQR').modal('show');
+
+                    // Use Bootstrap's modal method to show the modal
+                    count = 0; // Reset the count after showing the modal
+                }
+            } else {
+                count = 0;
+            }
+            lastClick = now;
+        });
+
+
+        // document.getElementById('close').addEventListener('click', function(event) {
+        //     event.preventDefault();
+        //     mainContent.classList.remove('d-none');
+        //     scannerContainer.classList.add('d-none');
+        //     html5QrCode.stop();
+        // });
     </script>
   </x-app-layout>

@@ -1,91 +1,109 @@
-<div class="question-section">
-    <style>
-        .heading-question {
-            color: #358ABF;
-            font-size: 20px;
-            font-weight: 700;
-            text-align: center;
-            margin-top: 20px;
-        }
-        .question-description {
-            width: 90%;
-            background: #fff;
-            border-radius: 12px;
-            position: relative;
-            margin: 0 auto;
-            padding: 20px;
-            margin-top: 40px;
-        }
-        .question-img {
-            width: 120px;
-            height: 120px;
-            border-radius: 12px;
-            background: #8BC28C;
-            position: absolute;
-            top: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        #question {
-            text-align: center;
-            color: #358ABF;
-            font-size: 24px;
-            font-weight: 700;
-            margin-top: 86px;
-        }
-        .answers {
-            width: 90%;
-            margin: 0 auto;
-            margin-top: 20px;
-        }
+<style>
+    .progress-container {
+        width: 90%;
+        background-color: #f3f3f3;
+        border-radius: 5px;
+        overflow: hidden;
+        margin: 0 auto;
+    }
 
-        .answers .item{
-            width: 100%;
-            background: #fff;
-            border-radius: 12px;
-            padding: 20px;
-            margin: 0 auto;
-            border: none;
-            outline: none;
-            margin-bottom: 10px;
-        }
-        .answers .active{
-            background: #0C5A40;
-            color: #fff;
-            border: 1px solid #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        #next{
-            width: 170px;
-            margin-top: 20px;
-            background: #0C5A40;
-            color: #fff;
-            border-radius: 40px;
-            padding: 10px;
-            border: none;
-            outline: none;
-        }
-        .navigation {
-            width: 90%;
-            margin: 0 auto;
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-        }
+    .progress-bar {
+        height: 10px;
+        background-color: #0C5A40; /* Change color */
+        text-align: center;
+        line-height: 30px;
+        color: white;
+        border-radius: 5px; /* Make it rounded */
+        transition: width 0.5s ease; /* Add transition for animation */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow */
+    }
+    .heading-question {
+        color: #358ABF;
+        font-size: 20px;
+        font-weight: 700;
+        text-align: center;
+        margin-top: 20px;
+    }
+    .question-description {
+        width: 90%;
+        background: #fff;
+        border-radius: 12px;
+        position: relative;
+        margin: 0 auto;
+        padding: 20px;
+        margin-top: 40px;
+    }
+    .question-img {
+        width: 120px;
+        height: 120px;
+        border-radius: 12px;
+        background: #8BC28C;
+        position: absolute;
+        top: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    #question {
+        text-align: center;
+        color: #358ABF;
+        font-size: 24px;
+        font-weight: 700;
+        margin-top: 86px;
+    }
+    .answers {
+        width: 90%;
+        margin: 0 auto;
+        margin-top: 20px;
+    }
 
-    </style>
+    .answers .item {
+        width: 100%;
+        background: #fff;
+        border-radius: 12px;
+        padding: 20px;
+        margin: 0 auto;
+        border: none;
+        outline: none;
+        margin-bottom: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s ease; /* Add transition for background color */
+    }
+    .answers .active {
+        background: #0C5A40;
+        color: #fff;
+        border: 1px solid #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    #next {
+        width: 170px;
+        margin-top: 20px;
+        background: #0C5A40;
+        color: #fff;
+        border-radius: 40px;
+        padding: 10px;
+        border: none;
+        outline: none;
+    }
+    .navigation {
+        width: 90%;
+        margin: 0 auto;
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+    }
+</style>
 
-    <h1 class="heading-question">Question <span id="question-number">1</span></h1>
-    <div class="question-description">
-        <div class="question-img">
-            <img src="" alt="">
-        </div>
-        <p id="question"></p>
-    </div>
-    <div class="answers">
-        <!-- Answer buttons will be dynamically inserted here -->
-    </div>
+<div class="progress-container">
+    <div class="progress-bar" id="progress-bar" style="width: 0%;"></div>
 </div>
+<h1 class="heading-question">Question <span id="question-number">1</span></h1>
+<div class="question-description">
+    <div class="question-img">
+        <img src="" alt="">
+    </div>
+    <p id="question"></p>
+</div>
+<div class="answers"></div>
 
 <script>
 const questions = [
@@ -108,9 +126,19 @@ const questions = [
 
 let currentQuestionIndex = 0;
 
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
 function renderQuestion() {
     const questionElement = document.getElementById('question');
     const answersElement = document.querySelector('.answers');
+    const progressBar = document.getElementById('progress-bar');
+    const questionNumberElement = document.getElementById('question-number');
 
     // Clear previous answers
     answersElement.innerHTML = '';
@@ -118,26 +146,62 @@ function renderQuestion() {
     // Set question text
     questionElement.textContent = questions[currentQuestionIndex].question;
 
-    // Create answer buttons
-    questions[currentQuestionIndex].choices.forEach(choice => {
+    // Update question number
+    questionNumberElement.textContent = currentQuestionIndex + 1;
+
+    // Update progress bar
+    const progressPercentage = ((currentQuestionIndex + 1) / questions.length) * 100;
+    progressBar.style.width = progressPercentage + '%';
+
+    // Shuffle and create answer buttons
+    const shuffledChoices = shuffle([...questions[currentQuestionIndex].choices]);
+    shuffledChoices.forEach(choice => {
         const button = document.createElement('button');
-        button.classList.add('item');
+        button.classList.add('item', 'shadow-sm');
         button.textContent = choice;
-        button.addEventListener('click', () => checkAnswer(choice));
+        button.addEventListener('click', () => checkAnswer(button, choice));
         answersElement.appendChild(button);
     });
 }
 
-function checkAnswer(selectedAnswer) {
-    if (selectedAnswer === questions[currentQuestionIndex].correctAnswer) {
-        currentQuestionIndex++;
-        if (currentQuestionIndex < questions.length) {
-            renderQuestion();
-        } else {
-            alert('You have completed the quiz!');
-        }
+function checkAnswer(button, selectedAnswer) {
+    const correctAnswer = questions[currentQuestionIndex].correctAnswer;
+    const answerButtons = document.querySelectorAll('.answers .item');
+
+    if (selectedAnswer === correctAnswer) {
+        button.style.backgroundColor = '#0C5A40';
+        button.style.border = '2px solid #fff';
+        button.style.color = '#fff';
+        setTimeout(() => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                renderQuestion();
+            } else {
+                var firstStationId = 1;
+                var url = "{{ route('station', ['station' => ':id']) }}".replace(':id', firstStationId) + "?questionComplete=true";
+                window.location.href = url;
+            }
+        }, 500);
     } else {
-        alert('Wrong answer. Try again.');
+        button.style.backgroundColor = '#FF0000';
+        button.style.border = '2px solid #fff';
+        button.style.color = '#fff';
+        answerButtons.forEach(btn => {
+            if (btn.textContent === correctAnswer) {
+                btn.style.backgroundColor = '#0C5A40';
+                btn.style.border = '2px solid #fff';
+                btn.style.color = '#fff';
+            }
+        });
+        setTimeout(() => {
+            answerButtons.forEach(btn => {
+                btn.style.backgroundColor = '';
+                btn.style.border = ''; // Reset border
+                btn.style.color = '';
+            });
+            // Re-render the question with shuffled choices
+            renderQuestion();
+        }, 2000);
     }
 }
 

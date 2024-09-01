@@ -91,6 +91,17 @@
         display: flex;
         justify-content: center;
     }
+    @keyframes shake {
+        0% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        50% { transform: translateX(5px); }
+        75% { transform: translateX(-5px); }
+        100% { transform: translateX(0); }
+    }
+
+    .shake {
+        animation: shake 0.5s;
+    }
 </style>
 
 <div class="progress-container">
@@ -168,7 +179,7 @@ function checkAnswer(button, selectedAnswer) {
     const correctAnswer = questions[currentQuestionIndex].correctAnswer;
     const answerButtons = document.querySelectorAll('.answers .item');
 
-    if (selectedAnswer === correctAnswer) {
+       if (selectedAnswer === correctAnswer) {
         button.style.backgroundColor = '#0C5A40';
         button.style.border = '2px solid #fff';
         button.style.color = '#fff';
@@ -186,6 +197,12 @@ function checkAnswer(button, selectedAnswer) {
         button.style.backgroundColor = '#FF0000';
         button.style.border = '2px solid #fff';
         button.style.color = '#fff';
+        document.body.classList.add('shake'); // Add shake class
+        navigator.vibrate(1000); // Vibrate for 500ms
+        setTimeout(() => {
+            document.body.classList.remove('shake'); // Remove shake class
+        }, 500); // Duration of the shake animation
+
         answerButtons.forEach(btn => {
             if (btn.textContent === correctAnswer) {
                 btn.style.backgroundColor = '#0C5A40';

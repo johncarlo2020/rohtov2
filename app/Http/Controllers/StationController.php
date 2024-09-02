@@ -31,6 +31,28 @@ class StationController extends Controller
         $brands = Brand::get();
         return view('brand',compact('brands'));
     }
+    public function puzzle(Station $station)
+    {
+
+        $user = User::with('stationUser')->where('id', auth()->id())->first();
+        // dd($user->stationUser->count());
+
+        $stationDone = $user->stationUser->count();
+        $stations = Station::get();
+
+        // Loop through each station and append a flag indicating if the user has it
+        foreach ($stations as $station) {
+            $userHasStation = $user->StationUser()->where('station_id', $station->id)->exists();
+            $station->status = $userHasStation;
+        }
+
+        return view('puzzle',compact('stations','stationDone'));
+    }
+
+    public function brands()
+    {
+        return view('brands');
+    }
 
     public function welcome()
     {

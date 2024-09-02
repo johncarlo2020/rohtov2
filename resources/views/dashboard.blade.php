@@ -34,15 +34,11 @@
                 <div class="map">
                     <img class="path-image" src="{{ asset('images/map.png') }}" alt="Station Image">
                     @foreach ($stations as $station)
-
-
                     <div class="step step__{{ $station->id }}">
                         <div class="content">
-                                    @if($stationDone < 5 && $station->id ==6)
-                                        <img  class="boot-img" src="{{ asset('images/step/step-img-'.$station->id.'.png') }}" alt="">
-                                    @else
+                                   
                                         <img onclick="gotoStation({{$station->id}})" class="boot-img" src="{{ asset('images/step/step-img-'.$station->id.'.png') }}" alt="">
-                                    @endif
+                                 
                             <div class="details-container">
                                 <div class="details">
                                     <span class="step-number {{ $station->status ? 'completed' : '' }}">

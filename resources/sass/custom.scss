@@ -1408,4 +1408,48 @@ $form-check-hover-shadow: rgba(0, 123, 255, 0.5);
         #d5eeeb 100%,
         #8aced0 100%
     ) !important;
+    background: linear-gradient(
+        to right,
+        #d5eeeb 100%,
+        #8aced0 100%
+    ) !important;
+
+    .branding {
+        .logo {
+            width: 30%;
+        }
+    }
+}
+
+.content-modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    img {
+        width: 40%;
+        height: auto;
+        object-fit: contain;
+        margin: 0 auto;
+    }
+
+    .station-name {
+        font-size: 20px;
+        font-weight: 600;
+        color: #0c5a40;
+        margin-top: 20px;
+    }
+
+    .station-message {
+        font-size: 16px;
+        font-weight: 400;
+        color: #0c5a40;
+        margin-top: 20px;
+    }
+
+    button {
+        width: 200px;
+        margin-bottom: 20px;
+    }
 }

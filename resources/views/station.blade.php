@@ -62,7 +62,8 @@
 
         
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script> <!-- Ensure Bootstrap JS is included -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
     <script>
         const mainContent = document.getElementById('mainContent');
         const scannerContainer = document.getElementById('scannerContainer');
@@ -77,7 +78,13 @@
 
             //get permission to use camera dont start qr scanner until permission is granted
 
-            const html5QrCode = new Html5Qrcode("reader");
+            const mainContent = document.getElementById('mainContent');
+            const scannerContainer = document.getElementById('scannerContainer');
+            document.getElementById('btn-back').addEventListener('click', function(event) {
+                event.preventDefault();
+                mainContent.classList.remove('d-none');
+                scannerContainer.classList.add('d-none');
+            });
 
             html5QrCode.start({
                         facingMode: "environment"
@@ -90,10 +97,25 @@
                         sendMessage(`${qrCodeMessage}`);
                         html5QrCode.stop();
 
-                    },
-                    errorMessage => {
-                        console.log(`QR Code no longer in front of camera.`);
-                    })
+                const html5QrCode = new Html5Qrcode("reader");
+
+                html5QrCode.start({
+                    facingMode: "environment",
+                }, {
+                    fps: 10,
+                    qrbox: { width: 200, height: 250 },
+                    aspectRatio: isLandscape ? 3 / 4 : 4 / 3
+
+                },
+                qrCodeMessage => {
+                    console.log(`${qrCodeMessage}`);
+                    sendMessage(`${qrCodeMessage}`);
+                    html5QrCode.stop();
+
+                },
+                errorMessage => {
+                    console.log(`QR Code no longer in front of camera.`);
+                })
                 .catch(err => {
                     console.log(`Unable to start scanning, error: ${err}`);
                 });
@@ -184,4 +206,4 @@
         //     html5QrCode.stop();
         // });
     </script>
-  </x-app-layout>
+</x-app-layout>

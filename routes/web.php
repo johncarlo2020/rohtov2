@@ -36,6 +36,7 @@ Route::get('/congrats', function () {
     return view('congrats');
 });
 
+
 Route::group(['middleware' => ['admin']], function () {
     Route::get('/admin', 'App\Http\Controllers\StationController@admin')->name('admin');
     Route::get('/admin/users', 'App\Http\Controllers\StationController@users')->name('users');
@@ -53,6 +54,8 @@ Route::group(['middleware' => ['client']], function () {
     Route::get('/dashboard', 'App\Http\Controllers\StationController@welcome')->name('dashboard');
     Route::post('/process_qr_code', 'App\Http\Controllers\StationController@scan')->name('process_qr_code');
     Route::get('/station/{station}/extension', 'App\Http\Controllers\StationController@extension')->name('station.extension');
+    Route::get('/station/{station}/puzzle', 'App\Http\Controllers\StationController@puzzle')->name('station.puzzle');
+    Route::get('/station/{station}/brands', 'App\Http\Controllers\StationController@brands')->name('station.brands');
 });
 
 require __DIR__.'/auth.php';

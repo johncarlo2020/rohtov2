@@ -1,0 +1,118 @@
+<x-app-layout>
+    <style>
+        .puzzle-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            width: 215px;
+            height: 215px;
+            justify-content: center;
+            align-items: center;
+            background: #fff;
+            padding: 20px;
+            border: 2px solid #8BC28C;
+            border-radius: 20px;
+            margin: 0 auto;
+            margin-top: 40px;
+        }
+
+        .puzzle-piece {
+            height: 100%;
+            margin-bottom: 2px;
+        }
+
+        .badge-container-bottom {
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            display: grid;
+        }
+
+        .badge-piece {
+            width: 100%;
+            height: 92px;
+        }
+
+        .badge-text {
+            font-size: 9px;
+            color: #303030;
+            text-align: center;
+            margin-top: 5px;
+            font-weight: 700;
+        }
+
+        .badge-piece img {
+            width: 58px;
+            height: 58px;
+        }
+
+        .heading-brands {
+            font-size: 24px;
+            font-weight: 800;
+            color: #303030;
+            text-align: center
+        }
+
+        .brand-details {
+            padding: 20px;
+            background: #fff;
+            border-radius: 12px;
+        }
+
+        .brand-details img {
+            height: 30px;
+            width: auto;
+            margin: 0 auto;
+        }
+
+        .brand-details .brand-count {
+            font-size: 36px;
+            font-weight: 700;
+            color: #0C5A40;
+            text-align: center;
+            margin-top: 10px;
+            line-height: 1.2;
+            margin-bottom: 10px;
+        }
+
+        .brand-details .brand-text {
+            font-size: 12px;
+            font-weight: 700;
+            color: #0C5A40;
+            text-align: center;
+            margin-top: 10px;
+            margin-bottom: 0;
+        }
+        .brand-btn {
+            width: 171px;
+            border-radius: 36px;
+        }
+    </style>
+    <div class="container-fluid start home dashboard">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="col-12 d-flex justify-content-center">
+                    @include('components.branding')
+                </div>
+                <p class="mt-5 heading-brands">OUR BEST SELLER</p>
+
+            </div>
+            <div class="mt-2 text-center col-12">
+                <div class="px-3 row brand-container">
+                    @for ($i = 0; $i < 7; $i++)
+                        <div class="p-2 col-6">
+                            <div class="brand-details">
+                                <img src="{{ asset('images/brand.png') }}" alt="">
+                                <p class="brand-count">30</p>
+                                <p class="brand-text">Hydration lotion (Rich)</p>
+                            </div>
+                        </div>
+                    @endfor
+                </div>
+                <div class="mt-4 button-container">
+                    <button class="btn btn-primary brand-btn">DONE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</x-app-layout>

@@ -19,7 +19,7 @@
                     @if($i != 7)
                         <div class="badge {{ $i <= $stationDone ? 'completed' : '' }}">
                             <span>?</span>
-                            <img src="{{ asset('images/badge1.png') }}" alt="">
+                            <img src="{{ asset('images/badge'.$i.'.png') }}" alt="">
                         </div>
                     @else
                         <div class="badge with-img completed {{ $i <= $stationDone ? 'completed' : '' }}">

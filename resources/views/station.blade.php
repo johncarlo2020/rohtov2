@@ -43,9 +43,22 @@
                 <img class="mt-5 station-image" src="{{ asset('images/step/step-img-' . $station->id . '.png') }}"
                     alt="Station Image">
                 @if ($user != true)
+                    @if( $user == false && $station->id == 1)
+                    <div class="scanner-button">
+                    <a  href="{{ route('station.extension', ['station' => $station->id]) }}" class="button">
+                        BEGIN
+                    </a>
+                    @elseif( $user == false && $station->id == 2)
+
+                    <div class="scanner-button">
+                    <a  href="{{ route('station.brand', ['station' => $station->id]) }}" class="button">
+                        BEGIN
+                    </a>
+                    @else
                     <button id="start-scanner" class="camera-btn mx-auto mt-4"><img src="{{ asset('images/camera.svg') }}"
                             alt=""></button>
                     <p class="bottom-text px-4 mt-3">Scan the QR code at the station to proceed</p>
+                    @endif
                 @else
                     <p class="bottom-text px-4 mt-3">Already Completed</p>
                 @endif
@@ -78,13 +91,7 @@
 
             //get permission to use camera dont start qr scanner until permission is granted
 
-            const mainContent = document.getElementById('mainContent');
-            const scannerContainer = document.getElementById('scannerContainer');
-            document.getElementById('btn-back').addEventListener('click', function(event) {
-                event.preventDefault();
-                mainContent.classList.remove('d-none');
-                scannerContainer.classList.add('d-none');
-            });
+            const html5QrCode = new Html5Qrcode("reader");
 
             html5QrCode.start({
                         facingMode: "environment"
@@ -97,25 +104,10 @@
                         sendMessage(`${qrCodeMessage}`);
                         html5QrCode.stop();
 
-                const html5QrCode = new Html5Qrcode("reader");
-
-                html5QrCode.start({
-                    facingMode: "environment",
-                }, {
-                    fps: 10,
-                    qrbox: { width: 200, height: 250 },
-                    aspectRatio: isLandscape ? 3 / 4 : 4 / 3
-
-                },
-                qrCodeMessage => {
-                    console.log(`${qrCodeMessage}`);
-                    sendMessage(`${qrCodeMessage}`);
-                    html5QrCode.stop();
-
-                },
-                errorMessage => {
-                    console.log(`QR Code no longer in front of camera.`);
-                })
+                    },
+                    errorMessage => {
+                        console.log(`QR Code no longer in front of camera.`);
+                    })
                 .catch(err => {
                     console.log(`Unable to start scanning, error: ${err}`);
                 });

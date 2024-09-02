@@ -702,6 +702,31 @@ a:active {
     }
 }
 
+.brand-btn {
+    height: 10vh;
+    margin-top: auto;
+    text-align: center;
+    text-align: center;
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+
+    .scan-btn {
+        background-color: transparent;
+        border: none;
+        outline: none;
+    }
+    p {
+        font-size: 14px;
+        color: $white;
+        letter-spacing: 1px;
+        font-weight: 400;
+        padding: 0;
+        margin: 0;
+    }
+}
+
 .register-page {
     overflow-y: auto;
 }
@@ -930,9 +955,9 @@ a:active {
 
         &__1 {
             position: absolute;
-            left: 70%;
-            bottom: 65%;
-            width: 14%;
+            left: 73%;
+            bottom: 71%;
+            width: 11%;
             height: 13%;
             .boot-img {
                 position: absolute;
@@ -961,9 +986,9 @@ a:active {
 
         &__2 {
             position: absolute;
-            left: 80%;
-            bottom: 56%;
-            width: 14%;
+            left: 81%;
+            bottom: 65%;
+            width: 11%;
             height: 13%;
             .boot-img {
                 position: absolute;
@@ -984,7 +1009,7 @@ a:active {
                     .step-number {
                         top: -255%;
                         right: -10%;
-                        z-index: 2;
+                        z-index: 3;
                     }
                 }
             }
@@ -1024,7 +1049,7 @@ a:active {
         &__4 {
             position: absolute;
             left: 15%;
-            bottom: 67%;
+            bottom: 76%;
             width: 19%;
             height: 13%;
             .boot-img {
@@ -1054,9 +1079,9 @@ a:active {
 
         &__5 {
             position: absolute;
-            left: 15%;
-            bottom: 67%;
-            width: 19%;
+            left: 60%;
+            bottom: 70%;
+            width: 15%;
             height: 13%;
             .boot-img {
                 position: absolute;
@@ -1075,8 +1100,8 @@ a:active {
                 left: 0;
                 .details {
                     .step-number {
-                        top: -177%;
-                        right: 52%;
+                        top: -251%;
+                        right: 62%;
                         z-index: 2;
                     }
                 }
@@ -1085,8 +1110,8 @@ a:active {
 
         &__6 {
             position: absolute;
-            left: 85%;
-            bottom: 35%;
+            left: 87%;
+            bottom: 43%;
             width: 10%;
             height: 13%;
             .boot-img {
@@ -1116,8 +1141,8 @@ a:active {
 
         &__7 {
             position: absolute;
-            left: 7%;
-            bottom: 40%;
+            left: 4%;
+            bottom: 53%;
             width: 15%;
             height: 13%;
             .boot-img {
@@ -1147,8 +1172,8 @@ a:active {
 
         &__8 {
             position: absolute;
-            left: 18%;
-            bottom: 25%;
+            left: 13%;
+            bottom: 39%;
             width: 9%;
             height: 13%;
             .boot-img {
@@ -1302,6 +1327,32 @@ $form-check-hover-shadow: rgba(0, 123, 255, 0.5);
     margin-bottom: 0;
 }
 
+.icon-container {
+    height: 15%;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+    object-fit: contain;
+
+    // .icon-bg {
+    //     position: absolute;
+    //     top: 50%;
+    //     left: 50%;
+    //     transform: translate(-50%, -50%);
+    //     z-index: 1;
+    //     width: 100%;
+    //     height: 100%;
+    // }
+
+    .icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 2;
+    }
+}
+
 .dashboard {
     .heading-main {
         font-size: 32px;
@@ -1358,6 +1409,11 @@ $form-check-hover-shadow: rgba(0, 123, 255, 0.5);
         &.completed {
             span {
                 display: none;
+            }
+            img {
+                display: block;
+                width: 28px;
+                height: 28px;
             }
         }
 

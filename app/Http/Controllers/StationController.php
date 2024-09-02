@@ -7,6 +7,8 @@ use App\Models\Station;
 use App\Models\User;
 
 use App\Models\StationUser;
+use App\Models\Brand;
+
 use DB;
 use Auth;
 use Carbon\Carbon;
@@ -22,6 +24,12 @@ class StationController extends Controller
     public function extension(Station $station)
     {
         return view('extension');
+    }
+
+    public function brand(Station $station)
+    {
+        $brands = Brand::get();
+        return view('brand',compact('brands'));
     }
 
     public function welcome()
@@ -59,6 +67,20 @@ class StationController extends Controller
 
         // Get the last character of the QR code message
         $station_id = substr($qrCodeMessage, -1);
+
+        if ($request->has('brand')) {
+            // Fetch the authenticated user
+            $user = User::with('stationUser')->find(auth()->id());
+    
+            if ($user) {
+                // Update the user's brand_id
+                $user->brand_id = $request->brand;
+                $user->save();
+            } else {
+                // Handle case where user is not found (optional)
+                return response()->json(['error' => 'User not found.'], 404);
+            }
+        }
 
     // Assume that `$station_id` is validated before this point
 

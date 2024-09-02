@@ -54,12 +54,12 @@
     place-items: center; /* This centers the image within the container */
 }
 
-.question-img img {
-    max-width: 100%;
-    max-height: 100%;
-    border-radius: 12px;
-    object-fit: cover; /* Ensures the image covers the container while maintaining its aspect ratio */
-}
+    .question-img img {
+        max-width: 100%;
+        max-height: 100%;
+        border-radius: 12px;
+        object-fit: cover; /* Ensures the image covers the container while maintaining its aspect ratio */
+    }
     #question {
         text-align: center;
         color: #358ABF;
@@ -75,6 +75,7 @@
 
     .answers .item {
         width: 100%;
+        color:#358ABF;
         background: #fff;
         border-radius: 12px;
         padding: 20px;
@@ -119,21 +120,36 @@
     .shake {
         animation: shake 0.5s;
     }
+
+
+
+    .brand-img {
+        width:75px;
+        height:auto;
+        margin-left: 115px; /* Space between text and image */
+    }
 </style>
 
-<div class="progress-container">
-    <div class="progress-bar" id="progress-bar" style="width: 0%;"></div>
-</div>
-<h1 class="heading-question">Question <span id="question-number">1</span></h1>
+<h1 class="heading-question">Our Best Seller <span id="question-number"></span></h1>
 <div class="question-description">
     <div class="question-img">
         <img src="" alt="" id="img">
     </div>
     <p id="question"></p>
 </div>
-<div class="answers"></div>
+<div class="answers">
+    @foreach ($brands as $brand)
+                        <button onclick="checkAnswer(this)" class="item shadow-sm" data-id="{{$brand->id}}" style="">
+                            {{$brand->name}}
+                        <img class="brand-img" src="{{ asset('images/brand'.$brand->id.'.png') }}" alt="Lock Image">
+                        </button>
+    
+    @endforeach
+</div>
 
-
+<div class="brand-btn">
+    <button class="button" onclick="continueSelection()" > Continue </button>
+</div>
 
 <div class="modal fade " id="scanCompleteModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
@@ -166,33 +182,29 @@
 <script>
 const questions = [
     {
-        question: "In which year Mentholatum Trademark was registered?",
-        choices: ["1889", "1895", "2009"],
-        correctAnswer: "1895"
+        question: "Which is your first use brand?",
     },
-    {
-        question: "Mentholatum celebrates its ______ anniversary in year 2024",
-        choices: ["135th", "133rd", "100th"],
-        correctAnswer: "135th"
-    },
-    {
-        question: "Rohto Mentholatum Malaysia (RMM) launched the first skincare product _____ in year 2009",
-        choices: ["Sunplay", "OXY", "Hada Labo"],
-        correctAnswer: "Hada Labo"
-    }
 ];
 
 let currentQuestionIndex = 0;
 
-function shuffle(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-}
+function continueSelection() {
+            // Find the selected button
+            const selectedButton = document.querySelector('.item.selected');
 
-function sendMessage() {
+            if (selectedButton) {
+                // Get the data-id attribute of the selected button
+                const selectedId = selectedButton.getAttribute('data-id');
+                console.log('Selected ID:', selectedId);
+                sendMessage(selectedId);
+
+            } else {
+                console.log('No item selected');
+            }
+        }
+
+
+function sendMessage(id) {
             // Fetch the CSRF token from the meta tag
             var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
@@ -203,16 +215,15 @@ function sendMessage() {
                     'X-CSRF-TOKEN': csrfToken, // Include the CSRF token in the headers
                 },
                 data: {
-                    qrCodeMessage: 'example.com?station=1',
-                    station: 1
+                    qrCodeMessage: 'example.com?station=2',
+                    station: 2,
+                    brand:id
                 },
                 success: function(response) {
                     console.log('QR Code message sent successfully:', response);
                     // Handle success response if needed
-                 
-
-                  
-                        $('.station_id').html('1');
+                
+                        $('.station_id').html('2');
                   
                     $(scanCompleteModal).modal('show');
 
@@ -234,77 +245,31 @@ function renderQuestion() {
     const progressBar = document.getElementById('progress-bar');
     const questionNumberElement = document.getElementById('question-number');
     const questionNumberImage = document.getElementById('img');
-questionNumberImage.src = "{{ asset('images/') }}" + '/Q' + (currentQuestionIndex + 1) + '.png';
-
-
-
-
-    // Clear previous answers
-    answersElement.innerHTML = '';
-
-    // Set question text
+    questionNumberImage.src = "{{ asset('images/logo-large.png') }}";
     questionElement.textContent = questions[currentQuestionIndex].question;
-    
 
-    // Update question number
-    questionNumberElement.textContent = currentQuestionIndex + 1;
 
-    // Update progress bar
-    const progressPercentage = ((currentQuestionIndex + 1) / questions.length) * 100;
-    progressBar.style.width = progressPercentage + '%';
 
-    // Shuffle and create answer buttons
-    const shuffledChoices = shuffle([...questions[currentQuestionIndex].choices]);
-    shuffledChoices.forEach(choice => {
-        const button = document.createElement('button');
-        button.classList.add('item', 'shadow-sm');
-        button.textContent = choice;
-        button.addEventListener('click', () => checkAnswer(button, choice));
-        answersElement.appendChild(button);
-    });
+ 
 }
-
-function checkAnswer(button, selectedAnswer) {
-    const correctAnswer = questions[currentQuestionIndex].correctAnswer;
+function checkAnswer(button) {
     const answerButtons = document.querySelectorAll('.answers .item');
+    
+    answerButtons.forEach((btn) => {
+        btn.style.backgroundColor = ''; // or the default color
+        btn.style.border = ''; // or the default border
+        btn.style.color = ''; // or the default color
+        btn.classList.remove('selected')
+    });
 
-    if (selectedAnswer === correctAnswer) {
-        button.style.backgroundColor = '#0C5A40';
-        button.style.border = '2px solid #fff';
-        button.style.color = '#fff';
-        setTimeout(() => {
-            currentQuestionIndex++;
-            if (currentQuestionIndex < questions.length) {
-                renderQuestion();
-            } else {
-                sendMessage();
-                var firstStationId = 1;
-                // var url = "{{ route('station', ['station' => ':id']) }}".replace(':id', firstStationId) + "?questionComplete=true";
-                // window.location.href = url;
-            }
-        }, 500);
-    } else {
-        button.style.backgroundColor = '#FF0000';
-        button.style.border = '2px solid #fff';
-        button.style.color = '#fff';
-        document.body.classList.add('shake'); // Add shake class
-        navigator.vibrate(1000); // Vibrate for 500ms
-        setTimeout(() => {
-            document.body.classList.remove('shake'); // Remove shake class
-        }, 500); // Duration of the shake animation
-
-        // No longer highlighting the correct answer
-
-        setTimeout(() => {
-            answerButtons.forEach(btn => {
-                btn.style.backgroundColor = '';
-                btn.style.border = ''; // Reset border
-                btn.style.color = '';
-            });
-            // Re-render the question with shuffled choices
-            renderQuestion();
-        }, 2000);
-    }
+    // Apply styles to the clicked button
+    button.style.backgroundColor = '#8BC28C';
+    button.style.border = '2px solid #fff';
+    button.style.color = '#fff';
+    
+    // Add 'selected' class to the current button
+    button.classList.add('selected');
+     
 }
 
 // Initialize the first question

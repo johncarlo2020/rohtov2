@@ -20,49 +20,52 @@ class StationSeeder extends Seeder
      */
     public function run()
     {
-
         Station::create([
             'name' => 'History Wall',
-            'required'=>true
+            'required' => true,
+            'nurse' => 'Rohto',
         ]);
 
         Station::create([
             'name' => 'Best Seller',
-            'required'=>true
-
+            'required' => true,
+            'nurse' => 'Rohto',
         ]);
 
         Station::create([
             'name' => 'Haircare (Scalp Check)',
-            'required'=>true
-
+            'required' => true,
+            'nurse' => 'Selsun',
         ]);
 
         Station::create([
             'name' => 'Skin Care (Skin Check)',
-            'required'=>true
-
+            'required' => true,
+            'nurse' => 'Hada Labo',
         ]);
 
         Station::create([
             'name' => 'Photobooth',
-            'required'=>false
-
+            'required' => false,
+            'nurse' => 'Rohto',
         ]);
 
         Station::create([
             'name' => 'Sun Protection (UV Camera)',
-            'required'=>false
+            'required' => false,
+            'nurse' => 'Sunplay',
         ]);
 
         Station::create([
             'name' => 'Lip Care (Puzzle)',
-            'required'=>false
+            'required' => false,
+            'nurse' => 'Mentholatum',
         ]);
 
         Station::create([
             'name' => 'Acne & Eye Care (Eye Check)',
-            'required'=>false
+            'required' => false,
+            'nurse' => 'OXY',
         ]);
 
         Brand::create([
@@ -104,13 +107,10 @@ class StationSeeder extends Seeder
             'dob' => 'admin',
             'number' => '0123456789',
             'email' => 'admin@gmail.com',
-            'country'=> 'Malaysia',
+            'country' => 'Malaysia',
             'password' => Hash::make('WowsomeWardah'),
         ]);
 
         $user->assignRole('admin');
-
-
-
     }
 }

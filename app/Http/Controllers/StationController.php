@@ -46,16 +46,99 @@ class StationController extends Controller
             $station->status = $userHasStation;
         }
 
-        return view('puzzle',compact('stations','stationDone'));
+        $userId = Auth::id();
+
+        $required = DB::table('stations')
+            ->leftJoin('station_users', function ($join) use ($userId) {
+                $join->on('stations.id', '=', 'station_users.station_id')
+                    ->where('station_users.user_id', '=', $userId);
+            })
+            ->select('stations.id as station_id', 'stations.name as station_name', DB::raw('IF(station_users.station_id IS NULL, false, true) as is_gotten'))
+            ->distinct()
+            ->where('required',1)
+            ->get();
+        $puzzleRequired = DB::table('stations')
+            ->leftJoin('station_users', function ($join) use ($userId) {
+                $join->on('stations.id', '=', 'station_users.station_id')
+                    ->where('station_users.user_id', '=', $userId);
+            })
+            ->select('stations.id as station_id', 'stations.name as station_name', DB::raw('IF(station_users.station_id IS NULL, false, true) as is_gotten'))
+            ->distinct()
+            ->where('required',1)
+            ->orderBy('station_id','asc')
+            ->get();
+            // dd($required);
+        $notRequired = DB::table('stations')
+            ->leftJoin('station_users', function ($join) use ($userId) {
+                $join->on('stations.id', '=', 'station_users.station_id')
+                     ->where('station_users.user_id', '=', $userId);
+            })
+            ->select('stations.id as station_id', 'stations.name as station_name', DB::raw('IF(station_users.station_id IS NULL, false, true) as is_gotten'))
+            ->where('stations.required', 0) // Prioritize is_gotten=true, then order by station_id
+            
+            ->limit(2)
+            ->get();
+        $puzzleNotRequired = DB::table('stations')
+            ->leftJoin('station_users', function ($join) use ($userId) {
+                $join->on('stations.id', '=', 'station_users.station_id')
+                     ->where('station_users.user_id', '=', $userId);
+            })
+            ->select('stations.id as station_id', 'stations.name as station_name', DB::raw('IF(station_users.station_id IS NULL, false, true) as is_gotten'))
+            ->where('stations.required', 0)
+            ->orderByRaw('is_gotten DESC, station_id ASC')  // Prioritize is_gotten=true, then order by station_id
+            ->limit(2)
+            ->get();
+
+        $nurse =   DB::table('stations')
+        ->leftJoin('station_users', function ($join) use ($userId) {
+            $join->on('stations.id', '=', 'station_users.station_id')
+                ->where('station_users.user_id', '=', $userId);
+        })
+        ->select('stations.id as station_id', 'stations.name as station_name', 'stations.nurse as station_nurse', DB::raw('IF(station_users.station_id IS NULL, false, true) as is_gotten'))
+        ->distinct()
+        ->orderBy('stations.id','asc')
+        ->get();
+
+        return view('puzzle',compact('stations','stationDone','required','notRequired','puzzleRequired','puzzleNotRequired','nurse'));
     }
 
     public function brands()
     {
-        return view('brands');
+        $brands = DB::table('brands')
+        ->leftJoin('users', 'brands.id', '=', 'users.brand_id')
+        ->select('brands.id as brand_id', 'brands.name as brand_name', DB::raw('COUNT(users.id) as count'))
+        ->groupBy('brands.id', 'brands.name')
+        ->get();
+        // dd($brands);
+        return view('brands',compact('brands'));
     }
 
     public function welcome()
     {
+        
+        $userId = Auth::id();
+
+        $required = DB::table('stations')
+            ->leftJoin('station_users', function ($join) use ($userId) {
+                $join->on('stations.id', '=', 'station_users.station_id')
+                    ->where('station_users.user_id', '=', $userId);
+            })
+            ->select('stations.id as station_id', 'stations.name as station_name', DB::raw('IF(station_users.station_id IS NULL, false, true) as is_gotten'))
+            ->distinct()
+            ->where('required',1)
+            ->get();
+            // dd($required);
+        $notRequired = DB::table('stations')
+            ->leftJoin('station_users', function ($join) use ($userId) {
+                $join->on('stations.id', '=', 'station_users.station_id')
+                    ->where('station_users.user_id', '=', $userId);
+            })
+            ->select('stations.id as station_id', 'stations.name as station_name', DB::raw('IF(station_users.station_id IS NULL, false, true) as is_gotten'))
+            ->distinct()
+            ->where('required',0)
+            ->limit(2)
+            ->get();
+
         $user = User::with('stationUser')->where('id', auth()->id())->first();
         // dd($user->stationUser->count());
 
@@ -70,7 +153,7 @@ class StationController extends Controller
 
         if($stationDone < 6)
         {
-            return view('dashboard',compact('stations','stationDone'));
+            return view('dashboard',compact('stations','stationDone','required','notRequired'));
 
 
         }else{

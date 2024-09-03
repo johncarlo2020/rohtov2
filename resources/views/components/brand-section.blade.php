@@ -166,7 +166,7 @@
                             </p>
                         </div>
                         <div class="">
-                            <a href="{{ route('dashboard') }}" class="button">
+                            <a href="{{ route('station.brands') }}" class="button">
                                 Okay
                             </a>
                         </div>

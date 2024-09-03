@@ -41,6 +41,10 @@
             width: 58px;
             height: 58px;
         }
+        .old{
+            -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+            filter: grayscale(100%); 
+        }
     </style>
     <div class="container-fluid start home dashboard">
         <div class="row justify-content-center">
@@ -50,36 +54,47 @@
                 </div>
                 <p class="mt-5 station-progress-heading">Station Progress</p>
                 <div class="badge-container">
-                    @for ($i = 1; $i <= 7; $i++) @if($i !=7) <div
-                        class="badge {{ $i <= $stationDone ? 'completed' : '' }}">
-                        <span>?</span>
-                        <img src="{{ asset('images/badge1.png') }}" alt="">
-                </div>
-                @else
-                <div class="badge with-img completed {{ $i <= $stationDone ? 'completed' : '' }}">
-                    <span>
-                        <img src="{{ asset('images/gift.png') }}" alt="">
-                    </span>
-                </div>
-                @endif
-                @endfor
+                @foreach ($required as $item)
+                        <div class="badge {{ $item->is_gotten == 1 ? 'completed' : '' }}">
+                            <span>?</span>
+                            <img src="{{ asset('images/badge'.$item->station_id.'.png') }}" alt="">
+                        </div>
+                @endforeach
+                @foreach ($notRequired as $item)
+                        <div class="badge {{ $item->is_gotten == 1 ? 'completed' : '' }}">
+                            <span>?</span>
+                            <img src="{{ asset('images/badge'.$item->station_id.'.png') }}" alt="">
+                        </div>
+                @endforeach
+                
+                        <div class="badge with-img completed ">
+                            <span>
+                                <img src="{{ asset('images/gift.png') }}" alt="">
+                            </span>
+                        </div>
             </div>
             <div class="mt-3 text-center col-12 text-content">
                 <div class="puzzle-container">
-                    @for ($i = 1; $i <= 6; $i++)
+                @foreach ($puzzleRequired as $item)
                         <div class="puzzle-piece">
-                            <img src="{{ asset('images/puzzle/' .$i.'.png') }}" alt="">
+                            <img class="{{ $item->is_gotten == 1 ? '' : 'd-none' }}" src="{{ asset('images/puzzle/' .$item->station_id.'.png') }}" alt="">
                         </div>
-                    @endfor
+                @endforeach
+                @foreach ($puzzleNotRequired as $item)
+                    <div class="puzzle-piece">
+                        <img class="{{ $item->is_gotten == 1 ? '' : 'd-none' }}" src="{{ asset('images/puzzle/' . $loop->iteration+4 . '.png') }}" alt="">
+                    </div>
+                @endforeach
                 </div>
                 <p class="mt-3 station-progress-heading">Little Nurse</p>
                 <div class="badge-container-bottom">
-                    @for ($i = 1; $i <= 8; $i++)
-                    <div class="badge-piece">
-                        <img src="{{ asset('images/badge1.png') }}">
-                        <p class="badge-text">Little Nurse</p>
-                    </div>
-                @endfor
+                    @foreach ($nurse as $item)
+                        <div class="badge-piece">
+                            <img class="{{ $item->is_gotten == 1 ? '' : 'old' }}" src="{{ asset('images/badge'.$item->station_id.'.png') }}">
+                            <p class="badge-text ">{{$item->station_nurse}} Nurse</p>
+                        </div> 
+                    @endforeach
+                   
                 </div>
             </div>
         </div>

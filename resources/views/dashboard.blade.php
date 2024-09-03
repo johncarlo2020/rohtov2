@@ -11,24 +11,28 @@
                 </h1>
             </div>
             <div class="icon-girl">
-                <img class=""  src="{{ asset('images/girlIcon.png') }}" alt="">
+                <img onclick="puzzle()" class=""  src="{{ asset('images/girlIcon.png') }}" alt="">
             </div>
             <p class="station-progress-heading">Station Progress</p>
             <div class="badge-container">
-                @for ($i = 1; $i <= 7; $i++)
-                    @if($i != 7)
-                        <div class="badge {{ $i <= $stationDone ? 'completed' : '' }}">
+                @foreach ($required as $item)
+                        <div class="badge {{ $item->is_gotten == 1 ? 'completed' : '' }}">
                             <span>?</span>
-                            <img src="{{ asset('images/badge'.$i.'.png') }}" alt="">
+                            <img src="{{ asset('images/badge'.$item->station_id.'.png') }}" alt="">
                         </div>
-                    @else
-                        <div class="badge with-img completed {{ $i <= $stationDone ? 'completed' : '' }}">
+                @endforeach
+                @foreach ($notRequired as $item)
+                        <div class="badge {{ $item->is_gotten == 1 ? 'completed' : '' }}">
+                            <span>?</span>
+                            <img src="{{ asset('images/badge'.$item->station_id.'.png') }}" alt="">
+                        </div>
+                @endforeach
+                
+                        <div class="badge with-img completed ">
                             <span>
                                 <img src="{{ asset('images/gift.png') }}" alt="">
                             </span>
                         </div>
-                    @endif
-                @endfor
             </div>
             <div class="mt-3 text-center col-12 text-content">
                 <div class="map">
@@ -66,6 +70,11 @@
    function gotoStation(id) {
     // Construct the URL with the 'id' parameter dynamically
     var url = "{{ route('station', ['station' => ':id']) }}".replace(':id', id);
+    // Redirect to the generated URL
+    window.location.href = url;
+}
+function puzzle(){
+    var url = "{{ route('station.puzzle')}}";
     // Redirect to the generated URL
     window.location.href = url;
 }

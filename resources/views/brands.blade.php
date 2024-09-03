@@ -83,7 +83,6 @@
             margin-bottom: 0;
         }
         .brand-btn {
-            width: 171px;
             border-radius: 36px;
         }
     </style>
@@ -98,18 +97,20 @@
             </div>
             <div class="mt-2 text-center col-12">
                 <div class="px-3 row brand-container">
-                    @for ($i = 0; $i < 7; $i++)
-                        <div class="p-2 col-6">
+                    @foreach ($brands as $brand)
+                    <div class="p-2 col-6">
                             <div class="brand-details">
-                                <img src="{{ asset('images/brand.png') }}" alt="">
-                                <p class="brand-count">30</p>
-                                <p class="brand-text">Hydration lotion (Rich)</p>
+                                <img src="{{ asset('images/brand'.$brand->brand_id.'.png') }}" alt="">
+                                <p class="brand-count">{{$brand->count}}</p>
+                                <p class="brand-text">{{$brand->brand_name}}</p>
                             </div>
                         </div>
-                    @endfor
+                    @endforeach 
                 </div>
-                <div class="mt-4 button-container">
-                    <button class="btn btn-primary brand-btn">DONE</button>
+                <div class="mt-4 brand-btn">
+                <a  href="{{ route('dashboard') }}" class="button">
+                                Okay
+                            </a>
                 </div>
             </div>
         </div>

@@ -943,7 +943,7 @@ a:active {
             position: absolute;
             width: 20px;
             height: 20px;
-            background-color: #faeab9;
+            background-color: #faeab9; /* Default background color */
             color: $primary;
             font-size: 10px;
             font-weight: 600;
@@ -979,6 +979,8 @@ a:active {
                         top: -255%;
                         right: -10%;
                         z-index: 2;
+                        background-color: #40a355;
+                        color: white;
                     }
                 }
             }
@@ -1010,6 +1012,8 @@ a:active {
                         top: -255%;
                         right: -10%;
                         z-index: 3;
+                        background-color: #40a355;
+                        color: white;
                     }
                 }
             }
@@ -1041,6 +1045,8 @@ a:active {
                         top: -255%;
                         right: 61%;
                         z-index: 2;
+                        background-color: #40a355;
+                        color: white;
                     }
                 }
             }
@@ -1072,6 +1078,8 @@ a:active {
                         top: -177%;
                         right: 52%;
                         z-index: 2;
+                        background-color: #40a355;
+                        color: white;
                     }
                 }
             }
@@ -1103,6 +1111,8 @@ a:active {
                         top: -251%;
                         right: 62%;
                         z-index: 2;
+                        background-color: #ffff77;
+                        color: black;
                     }
                 }
             }
@@ -1134,6 +1144,8 @@ a:active {
                         top: -283%;
                         right: -19%;
                         z-index: 2;
+                        background-color: #ffff77;
+                        color: black;
                     }
                 }
             }
@@ -1165,6 +1177,8 @@ a:active {
                         top: -285%;
                         right: 68%;
                         z-index: 2;
+                        background-color: #ffff77;
+                        color: black;
                     }
                 }
             }
@@ -1196,6 +1210,8 @@ a:active {
                         top: -285%;
                         right: -12%;
                         z-index: 2;
+                        background-color: #ffff77;
+                        color: black;
                     }
                 }
             }

@@ -4,7 +4,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        <title>Wardah</title>
+        <title>Rohto</title>
 
         @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
@@ -75,9 +75,7 @@
                         alt=""
                     />
                 </div>
-                <a href="https://wardahbeauty.com/"
-                    >CLick Here for more information</a
-                >
+                <a href="">CLick Here for more information</a>
             </div>
         </div>
     </body>

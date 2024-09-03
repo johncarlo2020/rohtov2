@@ -108,7 +108,7 @@ class StationSeeder extends Seeder
             'number' => '0123456789',
             'email' => 'admin@gmail.com',
             'country' => 'Malaysia',
-            'password' => Hash::make('WowsomeWardah'),
+            'password' => Hash::make('WowsomeRohto'),
         ]);
 
         $user->assignRole('admin');

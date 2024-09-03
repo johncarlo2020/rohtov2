@@ -25,13 +25,12 @@ class AddViewer extends Seeder
 
             'number' => '0123456789',
             'email' => 'viewer@gmail.com',
-            'country'=> 'Malaysia',
-            'password' => Hash::make('WowsomeWardahViewer'),
+            'country' => 'Malaysia',
+            'password' => Hash::make('WowsomeRohtoViewer'),
         ]);
 
         $permission = Permission::create(['name' => 'view']);
         $permission = Permission::create(['name' => 'full']);
-
 
         $user->assignRole('admin');
 
@@ -39,6 +38,5 @@ class AddViewer extends Seeder
 
         $user2 = User::find(1);
         $user2->givePermissionTo('full');
-
     }
 }

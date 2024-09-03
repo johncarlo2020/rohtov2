@@ -34,8 +34,7 @@ Route::get('/admin/login', function () {
 
 Route::get('/congrats', function () {
     return view('congrats');
-});
-
+})->name('congrats');
 
 Route::group(['middleware' => ['admin']], function () {
     Route::get('/admin', 'App\Http\Controllers\StationController@admin')->name('admin');
@@ -43,8 +42,6 @@ Route::group(['middleware' => ['admin']], function () {
     Route::get('/admin/{user}', 'App\Http\Controllers\StationController@userData')->name('userData');
     Route::post('/admin/check', 'App\Http\Controllers\StationController@check')->name('check');
 });
-
-
 
 Route::group(['middleware' => ['client']], function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -59,4 +56,4 @@ Route::group(['middleware' => ['client']], function () {
     Route::get('/brands', 'App\Http\Controllers\StationController@brands')->name('station.brands');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

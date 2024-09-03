@@ -5,21 +5,21 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Station;
 use App\Models\User;
-
 use App\Models\StationUser;
 use App\Models\Brand;
-
 use DB;
 use Auth;
 use Carbon\Carbon;
+
 class StationController extends Controller
 {
     public function index(Station $station)
     {
-        $user = StationUser::where('user_id',auth()->id())->where('station_id',$station->id)->exists();
+        $user = StationUser::where('user_id', auth()->id())
+            ->where('station_id', $station->id)
+            ->exists();
 
-
-        return view('station',compact('station','user'));
+        return view('station', compact('station', 'user'));
     }
     public function extension(Station $station)
     {
@@ -29,11 +29,10 @@ class StationController extends Controller
     public function brand(Station $station)
     {
         $brands = Brand::get();
-        return view('brand',compact('brands'));
+        return view('brand', compact('brands'));
     }
     public function puzzle(Station $station)
     {
-
         $user = User::with('stationUser')->where('id', auth()->id())->first();
         // dd($user->stationUser->count());
 
@@ -42,7 +41,10 @@ class StationController extends Controller
 
         // Loop through each station and append a flag indicating if the user has it
         foreach ($stations as $station) {
-            $userHasStation = $user->StationUser()->where('station_id', $station->id)->exists();
+            $userHasStation = $user
+                ->StationUser()
+                ->where('station_id', $station->id)
+                ->exists();
             $station->status = $userHasStation;
         }
 
@@ -50,94 +52,96 @@ class StationController extends Controller
 
         $required = DB::table('stations')
             ->leftJoin('station_users', function ($join) use ($userId) {
-                $join->on('stations.id', '=', 'station_users.station_id')
-                    ->where('station_users.user_id', '=', $userId);
+                $join->on('stations.id', '=', 'station_users.station_id')->where('station_users.user_id', '=', $userId);
             })
             ->select('stations.id as station_id', 'stations.name as station_name', DB::raw('IF(station_users.station_id IS NULL, false, true) as is_gotten'))
             ->distinct()
-            ->where('required',1)
+            ->orderByRaw('is_gotten DESC')
+            ->where('required', 1)
             ->get();
         $puzzleRequired = DB::table('stations')
             ->leftJoin('station_users', function ($join) use ($userId) {
-                $join->on('stations.id', '=', 'station_users.station_id')
-                    ->where('station_users.user_id', '=', $userId);
+                $join->on('stations.id', '=', 'station_users.station_id')->where('station_users.user_id', '=', $userId);
             })
             ->select('stations.id as station_id', 'stations.name as station_name', DB::raw('IF(station_users.station_id IS NULL, false, true) as is_gotten'))
             ->distinct()
-            ->where('required',1)
-            ->orderBy('station_id','asc')
+            ->where('required', 1)
+            ->orderBy('station_id', 'asc')
             ->get();
-            // dd($required);
+        // dd($required);
         $notRequired = DB::table('stations')
             ->leftJoin('station_users', function ($join) use ($userId) {
-                $join->on('stations.id', '=', 'station_users.station_id')
-                     ->where('station_users.user_id', '=', $userId);
+                $join->on('stations.id', '=', 'station_users.station_id')->where('station_users.user_id', '=', $userId);
             })
             ->select('stations.id as station_id', 'stations.name as station_name', DB::raw('IF(station_users.station_id IS NULL, false, true) as is_gotten'))
             ->where('stations.required', 0) // Prioritize is_gotten=true, then order by station_id
-            
+            ->orderByRaw('is_gotten DESC')
             ->limit(2)
             ->get();
         $puzzleNotRequired = DB::table('stations')
             ->leftJoin('station_users', function ($join) use ($userId) {
-                $join->on('stations.id', '=', 'station_users.station_id')
-                     ->where('station_users.user_id', '=', $userId);
+                $join->on('stations.id', '=', 'station_users.station_id')->where('station_users.user_id', '=', $userId);
             })
             ->select('stations.id as station_id', 'stations.name as station_name', DB::raw('IF(station_users.station_id IS NULL, false, true) as is_gotten'))
             ->where('stations.required', 0)
-            ->orderByRaw('is_gotten DESC, station_id ASC')  // Prioritize is_gotten=true, then order by station_id
+            ->orderByRaw('is_gotten DESC, station_id ASC') // Prioritize is_gotten=true, then order by station_id
             ->limit(2)
             ->get();
 
-        $nurse =   DB::table('stations')
-        ->leftJoin('station_users', function ($join) use ($userId) {
-            $join->on('stations.id', '=', 'station_users.station_id')
-                ->where('station_users.user_id', '=', $userId);
-        })
-        ->select('stations.id as station_id', 'stations.name as station_name', 'stations.nurse as station_nurse', DB::raw('IF(station_users.station_id IS NULL, false, true) as is_gotten'))
-        ->distinct()
-        ->orderBy('stations.id','asc')
-        ->get();
+        $nurse = DB::table('stations')
+            ->leftJoin('station_users', function ($join) use ($userId) {
+                $join->on('stations.id', '=', 'station_users.station_id')->where('station_users.user_id', '=', $userId);
+            })
+            ->select('stations.id as station_id', 'stations.name as station_name', 'stations.nurse as station_nurse', DB::raw('IF(station_users.station_id IS NULL, false, true) as is_gotten'))
+            ->distinct()
+            ->orderBy('stations.id', 'asc')
+            ->get();
 
-        return view('puzzle',compact('stations','stationDone','required','notRequired','puzzleRequired','puzzleNotRequired','nurse'));
+        return view('puzzle', compact('stations', 'stationDone', 'required', 'notRequired', 'puzzleRequired', 'puzzleNotRequired', 'nurse'));
     }
 
     public function brands()
     {
-        $brands = DB::table('brands')
-        ->leftJoin('users', 'brands.id', '=', 'users.brand_id')
-        ->select('brands.id as brand_id', 'brands.name as brand_name', DB::raw('COUNT(users.id) as count'))
-        ->groupBy('brands.id', 'brands.name')
-        ->get();
+        $brands = DB::table('brands')->leftJoin('users', 'brands.id', '=', 'users.brand_id')->select('brands.id as brand_id', 'brands.name as brand_name', DB::raw('COUNT(users.id) as count'))->groupBy('brands.id', 'brands.name')->get();
         // dd($brands);
-        return view('brands',compact('brands'));
+        return view('brands', compact('brands'));
     }
 
     public function welcome()
     {
-        
         $userId = Auth::id();
 
         $required = DB::table('stations')
             ->leftJoin('station_users', function ($join) use ($userId) {
-                $join->on('stations.id', '=', 'station_users.station_id')
-                    ->where('station_users.user_id', '=', $userId);
+                $join->on('stations.id', '=', 'station_users.station_id')->where('station_users.user_id', '=', $userId);
             })
             ->select('stations.id as station_id', 'stations.name as station_name', DB::raw('IF(station_users.station_id IS NULL, false, true) as is_gotten'))
             ->distinct()
-            ->where('required',1)
+            ->orderByRaw('is_gotten DESC')
+            ->where('required', 1)
             ->get();
-            // dd($required);
         $notRequired = DB::table('stations')
             ->leftJoin('station_users', function ($join) use ($userId) {
-                $join->on('stations.id', '=', 'station_users.station_id')
-                    ->where('station_users.user_id', '=', $userId);
+                $join->on('stations.id', '=', 'station_users.station_id')->where('station_users.user_id', '=', $userId);
             })
             ->select('stations.id as station_id', 'stations.name as station_name', DB::raw('IF(station_users.station_id IS NULL, false, true) as is_gotten'))
             ->distinct()
-            ->where('required',0)
+            ->orderByRaw('is_gotten DESC')
+            ->where('required', 0)
             ->limit(2)
             ->get();
+
+        $gift = DB::table('stations')
+            ->leftJoin('station_users', function ($join) use ($userId) {
+                $join->on('stations.id', '=', 'station_users.station_id')->where('station_users.user_id', '=', $userId);
+            })
+            ->select('stations.id as station_id', 'stations.name as station_name', DB::raw('IF(station_users.station_id IS NULL, false, true) as is_gotten'))
+            ->distinct()
+            ->orderByRaw('is_gotten DESC')
+            ->having('is_gotten', true)
+            ->limit(2)
+            ->get();
+        $claim = count($gift);
 
         $user = User::with('stationUser')->where('id', auth()->id())->first();
         // dd($user->stationUser->count());
@@ -147,26 +151,23 @@ class StationController extends Controller
 
         // Loop through each station and append a flag indicating if the user has it
         foreach ($stations as $station) {
-            $userHasStation = $user->StationUser()->where('station_id', $station->id)->exists();
+            $userHasStation = $user
+                ->StationUser()
+                ->where('station_id', $station->id)
+                ->exists();
             $station->status = $userHasStation;
         }
 
-        if($stationDone < 6)
-        {
-            return view('dashboard',compact('stations','stationDone','required','notRequired'));
-
-
-        }else{
+        if ($stationDone < 6) {
+            return view('dashboard', compact('stations', 'stationDone', 'required', 'notRequired', 'claim'));
+        } else {
             return view('congrats');
         }
-
     }
-
 
     public function scan(Request $request)
     {
         // Parse the URL to get the query string
-
 
         $qrCodeMessage = trim($request->qrCodeMessage);
 
@@ -176,7 +177,7 @@ class StationController extends Controller
         if ($request->has('brand')) {
             // Fetch the authenticated user
             $user = User::with('stationUser')->find(auth()->id());
-    
+
             if ($user) {
                 // Update the user's brand_id
                 $user->brand_id = $request->brand;
@@ -187,52 +188,50 @@ class StationController extends Controller
             }
         }
 
-    // Assume that `$station_id` is validated before this point
+        // Assume that `$station_id` is validated before this point
 
-    try {
-        DB::beginTransaction();
+        try {
+            DB::beginTransaction();
 
-        if($station_id != $request->station){
-            return response()->json(['message' => 'Invalid Qr','status'=>'error'], 401);
+            if ($station_id != $request->station) {
+                return response()->json(['message' => 'Invalid Qr', 'status' => 'error'], 401);
+            }
+
+            $lastStation = StationUser::where('user_id', auth()->id())->orderBy('id', 'desc')->first();
+
+            if (empty($lastStation)) {
+                $lastLoginTime = Auth::user()->last_login_at;
+                $currentDateTime = Carbon::now();
+                $timeSpent = $currentDateTime->diff($lastLoginTime);
+                $minutesSpent = $timeSpent->i; // Minutes spent
+                $secondsDifference = $timeSpent->s; // Seconds
+
+                // Convert minutes to seconds
+                $secondsSpent = $minutesSpent * 60 + $secondsDifference;
+            } else {
+                $lastLoginTime = $lastStation->created_at;
+                $currentDateTime = Carbon::now();
+                $timeSpent = $currentDateTime->diff($lastLoginTime);
+                $minutesSpent = $timeSpent->i; // Minutes spent
+                $secondsDifference = $timeSpent->s; // Seconds
+                // Convert minutes to seconds
+                $secondsSpent = $minutesSpent * 60 + $secondsDifference;
+            }
+
+            $stationUser = new StationUser();
+            $stationUser->user_id = auth()->id();
+            $stationUser->station_id = $station_id;
+            $stationUser->time_spent = $secondsSpent;
+            $stationUser->save();
+            DB::commit();
+            // Success response
+            return response()->json(['message' => 'Station ID updated successfully'], 200);
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            // Handle the error, log it, or return an appropriate response
+            return response()->json(['error' => $e], 500);
         }
-
-        $lastStation = StationUser::where('user_id', auth()->id())->orderBy('id','desc')->first();
-
-        if(empty($lastStation)){
-            $lastLoginTime = Auth::user()->last_login_at;
-            $currentDateTime = Carbon::now();
-            $timeSpent = $currentDateTime->diff($lastLoginTime);
-            $minutesSpent = $timeSpent->i; // Minutes spent
-            $secondsDifference = $timeSpent->s; // Seconds
-
-            // Convert minutes to seconds
-            $secondsSpent = ($minutesSpent * 60)+$secondsDifference;
-        }else{
-            $lastLoginTime = $lastStation->created_at;
-            $currentDateTime = Carbon::now();
-            $timeSpent = $currentDateTime->diff($lastLoginTime);
-            $minutesSpent = $timeSpent->i; // Minutes spent
-            $secondsDifference = $timeSpent->s; // Seconds
-            // Convert minutes to seconds
-            $secondsSpent = ($minutesSpent * 60)+$secondsDifference;
-
-        }
-
-        $stationUser = new StationUser;
-        $stationUser->user_id = auth()->id();
-        $stationUser->station_id = $station_id;
-        $stationUser->time_spent = $secondsSpent;
-        $stationUser->save();
-        DB::commit();
-        // Success response
-        return response()->json(['message' => 'Station ID updated successfully'], 200);
-    } catch (\Exception $e) {
-        DB::rollback();
-
-        // Handle the error, log it, or return an appropriate response
-        return response()->json(['error' => $e,], 500);
-    }
-
     }
 
     public function admin()
@@ -241,7 +240,7 @@ class StationController extends Controller
         $permission = $admin->getPermissionNames()->first();
         $today = Carbon::today();
         $startDate = Carbon::create(2024, 7, 10);
-        $data['users'] = User::with('stationUser')->take(4)->orderBy('id','desc')->get();
+        $data['users'] = User::with('stationUser')->take(4)->orderBy('id', 'desc')->get();
         $data['usersCount'] = User::whereDate('created_at', '>=', $startDate->toDateString())->count();
         $data['userToday'] = User::whereDate('created_at', $today)->count();
         $usersWithSixStationUsers = User::with('stationUser')->whereDate('created_at', '>=', $startDate->toDateString())->has('stationUser', '>=', 5)->count();
@@ -251,27 +250,15 @@ class StationController extends Controller
 
         if ($data['usersCount'] > 0) {
             $data['percentage'] = number_format(($usersWithSixStationUsers / $data['usersCount']) * 100, 2);
-
         } else {
             $data['percentage'] = 0; // Avoid division by zero
         }
-        $userCounts = User::selectRaw('DATE(created_at) as date, COUNT(*) as count')
-            ->groupBy('date')
-            ->orderBy('date')
-            ->get()
-            ->toArray();
+        $userCounts = User::selectRaw('DATE(created_at) as date, COUNT(*) as count')->groupBy('date')->orderBy('date')->get()->toArray();
 
         $userCountsArray = [];
-        $data['dates'] = User::select(
-            DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as date')
-        )
-        ->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
-        ->groupBy('date')
-        ->get();
-
+        $data['dates'] = User::select(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as date'))->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())->groupBy('date')->get();
 
         //   dd($data['where']);
-
 
         $data['registrationsPerHour'] = User::select(
             DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as date'),
@@ -280,29 +267,24 @@ class StationController extends Controller
                 IF((DATE_FORMAT(created_at, "%H") + 8) >= 12, "pm", "am")
             ) as hour'),
 
-
-
-            DB::raw('COUNT(*) as registrations')
+            DB::raw('COUNT(*) as registrations'),
         )
-        ->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
+            ->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
 
-        ->groupBy('date', 'hour')
-        ->get()
-        ->groupBy('date');
+            ->groupBy('date', 'hour')
+            ->get()
+            ->groupBy('date');
         //  dd($data);
 
         foreach ($userCounts as $userCount) {
-            if($userCount['date'] >= $startDate->toDateString())
-            $userCountsArray[$userCount['date']] = $userCount['count'];
+            if ($userCount['date'] >= $startDate->toDateString()) {
+                $userCountsArray[$userCount['date']] = $userCount['count'];
+            }
         }
         $data['usersDaily'] = $userCountsArray;
         // $completed = StationUser::w
 
-        $averageTimespentByStation = StationUser::select('station_id', \DB::raw('AVG(time_spent) as average_timespent'))
-            ->groupBy('station_id')
-            ->get()
-            ->keyBy('station_id');
-
+        $averageTimespentByStation = StationUser::select('station_id', \DB::raw('AVG(time_spent) as average_timespent'))->groupBy('station_id')->get()->keyBy('station_id');
 
         $stations = Station::pluck('name', 'id');
 
@@ -313,7 +295,6 @@ class StationController extends Controller
             $numStations = count($userStations);
 
             $user->stations = $stations->map(function ($name, $id) use ($userStations, $averageTimespentByStation) {
-
                 return [
                     'name' => $name,
                     'value' => in_array($id, $userStations),
@@ -323,25 +304,19 @@ class StationController extends Controller
 
         $data['stations'] = $stations->map(function ($name, $id) use ($userStations, $averageTimespentByStation) {
             return [
-                'name' =>$name,
-                'average_timespent' => number_format(($averageTimespentByStation->get($id)['average_timespent'] ?? 0) / 60, 2)
-
+                'name' => $name,
+                'average_timespent' => number_format(($averageTimespentByStation->get($id)['average_timespent'] ?? 0) / 60, 2),
             ];
         });
 
-        $averagePlaytimeByUser = StationUser::select('user_id', DB::raw('SUM(time_spent) / 60 as total_playtime'))
-        ->groupBy('user_id')
-        ->get();
-
+        $averagePlaytimeByUser = StationUser::select('user_id', DB::raw('SUM(time_spent) / 60 as total_playtime'))->groupBy('user_id')->get();
 
         $totalAveragePlaytime = $averagePlaytimeByUser->avg('total_playtime');
         // dd($totalAveragePlaytime);
-                //dd($data['users'][0]['stations']);
-                //  dd($data);
+        //dd($data['users'][0]['stations']);
+        //  dd($data);
 
-
-
-        return view('dashboardadmin',compact('data','permission'));
+        return view('dashboardadmin', compact('data', 'permission'));
     }
     public function users()
     {
@@ -349,21 +324,15 @@ class StationController extends Controller
         $permission = auth()->user()->getPermissionNames()->first();
 
         $startDate = Carbon::create(2024, 5, 24);
-        $data['users'] = User::whereDate('created_at', '>=', $startDate->toDateString())->with('stationUser')->orderBy('id','desc')->get();
+        $data['users'] = User::whereDate('created_at', '>=', $startDate->toDateString())->with('stationUser')->orderBy('id', 'desc')->get();
 
-
-
-        $averageTimespentByStation = StationUser::select('station_id', \DB::raw('AVG(time_spent) as average_timespent'))
-            ->groupBy('station_id')
-            ->get()
-            ->keyBy('station_id');
+        $averageTimespentByStation = StationUser::select('station_id', \DB::raw('AVG(time_spent) as average_timespent'))->groupBy('station_id')->get()->keyBy('station_id');
 
         $stations = Station::pluck('name', 'id');
 
         foreach ($data['users'] as $user) {
             $userStations = $user->stationUser->pluck('station_id')->toArray();
             $user->stations = $stations->map(function ($name, $id) use ($userStations, $averageTimespentByStation) {
-
                 return [
                     'name' => $name,
                     'value' => in_array($id, $userStations),
@@ -373,71 +342,70 @@ class StationController extends Controller
 
         $data['stations'] = $stations->map(function ($name, $id) use ($userStations, $averageTimespentByStation) {
             return [
-                'name' =>$name,
-                'average_timespent' => number_format(($averageTimespentByStation->get($id)['average_timespent'] ?? 0) / 60, 2)
-
+                'name' => $name,
+                'average_timespent' => number_format(($averageTimespentByStation->get($id)['average_timespent'] ?? 0) / 60, 2),
             ];
         });
         //dd($data['users'][0]['stations']);
         //  dd($data);
 
-
-
-        return view('users',compact('data','permission'));
-
+        return view('users', compact('data', 'permission'));
     }
 
     public function userData(User $user)
     {
-
-        $averagePlaytimeByUser = StationUser::where('user_id',$user->id)
-        ->avg('time_spent');
+        $averagePlaytimeByUser = StationUser::where('user_id', $user->id)->avg('time_spent');
         $permission = auth()->user()->getPermissionNames()->first();
 
         $stations = Station::pluck('name', 'id');
 
-        $averageTimespentByStation = StationUser::where('user_id',$user->id)->orderBy('id','asc')->get();
-        $total = StationUser::where('user_id',$user->id)->orderBy('id','asc')->sum('time_spent');
-        $totalMinutes = $total/60;
+        $averageTimespentByStation = StationUser::where('user_id', $user->id)
+            ->orderBy('id', 'asc')
+            ->get();
+        $total = StationUser::where('user_id', $user->id)
+            ->orderBy('id', 'asc')
+            ->sum('time_spent');
+        $totalMinutes = $total / 60;
         $totalMinutes = number_format($totalMinutes, 2);
 
+        $userStations = $user->stationUser->pluck('station_id')->toArray();
+        $numStations = count($userStations);
 
-            $userStations = $user->stationUser->pluck('station_id')->toArray();
-            $numStations = count($userStations);
+        $user->stations = $stations->map(function ($name, $id) use ($userStations, $user) {
+            $spent = StationUser::where('user_id', $user->id)
+                ->where('station_id', $id)
+                ->first();
+            if (!$spent) {
+                $minute = 0;
+            } else {
+                $seconds = $spent->time_spent;
+                $minute = $seconds / 60;
+                $minute = number_format($minute, 2);
+            }
+            return [
+                'name' => $name,
+                'value' => in_array($id, $userStations),
+                'time_spent' => $minute,
+                'id' => $id,
+            ];
+        });
 
-            $user->stations = $stations->map(function ($name, $id) use ($userStations,$user) {
-                $spent = StationUser::where('user_id',$user->id)->where('station_id',$id)->first();
-                if(!$spent){
-                    $minute = 0;
-
-                }else{
-                    $seconds = $spent->time_spent;
-                    $minute = $seconds/60;
-                    $minute = number_format($minute, 2);
-
-                }
-                return [
-                    'name' => $name,
-                    'value' => in_array($id, $userStations),
-                    'time_spent'=>$minute,
-                    'id'    => $id
-                ];
-            });
-
-        return view('userData',compact('user','totalMinutes','permission'));
+        return view('userData', compact('user', 'totalMinutes', 'permission'));
     }
 
     public function check(Request $request)
     {
-        $check = StationUser::where('user_id',$request->user_id)->where('station_id',$request->station_id)->first();
+        $check = StationUser::where('user_id', $request->user_id)
+            ->where('station_id', $request->station_id)
+            ->first();
 
-        if(!$check){
-            $stationUser = new StationUser;
+        if (!$check) {
+            $stationUser = new StationUser();
             $stationUser->user_id = $request->user_id;
             $stationUser->station_id = $request->station_id;
             $stationUser->time_spent = 60;
             $stationUser->save();
-        }else{
+        } else {
             $check->delete();
         }
 

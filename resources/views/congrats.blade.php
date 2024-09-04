@@ -37,8 +37,8 @@
             @include('components.branding')
         </div>
         <p class="yellow-text mt-4">
-            Congratulations, {{ auth()->user()->fname }}!<br />
-            <span>You have completed</span><br />the Hydration Journey!
+            Mission Accomplished<br />
+            <span>You’ve successfully</span><br />unlocked the Little Nurse
         </p>
 
         <div class="product-image">

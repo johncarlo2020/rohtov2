@@ -5,6 +5,9 @@
             height: auto;
             margin-bottom: 25px;
         }
+        .iconNew {
+            width: 60px;
+        }
     </style>
     <div class="modal fade " id="scanCompleteModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
@@ -37,8 +40,15 @@
         </div>
         <div id="mainContent" class="col-12 mt-3 text-content text-center">
             <div id="{{ $user ? '' : 'forceQr' }}" class="icon-container mt-4">
-                <img class="icon-bg" src="{{ asset('images/icon-bg.svg') }}" alt="Lock Image">
-                <img class="icon" src="{{ asset('images/station3icon.svg') }}" alt="Lock Image">
+                @if($station->id == 1 || $station->id == 2)
+                <img class="icon-bg iconNew" src="{{ asset('images/Icon1.png') }}" alt="Lock Image">
+                @elseif($station->id == 3 || $station->id == 7 || $station->id == 8)
+                <img class="icon-bg iconNew" src="{{ asset('images/Icon2.png') }}" alt="Lock Image">
+                @elseif($station->id == 4 || $station->id == 6)
+                <img class="icon-bg iconNew" src="{{ asset('images/Icon3.png') }}" alt="Lock Image">
+                @else
+                <img class="icon-bg iconNew" src="{{ asset('images/Icon4.png') }}" alt="Lock Image">
+                @endif
             </div>
             <h1 class="station-heading mt-4">
                 @if ($station->id == 6)

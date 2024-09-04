@@ -467,25 +467,17 @@ a:active {
 }
 
 .login {
+  height: 100vh;
     width: 100%;
-    height: 100vh;
-    box-sizing: border-box;
-    text-align: center;
-    padding-top: 30px;
-    background: linear-gradient(to top, #ffffff 0%, #d3eefd 100%);
+    background: $reverse-gradient;
+    position: relative;
 
-    .branding-container {
-        box-sizing: border-box;
-    }
+     .login-main {
+        height: 100vh;
+        overflow: auto;
+        padding-bottom: 30px;
 
-    .content {
-        height: 100%;
-        padding: 20px;
-        padding-top: 40px;
-        text-align: start;
-        box-sizing: border-box;
-
-        h1 {
+         h1 {
             text-align: center;
             font-size: 24px;
             font-weight: 600;
@@ -527,6 +519,8 @@ a:active {
             }
         }
     }
+
+
 }
 
 .devider {

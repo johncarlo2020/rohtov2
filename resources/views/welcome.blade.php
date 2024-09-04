@@ -52,7 +52,7 @@
                         Mentholatum 135th Anniversary Roadshow
                     </h1>
                     <h2 class="sub-heading">Queensbay Mall, Penang</h2>
-                    <p class="date with-border">26 August 2024 - 1 Sept 2024</p>
+                    <p class="date with-border">24 Sept - 29 Sept 2024</p>
                     <p class="sub-heading">Sunway Pyramid, KL</p>
                     <p class="date">28 Oct - 3 Nov 2024</p>
                     <a

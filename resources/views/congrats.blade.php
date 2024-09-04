@@ -1,82 +1,72 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-        <title>Rohto</title>
-
-        @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
-            rel="stylesheet"
+<x-app-layout>
+    <div class="container-fluid home start completed-screen pt-4">
+        <img
+            class="bubble bubble__1"
+            src="{{ asset('images/bubble-1.png') }}"
+            alt=""
         />
-        <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-            integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-            crossorigin="anonymous"
+        <img
+            class="bubble bubble__2"
+            src="{{ asset('images/bubble-2.png') }}"
+            alt=""
         />
-    </head>
+        <img
+            class="bubble bubble__3"
+            src="{{ asset('images/bubble-3.png') }}"
+            alt=""
+        />
+        <img
+            class="bubble bubble__4"
+            src="{{ asset('images/bubble-4.png') }}"
+            alt=""
+        />
 
-    <body class="welcome home">
-        <style>
-            .main-bg {
-                background-image: url("{{ asset("/images/main-bg.png") }}");
-            }
-            .main-logo {
-                width: 34%;
-                height: auto;
-            }
+        <div class="title-container">
+            <img
+                class="bubble bubble__5"
+                src="{{ asset('images/bubble-5.png') }}"
+                alt=""
+            />
+            <img
+                class="bubble bubble__6"
+                src="{{ asset('images/bubble-6.png') }}"
+                alt=""
+            />
+        </div>
+        <div class="col-12 d-flex justify-content-center">
+            @include('components.branding')
+        </div>
+        <p class="yellow-text mt-4">
+            Congratulations, {{ auth()->user()->fname }}!<br />
+            <span>You have completed</span><br />the Hydration Journey!
+        </p>
 
-            .tag-line {
-                font-size: 16px;
-                line-height: 20px;
-                font-weight: 400;
-                color: #3c727a;
-                letter-spacing: 1px;
-            }
-
-            .congrats {
-                height: 100%;
-                display: flex;
-                flex-direction: column;
-                gap: 20px;
-                text-align: center;
-                justify-content: center;
-                align-items: center;
-            }
-            .visit {
-                align-self: flex-end;
-            }
-        </style>
-        <div class="congrats">
-            <div class="branding">
+        <div class="product-image">
+            <img class="" src="{{ asset('images/badge2.png') }}" alt="" />
+        </div>
+        <div class="title-container">
+            <p class="title small">
+                Please proceed to r<br />redemption counte
                 <img
-                    class="logo"
-                    src="{{ asset('images/logo-large.png') }}"
+                    class="arrow arrow__2"
+                    src="{{ asset('images/arrow-2.png') }}"
                     alt=""
                 />
-            </div>
-            <p class="mt-5 tag-line">
-                CONGRATULATIONS <br />
-                YOU HAVE COMPLETED <br />
-                YOUR JOURNEY
+                <img
+                    class="arrow arrow__1"
+                    src="{{ asset('images/arrow-1.png') }}"
+                    alt=""
+                />
             </p>
-            <div class="visit">
-                <p class="mt-5 mb-4">Visit our official website</p>
-                <div class="mb-3 logo-footer">
-                    <img
-                        class="main-logo"
-                        src="{{ asset('images/logo-large.png') }}"
-                        alt=""
-                    />
-                </div>
-                <a href="">CLick Here for more information</a>
-            </div>
         </div>
-    </body>
-</html>
+        <div class="bottom-text mt-3">
+            <br />
+            <p class="text-success text-center">Visit our official website</p>
+            <br />
+            <img src="{{ asset('images/logo-large.png') }}" alt="" />
+            <a class="mt-3" href="https://hadalabo.com.my/">
+                Click Here for more Information
+            </a>
+        </div>
+    </div>
+</x-app-layout>

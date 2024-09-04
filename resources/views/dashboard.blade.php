@@ -127,8 +127,8 @@
                         <div class="badge with-img {{ $claim >= 6 ? 'completed' : '' }}">
                             <span>
 
-                                <img class="gift-icon" src="{{ asset('images/gift.png') }}"
-                                    {{ $claim >= 6 ? 'onclick="congrats()"' : '' }} />
+                                <img class="gift-icon" src="{{ asset('images/gift.png') }}" {!! $claim >= 6 ? 'onclick="congrats()"' : '' !!} />
+
                             </span>
                         </div>
                 </div>

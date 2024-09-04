@@ -164,7 +164,6 @@ class StationController extends Controller
             ->distinct()
             ->orderByRaw('is_gotten DESC')
             ->having('is_gotten', true)
-            ->limit(2)
             ->get();
         $claim = count($gift);
 
@@ -183,11 +182,7 @@ class StationController extends Controller
             $station->status = $userHasStation;
         }
 
-        if ($stationDone < 6) {
-            return view('dashboard', compact('stations', 'stationDone', 'required', 'notRequired', 'claim'));
-        } else {
-            return view('congrats');
-        }
+        return view('dashboard', compact('stations', 'stationDone', 'required', 'notRequired', 'claim'));
     }
 
     public function scan(Request $request)

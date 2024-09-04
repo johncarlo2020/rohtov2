@@ -468,7 +468,7 @@ a:active {
 
 .login {
     width: 100%;
-    height: 100%;
+    height: 100vh;
     box-sizing: border-box;
     text-align: center;
     padding-top: 30px;
@@ -736,7 +736,6 @@ a:active {
     width: 100%;
     background: $reverse-gradient;
     position: relative;
-    overflow: hidden;
 
     .register-main {
         height: 100vh;
@@ -894,9 +893,10 @@ a:active {
 }
 
 .map {
-    position: relative;
-    width: 100%;
+        width: 107%;
     height: auto;
+    position: absolute;
+    left: -15px;
     .path-image {
         object-fit: contain;
 

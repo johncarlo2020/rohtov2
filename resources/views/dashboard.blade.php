@@ -50,44 +50,49 @@
         }
 
         @keyframes moveCloudLeft {
-        0% {
-            left: 0px;
-            opacity: 1;
-        }
-        30% {
-            left: 30%;
-            opacity: 1;
-            z-index: 1;
-        }
-        60% {
-            left: 60%;
-            opacity: 0;
-        }
-        100% {
-            left: 0px;
-            opacity: 0;
-        }
-    }
+            0% {
+                left: 0px;
+                opacity: 1;
+            }
 
-    @keyframes moveCloudRight {
-        0% {
-            right: 0px;
-            opacity: 1;
-        }
-        30% {
-            right: 30%;
-            opacity: 1;
-        }
-        60% {
-            right: 60%;
-            opacity: 0;
-        }
-        100% {
-            right: 0px;
-            opacity: 0;
-        }
-    }
+            30% {
+                left: 30%;
+                opacity: 1;
+                z-index: 1;
+            }
 
+            60% {
+                left: 60%;
+                opacity: 0;
+            }
+
+            100% {
+                left: 0px;
+                opacity: 0;
+            }
+        }
+
+        @keyframes moveCloudRight {
+            0% {
+                right: 0px;
+                opacity: 1;
+            }
+
+            30% {
+                right: 30%;
+                opacity: 1;
+            }
+
+            60% {
+                right: 60%;
+                opacity: 0;
+            }
+
+            100% {
+                right: 0px;
+                opacity: 0;
+            }
+        }
     </style>
     <div class="container-fluid start home dashboard">
         <div class="row justify-content-center">

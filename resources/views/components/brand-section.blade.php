@@ -63,7 +63,7 @@
     }
 
     .question-img img {
-        max-width: 100%;
+        max-width: 80%;
         max-height: 100%;
         border-radius: 12px;
         object-fit: cover;
@@ -96,7 +96,17 @@
         margin-bottom: 10px;
         cursor: pointer;
         transition: background-color 0.3s ease;
-        /* Add transition for background color */
+        display: flex;
+        /* Use flexbox for alignment */
+        justify-content: space-between;
+        /* Space between text and image */
+        align-items: center;
+        /* Vertically align text and image */
+    }
+
+    .answers .item .brand-img {
+        margin-left: auto;
+        /* Push image to the right */
     }
 
     .answers .active {
@@ -188,7 +198,7 @@
                 <div class="text-center content">
                     <div class="image-check">
                         <div class="text-content">
-                            <img class="icon-bg" src="{{ asset('images/badge1.png') }}" alt="Lock Image" />
+                            <img class="icon-bg" src="{{ asset('images/badge2.png') }}" alt="Lock Image" />
 
                             <p class="station-text">
                                 Station <span class="station_id"></span>

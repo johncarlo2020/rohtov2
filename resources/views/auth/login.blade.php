@@ -11,40 +11,53 @@
             @csrf
             <div class="row mb-2">
                 <div class="col-12">
-                <label class="text-left" for="">Email Address</label>
+                    <label class="text-left" for="">Email Address</label>
 
-                    <input id="email" placeholder="example@email.com" type="email"
-                        class="input-text form-control @error('email') is-invalid @enderror" name="email"
-                        value="{{ old('email') }}" required autocomplete="email">
+                    <input
+                        id="email"
+                        placeholder="example@email.com"
+                        type="email"
+                        class="input-text form-control @error('email') is-invalid @enderror"
+                        name="email"
+                        value="{{ old('email') }}"
+                        required
+                        autocomplete="email"
+                    />
 
                     @error('email')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
                     @enderror
                 </div>
             </div>
 
-
             <!-- Password -->
-            <x-text-input id="password" class="block w-full mt-1"
-                                type="hidden"
-                                name="password"
-                                value="password"
-                                required autocomplete="current-password" />
+            <x-text-input
+                id="password"
+                class="block w-full mt-1"
+                type="hidden"
+                name="password"
+                value="password"
+                required
+                autocomplete="current-password"
+            />
 
-                <x-input-error :messages="$errors->get('password')" class="mt-2" />
+            <x-input-error :messages="$errors->get('password')" class="mt-2" />
 
             <div class="flex items-center justify-end mt-4">
                 <x-primary-button class="main-btn btn btn-primary">
-                    {{ __('LOGIN') }}
+                    {{ __("LOGIN") }}
                 </x-primary-button>
             </div>
         </form>
         <div class="bottom-text">
-            <p>Don’t have account yet! Register <a class="" href="{{ route('register') }}">
-                {{ __('REGISTER') }}
-            </a></p>
+            <p>
+                Don’t have account yet! Register
+                <a class="" href="{{ route('register') }}">
+                    {{ __("REGISTER") }}
+                </a>
+            </p>
         </div>
     </div>
 </x-guest-layout>

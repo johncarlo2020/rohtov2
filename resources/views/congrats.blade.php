@@ -46,7 +46,7 @@
         </div>
         <div class="title-container">
             <p class="title small">
-                Please proceed to r<br />redemption counte
+                Please proceed to <br />redemption counter
                 <img
                     class="arrow arrow__2"
                     src="{{ asset('images/arrow-2.png') }}"
@@ -64,9 +64,7 @@
             <p class="text-success text-center">Visit our official website</p>
             <br />
             <img src="{{ asset('images/logo-large.png') }}" alt="" />
-            <a class="mt-3" href="https://hadalabo.com.my/">
-                Click Here for more Information
-            </a>
+            <a class="mt-3" href=""> Click Here for more Information </a>
         </div>
     </div>
 </x-app-layout>

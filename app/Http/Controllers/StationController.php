@@ -78,14 +78,28 @@ class StationController extends Controller
             ->orderByRaw('is_gotten DESC')
             ->limit(2)
             ->get();
-        $puzzleNotRequired = DB::table('stations')
+        $puzzleNotRequiredLeft = DB::table('stations')
             ->leftJoin('station_users', function ($join) use ($userId) {
                 $join->on('stations.id', '=', 'station_users.station_id')->where('station_users.user_id', '=', $userId);
             })
             ->select('stations.id as station_id', 'stations.name as station_name', DB::raw('IF(station_users.station_id IS NULL, false, true) as is_gotten'))
             ->where('stations.required', 0)
+            ->where('stations.id', 5)
+            ->orWhere('stations.id', 6)
             ->orderByRaw('is_gotten DESC, station_id ASC') // Prioritize is_gotten=true, then order by station_id
-            ->limit(2)
+            ->limit(1)
+            ->get();
+
+        $puzzleNotRequiredRight = DB::table('stations')
+            ->leftJoin('station_users', function ($join) use ($userId) {
+                $join->on('stations.id', '=', 'station_users.station_id')->where('station_users.user_id', '=', $userId);
+            })
+            ->select('stations.id as station_id', 'stations.name as station_name', DB::raw('IF(station_users.station_id IS NULL, false, true) as is_gotten'))
+            ->where('stations.required', 0)
+            ->where('stations.id', 7)
+            ->orWhere('stations.id', 8)
+            ->orderByRaw('is_gotten DESC, station_id ASC') // Prioritize is_gotten=true, then order by station_id
+            ->limit(1)
             ->get();
         $gift = DB::table('stations')
             ->leftJoin('station_users', function ($join) use ($userId) {
@@ -108,7 +122,7 @@ class StationController extends Controller
             ->orderBy('stations.id', 'asc')
             ->get();
 
-        return view('puzzle', compact('stations', 'stationDone', 'required', 'notRequired', 'puzzleRequired', 'puzzleNotRequired', 'nurse', 'claim'));
+        return view('puzzle', compact('stations', 'stationDone', 'required', 'notRequired', 'puzzleRequired', 'puzzleNotRequiredLeft', 'puzzleNotRequiredRight', 'nurse', 'claim'));
     }
 
     public function brands()

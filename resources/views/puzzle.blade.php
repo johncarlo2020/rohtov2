@@ -46,7 +46,7 @@
 
         .badge-piece img {
             width: 58px;
-            height: 58px;
+            height: auto;
         }
 
         .old {
@@ -87,14 +87,20 @@
                         @foreach ($puzzleRequired as $item)
                             <div class="puzzle-piece">
                                 <img class="puzzle-img
-puzzle-img {{ $item->is_gotten == 1 ? '' : 'd-none' }}"
+                                    puzzle-img {{ $item->is_gotten == 1 ? '' : 'd-none' }}"
                                     src="{{ asset('images/puzzle/' . $item->station_id . '.png') }}" alt="">
                             </div>
                         @endforeach
-                        @foreach ($puzzleNotRequired as $item)
+                        @foreach ($puzzleNotRequiredLeft as $item)
                             <div class="puzzle-piece">
-                                <img class="{{ $item->is_gotten == 1 ? '' : 'd-none' }}"
+                                <img class=" puzzle-img {{ $item->is_gotten == 1 ? '' : 'd-none' }}"
                                     src="{{ asset('images/puzzle/' . $loop->iteration + 4 . '.png') }}" alt="">
+                            </div>
+                        @endforeach
+                        @foreach ($puzzleNotRequiredRight as $item)
+                            <div class="puzzle-piece">
+                                <img class="puzzle-img {{ $item->is_gotten == 1 ? '' : 'd-none' }}"
+                                    src="{{ asset('images/puzzle/' . $loop->iteration + 5 . '.png') }}" alt="">
                             </div>
                         @endforeach
                     </div>

@@ -105,7 +105,7 @@
                                 <p class="brand-text">{{$brand->brand_name}}</p>
                             </div>
                         </div>
-                    @endforeach 
+                    @endforeach
                 </div>
                 <div class="mt-4 brand-btn">
                 <a  href="{{ route('dashboard') }}" class="button">

@@ -49,6 +49,10 @@
             animation-duration: 120s;
         }
 
+        .gift-icon {
+            width: 38px;
+        }
+
         @keyframes moveCloudLeft {
             0% {
                 left: 0px;
@@ -122,7 +126,8 @@
 
                         <div class="badge with-img {{ $claim >= 6 ? 'completed' : '' }}">
                             <span>
-                                <img src="{{ asset('images/gift.png') }}"
+
+                                <img class="gift-icon" src="{{ asset('images/gift.png') }}"
                                     {{ $claim >= 6 ? 'onclick="congrats()"' : '' }} />
                             </span>
                         </div>

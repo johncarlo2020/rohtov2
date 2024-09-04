@@ -49,6 +49,10 @@
             height: auto;
         }
 
+        .gift-icon {
+            width: 38px;
+        }
+
         .old {
             -webkit-filter: grayscale(100%);
             /* Safari 6.0 - 9.0 */
@@ -78,7 +82,8 @@
 
                     <div class="badge with-img {{ $claim >= 6 ? 'completed' : '' }}">
                         <span>
-                            <img src="{{ asset('images/gift.png') }}" {{ $claim >= 6 ? 'onclick="congrats()"' : '' }} />
+                            <img class="gift-icon" src="{{ asset('images/gift.png') }}"
+                                {{ $claim >= 6 ? 'onclick="congrats()"' : '' }} />
                         </span>
                     </div>
                 </div>

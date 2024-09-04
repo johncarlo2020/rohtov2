@@ -152,8 +152,8 @@
                             <img
                                 class="icon-bg"
                                 src="{{ asset('images/badge1.png') }}"
-                                alt="Lock Image"
                             />
+                            <img class="check" id="badge" src="" />
 
                             <p class="station-text">
                                 Station <span class="station_id"></span>

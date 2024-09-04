@@ -176,6 +176,8 @@
     <div class="question-img">
         <img src="" alt="" id="img" />
     </div>
+    <img class="check" id="badge" src="">
+
     <p id="question"></p>
 </div>
 <div class="answers">

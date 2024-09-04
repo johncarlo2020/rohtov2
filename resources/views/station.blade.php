@@ -18,7 +18,9 @@
                             <i class="fa-regular check"></i>
                         </div>
                         <div class="text-content">
-                            <img class="icon-badge" id="badge" src="" alt="Lock Image">
+                            <img  class="icon-badge" id="badge" src="">
+                            <img  class="check" id="badge" src="">
+
                             <p class="station-text">Station <span class="station_id"></span></p>
                             <p class="message">
                                 Check-in Successful
@@ -95,6 +97,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script> <!-- Ensure Bootstrap JS is included -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
+
     <script>
         const mainContent = document.getElementById('mainContent');
         const scannerContainer = document.getElementById('scannerContainer');

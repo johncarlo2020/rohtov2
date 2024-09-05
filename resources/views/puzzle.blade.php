@@ -82,8 +82,8 @@
 
                     <div class="badge with-img {{ $claim >= 6 ? 'completed' : '' }}">
                         <span>
-                            <img class="gift-icon" src="{{ asset('images/gift.png') }}"
-                                {{ $claim >= 6 ? 'onclick="congrats()"' : '' }} />
+                            <img class="gift-icon" src="{{ asset('images/gift.png') }}" {!! $claim >= 6 ? 'onclick="congrats()"' : '' !!} />
+
                         </span>
                     </div>
                 </div>
@@ -96,16 +96,10 @@
                                     src="{{ asset('images/puzzle/' . $item->station_id . '.png') }}" alt="">
                             </div>
                         @endforeach
-                        @foreach ($puzzleNotRequiredLeft as $item)
+                        @foreach ($puzzleNotRequired as $item)
                             <div class="puzzle-piece">
                                 <img class=" puzzle-img {{ $item->is_gotten == 1 ? '' : 'd-none' }}"
                                     src="{{ asset('images/puzzle/' . $loop->iteration + 4 . '.png') }}" alt="">
-                            </div>
-                        @endforeach
-                        @foreach ($puzzleNotRequiredRight as $item)
-                            <div class="puzzle-piece">
-                                <img class="puzzle-img {{ $item->is_gotten == 1 ? '' : 'd-none' }}"
-                                    src="{{ asset('images/puzzle/' . $loop->iteration + 5 . '.png') }}" alt="">
                             </div>
                         @endforeach
                     </div>
@@ -131,4 +125,11 @@
             </div>
         </div>
     </div>
+    <script>
+           function congrats() {
+            var url = "{{ route('congrats') }}";
+            // Redirect to the generated URL
+            window.location.href = url;
+        }
+    </script>
 </x-app-layout>

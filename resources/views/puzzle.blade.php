@@ -65,28 +65,7 @@
                 <div class="col-12 d-flex justify-content-center">
                     @include('components.branding')
                 </div>
-                <p class="mt-5 station-progress-heading">Station Progress</p>
-                <div class="badge-container">
-                    @foreach ($required as $item)
-                        <div class="badge {{ $item->is_gotten == 1 ? 'completed' : '' }}">
-                            <span>?</span>
-                            <img src="{{ asset('images/badge' . $item->station_id . '.png') }}" alt="">
-                        </div>
-                    @endforeach
-                    @foreach ($notRequired as $item)
-                        <div class="badge {{ $item->is_gotten == 1 ? 'completed' : '' }}">
-                            <span>?</span>
-                            <img src="{{ asset('images/badge' . $item->station_id . '.png') }}" alt="">
-                        </div>
-                    @endforeach
 
-                    <div class="badge with-img {{ $claim >= 6 ? 'completed' : '' }}">
-                        <span>
-                            <img class="gift-icon" src="{{ asset('images/gift.png') }}" {!! $claim >= 6 ? 'onclick="congrats()"' : '' !!} />
-
-                        </span>
-                    </div>
-                </div>
                 <div class="mt-3 text-center col-12 text-content">
                     <div class="puzzle-container">
                         @foreach ($puzzleRequired as $item)
@@ -126,10 +105,5 @@
         </div>
     </div>
     <script>
-           function congrats() {
-            var url = "{{ route('congrats') }}";
-            // Redirect to the generated URL
-            window.location.href = url;
-        }
     </script>
 </x-app-layout>

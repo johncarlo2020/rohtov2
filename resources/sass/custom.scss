@@ -27,7 +27,7 @@ body {
         width: 100%;
 
         .branding .logo {
-            width: 100%;
+            width: 40%;
             height: auto;
             margin-bottom: 20px;
         }
@@ -430,7 +430,7 @@ a:active {
     justify-content: center;
     align-items: center;
     .logo {
-        width: 50%;
+        width: 40%;
         height: auto;
     }
 }
@@ -972,8 +972,8 @@ a:active {
                         top: -68%;
                         right: 27%;
                         z-index: 2;
-                        background-color: #ffff77;
-                        color: black;
+                        background-color: #0C5A40;
+                        color: white;
                     }
                 }
             }
@@ -1005,8 +1005,8 @@ a:active {
                         top: -68%;
                         right: 27%;
                         z-index: 2;
-                        background-color: #ffff77;
-                        color: black;
+                        background-color: #0C5A40;
+                        color: white;
                     }
                 }
             }
@@ -1038,8 +1038,8 @@ a:active {
                         top: 99%;
                         right: 20%;
                         z-index: 2;
-                        background-color: #ffff77;
-                        color: black;
+                        background-color: #0C5A40;
+                        color: white;
                     }
                 }
             }
@@ -1071,8 +1071,8 @@ a:active {
                         top: 207%;
                         right: 39%;
                         z-index: 2;
-                        background-color: #ffff77;
-                        color: black;
+                        background-color: #0C5A40;
+                        color: white;
                     }
                 }
             }
@@ -1650,7 +1650,7 @@ $form-check-hover-shadow: rgba(0, 123, 255, 0.5);
 
     .branding {
         .logo {
-            width: 30%;
+            width: 40%;
         }
     }
 }

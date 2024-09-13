@@ -17,12 +17,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('discover');
-})->name('discover');
-
-Route::get('/welcome', function () {
     return view('welcome');
 })->name('welcome');
+
 
 Route::get('/qr', function () {
     return view('error');

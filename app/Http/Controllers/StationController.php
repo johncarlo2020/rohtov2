@@ -121,6 +121,7 @@ class StationController extends Controller
             ->orderBy('stations.id', 'asc')
             ->get();
 
+
         return view('puzzle', compact('stations', 'stationDone', 'required', 'notRequired', 'puzzleRequired', 'puzzleNotRequired', 'nurse', 'claim'));
     }
 

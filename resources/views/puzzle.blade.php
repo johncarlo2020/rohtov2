@@ -88,7 +88,7 @@
                             <div class="badge-piece">
                                 <img class="{{ $item->is_gotten == 1 ? '' : 'old' }}"
                                     src="{{ asset('images/badge' . $item->station_id . '.png') }}">
-                                <p class="badge-text ">{{ $item->station_nurse }} Nurse</p>
+                                <p class="badge-text ">{{ $item->station_name }} Nurse</p>
                             </div>
                         @endforeach
 

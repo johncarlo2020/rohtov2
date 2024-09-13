@@ -948,9 +948,9 @@ a:active {
 
         &__1 {
             position: absolute;
-            left: 73%;
-            bottom: 71%;
-            width: 11%;
+            left: 72%;
+            bottom: 59%;
+            width: 10%;
             height: 13%;
             .boot-img {
                 position: absolute;
@@ -969,11 +969,11 @@ a:active {
                 left: 0;
                 .details {
                     .step-number {
-                        top: -255%;
-                        right: -10%;
+                        top: -68%;
+                        right: 27%;
                         z-index: 2;
-                        background-color: #40a355;
-                        color: white;
+                        background-color: #ffff77;
+                        color: black;
                     }
                 }
             }
@@ -981,17 +981,17 @@ a:active {
 
         &__2 {
             position: absolute;
-            left: 81%;
-            bottom: 65%;
-            width: 11%;
-            height: 13%;
+            left: 82%;
+            bottom: 59%;
+            width: 10%;
+            height: 12.5%;
             .boot-img {
                 position: absolute;
                 right: 0;
                 top: 0;
                 width: 100%;
                 height: auto;
-                z-index: 3;
+                z-index: 2;
             }
 
             .details-container {
@@ -1002,11 +1002,11 @@ a:active {
                 left: 0;
                 .details {
                     .step-number {
-                        top: -255%;
-                        right: -10%;
-                        z-index: 3;
-                        background-color: #40a355;
-                        color: white;
+                        top: -68%;
+                        right: 27%;
+                        z-index: 2;
+                        background-color: #ffff77;
+                        color: black;
                     }
                 }
             }
@@ -1014,9 +1014,9 @@ a:active {
 
         &__3 {
             position: absolute;
-            left: 65%;
-            bottom: 23%;
-            width: 11%;
+            left: 63%;
+            bottom: 29%;
+            width: 14%;
             height: 13%;
             .boot-img {
                 position: absolute;
@@ -1035,11 +1035,11 @@ a:active {
                 left: 0;
                 .details {
                     .step-number {
-                        top: -255%;
-                        right: 61%;
+                        top: 99%;
+                        right: 20%;
                         z-index: 2;
-                        background-color: #40a355;
-                        color: white;
+                        background-color: #ffff77;
+                        color: black;
                     }
                 }
             }
@@ -1047,8 +1047,41 @@ a:active {
 
         &__4 {
             position: absolute;
-            left: 15%;
-            bottom: 76%;
+    left: 14%;
+    bottom: 67%;
+    width: 19%;
+    height: 13%;
+            .boot-img {
+                position: absolute;
+                right: 0;
+                top: 0;
+                width: 100%;
+                height: auto;
+                z-index: 1;
+            }
+
+            .details-container {
+                width: 100%;
+                height: 30%;
+                bottom: 0;
+                position: absolute;
+                left: 0;
+                .details {
+                    .step-number {
+                        top: 207%;
+                        right: 39%;
+                        z-index: 2;
+                        background-color: #ffff77;
+                        color: black;
+                    }
+                }
+            }
+        }
+
+        &__5 {
+            position: absolute;
+            left: 60%;
+            bottom: 67%;
             width: 19%;
             height: 13%;
             .boot-img {
@@ -1068,41 +1101,8 @@ a:active {
                 left: 0;
                 .details {
                     .step-number {
-                        top: -177%;
-                        right: 52%;
-                        z-index: 2;
-                        background-color: #40a355;
-                        color: white;
-                    }
-                }
-            }
-        }
-
-        &__5 {
-            position: absolute;
-            left: 60%;
-            bottom: 70%;
-            width: 15%;
-            height: 13%;
-            .boot-img {
-                position: absolute;
-                right: 0;
-                top: 0;
-                width: 100%;
-                height: auto;
-                z-index: 1;
-            }
-
-            .details-container {
-                width: 100%;
-                height: 30%;
-                bottom: 0;
-                position: absolute;
-                left: 0;
-                .details {
-                    .step-number {
-                        top: -251%;
-                        right: 62%;
+                        top: -274%;
+                        right: 39%;
                         z-index: 2;
                         background-color: #ffff77;
                         color: black;
@@ -1113,9 +1113,9 @@ a:active {
 
         &__6 {
             position: absolute;
-            left: 87%;
-            bottom: 43%;
-            width: 10%;
+            left: 75%;
+            bottom: 45%;
+            width: 19%;
             height: 13%;
             .boot-img {
                 position: absolute;
@@ -1134,8 +1134,8 @@ a:active {
                 left: 0;
                 .details {
                     .step-number {
-                        top: -283%;
-                        right: -19%;
+                        top: 99%;
+                        right: 20%;
                         z-index: 2;
                         background-color: #ffff77;
                         color: black;
@@ -1146,8 +1146,41 @@ a:active {
 
         &__7 {
             position: absolute;
-            left: 4%;
-            bottom: 53%;
+            left: 8%;
+            bottom: 44%;
+            width: 17%;
+            height: 13%;
+            .boot-img {
+                position: absolute;
+                right: 0;
+                top: 0;
+                width: 100%;
+                height: auto;
+                z-index: 1;
+            }
+
+            .details-container {
+                width: 100%;
+                height: 30%;
+                bottom: 0;
+                position: absolute;
+                left: 0;
+                .details {
+                    .step-number {
+                        top: 77%;
+                        right: 76%;
+                        z-index: 2;
+                        background-color: #ffff77;
+                        color: black;
+                    }
+                }
+            }
+        }
+
+        &__8 {
+            position: absolute;
+            left: 24%;
+            bottom: 28%;
             width: 15%;
             height: 13%;
             .boot-img {
@@ -1167,8 +1200,8 @@ a:active {
                 left: 0;
                 .details {
                     .step-number {
-                        top: -285%;
-                        right: 68%;
+                        top: 35%;
+                        right: 43%;
                         z-index: 2;
                         background-color: #ffff77;
                         color: black;
@@ -1177,38 +1210,7 @@ a:active {
             }
         }
 
-        &__8 {
-            position: absolute;
-            left: 13%;
-            bottom: 39%;
-            width: 9%;
-            height: 13%;
-            .boot-img {
-                position: absolute;
-                right: 0;
-                top: 0;
-                width: 100%;
-                height: auto;
-                z-index: 1;
-            }
 
-            .details-container {
-                width: 100%;
-                height: 30%;
-                bottom: 0;
-                position: absolute;
-                left: 0;
-                .details {
-                    .step-number {
-                        top: -285%;
-                        right: -12%;
-                        z-index: 2;
-                        background-color: #ffff77;
-                        color: black;
-                    }
-                }
-            }
-        }
     }
 }
 
@@ -1683,5 +1685,112 @@ $form-check-hover-shadow: rgba(0, 123, 255, 0.5);
     button {
         width: 200px;
         margin-bottom: 20px;
+    }
+}
+
+.welcome-page {
+    position: relative;
+
+    .cover-image {
+        position: absolute;
+        width: 100%;
+        height: calc(100vh + 10vh);
+        object-fit: cover;
+        z-index: 1;
+        top: -10vh;
+        left: 0;
+    }
+    .main-content {
+        position: absolute;
+        width: 100%;
+        height: 100vh;
+        z-index: 2;
+        left: 0;
+        top: 0;
+
+        .branding {
+            img {
+                width: 40%;
+                height: auto;
+                object-fit: contain;
+            }
+        }
+
+         .text-content {
+            margin-top: 8vw;
+
+            h1 {
+                color: #fff;
+                font-size: 8vw;
+                font-weight: 400;
+                text-align: center;
+                margin-bottom: 2vh;
+            }
+
+            h2 {
+                color: #fff;
+                font-size: 7vw;
+                font-weight: 600;
+                text-align: center;
+                line-height: 1.2;
+            }
+
+            h3 {
+                color: #fff;
+                font-size: 5vw;
+                font-weight: 700;
+                text-align: center;
+                line-height: 1.2;
+                margin-top: 3vw;
+            }
+
+            p {
+                color: #fff;
+                font-size: 4vw;
+                font-weight: 400;
+                text-align: center;
+                line-height: 1.2;
+                margin-top: 3vw;
+            }
+         }
+    }
+    .register-main {
+        position: absolute;
+        width: 100%;
+        bottom: 2vh;
+        left: 0;
+        z-index: 2;
+        text-align: center;
+        margin-top: -3vh;
+
+        .home-btn {
+            min-width: 40vw !important;
+            max-width: 60vw;
+            font-size: 3vw;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+            margin-bottom: 2vh;
+        }
+
+        .already-register {
+            font-size: 4vw;
+            font-weight: 600;
+            margin-top: 5vw;
+            color: #303030;
+            margin: 0 !important;
+        }
+
+        .footer-text {
+            font-size: 3vw;
+            font-weight: 400;
+            color: black;
+            margin-top: 3vw;
+            position: relative;
+            z-index: 2;
+            margin-bottom: 3vh;
+        }
     }
 }

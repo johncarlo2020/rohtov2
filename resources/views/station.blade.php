@@ -40,24 +40,12 @@
         <div class="mb-3 branding-container">
             @include('components.branding')
         </div>
-        <div id="mainContent" class="col-12 mt-3 text-content text-center">
-            <div id="{{ $user ? '' : 'forceQr' }}" class="icon-container mt-4">
-                @if($station->id == 1 || $station->id == 2)
+        <div id="mainContent" class="mt-3 text-center col-12 text-content">
+            <div id="{{ $user ? '' : 'forceQr' }}" class="mt-4 icon-container">
                 <img class="icon-bg iconNew" src="{{ asset('images/Icon1.png') }}" alt="Lock Image">
-                @elseif($station->id == 3 || $station->id == 7 || $station->id == 8)
-                <img class="icon-bg iconNew" src="{{ asset('images/Icon2.png') }}" alt="Lock Image">
-                @elseif($station->id == 4 || $station->id == 6)
-                <img class="icon-bg iconNew" src="{{ asset('images/Icon3.png') }}" alt="Lock Image">
-                @else
-                <img class="icon-bg iconNew" src="{{ asset('images/Icon4.png') }}" alt="Lock Image">
-                @endif
             </div>
-            <h1 class="station-heading mt-4">
-                @if ($station->id == 6)
-                    Gift House
-                @else
+            <h1 class="mt-4 station-heading">
                     Station {{ $station->id }}
-                @endif
             </h1>
             <h2 class="station-subheading">{{ $station->name }}</h2>
             <img class="mt-5 station-image" src="{{ asset('images/step/step-img-' . $station->id . '.png') }}"
@@ -74,20 +62,20 @@
                                 BEGIN
                             </a>
                         @else
-                            <button id="start-scanner" class="camera-btn mx-auto mt-4"><img
+                            <button id="start-scanner" class="mx-auto mt-4 camera-btn"><img
                                     src="{{ asset('images/camera.svg') }}" alt=""></button>
-                            <p class="bottom-text px-4 mt-3">Scan the QR code at the station to proceed</p>
+                            <p class="px-4 mt-3 bottom-text">Scan the QR code at the station to proceed</p>
                 @endif
             @else
-                <p class="bottom-text px-4 mt-3">Already Completed</p>
+                <p class="px-4 mt-3 bottom-text">Already Completed</p>
             @endif
 
         </div>
         <div id="scannerContainer" class="scanner-container d-none">
-            <!-- <button id="close" class="camera-btn mx-auto mt-4">x</button> -->
+            <!-- <button id="close" class="mx-auto mt-4 camera-btn">x</button> -->
             <div id="reader"></div>
-            <div class="mt-3 p-3">
-                <p class="bottom-text px-4 text-center">Find the QR code & Scan to check in the station</p>
+            <div class="p-3 mt-3">
+                <p class="px-4 text-center bottom-text">Find the QR code & Scan to check in the station</p>
             </div>
         </div>
     </div>

@@ -42,13 +42,12 @@
         border-radius: 12px;
         position: relative;
         margin: 0 auto;
-        padding: 20px;
-        margin-top: 40px;
+        padding: 3vw;
+        margin-top: 5vh;
     }
 
     .question-img {
-        width: 120px;
-        height: 120px;
+        width: 25vw;
         border-radius: 12px;
         background: #8bc28c;
         position: absolute;
@@ -56,32 +55,32 @@
         left: 50%;
         transform: translateX(-50%);
 
-        /* Centering the content using CSS Grid */
         display: grid;
         place-items: center;
-        /* This centers the image within the container */
+        padding: 3vh 2vh;
     }
 
     .question-img img {
-        max-width: 80%;
-        max-height: 100%;
-        border-radius: 12px;
-        object-fit: cover;
-        /* Ensures the image covers the container while maintaining its aspect ratio */
+       width: 100%;
+        height: 100%;
+        object-fit: contain;
     }
 
     #question {
         text-align: center;
         color: #358abf;
-        font-size: 24px;
+        font-size: 5vw;
         font-weight: 700;
-        margin-top: 86px;
+        margin-top: 10vw;
     }
 
     .answers {
         width: 90%;
         margin: 0 auto;
         margin-top: 20px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 10px;
     }
 
     .answers .item {
@@ -89,24 +88,20 @@
         color: #358abf;
         background: #fff;
         border-radius: 12px;
-        padding: 20px;
+        padding: 1.5vh;
         margin: 0 auto;
         border: none;
         outline: none;
-        margin-bottom: 10px;
         cursor: pointer;
         transition: background-color 0.3s ease;
         display: flex;
-        /* Use flexbox for alignment */
         justify-content: space-between;
-        /* Space between text and image */
         align-items: center;
-        /* Vertically align text and image */
     }
 
     .answers .item .brand-img {
         margin-left: auto;
-        /* Push image to the right */
+        object-fit: contain;
     }
 
     .answers .active {
@@ -162,10 +157,10 @@
     }
 
     .brand-img {
-        width: 75px;
-        height: auto;
+        width: 45px;
+        height: 100%;
+        object-fit: contain;
         margin-left: 115px;
-        /* Space between text and image */
     }
 </style>
 
@@ -182,14 +177,14 @@
 </div>
 <div class="answers">
     @foreach ($brands as $brand)
-        <button onclick="checkAnswer(this)" class="item shadow-sm" data-id="{{ $brand->id }}" style="">
+        <button onclick="checkAnswer(this)" class="shadow-sm item" data-id="{{ $brand->id }}" style="">
             {{ $brand->name }}
             <img class="brand-img" src="{{ asset('images/brand' . $brand->id . '.png') }}" alt="Lock Image" />
         </button>
     @endforeach
 </div>
 
-<div class="brand-btn">
+<div class="mt-3 brand-btn">
     <button class="button" onclick="continueSelection()">Continue</button>
 </div>
 

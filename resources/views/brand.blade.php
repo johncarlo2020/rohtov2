@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="station-page main main-bg question-page">
+    <div class="station-page main main-bg question-page brand-page">
         <div class="mb-3 branding-container">
             @include('components.branding')
         </div>

@@ -1794,3 +1794,15 @@ $form-check-hover-shadow: rgba(0, 123, 255, 0.5);
         }
     }
 }
+
+.brand-page {
+    height: 100vh !important;
+
+    .branding {
+        img {
+            width: 30%;
+            height: auto;
+            object-fit: contain;
+        }
+    }
+}

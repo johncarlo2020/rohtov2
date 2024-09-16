@@ -150,14 +150,14 @@
                         @foreach ($stations as $station)
                             <div class="step step__{{ $station->id }}">
                                 <div class="content">
-                                    <img onclick="gotoStation({{ $station->id }})" class="boot-img"
+                                    <img @if ($station->id != 9 || ($station->id == 9 && $claim == 6)) onclick="gotoStation({{ $station->id }})" @endif
+                                        class="boot-img"
                                         src="{{ asset('images/step/step-img-' . $station->id . '.png') }}"
                                         alt="" />
-
                                     <div class="details-container">
                                         <div class="details">
                                             <span class="step-number {{ $station->status ? 'completed' : '' }}">
-                                                @if ($station->status == false)
+                                                @if (!$station->status)
                                                     {{ $station->id }}
                                                 @else
                                                     <i class="fa-solid fa-check"></i>
@@ -168,6 +168,7 @@
                                 </div>
                             </div>
                         @endforeach
+
                     </div>
                 </div>
             </div>

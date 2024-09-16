@@ -68,6 +68,12 @@ class StationSeeder extends Seeder
             'nurse' => 'OXY',
         ]);
 
+        Station::create([
+            'name' => 'GIft Redemption',
+            'required' => false,
+            'nurse' => 'Gift',
+        ]);
+
         Brand::create([
             'name' => 'Hada Labo',
         ]);

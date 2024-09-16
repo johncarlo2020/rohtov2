@@ -92,8 +92,6 @@
                 <div class="col-12 d-flex justify-content-center">
                     @include('components.branding')
                 </div>
-                <p class="mt-5 heading-brands">OUR BEST SELLER</p>
-
             </div>
             <div class="mt-2 text-center col-12">
                 <div class="px-3 row brand-container">
@@ -102,7 +100,6 @@
                             <div class="brand-details">
                                 <img src="{{ asset('images/brand'.$brand->brand_id.'.png') }}" alt="">
                                 <p class="brand-count">{{$brand->count}}</p>
-                                <p class="brand-text">{{$brand->brand_name}}</p>
                             </div>
                         </div>
                     @endforeach

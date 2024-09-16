@@ -88,8 +88,7 @@ class StationController extends Controller
             ->limit(2)
             ->get();
 
-
-            $giftRequired = DB::table('stations')
+        $giftRequired = DB::table('stations')
             ->leftJoin('station_users', function ($join) use ($userId) {
                 $join->on('stations.id', '=', 'station_users.station_id')->where('station_users.user_id', '=', $userId);
             })
@@ -120,7 +119,6 @@ class StationController extends Controller
             ->distinct()
             ->orderBy('stations.id', 'asc')
             ->get();
-
 
         return view('puzzle', compact('stations', 'stationDone', 'required', 'notRequired', 'puzzleRequired', 'puzzleNotRequired', 'nurse', 'claim'));
     }
@@ -178,7 +176,7 @@ class StationController extends Controller
             ->having('is_gotten', true)
             ->get();
         $claim = count($giftRequired) + count($giftNotRequired);
-        // dd($claim) ;
+        //dd($claim);
 
         $user = User::with('stationUser')->where('id', auth()->id())->first();
         // dd($user->stationUser->count());

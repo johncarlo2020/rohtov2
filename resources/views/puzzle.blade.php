@@ -85,11 +85,13 @@
                     <p class="mt-3 station-progress-heading">Little Nurse</p>
                     <div class="badge-container-bottom">
                         @foreach ($nurse as $item)
-                            <div class="badge-piece">
-                                <img class="{{ $item->is_gotten == 1 ? '' : 'old' }}"
-                                    src="{{ asset('images/badge' . $item->station_id . '.png') }}">
-                                <p class="badge-text ">{{ $item->station_name }} Nurse</p>
-                            </div>
+                            @if ($item->station_id != 9)
+                                <div class="badge-piece">
+                                    <img class="{{ $item->is_gotten == 1 ? '' : 'old' }}"
+                                        src="{{ asset('images/badge' . $item->station_id . '.png') }}">
+                                    <p class="badge-text ">{{ $item->station_name }}</p>
+                                </div>
+                            @endif
                         @endforeach
 
                     </div>
@@ -104,6 +106,5 @@
             </div>
         </div>
     </div>
-    <script>
-    </script>
+    <script></script>
 </x-app-layout>

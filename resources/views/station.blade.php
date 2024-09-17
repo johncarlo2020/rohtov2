@@ -5,6 +5,7 @@
             height: auto;
             margin-bottom: 25px;
         }
+
         .iconNew {
             width: 60px;
         }
@@ -18,8 +19,8 @@
                             <i class="fa-regular check"></i>
                         </div>
                         <div class="text-content">
-                            <img  class="icon-badge" id="badge" src="">
-                            <img  class="check" id="badge" src="">
+                            <img class="icon-badge" id="badge" src="">
+                            <img class="check" id="badge" src="">
 
                             <p class="station-text">Station <span class="station_id"></span></p>
                             <p class="message">
@@ -42,10 +43,9 @@
         </div>
         <div id="mainContent" class="mt-3 text-center col-12 text-content">
             <div id="{{ $user ? '' : 'forceQr' }}" class="mt-4 icon-container">
-                <img class="icon-bg iconNew" src="{{ asset('images/Icon1.png') }}" alt="Lock Image">
             </div>
             <h1 class="mt-4 station-heading">
-                    Station {{ $station->id }}
+                Station {{ $station->id }}
             </h1>
             <h2 class="station-subheading">{{ $station->name }}</h2>
             <img class="mt-5 station-image" src="{{ asset('images/step/step-img-' . $station->id . '.png') }}"

@@ -1414,6 +1414,22 @@ $form-check-hover-shadow: rgba(0, 123, 255, 0.5);
         }
     }
 
+    .where h1{
+        font-size: 22px;
+        font-weight: 6
+        00 !important;
+        color: $primary;
+        margin-bottom: 20px;
+        text-align: center;
+        line-height: 1.2;
+        color: $primary;
+        margin-top: 20px;
+
+        span {
+            color: #8bc28c;
+        }
+    }
+
     .icon-girl {
         display: flex;
         justify-content: center;

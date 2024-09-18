@@ -59,9 +59,12 @@
         </div>
     </div>
     <div class="register-main">
-        <a href="{{ route('vote') }}" class="home-btn btn rounded-pill"><span>Vote</span></a>
-        <a href="{{ route('register') }}" class="sign-btn btn rounded-pill"><span>Sign Up</span></a>
-
+        <a href="{{ route('register') }}" class="home-btn btn rounded-pill"><span>Sign Up</span></a>
+        <p class="already-register">Already Registered</p>
+        <p class="already-register">
+            Please Login
+            <a href="{{ route('login') }}" class="">here</a>
+        </p>
         <a class="footer-text" href="https://wowsome.com.my/">Powered by WOWSOME®2024</a>
     </div>
 </body>

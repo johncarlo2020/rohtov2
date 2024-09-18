@@ -48,11 +48,10 @@
         }
 
         .question-img {
-            width: 25vw;
+            width: 29vw;
             border-radius: 12px;
-            background: #8bc28c;
             position: absolute;
-            top: -30px;
+            top: -60px;
             left: 50%;
             transform: translateX(-50%);
 
@@ -280,7 +279,7 @@
                 const progressBar = document.getElementById('progress-bar');
                 const questionNumberElement = document.getElementById('question-number');
                 const questionNumberImage = document.getElementById('img');
-                questionNumberImage.src = "{{ asset('images/logo-large.png') }}";
+                questionNumberImage.src = "{{ asset('images/bigNurse.png') }}";
                 questionElement.textContent = questions[currentQuestionIndex].question;
             }
 

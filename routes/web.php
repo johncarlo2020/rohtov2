@@ -32,7 +32,10 @@ Route::get('/congrats', function () {
     return view('congrats');
 })->name('congrats');
 
-Route::get('/voteyourfav', 'App\Http\Controllers\StationController@vote')->name('vote');
+Route::get('/voteyourfav', function () {
+    return view('welcomeVote');
+})->name('welcomeVote');
+Route::get('/vote', 'App\Http\Controllers\StationController@vote')->name('vote');
 Route::post('/castVote', 'App\Http\Controllers\StationController@castVote')->name('castVote');
 Route::get('/voteData', 'App\Http\Controllers\StationController@voteData')->name('voteData');
 Route::get('/congratsVote', 'App\Http\Controllers\StationController@congratsVote')->name('congratsVote');

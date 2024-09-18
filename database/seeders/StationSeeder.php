@@ -79,15 +79,7 @@ class StationSeeder extends Seeder
         ]);
 
         Brand::create([
-            'name' => 'Selson Blue',
-        ]);
-
-        Brand::create([
-            'name' => 'Rohto',
-        ]);
-
-        Brand::create([
-            'name' => 'Mentholatum',
+            'name' => 'Sunplay',
         ]);
 
         Brand::create([
@@ -95,11 +87,19 @@ class StationSeeder extends Seeder
         ]);
 
         Brand::create([
+            'name' => 'Mentholatum',
+        ]);
+
+        Brand::create([
+            'name' => 'Selson Blue',
+        ]);
+
+        Brand::create([
             'name' => '50 Megumi',
         ]);
 
         Brand::create([
-            'name' => 'Sunplay',
+            'name' => 'Rohto',
         ]);
 
         $role = Role::create(['name' => 'client']);

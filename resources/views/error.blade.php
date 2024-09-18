@@ -16,19 +16,14 @@
         />
     </head>
 
-    <body class="welcome main main-bg">
-        <style>
-            .main-bg {
-                background-image: url("{{ asset("/images/main-bg.png") }}");
-            }
-        </style>
+    <body class="welcome home">
         <div class="branding-container">@include('components.branding')</div>
 
         <div class="container">
             <h1>
                 Please rescan and access the QR from the digital journey. To
                 start the journey
-                <a href="{{ route('rohto') }}">Click here</a> !
+                <a href="{{ route('welcome') }}">Click here</a> !
             </h1>
         </div>
     </body>

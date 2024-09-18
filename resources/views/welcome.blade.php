@@ -42,7 +42,7 @@
 </style>
 
 <body class="antialiased welcome-page">
-    <img class="cover-image" src="{{ asset('images/girl_bg.png') }}" alt="">
+    <img class="cover-image" src="{{ asset('images/girl_bg.png') }}" alt="" />
     <div class="py-5 container-fluid main-content">
         <div class="row">
             <div class="col-12 d-flex justify-content-center align-items-center">
@@ -59,12 +59,8 @@
         </div>
     </div>
     <div class="register-main">
-        <a href="{{ route('register') }}" class="home-btn btn rounded-pill"><span>Sign Up</span></a>
-        <p class="already-register">Already Registered</p>
-        <p class="already-register">
-            Please Login
-            <a href="{{ route('login') }}" class="">here</a>
-        </p>
+        <a href="{{ route('vote') }}" class="home-btn btn rounded-pill"><span>Vote</span></a>
+        <a href="{{ route('register') }}" class="sign-btn btn rounded-pill"><span>Sign Up</span></a>
 
         <a class="footer-text" href="https://wowsome.com.my/">Powered by WOWSOME®2024</a>
     </div>

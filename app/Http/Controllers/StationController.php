@@ -7,6 +7,8 @@ use App\Models\Station;
 use App\Models\User;
 use App\Models\StationUser;
 use App\Models\Brand;
+use App\Models\Vote;
+
 use DB;
 use Auth;
 use Carbon\Carbon;
@@ -24,6 +26,11 @@ class StationController extends Controller
     public function extension(Station $station)
     {
         return view('extension');
+    }
+
+    public function congratsVote()
+    {
+        return view('congratsVote');
     }
 
     public function brand(Station $station)
@@ -123,11 +130,34 @@ class StationController extends Controller
         return view('puzzle', compact('stations', 'stationDone', 'required', 'notRequired', 'puzzleRequired', 'puzzleNotRequired', 'nurse', 'claim'));
     }
 
+    public function castVote(Request $request)
+    {
+        $vote = new Vote();
+        $vote->brand_id = $request->brand_id;
+        $vote->save();
+
+        return $vote;
+    }
+
     public function brands()
     {
         $brands = DB::table('brands')->leftJoin('users', 'brands.id', '=', 'users.brand_id')->select('brands.id as brand_id', 'brands.name as brand_name', DB::raw('COUNT(users.id) as count'))->groupBy('brands.id', 'brands.name')->get();
         // dd($brands);
         return view('brands', compact('brands'));
+    }
+
+    public function vote()
+    {
+        $brands = Brand::get();
+        // dd($brands);
+        return view('vote', compact('brands'));
+    }
+
+    public function voteData()
+    {
+        $brands = DB::table('brands')->leftJoin('votes', 'brands.id', '=', 'votes.brand_id')->select('brands.id as brand_id', 'brands.name as brand_name', DB::raw('COUNT(votes.id) as count'))->groupBy('brands.id', 'brands.name')->get();
+        //dd($brands);
+        return view('votes', compact('brands'));
     }
 
     public function welcome()

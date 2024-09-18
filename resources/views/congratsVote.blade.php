@@ -1,13 +1,12 @@
 <x-app-layout>
-    <div class="container-fluid home start completed-screen pt-4">
-
+    <div class="container-fluid home completed-screen pt-4">
 
         <div class="col-12 d-flex justify-content-center">
             @include('components.branding')
         </div>
         <p class="yellow-text mt-4">
-            Mission Accomplished<br />
-            <span>You’ve successfully</span><br />unlocked the Little Nurse
+            Thank You<br />
+            <span>For Voting</span><br />
         </p>
 
         <div class="product-image">
@@ -15,7 +14,7 @@
         </div>
         <div class="title-container">
             <p class="title small">
-                Please proceed to <br />redemption counter
+                Join our <br /> Journey Now
 
             </p>
         </div>

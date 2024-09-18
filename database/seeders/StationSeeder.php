@@ -27,7 +27,7 @@ class StationSeeder extends Seeder
         ]);
 
         Station::create([
-            'name' => 'First Known Brand',
+            'name' => 'Best Seller',
             'required' => true,
             'nurse' => 'Rohto',
         ]);

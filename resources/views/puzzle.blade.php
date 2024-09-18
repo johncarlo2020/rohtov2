@@ -10,7 +10,7 @@
             align-items: center;
             background: #fff;
             padding: 20px;
-            border: 2px solid #8BC28C;
+            border: 2px solid #8bc28c;
             border-radius: 20px;
             margin: 0 auto;
             margin-top: 40px;
@@ -69,40 +69,50 @@
                 <div class="mt-3 text-center col-12 text-content">
                     <div class="puzzle-container">
                         @foreach ($puzzleRequired as $item)
-                            <div class="puzzle-piece">
-                                <img class="puzzle-img
+                        <div class="puzzle-piece">
+                            <img
+                                class="puzzle-img
                                     puzzle-img {{ $item->is_gotten == 1 ? '' : 'd-none' }}"
-                                    src="{{ asset('images/puzzle/' . $item->station_id . '.png') }}" alt="">
-                            </div>
-                        @endforeach
-                        @foreach ($puzzleNotRequired as $item)
-                            <div class="puzzle-piece">
-                                <img class=" puzzle-img {{ $item->is_gotten == 1 ? '' : 'd-none' }}"
-                                    src="{{ asset('images/puzzle/' . $loop->iteration + 4 . '.png') }}" alt="">
-                            </div>
+                                src="{{ asset('images/puzzle/' . $item->station_id . '.png') }}"
+                                alt=""
+                            />
+                        </div>
+                        @endforeach @foreach ($puzzleNotRequired as $item)
+                        <div class="puzzle-piece">
+                            <img
+                                class=" puzzle-img {{ $item->is_gotten == 1 ? '' : 'd-none' }}"
+                                src="{{ asset('images/puzzle/' . $loop->iteration + 4 . '.png') }}"
+                                alt=""
+                            />
+                        </div>
                         @endforeach
                     </div>
                     <p class="mt-3 station-progress-heading">Little Nurse</p>
                     <div class="badge-container-bottom">
-                        @foreach ($nurse as $item)
-                            @if ($item->station_id != 9)
-                                <div class="badge-piece">
-                                    <img class="{{ $item->is_gotten == 1 ? '' : 'old' }}"
-                                        src="{{ asset('images/badge' . $item->station_id . '.png') }}">
-                                    <p class="badge-text ">{{ $item->station_name }}</p>
-                                </div>
-                            @endif
-                        @endforeach
-
+                        @foreach ($nurse as $item) @if ($item->station_id != 9)
+                        <div class="badge-piece">
+                            <img
+                                class="{{ $item->is_gotten == 1 ? '' : 'old' }}"
+                                src="{{ asset('images/badge' . $item->station_id . '.png') }}"
+                            />
+                            <p class="badge-text">
+                                {{ preg_replace('/\s*\(.*?\)\s*/', '', $item->station_name) }}
+                            </p>
+                        </div>
+                        @endif @endforeach
                     </div>
-                    <div class="text-center" style="text-align: center;"> <!-- Ensures content inside is centered -->
-                        <a href="{{ route('dashboard') }}" class="button" style="display: inline-block;">
+                    <div class="text-center" style="text-align: center">
+                        <!-- Ensures content inside is centered -->
+                        <a
+                            href="{{ route('dashboard') }}"
+                            class="button"
+                            style="display: inline-block"
+                        >
                             <!-- Keeps the button inline -->
                             BACK
                         </a>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

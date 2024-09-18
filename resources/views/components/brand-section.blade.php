@@ -61,7 +61,7 @@
     }
 
     .question-img img {
-       width: 100%;
+        width: 100%;
         height: 100%;
         object-fit: contain;
     }
@@ -171,14 +171,14 @@
     <div class="question-img">
         <img src="" alt="" id="img" />
     </div>
-    <img class="check" id="badge" src="">
+    <img class="check" id="badge" src="" />
 
     <p id="question"></p>
 </div>
 <div class="answers">
     @foreach ($brands as $brand)
         <button onclick="checkAnswer(this)" class="shadow-sm item" data-id="{{ $brand->id }}" style="">
-            {{ $brand->name }}
+            {{ $brand->name }}asdasd
             <img class="brand-img" src="{{ asset('images/brand' . $brand->id . '.png') }}" alt="Lock Image" />
         </button>
     @endforeach

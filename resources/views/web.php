@@ -28,6 +28,11 @@ Route::get('/admin/login', function () {
     return view('auth.admin-login');
 });
 
+Route::get('/vote', 'App\Http\Controllers\StationController@vote')->name('vote');
+Route::post('/castVote', 'App\Http\Controllers\StationController@castVote')->name('castVote');
+Route::get('/voteData', 'App\Http\Controllers\StationController@voteData')->name('voteData');
+Route::get('/congratsVote', 'App\Http\Controllers\StationController@congratsVote')->name('congratsVote');
+
 Route::get('/congrats', function () {
     return view('congrats');
 })->name('congrats');
@@ -50,10 +55,6 @@ Route::group(['middleware' => ['client']], function () {
     Route::get('/station/{station}/brand', 'App\Http\Controllers\StationController@brand')->name('station.brand');
     Route::get('/puzzle', 'App\Http\Controllers\StationController@puzzle')->name('station.puzzle');
     Route::get('/brands', 'App\Http\Controllers\StationController@brands')->name('station.brands');
-    Route::get('/vote', 'App\Http\Controllers\StationController@vote')->name('vote');
-    Route::post('/castVote', 'App\Http\Controllers\StationController@castVote')->name('castVote');
-    Route::get('/voteData', 'App\Http\Controllers\StationController@voteData')->name('voteData');
-    Route::get('/congratsVote', 'App\Http\Controllers\StationController@congratsVote')->name('congratsVote');
 });
 
 require __DIR__ . '/auth.php';

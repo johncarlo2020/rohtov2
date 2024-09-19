@@ -42,7 +42,9 @@
 </style>
 
 <body class="antialiased welcome-page">
-    <img class="cover-image" src="{{ asset('images/girl_bg.png') }}" alt="" />
+    {{-- <img class="cover-image" src="{{ asset('images/girl_bg.png') }}" alt="" /> --}}
+    <img class="cover-image" src="{{ asset('images/rohto.webp') }}" alt="" />
+
     <div class="py-5 container-fluid main-content">
         <div class="row">
             <div class="col-12 d-flex justify-content-center align-items-center">

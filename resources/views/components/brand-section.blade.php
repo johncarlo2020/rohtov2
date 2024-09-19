@@ -178,7 +178,7 @@
 <div class="answers">
     @foreach ($brands as $brand)
         <button onclick="checkAnswer(this)" class="shadow-sm item" data-id="{{ $brand->id }}" style="">
-            {{ $brand->name }}asdasd
+            {{ $brand->name }}
             <img class="brand-img" src="{{ asset('images/brand' . $brand->id . '.png') }}" alt="Lock Image" />
         </button>
     @endforeach

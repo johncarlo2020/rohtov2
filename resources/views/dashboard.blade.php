@@ -97,8 +97,27 @@
                 opacity: 0;
             }
         }
+
+        .ct-animate-blink {
+            animation: blink 2s infinite;
+            animation-fill-mode: both;
+        }
+
+        @keyframes blink {
+            0% {
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
     </style>
-    <div class="modal fade " id="scanCompleteModal" tabindex="-1">
+    <div class="modal fade" id="scanCompleteModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-body">
@@ -107,14 +126,18 @@
                             <i class="fa-regular check"></i>
                         </div>
                         <div class="text-content">
-                            <p class="station-text">Collect badges from 4 green stations and 2 yellow stations</p>
+                            <p class="station-text">
+                                Collect badges from 4 green stations and 2
+                                yellow stations
+                            </p>
                             <p class="message">
                                 Head to redemption counter once completed
                             </p>
                         </div>
                         <div class="">
-                            <button type="button" class="button" data-dismiss="modal">Close</button>
-
+                            <button type="button" class="button" data-dismiss="modal">
+                                Close
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -128,48 +151,52 @@
                     @include('components.branding')
                 </div>
                 <div class="where">
-                    <h1>Where is the <span>Little Nurse</span> </h1>
+                    <h1>Where is the <span>Little Nurse</span></h1>
                 </div>
                 <div class="heading-main">
                     <h1>Start your <span>Journey</span> now</h1>
                 </div>
-                <div class="icon-girl">
+                <div class="icon-girl ct-animate-blink">
                     <img onclick="puzzle()" class="" src="{{ asset('images/girlIcon.png') }}" alt="" />
                 </div>
                 <p class="station-progress-heading">Station Progress</p>
                 <div class="badge-container">
-                    @foreach ($required as $item)
+                    @foreach ($stations as $station)
+                        @if ($station->id <= 4)
+                            {{-- <div class="badge {{ $item->is_gotten == 1 ? 'completed' : '' }}"> --}}
+                            <div class="badge {{ !$station->status ? '' : 'completed' }}"
+                                onclick="gotoStation({{ $station->id }})">
+
+                                <span>{{ $station->id }}</span>
+                                <img src="{{ asset('images/badge' . $station->id . '.png') }}" alt="" />
+                            </div>
+                        @endif
+                    @endforeach
+                    @foreach ($notRequired as $item)
                         <div class="badge {{ $item->is_gotten == 1 ? 'completed' : '' }}">
                             <span>?</span>
                             <img src="{{ asset('images/badge' . $item->station_id . '.png') }}" alt="" />
                         </div>
-                        @endforeach @foreach ($notRequired as $item)
-                            <div class="badge {{ $item->is_gotten == 1 ? 'completed' : '' }}">
-                                <span>?</span>
-                                <img src="{{ asset('images/badge' . $item->station_id . '.png') }}" alt="" />
-                            </div>
-                        @endforeach
+                    @endforeach
 
-                        <div class="badge with-img {{ $claim >= 6 ? 'completed' : '' }}">
-                            <span>
-
-                                <img class="gift-icon" src="{{ asset('images/gift.png') }}" onclick="modalOPen()" />
-
-                            </span>
-                        </div>
+                    <div class="badge with-img {{ $claim >= 6 ? 'completed' : '' }}">
+                        <span>
+                            <img class="gift-icon" src="{{ asset('images/gift.png') }}" onclick="modalOPen()" />
+                        </span>
+                    </div>
                 </div>
                 <div class="mt-3 text-center col-12 text-content">
                     <div class="cloud first">
-                        <img src="{{ asset('images/cloud.png') }}" alt="">
+                        <img src="{{ asset('images/cloud.png') }}" alt="" />
                     </div>
                     <div class="cloud second">
-                        <img src="{{ asset('images/cloud.png') }}" alt="">
+                        <img src="{{ asset('images/cloud.png') }}" alt="" />
                     </div>
                     <div class="cloud third">
-                        <img src="{{ asset('images/cloud.png') }}" alt="">
+                        <img src="{{ asset('images/cloud.png') }}" alt="" />
                     </div>
                     <div class="cloud fourth">
-                        <img src="{{ asset('images/cloud.png') }}" alt="">
+                        <img src="{{ asset('images/cloud.png') }}" alt="" />
                     </div>
                     <div class="map">
                         <img class="path-image" src="{{ asset('images/map.png') }}" alt="Station Image" />
@@ -194,7 +221,6 @@
                                 </div>
                             </div>
                         @endforeach
-
                     </div>
                 </div>
             </div>
@@ -203,13 +229,13 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script> <!-- Ensure Bootstrap JS is included -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <!-- Ensure Bootstrap JS is included -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
 
     <script>
         function modalOPen() {
-            $(scanCompleteModal).modal('show');
-
+            $(scanCompleteModal).modal("show");
         }
 
         function gotoStation(id) {

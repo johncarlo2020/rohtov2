@@ -212,128 +212,130 @@
             </div>
         </div>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <!-- Ensure Bootstrap JS is included -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
+</div>
 
-    <script>
-        const questions = [{
-            question: "Which is your first use brand?",
-        }, ];
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<!-- Ensure Bootstrap JS is included -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
 
-        let currentQuestionIndex = 0;
+<script>
+    const questions = [{
+        question: "Which is your first use brand?",
+    }, ];
 
-        function continueSelection() {
-            // Find the selected button
-            const selectedButton = document.querySelector('.item.selected');
+    let currentQuestionIndex = 0;
 
-            if (selectedButton) {
-                // Get the data-id attribute of the selected button
-                const selectedId = selectedButton.getAttribute('data-id');
-                console.log('Selected ID:', selectedId);
-                sendMessage(selectedId);
+    function continueSelection() {
+        // Find the selected button
+        const selectedButton = document.querySelector('.item.selected');
 
-            } else {
-                console.log('No item selected');
+        if (selectedButton) {
+            // Get the data-id attribute of the selected button
+            const selectedId = selectedButton.getAttribute('data-id');
+            console.log('Selected ID:', selectedId);
+            sendMessage(selectedId);
+
+        } else {
+            console.log('No item selected');
+        }
+    }
+
+
+    function sendMessage(id) {
+        // Fetch the CSRF token from the meta tag
+        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+        $.ajax({
+            url: '{{ route('process_qr_code') }}', // Using Laravel's route() helper function
+            type: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken, // Include the CSRF token in the headers
+            },
+            data: {
+                qrCodeMessage: 'example.com?station=2',
+                station: 2,
+                brand: id
+            },
+            success: function(response) {
+                const confettiCanvas = document.createElement('canvas');
+                confettiCanvas.style.position = 'fixed';
+                confettiCanvas.style.top = 0;
+                confettiCanvas.style.left = 0;
+                confettiCanvas.style.width = '100%';
+                confettiCanvas.style.height = '100%';
+                confettiCanvas.style.pointerEvents = 'none';
+                confettiCanvas.style.zIndex = 9999;
+                document.body.appendChild(confettiCanvas);
+
+                // Trigger confetti using the new canvas
+                const myConfetti = confetti.create(confettiCanvas, {
+                    resize: true,
+                    useWorker: true
+                });
+
+                myConfetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: {
+                        y: 0.6
+                    }
+                });
+
+                // Optional: Remove the canvas after a short delay
+                setTimeout(() => {
+                    document.body.removeChild(confettiCanvas);
+                }, 5000);
+                console.log('QR Code message sent successfully:', response);
+                // Handle success response if needed
+
+                $('.station_id').html('2');
+
+                $(scanCompleteModal).modal('show');
+
+            },
+            error: function(xhr, status, error) {
+                console.error('Error sending QR Code message:', error);
+                $('.station-text').html('Failed');
+                $('.message').html('Invalid QR code. Please try again.');
+                $('.check').attr('src', '{{ asset('images / error.svg ') }}');
+                $(scanCompleteModal).modal('show');
+
             }
-        }
+        });
+    }
 
+    function renderQuestion() {
+        const questionElement = document.getElementById('question');
+        const answersElement = document.querySelector('.answers');
+        const progressBar = document.getElementById('progress-bar');
+        const questionNumberElement = document.getElementById('question-number');
+        const questionNumberImage = document.getElementById('img');
+        questionNumberImage.src = "{{ asset('images/logo-large.png') }}";
+        questionElement.textContent = questions[currentQuestionIndex].question;
+    }
 
-        function sendMessage(id) {
-            // Fetch the CSRF token from the meta tag
-            var csrfToken = $('meta[name="csrf-token"]').attr('content');
+    function checkAnswer(button) {
+        const answerButtons = document.querySelectorAll('.answers .item');
 
-            $.ajax({
-                url: '{{ route('process_qr_code') }}', // Using Laravel's route() helper function
-                type: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': csrfToken, // Include the CSRF token in the headers
-                },
-                data: {
-                    qrCodeMessage: 'example.com?station=2',
-                    station: 2,
-                    brand: id
-                },
-                success: function(response) {
-                    const confettiCanvas = document.createElement('canvas');
-                    confettiCanvas.style.position = 'fixed';
-                    confettiCanvas.style.top = 0;
-                    confettiCanvas.style.left = 0;
-                    confettiCanvas.style.width = '100%';
-                    confettiCanvas.style.height = '100%';
-                    confettiCanvas.style.pointerEvents = 'none';
-                    confettiCanvas.style.zIndex = 9999;
-                    document.body.appendChild(confettiCanvas);
+        answerButtons.forEach((btn) => {
+            btn.style.backgroundColor = ''; // or the default color
+            btn.style.border = ''; // or the default border
+            btn.style.color = ''; // or the default color
+            btn.classList.remove('selected')
+        });
 
-                    // Trigger confetti using the new canvas
-                    const myConfetti = confetti.create(confettiCanvas, {
-                        resize: true,
-                        useWorker: true
-                    });
+        // Apply styles to the clicked button
+        button.style.backgroundColor = '#8BC28C';
+        button.style.border = '2px solid #fff';
+        button.style.color = '#fff';
 
-                    myConfetti({
-                        particleCount: 100,
-                        spread: 70,
-                        origin: {
-                            y: 0.6
-                        }
-                    });
+        // Add 'selected' class to the current button
+        button.classList.add('selected');
 
-                    // Optional: Remove the canvas after a short delay
-                    setTimeout(() => {
-                        document.body.removeChild(confettiCanvas);
-                    }, 5000);
-                    console.log('QR Code message sent successfully:', response);
-                    // Handle success response if needed
+    }
 
-                    $('.station_id').html('2');
-
-                    $(scanCompleteModal).modal('show');
-
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error sending QR Code message:', error);
-                    $('.station-text').html('Failed');
-                    $('.message').html('Invalid QR code. Please try again.');
-                    $('.check').attr('src', '{{ asset('images / error.svg ') }}');
-                    $(scanCompleteModal).modal('show');
-
-                }
-            });
-        }
-
-        function renderQuestion() {
-            const questionElement = document.getElementById('question');
-            const answersElement = document.querySelector('.answers');
-            const progressBar = document.getElementById('progress-bar');
-            const questionNumberElement = document.getElementById('question-number');
-            const questionNumberImage = document.getElementById('img');
-            questionNumberImage.src = "{{ asset('images/logo-large.png') }}";
-            questionElement.textContent = questions[currentQuestionIndex].question;
-        }
-
-        function checkAnswer(button) {
-            const answerButtons = document.querySelectorAll('.answers .item');
-
-            answerButtons.forEach((btn) => {
-                btn.style.backgroundColor = ''; // or the default color
-                btn.style.border = ''; // or the default border
-                btn.style.color = ''; // or the default color
-                btn.classList.remove('selected')
-            });
-
-            // Apply styles to the clicked button
-            button.style.backgroundColor = '#8BC28C';
-            button.style.border = '2px solid #fff';
-            button.style.color = '#fff';
-
-            // Add 'selected' class to the current button
-            button.classList.add('selected');
-
-        }
-
-        // Initialize the first question
-        document.addEventListener('DOMContentLoaded', renderQuestion);
-    </script>
+    // Initialize the first question
+    document.addEventListener('DOMContentLoaded', renderQuestion);
+</script>
 </div>

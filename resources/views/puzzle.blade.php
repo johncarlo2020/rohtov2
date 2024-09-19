@@ -82,7 +82,34 @@
             /* Safari 6.0 - 9.0 */
             filter: grayscale(100%);
         }
+
+        .icon-bg {
+            width: 150px;
+            height: auto;
+            margin-bottom: 25px;
+        }
+
+        .iconNew {
+            width: 60px;
+        }
     </style>
+    <div class="modal fade" id="scanCompleteModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="text-center content">
+                        <div class="image-check">
+                            <div class="text-content">
+                                <img id="badge" class="icon-bg" src="" alt="Lock Image" />
+                                <p class="name"></p>
+                            </div>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="container-fluid start home dashboard">
         <div class="row justify-content-center">
             <div class="col-md-8">
@@ -112,7 +139,9 @@
                             @if ($item->station_id != 9)
                                 <div class="badge-piece">
                                     <img class="{{ $item->is_gotten == 1 ? '' : 'old' }}"
-                                        src="{{ asset('images/badge' . $item->station_id . '.png') }}" />
+                                        src="{{ asset('images/badge' . $item->station_id . '.png') }}"
+                                        @if ($item->is_gotten == 1) onclick="openModal({{ $item->station_id }}, '{{ $item->station_name }}')" @endif />
+
                                     <p class="badge-text">
                                         {{ preg_replace('/\s*\(.*?\)\s*/', '', $item->station_name) }}
                                     </p>
@@ -131,5 +160,20 @@
             </div>
         </div>
     </div>
-    <script></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <!-- Ensure Bootstrap JS is included -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        function openModal(id, name) {
+            const dynamicImage = `{{ asset('images/badge') }}${id}.png`;
+            $('#badge').attr('src', dynamicImage);
+            $('.name').html(name);
+            $(scanCompleteModal).modal("show");
+
+        }
+    </script>
 </x-app-layout>

@@ -1582,9 +1582,26 @@ $form-check-hover-shadow: rgba(0, 123, 255, 0.5);
                 position: relative;
             }
 
+
+
             span {
                 font-weight: 700;
             }
+        }
+
+             .join-btn {
+            min-width: 40vw !important;
+            max-width: 60vw;
+            font-size: 3vw;
+color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+            margin-bottom: 2vh;
+                background-color: $primary;
+    width: 30vw;
+    margin-top: 20px;
         }
 
         .arrow {

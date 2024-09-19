@@ -25,7 +25,7 @@
             right: 20px;
             width: 60px;
             height: 30px;
-            z-index: 9999;
+            z-index: 10;
             animation: moveCloudRight 100s linear infinite;
         }
 
@@ -36,7 +36,7 @@
             left: 20px;
             width: 80px;
             height: 40px;
-            z-index: 9999;
+            z-index: 10;
         }
 
         .fourth {

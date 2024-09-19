@@ -47,11 +47,10 @@
     }
 
     .question-img {
-        width: 25vw;
+        width: 29vw;
         border-radius: 12px;
-        background: #8bc28c;
         position: absolute;
-        top: -30px;
+        top: -60px;
         left: 50%;
         transform: translateX(-50%);
 
@@ -79,7 +78,8 @@
         margin: 0 auto;
         margin-top: 20px;
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        grid-template-columns: repeat(auto-fill,
+                minmax(200px, 1fr));
         gap: 10px;
     }
 
@@ -221,7 +221,8 @@
 
 <script>
     const questions = [{
-        question: "Which is your first use brand?",
+        question: "Vote for your favourite brand!",
+
     }, ];
 
     let currentQuestionIndex = 0;
@@ -311,7 +312,7 @@
         const progressBar = document.getElementById('progress-bar');
         const questionNumberElement = document.getElementById('question-number');
         const questionNumberImage = document.getElementById('img');
-        questionNumberImage.src = "{{ asset('images/logo-large.png') }}";
+        questionNumberImage.src = "{{ asset('images/bigNurse.png') }}";
         questionElement.textContent = questions[currentQuestionIndex].question;
     }
 

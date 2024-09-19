@@ -87,11 +87,11 @@ class StationSeeder extends Seeder
         ]);
 
         Brand::create([
-            'name' => 'Mentholatum',
+            'name' => 'Mentholatum Lipcare',
         ]);
 
         Brand::create([
-            'name' => 'Selson Blue',
+            'name' => 'Selsun Blue',
         ]);
 
         Brand::create([

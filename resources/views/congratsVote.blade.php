@@ -17,6 +17,8 @@
                 Join our <br /> Journey Now
 
             </p>
+            <a href="{{ route('welcome') }}" class="join-btn btn rounded-pill"><span>Join Now</span></a>
+
         </div>
         <div class="bottom-text mt-3">
             <br />

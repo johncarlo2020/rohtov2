@@ -21,6 +21,30 @@
             margin-bottom: 2px;
         }
 
+        .piece-1 {
+            border-bottom: 2px solid #C7C7C7;
+            border-right: 2px solid #C7C7C7;
+        }
+
+        .piece-2 {
+            border-bottom: 2px solid #C7C7C7;
+        }
+
+        .piece-3 {
+            border-right: 2px solid #C7C7C7;
+        }
+
+        .piece-4 {}
+
+        .piece-5 {
+            border-top: 2px solid #C7C7C7;
+            border-right: 2px solid #C7C7C7;
+        }
+
+        .piece-6 {
+            border-top: 2px solid #C7C7C7;
+        }
+
         .puzzle-img {
             width: 80px;
         }
@@ -69,45 +93,36 @@
                 <div class="mt-3 text-center col-12 text-content">
                     <div class="puzzle-container">
                         @foreach ($puzzleRequired as $item)
-                        <div class="puzzle-piece">
-                            <img
-                                class="puzzle-img
+                            <div class="puzzle-piece piece-{{ $item->station_id }}">
+                                <img class="puzzle-img
                                     puzzle-img {{ $item->is_gotten == 1 ? '' : 'd-none' }}"
-                                src="{{ asset('images/puzzle/' . $item->station_id . '.png') }}"
-                                alt=""
-                            />
-                        </div>
-                        @endforeach @foreach ($puzzleNotRequired as $item)
-                        <div class="puzzle-piece">
-                            <img
-                                class=" puzzle-img {{ $item->is_gotten == 1 ? '' : 'd-none' }}"
-                                src="{{ asset('images/puzzle/' . $loop->iteration + 4 . '.png') }}"
-                                alt=""
-                            />
-                        </div>
-                        @endforeach
+                                    src="{{ asset('images/puzzle/' . $item->station_id . '.png') }}" alt="" />
+                            </div>
+                            @endforeach @foreach ($puzzleNotRequired as $item)
+                                <div class="puzzle-piece piece-{{ $loop->iteration + 4 }}">
+                                    <img class=" puzzle-img {{ $item->is_gotten == 1 ? '' : 'd-none' }}"
+                                        src="{{ asset('images/puzzle/' . $loop->iteration + 4 . '.png') }}"
+                                        alt="" />
+                                </div>
+                            @endforeach
                     </div>
                     <p class="mt-3 station-progress-heading">Little Nurse</p>
                     <div class="badge-container-bottom">
-                        @foreach ($nurse as $item) @if ($item->station_id != 9)
-                        <div class="badge-piece">
-                            <img
-                                class="{{ $item->is_gotten == 1 ? '' : 'old' }}"
-                                src="{{ asset('images/badge' . $item->station_id . '.png') }}"
-                            />
-                            <p class="badge-text">
-                                {{ preg_replace('/\s*\(.*?\)\s*/', '', $item->station_name) }}
-                            </p>
-                        </div>
-                        @endif @endforeach
+                        @foreach ($nurse as $item)
+                            @if ($item->station_id != 9)
+                                <div class="badge-piece">
+                                    <img class="{{ $item->is_gotten == 1 ? '' : 'old' }}"
+                                        src="{{ asset('images/badge' . $item->station_id . '.png') }}" />
+                                    <p class="badge-text">
+                                        {{ preg_replace('/\s*\(.*?\)\s*/', '', $item->station_name) }}
+                                    </p>
+                                </div>
+                            @endif
+                        @endforeach
                     </div>
                     <div class="text-center" style="text-align: center">
                         <!-- Ensures content inside is centered -->
-                        <a
-                            href="{{ route('dashboard') }}"
-                            class="button"
-                            style="display: inline-block"
-                        >
+                        <a href="{{ route('dashboard') }}" class="button" style="display: inline-block">
                             <!-- Keeps the button inline -->
                             BACK
                         </a>

@@ -118,28 +118,42 @@
         }
 
         @keyframes blink2 {
-        0% {
-            opacity: 1;
-        }
-        50% {
-            opacity: 0;
-        }
-        100% {
-            opacity: 1;
-        }
-    }
+            0% {
+                opacity: 1;
+            }
 
-    .metol-logo {
-        bottom: -4vh;
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        height: 60px;
-        width: 59px !important;
-        object-fit: contain;
-        z-index: 2;
-        animation: blink2 1s infinite;
-    }
+            50% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .metol-logo {
+            position: absolute;
+            bottom: -70%;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 60px;
+            width: 59px !important;
+            object-fit: contain;
+            z-index: 2;
+            animation: blink2 1s infinite;
+        }
+
+        .logo-135 {
+            bottom: 54%;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 60px;
+            width: 37px !important;
+            object-fit: contain;
+            z-index: 2;
+            animation: blink2 0.5s infinite;
+        }
     </style>
     <div class="modal fade" id="scanCompleteModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
@@ -231,7 +245,11 @@
                                         class="boot-img"
                                         src="{{ asset('images/step/step-img-' . $station->id . '.png') }}"
                                         alt="" />
-                                    <img @if ($station->id === 9) class="metol-logo"  src="{{ asset('images/metol.png') }}" alt=""@endif>
+                                    <img
+                                        @if ($station->id === 9) class="metol-logo"  src="{{ asset('images/metol.png') }}" alt="" @endif>
+                                    <img
+                                        @if ($station->id === 9) class="logo-135"  src="{{ asset('images/135.png') }}" alt="" @endif>
+
                                     <div class="details-container">
                                         <div class="details">
                                             <span class="step-number {{ $station->status ? 'completed' : '' }}">

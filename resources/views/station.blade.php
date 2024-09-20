@@ -83,7 +83,10 @@
                         <p class="px-4 mt-3 bottom-text">Scan the QR code at the station to proceed</p>
                 @endif
             @else
+                <p class="mt-3 bottom-text">Checked-in Succesful</p>
+
                 <div class="scanner-button">
+
                     <a href="{{ route('dashboard') }}" class="button">
                         BACK
                     </a>

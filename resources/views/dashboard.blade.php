@@ -3,6 +3,7 @@
         .cloud {
             position: absolute;
             background-size: contain;
+            z-index: 1;
         }
 
         .cloud img {
@@ -25,7 +26,6 @@
             right: 20px;
             width: 60px;
             height: 30px;
-            z-index: 10;
             animation: moveCloudRight 100s linear infinite;
         }
 
@@ -36,7 +36,6 @@
             left: 20px;
             width: 80px;
             height: 40px;
-            z-index: 10;
         }
 
         .fourth {
@@ -44,7 +43,6 @@
             right: 20px;
             width: 50px;
             height: 30px;
-            z-index: 3;
             animation: moveCloudRight 100s linear infinite;
             animation-duration: 120s;
         }
@@ -56,12 +54,12 @@
         @keyframes moveCloudLeft {
             0% {
                 left: 0px;
-                opacity: 1;
+                opacity: 0.6;
             }
 
             30% {
                 left: 30%;
-                opacity: 1;
+                opacity: 0.4;
                 z-index: 1;
             }
 
@@ -79,12 +77,12 @@
         @keyframes moveCloudRight {
             0% {
                 right: 0px;
-                opacity: 1;
+                opacity: 0.6;
             }
 
             30% {
                 right: 30%;
-                opacity: 1;
+                opacity: 0.4;
             }
 
             60% {

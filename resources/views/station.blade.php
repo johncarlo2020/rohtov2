@@ -11,7 +11,7 @@
         }
 
         .logo-img {
-            width: 100px;
+            width: 150px;
         }
     </style>
     <div class="modal fade " id="scanCompleteModal" tabindex="-1">
@@ -49,17 +49,17 @@
             <div id="{{ $user ? '' : 'forceQr' }}" class="mt-4 icon-container">
             </div>
             @if ($station->id == 3)
-                <img class="logo-img" src="{{ asset('images/logo3.png') }}" alt="">
+                <img class="logo-img" src="{{ asset('images/label 1.png') }}" alt="">
             @elseif($station->id == 4)
-                <img class="logo-img" src="{{ asset('images/logo5.png') }}" alt="">
+                <img class="logo-img" src="{{ asset('images/label 2.png') }}" alt="">
             @elseif($station->id == 6)
-                <img class="logo-img" src="{{ asset('images/logo4.png') }}" alt="">
+                <img class="logo-img" src="{{ asset('images/label 3.png') }}" alt="">
             @elseif($station->id == 7)
-                <img class="logo-img" src="{{ asset('images/logo1.png') }}" alt="">
+                <img class="logo-img" src="{{ asset('images/label 4.png') }}" alt="">
             @elseif($station->id == 8)
-                <img class="logo-img" src="{{ asset('images/logo2.png') }}" alt="">
+                <img class="logo-img" src="{{ asset('images/label 5.png') }}" alt="">
             @endif
-            <h1 class="mt-4 station-heading">
+            <h1 class=" station-heading">
                 Station {{ $station->id }}
             </h1>
             <h2 class="station-subheading">{{ $station->name }}</h2>

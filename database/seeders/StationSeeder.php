@@ -69,7 +69,7 @@ class StationSeeder extends Seeder
         ]);
 
         Station::create([
-            'name' => 'GIft Redemption',
+            'name' => 'Gift Redemption',
             'required' => false,
             'nurse' => 'Gift',
         ]);

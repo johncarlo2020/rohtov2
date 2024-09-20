@@ -120,7 +120,7 @@
                         <div class="col-12">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="marketing" value="1"
-                                    id="marketing" />
+                                    id="marketing" required />
                                 <label class="form-check-label" for="marketing">
                                     I agree to receive marketing and promotional
                                     communications from Rohto Mentholatum Malaysia (RMM) via e-mail and

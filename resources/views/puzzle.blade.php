@@ -133,7 +133,9 @@
                                 </div>
                             @endforeach
                     </div>
-                    <p class="mt-3 station-progress-heading">Little Nurse</p>
+                    <p class="mt-3 station-progress-heading">FIND THE LITTLE NURSE <br>
+                        <span>Click on icon to view badge</span>
+                    </p>
                     <div class="badge-container-bottom">
                         @foreach ($nurse as $item)
                             @if ($item->station_id != 9)

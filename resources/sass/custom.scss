@@ -1375,10 +1375,8 @@ $form-check-hover-shadow: rgba(0, 123, 255, 0.5);
     padding: 5px 30px;
     border-radius: 40px;
     background-color: #fff;
-        border-color: transparent;
--webkit-box-shadow: 13px 12px 7px -8px rgba(0,0,0,0.75);
--moz-box-shadow: 13px 12px 7px -8px rgba(0,0,0,0.75);
-box-shadow: 13px 12px 7px -8px rgba(0,0,0,0.75);
+    border-color: $primary;
+
 }
 .logo-btn img{
     width: 40px;

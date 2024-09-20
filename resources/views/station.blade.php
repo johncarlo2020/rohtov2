@@ -9,6 +9,10 @@
         .iconNew {
             width: 60px;
         }
+
+        .logo-img {
+            width: 100px;
+        }
     </style>
     <div class="modal fade " id="scanCompleteModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
@@ -45,20 +49,15 @@
             <div id="{{ $user ? '' : 'forceQr' }}" class="mt-4 icon-container">
             </div>
             @if ($station->id == 3)
-                <button class="mx-auto mt-4 logo-btn"><img src="{{ asset('images/brand5.png') }}"
-                        alt=""></button>
+                <img class="logo-img" src="{{ asset('images/logo3.png') }}" alt="">
             @elseif($station->id == 4)
-                <button class="mx-auto mt-4 logo-btn"><img src="{{ asset('images/brand1.png') }}"
-                        alt=""></button>
+                <img class="logo-img" src="{{ asset('images/logo5.png') }}" alt="">
             @elseif($station->id == 6)
-                <button class="mx-auto mt-4 logo-btn"><img src="{{ asset('images/brand2.png') }}"
-                        alt=""></button>
+                <img class="logo-img" src="{{ asset('images/logo4.png') }}" alt="">
             @elseif($station->id == 7)
-                <button class="mx-auto mt-4 logo-btn"><img src="{{ asset('images/brand4.png') }}"
-                        alt=""></button>
+                <img class="logo-img" src="{{ asset('images/logo1.png') }}" alt="">
             @elseif($station->id == 8)
-                <button class="mx-auto mt-4 logo-btn"><img src="{{ asset('images/brand7.png') }}"
-                        alt=""></button>
+                <img class="logo-img" src="{{ asset('images/logo2.png') }}" alt="">
             @endif
             <h1 class="mt-4 station-heading">
                 Station {{ $station->id }}
@@ -86,7 +85,6 @@
                 <p class="mt-3 bottom-text">Checked-in Succesful</p>
 
                 <div class="scanner-button">
-
                     <a href="{{ route('dashboard') }}" class="button">
                         BACK
                     </a>
@@ -99,6 +97,11 @@
             <div id="reader"></div>
             <div class="p-3 mt-3">
                 <p class="px-4 text-center bottom-text">Find the QR code & Scan to check in the station</p>
+            </div>
+            <div>
+                <a href="{{ route('dashboard') }}" class="button">
+                    BACK
+                </a>
             </div>
         </div>
     </div>

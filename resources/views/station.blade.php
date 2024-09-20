@@ -44,12 +44,27 @@
         <div id="mainContent" class="mt-3 text-center col-12 text-content">
             <div id="{{ $user ? '' : 'forceQr' }}" class="mt-4 icon-container">
             </div>
+            @if ($station->id == 3)
+                <button class="mx-auto mt-4 logo-btn"><img src="{{ asset('images/brand5.png') }}"
+                        alt=""></button>
+            @elseif($station->id == 4)
+                <button class="mx-auto mt-4 logo-btn"><img src="{{ asset('images/brand1.png') }}"
+                        alt=""></button>
+            @elseif($station->id == 6)
+                <button class="mx-auto mt-4 logo-btn"><img src="{{ asset('images/brand2.png') }}"
+                        alt=""></button>
+            @elseif($station->id == 7)
+                <button class="mx-auto mt-4 logo-btn"><img src="{{ asset('images/brand4.png') }}"
+                        alt=""></button>
+            @elseif($station->id == 8)
+                <button class="mx-auto mt-4 logo-btn"><img src="{{ asset('images/brand7.png') }}"
+                        alt=""></button>
+            @endif
             <h1 class="mt-4 station-heading">
                 Station {{ $station->id }}
             </h1>
             <h2 class="station-subheading">{{ $station->name }}</h2>
-            <img class="mt-5 station-image" src="{{ asset('images/step/step-img-' . $station->id . '.png') }}"
-                alt="Station Image">
+            <img class="mt-5 station-image" src="{{ asset('images/n_S' . $station->id . '.png') }}" alt="Station Image">
             @if ($user != true)
                 @if ($user == false && $station->id == 1)
                     <div class="scanner-button">
@@ -61,13 +76,18 @@
                             <a href="{{ route('station.brand', ['station' => $station->id]) }}" class="button">
                                 BEGIN
                             </a>
-                        @else
-                            <button id="start-scanner" class="mx-auto mt-4 camera-btn"><img
-                                    src="{{ asset('images/camera.svg') }}" alt=""></button>
-                            <p class="px-4 mt-3 bottom-text">Scan the QR code at the station to proceed</p>
+                        </div>
+                    @else
+                        <button id="start-scanner" class="mx-auto mt-4 camera-btn"><img
+                                src="{{ asset('images/camera.svg') }}" alt=""></button>
+                        <p class="px-4 mt-3 bottom-text">Scan the QR code at the station to proceed</p>
                 @endif
             @else
-                <p class="px-4 mt-3 bottom-text">Already Completed</p>
+                <div class="scanner-button">
+                    <a href="{{ route('dashboard') }}" class="button">
+                        BACK
+                    </a>
+                </div>
             @endif
 
         </div>

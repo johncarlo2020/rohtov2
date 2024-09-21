@@ -1,6 +1,6 @@
 <x-app-layout>
     <style>
-        .puzzle-container {
+          .puzzle-container {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             grid-template-rows: repeat(3, 1fr);
@@ -51,18 +51,20 @@
             color: #303030;
             text-align: center
         }
+.brand-details {
+    padding: 20px;
+    background: #fff;
+    border-radius: 12px;
+    text-align: center; /* Centers the content including the image */
+    overflow: hidden; /* Prevents the image from overflowing outside the container */
+}
 
-        .brand-details {
-            padding: 20px;
-            background: #fff;
-            border-radius: 12px;
-        }
-
-        .brand-details img {
-            height: 30px;
-            width: auto;
-            margin: 0 auto;
-        }
+.brand-details img {
+    height: auto;
+    max-width: 100%; /* Ensures the image doesn't exceed the container's width */
+    display: block;
+    margin: 0 auto; /* Center the image horizontally */
+}
 
         .brand-details .brand-count {
             font-size: 36px;
@@ -82,7 +84,6 @@
             margin-top: 10px;
             margin-bottom: 0;
         }
-
         .brand-btn {
             border-radius: 36px;
         }

@@ -51,18 +51,20 @@
             color: #303030;
             text-align: center
         }
+.brand-details {
+    padding: 20px;
+    background: #fff;
+    border-radius: 12px;
+    text-align: center; /* Centers the content including the image */
+    overflow: hidden; /* Prevents the image from overflowing outside the container */
+}
 
-        .brand-details {
-            padding: 20px;
-            background: #fff;
-            border-radius: 12px;
-        }
-
-        .brand-details img {
-            height: 30px;
-            width: auto;
-            margin: 0 auto;
-        }
+.brand-details img {
+    height: auto;
+    max-width: 100%; /* Ensures the image doesn't exceed the container's width */
+    display: block;
+    margin: 0 auto; /* Center the image horizontally */
+}
 
         .brand-details .brand-count {
             font-size: 36px;
@@ -85,6 +87,7 @@
         .brand-btn {
             border-radius: 36px;
         }
+
     </style>
     <div class="container-fluid start home dashboard">
         <div class="row justify-content-center">

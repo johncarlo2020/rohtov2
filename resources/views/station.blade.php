@@ -11,7 +11,7 @@
         }
 
         .logo-img {
-            width: 150px;
+            width: 100px;
         }
     </style>
     <div class="modal fade " id="scanCompleteModal" tabindex="-1">
@@ -49,21 +49,23 @@
             <div id="{{ $user ? '' : 'forceQr' }}" class="mt-4 icon-container">
             </div>
             @if ($station->id == 3)
-                <img class="logo-img" src="{{ asset('images/label 1.png') }}" alt="">
+                <img class="logo-img" src="{{ asset('images/brand5.png') }}" alt="">
+                <img class="logo-img" src="{{ asset('images/brand6.png') }}" alt="">
             @elseif($station->id == 4)
-                <img class="logo-img" src="{{ asset('images/label 2.png') }}" alt="">
+                <img class="logo-img" src="{{ asset('images/brand1.png') }}" alt="">
             @elseif($station->id == 6)
-                <img class="logo-img" src="{{ asset('images/label 3.png') }}" alt="">
+                <img class="logo-img" src="{{ asset('images/brand2.png') }}" alt="">
             @elseif($station->id == 7)
-                <img class="logo-img" src="{{ asset('images/label 4.png') }}" alt="">
+                <img class="logo-img" src="{{ asset('images/brand4.png') }}" alt="">
             @elseif($station->id == 8)
-                <img class="logo-img" src="{{ asset('images/label 5.png') }}" alt="">
+                <img class="logo-img" src="{{ asset('images/brand7.png') }}" alt="">
             @endif
-            <h1 class=" station-heading">
+            <h1 class=" station-heading mt-2">
                 Station {{ $station->id }}
             </h1>
             <h2 class="station-subheading">{{ $station->name }}</h2>
-            <img class="mt-5 station-image" src="{{ asset('images/n_S' . $station->id . '.png') }}" alt="Station Image">
+            <img class="mt-5 station-image" src="{{ asset('images/n_S' . $station->id . '.png') }}"
+                alt="Station Image">
             @if ($user != true)
                 @if ($user == false && $station->id == 1)
                     <div class="scanner-button">
@@ -85,7 +87,7 @@
                 <p class="mt-3 bottom-text">Checked-in Succesful</p>
 
                 <div class="scanner-button">
-                    <a href="{{ route('dashboard') }}"  class="button">
+                    <a href="{{ route('dashboard') }}" class="button">
                         BACK
                     </a>
                 </div>
@@ -205,8 +207,8 @@
                     $('#badge').attr('src', dynamicImage);
 
                     if (lastCharacter == 9) {
-    document.getElementById('routeBtn').setAttribute('href', '{{ route('congrats') }}');
-}
+                        document.getElementById('routeBtn').setAttribute('href', '{{ route('congrats') }}');
+                    }
 
                     $(scanCompleteModal).modal('show');
 

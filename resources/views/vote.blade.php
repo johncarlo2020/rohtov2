@@ -44,34 +44,14 @@
             position: relative;
             margin: 0 auto;
             padding: 3vw;
-            margin-top: 5vh;
         }
 
-        .question-img {
-            width: 29vw;
-            border-radius: 12px;
-            position: absolute;
-            top: -60px;
-            left: 50%;
-            transform: translateX(-50%);
-
-            display: grid;
-            place-items: center;
-            padding: 3vh 2vh;
-        }
-
-        .question-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
 
         #question {
             text-align: center;
             color: #358abf;
             font-size: 5vw;
             font-weight: 700;
-            margin-top: 10vw;
         }
 
         .answers {
@@ -79,8 +59,7 @@
             margin: 0 auto;
             margin-top: 20px;
             display: grid;
-            grid-template-columns: repeat(auto-fill,
-                    minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 10px;
         }
 
@@ -168,12 +147,13 @@
         <div class="mb-3 branding-container">
             @include('components.branding')
         </div>
-
+        <h1 class="heading-question">
+            Our Best Seller <span id="question-number"></span>
+        </h1>
         <div class="question">
+
             <div class="question-description">
-                <div class="question-img">
-                    <img src="" alt="" id="img" />
-                </div>
+                <div class="question-img"></div>
                 <img class="check" id="badge" src="" />
 
                 <p id="question"></p>
@@ -279,7 +259,6 @@
                 const progressBar = document.getElementById('progress-bar');
                 const questionNumberElement = document.getElementById('question-number');
                 const questionNumberImage = document.getElementById('img');
-                questionNumberImage.src = "{{ asset('images/bigNurse.png') }}";
                 questionElement.textContent = questions[currentQuestionIndex].question;
             }
 

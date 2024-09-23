@@ -1,167 +1,146 @@
 <style>
-    .icon-bg {
-        width: 150px;
-        height: auto;
-        margin-bottom: 25px;
-    }
-
-    .progress-container {
-        width: 90%;
-        background-color: #f3f3f3;
-        border-radius: 5px;
-        overflow: hidden;
-        margin: 0 auto;
-    }
-
-    .progress-bar {
-        height: 10px;
-        background-color: #0c5a40;
-        /* Change color */
-        text-align: center;
-        line-height: 30px;
-        color: white;
-        border-radius: 5px;
-        /* Make it rounded */
-        transition: width 0.5s ease;
-        /* Add transition for animation */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        /* Add shadow */
-    }
-
-    .heading-question {
-        color: #358abf;
-        font-size: 20px;
-        font-weight: 700;
-        text-align: center;
-        margin-top: 20px;
-    }
-
-    .question-description {
-        width: 90%;
-        background: #fff;
-        border-radius: 12px;
-        position: relative;
-        margin: 0 auto;
-        padding: 3vw;
-        margin-top: 5vh;
-    }
-
-    .question-img {
-        width: 29vw;
-        border-radius: 12px;
-        position: absolute;
-        top: -60px;
-        left: 50%;
-        transform: translateX(-50%);
-
-        display: grid;
-        place-items: center;
-        padding: 3vh 2vh;
-    }
-
-    .question-img img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-    }
-
-    #question {
-        text-align: center;
-        color: #358abf;
-        font-size: 5vw;
-        font-weight: 700;
-        margin-top: 10vw;
-    }
-
-    .answers {
-        width: 90%;
-        margin: 0 auto;
-        margin-top: 20px;
-        display: grid;
-        grid-template-columns: repeat(auto-fill,
-                minmax(200px, 1fr));
-        gap: 10px;
-    }
-
-    .answers .item {
-        width: 100%;
-        color: #358abf;
-        background: #fff;
-        border-radius: 12px;
-        padding: 1.5vh;
-        margin: 0 auto;
-        border: none;
-        outline: none;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .answers .item .brand-img {
-        margin-left: auto;
-        object-fit: contain;
-    }
-
-    .answers .active {
-        background: #0c5a40;
-        color: #fff;
-        border: 1px solid #fff;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    #next {
-        width: 170px;
-        margin-top: 20px;
-        background: #0c5a40;
-        color: #fff;
-        border-radius: 40px;
-        padding: 10px;
-        border: none;
-        outline: none;
-    }
-
-    .navigation {
-        width: 90%;
-        margin: 0 auto;
-        margin-top: 20px;
-        display: flex;
-        justify-content: center;
-    }
-
-    @keyframes shake {
-        0% {
-            transform: translateX(0);
+      .icon-bg {
+            width: 150px;
+            height: auto;
+            margin-bottom: 25px;
         }
 
-        25% {
-            transform: translateX(-5px);
+        .progress-container {
+            width: 90%;
+            background-color: #f3f3f3;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 0 auto;
         }
 
-        50% {
-            transform: translateX(5px);
+        .progress-bar {
+            height: 10px;
+            background-color: #0c5a40;
+            /* Change color */
+            text-align: center;
+            line-height: 30px;
+            color: white;
+            border-radius: 5px;
+            /* Make it rounded */
+            transition: width 0.5s ease;
+            /* Add transition for animation */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            /* Add shadow */
         }
 
-        75% {
-            transform: translateX(-5px);
+        .heading-question {
+            color: #358abf;
+            font-size: 20px;
+            font-weight: 700;
+            text-align: center;
+            margin-top: 20px;
         }
 
-        100% {
-            transform: translateX(0);
+        .question-description {
+            width: 90%;
+            background: #fff;
+            border-radius: 12px;
+            position: relative;
+            margin: 0 auto;
+            padding: 3vw;
         }
-    }
 
-    .shake {
-        animation: shake 0.5s;
-    }
 
-    .brand-img {
-        width: 45px;
-        height: 100%;
-        object-fit: contain;
-        margin-left: 115px;
-    }
+        #question {
+            text-align: center;
+            color: #358abf;
+            font-size: 5vw;
+            font-weight: 700;
+        }
+
+        .answers {
+            width: 90%;
+            margin: 0 auto;
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .answers .item {
+            width: 100%;
+            color: #358abf;
+            background: #fff;
+            border-radius: 12px;
+            padding: 1.5vh;
+            margin: 0 auto;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .answers .item .brand-img {
+            margin-left: auto;
+            object-fit: contain;
+        }
+
+        .answers .active {
+            background: #0c5a40;
+            color: #fff;
+            border: 1px solid #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #next {
+            width: 170px;
+            margin-top: 20px;
+            background: #0c5a40;
+            color: #fff;
+            border-radius: 40px;
+            padding: 10px;
+            border: none;
+            outline: none;
+        }
+
+        .navigation {
+            width: 90%;
+            margin: 0 auto;
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        @keyframes shake {
+            0% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            50% {
+                transform: translateX(5px);
+            }
+
+            75% {
+                transform: translateX(-5px);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        .shake {
+            animation: shake 0.5s;
+        }
+
+        .brand-img {
+            width: 45px;
+            height: 100%;
+            object-fit: contain;
+            margin-left: 115px;
+        }
 </style>
 
 <h1 class="heading-question">
@@ -169,7 +148,6 @@
 </h1>
 <div class="question-description">
     <div class="question-img">
-        <img src="" alt="" id="img" />
     </div>
     <img class="check" id="badge" src="" />
 
@@ -312,7 +290,6 @@
         const progressBar = document.getElementById('progress-bar');
         const questionNumberElement = document.getElementById('question-number');
         const questionNumberImage = document.getElementById('img');
-        questionNumberImage.src = "{{ asset('images/bigNurse.png') }}";
         questionElement.textContent = questions[currentQuestionIndex].question;
     }
 

@@ -20,6 +20,9 @@ class StationController extends Controller
         $user = StationUser::where('user_id', auth()->id())
             ->where('station_id', $station->id)
             ->exists();
+        if ($station->id == 9 && $user == true) {
+            return view('congrats');
+        }
 
         return view('station', compact('station', 'user'));
     }

@@ -32,7 +32,7 @@
                             </p>
                         </div>
                         <div class="">
-                            <a href="{{ route('dashboard') }}" class="button">
+                            <a href="{{ route('dashboard') }}" id="routeBtn" class="button">
                                 Close
                             </a>
                         </div>
@@ -85,7 +85,7 @@
                 <p class="mt-3 bottom-text">Checked-in Succesful</p>
 
                 <div class="scanner-button">
-                    <a href="{{ route('dashboard') }}" class="button">
+                    <a href="{{ route('dashboard') }}"  class="button">
                         BACK
                     </a>
                 </div>
@@ -203,6 +203,10 @@
                     $('.station_id').html(lastCharacter);
                     const dynamicImage = `{{ asset('images/badge') }}${lastCharacter}.png`;
                     $('#badge').attr('src', dynamicImage);
+
+                    if (lastCharacter == 9) {
+    document.getElementById('routeBtn').setAttribute('href', '{{ route('congrats') }}');
+}
 
                     $(scanCompleteModal).modal('show');
 

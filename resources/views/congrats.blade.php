@@ -16,10 +16,8 @@
 
             </p>
         </div>
-        <div class="bottom-text mt-3">
-            <br />
+        <div class="bottom-text mt-5">
             <p class="text-success text-center">Visit our official website</p>
-            <br />
             <a href="http://www.mentholatum.com.my/">  <img src="{{ asset('images/logo-large.png') }}" alt="" /></a>
 
         </div>

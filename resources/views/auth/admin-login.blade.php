@@ -31,7 +31,7 @@
             >
                 <h1 class="mb-4">Welcome!</h1>
                 <h2>Sign in to</h2>
-                <p class="mb-4">Warda Admin Panel</p>
+                <p class="mb-4">{{env('APP_NAME')}} Admin Panel</p>
                 <form
                     method="POST"
                     id="loginForm"

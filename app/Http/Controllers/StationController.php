@@ -303,7 +303,7 @@ class StationController extends Controller
         $admin = User::find(auth()->id());
         $permission = $admin->getPermissionNames()->first();
         $today = Carbon::today();
-        $startDate = Carbon::create(2024, 7, 10);
+        $startDate = Carbon::create(2024, 9, 24);
         $data['users'] = User::with('stationUser')->take(4)->orderBy('id', 'desc')->get();
         $data['usersCount'] = User::whereDate('created_at', '>=', $startDate->toDateString())->count();
         $data['userToday'] = User::whereDate('created_at', $today)->count();

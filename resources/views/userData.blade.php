@@ -155,32 +155,36 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
         var permissionName = "{{ $permission }}";
-        if(permissionName === 'full'){
-            $('.big-checkbox').change(function() {
-            var newState = $(this).prop('checked');
-            var user_id = {{ $user->id }}
-            var station_id = $(this).data('id');
-            var csrfToken = $('meta[name="csrf-token"]').attr('content');
+      if (permissionName === 'full') {
+    $('.big-checkbox').change(function() {
+        var newState = $(this).prop('checked');
+        var user_id = {{ $user->id }};
+        var station_id = $(this).data('id');
+        var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
-            $.ajax({
-                url: '{{ route('check') }}', // Using Laravel's route() helper function
-                type: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': csrfToken, // Include the CSRF token in the headers
-                },
-                data: {
-                    user_id: user_id,
-                    station_id: station_id
-                },
-                success: function(response) {
-
-                },
-                error: function(xhr, status, error) {
-
-                }
-            });
+        $.ajax({
+            url: '{{ route('check') }}', // Using Laravel's route() helper function
+            type: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken, // Include the CSRF token in the headers
+            },
+            data: {
+                user_id: user_id,
+                station_id: station_id
+            },
+            success: function(response) {
+                // Handle the success response here
+            },
+            error: function(xhr, status, error) {
+                // Handle the error response here
+            }
         });
-        }
+    });
+} else {
+    // Disable all input elements if permission is not 'full'
+    $('input').prop('disabled', true);
+}
+
        
     </script>
 @endsection

@@ -13,9 +13,9 @@
                                 {{ $data['usersCount'] }}
                             </h5>
                             {{-- <p class="mb-0">
-                                    <span class="text-success text-sm font-weight-bolder">+55%</span>
-                                    since yesterday
-                                </p> --}}
+                                <span class="text-success text-sm font-weight-bolder">+55%</span>
+                                since yesterday
+                            </p> --}}
                         </div>
                     </div>
                     <div class="col-4 text-end">
@@ -38,9 +38,9 @@
                                 {{ $data['userToday'] }}
                             </h5>
                             {{-- <p class="mb-0">
-                                    <span class="text-success text-sm font-weight-bolder">+3%</span>
-                                    since last week
-                                </p> --}}
+                                <span class="text-success text-sm font-weight-bolder">+3%</span>
+                                since last week
+                            </p> --}}
                         </div>
                     </div>
                     <div class="col-4 text-end">
@@ -126,8 +126,8 @@
                             </div>
                             <div class="d-flex flex-column">
                                 <h6 class="mb-1 text-dark text-sm">{{ $station['name'] }}</h6>
-                                <span class="text-xs">Average Time : <span
-                                        class="font-weight-bold">{{ $station['average_timespent'] }}
+                                <span class="text-xs">Average Time : <span class="font-weight-bold">{{
+                                        $station['average_timespent'] }}
                                         minutes</span></span>
                             </div>
                         </div>
@@ -141,7 +141,7 @@
     </div>
 
     <div class="row mt-4">
-        <div class="col-lg-12 mb-lg-0 mb-4">
+        <div class="col-lg-8 mb-lg-0 mb-4">
             <div class="card z-index-2 h-100">
                 <div class="card-header pb-0 pt-3 bg-transparent">
                     <div class="row align-items-center">
@@ -164,6 +164,51 @@
                     <figure class="highcharts-figure">
                         <div id="container"></div>
                     </figure>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-2">
+            <div class="card">
+                <div class="card-header pb-0 p-3">
+                    <h6 class="mb-0">Countries</h6>
+                </div>
+                <div class="card-body p-3">
+                    <ul class="list-group">
+                        @foreach ($data['country'] as $location)
+                        <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                            <div class="d-flex align-items-center">
+                                <div class="d-flex flex-column">
+                                    <h6 class="mb-1 text-dark text-sm">{{ $location->country }}</h6>
+                                    <span class="text-xs">Count : <span class="font-weight-bold">{{ $location->count
+                                            }}</span></span>
+                                </div>
+                            </div>
+                        </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="card">
+                <div class="card-header pb-0 p-3">
+                    <h6 class="mb-0">Where</h6>
+                </div>
+                <div class="card-body p-3">
+                    <ul class="list-group">
+                        @foreach ($data['where'] as $location)
+                        <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                            <div class="d-flex align-items-center">
+                                <div class="d-flex flex-column">
+                                    <h6 class="mb-1 text-dark text-sm">{{ $location['name']}}</h6>
+                                    <span class="text-xs">Count : <span class="font-weight-bold">{{ $location['count']
+                                            }}</span></span>
+                                </div>
+                            </div>
+                        </li>
+                        @endforeach
+                    </ul>
                 </div>
             </div>
         </div>
@@ -261,7 +306,7 @@
         var selectedDate = $('#date-format-select').val();
 
         // Listen for change event on select element
-        $('#date-format-select').change(function() {
+        $('#date-format-select').change(function () {
             selectedDate = $(this).val(); // Get selected date
 
             // Assuming $data['registrationsPerHour'] is an associative array where keys are dates
@@ -294,7 +339,7 @@
             });
         });
 
-        var permissionName = "{{ $permission}}";
+        var permissionName = "{{ $permission }}";
 
         var chart = @json($data['usersDaily']);
         console.log(chart);
@@ -302,7 +347,7 @@
         var day1 = "{{ $data['dates'][0]['date'] }}";
         var chart2 = @json($data['registrationsPerHour'][$data['dates'][0]['date']]);
 
-        Object.keys(chart).forEach(function(date, index) {
+        Object.keys(chart).forEach(function (date, index) {
             var dateObj = new Date(date);
             var formattedDate = dateObj.toLocaleDateString('en-US', {
                 month: 'long',
@@ -313,7 +358,7 @@
         });
 
 
-        chart2.forEach(function(obj) {
+        chart2.forEach(function (obj) {
             // Log index
 
             // Push date and hour as label
@@ -358,7 +403,7 @@
                 column: {
                     dataLabels: {
                         enabled: true,
-                        formatter: function() {
+                        formatter: function () {
                             return this.y; // Display the data value as the label
                         },
                         inside: false,
@@ -419,7 +464,7 @@
                 column: {
                     dataLabels: {
                         enabled: true,
-                        formatter: function() {
+                        formatter: function () {
                             return this.y; // Display the data value as the label
                         },
                         inside: false,
@@ -650,7 +695,7 @@
                         },
                         anchor: 'end', // Position of the labels relative to the anchor point
                         align: 'top', // Alignment of the labels relative to the anchor point
-                        formatter: function(value) {
+                        formatter: function (value) {
                             return value; // Return the value to be displayed
                         }
                     }

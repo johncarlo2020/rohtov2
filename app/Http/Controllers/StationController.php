@@ -307,6 +307,19 @@ class StationController extends Controller
         $data['users'] = User::with('stationUser')->take(4)->orderBy('id', 'desc')->get();
         $data['usersCount'] = User::whereDate('created_at', '>=', $startDate->toDateString())->count();
         $data['userToday'] = User::whereDate('created_at', $today)->count();
+        $data['country'] = User::selectRaw('country , COUNT(*) as count')->groupBy('country')->where('country' ,'!=','admin')->get();
+
+         $data['where'] = User::groupBy('where')
+    ->select('where', DB::raw('COUNT(*) as count'))
+    ->having('count', '>', 1) // Exclude entries with count = 1
+    ->orderBy('count', 'desc') // Order by count in descending order
+    ->get()
+    ->map(function ($item) {
+        return ['name' => $item->where, 'count' => $item->count];
+    })
+    ->values()
+    ->toArray();
+
         $usersWithSixStationUsers = User::with('stationUser')->whereDate('created_at', '>=', $startDate->toDateString())->has('stationUser', '>=', 5)->count();
         // dd($usersWithSixStationUsers);
         $data['completedUsers'] = $usersWithSixStationUsers;

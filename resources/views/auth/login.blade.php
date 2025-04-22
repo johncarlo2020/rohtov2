@@ -1,10 +1,10 @@
 <x-guest-layout>
     <div class="login-main">
-        <div class="row justify-content-center">
+        <div class="justify-content-center">
             <div class="col-12 d-flex justify-content-center mt-5">
                 @include('components.branding')
             </div>
-            <div class="col-12 mt-5 px-5">
+            <div class="col-12 mt-5 px-4">
                 <h1 class="login-heading">LOGIN</h1>
                 <!-- Session Status -->
                 <x-auth-session-status
@@ -17,7 +17,7 @@
                     <div class="row mb-2">
                         <div class="col-12">
                             <label class="text-left" for=""
-                                >Email Address</label
+                                >Email</label
                             >
 
                             <input
@@ -63,11 +63,11 @@
                 </form>
                 <div class="bottom-text">
                     <p>
-                        Don’t have account yet! Register
-                        <a class="" href="{{ route('register') }}">
-                            {{ __("REGISTER") }}
-                        </a>
+                        Haven't register yet?
                     </p>
+                    <a class="underline" href="{{ route('register') }}">
+                        Sign Up
+                    </a>
                 </div>
             </div>
         </div>

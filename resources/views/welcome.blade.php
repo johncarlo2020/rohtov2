@@ -39,35 +39,36 @@
         text-decoration: none;
         color: inherit;
     }
+    .welcome_img {
+        width: 80vw;
+        height: auto;
+        object-fit: contain
+    }
+
+    .welcome-sign-btn {
+        width: 40vw !important;
+        min-width: unset !important;
+    }
 </style>
 
-<body class="antialiased welcome-page">
-    {{-- <img class="cover-image" src="{{ asset('images/girl_bg.png') }}" alt="" /> --}}
-    <img class="cover-image" src="{{ asset('images/rohto.webp') }}" alt="" />
-
+<body class="antialiased welcome-page main-background hadalabo">
     <div class="py-5 container-fluid main-content">
-        <div class="row">
+        <div class="row mt-5">
             <div class="col-12 d-flex justify-content-center align-items-center">
-                @include('components.branding')
+                <img class="welcome_img" src="{{ asset('images/hadalabobabies/welcome_image.png') }}" alt="" />
             </div>
-            <div class="text-center col-12 text-content">
-                <h1>Welcome to</h1>
-                <h2 class="heading">
-                    Mentholatum 135th Anniversary Roadshow
-                </h2>
-                <h3 class="sub-heading">Queensbay Mall, Penang</h3>
-                <p class="date with-border">24-29 Sept 2024</p>
+            <div class="text-center bottom-text-welcome col-12 mt-5">
+                <a href="{{ route('register') }}" class="home-btn welcome-sign-btn btn rounded-pill"><span>Sign Up</span></a>
+                <p class="mt-5 p-0 m-0">Already Registered</p>
+                <p class="m-0 p-0">
+                    Please Login
+                    <a class="underline" href="{{ route('login') }}" class="">here</a>
+                </p>
             </div>
         </div>
     </div>
     <div class="register-main">
-        <a href="{{ route('register') }}" class="home-btn btn rounded-pill"><span>Sign Up</span></a>
-        <p class="already-register">Already Registered</p>
-        <p class="already-register">
-            Please Login
-            <a href="{{ route('login') }}" class="">here</a>
-        </p>
-        <a class="footer-text" href="https://wowsome.com.my/">Powered by WOWSOME®2024</a>
+        <a class="footer-text" href="https://wowsome.com.my/">Powered by WOWSOME®2025</a>
     </div>
 </body>
 

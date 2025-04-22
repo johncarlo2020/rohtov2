@@ -35,8 +35,8 @@
     </head>
     <body>
         <style></style>
-        <div class="{{ Route::currentRouteName() }}">
-            <div class="content home">
+        <div class="{{ Route::currentRouteName() }} hadalabo">
+            <div class="hadalabo main-background">
                 {{ $slot }}
             </div>
         </div>

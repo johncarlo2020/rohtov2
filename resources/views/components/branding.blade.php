@@ -1,5 +1,5 @@
 <a href="{{ route('dashboard') }}">
     <div class="branding">
-        <img class="logo" src="{{ asset('images/logo-large.png') }}" alt="" />
+        <img class="logo" src="{{ asset('images/hadalabobabies/logo.png') }}" alt="" />
     </div>
 </a>

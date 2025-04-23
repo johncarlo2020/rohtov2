@@ -16,7 +16,7 @@ body {
     height: 100vh;
     width: 100%;
     background: linear-gradient(to right, #d5eeeb 100%, #8aced0 100%);
-   overflow-y: auto; /* Allows vertical scrolling */
+    overflow-y: auto; /* Allows vertical scrolling */
 
     .content-wrapper {
         display: flex;
@@ -488,17 +488,17 @@ a:active {
 }
 
 .login {
-  height: 100vh;
+    height: 100vh;
     width: 100%;
     background: $reverse-gradient;
     position: relative;
 
-     .login-main {
+    .login-main {
         height: 100vh;
         overflow: auto;
         padding-bottom: 30px;
 
-         h1 {
+        h1 {
             text-align: center;
             font-size: 24px;
             font-weight: 600;
@@ -540,8 +540,6 @@ a:active {
             }
         }
     }
-
-
 }
 
 .devider {
@@ -905,7 +903,7 @@ a:active {
 }
 
 .map {
-        width: 107%;
+    width: 107%;
     height: auto;
     position: absolute;
     left: -15px;
@@ -991,7 +989,7 @@ a:active {
                         top: -68%;
                         right: 27%;
                         z-index: 2;
-                        background-color: #0C5A40;
+                        background-color: #0c5a40;
                         color: white;
                     }
                 }
@@ -1024,7 +1022,7 @@ a:active {
                         top: -68%;
                         right: 27%;
                         z-index: 2;
-                        background-color: #0C5A40;
+                        background-color: #0c5a40;
                         color: white;
                     }
                 }
@@ -1057,7 +1055,7 @@ a:active {
                         top: 99%;
                         right: 20%;
                         z-index: 2;
-                        background-color: #0C5A40;
+                        background-color: #0c5a40;
                         color: white;
                     }
                 }
@@ -1066,10 +1064,10 @@ a:active {
 
         &__4 {
             position: absolute;
-    left: 14%;
-    bottom: 67%;
-    width: 19%;
-    height: 13%;
+            left: 14%;
+            bottom: 67%;
+            width: 19%;
+            height: 13%;
             .boot-img {
                 position: absolute;
                 right: 0;
@@ -1090,7 +1088,7 @@ a:active {
                         top: 207%;
                         right: 39%;
                         z-index: 2;
-                        background-color: #0C5A40;
+                        background-color: #0c5a40;
                         color: white;
                     }
                 }
@@ -1262,8 +1260,6 @@ a:active {
                 }
             }
         }
-
-
     }
 }
 
@@ -1373,9 +1369,8 @@ $form-check-hover-shadow: rgba(0, 123, 255, 0.5);
     border-radius: 40px;
     background-color: #fff;
     border-color: $primary;
-
 }
-.logo-btn img{
+.logo-btn img {
     width: 40px;
 }
 
@@ -1447,10 +1442,9 @@ $form-check-hover-shadow: rgba(0, 123, 255, 0.5);
         }
     }
 
-    .where h1{
+    .where h1 {
         font-size: 22px;
-        font-weight: 6
-        00 !important;
+        font-weight: 6 00 !important;
         color: $primary;
         margin-bottom: 20px;
         text-align: center;
@@ -1503,13 +1497,9 @@ $form-check-hover-shadow: rgba(0, 123, 255, 0.5);
     .yellow-text {
         position: relative;
         z-index: 10;
-         font-family: "Nunito", sans-serif;
+        font-family: "Nunito", sans-serif;
         font-size: 4vw;
-        background: radial-gradient(
-            circle,
-            #0C5A40,
-            #8CC28D
-        );
+        background: radial-gradient(circle, #0c5a40, #8cc28d);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -1572,7 +1562,7 @@ $form-check-hover-shadow: rgba(0, 123, 255, 0.5);
         z-index: 10;
         margin-top: 5vh;
         .title {
-            background: linear-gradient(to right, #8BC28C 0%, #0C5A40 100%);
+            background: linear-gradient(to right, #8bc28c 0%, #0c5a40 100%);
             -webkit-text-fill-color: transparent;
             -webkit-background-clip: text;
             background-clip: text;
@@ -1586,32 +1576,30 @@ $form-check-hover-shadow: rgba(0, 123, 255, 0.5);
             &.small {
                 font-size: 4vw;
                 font-weight: 900;
-                 font-family: "Nunito", sans-serif;
+                font-family: "Nunito", sans-serif;
                 width: 44%;
                 margin: 0 auto;
                 position: relative;
             }
-
-
 
             span {
                 font-weight: 700;
             }
         }
 
-             .join-btn {
+        .join-btn {
             min-width: 40vw !important;
             max-width: 60vw;
             font-size: 3vw;
-color: white;
+            color: white;
             display: flex;
             justify-content: center;
             align-items: center;
             margin: 0 auto;
             margin-bottom: 2vh;
-                background-color: $primary;
-    width: 30vw;
-    margin-top: 20px;
+            background-color: $primary;
+            width: 30vw;
+            margin-top: 20px;
         }
 
         .arrow {
@@ -1647,13 +1635,13 @@ color: white;
     .bottom-text {
         position: relative;
         z-index: 10;
-         font-family: "Nunito", sans-serif;
+        font-family: "Nunito", sans-serif;
 
         display: flex;
         justify-content: center;
         align-items: center;
         flex-direction: column;
-line-height: 1.2;
+        line-height: 1.2;
         p {
             font-size: 12px;
         }
@@ -1691,7 +1679,7 @@ line-height: 1.2;
             img {
                 display: block;
                 width: 38px;
-        height: 38px;
+                height: 38px;
             }
         }
 
@@ -1711,7 +1699,7 @@ line-height: 1.2;
             color: $primary;
         }
         &:nth-child(7) {
-            background-color:#f5dae6;
+            background-color: #f5dae6;
             position: relative;
             span {
                 img {
@@ -1816,7 +1804,7 @@ line-height: 1.2;
             }
         }
 
-         .text-content {
+        .text-content {
             margin-top: 8vw;
 
             h1 {
@@ -1852,7 +1840,7 @@ line-height: 1.2;
                 line-height: 1.2;
                 margin-top: 3vw;
             }
-         }
+        }
     }
     .register-main {
         position: absolute;
@@ -1919,14 +1907,15 @@ line-height: 1.2;
     }
 }
 
-html , body {
+html,
+body {
     height: 100vh;
     width: 100%;
     margin: 0;
     padding: 0;
     overflow: hidden;
     box-sizing: border-box;
-    color: #61646B;
+    color: #61646b;
 }
 
 .hadalabo {
@@ -1943,14 +1932,14 @@ html , body {
 
     .underline {
         text-decoration: underline !important;
-        color: #4F86C6;
+        color: #4f86c6;
     }
 
     .dash-board {
         .welcome_img {
             width: 80vw;
             height: auto;
-            object-fit: contain
+            object-fit: contain;
         }
         .welcome-sign-btn {
             width: 40vw !important;
@@ -1974,16 +1963,13 @@ html , body {
             border-radius: 10px;
         }
 
-
         .slick-slide-item {
             .staion-container {
                 margin: auto auto;
                 width: 80vw;
                 height: 80vw;
                 padding: 20px;
-                background-color: rgb(255, 255, 255);
                 border-radius: 50%;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 
                 img {
                     width: 100%;
@@ -1991,8 +1977,90 @@ html , body {
                     object-fit: contain;
                 }
             }
+        }
+    }
+}
 
+.slider-container {
+    position: relative;
+
+    .slick-slide-item {
+        .staion-container {
+            position: relative;
+            .complete-indicator {
+                top: 0;
+                left: 0;
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.26);
+                border-radius: 50%;
+                z-index: 1;
+                display: none;
+                justify-content: center;
+                align-items: center;
+
+                p {
+                    color: #fff;
+                    font-size: 30px;
+                    text-align: center;
+                }
+
+
+                &.active {
+                    display: flex;
+                }
+            }
+        }
+    }
+    .slider-navigation {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        .slider-btn {
+            border: none;
+            outline: none;
+            background-color: transparent;
+            padding: 0;
+            margin: 0;
+
+            i {
+                color: $primary;
+                font-size: 30px;
+            }
+        }
+
+        &.slider-next {
+            right: 0;
+        }
+
+        &.slider-prev {
+            left: 0;
         }
     }
 
+    .slick-dots {
+        li {
+            .slick-dot-number {
+                color: #0c5a40;
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                background-color: #fff;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+                font-size: 13px;
+                &:before {
+                    content: "";
+                    display: none;
+                }
+            }
+
+            &.slick-active {
+                .slick-dot-number {
+                    background-color: $primary;
+                    color: #fff;
+                }
+            }
+        }
+    }
 }

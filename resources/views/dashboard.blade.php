@@ -10,20 +10,36 @@
         <div class="sliders d-none w-100">
             <div class="container-fluid p-0 m-0">
                 <div class="row p-0 m-0 justify-content-center">
-                    <div class="col-md-10">
+                    <div class="col-md-10 slider-container">
+                        <div class="slider-prev slider-navigation">
+                            <button id="prev" class="slider-btn"><i class="fa-solid fa-caret-left"></i></button>
+                        </div>
+                        <div class="slider-next slider-navigation">
+                            <button id="next" class="slider-btn"><i class="fa-solid fa-caret-right"></i></button>
+                        </div>
                         <!-- Slick Slider Component -->
                         <div class="slick-carousel mt-4">
-                            <div class="slick-slide-item">
-                                <div class="staion-container">
+                            <div id="1" class="slick-slide-item">
+                                {{-- add active --}}
+                                <div class="staion-container completed" onclick="gotoStation(1)">
                                     <img src="{{ asset('images/hadalabobabies/station1.png') }}" class="station-img"
                                         alt="Slide 1">
+                                    <div class="complete-indicator active">
+                                        <p>CHECK-IN SUCCESSFUL</p>
+                                    </div>
                                 </div>
+
                             </div>
-                            <div class="slick-slide-item">
-                                <div class="staion-container">
-                                    <img src="{{ asset('images/hadalabobabies/station1.png') }}" class="station-img"
+                            <div id="2" class="slick-slide-item">
+
+                                <div class="staion-container" onclick="gotoStation(2)">
+                                    <img src="{{ asset('images/hadalabobabies/station2.png') }}" class="station-img"
                                         alt="Slide 1">
+                                    <div class="complete-indicator">
+                                        <p>CHECK-IN SUCCESSFUL</p>
+                                    </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -32,7 +48,16 @@
         </div>
     </div>
     <script>
+           function gotoStation(id) {
+                var url = "{{ route('station', ['station' => ':id']) }}".replace(
+                    ":id",
+                    id
+                );
+                // Redirect to the generated URL
+                window.location.href = url;
+            }
         document.addEventListener('DOMContentLoaded', function() {
+            let currentSlide = 0;
             const startButton = document.getElementById('start');
             const sliders = document.querySelector('.sliders');
             const startPage = document.getElementById('startpage');
@@ -49,7 +74,7 @@
                     // Initialize Slick Slider after it becomes visible
                     $('.slick-carousel').slick({
                         dots: true,
-                        arrows: true,
+                        arrows: false,
                         infinite: true,
                         speed: 500,
                         cssEase: 'linear',
@@ -61,14 +86,18 @@
                             return '<button type="button" class="slick-dot-number">' + (
                                 i + 1) + '</button>';
                         },
-                        responsive: [{
-                            breakpoint: 768,
-                            settings: {
-                                arrows: false,
-                            }
-                        }]
                     });
                 }, 500);
+            });
+
+            // Slider navigation buttons
+            const prevButton = document.getElementById('prev');
+            const nextButton = document.getElementById('next');
+            prevButton.addEventListener('click', function() {
+                $('.slick-carousel').slick('slickPrev');
+            });
+            nextButton.addEventListener('click', function() {
+                $('.slick-carousel').slick('slickNext');
             });
         });
     </script>

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\IpadController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -20,7 +21,9 @@ Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
-Route::get('/qr', function () {
+Route::get('/ipad', [IpadController::class, 'index'])->name('ipad.index');
+
+Route::get('/pad', function () {
     return view('error');
 });
 

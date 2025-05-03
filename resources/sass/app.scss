@@ -1,8 +1,8 @@
 // Import _variables.scss
 @import "variables";
-
 // Bootstrap
 @import "bootstrap/scss/bootstrap";
 
 @import "custom";
 @import "utilities";
+@import "custom/ipad.scss";

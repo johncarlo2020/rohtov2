@@ -8,13 +8,42 @@ use App\Models\User;
 use App\Models\StationUser;
 use App\Models\Brand;
 use App\Models\Vote;
-
+use App\Events\babyEvent;
 use DB;
 use Auth;
 use Carbon\Carbon;
-
+use Illuminate\Support\Facades\Storage;
 class StationController extends Controller
 {
+        public function uploadBaby(Request $request)
+    {
+        $request->validate([
+            'baby_img' => 'required|image|mimes:gif|max:2048', // max 2MB
+            'baby_name' => 'required|string|max:255',
+        ]);
+
+        $user = Auth::user();
+
+        // Store the uploaded image in `public/babies`
+        $path = $request->file('baby_img')->store('public/babies');
+
+        // Convert path to URL or relative path for saving
+        $publicPath = Storage::url($path); // returns `/storage/babies/filename.gif`
+
+        // Save to user
+        $user->baby_img = $publicPath;
+        $user->baby_name = $request->baby_name;
+        $user->save();
+
+        // Fire the event
+        broadcast(new babyEvent($publicPath, $user->baby_name))->toOthers();
+
+        return response()->json([
+            'message' => 'Baby image uploaded and event broadcasted.',
+            'img' => $publicPath,
+            'name' => $user->baby_name
+        ]);
+    }
     public function index(Station $station)
     {
         $user = StationUser::where('user_id', auth()->id())
@@ -301,6 +330,8 @@ class StationController extends Controller
             return response()->json(['error' => $e], 500);
         }
     }
+
+
 
     public function admin()
     {

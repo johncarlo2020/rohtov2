@@ -15,12 +15,48 @@
             opacity: 1;
         }
     }
+
+    .branding .logo {
+        width: 100% !important;
+        height: 9vh !important;
+        object-fit: contain !important;
+        margin-bottom: 0 !important;
+    }
+
+    .welcome_img {
+        width: 60vw;
+        height: auto;
+        object-fit: contain;
+    }
+
+    .next-button {
+        background-color: #1B82C3;
+        min-width: 40vw;
+        color: #fff;
+        font-size: 4vw;
+        border-radius: 40px;
+        padding: 1vh 3vw;
+        border: none;
+        outline: none;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #1A7BBE;
+        }
+
+        &:active {
+            background-color: #1A7BBE;
+            transform: scale(0.95);
+            transition: all 0.1s ease-in-out;
+        }
+    }
+
     .character-selection-container {
         $spacing: 0.5vh;
-        $bubble-size: 23vh;
+        $bubble-size: 22vh;
         .bubbles-container {
             position: relative;
-            width: 80vw;
+            width: 70vw;
             height: 60vh;
             margin: 0 auto;
 
@@ -71,10 +107,248 @@
                 }
             }
         }
-        .select-name-container {
-            input {
-                text-align: center;
+    }
+
+    .get-name-container {
+        .next-button-container {
+            width: 100vw;
+            position: absolute;
+            bottom: 107px;
+            left: 0;
+        }
+        input {
+            text-align: center;
+            height: 60px;
+            font-size: 4vw;
+
+            &::placeholder {
+                color: #aaafb3;
             }
+        }
+
+        h1 {
+            font-size: 5vw;
+            color: #2480be;
+            text-align: center;
+            margin-bottom: 3vh;
+        }
+    }
+
+    .text-btn {
+        background-color: transparent;
+        border: none;
+        outline: none;
+        color: #2480be;
+        font-size: 5.5vw;
+        margin-top: 10px;
+    }
+
+    .end-text {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 6vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        img {
+            position: absolute;
+            bottom: 15px;
+            right: 46px;
+        }
+    }
+
+    #editCharacter {
+        width: 100vw;
+        padding: 0;
+        .edit-character-container {
+            .selected-skin-container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0px 70px;
+
+
+                //on small screens
+                @media (max-width: 500px) {
+                   flex-direction: column-reverse;
+                }
+
+                .skin-name-container {
+                    width: 30vw;
+                    height: 30vw;
+
+                    img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: contain;
+                    }
+                }
+
+                .character-container {
+                    position: relative;
+                    width: 40vw;
+                    height: 40vw;
+
+                    img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: contain;
+                    }
+
+                    .parts {
+                        position: absolute;
+
+                        &.hair {
+                            top: 8vw;
+                            left: 50%;
+                            transform: translateX(-50%);
+                            z-index: 2;
+                            width: 20vw;
+                            height: auto;
+                            img {
+                                width: 100%;
+                                height: 100%;
+                                object-fit: contain;
+                            }
+                        }
+
+                        &.face {
+                            top: 17vw;
+                            left: 50%;
+                            transform: translateX(-50%);
+                            z-index: 1;
+                            width: 21vw;
+                            height: auto;
+                            img {
+                                width: 100%;
+                                height: 100%;
+                                object-fit: contain;
+                            }
+                        }
+                    }
+                }
+            }
+            .options-container {
+                background-color: #cce4f4;
+                position: relative;
+
+                .option {
+                    display: flex;
+                    justify-content: start;
+                    align-items: center;
+                }
+
+                .devider {
+                    width: 100vw;
+                    height: auto;
+                    position: absolute;
+                    top: 50%;
+                    left: 0;
+                    transform: translateY(-50%);
+
+                    img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: contain;
+                    }
+                }
+
+                .button-container {
+                    width: 22vw;
+                    height: 22vw;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    background-color: #2480be;
+
+                    p {
+                        color: #4f86c6;
+                        font-size: 3vw;
+                    }
+                }
+                .edit-btn {
+                    width: 15vw;
+                    height: 15vw;
+                    background-color: white;
+                    border: none;
+                    outline: none;
+                    position: relative;
+                    border-radius: 8px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+
+                .items {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 20px 30px;
+                    gap: 40px;
+                    .item {
+                        width: 15vw;
+                        height: 15vw;
+                        background-color: transparent;
+                        border: none;
+                        outline: none;
+
+                        &.active {
+                            border: white 2px solid;
+                            border-radius: 9px;
+                            transition: all 0.1s ease-in-out;
+                        }
+
+                        img {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: contain;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Loader Styles
+    .loader-container {
+        position: fixed; // Or absolute, depending on context
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex; // Use flex to center the loader
+        justify-content: center;
+        align-items: center;
+        background-color: rgb(255, 255, 255); // Optional: semi-transparent background
+        z-index: 9999; // Ensure it's above other content
+        flex-direction: column; // Stack loader and text vertically
+    }
+
+    .loader {
+        border: 8px solid #f3f3f3; // Light grey
+        border-top: 8px solid #3498db; // Blue
+        border-radius: 50%;
+        width: 100px; // Increase width
+        height: 100px; // Increase height
+        border-width: 10px; // Make border thicker to match size
+        animation: spin 1s linear infinite;
+    }
+
+    .loading-text {
+        margin-top: 20px; // Space between loader and text
+        font-size: 1.5rem; // Adjust font size as needed
+        color: #333; // Adjust color as needed
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
         }
     }
 }

@@ -1,11 +1,11 @@
-<div class="p-5 select-name-container">
+<div class="p-5 get-name-container">
     <h1 class="text-center">PLEASE INSERT YOUR NAME</h1>
-    <div class="mb-3">
-        <input type="text" class="form-control rounded-pill text-center" id="name" aria-describedby="nameHelp">
-        {{-- <div id="nameHelp" class="form-text">Please enter a valid name</div> --}}
+    <div class="input-container px-5">
+        <input type="text" class="form-control rounded-pill text-center" id="name" aria-describedby="nameHelp" placeholder="your name">
+        <div id="nameHelp" class="form-text text-center">*Maximum 5 character</div>
     </div>
-    <div class="text-center bottom-text-welcome col-12 mt-5">
-        <button onclick="addName()" class="home-btn welcome-sign-btn btn rounded-pill"><span>Start</span></button>
+    <div class="next-button-container text-center">
+        <button onclick="addName()" class="next-button"><span>Next</span></button>
     </div>
 </div>
 

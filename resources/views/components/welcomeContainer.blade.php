@@ -2,7 +2,7 @@
     <img class="welcome_img" src="{{ asset('images/hadalabobabies/welcome_image.png') }}" alt="" />
 </div>
 <div class="text-center bottom-text-welcome col-12 mt-5">
-    <a onclick="nextStep()" class="home-btn welcome-sign-btn btn rounded-pill"><span>Start</span></a>
+    <button onclick="nextStep()" class="next-button"><span>Start</span></button>
 </div>
 
 

@@ -10,4 +10,5 @@ class IpadController extends Controller
     {
         return view('ipad');
     }
+
 }

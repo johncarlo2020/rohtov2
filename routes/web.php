@@ -27,6 +27,7 @@ Route::get('/pad', function () {
     return view('error');
 });
 
+
 Route::get('/admin/login', function () {
     return view('auth.admin-login');
 });
@@ -69,6 +70,8 @@ Route::group(['middleware' => ['client']], function () {
         return view('listen-baby');
     })->name('listen.baby.form');
     Route::post('/upload', 'App\Http\Controllers\StationController@uploadBaby')->name('upload.baby');
+
+
 
 });
 

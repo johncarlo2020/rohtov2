@@ -45,12 +45,21 @@
         <!-- Slick Slider CSS -->
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
-
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
         <!-- Scripts -->
         @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     </head>
 
     <body class="main-background hadalabo">
+
+        <style>
+            @font-face {
+                font-family: 'Flamante-Roma-Medium';
+                src: url('{{ asset('images/font/Flamante-Roma-Medium.ttf') }}') format('truetype');
+                font-weight: normal;
+                font-style: normal;
+            }
+        </style>
         <main>
             {{ $slot }}
         </main>

@@ -1,5 +1,8 @@
 <x-app-layout>
     <div class="ipad-container">
+        <button onclick="prevStep()" class="back-btn d-none">
+            <i class="fa-solid fa-arrow-left"></i>
+        </button>
         <div class="col-12 d-flex justify-content-center mt-5">
             @include('components.branding')
         </div>
@@ -10,9 +13,6 @@
             </div>
             <div class="w-100" id="welcomeContiner">
                 @include('components.welcomeContainer')
-            </div>
-            <div class="w-100" id="getName" class="hidden">
-                @include('components.getName')
             </div>
             <div class="w-100" id="selectCharacter" class="hidden">
                 @include('components.selectCharacter')
@@ -33,10 +33,8 @@
         const step = [{
             elementId: 'welcomeContiner',
             completed: false,
-        }, {
-            elementId: 'getName',
-            completed: false,
-        }, {
+        },
+        {
             elementId: 'selectCharacter',
             completed: false,
         }, {
@@ -55,6 +53,16 @@
         };
 
         function showStep(stepIndex) {
+            const backBtn = document.querySelector('.back-btn');
+
+            // console.log("Step Index:", stepIndex);
+
+            if (stepIndex > 1) {
+                backBtn.classList.remove('d-none');
+            } else {
+                backBtn.classList.add('d-none');
+            }
+
             if (stepIndex < 0 || stepIndex >= step.length) {
                 console.error("Invalid step index:", stepIndex);
                 stepIndex = 0;
@@ -87,6 +95,17 @@
             }
         }
 
+        function prevStep() {
+            const currentStepIndex = step.findIndex(s => {
+                const element = document.getElementById(s.elementId);
+                return element && !element.classList.contains('hidden');
+            });
+
+            if (currentStepIndex > 0) {
+                showStep(currentStepIndex - 1);
+            }
+        }
+
         function selectItem(type, index, element) {
             const characterContainer = document.getElementById('characterEditContainer');
 
@@ -114,27 +133,29 @@
             const part = document.createElement('img');
             part.classList.add(type);
             part.classList.add('parts');
-            part.src = `{{ asset('images/character/${type}/${index}.png') }}`;
+            part.src = `{{ asset('images/character/${type}/${index}/${index}.png') }}`;
             part.alt = `Item ${index}`;
             characterContainer.appendChild(part);
         }
 
         function selectSkin(skin) {
+            const characterName = 'characterName';
+            const characterEditContainer = 'characterEditContainer';
             selectedCharacter.skin = skin;
-            initEditCharacter();
+            initEditCharacter(characterName,characterEditContainer);
             nextStep();
         }
 
-        function initEditCharacter() {
-            const characterNameContainer = document.getElementById('characterName');
-            const characterContainer = document.getElementById('characterEditContainer');
+        function initEditCharacter(characterName, characterEditContainer, edit = false) {
+            const characterNameContainer = document.getElementById(characterName);
+            const characterContainer = document.getElementById(characterEditContainer);
             if (characterContainer) {
                 characterContainer.innerHTML = ''; // Clear previous content
                 characterNameContainer.innerHTML = ''; // Clear previous content
                 const nameElement = document.createElement('img');
                 nameElement.src = `{{ asset('images/character/name/${selectedCharacter.skin}.png') }}`;
                 const skinImage = document.createElement('img');
-                skinImage.src = `{{ asset('images/character/skin/${selectedCharacter.skin}.png') }}`;
+                skinImage.src = `{{ asset('images/character/skin/${selectedCharacter.skin}/${selectedCharacter.skin}.png') }}`;
                 skinImage.alt = 'Selected Skin';
                 skinImage.classList.add('selected-skin-image');
                 nameElement.alt = 'Selected Name';
@@ -142,7 +163,110 @@
                 characterNameContainer.appendChild(nameElement);
                 characterContainer.appendChild(skinImage);
             }
+
+            console.log(selectedCharacter);
+
+            if (edit) {
+                const hairImage = document.createElement('img');
+                hairImage.src = `{{ asset('images/character/hair/${selectedCharacter.hair}/${selectedCharacter.hair}.png') }}`;
+                hairImage.alt = 'Selected Hair';
+                hairImage.classList.add('hair');
+                characterContainer.appendChild(hairImage);
+
+                const faceImage = document.createElement('img');
+                faceImage.src = `{{ asset('images/character/face/${selectedCharacter.face}/${selectedCharacter.face}.png') }}`;
+                faceImage.alt = 'Selected Face';
+                faceImage.classList.add('face');
+                characterContainer.appendChild(faceImage);
+            }
         }
+
+        function gotoFinishPage() {
+            const characterName = 'characterNameFinish';
+            const characterEditContainer = 'finishedCharacterContainer';
+            initEditCharacter(characterName, characterEditContainer, true);
+            nextStep();
+        }
+
+        let sprites= [];
+        const frameRate = 6;
+
+        function waitForImageLoad(image) {
+            return new Promise((resolve) => {
+            if (image.complete) resolve();
+            else image.onload = resolve;
+            });
+        }
+
+        function createSpriteSheet() {
+
+        }
+
+        async function captureFrame(frameIndex) {
+          // Update character images for this frame, using custom face if provided
+          skin.src = `/assets/green_0${frameIndex + 1}.png`;
+          hair.src = `/assets/green_hair0${frameIndex + 1}.png`;
+          face.src = customFaceSrc;
+
+          // Ensure all images load before capturing
+          await Promise.all([
+            waitForImageLoad(skin),
+            waitForImageLoad(hair),
+
+          ]);
+
+          // Small delay to allow DOM updates
+          await new Promise((resolve) => setTimeout(resolve, 100));
+
+          return html2canvas(character, { backgroundColor: null });
+      }
+
+    //   const createSpriteSheet = document.getElementById("create-sprite-sheet");
+
+    //     createSpriteSheet.addEventListener("click", async () => {
+    //     // Get entered character name or default to "Unnamed"
+    //     const nameValue = charnameInput.value || "Unnamed";
+
+    //     try {
+    //       const frames = [];
+    //       for (let i = 0; i < frameCount; i++) {
+    //         const frameCanvas = await captureFrame(i);
+    //         frames.push(frameCanvas);
+    //       }
+
+    //       // Create a single sprite sheet from the captured frames
+    //       const tempCanvas = document.createElement("canvas");
+    //       const tempCtx = tempCanvas.getContext("2d");
+    //       const frameWidth = frames[0].width;
+    //       const frameHeight = frames[0].height;
+
+    //       tempCanvas.width = frameWidth * frameCount;
+    //       tempCanvas.height = frameHeight;
+    //       frames.forEach((frame, index) => {
+    //         tempCtx.drawImage(frame, index * frameWidth, 0);
+    //       });
+
+    //       // Convert temporary canvas to image
+    //       const spriteSheetImage = new Image();
+    //       spriteSheetImage.src = tempCanvas.toDataURL("image/png");
+
+    //       // Setup download link
+    //       const download = document.getElementById("download");
+    //       download.href = spriteSheetImage.src;
+    //       download.download = "sprite-sheet.png";
+
+    //       spriteSheetImage.onload = () => {
+    //         // Pass the entered name to addSprite so each sprite has its own bubble
+    //         addSprite(spriteSheetImage, frameWidth, frameHeight, nameValue);
+    //         if (!animationRunning) {
+    //           animationRunning = true;
+    //           requestAnimationFrame(animate);
+    //         }
+    //       };
+    //     } catch (error) {
+    //       console.error("Error creating sprite sheet:", error);
+    //     }
+    //   });
 
         document.addEventListener('DOMContentLoaded', function() {
             const loaderContainer = document.querySelector('.loader-container');

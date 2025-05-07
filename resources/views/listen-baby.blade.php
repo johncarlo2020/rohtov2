@@ -13,12 +13,8 @@
 </head>
 
 <body class="container py-5">
-
-    <h2 class="mb-4">Live Baby GIF Feed</h2>
-
-    <div id="baby-feed" class="d-flex flex-wrap gap-3"></div>
-
-    <script>
+    <div id="aquarium-container" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;"></div>
+    {{-- <script>
         Pusher.logToConsole = true;
 
         const pusher = new Pusher('{{ env("PUSHER_APP_KEY") }}', {
@@ -46,8 +42,11 @@
 
             container.prepend(card);
         });
-    </script>
-
+    </script> --}}
+    <script>
+        window.ASSET_BASE = "{{ asset('') }}".replace(/\/$/,'');
+      </script>
+    @vite('resources/js/aquarium.js')
 </body>
 
 </html>

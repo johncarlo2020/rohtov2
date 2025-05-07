@@ -18,6 +18,7 @@
     },
     "dependencies": {
         "bootstrap": "^5.3.3",
-        "html5-qrcode-scanner-dinte": "^2.3.8"
+        "html5-qrcode-scanner-dinte": "^2.3.8",
+        "phaser": "^3.88.2"
     }
 }

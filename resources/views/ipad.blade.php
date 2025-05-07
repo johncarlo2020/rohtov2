@@ -8,7 +8,8 @@
         </div>
         <div class="mt-5 w-100">
             <div class="loader-container">
-                <div class="loader"></div>
+                {{-- <div class="loader"></div> --}}
+                <img class="loading-gif" src="{{ asset('images/loading.gif') }}" alt="Face 4" />
                 <p class="loading-text">Loading...</p>
             </div>
             <div class="w-100" id="welcomeContiner">
@@ -23,6 +24,12 @@
             <div class="w-100" id="completeContainer" class="hidden">
                 @include('components.completeContainer')
             </div>
+            <form id="uploadForm" action="{{ route('upload.baby') }}" method="POST" enctype="multipart/form-data" style="display:none;">
+                @csrf
+                <input type="file" name="baby_img" id="baby_img" accept="image/png">
+                <input type="text" name="baby_name" id="baby_name">
+                <button type="submit" id="uploadButton"></button>
+            </form>
         </div>
         <div class="end-text">
             <p>Powered by WOWSOME®️ 2025</p>
@@ -30,6 +37,7 @@
         </div>
     </div>
     <script>
+        const loaderContainer = document.querySelector('.loader-container');
         const step = [{
             elementId: 'welcomeContiner',
             completed: false,
@@ -157,7 +165,7 @@
                 const skinImage = document.createElement('img');
                 skinImage.src = `{{ asset('images/character/skin/${selectedCharacter.skin}/${selectedCharacter.skin}.png') }}`;
                 skinImage.alt = 'Selected Skin';
-                skinImage.classList.add('selected-skin-image');
+                skinImage.classList.add('skin');
                 nameElement.alt = 'Selected Name';
                 nameElement.classList.add('selected-skin-name');
                 characterNameContainer.appendChild(nameElement);
@@ -182,6 +190,9 @@
         }
 
         function gotoFinishPage() {
+
+            createSpriteSheet();
+
             const characterName = 'characterNameFinish';
             const characterEditContainer = 'finishedCharacterContainer';
             initEditCharacter(characterName, characterEditContainer, true);
@@ -198,78 +209,106 @@
             });
         }
 
-        function createSpriteSheet() {
+       async function createSpriteSheet() {
+                 // Get entered character name or default to "Unnamed"
+
+
+            const frameCount = 7;
+
+            try {
+            const frames = [];
+            for (let i = 1; i < frameCount; i++) {
+                const frameCanvas = await captureFrame(i);
+                frames.push(frameCanvas);
+            }
+
+            // Create a single sprite sheet from the captured frames
+            const tempCanvas = document.createElement("canvas");
+            const tempCtx = tempCanvas.getContext("2d");
+            const frameWidth = frames[0].width;
+            const frameHeight = frames[0].height;
+
+            tempCanvas.width = frameWidth * frameCount;
+            tempCanvas.height = frameHeight;
+            frames.forEach((frame, index) => {
+                tempCtx.drawImage(frame, index * frameWidth, 0);
+            });
+
+            // Convert temporary canvas to image
+            const spriteSheetImage = new Image();
+            spriteSheetImage.src = tempCanvas.toDataURL("image/png");
+
+            // convert canvas to blob and upload via form-data
+            tempCanvas.toBlob((blob) => {
+                if (!blob) return console.error('Canvas to blob failed');
+                const file = new File([blob], 'sprite-sheet.png', { type: 'image/png' });
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                const fileInput = document.getElementById('baby_img');
+                fileInput.files = dataTransfer.files;
+                document.getElementById('baby_name').value = selectedCharacter.name || 'asdas';
+                document.getElementById('uploadForm').submit();
+            });
+
+
+
+            } catch (error) {
+            console.error("Error creating sprite sheet:", error);
+            }
 
         }
 
         async function captureFrame(frameIndex) {
-          // Update character images for this frame, using custom face if provided
-          skin.src = `/assets/green_0${frameIndex + 1}.png`;
-          hair.src = `/assets/green_hair0${frameIndex + 1}.png`;
-          face.src = customFaceSrc;
+            // Update character images for this frame, using custom face if provided
+            // skin.src = `/assets/green_0${frameIndex + 1}.png`;
+            // hair.src = `/assets/green_hair0${frameIndex + 1}.png`;
+            // face.src = customFaceSrc;
 
-          // Ensure all images load before capturing
-          await Promise.all([
-            waitForImageLoad(skin),
-            waitForImageLoad(hair),
+            // loop through selectedCharacter and update the src of each image
+            const character = document.getElementById('finishedCharacterContainer');
+            const skin = character.querySelector('.skin');
+            const hair = character.querySelector('.hair');
+            const face = character.querySelector('.face');
 
-          ]);
+            console.log(skin, hair, face);
 
-          // Small delay to allow DOM updates
-          await new Promise((resolve) => setTimeout(resolve, 100));
 
-          return html2canvas(character, { backgroundColor: null });
-      }
+            Object.entries(selectedCharacter).forEach(([key, value]) => {
+                // Skip empty values if you want
+                if (key === 'name') return;
 
-    //   const createSpriteSheet = document.getElementById("create-sprite-sheet");
+                skin.src = `{{ asset('images/character/skin/${value}/${frameIndex}.png') }}`;
+                hair.src = `{{ asset('images/character/hair/${value}/${frameIndex}.png') }}`;
+                face.src = `{{ asset('images/character/face/${value}/${frameIndex}.png') }}`;
+            });
 
-    //     createSpriteSheet.addEventListener("click", async () => {
-    //     // Get entered character name or default to "Unnamed"
-    //     const nameValue = charnameInput.value || "Unnamed";
+            // Ensure all images load before capturing
+            await Promise.all([
+                waitForImageLoad(skin),
+                waitForImageLoad(hair),
+                waitForImageLoad(face),
+            ]);
 
-    //     try {
-    //       const frames = [];
-    //       for (let i = 0; i < frameCount; i++) {
-    //         const frameCanvas = await captureFrame(i);
-    //         frames.push(frameCanvas);
-    //       }
+            // Small delay to allow DOM updates
+            await new Promise((resolve) => setTimeout(resolve, 100));
 
-    //       // Create a single sprite sheet from the captured frames
-    //       const tempCanvas = document.createElement("canvas");
-    //       const tempCtx = tempCanvas.getContext("2d");
-    //       const frameWidth = frames[0].width;
-    //       const frameHeight = frames[0].height;
+            return html2canvas(character, { backgroundColor: null });
+        }
 
-    //       tempCanvas.width = frameWidth * frameCount;
-    //       tempCanvas.height = frameHeight;
-    //       frames.forEach((frame, index) => {
-    //         tempCtx.drawImage(frame, index * frameWidth, 0);
-    //       });
+        function showLoader() {
+            if (loaderContainer) {
+                loaderContainer.style.display = 'flex';
+            }
+        }
 
-    //       // Convert temporary canvas to image
-    //       const spriteSheetImage = new Image();
-    //       spriteSheetImage.src = tempCanvas.toDataURL("image/png");
-
-    //       // Setup download link
-    //       const download = document.getElementById("download");
-    //       download.href = spriteSheetImage.src;
-    //       download.download = "sprite-sheet.png";
-
-    //       spriteSheetImage.onload = () => {
-    //         // Pass the entered name to addSprite so each sprite has its own bubble
-    //         addSprite(spriteSheetImage, frameWidth, frameHeight, nameValue);
-    //         if (!animationRunning) {
-    //           animationRunning = true;
-    //           requestAnimationFrame(animate);
-    //         }
-    //       };
-    //     } catch (error) {
-    //       console.error("Error creating sprite sheet:", error);
-    //     }
-    //   });
+        function hideLoader() {
+            if (loaderContainer) {
+                loaderContainer.style.display = 'none';
+            }
+        }
 
         document.addEventListener('DOMContentLoaded', function() {
-            const loaderContainer = document.querySelector('.loader-container');
+
             const stepElements = step.map(s => document.getElementById(s.elementId)).filter(el => el);
 
             // Hide all steps initially and show loader
@@ -293,7 +332,7 @@
                     loaderContainer.style.display = 'none';
                 }
                 showStep(0);
-            }, 2000); // 2000 milliseconds = 2 seconds
+            }, 2000);
         });
     </script>
 </x-app-layout>

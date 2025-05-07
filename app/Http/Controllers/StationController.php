@@ -18,8 +18,8 @@ class StationController extends Controller
         public function uploadBaby(Request $request)
     {
         $request->validate([
-            'baby_img' => 'required|image|mimes:gif|max:2048', // max 2MB
-            'baby_name' => 'required|string|max:255',
+            'baby_img' => 'required|image|max:2048', // max 2MB
+            'baby_name' => 'string|max:255',
         ]);
 
         $user = Auth::user();

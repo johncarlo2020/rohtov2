@@ -148,8 +148,8 @@
         }
 
         .finish-character-container {
-            width: 60vw;
-            height: 60vw;
+            width: 400px;
+            height: 400px;
             position: relative;
             img {
                 width: 100%;
@@ -208,9 +208,14 @@
         justify-content: center;
         align-items: center;
 
+        p {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 2vw;
+        }
+
         img {
             position: absolute;
-            bottom: 15px;
+            bottom: 24px;
             right: 46px;
         }
     }
@@ -474,9 +479,10 @@
     }
 
     .loading-text {
-        margin-top: 20px; // Space between loader and text
-        font-size: 1.5rem; // Adjust font size as needed
-        color: #333; // Adjust color as needed
+        margin-top: 20px;
+        font-size: 1.5rem;
+        color: #4f86c6;
+        font-size: 4vw;
     }
 
     @keyframes spin {

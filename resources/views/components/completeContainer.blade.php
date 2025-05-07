@@ -7,6 +7,9 @@
             </div>
         </div>
     </div>
+    <a id="download" class="btn btn-primary" style="display:none;">
+        Download Sprite Sheet
+    </a>
 
-    <button onclick="nextStep()" class="text-btn mt-5"><span>DONE</span></button>
+    <button onclick="createSpriteSheet()" class="text-btn mt-5"><span>DONE</span></button>
 </div>

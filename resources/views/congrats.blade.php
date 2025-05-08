@@ -1,25 +1,16 @@
 <x-app-layout>
     <div class="container-fluid home start completed-screen pt-4">
-
-
-        <p class="yellow-text mt-4">
-            Mission Accomplished<br />
-            <span>You’ve successfully</span><br />unlocked the Little Nurse
-        </p>
-
-        <div class="product-image">
-            <img class="" src="{{ asset('images/congrats.png') }}" alt="" />
+        <div class="mb-3 branding-container">
+            @include('components.branding')
         </div>
-        <div class="title-container">
-            <p class="title small">
-                Please proceed to <br />redemption counter
-
-            </p>
-        </div>
-        <div class="bottom-text mt-5">
-            <p class="text-success text-center">Visit our official website</p>
-            <a href="http://www.mentholatum.com.my/">  <img src="{{ asset('images/logo-large.png') }}" alt="" /></a>
-
+        <div class="congrats-container">
+            <h1 class="text-center main-color font-medium mb-2">Visit</h1>
+            <div class="product-image mb-3 px-5">
+                <img class="" src="{{ asset('images/congrats.png') }}" alt="" />
+            </div>
+           <p class="text-center main-color font-medium mb-3 ">
+             for more information
+           </p>
         </div>
     </div>
     </div>

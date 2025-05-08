@@ -16,6 +16,18 @@ body {
     color: #1B82C3 !important;
 }
 
+.congrats-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 72%;
+    width: 100%;
+}
+.text-lg {
+    font-size:4rem !important;
+}
+
 .font-medium {
     font-weight: 600;
     font-size:1rem;

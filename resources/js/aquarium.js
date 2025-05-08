@@ -8,7 +8,7 @@ const config = {
     height: window.innerHeight,
     physics: {
         default: 'arcade',
-        arcade: { gravity: { y: 0 }, debug: false }
+        arcade: { gravity: { y: 0 }, debug: false } // Changed to false
     },
     pipeline: { PlasmaPost2FX },
     render: {
@@ -49,13 +49,22 @@ const BUBBLE_RADIUS = 30;
 const MIN_COLLISION_DISTANCE = 80;
 const STRETCH_FACTOR = 0.01;
 const STRETCH_DURATION = 100;
+// New Movement Dynamics Constants
+const DART_CHANCE_PER_SECOND = 0.15; // 15% chance per second for a fish to consider darting
+const DART_DURATION = 0.7;          // Dart lasts for 0.7 seconds
+const DART_SPEED_MULTIPLIER = 2.8;  // Darts are 2.8x faster than normal base speed
+const DART_COOLDOWN_MIN = 4.0;      // Minimum cooldown between darts (seconds)
+const DART_COOLDOWN_MAX = 10.0;     // Maximum cooldown between darts (seconds)
+const MAX_NORMAL_SPEED_FACTOR = 1.3;// Max speed during normal floating (1.3x base speed)
+
 // fish spritesheet settings
 const FISH_FRAME_WIDTH = 800;
 const FISH_FRAME_HEIGHT = 800;
 // actual fish spritesheet has 7 frames
 const FISH_FRAME_COUNT = 6;
 // add a scale constant for fish size
-const FISH_SCALE = 0.4; // scale for fish sprites
+const FISH_SCALE = 0.5; // scale for fish sprites (Increased from 0.4)
+const TEMP_CHAR_SCALE = 0.9; // scale for temp characters (Previously hardcoded 0.8)
 // tempCharacter spritesheet frame count (25000px width ÷ 200px frame = 125 frames)
 const TEMP_FRAME_COUNT = 125;
 
@@ -132,7 +141,7 @@ function create() {
     const tempKeys = ['tempCharacter','tempCharacter2','tempCharacter3','tempCharacter4','tempCharacter5'];
     for (let i = 0; i < NUM_DEFAULT_TEMP_CHARACTERS; i++) {
         const spriteKey = tempKeys[i % tempKeys.length]; // Ensures different variants if NUM_DEFAULT_TEMP_CHARACTERS <= tempKeys.length
-        addFish.call(this, { spriteKey, frameWidth: 200, frameHeight: 200 });
+        addFish.call(this, { spriteKey, frameWidth: 400, frameHeight: 400 }); // Corrected frame dimensions
     }
 
     // Timer to ensure NUM_DEFAULT_TEMP_CHARACTERS are present, up to MAX_TOTAL_CHARACTERS
@@ -148,13 +157,19 @@ function create() {
             if (numCurrentTemps < NUM_DEFAULT_TEMP_CHARACTERS && this.entities.getLength() < MAX_TOTAL_CHARACTERS) {
                 const tempKeyToAdd = tempKeys[Phaser.Math.Between(0, tempKeys.length - 1)];
                 console.log(`Replenishing temp character. Current temps: ${numCurrentTemps}, Total: ${this.entities.getLength()}`);
-                addFish.call(this, { spriteKey: tempKeyToAdd, frameWidth: 200, frameHeight: 200 });
+                addFish.call(this, { spriteKey: tempKeyToAdd, frameWidth: 400, frameHeight: 400 }); // Corrected frame dimensions
             }
         }
     });
 
     // collision among all entities
-    this.physics.add.collider(this.entities, this.entities);
+    this.physics.add.collider(this.entities, this.entities, (entity1, entity2) => {
+        // Check if the entities are active and have bodies before processing collision
+        if (entity1 && entity1.active && entity1.body && entity2 && entity2.active && entity2.body) {
+            handleCollisionSpin(entity1, this); // Pass scene context for tweens
+            handleCollisionSpin(entity2, this);
+        }
+    }, null, this);
 
     // add character count display
     this.countText = this.add.text(10, 10, '', { font: '20px Arial', fill: '#ffffff' }).setDepth(10);
@@ -230,7 +245,7 @@ function addFish({ spriteKey, spriteUrl, frameWidth, frameHeight, name = null } 
             }
         }
 
-        const scaleFactor = (spriteKey === 'fish') ? FISH_SCALE : 0.8; // Behavior based on original spriteKey
+        const scaleFactor = (spriteKey === 'fish') ? FISH_SCALE : TEMP_CHAR_SCALE; // Use new TEMP_CHAR_SCALE
         let startX, startY, targetX, targetY, initialActualScale, initialAngle;
 
         if (spriteKey === 'fish') { // Entry animation style based on original spriteKey
@@ -276,9 +291,50 @@ function addFish({ spriteKey, spriteUrl, frameWidth, frameHeight, name = null } 
         }
 
         const fish = this.physics.add.sprite(startX, startY, effectiveTextureKey); // Use unique texture key
-        fish.setAlpha(0);
+
+        if (spriteKey === 'fish') {
+            fish.setAlpha(0); // Real fish start transparent for their fade-in entry
+        } else {
+            fish.setAlpha(1); // Temp characters start fully opaque
+        }
+
         fish.setScale(initialActualScale);
         fish.setAngle(initialAngle);
+        fish.isSpinning = false; // Initialize isSpinning flag
+
+        // Movement dynamics properties
+        fish.baseSpeedMultiplier = Phaser.Math.FloatBetween(0.85, 1.15); // Slight variation in base speed
+        fish.personalFloatSpeed = FLOAT_SPEED * Phaser.Math.FloatBetween(0.7, 1.3);
+        fish.personalFloatFrequency = FLOAT_FREQUENCY * Phaser.Math.FloatBetween(0.8, 1.2);
+        fish.isDarting = false;
+        fish.dartTimer = 0;
+        // Initial dart cooldown so they don't all dart at the start
+        fish.dartCooldown = Phaser.Math.FloatBetween(1.0, DART_COOLDOWN_MAX / 2);
+
+        // Adjust physics body size and offset to better match visible sprite
+        // frameWidth and frameHeight are arguments to addFish, representing the original sprite frame dimensions
+        let bodyWidthPercent = 0.7;  // Default percentage of original frame dimension for body size
+        let bodyHeightPercent = 0.7;
+
+        if (spriteKey === 'fish') {
+            // Fish sprites might be wider than tall and have more transparent area
+            bodyWidthPercent = 0.50; // Body will be 50% of the frame's width
+            bodyHeightPercent = 0.30; // Body will be 30% of the frame's height
+        } else { // For tempCharacters
+            // Assuming tempCharacters are more uniform
+            bodyWidthPercent = 0.60; // Body will be 60% of the frame's width
+            bodyHeightPercent = 0.60; // Body will be 60% of the frame's height
+        }
+
+        const newBodyWidth = frameWidth * bodyWidthPercent;
+        const newBodyHeight = frameHeight * bodyHeightPercent;
+
+        // Calculate offsets to center the new smaller body within the original (unscaled) frame
+        const offsetX = (frameWidth - newBodyWidth) / 2;
+        const offsetY = (frameHeight - newBodyHeight) / 2;
+
+        fish.body.setSize(newBodyWidth, newBodyHeight);
+        fish.body.setOffset(offsetX, offsetY);
 
         // play animation based on key
         // For dynamic sprites, animation is created in the loading block if texture is new.
@@ -311,7 +367,7 @@ function addFish({ spriteKey, spriteUrl, frameWidth, frameHeight, name = null } 
                 alpha: 1,                               // Fade in
                 scale: scaleFactor,                     // Animate to its final intended scale (downsizing)
                 angle: 0,                               // Straighten out from the initial tilt
-                duration: 3000,                         // Duration for the entry
+                duration: 4000,                         // Duration for the entry (Increased from 3000)
                 ease: 'Cubic.InOut',                    // Smooth acceleration and deceleration
                 onComplete: () => {
                     // Optional: a very subtle "settle" animation once arrived
@@ -327,25 +383,25 @@ function addFish({ spriteKey, spriteUrl, frameWidth, frameHeight, name = null } 
                 }
             });
         } else { // For tempCharacters (original spriteKey starts with 'tempCharacter')
-            // Entry tween: move from off-screen start to in-frame target, fade in, and adjust angle
+            // Entry tween: move from off-screen start to in-frame target, and adjust angle (alpha removed)
             this.tweens.add({
                 targets: fish,
                 x: targetX,
                 y: targetY,
-                alpha: 1,
+                // alpha: 1, // REMOVED - Temp characters no longer fade in via this tween
                 angle: 0, // Straighten out as it arrives
-                duration: 2000, // Gentler arrival duration
-                ease: 'Sine.InOut' // Smoother easing for movement, alpha, and angle
+                duration: 3000, // Gentler arrival duration
+                ease: 'Sine.InOut' // Smoother easing for movement and angle
             });
 
             // Scale pop animation: scale up then back to normal - made more subtle
             this.tweens.add({
                 targets: fish,
-                scale: initialActualScale * 1.1, // Subtle pop (10% bigger from its starting/final scale)
-                duration: 500, // Slightly longer duration for the pop
+                scale: initialActualScale * 1.2, // More pronounced pop (Increased from 1.1)
+                duration: 700, // Slightly longer duration for the pop (Increased from 500)
                 ease: 'Sine.easeOut', // Smoother, less bouncy pop
                 yoyo: true,
-                delay: 1500 // Start pop as movement nears completion
+                delay: 2300 // Start pop as movement nears completion (Adjusted from 1500 due to increased movement duration)
             });
         }
 
@@ -370,9 +426,12 @@ function addFish({ spriteKey, spriteUrl, frameWidth, frameHeight, name = null } 
         this.entities.add(fish);
         // enable arcade physics bounce and collision
         fish.body.setCollideWorldBounds(true);
-        fish.body.setBounce(1);
-        // apply initial velocity from vx/vy
-        fish.body.setVelocity(fish.vx, fish.vy);
+        fish.body.setBounce(0.85); // Increased bounce for stronger push (was 0.6)
+        // apply initial velocity from vx/vy, now incorporating baseSpeedMultiplier
+        const baseSpeed = (spriteKey === 'fish' ? FISH_SPEED : TEMP_SPEED) * fish.baseSpeedMultiplier;
+        const initialBodyAngle = Phaser.Math.Angle.Random(); // Renamed to avoid conflict with fish.angle
+        fish.body.setVelocity(Math.cos(initialBodyAngle) * baseSpeed, Math.sin(initialBodyAngle) * baseSpeed);
+
         if (name && spriteKey === 'fish') { // Emit event if it's a named fish (typically dynamic ones)
             this.events.emit('fishAdded', fish);
         }
@@ -431,7 +490,7 @@ function handleMovement(sprite, dt) {
 }
 
 function update(time, delta) {
-    const dt = delta / 1000;
+    const dt = delta / 1000; // delta is in ms, convert to seconds for timers and rates
     const moveFactor = dt; // use direct dt since vx/vy are in pixels/sec
 
     const numEntities = this.entities ? this.entities.getLength() : 0;
@@ -451,14 +510,52 @@ function update(time, delta) {
                     entity.y + BUBBLE_OFFSET_Y
                 );
             }
-            // apply float oscillation velocity on top of physics
-            entity.floatTime += dt;
-            const floatX = Math.cos(entity.floatTime * FLOAT_FREQUENCY) * FLOAT_SPEED * entity.floatDirection;
-            const floatY = Math.sin(entity.floatTime * FLOAT_FREQUENCY) * FLOAT_SPEED * entity.floatDirection;
-            entity.body.velocity.x += floatX;
-            entity.body.velocity.y += floatY;
-            // flip sprite based on current velocity
-            entity.flipX = entity.body.velocity.x < 0;
+            // New movement logic
+            if (entity.isDarting) {
+                entity.dartTimer -= dt;
+                if (entity.dartTimer <= 0) {
+                    entity.isDarting = false;
+                    // Restore a base cruising speed after darting
+                    const baseSpeedAfterDart = (entity.texture.key.startsWith('dyn_fish_') || entity.texture.key === 'fish' ? FISH_SPEED : TEMP_SPEED) * entity.baseSpeedMultiplier;
+                    if (entity.body.velocity.lengthSq() > 0) { // lengthSq for efficiency
+                        entity.body.velocity.normalize().scale(baseSpeedAfterDart);
+                    } else {
+                        const newAngle = Phaser.Math.Angle.Random();
+                        entity.body.velocity.setTo(Math.cos(newAngle) * baseSpeedAfterDart, Math.sin(newAngle) * baseSpeedAfterDart);
+                    }
+                }
+                // Velocity for darting is already set. Physics engine handles movement.
+            } else { // Not currently darting
+                entity.dartCooldown -= dt;
+                // Check if it's time to consider darting (and not currently spinning from a collision)
+                if (entity.dartCooldown <= 0 && !entity.isSpinning && Math.random() < DART_CHANCE_PER_SECOND * dt) {
+                    entity.isDarting = true;
+                    entity.dartTimer = DART_DURATION;
+                    entity.dartCooldown = Phaser.Math.FloatBetween(DART_COOLDOWN_MIN, DART_COOLDOWN_MAX);
+
+                    const dartAngle = Phaser.Math.Angle.Random(); // Could also use entity.body.velocity.angle() to dart forward
+                    const dartSpeedValue = (entity.texture.key.startsWith('dyn_fish_') || entity.texture.key === 'fish' ? FISH_SPEED : TEMP_SPEED) * entity.baseSpeedMultiplier * DART_SPEED_MULTIPLIER;
+                    entity.body.velocity.setTo(Math.cos(dartAngle) * dartSpeedValue, Math.sin(dartAngle) * dartSpeedValue);
+                } else if (!entity.isSpinning) { // Apply normal floating only if not darting and not spinning
+                    entity.floatTime += dt; // floatTime is an existing property
+                    const floatX = Math.cos(entity.floatTime * entity.personalFloatFrequency) * entity.personalFloatSpeed * entity.floatDirection;
+                    const floatY = Math.sin(entity.floatTime * entity.personalFloatFrequency) * entity.personalFloatSpeed * entity.floatDirection;
+
+                    entity.body.velocity.x += floatX;
+                    entity.body.velocity.y += floatY;
+
+                    // Clamp velocity to a max normal speed
+                    const maxNormalSpeed = (entity.texture.key.startsWith('dyn_fish_') || entity.texture.key === 'fish' ? FISH_SPEED : TEMP_SPEED) * entity.baseSpeedMultiplier * MAX_NORMAL_SPEED_FACTOR;
+                    if (entity.body.velocity.lengthSq() > maxNormalSpeed * maxNormalSpeed) {
+                        entity.body.velocity.normalize().scale(maxNormalSpeed);
+                    }
+                }
+            }
+
+            // flip sprite based on current velocity (ensure this is after all velocity modifications)
+            if (!entity.isSpinning) { // Don't flip if spinning, let the spin animation control orientation
+                 entity.flipX = entity.body.velocity.x < 0;
+            }
         });
     }
 }
@@ -474,4 +571,41 @@ function resizeGame() {
         origWidth * scaleFactor,
         origHeight * scaleFactor
     );
+}
+
+function handleCollisionSpin(entity, scene) {
+    if (!entity || !entity.active || entity.isSpinning) return; // Don't spin if already spinning or inactive
+
+    entity.isSpinning = true;
+    scene.tweens.killTweensOf(entity, ['angle']); // Stop any ongoing angle tweens
+
+    const spinAmount = Phaser.Math.Between(120, 240) * (Math.random() < 0.5 ? 1 : -1); // Spin amount
+    const currentAngle = entity.angle;
+
+    scene.tweens.add({
+        targets: entity,
+        angle: currentAngle + spinAmount,
+        duration: 600, // Duration of the spin (Increased from 300ms)
+        ease: 'Power1',
+        onComplete: () => {
+            if (entity && entity.active) { // Check if entity still exists and is active
+                scene.tweens.add({
+                    targets: entity,
+                    angle: 0, // Rotate back to normal orientation
+                    duration: 1800, // Slower recovery duration
+                    ease: 'Sine.Out',
+                    onComplete: () => {
+                        if (entity && entity.active) {
+                            entity.isSpinning = false;
+                        }
+                    }
+                });
+            } else {
+                // Entity might have been destroyed during the spin
+                if (entity) {
+                    entity.isSpinning = false;
+                }
+            }
+        }
+    });
 }

@@ -59,6 +59,15 @@
                 font-weight: normal;
                 font-style: normal;
             }
+
+            @font-face {
+                font-family: 'Stella Demo';
+                src: url('{{ asset('images/font/Stella Demo.otf') }}') format('opentype');
+                font-weight: normal;
+                font-style: normal;
+            }
+
+
         </style>
         <main>
             {{ $slot }}

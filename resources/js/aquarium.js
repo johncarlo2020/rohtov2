@@ -55,7 +55,7 @@ const FISH_FRAME_HEIGHT = 800;
 // actual fish spritesheet has 7 frames
 const FISH_FRAME_COUNT = 6;
 // add a scale constant for fish size
-const FISH_SCALE = 0.2; // scale for fish sprites
+const FISH_SCALE = 0.4; // scale for fish sprites
 // tempCharacter spritesheet frame count (25000px width ÷ 200px frame = 125 frames)
 const TEMP_FRAME_COUNT = 125;
 

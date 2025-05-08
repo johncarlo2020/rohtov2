@@ -145,6 +145,10 @@
             justify-content: center;
             align-items: center;
             margin-top: 5vh;
+
+            p {
+                font-family: 'Stella Demo', sans-serif;
+            }
         }
 
         .finish-character-container {
@@ -493,4 +497,19 @@
             transform: rotate(360deg);
         }
     }
+
+    .skin-name-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 5vh;
+
+        p {
+            font-family: 'Stella Demo', sans-serif;
+            font-size: 14vw;
+            color: #14477A;
+        }
+    }
 }
+
+

@@ -3,7 +3,7 @@
         @for ($i = 1; $i <= 5; $i++)
             <button onclick="selectSkin({{ $i }})" class="character-btn">
                 {{-- Assuming image filenames correspond to the loop index, e.g., bubbles/1.png --}}
-                <img class="bubbles" src="{{ asset('images/character/bubbles/bubble' . $i . '.png') }}"
+                <img class="bubbles" src="{{ asset('images/character/bubbles/' . $i . '.webp') }}"
                     alt="Character {{ $i }}" />
             </button>
         @endfor

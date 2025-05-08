@@ -31,10 +31,6 @@
                 <button type="submit" id="uploadButton"></button>
             </form>
         </div>
-        <div class="end-text">
-            <p>Powered by WOWSOME®️ 2025</p>
-            <img src="{{ asset('images/logo-rounded.png') }}" alt="Item 2" />
-        </div>
     </div>
     <script>
         const loaderContainer = document.querySelector('.loader-container');
@@ -53,11 +49,20 @@
             completed: false,
         }];
 
+        const characterNameMap = [
+            'Bounci',
+            'Chubbi',
+            'Globelle',
+            'mochimura',
+            'Dewy',
+        ]
+
         var selectedCharacter = {
             name: '',
             skin: '',
             hair: '',
             face: '',
+            character:'',
         };
 
         function showStep(stepIndex) {
@@ -150,6 +155,7 @@
             const characterName = 'characterName';
             const characterEditContainer = 'characterEditContainer';
             selectedCharacter.skin = skin;
+            selectedCharacter.character = characterNameMap[skin - 1];
             initEditCharacter(characterName,characterEditContainer);
             nextStep();
         }
@@ -160,13 +166,12 @@
             if (characterContainer) {
                 characterContainer.innerHTML = ''; // Clear previous content
                 characterNameContainer.innerHTML = ''; // Clear previous content
-                const nameElement = document.createElement('img');
-                nameElement.src = `{{ asset('images/character/name/${selectedCharacter.skin}.png') }}`;
+                const nameElement = document.createElement('p');
+                nameElement.textContent = selectedCharacter.character;
                 const skinImage = document.createElement('img');
                 skinImage.src = `{{ asset('images/character/skin/${selectedCharacter.skin}/${selectedCharacter.skin}.png') }}`;
                 skinImage.alt = 'Selected Skin';
                 skinImage.classList.add('skin');
-                nameElement.alt = 'Selected Name';
                 nameElement.classList.add('selected-skin-name');
                 characterNameContainer.appendChild(nameElement);
                 characterContainer.appendChild(skinImage);
@@ -292,6 +297,7 @@
             Object.entries(selectedCharacter).forEach(([key, value]) => {
                 // Skip empty values if you want
                 if (key === 'name') return;
+                if (key === 'character') return;
 
                 skin.src = `{{ asset('images/character/skin/${value}/${frameIndex}.png') }}`;
                 hair.src = `{{ asset('images/character/hair/${value}/${frameIndex}.png') }}`;

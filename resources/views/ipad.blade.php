@@ -152,10 +152,25 @@
         }
 
         function selectSkin(skin) {
+            selectedCharacter = {
+                name: '',
+                skin: '',
+                hair: '',
+                face: '',
+                character:'',
+            };
+
+            //remove active class from all buttons
+            const characterButtons = document.querySelectorAll('.item');
+            characterButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+
             const characterName = 'characterName';
             const characterEditContainer = 'characterEditContainer';
             selectedCharacter.skin = skin;
             selectedCharacter.character = characterNameMap[skin - 1];
+            console.log(selectedCharacter.skin, skin);
             initEditCharacter(characterName,characterEditContainer);
             nextStep();
         }
@@ -243,7 +258,6 @@
             spriteSheetImage.src = tempCanvas.toDataURL("image/png");
             spriteSheetImageConverted.src = spriteSheetImage.src;
 
-            uploadSpriteSheet();
             hideLoader();
 
             } catch (error) {
@@ -270,7 +284,7 @@
                     console.error('Failed to generate blob from sprite sheet.');
                     return;
                 }
-                const file = new File([blob], "sprite_sheet.webp", { type: "image/png" });
+                const file = new File([blob], "sprite_sheet.webp", { type: "image/webp" });
                 const dataTransfer = new DataTransfer();
                 dataTransfer.items.add(file);
                 babyImgInput.files = dataTransfer.files;
@@ -278,33 +292,29 @@
 
                 // Submit the form
                 uploadButton.click();
-            }, "image/png");
+            }, "image/webp");
         }
 
         async function captureFrame(frameIndex) {
-            // Update character images for this frame, using custom face if provided
-            // skin.src = `/assets/green_0${frameIndex + 1}.webp`;
-            // hair.src = `/assets/green_hair0${frameIndex + 1}.webp`;
-            // face.src = customFaceSrc;
-
             // loop through selectedCharacter and update the src of each image
             const character = document.getElementById('finishedCharacterContainer');
             const skin = character.querySelector('.skin');
             const hair = character.querySelector('.hair');
             const face = character.querySelector('.face');
 
+
+         // Directly set the src for each part using the correct selectedCharacter property
+            if (selectedCharacter.skin) {
+                skin.src = `{{ asset('images/character/skin/${selectedCharacter.skin}/${frameIndex}.webp') }}`;
+            }
+            if (selectedCharacter.hair) {
+                hair.src = `{{ asset('images/character/hair/${selectedCharacter.hair}/${frameIndex}.webp') }}`;
+            }
+            if (selectedCharacter.face) {
+                face.src = `{{ asset('images/character/face/${selectedCharacter.face}/${frameIndex}.webp') }}`;
+            }
+
             console.log(skin, hair, face);
-
-
-            Object.entries(selectedCharacter).forEach(([key, value]) => {
-                // Skip empty values if you want
-                if (key === 'name') return;
-                if (key === 'character') return;
-
-                skin.src = `{{ asset('images/character/skin/${value}/${frameIndex}.webp') }}`;
-                hair.src = `{{ asset('images/character/hair/${value}/${frameIndex}.webp') }}`;
-                face.src = `{{ asset('images/character/face/${value}/${frameIndex}.webp') }}`;
-            });
 
             // Ensure all images load before capturing
             await Promise.all([

@@ -420,12 +420,15 @@
                         justify-content: flex-start;
                         overflow-x: scroll ;
                         -ms-overflow-style: none;    /* IE and Edge */
-                        scrollbar-width: none;       /* Firefox */
+                        scrollbar-width: none;
+                        transition: all 0.1s ease-in-out;
+                        /* Firefox */
                         &::-webkit-scrollbar {
                             display: none;             /* Chrome, Safari, Opera */
                         }
 
                         padding: 20px 10vw;
+
 
 
 
@@ -438,11 +441,17 @@
                             outline: none;
                             display: block;
                             padding: 20px;
+                            transition: all 0.1s ease-in-out;
+                            border-radius: 9px;
+
+                            &:focus {
+                                outline: none;
+                              }
+
 
                             &.active {
                                 border: white 4px solid;
                                 border-radius: 9px;
-                                transition: all 0.1s ease-in-out;
                             }
 
                             img {

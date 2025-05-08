@@ -58,6 +58,11 @@ class StationController extends Controller
         // Convert path to URL or relative path for saving
         $publicPath = Storage::url($path); // returns `/storage/babies/filename.gif`
 
+        //check if image is uploaded
+        if (!$publicPath) {
+            return response()->json(['error' => 'Image upload failed.'], 500);
+        }
+
         // Fire the event
         broadcast(new babyEvent($publicPath, 'noname'))->toOthers();
 

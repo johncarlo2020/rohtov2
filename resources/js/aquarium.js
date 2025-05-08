@@ -60,7 +60,7 @@ const FISH_SCALE = 0.4; // scale for fish sprites
 const TEMP_FRAME_COUNT = 125;
 
 function preload() {
-    this.load.video("aquarium", `${ASSET}/images/hadalabobabies/aquarium.mp4`);
+    this.load.video("aquarium", `${ASSET}/images/hadalabobabies/Aqua HL v2.mp4`);
     // load fish as spritesheet instead of static image
     this.load.spritesheet(
         "fish",

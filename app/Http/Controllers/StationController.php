@@ -15,7 +15,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 class StationController extends Controller
 {
-        public function uploadBaby(Request $request)
+    public function uploadBaby(Request $request)
     {
         $request->validate([
             'baby_img' => 'required|image|max:2048', // max 2MB
@@ -44,6 +44,26 @@ class StationController extends Controller
             'name' => $user->baby_name
         ]);
     }
+
+    public function uploadBabyIpad(Request $request)
+    {
+        $request->validate([
+            'baby_img' => 'required|image|max:2048',
+        ]);
+
+
+        // Store the uploaded image in `public/babies`
+        $path = $request->file('baby_img')->store('public/babies');
+
+        // Convert path to URL or relative path for saving
+        $publicPath = Storage::url($path); // returns `/storage/babies/filename.gif`
+
+        // Fire the event
+        broadcast(new babyEvent($publicPath, 'noname'))->toOthers();
+
+        return redirect()->back();
+    }
+
     public function index(Station $station)
     {
         $user = StationUser::where('user_id', auth()->id())

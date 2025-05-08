@@ -27,6 +27,8 @@ Route::get('/upload-baby', function () {
     return view('upload-baby');
 })->name('upload.baby.form');
 
+Route::post('/uploadBabyIpad', 'App\Http\Controllers\StationController@uploadBabyIpad')->name('upload.babyIpad');
+
 Route::get('/listen-baby', function () {
     return view('listen-baby');
 })->name('listen.baby.form');

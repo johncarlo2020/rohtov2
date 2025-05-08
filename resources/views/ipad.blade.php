@@ -24,7 +24,7 @@
             <div class="w-100" id="completeContainer" class="hidden">
                 @include('components.completeContainer')
             </div>
-            <form id="uploadForm" action="{{ route('upload.baby') }}" method="POST" enctype="multipart/form-data" style="display:none;">
+            <form id="uploadForm" action="{{ route('upload.babyIpad') }}" method="POST" enctype="multipart/form-data" style="display:none;">
                 @csrf
                 <input type="file" name="baby_img" id="baby_img" accept="image/png">
                 <input type="text" name="baby_name" id="baby_name">

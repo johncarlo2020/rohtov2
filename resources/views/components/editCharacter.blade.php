@@ -21,16 +21,19 @@
                 </div>
                 <div class="slider">
                     <button class="item" onclick="selectItem('hair', 1, this)">
-                        <img src="{{ asset('images/character/choises/hair/1.png') }}" alt="Hair 1" />
+                        <img src="{{ asset('images/character/hair/1/1.png') }}" alt="Hair 1" />
                     </button>
                     <button class="item" onclick="selectItem('hair', 2, this)">
-                        <img src="{{ asset('images/character/choises/hair/2.png') }}" alt="Hair 2" />
+                        <img src="{{ asset('images/character/hair/2/1.png') }}" alt="Hair 2" />
                     </button>
-                    <button class="item" onclick="selectItem('hair', 1, this)">
-                        <img src="{{ asset('images/character/choises/hair/1.png') }}" alt="Hair 1" />
+                    <button class="item" onclick="selectItem('hair', 3, this)">
+                        <img src="{{ asset('images/character/hair/3/1.png') }}" alt="Hair 1" />
                     </button>
-                    <button class="item" onclick="selectItem('hair', 2, this)">
-                        <img src="{{ asset('images/character/choises/hair/2.png') }}" alt="Hair 2" />
+                    <button class="item" onclick="selectItem('hair', 4, this)">
+                        <img src="{{ asset('images/character/hair/4/1.png') }}" alt="Hair 2" />
+                    </button>
+                    <button class="item" onclick="selectItem('hair', 5, this)">
+                        <img src="{{ asset('images/character/hair/5/1.png') }}" alt="Hair 2" />
                     </button>
                 </div>
                 <div class="right-nav">
@@ -59,16 +62,19 @@
                 </div>
                 <div class="slider">
                     <button class="item" onclick="selectItem('face', 1, this)">
-                        <img src="{{ asset('images/character/choises/face/1.png') }}" alt="Face 1" />
+                        <img src="{{ asset('images/character/face/1/1.png') }}" alt="Face 1" />
                     </button>
                     <button class="item" onclick="selectItem('face', 2, this)">
-                        <img src="{{ asset('images/character/choises/face/2.png') }}" alt="Face 2" />
+                        <img src="{{ asset('images/character/face/2/1.png') }}" alt="Face 2" />
                     </button>
                     <button class="item" onclick="selectItem('face', 3, this)">
-                        <img src="{{ asset('images/character/choises/face/1.png') }}" alt="Face 3" />
+                        <img src="{{ asset('images/character/face/3/1.png') }}" alt="Face 3" />
                     </button>
                     <button class="item" onclick="selectItem('face', 4, this)">
-                        <img src="{{ asset('images/character/choises/face/2.png') }}" alt="Face 4" />
+                        <img src="{{ asset('images/character/face/4/1.png') }}" alt="Face 4" />
+                    </button>
+                    <button class="item" onclick="selectItem('face', 5, this)">
+                        <img src="{{ asset('images/character/face/5/1.png') }}" alt="Face 4" />
                     </button>
                 </div>
                 <div class="right-nav">

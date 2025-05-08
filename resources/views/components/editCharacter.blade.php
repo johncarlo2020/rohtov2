@@ -35,7 +35,7 @@
             </div>
         </div>
         <div class="devider">
-            <img src="{{ asset('images/line.webp') }}" alt="Item 2" />
+            <img src="{{ asset('images/Line.webp') }}" alt="Item 2" />
         </div>
         <div class="option">
             <div class="button-container">

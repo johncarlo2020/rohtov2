@@ -31,15 +31,15 @@ const fishNames = ["Nemo", "Bub", "Fin", "Splash", "Marl", "Corl"];
 
 // Adjustable Variables
 const SPAWN_DELAY = 3000;
-const FISH_SPEED = 6;
+const FISH_SPEED = 80;
 const TEMP_SPEED = 100;
-const FLOAT_SPEED = 0.02;
-const FLOAT_FREQUENCY = 2; // oscillation frequency multiplier
+const FLOAT_SPEED = 0.04;
+const FLOAT_FREQUENCY = 3; // oscillation frequency multiplier
 const COLLISION_PUSH_FORCE = 1.5;
 // Frame rate presets for animations
 const FRAME_RATE_SLOW = 6;
 const FRAME_RATE_NORMAL = 3;
-const FRAME_RATE_FAST = 8;
+const FRAME_RATE_FAST = 10;
 const FRAME_RATE_SUPERFAST = 16;
 const SPIN_TIME = 2000;
 const SPIN_VELOCITY = 360;
@@ -79,6 +79,10 @@ function preload() {
         `${ASSET}/images/defaultBabies/2.png`,
         { frameWidth: 400, frameHeight: 400, endFrame: TEMP_FRAME_COUNT - 1 }
     );
+    // load additional temp character variants (3-5)
+    this.load.spritesheet("tempCharacter3", `${ASSET}/images/defaultBabies/3.png`, { frameWidth: 400, frameHeight: 400, endFrame: TEMP_FRAME_COUNT - 1 });
+    this.load.spritesheet("tempCharacter4", `${ASSET}/images/defaultBabies/4.png`, { frameWidth: 400, frameHeight: 400, endFrame: TEMP_FRAME_COUNT - 1 });
+    this.load.spritesheet("tempCharacter5", `${ASSET}/images/defaultBabies/5.png`, { frameWidth: 400, frameHeight: 400, endFrame: TEMP_FRAME_COUNT - 1 });
 }
 
 function create() {
@@ -114,29 +118,27 @@ function create() {
         frameRate: FRAME_RATE_FAST,
         repeat: -1
     });
-    // swim animation for fish
-    this.anims.create({
-        key: "fishSwim",
-        frames: this.anims.generateFrameNumbers("fish", { start: 0, end: FISH_FRAME_COUNT - 1 }),
-        frameRate: FRAME_RATE_NORMAL,
-        repeat: -1
-    });
-
+    // idle animations for variants 3-5
+    this.anims.create({ key: "idle3", frames: this.anims.generateFrameNumbers("tempCharacter3", { start: 0, end: TEMP_FRAME_COUNT - 1 }), frameRate: FRAME_RATE_FAST, repeat: -1 });
+    this.anims.create({ key: "idle4", frames: this.anims.generateFrameNumbers("tempCharacter4", { start: 0, end: TEMP_FRAME_COUNT - 1 }), frameRate: FRAME_RATE_FAST, repeat: -1 });
+    this.anims.create({ key: "idle5", frames: this.anims.generateFrameNumbers("tempCharacter5", { start: 0, end: TEMP_FRAME_COUNT - 1 }), frameRate: FRAME_RATE_FAST, repeat: -1 });
 
     // unify all characters (temps & real fish) into one physics group
     this.entities = this.physics.add.group();
-    // spawn initial mix of two tempCharacter variants
-    for (let i = 0; i < 10; i++) {
-        const spriteKey = (i % 2 === 0) ? 'tempCharacter' : 'tempCharacter2';
+    // spawn initial mix of five tempCharacter variants
+    const tempKeys = ['tempCharacter','tempCharacter2','tempCharacter3','tempCharacter4','tempCharacter5'];
+    for (let i = 0; i < tempKeys.length; i++) {
+        const spriteKey = tempKeys[i % tempKeys.length];
         addFish.call(this, { spriteKey, frameWidth: 200, frameHeight: 200 });
     }
     this.time.addEvent({
         delay: 1000,
         loop: true,
         callback: () => {
-            if (this.entities.getLength() < 10) {
-                // randomly choose which temp variant to add
-                const key = Phaser.Math.Between(0, 1) ? 'tempCharacter2' : 'tempCharacter';
+            if (this.entities.getLength() < 5) {
+                // randomly choose among five temp variants
+                const randIndex = Phaser.Math.Between(0, tempKeys.length - 1);
+                const key = tempKeys[randIndex];
                 addFish.call(this, { spriteKey: key, frameWidth: 200, frameHeight: 200 });
             }
         }
@@ -169,7 +171,7 @@ function addFish({ spriteKey, spriteUrl, frameWidth, frameHeight, name = null } 
         // choose a random side to spawn from (0:left,1:right,2:top,3:bottom)
         let startX, startY;
         const side = Phaser.Math.Between(0, 3);
-        const scaleFactor = spriteKey === 'fish' ? FISH_SCALE : 0.4;
+        const scaleFactor = spriteKey === 'fish' ? FISH_SCALE : 0.8;
         switch (side) {
             case 0: // left
                 startX = -frameWidth * scaleFactor;
@@ -210,6 +212,12 @@ function addFish({ spriteKey, spriteUrl, frameWidth, frameHeight, name = null } 
             fish.play('idle');
         } else if (key === 'tempCharacter2') {
             fish.play('idle2');
+        } else if (key === 'tempCharacter3') {
+            fish.play('idle3');
+        } else if (key === 'tempCharacter4') {
+            fish.play('idle4');
+        } else if (key === 'tempCharacter5') {
+            fish.play('idle5');
         }
         // entry tween: move from off-screen start to in-frame target and fade in
         fish.alpha = 0;
@@ -230,8 +238,13 @@ function addFish({ spriteKey, spriteUrl, frameWidth, frameHeight, name = null } 
             yoyo: true
         });
         // movement properties
-        fish.vx = Phaser.Math.FloatBetween(-0.05, 0.05);
-        fish.vy = Phaser.Math.FloatBetween(-0.05, 0.05);
+        if (spriteKey === 'fish') {
+            fish.vx = Phaser.Math.FloatBetween(-FISH_SPEED, FISH_SPEED);
+            fish.vy = Phaser.Math.FloatBetween(-FISH_SPEED, FISH_SPEED);
+        } else {
+            fish.vx = Phaser.Math.FloatBetween(-TEMP_SPEED, TEMP_SPEED);
+            fish.vy = Phaser.Math.FloatBetween(-TEMP_SPEED, TEMP_SPEED);
+        }
         fish.floatTime = 0;
         fish.floatDirection = Math.random() < 0.5 ? 1 : -1;
         // no spin effect, keep horizontal orientation
@@ -243,6 +256,11 @@ function addFish({ spriteKey, spriteUrl, frameWidth, frameHeight, name = null } 
             // fish.bubble = { bubble, text: textObj };
         }
         this.entities.add(fish);
+        // enable arcade physics bounce and collision
+        fish.body.setCollideWorldBounds(true);
+        fish.body.setBounce(1);
+        // apply initial velocity from vx/vy
+        fish.body.setVelocity(fish.vx, fish.vy);
         if (name) {
             this.events.emit('fishAdded', fish);
         }
@@ -273,6 +291,10 @@ function spawnTempChar() {
     temp.floatTime = 0;
     temp.floatDirection = Math.random() < 0.5 ? 1 : -1;
     this.entities.add(temp);
+    // enable arcade physics bounce and collision for manual temp spawn
+    temp.body.setCollideWorldBounds(true);
+    temp.body.setBounce(1);
+    temp.body.setVelocity(temp.vx * TEMP_SPEED, temp.vy * TEMP_SPEED);
     return temp;
 }
 
@@ -298,7 +320,7 @@ function handleMovement(sprite, dt) {
 
 function update(time, delta) {
     const dt = delta / 1000;
-    const moveFactor = dt * FISH_SPEED;
+    const moveFactor = dt; // use direct dt since vx/vy are in pixels/sec
 
     const numEntities = this.entities ? this.entities.getLength() : 0;
     this.countText.setText(`Count: ${numEntities}`);
@@ -306,8 +328,7 @@ function update(time, delta) {
     // update entities group only when there are entities
     if (this.entities && this.entities.getChildren().length > 0) {
         this.entities.getChildren().forEach((entity) => {
-            entity.x += entity.vx * moveFactor;
-            entity.y += entity.vy * moveFactor;
+            // update bubble position if exists
             if (entity.bubble) {
                 entity.bubble.bubble.setPosition(
                     entity.x + BUBBLE_OFFSET_X,
@@ -318,72 +339,14 @@ function update(time, delta) {
                     entity.y + BUBBLE_OFFSET_Y
                 );
             }
-
+            // apply float oscillation velocity on top of physics
             entity.floatTime += dt;
-            entity.vy += Math.sin(entity.floatTime * FLOAT_FREQUENCY) * FLOAT_SPEED * entity.floatDirection;
-            entity.vx += Math.cos(entity.floatTime * FLOAT_FREQUENCY) * FLOAT_SPEED * entity.floatDirection;
-
-            // **Squash & Stretch Based on Movement**
-            let speed = Math.sqrt(entity.vx * entity.vx + entity.vy * entity.vy);
-            let stretchX = 1 + speed * STRETCH_FACTOR;
-            let stretchY = 1 / stretchX;
-
-            if (entity.x < 50) {
-                entity.x = 50;
-                entity.vx = Math.abs(entity.vx);
-            }
-            if (entity.x > window.innerWidth - 50) {
-                entity.x = window.innerWidth - 50;
-                entity.vx = -Math.abs(entity.vx);
-            }
-            if (entity.y < 50) {
-                entity.y = 50;
-                entity.vy = Math.abs(entity.vy);
-            }
-            if (entity.y > window.innerHeight - 50) {
-                entity.y = window.innerHeight - 50;
-                entity.vy = -Math.abs(entity.vy);
-            }
-
-            // **Collision Handling**
-            this.entities.getChildren().forEach((otherEntity) => {
-                if (entity !== otherEntity) {
-                    const dist = Phaser.Math.Distance.Between(
-                        entity.x,
-                        entity.y,
-                        otherEntity.x,
-                        otherEntity.y
-                    );
-
-                    if (dist < MIN_COLLISION_DISTANCE) {
-                        const angle = Phaser.Math.Angle.Between(
-                            entity.x,
-                            entity.y,
-                            otherEntity.x,
-                            otherEntity.y
-                        );
-                        const pushForce =
-                            COLLISION_PUSH_FORCE *
-                            (1 - dist / MIN_COLLISION_DISTANCE);
-                        const repelX = Math.cos(angle) * pushForce;
-                        const repelY = Math.sin(angle) * pushForce;
-
-                        // Apply repulsion force
-                        entity.vx -= repelX;
-                        entity.vy -= repelY;
-                        otherEntity.vx += repelX;
-                        otherEntity.vy += repelY;
-
-                    }
-                }
-            });
-
-            // always face horizontally and flip based on velocity
-            entity.angle = 0;
-            entity.flipX = entity.vx < 0;
-
-            // reuse movement helper for bouncing
-            handleMovement(entity, dt);
+            const floatX = Math.cos(entity.floatTime * FLOAT_FREQUENCY) * FLOAT_SPEED * entity.floatDirection;
+            const floatY = Math.sin(entity.floatTime * FLOAT_FREQUENCY) * FLOAT_SPEED * entity.floatDirection;
+            entity.body.velocity.x += floatX;
+            entity.body.velocity.y += floatY;
+            // flip sprite based on current velocity
+            entity.flipX = entity.body.velocity.x < 0;
         });
     }
 }

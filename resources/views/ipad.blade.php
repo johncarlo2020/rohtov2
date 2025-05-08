@@ -190,13 +190,12 @@
         }
 
         function gotoFinishPage() {
-
-            createSpriteSheet();
-
             const characterName = 'characterNameFinish';
             const characterEditContainer = 'finishedCharacterContainer';
             initEditCharacter(characterName, characterEditContainer, true);
-            nextStep();
+            showLoader();
+            showStep(3);
+            createSpriteSheet();
         }
 
         let sprites= [];
@@ -248,8 +247,12 @@
                 fileInput.files = dataTransfer.files;
                 document.getElementById('baby_name').value = selectedCharacter.name || 'asdas';
                 document.getElementById('uploadForm').submit();
+            }).then(() => {
+                hideLoader();
+                console.log("Sprite sheet created and uploaded successfully");
+            }).catch((error) => {
+                console.error("Error creating sprite sheet:", error);
             });
-
 
 
             } catch (error) {

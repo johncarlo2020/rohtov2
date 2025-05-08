@@ -58,12 +58,12 @@ const DART_COOLDOWN_MAX = 10.0;     // Maximum cooldown between darts (seconds)
 const MAX_NORMAL_SPEED_FACTOR = 1.3;// Max speed during normal floating (1.3x base speed)
 
 // fish spritesheet settings
-const FISH_FRAME_WIDTH = 640;
-const FISH_FRAME_HEIGHT = 640;
+const FISH_FRAME_WIDTH = 300;
+const FISH_FRAME_HEIGHT = 300;
 // actual fish spritesheet has 7 frames
 const FISH_FRAME_COUNT = 6;
 // add a scale constant for fish size
-const FISH_SCALE = 0.6; // scale for fish sprites (Increased from 0.4)
+const FISH_SCALE = 1.1; // scale for fish sprites (Increased from 0.4)
 
 // tempCharacter spritesheet settings
 const TEMP_CHAR_FRAME_WIDTH = 400;
@@ -172,6 +172,40 @@ function create() {
         if (entity1 && entity1.active && entity1.body && entity2 && entity2.active && entity2.body) {
             handleCollisionSpin(entity1, this); // Pass scene context for tweens
             handleCollisionSpin(entity2, this);
+
+            // Custom push logic for stronger collisions
+            const body1 = entity1.body;
+            const body2 = entity2.body;
+
+            const dx = entity2.x - entity1.x;
+            const dy = entity2.y - entity1.y;
+            let distance = Math.sqrt(dx * dx + dy * dy);
+
+            let normalX, normalY;
+
+            if (distance === 0) {
+                // Bodies are at the exact same position. Apply a random push direction.
+                const randomAngle = Phaser.Math.FloatBetween(0, 2 * Math.PI);
+                normalX = Math.cos(randomAngle);
+                normalY = Math.sin(randomAngle);
+            } else {
+                normalX = dx / distance;
+                normalY = dy / distance;
+            }
+
+            // COLLISION_PUSH_FORCE (1.5) is used as a multiplier for a base push velocity.
+            const BASE_PUSH_VELOCITY = 20; // px/s. Adjust this value if needed.
+            const pushImpulse = COLLISION_PUSH_FORCE * BASE_PUSH_VELOCITY; // e.g., 1.5 * 20 = 30 px/s
+
+            // Apply the push to the velocities, ensuring bodies are movable
+            if (body1.moves) {
+                body1.velocity.x -= normalX * pushImpulse;
+                body1.velocity.y -= normalY * pushImpulse;
+            }
+            if (body2.moves) {
+                body2.velocity.x += normalX * pushImpulse;
+                body2.velocity.y += normalY * pushImpulse;
+            }
         }
     }, null, this);
 
@@ -231,7 +265,7 @@ function addFish({ spriteKey, spriteUrl, frameWidth, frameHeight, name = null } 
             if (spriteKey === 'fish' || isDynamicSprite) { // Check original intent or if it's a dynamic fish
                 // Find the oldest "fish" (first in the group that is a fish)
                 const oldestFish = this.entities.getChildren().find(entity =>
-                    entity.texture.key === 'fish' || entity.texture.key.startsWith('fish_dyn')
+                    entity.texture.key === 'fish' || entity.texture.key.startsWith('dyn_fish_') // Corrected: 'dyn_fish_'
                 );
                 if (oldestFish) {
                     console.log(`Max capacity (${MAX_TOTAL_CHARACTERS}) reached. Removing oldest fish ('${oldestFish.texture.key}') to make space for new fish.`);
@@ -430,7 +464,7 @@ function addFish({ spriteKey, spriteUrl, frameWidth, frameHeight, name = null } 
         this.entities.add(fish);
         // enable arcade physics bounce and collision
         fish.body.setCollideWorldBounds(true);
-        fish.body.setBounce(0.85); // Increased bounce for stronger push (was 0.6)
+        fish.body.setBounce(0.92); // Increased bounce for stronger push (was 0.85, then 0.6)
         // apply initial velocity from vx/vy, now incorporating baseSpeedMultiplier
         const baseSpeed = (spriteKey === 'fish' ? FISH_SPEED : TEMP_SPEED) * fish.baseSpeedMultiplier;
         const initialBodyAngle = Phaser.Math.Angle.Random(); // Renamed to avoid conflict with fish.angle
@@ -581,6 +615,15 @@ function handleCollisionSpin(entity, scene) {
     if (!entity || !entity.active || entity.isSpinning) return; // Don't spin if already spinning or inactive
 
     entity.isSpinning = true;
+
+    const isRealFish = entity.texture.key === 'fish' || entity.texture.key.startsWith('dyn_fish_');
+    if (isRealFish && entity.alpha < 1) {
+        // Stop any tweens that might be controlling the alpha property.
+        scene.tweens.killTweensOf(entity, ['alpha']);
+        // Set alpha to 1 to ensure the fish is fully visible.
+        entity.setAlpha(1);
+    }
+
     scene.tweens.killTweensOf(entity, ['angle']); // Stop any ongoing angle tweens
 
     const spinAmount = Phaser.Math.Between(120, 240) * (Math.random() < 0.5 ? 1 : -1); // Spin amount

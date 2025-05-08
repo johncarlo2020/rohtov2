@@ -305,6 +305,16 @@
         async function captureFrame(frameIndex) {
             // loop through selectedCharacter and update the src of each image
             const character = document.getElementById('finishedCharacterContainer');
+
+            // Store original style to revert later
+            const originalHeight = character.style.height;
+            const originalWidth = character.style.width; // Store original width
+            // Set fixed height for consistent capture - adjust '300px' as needed
+
+            console.log(character.style.height, character.style.width);
+            character.style.height = '300px';
+            character.style.width = '300px';
+
             const skin = character.querySelector('.skin');
             const hair = character.querySelector('.hair');
             const face = character.querySelector('.face');
@@ -333,7 +343,21 @@
             // Small delay to allow DOM updates
             await new Promise((resolve) => setTimeout(resolve, 100));
 
-            return html2canvas(character, { backgroundColor: null });
+            let canvas;
+            try {
+                canvas = await html2canvas(character, {
+                    backgroundColor: null,
+                    scale: 1, // Use a 1:1 pixel scale, ignoring device pixel ratio
+                    width: 300, // Explicitly set the desired output canvas width
+                    height: 300 // Explicitly set the desired output canvas height
+                });
+
+            } finally {
+                // Revert to original style
+                character.style.height = originalHeight;
+                character.style.width = originalWidth; // Revert width
+            }
+            return canvas;
         }
 
         function showLoader() {

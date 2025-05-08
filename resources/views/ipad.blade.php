@@ -210,6 +210,10 @@
         }
 
         function gotoFinishPage() {
+            if (selectedCharacter.hair === '' || selectedCharacter.face === '') {
+                alert('Please select a hair and face option before proceeding.');
+                return;
+            }
             const characterName = 'characterNameFinish';
             const characterEditContainer = 'finishedCharacterContainer';
             initEditCharacter(characterName, characterEditContainer, true);

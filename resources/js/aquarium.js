@@ -64,25 +64,25 @@ function preload() {
     // load fish as spritesheet instead of static image
     this.load.spritesheet(
         "fish",
-        `${ASSET}/images/drawing (2).png`,
+        `${ASSET}/images/drawing (2).webp`,
         { frameWidth: FISH_FRAME_WIDTH, frameHeight: FISH_FRAME_HEIGHT, endFrame: FISH_FRAME_COUNT - 1 }
     );
     // load tempCharacter sheet as 200×200 frames (TEMP_FRAME_COUNT frames)
     this.load.spritesheet(
         "tempCharacter",
-        `${ASSET}/images/defaultBabies/1.png`,
+        `${ASSET}/images/defaultBabies/1.webp`,
         { frameWidth: 400, frameHeight: 400, endFrame: TEMP_FRAME_COUNT - 1 }
     );
     // load second temp character variant
     this.load.spritesheet(
         "tempCharacter2",
-        `${ASSET}/images/defaultBabies/2.png`,
+        `${ASSET}/images/defaultBabies/2.webp`,
         { frameWidth: 400, frameHeight: 400, endFrame: TEMP_FRAME_COUNT - 1 }
     );
     // load additional temp character variants (3-5)
-    this.load.spritesheet("tempCharacter3", `${ASSET}/images/defaultBabies/3.png`, { frameWidth: 400, frameHeight: 400, endFrame: TEMP_FRAME_COUNT - 1 });
-    this.load.spritesheet("tempCharacter4", `${ASSET}/images/defaultBabies/4.png`, { frameWidth: 400, frameHeight: 400, endFrame: TEMP_FRAME_COUNT - 1 });
-    this.load.spritesheet("tempCharacter5", `${ASSET}/images/defaultBabies/5.png`, { frameWidth: 400, frameHeight: 400, endFrame: TEMP_FRAME_COUNT - 1 });
+    this.load.spritesheet("tempCharacter3", `${ASSET}/images/defaultBabies/3.webp`, { frameWidth: 400, frameHeight: 400, endFrame: TEMP_FRAME_COUNT - 1 });
+    this.load.spritesheet("tempCharacter4", `${ASSET}/images/defaultBabies/4.webp`, { frameWidth: 400, frameHeight: 400, endFrame: TEMP_FRAME_COUNT - 1 });
+    this.load.spritesheet("tempCharacter5", `${ASSET}/images/defaultBabies/5.webp`, { frameWidth: 400, frameHeight: 400, endFrame: TEMP_FRAME_COUNT - 1 });
 }
 
 function create() {

@@ -146,7 +146,7 @@
             const part = document.createElement('img');
             part.classList.add(type);
             part.classList.add('parts');
-            part.src = `{{ asset('images/character/${type}/${index}/${index}.png') }}`;
+            part.src = `{{ asset('images/character/${type}/${index}/${index}.webp') }}`;
             part.alt = `Item ${index}`;
             characterContainer.appendChild(part);
         }
@@ -169,7 +169,7 @@
                 const nameElement = document.createElement('p');
                 nameElement.textContent = selectedCharacter.character;
                 const skinImage = document.createElement('img');
-                skinImage.src = `{{ asset('images/character/skin/${selectedCharacter.skin}/${selectedCharacter.skin}.png') }}`;
+                skinImage.src = `{{ asset('images/character/skin/${selectedCharacter.skin}/${selectedCharacter.skin}.webp') }}`;
                 skinImage.alt = 'Selected Skin';
                 skinImage.classList.add('skin');
                 nameElement.classList.add('selected-skin-name');
@@ -181,13 +181,13 @@
 
             if (edit) {
                 const hairImage = document.createElement('img');
-                hairImage.src = `{{ asset('images/character/hair/${selectedCharacter.hair}/${selectedCharacter.hair}.png') }}`;
+                hairImage.src = `{{ asset('images/character/hair/${selectedCharacter.hair}/${selectedCharacter.hair}.webp') }}`;
                 hairImage.alt = 'Selected Hair';
                 hairImage.classList.add('hair');
                 characterContainer.appendChild(hairImage);
 
                 const faceImage = document.createElement('img');
-                faceImage.src = `{{ asset('images/character/face/${selectedCharacter.face}/${selectedCharacter.face}.png') }}`;
+                faceImage.src = `{{ asset('images/character/face/${selectedCharacter.face}/${selectedCharacter.face}.webp') }}`;
                 faceImage.alt = 'Selected Face';
                 faceImage.classList.add('face');
                 characterContainer.appendChild(faceImage);
@@ -242,6 +242,8 @@
             const spriteSheetImage = new Image();
             spriteSheetImage.src = tempCanvas.toDataURL("image/png");
             spriteSheetImageConverted.src = spriteSheetImage.src;
+
+            uploadSpriteSheet();
             hideLoader();
 
             } catch (error) {
@@ -268,7 +270,7 @@
                     console.error('Failed to generate blob from sprite sheet.');
                     return;
                 }
-                const file = new File([blob], "sprite_sheet.png", { type: "image/png" });
+                const file = new File([blob], "sprite_sheet.webp", { type: "image/png" });
                 const dataTransfer = new DataTransfer();
                 dataTransfer.items.add(file);
                 babyImgInput.files = dataTransfer.files;
@@ -281,8 +283,8 @@
 
         async function captureFrame(frameIndex) {
             // Update character images for this frame, using custom face if provided
-            // skin.src = `/assets/green_0${frameIndex + 1}.png`;
-            // hair.src = `/assets/green_hair0${frameIndex + 1}.png`;
+            // skin.src = `/assets/green_0${frameIndex + 1}.webp`;
+            // hair.src = `/assets/green_hair0${frameIndex + 1}.webp`;
             // face.src = customFaceSrc;
 
             // loop through selectedCharacter and update the src of each image
@@ -299,9 +301,9 @@
                 if (key === 'name') return;
                 if (key === 'character') return;
 
-                skin.src = `{{ asset('images/character/skin/${value}/${frameIndex}.png') }}`;
-                hair.src = `{{ asset('images/character/hair/${value}/${frameIndex}.png') }}`;
-                face.src = `{{ asset('images/character/face/${value}/${frameIndex}.png') }}`;
+                skin.src = `{{ asset('images/character/skin/${value}/${frameIndex}.webp') }}`;
+                hair.src = `{{ asset('images/character/hair/${value}/${frameIndex}.webp') }}`;
+                face.src = `{{ asset('images/character/face/${value}/${frameIndex}.webp') }}`;
             });
 
             // Ensure all images load before capturing

@@ -16,36 +16,26 @@
                 <div class="left-nav">
                     <div class="nav-items">
                         <i class="fa-solid fa-chevron-left"></i>
-                        <img src="{{ asset('images/navbacground.png') }}" alt="Hair 1" />
+                        <img src="{{ asset('images/navbacground.webp') }}" alt="Hair 1" />
                     </div>
                 </div>
                 <div class="slider">
-                    <button class="item" onclick="selectItem('hair', 1, this)">
-                        <img src="{{ asset('images/character/hair/1/1.png') }}" alt="Hair 1" />
-                    </button>
-                    <button class="item" onclick="selectItem('hair', 2, this)">
-                        <img src="{{ asset('images/character/hair/2/1.png') }}" alt="Hair 2" />
-                    </button>
-                    <button class="item" onclick="selectItem('hair', 3, this)">
-                        <img src="{{ asset('images/character/hair/3/1.png') }}" alt="Hair 1" />
-                    </button>
-                    <button class="item" onclick="selectItem('hair', 4, this)">
-                        <img src="{{ asset('images/character/hair/4/1.png') }}" alt="Hair 2" />
-                    </button>
-                    <button class="item" onclick="selectItem('hair', 5, this)">
-                        <img src="{{ asset('images/character/hair/5/1.png') }}" alt="Hair 2" />
-                    </button>
+                    @for ($i = 1; $i <= 5; $i++)
+                        <button class="item" onclick="selectItem('hair', {{ $i }}, this)">
+                            <img src="{{ asset('images/character/choises/hair/' . $i . '.webp') }}" alt="Hair {{ $i }}" />
+                        </button>
+                    @endfor
                 </div>
                 <div class="right-nav">
                     <div class="nav-items">
-                        <img src="{{ asset('images/navbacground.png') }}" alt="Hair 1" />
+                        <img src="{{ asset('images/navbacground.webp') }}" alt="Hair 1" />
                         <i class="fa-solid fa-chevron-right"></i>
                     </div>
                 </div>
             </div>
         </div>
         <div class="devider">
-            <img src="{{ asset('images/line.png') }}" alt="Item 2" />
+            <img src="{{ asset('images/line.webp') }}" alt="Item 2" />
         </div>
         <div class="option">
             <div class="button-container">
@@ -57,29 +47,19 @@
                 <div class="left-nav">
                     <div class="nav-items">
                         <i class="fa-solid fa-chevron-left"></i>
-                        <img src="{{ asset('images/navbacground.png') }}" alt="Previous" />
+                        <img src="{{ asset('images/navbacground.webp') }}" alt="Previous" />
                     </div>
                 </div>
                 <div class="slider">
-                    <button class="item" onclick="selectItem('face', 1, this)">
-                        <img src="{{ asset('images/character/face/1/1.png') }}" alt="Face 1" />
-                    </button>
-                    <button class="item" onclick="selectItem('face', 2, this)">
-                        <img src="{{ asset('images/character/face/2/1.png') }}" alt="Face 2" />
-                    </button>
-                    <button class="item" onclick="selectItem('face', 3, this)">
-                        <img src="{{ asset('images/character/face/3/1.png') }}" alt="Face 3" />
-                    </button>
-                    <button class="item" onclick="selectItem('face', 4, this)">
-                        <img src="{{ asset('images/character/face/4/1.png') }}" alt="Face 4" />
-                    </button>
-                    <button class="item" onclick="selectItem('face', 5, this)">
-                        <img src="{{ asset('images/character/face/5/1.png') }}" alt="Face 4" />
-                    </button>
+                    @for ($i = 1; $i <= 5; $i++)
+                        <button class="item" onclick="selectItem('face', {{ $i }}, this)">
+                            <img src="{{ asset('images/character/choises/face/'.$i.'.webp') }}" alt="Face {{ $i }}" />
+                        </button>
+                    @endfor
                 </div>
                 <div class="right-nav">
                     <div class="nav-items">
-                        <img src="{{ asset('images/navbacground.png') }}" alt="Next" />
+                        <img src="{{ asset('images/navbacground.webp') }}" alt="Next" />
                         <i class="fa-solid fa-chevron-right"></i>
                     </div>
                 </div>

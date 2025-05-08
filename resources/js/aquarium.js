@@ -622,6 +622,7 @@ function handleCollisionSpin(entity, scene) {
         scene.tweens.killTweensOf(entity, ['alpha']);
         // Set alpha to 1 to ensure the fish is fully visible.
         entity.setAlpha(1);
+        entity.scale = FISH_SCALE;
     }
 
     scene.tweens.killTweensOf(entity, ['angle']); // Stop any ongoing angle tweens

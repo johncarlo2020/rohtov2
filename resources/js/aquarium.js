@@ -59,6 +59,9 @@ const FISH_SCALE = 0.4; // scale for fish sprites
 // tempCharacter spritesheet frame count (25000px width ÷ 200px frame = 125 frames)
 const TEMP_FRAME_COUNT = 125;
 
+const MAX_TOTAL_CHARACTERS = 10;
+const NUM_DEFAULT_TEMP_CHARACTERS = 5;
+
 function preload() {
     this.load.video("aquarium", `${ASSET}/images/hadalabobabies/Aqua HL v2.mp4`);
     // load fish as spritesheet instead of static image
@@ -125,26 +128,31 @@ function create() {
 
     // unify all characters (temps & real fish) into one physics group
     this.entities = this.physics.add.group();
-    // spawn initial mix of five tempCharacter variants
+    // spawn initial mix of NUM_DEFAULT_TEMP_CHARACTERS tempCharacter variants
     const tempKeys = ['tempCharacter','tempCharacter2','tempCharacter3','tempCharacter4','tempCharacter5'];
-    for (let i = 0; i < tempKeys.length; i++) {
-        const spriteKey = tempKeys[i % tempKeys.length];
+    for (let i = 0; i < NUM_DEFAULT_TEMP_CHARACTERS; i++) {
+        const spriteKey = tempKeys[i % tempKeys.length]; // Ensures different variants if NUM_DEFAULT_TEMP_CHARACTERS <= tempKeys.length
         addFish.call(this, { spriteKey, frameWidth: 200, frameHeight: 200 });
     }
+
+    // Timer to ensure NUM_DEFAULT_TEMP_CHARACTERS are present, up to MAX_TOTAL_CHARACTERS
     this.time.addEvent({
-        delay: 1000,
+        delay: 3000, // Check periodically
         loop: true,
         callback: () => {
-            if (this.entities.getLength() < 5) {
-                // randomly choose among five temp variants
-                const randIndex = Phaser.Math.Between(0, tempKeys.length - 1);
-                const key = tempKeys[randIndex];
-                addFish.call(this, { spriteKey: key, frameWidth: 200, frameHeight: 200 });
+            const currentTempCharacters = this.entities.getChildren().filter(entity =>
+                entity.texture.key.startsWith('tempCharacter')
+            );
+            const numCurrentTemps = currentTempCharacters.length;
+
+            if (numCurrentTemps < NUM_DEFAULT_TEMP_CHARACTERS && this.entities.getLength() < MAX_TOTAL_CHARACTERS) {
+                const tempKeyToAdd = tempKeys[Phaser.Math.Between(0, tempKeys.length - 1)];
+                console.log(`Replenishing temp character. Current temps: ${numCurrentTemps}, Total: ${this.entities.getLength()}`);
+                addFish.call(this, { spriteKey: tempKeyToAdd, frameWidth: 200, frameHeight: 200 });
             }
         }
     });
-    // on real fish added, remove one tempCharacter to keep total constant
-    this.events.on('fishAdded', reduceTempCharacters, this);
+
     // collision among all entities
     this.physics.add.collider(this.entities, this.entities);
 
@@ -161,83 +169,187 @@ function setupCanvas() {
 // spawn a fish with dynamic sprite and optional name
 function addFish({ spriteKey, spriteUrl, frameWidth, frameHeight, name = null } = {}, callback) {
     if (!this.entities) { this.entities = this.add.group(); }
-    // determine texture key: use dynamic key for uploaded sprite sheets
-    const baseKey = spriteKey || 'fish';
-    const key = spriteUrl ? `${baseKey}_dyn` : baseKey;
-    const spawnFish = () => {
-        // determine random in-frame target position
-        const targetX = Phaser.Math.Between(50, window.innerWidth - 50);
-        const targetY = Phaser.Math.Between(50, window.innerHeight - 50);
-        // choose a random side to spawn from (0:left,1:right,2:top,3:bottom)
-        let startX, startY;
-        const side = Phaser.Math.Between(0, 3);
-        const scaleFactor = spriteKey === 'fish' ? FISH_SCALE : 0.8;
-        switch (side) {
-            case 0: // left
-                startX = -frameWidth * scaleFactor;
-                startY = Phaser.Math.Between(50, window.innerHeight - 50);
-                break;
-            case 1: // right
-                startX = window.innerWidth + frameWidth * scaleFactor;
-                startY = Phaser.Math.Between(50, window.innerHeight - 50);
-                break;
-            case 2: // top
-                startY = -frameHeight * scaleFactor;
-                startX = Phaser.Math.Between(50, window.innerWidth - 50);
-                break;
-            default: // bottom
-                startY = window.innerHeight + frameHeight * scaleFactor;
-                startX = Phaser.Math.Between(50, window.innerWidth - 50);
-                break;
+
+    let effectiveTextureKey;
+    let effectiveAnimationKey;
+    const isDynamicSprite = !!spriteUrl;
+
+    if (isDynamicSprite) {
+        // For dynamically loaded sprites (e.g., from Pusher)
+        // Create a unique texture key from the spriteUrl to avoid caching issues.
+        // Using a simplified approach by taking the last part of the URL (filename) and sanitizing it.
+        const filename = spriteUrl.substring(spriteUrl.lastIndexOf('/') + 1).replace(/[^a-zA-Z0-9_.-]/g, '_');
+        effectiveTextureKey = `dyn_${spriteKey}_${filename}`; // e.g., dyn_fish_unique_sprite.webp
+        effectiveAnimationKey = `${effectiveTextureKey}_anim`; // e.g., dyn_fish_unique_sprite.webp_anim
+    } else {
+        // For preloaded sprites (default 'fish' or 'tempCharacter' variants)
+        effectiveTextureKey = spriteKey; // e.g., 'fish', 'tempCharacter', 'tempCharacter2'
+        // Determine animationKey based on existing conventions for preloaded sprites
+        if (effectiveTextureKey === 'fish') {
+            effectiveAnimationKey = 'fishSwim';
+        } else if (effectiveTextureKey === 'tempCharacter') {
+            effectiveAnimationKey = 'idle';
+        } else if (effectiveTextureKey === 'tempCharacter2') {
+            effectiveAnimationKey = 'idle2';
+        } else if (effectiveTextureKey === 'tempCharacter3') {
+            effectiveAnimationKey = 'idle3';
+        } else if (effectiveTextureKey === 'tempCharacter4') {
+            effectiveAnimationKey = 'idle4';
+        } else if (effectiveTextureKey === 'tempCharacter5') {
+            effectiveAnimationKey = 'idle5';
+        } else {
+            console.warn(`Unknown spriteKey for preloaded animation: ${effectiveTextureKey}`);
+            effectiveAnimationKey = `${effectiveTextureKey}_default_anim`; // Fallback
         }
-        // always use a physics-enabled sprite for fish
-        const fish = this.physics.add.sprite(startX, startY, key)
-            .setScale(scaleFactor);
+    }
+
+    // This inner function contains the core logic for creating and setting up the fish/character.
+    // It uses `effectiveTextureKey` and `effectiveAnimationKey` for assets,
+    // but the original `spriteKey` (from addFish args) for behavioral decisions.
+    const spawnFishEntity = () => {
+        // Max character handling (uses original spriteKey to differentiate fish vs temp)
+        if (this.entities.getLength() >= MAX_TOTAL_CHARACTERS) {
+            if (spriteKey === 'fish' || isDynamicSprite) { // Check original intent or if it's a dynamic fish
+                // Find the oldest "fish" (first in the group that is a fish)
+                const oldestFish = this.entities.getChildren().find(entity =>
+                    entity.texture.key === 'fish' || entity.texture.key.startsWith('fish_dyn')
+                );
+                if (oldestFish) {
+                    console.log(`Max capacity (${MAX_TOTAL_CHARACTERS}) reached. Removing oldest fish ('${oldestFish.texture.key}') to make space for new fish.`);
+                    this.entities.remove(oldestFish, true, true); // Remove from group and destroy
+                } else {
+                    // Max capacity reached, and all are tempCharacters (or no fish to remove)
+                    console.log(`Max capacity (${MAX_TOTAL_CHARACTERS}) reached, but no removable fish found. New fish not added.`);
+                    if (typeof callback === 'function') callback(null);
+                    return null; // Do not add the new fish
+                }
+            } else { // Trying to add a tempCharacter when at max capacity
+                console.log(`Max capacity (${MAX_TOTAL_CHARACTERS}) reached. New temp character not added.`);
+                if (typeof callback === 'function') callback(null);
+                return null; // Do not add new temp character
+            }
+        }
+
+        const scaleFactor = (spriteKey === 'fish') ? FISH_SCALE : 0.8; // Behavior based on original spriteKey
+        let startX, startY, targetX, targetY, initialActualScale, initialAngle;
+
+        if (spriteKey === 'fish') { // Entry animation style based on original spriteKey
+            const fishEntryScaleMultiplier = 1.5;
+            initialActualScale = scaleFactor * fishEntryScaleMultiplier;
+            initialAngle = Phaser.Math.Between(-15, 15); // Slight random tilt
+
+            // Starting position for 'fish': Middle-right, slightly off-screen
+            startX = window.innerWidth + (frameWidth * initialActualScale / 2); // Use actual initial scale for offset
+            startY = window.innerHeight / 2; // Vertical middle
+
+            // Target position for 'fish': Center of the screen
+            targetX = window.innerWidth / 2;
+            targetY = window.innerHeight / 2;
+        } else { // For tempCharacters and any other non-'fish' entities
+            initialActualScale = scaleFactor; // Start at their normal scale
+            initialAngle = Phaser.Math.Between(-15, 15); // Slight random tilt for natural entry
+
+            // Random off-screen start for temp characters
+            const edge = Phaser.Math.Between(0, 3); // 0: top, 1: right, 2: bottom, 3: left
+            // Calculate buffer based on the larger dimension of the sprite to ensure it's off-screen
+            const spriteDimension = frameWidth > frameHeight ? frameWidth : frameHeight;
+            const buffer = (spriteDimension * initialActualScale / 2) + 30; // 30px extra margin
+
+            if (edge === 0) { // Top
+                startX = Phaser.Math.Between(0, window.innerWidth);
+                startY = -buffer;
+            } else if (edge === 1) { // Right
+                startX = window.innerWidth + buffer;
+                startY = Phaser.Math.Between(0, window.innerHeight);
+            } else if (edge === 2) { // Bottom
+                startX = Phaser.Math.Between(0, window.innerWidth);
+                startY = window.innerHeight + buffer;
+            } else { // Left
+                startX = -buffer;
+                startY = Phaser.Math.Between(0, window.innerHeight);
+            }
+
+            // Random on-screen target for temp characters
+            const margin = 100; // Keep them away from screen edges
+            targetX = Phaser.Math.Between(margin, window.innerWidth - margin);
+            targetY = Phaser.Math.Between(margin, window.innerHeight - margin);
+        }
+
+        const fish = this.physics.add.sprite(startX, startY, effectiveTextureKey); // Use unique texture key
+        fish.setAlpha(0);
+        fish.setScale(initialActualScale);
+        fish.setAngle(initialAngle);
+
         // play animation based on key
-        if (spriteUrl) {
-            // dynamic baby sprite sheet: create unique animation key if needed
-            const animKey = `${key}_dyn`;
-            if (!this.anims.exists(animKey)) {
+        // For dynamic sprites, animation is created in the loading block if texture is new.
+        // For preloaded, it should exist.
+        if (this.anims.exists(effectiveAnimationKey)) {
+            fish.play(effectiveAnimationKey);
+        } else {
+            // This block primarily handles the case where a dynamic sprite's animation needs creation
+            // if spawnFishEntity is called when the texture already exists but anim doesn't (e.g. after a reload)
+            if (isDynamicSprite) {
                 this.anims.create({
-                    key: animKey,
-                    frames: this.anims.generateFrameNumbers(key, { start: 0, end: FISH_FRAME_COUNT - 1 }),
+                    key: effectiveAnimationKey,
+                    frames: this.anims.generateFrameNumbers(effectiveTextureKey, { start: 0, end: FISH_FRAME_COUNT - 1 }),
                     frameRate: FRAME_RATE_NORMAL,
                     repeat: -1
                 });
+                fish.play(effectiveAnimationKey);
+            } else {
+                console.error(`Animation ${effectiveAnimationKey} not found for preloaded sprite ${effectiveTextureKey}`);
             }
-            fish.play(animKey);
-        } else if (key === 'fish') {
-            fish.play('fishSwim');
-        } else if (key === 'tempCharacter') {
-            fish.play('idle');
-        } else if (key === 'tempCharacter2') {
-            fish.play('idle2');
-        } else if (key === 'tempCharacter3') {
-            fish.play('idle3');
-        } else if (key === 'tempCharacter4') {
-            fish.play('idle4');
-        } else if (key === 'tempCharacter5') {
-            fish.play('idle5');
         }
-        // entry tween: move from off-screen start to in-frame target and fade in
-        fish.alpha = 0;
-        this.tweens.add({
-            targets: fish,
-            x: targetX,
-            y: targetY,
-            alpha: 1,
-            duration: 1000,
-            ease: 'Cubic.easeOut'
-        });
-        // scale pop animation: scale up then back to normal
-        this.tweens.add({
-            targets: fish,
-            scale: scaleFactor * 1.2,
-            duration: 300,
-            ease: 'Back.easeOut',
-            yoyo: true
-        });
-        // movement properties
+
+        // Apply tweens based on original spriteKey
+        if (spriteKey === 'fish') {
+            // Main entry tween for 'fish' type entities
+            this.tweens.add({
+                targets: fish,
+                x: targetX,
+                y: targetY,
+                alpha: 1,                               // Fade in
+                scale: scaleFactor,                     // Animate to its final intended scale (downsizing)
+                angle: 0,                               // Straighten out from the initial tilt
+                duration: 3000,                         // Duration for the entry
+                ease: 'Cubic.InOut',                    // Smooth acceleration and deceleration
+                onComplete: () => {
+                    // Optional: a very subtle "settle" animation once arrived
+                    if (fish && fish.active) {
+                        this.tweens.add({
+                            targets: fish,
+                            scale: scaleFactor * 1.03, // Very subtle bounce
+                            duration: 300,
+                            ease: 'Sine.easeInOut',
+                            yoyo: true
+                        });
+                    }
+                }
+            });
+        } else { // For tempCharacters (original spriteKey starts with 'tempCharacter')
+            // Entry tween: move from off-screen start to in-frame target, fade in, and adjust angle
+            this.tweens.add({
+                targets: fish,
+                x: targetX,
+                y: targetY,
+                alpha: 1,
+                angle: 0, // Straighten out as it arrives
+                duration: 2000, // Gentler arrival duration
+                ease: 'Sine.InOut' // Smoother easing for movement, alpha, and angle
+            });
+
+            // Scale pop animation: scale up then back to normal - made more subtle
+            this.tweens.add({
+                targets: fish,
+                scale: initialActualScale * 1.1, // Subtle pop (10% bigger from its starting/final scale)
+                duration: 500, // Slightly longer duration for the pop
+                ease: 'Sine.easeOut', // Smoother, less bouncy pop
+                yoyo: true,
+                delay: 1500 // Start pop as movement nears completion
+            });
+        }
+
+        // movement properties (based on original spriteKey)
         if (spriteKey === 'fish') {
             fish.vx = Phaser.Math.FloatBetween(-FISH_SPEED, FISH_SPEED);
             fish.vy = Phaser.Math.FloatBetween(-FISH_SPEED, FISH_SPEED);
@@ -261,50 +373,50 @@ function addFish({ spriteKey, spriteUrl, frameWidth, frameHeight, name = null } 
         fish.body.setBounce(1);
         // apply initial velocity from vx/vy
         fish.body.setVelocity(fish.vx, fish.vy);
-        if (name) {
+        if (name && spriteKey === 'fish') { // Emit event if it's a named fish (typically dynamic ones)
             this.events.emit('fishAdded', fish);
         }
         if (typeof callback === 'function') callback(fish);
         return fish;
     };
     // dynamically load asset if needed
-    if (!this.textures.exists(key)) {
+    if (isDynamicSprite && !this.textures.exists(effectiveTextureKey)) {
         // load uploaded sprite sheet for dynamic fish
-        this.load.spritesheet(key, spriteUrl, { frameWidth, frameHeight });
-        this.load.once('complete', spawnFish, this);
+        this.load.spritesheet(effectiveTextureKey, spriteUrl, { frameWidth, frameHeight });
+        this.load.once('complete', () => {
+            // Create animation for the newly loaded dynamic spritesheet
+            if (!this.anims.exists(effectiveAnimationKey)) {
+                this.anims.create({
+                    key: effectiveAnimationKey,
+                    frames: this.anims.generateFrameNumbers(effectiveTextureKey, { start: 0, end: FISH_FRAME_COUNT - 1 }),
+                    frameRate: FRAME_RATE_NORMAL,
+                    repeat: -1
+                });
+            }
+            spawnFishEntity(); // Call the main spawning logic
+        }, this);
         this.load.start();
-        return;
+        return; // Async path, function returns undefined here
     }
-    // texture exists: spawn immediately
-    return spawnFish();
-}
-
-// spawn a single temp character at random position
-function spawnTempChar() {
-    const x = Phaser.Math.Between(50, window.innerWidth - 50);
-    const y = Phaser.Math.Between(50, window.innerHeight - 50);
-    const temp = this.physics.add.sprite(x, y, 'tempCharacter').setOrigin(0.5).setScale(0.3);
-    temp.play('idle');
-    // manual movement properties for consistent collision
-    temp.vx = Phaser.Math.FloatBetween(-0.05, 0.05);
-    temp.vy = Phaser.Math.FloatBetween(-0.05, 0.05);
-    temp.floatTime = 0;
-    temp.floatDirection = Math.random() < 0.5 ? 1 : -1;
-    this.entities.add(temp);
-    // enable arcade physics bounce and collision for manual temp spawn
-    temp.body.setCollideWorldBounds(true);
-    temp.body.setBounce(1);
-    temp.body.setVelocity(temp.vx * TEMP_SPEED, temp.vy * TEMP_SPEED);
-    return temp;
-}
-
-// remove one temp character from screen
-function reduceTempCharacters() {
-    if (this.entities.getLength() > 0) {
-        // remove any tempCharacter variant
-        const temp = this.entities.getChildren().find(c => c.texture.key.startsWith('tempCharacter'));
-        if (temp) { this.entities.remove(temp, true, true); }
+    // texture exists (preloaded, or dynamic and already loaded from a previous call/session cache):
+    // or if it's a preloaded sprite (isDynamicSprite is false)
+    if (!isDynamicSprite && !this.textures.exists(effectiveTextureKey)){
+        console.error(`Error: Preloaded texture ${effectiveTextureKey} for ${spriteKey} not found.`);
+        if (typeof callback === 'function') callback(null);
+        return null;
     }
+
+    // If it's a dynamic texture that already exists, its animation might also need to be created
+    // if it wasn't (e.g. texture cached by browser but JS state lost on reload, then anims re-registered)
+    if (isDynamicSprite && !this.anims.exists(effectiveAnimationKey)) {
+        this.anims.create({
+            key: effectiveAnimationKey,
+            frames: this.anims.generateFrameNumbers(effectiveTextureKey, { start: 0, end: FISH_FRAME_COUNT - 1 }),
+            frameRate: FRAME_RATE_NORMAL,
+            repeat: -1
+        });
+    }
+    return spawnFishEntity(); // Synchronous path
 }
 
 // helper: move sprite by velocity and bounce off edges

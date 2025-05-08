@@ -260,6 +260,9 @@
             // Convert temporary canvas to image
             const spriteSheetImage = new Image();
             spriteSheetImage.src = tempCanvas.toDataURL("image/png");
+
+            // Clear the previous image source before assigning a new one
+            spriteSheetImageConverted.src = ""; // or null
             spriteSheetImageConverted.src = spriteSheetImage.src;
 
             hideLoader();

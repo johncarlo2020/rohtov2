@@ -208,10 +208,10 @@
             });
         }
 
+        let spriteSheetImageConverted = new Image();
+
        async function createSpriteSheet() {
-                 // Get entered character name or default to "Unnamed"
-
-
+            // Get entered character name or default to "Unnamed"
             const frameCount = 7;
 
             try {
@@ -236,29 +236,42 @@
             // Convert temporary canvas to image
             const spriteSheetImage = new Image();
             spriteSheetImage.src = tempCanvas.toDataURL("image/png");
-
-            // convert canvas to blob and upload via form-data
-            tempCanvas.toBlob((blob) => {
-                if (!blob) return console.error('Canvas to blob failed');
-                const file = new File([blob], 'sprite-sheet.png', { type: 'image/png' });
-                const dataTransfer = new DataTransfer();
-                dataTransfer.items.add(file);
-                const fileInput = document.getElementById('baby_img');
-                fileInput.files = dataTransfer.files;
-                document.getElementById('baby_name').value = selectedCharacter.name || 'asdas';
-                document.getElementById('uploadForm').submit();
-            }).then(() => {
-                hideLoader();
-                console.log("Sprite sheet created and uploaded successfully");
-            }).catch((error) => {
-                console.error("Error creating sprite sheet:", error);
-            });
-
+            spriteSheetImageConverted.src = spriteSheetImage.src;
+            hideLoader();
 
             } catch (error) {
             console.error("Error creating sprite sheet:", error);
             }
 
+        }
+
+        function uploadSpriteSheet() {
+            const uploadButton = document.getElementById('uploadButton');
+            const babyImgInput   = document.getElementById('baby_img');
+            const babyNameInput  = document.getElementById('baby_name');
+
+            // draw the spriteSheetImageConverted into a canvas so we can call toBlob()
+            const img = spriteSheetImageConverted;
+            const canvas = document.createElement('canvas');
+            canvas.width  = img.naturalWidth || img.width;
+            canvas.height = img.naturalHeight || img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+
+            canvas.toBlob((blob) => {
+                if (!blob) {
+                    console.error('Failed to generate blob from sprite sheet.');
+                    return;
+                }
+                const file = new File([blob], "sprite_sheet.png", { type: "image/png" });
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                babyImgInput.files = dataTransfer.files;
+                babyNameInput.value = 'empty';
+
+                // Submit the form
+                uploadButton.click();
+            }, "image/png");
         }
 
         async function captureFrame(frameIndex) {

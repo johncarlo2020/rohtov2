@@ -63,6 +63,11 @@
         <main>
             {{ $slot }}
         </main>
+
+        <div class="end-text">
+            <p>Powered by WOWSOME®️ 2025</p>
+            <img src="{{ asset('images/logo-rounded.png') }}" alt="Item 2" />
+        </div>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
 

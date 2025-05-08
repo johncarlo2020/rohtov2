@@ -11,5 +11,5 @@
         Download Sprite Sheet
     </a>
 
-    <button onclick="createSpriteSheet()" class="text-btn mt-5"><span>DONE</span></button>
+    <button onclick="uploadSpriteSheet()" class="text-btn mt-5"><span>DONE</span></button>
 </div>

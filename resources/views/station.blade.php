@@ -14,26 +14,24 @@
             width: 100px;
         }
     </style>
-    <div class="modal fade " id="scanCompleteModal" tabindex="-1">
+    <div class="modal fade" id="scanCompleteModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="text-center content">
-                        <div class="image-check">
-                            <i class="fa-regular check"></i>
-                        </div>
-                        <div class="text-content">
+                        <i class="fa-solid fa-circle-check modal-icon"></i>
+                        <div class="text-content mt-0">
                             <img class="icon-badge" id="badge" src="">
                             <img class="check" id="badge" src="">
 
-                            <p class="station-text">Station <span class="station_id"></span></p>
+                            <p class="station-text mb-2">Station <span class="station_id"></span></p>
                             <p class="message">
                                 Check-in Successful
                             </p>
                         </div>
                         <div class="">
                             <a href="{{ route('dashboard') }}" id="routeBtn" class="button">
-                                Close
+                                okay
                             </a>
                         </div>
                     </div>
@@ -48,22 +46,11 @@
         <div id="mainContent" class="mt-3 text-center col-12 text-content">
             <div id="{{ $user ? '' : 'forceQr' }}" class="mt-4 icon-container">
             </div>
-            @if ($station->id == 3)
-                <img class="logo-img" src="{{ asset('images/brand5.png') }}" alt="">
-                <img class="logo-img" src="{{ asset('images/brand6.png') }}" alt="">
-            @elseif($station->id == 4)
-                <img class="logo-img" src="{{ asset('images/brand1.png') }}" alt="">
-            @elseif($station->id == 6)
-                <img class="logo-img" src="{{ asset('images/brand2.png') }}" alt="">
-            @elseif($station->id == 7)
-                <img class="logo-img" src="{{ asset('images/brand4.png') }}" alt="">
-            @elseif($station->id == 8)
-                <img class="logo-img" src="{{ asset('images/brand7.png') }}" alt="">
-            @endif
+
             <h1 class=" station-heading mt-2">
-                Station {{ $station->id }}
+                {{ $station->id }}
             </h1>
-            <h2 class="station-subheading">{{ $station->name }}</h2>
+            <h2 class="station-subheading mt-3">{{ $station->name }}</h2>
             <img class="mt-5 station-image" src="{{ asset('images/n_S' . $station->id . '.png') }}"
                 alt="Station Image">
             @if ($user != true)
@@ -81,10 +68,10 @@
                     @else
                         <button id="start-scanner" class="mx-auto mt-4 camera-btn"><img
                                 src="{{ asset('images/camera.svg') }}" alt=""></button>
-                        <p class="px-4 mt-3 bottom-text">Scan the QR code at the station to proceed</p>
+                        <p class="px-4 mt-3 bottom-text main-color font-medium small-width">Scan the QR code at the station to proceed</p>
                 @endif
             @else
-                <p class="mt-3 bottom-text">Checked-in Succesful</p>
+                <p class="mt-3 bottom-text main-color font-medium">Checked-in Succesful</p>
 
                 <div class="scanner-button">
                     <a href="{{ route('dashboard') }}" class="button">
@@ -98,14 +85,19 @@
             <!-- <button id="close" class="mx-auto mt-4 camera-btn">x</button> -->
             <div id="reader"></div>
             <div class="p-3 mt-3">
-                <p class="px-4 text-center bottom-text">Find the QR code & Scan to check in the station</p>
+                <p class="px-4 text-center bottom-text main-color font-medium">Find the QR code & Scan to check in the station</p>
             </div>
-            <div>
+            {{-- <div>
                 <a href="{{ route('dashboard') }}" class="button">
                     BACK
                 </a>
-            </div>
+            </div> --}}
         </div>
+    </div>
+
+    <div class="end-text">
+        <p>Powered by WOWSOME®️ 2025</p>
+        <img src="{{ asset('images/logo-rounded.png') }}" alt="Item 2" />
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
@@ -223,19 +215,19 @@
             });
         }
 
-        document.getElementById('btn_manual').addEventListener('click', function() {
-            var password = $('#password').val();
+        // document.getElementById('btn_manual').addEventListener('click', function() {
+        //     var password = $('#password').val();
 
-            if (password == 8888) {
-                sendMessage({{ $station->id }});
-                $('#manualQR').modal('hide');
-            } else {
-                $('#manualQR').modal('hide');
-                $('#password').val('');
-                alert('wrong password');
-            }
-            console.log(password);
-        });
+        //     if (password == 8888) {
+        //         sendMessage({{ $station->id }});
+        //         $('#manualQR').modal('hide');
+        //     } else {
+        //         $('#manualQR').modal('hide');
+        //         $('#password').val('');
+        //         alert('wrong password');
+        //     }
+        //     console.log(password);
+        // });
 
         document.getElementById('forceQr').addEventListener('click', function() {
             console.log('clicked');

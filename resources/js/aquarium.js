@@ -58,12 +58,16 @@ const DART_COOLDOWN_MAX = 10.0;     // Maximum cooldown between darts (seconds)
 const MAX_NORMAL_SPEED_FACTOR = 1.3;// Max speed during normal floating (1.3x base speed)
 
 // fish spritesheet settings
-const FISH_FRAME_WIDTH = 800;
-const FISH_FRAME_HEIGHT = 800;
+const FISH_FRAME_WIDTH = 640;
+const FISH_FRAME_HEIGHT = 640;
 // actual fish spritesheet has 7 frames
 const FISH_FRAME_COUNT = 6;
 // add a scale constant for fish size
-const FISH_SCALE = 0.5; // scale for fish sprites (Increased from 0.4)
+const FISH_SCALE = 0.6; // scale for fish sprites (Increased from 0.4)
+
+// tempCharacter spritesheet settings
+const TEMP_CHAR_FRAME_WIDTH = 400;
+const TEMP_CHAR_FRAME_HEIGHT = 400;
 const TEMP_CHAR_SCALE = 0.9; // scale for temp characters (Previously hardcoded 0.8)
 // tempCharacter spritesheet frame count (25000px width ÷ 200px frame = 125 frames)
 const TEMP_FRAME_COUNT = 125;
@@ -83,18 +87,18 @@ function preload() {
     this.load.spritesheet(
         "tempCharacter",
         `${ASSET}/images/defaultBabies/1.webp`,
-        { frameWidth: 400, frameHeight: 400, endFrame: TEMP_FRAME_COUNT - 1 }
+        { frameWidth: TEMP_CHAR_FRAME_WIDTH, frameHeight: TEMP_CHAR_FRAME_HEIGHT, endFrame: TEMP_FRAME_COUNT - 1 }
     );
     // load second temp character variant
     this.load.spritesheet(
         "tempCharacter2",
         `${ASSET}/images/defaultBabies/2.webp`,
-        { frameWidth: 400, frameHeight: 400, endFrame: TEMP_FRAME_COUNT - 1 }
+        { frameWidth: TEMP_CHAR_FRAME_WIDTH, frameHeight: TEMP_CHAR_FRAME_HEIGHT, endFrame: TEMP_FRAME_COUNT - 1 }
     );
     // load additional temp character variants (3-5)
-    this.load.spritesheet("tempCharacter3", `${ASSET}/images/defaultBabies/3.webp`, { frameWidth: 400, frameHeight: 400, endFrame: TEMP_FRAME_COUNT - 1 });
-    this.load.spritesheet("tempCharacter4", `${ASSET}/images/defaultBabies/4.webp`, { frameWidth: 400, frameHeight: 400, endFrame: TEMP_FRAME_COUNT - 1 });
-    this.load.spritesheet("tempCharacter5", `${ASSET}/images/defaultBabies/5.webp`, { frameWidth: 400, frameHeight: 400, endFrame: TEMP_FRAME_COUNT - 1 });
+    this.load.spritesheet("tempCharacter3", `${ASSET}/images/defaultBabies/3.webp`, { frameWidth: TEMP_CHAR_FRAME_WIDTH, frameHeight: TEMP_CHAR_FRAME_HEIGHT, endFrame: TEMP_FRAME_COUNT - 1 });
+    this.load.spritesheet("tempCharacter4", `${ASSET}/images/defaultBabies/4.webp`, { frameWidth: TEMP_CHAR_FRAME_WIDTH, frameHeight: TEMP_CHAR_FRAME_HEIGHT, endFrame: TEMP_FRAME_COUNT - 1 });
+    this.load.spritesheet("tempCharacter5", `${ASSET}/images/defaultBabies/5.webp`, { frameWidth: TEMP_CHAR_FRAME_WIDTH, frameHeight: TEMP_CHAR_FRAME_HEIGHT, endFrame: TEMP_FRAME_COUNT - 1 });
 }
 
 function create() {
@@ -141,7 +145,7 @@ function create() {
     const tempKeys = ['tempCharacter','tempCharacter2','tempCharacter3','tempCharacter4','tempCharacter5'];
     for (let i = 0; i < NUM_DEFAULT_TEMP_CHARACTERS; i++) {
         const spriteKey = tempKeys[i % tempKeys.length]; // Ensures different variants if NUM_DEFAULT_TEMP_CHARACTERS <= tempKeys.length
-        addFish.call(this, { spriteKey, frameWidth: 400, frameHeight: 400 }); // Corrected frame dimensions
+        addFish.call(this, { spriteKey, frameWidth: TEMP_CHAR_FRAME_WIDTH, frameHeight: TEMP_CHAR_FRAME_HEIGHT }); // Corrected frame dimensions
     }
 
     // Timer to ensure NUM_DEFAULT_TEMP_CHARACTERS are present, up to MAX_TOTAL_CHARACTERS
@@ -157,7 +161,7 @@ function create() {
             if (numCurrentTemps < NUM_DEFAULT_TEMP_CHARACTERS && this.entities.getLength() < MAX_TOTAL_CHARACTERS) {
                 const tempKeyToAdd = tempKeys[Phaser.Math.Between(0, tempKeys.length - 1)];
                 console.log(`Replenishing temp character. Current temps: ${numCurrentTemps}, Total: ${this.entities.getLength()}`);
-                addFish.call(this, { spriteKey: tempKeyToAdd, frameWidth: 400, frameHeight: 400 }); // Corrected frame dimensions
+                addFish.call(this, { spriteKey: tempKeyToAdd, frameWidth: TEMP_CHAR_FRAME_WIDTH, frameHeight: TEMP_CHAR_FRAME_HEIGHT }); // Corrected frame dimensions
             }
         }
     });

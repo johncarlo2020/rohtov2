@@ -275,6 +275,10 @@ function addFish({ spriteKey, spriteUrl, frameWidth, frameHeight, name = null, t
                 );
                 if (oldestFish) {
                     console.log(`Max capacity (${MAX_TOTAL_CHARACTERS}) reached. Removing oldest fish ('${oldestFish.texture.key}') to make space for new fish.`);
+                    if (oldestFish.bubble) {
+                        oldestFish.bubble.bubble.destroy();
+                        oldestFish.bubble.text.destroy();
+                    }
                     this.entities.remove(oldestFish, true, true); // Remove from group and destroy
                 } else {
                     // Max capacity reached, and all are tempCharacters (or no fish to remove)

@@ -73,7 +73,7 @@
         <div id="scannerContainer" class="scanner-container d-none">
             <!-- <button id="close" class="mx-auto mt-4 camera-btn">x</button> -->
             <div id="reader"></div>
-            <div class="p-3 mt-3">
+            <div class="p-3 pb-5">
                 <p class="px-4 text-center bottom-text main-color font-medium">Find the QR code & Scan to check in the station</p>
             </div>
             {{-- <div>

@@ -204,7 +204,7 @@
                     <i class="fa-solid fa-circle-check modal-icon"></i>
                     <h2>Station 2</h2>
                     <p>Check-in Successful</p>
-                    <button class="next-button mt-2"><span>okay</span></button>
+                    <a href="{{ route('dashboard') }}" class="next-button mt-2 px-5"><span>okay</span></a>
                 </div>
 
             </div>

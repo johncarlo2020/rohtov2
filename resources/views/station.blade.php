@@ -112,8 +112,8 @@
                         facingMode: "environment"
                     }, {
                         fps: 10,
-                        qrbox: 150,
-                        aspectRatio: 9 / 10 // Set the aspect ratio to 16:9
+                        qrbox: 200,
+                        aspectRatio: 2 / 2 // Set the aspect ratio to 16:9
                     },
                     qrCodeMessage => {
                         sendMessage(`${qrCodeMessage}`);

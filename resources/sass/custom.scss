@@ -276,6 +276,7 @@ div {
     align-items: center;
     flex-direction: column;
     margin-top: 0px !important;
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 100px) !important;
 
     #reader {
         @media (max-width: 768px) {

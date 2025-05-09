@@ -3,7 +3,7 @@
         <div class="d-flex justify-content-center align-item-center">
             @include('components.branding')
         </div>
-        <div id="startpage" class="d-flex justify-content-center align-items-center h-100 flex-column mt-4">
+        <div id="startpage" class="d-flex justify-content-center align-items-center h-100 flex-column mt-4 {{ $stations->firstWhere('status', true) ? 'd-none' : '' }}">
             <img class="welcome_img" src="{{ asset('images/hadalabobabies/welcome_image.webp') }}" alt="" />
             <button id="start" class="home-btn welcome-sign-btn btn rounded-pill mt-5"><span>Start</span></button>
         </div>
@@ -26,7 +26,7 @@
 </div>
 
 
-        <div class="sliders d-none w-100">
+        <div class="sliders {{ $stations->firstWhere('status', true) ? '' : 'd-none' }} w-100">
             <div class="container-fluid p-0 m-0">
                 <div class="row p-0 m-0 justify-content-center">
                     <div class="col-md-10 slider-container">
@@ -37,7 +37,7 @@
                             <button id="next" class="slider-btn"><i class="fa-solid fa-caret-right"></i></button>
                         </div>
                         <!-- Slick Slider Component -->
-                        <div class="slick-carousel mt-4">
+                        <div class="slick-carousel mt-4" style="visibility: hidden;">
                             @foreach ($stations as $station)
                             <div class="slick-slide-item">
                                 <div class="staion-container {{ $station->status ? 'completed' : '' }}" @if ($station->id == 5 &&
@@ -77,22 +77,16 @@
                 window.location.href = url;
             }
         document.addEventListener('DOMContentLoaded', function() {
-            let currentSlide = 0;
+
+            const completedStation = window.stationsData.find(station => station.status);
             const startButton = document.getElementById('start');
             const sliders = document.querySelector('.sliders');
             const startPage = document.getElementById('startpage');
 
-            startButton.addEventListener('click', function() {
-                // Add fade-out animation class
-                startPage.classList.add('fade-out');
-
-                // Wait for animation to complete before hiding start page and showing sliders
-                setTimeout(() => {
-                    startPage.classList.add('d-none');
-                    sliders.classList.remove('d-none');
-
-                    // Initialize Slick Slider after it becomes visible
-                    $('.slick-carousel').slick({
+            function initializeSlickSlider() {
+                const $carousel = $('.slick-carousel');
+                if (!$carousel.hasClass('slick-initialized')) {
+                    $carousel.slick({
                         dots: true,
                         arrows: false,
                         infinite: true,
@@ -113,8 +107,51 @@
                             }
                         },
                     });
-                }, 500);
-            });
+                }
+                // Always ensure position is updated if it's supposed to be visible and initialized
+                if ($carousel.is(':visible') && $carousel.hasClass('slick-initialized')) {
+                    $carousel.slick('setPosition');
+                }
+                // After initialization and setPosition, make it visible
+                $carousel.css('visibility', 'visible');
+            }
+
+            // This function is called when sliders should become visible and initialized
+            function displayAndInitSliders() {
+                if (sliders) {
+                    sliders.classList.remove('d-none'); // Ensure it's visible
+                    // Defer initialization to allow browser to render visibility change
+                    requestAnimationFrame(() => {
+                        initializeSlickSlider(); // Initializes and calls setPosition
+                    });
+                }
+            }
+
+            if (completedStation) {
+                // Sliders are already visible due to Blade directives.
+                if (sliders && !sliders.classList.contains('d-none')) {
+                     requestAnimationFrame(() => { // Defer to next frame
+                        initializeSlickSlider(); // Initializes and calls setPosition
+                    });
+                }
+            } else {
+                // No station completed, startPage is visible.
+                // Set up the start button.
+                if (startButton && startPage) { // Ensure elements exist
+                    startButton.addEventListener('click', function() {
+                        if (startPage) {
+                            startPage.classList.add('fade-out');
+                            setTimeout(() => {
+                                startPage.classList.add('d-none');
+                                displayAndInitSliders(); // Show sliders and init
+                            }, 500); // Matches fade-out duration
+                        } else {
+                            // Fallback if startPage somehow isn't there but button was clicked
+                            displayAndInitSliders();
+                        }
+                    });
+                }
+            }
 
             // Slider navigation buttons
             const prevButton = document.getElementById('prev');
@@ -145,6 +182,22 @@
         .slick-dots li.slick-active button.completed-dot {
             background-color: darkgreen; /* Active and completed dot style */
             color: white;
+        }
+        .slick-slide-item {
+            min-height: 180px; /* Adjust as needed, helps stabilize layout */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Optional: background-color: #f0f0f0; to see item bounds during load */
+        }
+        .station-img {
+            max-width: 100%;
+            height: auto; /* Maintain aspect ratio */
+            display: block; /* Prevents extra space below image */
+        }
+        /* Ensure the carousel itself is rendered if its parent is not d-none */
+        .sliders:not(.d-none) .slick-carousel {
+            visibility: visible;
         }
     </style>
 </x-app-layout>

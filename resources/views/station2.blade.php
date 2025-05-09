@@ -211,6 +211,9 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/gif.js.optimized/dist/gif.js"></script>
+
+
     <script>
         const loaderContainer = document.querySelector('.loader-container');
         const nameContainer = document.getElementById('nameContainer');
@@ -245,7 +248,7 @@
             skin: '',
             hair: '',
             face: '',
-            character:'',
+            character: '',
         };
 
         let stepIndex = 0;
@@ -344,40 +347,49 @@
 
                 // Perform AJAX request
                 fetch('{{ route('upload.baby') }}', {
-                    method: 'POST',
-                    body: formData, // FormData will set Content-Type to multipart/form-data with boundary
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken, // Standard CSRF header for Laravel
-                        'Accept': 'application/json', // Expect a JSON response
-                    }
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        // Try to get error message from server if response is JSON
-                        return response.json().then(errData => {
-                            throw new Error(errData.message || `Server responded with status: ${response.status}`);
-                        }).catch(() => {
-                            // Fallback if response is not JSON or no message field
-                            throw new Error(`Server responded with status: ${response.status}`);
-                        });
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Upload successful:', data);
-                    modal.show(); // Show success modal
-                    // Potentially trigger an update in the aquarium if the server confirms success
-                    if (window.game && window.game.scene.scenes[0] && typeof window.game.scene.scenes[0].addFish === 'function' && data.imgPath && data.name) {
-                        // Assuming your server returns imgPath and name for the new fish
-                        // And ASSET_BASE is globally available for constructing the full URL
-                        const fullImgUrl = `${window.ASSET_BASE}/${data.imgPath}`;
-                        window.game.scene.scenes[0].addFish({ spriteKey: 'fish', spriteUrl: fullImgUrl, frameWidth: 300, frameHeight: 300, name: data.name, type: data.type || 'user' });
-                    }
-                })
-                .catch(error => {
-                    console.error('Upload failed:', error);
-                    alert('Upload failed: ' + error.message);
-                });
+                        method: 'POST',
+                        body: formData, // FormData will set Content-Type to multipart/form-data with boundary
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken, // Standard CSRF header for Laravel
+                            'Accept': 'application/json', // Expect a JSON response
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            // Try to get error message from server if response is JSON
+                            return response.json().then(errData => {
+                                throw new Error(errData.message ||
+                                    `Server responded with status: ${response.status}`);
+                            }).catch(() => {
+                                // Fallback if response is not JSON or no message field
+                                throw new Error(`Server responded with status: ${response.status}`);
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Upload successful:', data);
+                        modal.show(); // Show success modal
+                        // Potentially trigger an update in the aquarium if the server confirms success
+                        if (window.game && window.game.scene.scenes[0] && typeof window.game.scene.scenes[0]
+                            .addFish === 'function' && data.imgPath && data.name) {
+                            // Assuming your server returns imgPath and name for the new fish
+                            // And ASSET_BASE is globally available for constructing the full URL
+                            const fullImgUrl = `${window.ASSET_BASE}/${data.imgPath}`;
+                            window.game.scene.scenes[0].addFish({
+                                spriteKey: 'fish',
+                                spriteUrl: fullImgUrl,
+                                frameWidth: 300,
+                                frameHeight: 300,
+                                name: data.name,
+                                type: data.type || 'user'
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Upload failed:', error);
+                        alert('Upload failed: ' + error.message);
+                    });
 
             }, "image/webp");
         }
@@ -586,27 +598,90 @@
             }
         }
 
+
         function downloadGif() {
-            // use local worker script installed via npm (ensure copied to public/js)
+            // Ensure spriteSheetImageConverted is loaded and has dimensions
+            if (!spriteSheetImageConverted || !spriteSheetImageConverted.complete || spriteSheetImageConverted.naturalWidth === 0) {
+                alert('Sprite sheet is not ready yet. Please wait or try regenerating.');
+                console.error('Sprite sheet image not loaded or invalid.');
+                return;
+            }
+
+            const frameWidth = 300; // Width of a single frame (consistent with captureFrame)
+            const frameHeight = 300; // Height of a single frame (consistent with captureFrame)
+
+            // createSpriteSheet captures 6 frames (loop i=1 to i<7 for a frameCount of 7).
+            // The sprite sheet canvas width might be set for 7 frames, but only 6 are drawn.
+            // So, we should extract these 6 frames.
+            const actualFramesInSpriteSheet = 6;
+
             const gif = new GIF({
                 workers: 2,
-                quality: 10,
-                width: spriteSheetImageConverted.width,
-                height: spriteSheetImageConverted.height,
-                workerScript: '{{ asset('js/gif.worker.min.js') }}',
+                quality: 10, // Lower is better quality (1-30)
+                width: frameWidth,
+                height: frameHeight,
+                workerScript: 'https://cdn.jsdelivr.net/npm/gif.js.optimized/dist/gif.worker.js', // Worker from CDN
+                debug: false
             });
-            const frameCount = 7;
-            for (let i = 0; i < frameCount; i++) {
-                gif.addFrame(spriteSheetImageConverted, {
-                    delay: 200
-                });
+
+            // Temporary canvas to hold each frame before adding to GIF
+            const tempCanvas = document.createElement('canvas');
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCanvas.width = frameWidth;
+            tempCanvas.height = frameHeight;
+
+            for (let i = 0; i < actualFramesInSpriteSheet; i++) {
+                // Clear the temporary canvas
+                tempCtx.clearRect(0, 0, frameWidth, frameHeight);
+
+                // Draw the current frame from the sprite sheet onto the temporary canvas
+                // Image Source: spriteSheetImageConverted
+                // Source X (sx): i * frameWidth (moves to the next frame in the horizontal sprite sheet)
+                // Source Y (sy): 0
+                // Source Width (sWidth): frameWidth
+                // Source Height (sHeight): frameHeight
+                // Destination X (dx): 0 (draw at the top-left of tempCanvas)
+                // Destination Y (dy): 0
+                // Destination Width (dWidth): frameWidth
+                // Destination Height (dHeight): frameHeight
+                tempCtx.drawImage(
+                    spriteSheetImageConverted,
+                    i * frameWidth,
+                    0,
+                    frameWidth,
+                    frameHeight,
+                    0,
+                    0,
+                    frameWidth,
+                    frameHeight
+                );
+
+                // Add the frame from the temporary canvas to the GIF
+                // copy: true is important here as we are reusing the same tempCanvas
+                gif.addFrame(tempCanvas, { delay: 200, copy: true });
             }
+
             gif.on('finished', function(blob) {
-                const downloadLink = document.getElementById('download');
+                const downloadLink = document.createElement('a');
                 downloadLink.href = URL.createObjectURL(blob);
-                downloadLink.download = 'sprite_sheet.gif';
-                downloadLink.style.display = 'block';
+                const characterName = selectedCharacter.name || 'character';
+                // Sanitize filename to prevent issues
+                downloadLink.download = `${characterName.replace(/[^a-zA-Z0-9_\\-]/g, '_')}_animation.gif`;
+
+                document.body.appendChild(downloadLink); // Append to body for Firefox compatibility
+                downloadLink.click(); // Trigger download
+                document.body.removeChild(downloadLink); // Clean up by removing the link
+
+                URL.revokeObjectURL(downloadLink.href); // Release the object URL
+                console.log('GIF finished rendering and download initiated.');
             });
+
+            gif.on('progress', function(p) {
+                console.log('GIF rendering progress: ' + Math.round(p * 100) + '%');
+                // You could update a UI element here to show progress
+            });
+
+            console.log('Starting GIF rendering...');
             gif.render();
         }
 

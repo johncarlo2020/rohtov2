@@ -43,24 +43,24 @@
         <div class="mb-3 branding-container">
             @include('components.branding')
         </div>
-        <div id="mainContent" class="mt-3 text-center col-12 text-content">
+        <div id="mainContent" class="mt-1 mb-2 text-center col-12 text-content">
             <div id="{{ $user ? '' : 'forceQr' }}" class="mt-4 icon-container">
             </div>
 
             <h1 class=" station-heading mt-2">
                 {{ $station->id }}
             </h1>
-            <h2 class="station-subheading mt-3">{{ $station->name }}</h2>
-            <img class="mt-5 station-image" src="{{ asset('images/hadalabobabies/station'.$station->id .'.webp') }}"
+            <h2 class="station-subheading mt-2">{{ $station->name }}</h2>
+            <img class="mt-2 station-image" src="{{ asset('images/hadalabobabies/station'.$station->id .'.webp') }}"
                 alt="Station Image">
             @if ($user != true)
 
-                        <button id="start-scanner" class="mx-auto mt-4 camera-btn"><img
+                        <button id="start-scanner" class="mx-auto mt-2 camera-btn"><img
                                 src="{{ asset('images/camera.webp') }}" alt=""></button>
-                        <p class="px-4 mt-3 bottom-text main-color font-medium small-width">Scan the QR code at the station to proceed</p>
+                        <p class="px-4 mt-2 bottom-text main-color font-medium small-width">Scan the QR code at the station to proceed</p>
 
             @else
-                <p class="mt-3 bottom-text main-color font-medium">Checked-in Succesful</p>
+                <p class="mt-2 bottom-text main-color font-medium">Checked-in Succesful</p>
 
                 <div class="scanner-button">
                     <a href="{{ route('dashboard') }}" class="button">

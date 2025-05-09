@@ -173,6 +173,8 @@
                         }
                     });
 
+                       $(scanCompleteModal).modal('show');
+
                     // Optional: Remove the canvas after a short delay
                     setTimeout(() => {
                         document.body.removeChild(confettiCanvas);
@@ -189,8 +191,6 @@
                     if (lastCharacter == 9) {
                         document.getElementById('routeBtn').setAttribute('href', '{{ route('congrats') }}');
                     }
-
-                    $(scanCompleteModal).modal('show');
 
                 },
                 error: function(xhr, status, error) {

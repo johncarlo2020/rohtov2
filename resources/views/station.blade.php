@@ -39,7 +39,7 @@
             </div>
         </div>
     </div>
-    <div id="stationPage" class="station-page home ">
+    <div id="stationPage" class="station-page home">
         <div class="mb-3 branding-container">
             @include('components.branding')
         </div>
@@ -84,7 +84,7 @@
         </div>
     </div>
 
-    <div class="end-text">
+    <div class="end-text mt-4">
         <p>Powered by WOWSOME®️ 2025</p>
         <img src="{{ asset('images/logo-rounded.webp') }}" alt="Item 2" />
     </div>

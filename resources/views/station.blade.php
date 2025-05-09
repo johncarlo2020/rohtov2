@@ -113,7 +113,7 @@
                     }, {
                         fps: 10,
                         qrbox: 150,
-                        aspectRatio: 9 / 16 // Set the aspect ratio to 16:9
+                        aspectRatio: 9 / 10 // Set the aspect ratio to 16:9
                     },
                     qrCodeMessage => {
                         sendMessage(`${qrCodeMessage}`);

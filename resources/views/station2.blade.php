@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="container station p-0">
+    <div class="container station p-0 pb-5">
         <div class="mb-3 branding-container mt-5">
             @include('components.branding')
         </div>
@@ -23,7 +23,7 @@
             </button>
         </div>
         <div id="selectCharacter" class="px-4 hidden">
-            <h5 class="text-center text-primary mb-5">Please select your skin</h5>
+            <h5 class="text-center text-primary mb-2">Please select your skin</h5>
             <div class="sliders w-100">
                 <div class="container-fluid p-0 m-0">
                     <div class="row p-0 m-0 justify-content-center">
@@ -401,11 +401,15 @@
             // Store original style to revert later
             const originalHeight = character.style.height;
             const originalWidth = character.style.width; // Store original width
-            // Set fixed height for consistent capture - adjust '300px' as needed
+            const originalBorderRadius = character.style.borderRadius; // Store original border radius
+            const originalOverflow = character.style.overflow; // Store original overflow
 
+            // Set fixed height for consistent capture - adjust '300px' as needed
             console.log(character.style.height, character.style.width);
             character.style.height = '300px';
             character.style.width = '300px';
+            character.style.borderRadius = '15px'; // Apply border radius for capture
+            character.style.overflow = 'hidden';   // Apply overflow hidden for border radius
 
             const skin = character.querySelector('.skin');
             const hair = character.querySelector('.hair');
@@ -448,6 +452,8 @@
                 // Revert to original style
                 character.style.height = originalHeight;
                 character.style.width = originalWidth; // Revert width
+                character.style.borderRadius = originalBorderRadius; // Revert border radius
+                character.style.overflow = originalOverflow; // Revert overflow
             }
             return canvas;
         }
@@ -475,7 +481,9 @@
             // tempCaptureDiv.style.border = '3px solid blue'; // For easy spotting
             tempCaptureDiv.style.width = '300px';
             tempCaptureDiv.style.height = '300px';
-            tempCaptureDiv.style.overflow = 'hidden';
+            tempCaptureDiv.style.overflow = 'hidden'; // Ensures border-radius clips content
+            tempCaptureDiv.style.borderRadius = '15px'; // Add border radius
+            tempCaptureDiv.style.backgroundColor = '#fff';
             tempCaptureDiv.style.display = 'flex';
             tempCaptureDiv.style.alignItems = 'center';
             tempCaptureDiv.style.justifyContent = 'center';
@@ -527,7 +535,7 @@
 
             try {
                 const gifFrameCanvas = await html2canvas(tempCaptureDiv, {
-                    backgroundColor: '#FFFFFF', // Changed from null to white
+                    backgroundColor: 'null', // Changed from null to white
                     scale: 1,
                     width: 300,
                     height: 300,
@@ -724,9 +732,9 @@
                 images: gifFrameDataUrls, // Use the pre-captured data URLs
                 gifWidth: frameWidth,
                 gifHeight: frameHeight,
-                frameDuration: 0.6, // Changed from 0.4 to 0.6 to slow down animation
+                // frameDuration: 6, // Changed from 0.6 to 0.1 to speed up animation
                 // numFrames: gifFrameDataUrls.length, // Optional, gifshot infers from images array
-                // interval: 0.2, // Alternative to frameDuration
+                interval: 0.5, // Alternative to frameDuration
                 // sampleInterval: 10, // Lower for better quality, higher for faster processing
                 // numWorkers: 2, // Number of web workers to use
             }, function(obj) {

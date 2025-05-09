@@ -170,7 +170,7 @@
                         }
                     });
 
-                       $(scanCompleteModal).modal('show');
+                       $('#scanCompleteModal').modal('show');
 
                     // Optional: Remove the canvas after a short delay
                     setTimeout(() => {
@@ -196,7 +196,7 @@
                     $('.station-text').html('Failed');
                     $('.message').html('Invalid QR code. Please try again.');
                     $('.check').attr('src', '{{ asset('images/error.webp') }}');
-                    $(scanCompleteModal).modal('show');
+                    $('#scanCompleteModal').modal('show');
                 }
             });
         }

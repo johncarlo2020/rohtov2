@@ -211,7 +211,7 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/gif.js.optimized/dist/gif.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gifshot@0.3.2/build/gifshot.min.js"></script>
 
 
     <script>
@@ -460,40 +460,146 @@
         }
 
         let spriteSheetImageConverted = new Image();
+        let gifFrameDataUrls = []; // Added for GIF frames
 
-        async function createSpriteSheet() {
-            // Get entered character name or default to "Unnamed"
-            const frameCount = 7;
+        // Helper function to capture a single frame for the GIF
+        async function captureGifFrame(frameIndex, characterElement, gifCaptureTarget, backgroundImg) {
+            // characterElement's content (image srcs) are set for frame 'i' by captureFrame.
 
-            try {
-                const frames = [];
-                for (let i = 1; i < frameCount; i++) {
-                    const frameCanvas = await captureFrame(i);
-                    frames.push(frameCanvas);
-                }
+            const tempCaptureDiv = document.createElement('div');
+            // Style for on-screen rendering and fixed size for debugging
+            tempCaptureDiv.style.position = 'fixed'; // Changed for visibility
+            tempCaptureDiv.style.left = '10px';      // Changed for visibility
+            tempCaptureDiv.style.top = '10px';       // Changed for visibility
+            tempCaptureDiv.style.zIndex = '-999';   // Ensure it's on top
+            // tempCaptureDiv.style.border = '3px solid blue'; // For easy spotting
+            tempCaptureDiv.style.width = '300px';
+            tempCaptureDiv.style.height = '300px';
+            tempCaptureDiv.style.overflow = 'hidden';
+            tempCaptureDiv.style.display = 'flex';
+            tempCaptureDiv.style.alignItems = 'center';
+            tempCaptureDiv.style.justifyContent = 'center';
+            // tempCaptureDiv.style.backgroundColor = 'transparent'; // Will be overridden by html2canvas option
 
-                // Create a single sprite sheet from the captured frames
-                const tempCanvas = document.createElement("canvas");
-                const tempCtx = tempCanvas.getContext("2d");
-                const frameWidth = frames[0].width;
-                const frameHeight = frames[0].height;
+            document.body.appendChild(tempCaptureDiv);
 
-                tempCanvas.width = frameWidth * frameCount;
-                tempCanvas.height = frameHeight;
-                frames.forEach((frame, index) => {
-                    tempCtx.drawImage(frame, index * frameWidth, 0);
-                });
-
-                // Convert temporary canvas to image
-                const spriteSheetImage = new Image();
-                spriteSheetImage.src = tempCanvas.toDataURL("image/webp");
-                spriteSheetImageConverted.src = spriteSheetImage.src;
-                hideLoader();
-
-            } catch (error) {
-                console.error("Error creating sprite sheet:", error);
+            if (backgroundImg) {
+                const bgClone = backgroundImg.cloneNode(true);
+                bgClone.style.width = '100%';
+                bgClone.style.height = '100%';
+                bgClone.style.objectFit = 'cover'; // Changed from 'contain' to 'cover'
+                bgClone.style.objectPosition = 'center center';
+                bgClone.style.position = 'absolute';
+                bgClone.style.top = '0';
+                bgClone.style.left = '0';
+                bgClone.style.zIndex = '0';
+                tempCaptureDiv.appendChild(bgClone);
             }
 
+            const charClone = characterElement.cloneNode(true);
+            charClone.style.width = '200px'; // Decreased from 300px
+            charClone.style.height = '200px'; // Decreased from 300px
+            charClone.style.position = 'relative';
+            charClone.style.zIndex = '1';
+            charClone.style.top = '50px'; // Added to move character down
+            charClone.style.boxSizing = 'border-box'; // Ensuring box-sizing is present
+
+            // Explicitly style inner images of the character clone
+            const innerCharImages = charClone.querySelectorAll('img');
+            innerCharImages.forEach(img => {
+                img.style.position = 'absolute';
+                img.style.top = '0';
+                img.style.left = '0';
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.objectFit = 'contain'; // Fit while maintaining aspect ratio
+            });
+
+            // Ensure all images within the clone are loaded
+            await Promise.all(Array.from(innerCharImages).map(img => waitForImageLoad(img)));
+
+            tempCaptureDiv.appendChild(charClone);
+
+            // Pause for visual inspection
+            await new Promise(resolve => setTimeout(resolve, 100));
+
+            let gifFrameDataUrl = '';
+
+            try {
+                const gifFrameCanvas = await html2canvas(tempCaptureDiv, {
+                    backgroundColor: '#FFFFFF', // Changed from null to white
+                    scale: 1,
+                    width: 300,
+                    height: 300,
+                    useCORS: true,
+                    logging: false
+                });
+                gifFrameDataUrl = gifFrameCanvas.toDataURL("image/webp");
+            } catch (error) {
+                console.error('Error during html2canvas capture in captureGifFrame:', error);
+            } finally {
+                document.body.removeChild(tempCaptureDiv); // Clean up: remove temporary div
+            }
+
+            return gifFrameDataUrl;
+        }
+
+        async function createSpriteSheet() {
+            gifFrameDataUrls = [];
+            const frameCount = 7;
+            const spriteFrames = [];
+
+            const characterElement = document.getElementById('finishedCharacterContainer');
+            const gifCaptureTarget = document.querySelector('#completeContainer .with-bg');
+            const backgroundImg = gifCaptureTarget ? gifCaptureTarget.querySelector('.background-img') : null;
+
+            if (!characterElement || !gifCaptureTarget) {
+                console.error('Required elements for capture not found.');
+                hideLoader();
+                return;
+            }
+
+            showLoader();
+
+            try {
+                for (let i = 1; i < frameCount; i++) {
+                    // Capture frame for sprite sheet
+                    const spriteFrameCanvas = await captureFrame(i);
+                    if (!spriteFrameCanvas) {
+                        console.error(`Failed to capture sprite frame ${i}`);
+                        continue;
+                    }
+                    spriteFrames.push(spriteFrameCanvas);
+
+                    // Capture frame for GIF
+                    if (backgroundImg) { // Only capture GIF if background is present
+                        const gifFrameDataUrl = await captureGifFrame(i, characterElement, gifCaptureTarget, backgroundImg);
+                        gifFrameDataUrls.push(gifFrameDataUrl);
+                    } else {
+                        console.warn('Background image for GIF capture not found. Skipping GIF frame.');
+                    }
+                }
+
+                if (spriteFrames.length > 0) {
+                    const tempCanvas = document.createElement("canvas");
+                    const tempCtx = tempCanvas.getContext("2d");
+                    const frameWidth = spriteFrames[0].width;
+                    const frameHeight = spriteFrames[0].height;
+                    tempCanvas.width = frameWidth * spriteFrames.length;
+                    tempCanvas.height = frameHeight;
+                    spriteFrames.forEach((frame, index) => {
+                        tempCtx.drawImage(frame, index * frameWidth, 0);
+                    });
+                    spriteSheetImageConverted.src = tempCanvas.toDataURL("image/webp");
+                } else {
+                    console.error("No frames were captured for the sprite sheet.");
+                }
+
+            } catch (error) {
+                console.error("Error during sprite sheet and/or GIF frame creation:", error);
+            } finally {
+                hideLoader();
+            }
         }
 
         function selectItem(type, index, element) {
@@ -600,89 +706,46 @@
 
 
         function downloadGif() {
-            // Ensure spriteSheetImageConverted is loaded and has dimensions
-            if (!spriteSheetImageConverted || !spriteSheetImageConverted.complete || spriteSheetImageConverted.naturalWidth === 0) {
-                alert('Sprite sheet is not ready yet. Please wait or try regenerating.');
-                console.error('Sprite sheet image not loaded or invalid.');
+            // Ensure GIF frames have been generated
+            if (!gifFrameDataUrls || gifFrameDataUrls.length === 0) {
+                alert('GIF frames are not ready yet. Please generate the character first or try again.');
+                console.error('GIF frame data URLs not populated or empty.');
                 return;
             }
 
-            const frameWidth = 300; // Width of a single frame (consistent with captureFrame)
-            const frameHeight = 300; // Height of a single frame (consistent with captureFrame)
+            const frameWidth = 300; // Consistent with capture settings
+            const frameHeight = 300; // Consistent with capture settings
+            const characterName = selectedCharacter.name || 'character';
+            const sanitizedCharacterName = characterName.replace(/[^a-zA-Z0-9_\\-]/g, '_');
 
-            // createSpriteSheet captures 6 frames (loop i=1 to i<7 for a frameCount of 7).
-            // The sprite sheet canvas width might be set for 7 frames, but only 6 are drawn.
-            // So, we should extract these 6 frames.
-            const actualFramesInSpriteSheet = 6;
+            console.log('Starting GIF creation with gifshot using pre-captured frames...');
 
-            const gif = new GIF({
-                workers: 2,
-                quality: 10, // Lower is better quality (1-30)
-                width: frameWidth,
-                height: frameHeight,
-                workerScript: 'https://cdn.jsdelivr.net/npm/gif.js.optimized/dist/gif.worker.js', // Worker from CDN
-                debug: false
+            gifshot.createGIF({
+                images: gifFrameDataUrls, // Use the pre-captured data URLs
+                gifWidth: frameWidth,
+                gifHeight: frameHeight,
+                frameDuration: 0.6, // Changed from 0.4 to 0.6 to slow down animation
+                // numFrames: gifFrameDataUrls.length, // Optional, gifshot infers from images array
+                // interval: 0.2, // Alternative to frameDuration
+                // sampleInterval: 10, // Lower for better quality, higher for faster processing
+                // numWorkers: 2, // Number of web workers to use
+            }, function(obj) {
+                if (!obj.error) {
+                    const image = obj.image; // This is the GIF data URL
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = image;
+                    downloadLink.download = `${sanitizedCharacterName}_animation.gif`;
+
+                    document.body.appendChild(downloadLink); // Append to body for Firefox compatibility
+                    downloadLink.click(); // Trigger download
+                    document.body.removeChild(downloadLink); // Clean up by removing the link
+
+                    console.log('GIF created successfully with gifshot and download initiated.');
+                } else {
+                    console.error('Error creating GIF with gifshot:', obj.error, obj.errorCode, obj.errorMsg);
+                    alert('Failed to create GIF: ' + (obj.errorMsg || 'Unknown error. Check console.'));
+                }
             });
-
-            // Temporary canvas to hold each frame before adding to GIF
-            const tempCanvas = document.createElement('canvas');
-            const tempCtx = tempCanvas.getContext('2d');
-            tempCanvas.width = frameWidth;
-            tempCanvas.height = frameHeight;
-
-            for (let i = 0; i < actualFramesInSpriteSheet; i++) {
-                // Clear the temporary canvas
-                tempCtx.clearRect(0, 0, frameWidth, frameHeight);
-
-                // Draw the current frame from the sprite sheet onto the temporary canvas
-                // Image Source: spriteSheetImageConverted
-                // Source X (sx): i * frameWidth (moves to the next frame in the horizontal sprite sheet)
-                // Source Y (sy): 0
-                // Source Width (sWidth): frameWidth
-                // Source Height (sHeight): frameHeight
-                // Destination X (dx): 0 (draw at the top-left of tempCanvas)
-                // Destination Y (dy): 0
-                // Destination Width (dWidth): frameWidth
-                // Destination Height (dHeight): frameHeight
-                tempCtx.drawImage(
-                    spriteSheetImageConverted,
-                    i * frameWidth,
-                    0,
-                    frameWidth,
-                    frameHeight,
-                    0,
-                    0,
-                    frameWidth,
-                    frameHeight
-                );
-
-                // Add the frame from the temporary canvas to the GIF
-                // copy: true is important here as we are reusing the same tempCanvas
-                gif.addFrame(tempCanvas, { delay: 200, copy: true });
-            }
-
-            gif.on('finished', function(blob) {
-                const downloadLink = document.createElement('a');
-                downloadLink.href = URL.createObjectURL(blob);
-                const characterName = selectedCharacter.name || 'character';
-                // Sanitize filename to prevent issues
-                downloadLink.download = `${characterName.replace(/[^a-zA-Z0-9_\\-]/g, '_')}_animation.gif`;
-
-                document.body.appendChild(downloadLink); // Append to body for Firefox compatibility
-                downloadLink.click(); // Trigger download
-                document.body.removeChild(downloadLink); // Clean up by removing the link
-
-                URL.revokeObjectURL(downloadLink.href); // Release the object URL
-                console.log('GIF finished rendering and download initiated.');
-            });
-
-            gif.on('progress', function(p) {
-                console.log('GIF rendering progress: ' + Math.round(p * 100) + '%');
-                // You could update a UI element here to show progress
-            });
-
-            console.log('Starting GIF rendering...');
-            gif.render();
         }
 
         function showStep(stepIndex) {

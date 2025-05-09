@@ -95,7 +95,7 @@
                         </div>
                     </div>
                     <div class="devider">
-                        <img src="{{ asset('images/line.webp') }}" alt="Item 2" />
+                        <img src="{{ asset('images/Line.webp') }}" alt="Item 2" />
                     </div>
                     <div class="option">
                         <div class="button-container">
@@ -260,6 +260,18 @@
         }
 
         function gotoFinishPage() {
+            if (selectedCharacter.name.trim() === '') {
+                alert('Please enter your name.');
+                return;
+            }
+            if (selectedCharacter.hair === '') {
+                alert('Please select your hair.');
+                return;
+            }
+            if (selectedCharacter.face === '') {
+                alert('Please select your face.');
+                return;
+            }
             const characterName = 'characterNameFinish';
             const characterEditContainer = 'finishedCharacterContainer';
             initEditCharacter(characterName, characterEditContainer, true);
@@ -328,7 +340,7 @@
                 const dataTransfer = new DataTransfer();
                 dataTransfer.items.add(file);
                 babyImgInput.files = dataTransfer.files;
-                babyNameInput.value = 'empty';
+                babyNameInput.value = selectedCharacter.name;
 
                 // Submit the form
                 uploadButton.click();

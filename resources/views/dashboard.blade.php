@@ -65,7 +65,8 @@
         </div>
     </div>
     <script>
-
+        // Pass stations data to JavaScript
+        window.stationsData = @json($stations);
 
            function gotoStation(id) {
                 var url = "{{ route('station', ['station' => ':id']) }}".replace(
@@ -102,8 +103,14 @@
                         slidesToShow: 1,
                         slidesToScroll: 1,
                         customPaging: function(slider, i) {
-                            return '<button type="button" class="slick-dot-number">' + (
+                            const station = window.stationsData[i];
+                            let dotClass = 'slick-dot-number';
+                            if (station && station.status) { // Check if station is completed
+                                return '<button type="button" class="' + dotClass + '"><i class="fa-solid fa-check"></i></button>';
+                            } else {
+                                    return '<button type="button" class="' + dotClass + '">' + (
                                 i + 1) + '</button>';
+                            }
                         },
                     });
                 }, 500);
@@ -120,4 +127,24 @@
             });
         });
     </script>
+    <style>
+        .slick-dots li button.completed-dot {
+            background-color: green; /* Or any color/style you prefer */
+            color: white;
+            border-radius: 50%; /* Example style */
+        }
+        .slick-dots li button.slick-dot-number {
+            /* Ensure default styles are distinct enough */
+            background-color: #ccc;
+            color: black;
+        }
+        .slick-dots li.slick-active button.slick-dot-number {
+            background-color: #555; /* Active dot style */
+            color: white;
+        }
+        .slick-dots li.slick-active button.completed-dot {
+            background-color: darkgreen; /* Active and completed dot style */
+            color: white;
+        }
+    </style>
 </x-app-layout>

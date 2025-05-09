@@ -47,7 +47,7 @@
             <div id="{{ $user ? '' : 'forceQr' }}" class="mt-4 icon-container">
             </div>
 
-            <h1 class=" station-heading mt-2">
+            <h1 class=" station-heading mt-2 mb-3">
                 {{ $station->id }}
             </h1>
             <h2 class="station-subheading mt-2">{{ $station->name }}</h2>
@@ -57,7 +57,7 @@
 
                         <button id="start-scanner" class="mx-auto mt-2 camera-btn"><img
                                 src="{{ asset('images/camera.webp') }}" alt=""></button>
-                        <p class="px-4 mt-2 bottom-text main-color font-medium small-width">Scan the QR code at the station to proceed</p>
+                        <p class="px-4 mt-4 bottom-text main-color font-medium small-width">Scan the QR code at the station to proceed</p>
 
             @else
                 <p class="mt-2 bottom-text main-color font-medium">Checked-in Succesful</p>

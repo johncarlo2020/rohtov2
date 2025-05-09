@@ -30,19 +30,57 @@ class StationController extends Controller
         // Convert path to URL or relative path for saving
         $publicPath = Storage::url($path); // returns `/storage/babies/filename.gif`
 
-        // Save to user
-        $user->baby_img = $publicPath;
+        try {
+            DB::beginTransaction();
+
+
+            $lastStation = StationUser::where('user_id', auth()->id())->orderBy('id', 'desc')->first();
+
+            if (empty($lastStation)) {
+                $lastLoginTime = Auth::user()->last_login_at;
+                $currentDateTime = Carbon::now();
+                $timeSpent = $currentDateTime->diff($lastLoginTime);
+                $minutesSpent = $timeSpent->i; // Minutes spent
+                $secondsDifference = $timeSpent->s; // Seconds
+
+                // Convert minutes to seconds
+                $secondsSpent = $minutesSpent * 60 + $secondsDifference;
+            } else {
+                $lastLoginTime = $lastStation->created_at;
+                $currentDateTime = Carbon::now();
+                $timeSpent = $currentDateTime->diff($lastLoginTime);
+                $minutesSpent = $timeSpent->i; // Minutes spent
+                $secondsDifference = $timeSpent->s; // Seconds
+                // Convert minutes to seconds
+                $secondsSpent = $minutesSpent * 60 + $secondsDifference;
+            }
+
+            $stationUser = new StationUser();
+            $stationUser->user_id = auth()->id();
+            $stationUser->station_id = 2;
+            $stationUser->time_spent = $secondsSpent;
+            $stationUser->save();
+
+            $user->baby_img = $publicPath;
         $user->baby_name = $request->baby_name;
         $user->save();
-
         // Fire the event
-        broadcast(new babyEvent($publicPath, $user->baby_name))->toOthers();
+        broadcast(new babyEvent($publicPath, $user->baby_name,'dj'))->toOthers();
 
-        return response()->json([
-            'message' => 'Baby image uploaded and event broadcasted.',
-            'img' => $publicPath,
-            'name' => $user->baby_name
-        ]);
+
+            DB::commit();
+            // Success response
+            return response()->json(['message' => 'Station ID updated successfully'], 200);
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            // Handle the error, log it, or return an appropriate response
+            return response()->json(['error' => $e], 500);
+        }
+
+        // Save to user
+
+
     }
 
     public function uploadBabyIpad(Request $request)
@@ -64,7 +102,7 @@ class StationController extends Controller
         }
 
         // Fire the event
-        broadcast(new babyEvent($publicPath, 'noname'))->toOthers();
+        broadcast(new babyEvent($publicPath, 'noname','ipad'))->toOthers();
 
         return redirect()->back();
     }

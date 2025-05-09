@@ -305,7 +305,6 @@
             const modal = new bootstrap.Modal(document.getElementById('exampleModal'));
             modal.show();
 
-            return;
             const uploadButton = document.getElementById('uploadButton');
             const babyImgInput = document.getElementById('baby_img');
             const babyNameInput = document.getElementById('baby_name');

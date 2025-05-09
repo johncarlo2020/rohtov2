@@ -49,6 +49,9 @@
                                     >
                                     <img src="{{ asset('images/hadalabobabies/station'.$station->id.'.webp') }}" class="station-img"
                                         alt="Slide {{ $station->id }}">
+                                    <p class="staion-name text-center font-medium main-color text-md">
+                                        {{ $station->name }}
+                                    </p>
                                     <div class="complete-indicator {{ $station->status ? 'active' : '' }}">
                                         <p>CHECK-IN SUCCESSFUL</p>
                                     </div>

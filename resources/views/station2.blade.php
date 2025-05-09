@@ -198,15 +198,13 @@
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-
+            <div class="modal-content station-2-model">
                 <div class="modal-body text-center">
                     <i class="fa-solid fa-circle-check modal-icon"></i>
                     <h2>Station 2</h2>
-                    <p>Check-in Successful</p>
-                    <a href="{{ route('dashboard') }}" class="next-button mt-2 px-5"><span>okay</span></a>
+                    <p class="mb-3">Check-in Successful</p>
+                    <a href="{{ route('dashboard') }}" class="next-buttonpx-5"><span>okay</span></a>
                 </div>
-
             </div>
         </div>
     </div>
@@ -443,7 +441,7 @@
             try {
                 canvas = await html2canvas(character, {
                     backgroundColor: null,
-                    scale: 2, // Use a 1:1 pixel scale, ignoring device pixel ratio
+                    scale: 1, // Use a 1:1 pixel scale, ignoring device pixel ratio
                     width: 300, // Explicitly set the desired output canvas width
                     height: 300 // Explicitly set the desired output canvas height
                 });
@@ -535,14 +533,14 @@
 
             try {
                 const gifFrameCanvas = await html2canvas(tempCaptureDiv, {
-                    backgroundColor: 'null', // Changed from null to white
-                    scale: 1,
+                    backgroundColor: null, // Changed from '#FFFFFF' to null for transparency
+                    scale: 1, // Increased scale for better quality
                     width: 300,
                     height: 300,
                     useCORS: true,
                     logging: false
                 });
-                gifFrameDataUrl = gifFrameCanvas.toDataURL("image/webp");
+                gifFrameDataUrl = gifFrameCanvas.toDataURL("image/png"); // Changed to PNG for better quality
             } catch (error) {
                 console.error('Error during html2canvas capture in captureGifFrame:', error);
             } finally {
@@ -571,16 +569,15 @@
 
             try {
                 for (let i = 1; i < frameCount; i++) {
-                    // Capture frame for sprite sheet
                     const spriteFrameCanvas = await captureFrame(i);
                     if (!spriteFrameCanvas) {
                         console.error(`Failed to capture sprite frame ${i}`);
                         continue;
                     }
+                    console.log(`Sprite Frame ${i} captured. Height: ${spriteFrameCanvas.height}px, Width: ${spriteFrameCanvas.width}px`);
                     spriteFrames.push(spriteFrameCanvas);
 
-                    // Capture frame for GIF
-                    if (backgroundImg) { // Only capture GIF if background is present
+                    if (backgroundImg) {
                         const gifFrameDataUrl = await captureGifFrame(i, characterElement, gifCaptureTarget, backgroundImg);
                         gifFrameDataUrls.push(gifFrameDataUrl);
                     } else {
@@ -591,14 +588,24 @@
                 if (spriteFrames.length > 0) {
                     const tempCanvas = document.createElement("canvas");
                     const tempCtx = tempCanvas.getContext("2d");
-                    const frameWidth = spriteFrames[0].width;
-                    const frameHeight = spriteFrames[0].height;
-                    tempCanvas.width = frameWidth * spriteFrames.length;
-                    tempCanvas.height = frameHeight;
-                    spriteFrames.forEach((frame, index) => {
-                        tempCtx.drawImage(frame, index * frameWidth, 0);
+                    const targetFrameDim = 300;
+
+                    tempCanvas.width = targetFrameDim * spriteFrames.length;
+                    tempCanvas.height = targetFrameDim;
+                    console.log(`Sprite sheet canvas created. Height: ${tempCanvas.height}px, Width: ${tempCanvas.width}px. Target frame dim: ${targetFrameDim}px`);
+
+                    spriteFrames.forEach((frameCanvas, index) => {
+                        console.log(`Drawing frame ${index} to sprite sheet. Source frame height: ${frameCanvas.height}px`);
+                        tempCtx.drawImage(
+                            frameCanvas,             // Source canvas
+                            index * targetFrameDim,    // Destination x
+                            0,                         // Destination y
+                            targetFrameDim,            // Destination width
+                            targetFrameDim             // Destination height
+                        );
                     });
                     spriteSheetImageConverted.src = tempCanvas.toDataURL("image/webp");
+                    console.log('Sprite sheet generated. spriteSheetImageConverted.src assigned.');
                 } else {
                     console.error("No frames were captured for the sprite sheet.");
                 }
@@ -732,10 +739,9 @@
                 images: gifFrameDataUrls, // Use the pre-captured data URLs
                 gifWidth: frameWidth,
                 gifHeight: frameHeight,
-                // frameDuration: 6, // Changed from 0.6 to 0.1 to speed up animation
-                // numFrames: gifFrameDataUrls.length, // Optional, gifshot infers from images array
-                interval: 0.5, // Alternative to frameDuration
-                sampleInterval: 1, // Lower for better quality, higher for faster processing
+                // frameDuration: 0.1, // Example: 10 FPS (adjust as needed)
+                interval: 0.5, // Current: 2 FPS. Consider decreasing for smoother animation if desired.
+                sampleInterval: 1, // Lowered for better quality (default is 10)
                 // numWorkers: 2, // Number of web workers to use
             }, function(obj) {
                 if (!obj.error) {

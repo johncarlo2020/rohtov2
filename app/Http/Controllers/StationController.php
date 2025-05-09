@@ -63,10 +63,12 @@ class StationController extends Controller
             $stationUser->save();
 
             $user->baby_img = $publicPath;
-        $user->baby_name = $request->baby_name;
-        $user->charname = $request->charname;
+            $user->baby_name = $request->baby_name;
+            if ($request->has('charname')) {
+                $user->charname = $request->input('charname');
+            }
 
-        $user->save();
+            $user->save();
         // Fire the event
         broadcast(new babyEvent($publicPath, $user->baby_name,'dj',$user->charname))->toOthers();
 

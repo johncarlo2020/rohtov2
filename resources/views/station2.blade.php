@@ -260,6 +260,18 @@
         }
 
         function gotoFinishPage() {
+            if (selectedCharacter.name.trim() === '') {
+                alert('Please enter your name.');
+                return;
+            }
+            if (selectedCharacter.hair === '') {
+                alert('Please select your hair.');
+                return;
+            }
+            if (selectedCharacter.face === '') {
+                alert('Please select your face.');
+                return;
+            }
             const characterName = 'characterNameFinish';
             const characterEditContainer = 'finishedCharacterContainer';
             initEditCharacter(characterName, characterEditContainer, true);
@@ -328,7 +340,7 @@
                 const dataTransfer = new DataTransfer();
                 dataTransfer.items.add(file);
                 babyImgInput.files = dataTransfer.files;
-                babyNameInput.value = 'empty';
+                babyNameInput.value = selectedCharacter.name;
 
                 // Submit the form
                 uploadButton.click();

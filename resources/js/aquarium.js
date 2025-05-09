@@ -43,12 +43,11 @@ const FRAME_RATE_FAST = 10;
 const FRAME_RATE_SUPERFAST = 16;
 const SPIN_TIME = 2000;
 const SPIN_VELOCITY = 360;
-const BUBBLE_OFFSET_X = 45;
-const BUBBLE_OFFSET_Y = -25;
-const BUBBLE_RADIUS = 30;
+const BUBBLE_OFFSET_X = 60; // Increased from 45
+const BUBBLE_OFFSET_Y = -60; // Decreased from -25
+const BUBBLE_RADIUS = 70; // Increased from 30
 const MIN_COLLISION_DISTANCE = 80;
 const STRETCH_FACTOR = 0.01;
-const STRETCH_DURATION = 100;
 // New Movement Dynamics Constants
 const DART_CHANCE_PER_SECOND = 0.15; // 15% chance per second for a fish to consider darting
 const DART_DURATION = 0.7;          // Dart lasts for 0.7 seconds
@@ -77,6 +76,8 @@ const NUM_DEFAULT_TEMP_CHARACTERS = 5;
 
 function preload() {
     this.load.video("aquarium", `${ASSET}/images/hadalabobabies/Aqua HL v2.mp4`);
+    this.load.image("bubble", `${ASSET}/images/bubble.webp`);
+
     // load fish as spritesheet instead of static image
     this.load.spritesheet(
         "fish",
@@ -114,8 +115,9 @@ function create() {
     });
     const channel = pusher.subscribe('baby-channel');
     channel.bind('baby-event', (data) => {
+
         const imgUrl = `${ASSET}/${data.img}`;
-        addFish.call(this, { spriteKey: 'fish', spriteUrl: imgUrl, frameWidth: FISH_FRAME_WIDTH, frameHeight: FISH_FRAME_HEIGHT, name: data.name });
+        addFish.call(this, { spriteKey: 'fish', spriteUrl: imgUrl, frameWidth: FISH_FRAME_WIDTH, frameHeight: FISH_FRAME_HEIGHT, name: data.name, type:data.type });
 
         console.log(data.img);
     });
@@ -220,7 +222,7 @@ function setupCanvas() {
 }
 
 // spawn a fish with dynamic sprite and optional name
-function addFish({ spriteKey, spriteUrl, frameWidth, frameHeight, name = null } = {}, callback) {
+function addFish({ spriteKey, spriteUrl, frameWidth, frameHeight, name = null, type = null } = {}, callback) {
     if (!this.entities) { this.entities = this.add.group(); }
 
     let effectiveTextureKey;
@@ -454,12 +456,18 @@ function addFish({ spriteKey, spriteUrl, frameWidth, frameHeight, name = null } 
         fish.floatTime = 0;
         fish.floatDirection = Math.random() < 0.5 ? 1 : -1;
         // no spin effect, keep horizontal orientation
-        // attach bubble only if name provided
-        if (name && name.trim().length > 0) {
-            // const bubble = this.add.circle(x + BUBBLE_OFFSET_X, y + BUBBLE_OFFSET_Y, BUBBLE_RADIUS, 0x87ceeb, 0.5);
-            // const textObj = this.add.text(x + BUBBLE_OFFSET_X, y + BUBBLE_OFFSET_Y, name.trim(), { font: '18px Arial', fill: '#ffffff' })
-            //     .setOrigin(0.5).setDepth(1);
-            // fish.bubble = { bubble, text: textObj };
+        // attach bubble only if name provided and type is 'dj'
+        if (name && name.trim().length > 0 && type === 'dj') {
+            // Replace circle with the loaded bubble image
+            const bubbleImage = this.add.image(fish.x + BUBBLE_OFFSET_X, fish.y + BUBBLE_OFFSET_Y, 'bubble');
+            bubbleImage.setScale(0.5);
+            // It might be necessary to scale the bubble image if its original size is not appropriate
+            // bubbleImage.setScale(0.5); // Example: scale to 50%
+            // Adjust BUBBLE_RADIUS or use image dimensions for text centering if needed
+
+            const textObj = this.add.text(bubbleImage.x, bubbleImage.y, name.trim(), { font: '25px Arial', fill: '#14477A', fontFamily: 'Stella Demo' })
+                .setOrigin(0.5).setDepth(1);
+            fish.bubble = { bubble: bubbleImage, text: textObj }; // Store image as bubble
         }
         this.entities.add(fish);
         // enable arcade physics bounce and collision
@@ -539,12 +547,13 @@ function update(time, delta) {
         this.entities.getChildren().forEach((entity) => {
             // update bubble position if exists
             if (entity.bubble) {
+                // Update position for both bubble image and text
                 entity.bubble.bubble.setPosition(
                     entity.x + BUBBLE_OFFSET_X,
                     entity.y + BUBBLE_OFFSET_Y
                 );
                 entity.bubble.text.setPosition(
-                    entity.x + BUBBLE_OFFSET_X,
+                    entity.x + BUBBLE_OFFSET_X, // Text is centered on the bubble image
                     entity.y + BUBBLE_OFFSET_Y
                 );
             }

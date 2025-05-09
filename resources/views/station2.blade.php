@@ -312,14 +312,12 @@
         }
 
         function uploadSpriteSheet() {
-
             // open modal uploadSpriteSheet
             const modal = new bootstrap.Modal(document.getElementById('exampleModal'));
-            modal.show();
 
-            const uploadButton = document.getElementById('uploadButton');
-            const babyImgInput = document.getElementById('baby_img');
-            const babyNameInput = document.getElementById('baby_name');
+            // const babyImgInput = document.getElementById('baby_img'); // Original input, data now comes from canvas blob
+            // const babyNameInput = document.getElementById('baby_name'); // Original input, data now comes from selectedCharacter
+            const csrfToken = document.querySelector('input[name="_token"]').value; // Get CSRF token from the hidden form
 
             // draw the spriteSheetImageConverted into a canvas so we can call toBlob()
             const img = spriteSheetImageConverted;
@@ -332,18 +330,55 @@
             canvas.toBlob((blob) => {
                 if (!blob) {
                     console.error('Failed to generate blob from sprite sheet.');
+                    alert('Error preparing image for upload. Please try again.');
                     return;
                 }
                 const file = new File([blob], "sprite_sheet.webp", {
                     type: "image/webp"
                 });
-                const dataTransfer = new DataTransfer();
-                dataTransfer.items.add(file);
-                babyImgInput.files = dataTransfer.files;
-                babyNameInput.value = selectedCharacter.name;
 
-                // Submit the form
-                uploadButton.click();
+                const formData = new FormData();
+                formData.append('baby_img', file); // The image file from canvas blob
+                formData.append('baby_name', selectedCharacter.name); // The name from selectedCharacter context
+                formData.append('_token', csrfToken); // CSRF token for Laravel
+
+                // Perform AJAX request
+                fetch('{{ route('upload.baby') }}', {
+                    method: 'POST',
+                    body: formData, // FormData will set Content-Type to multipart/form-data with boundary
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken, // Standard CSRF header for Laravel
+                        'Accept': 'application/json', // Expect a JSON response
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        // Try to get error message from server if response is JSON
+                        return response.json().then(errData => {
+                            throw new Error(errData.message || `Server responded with status: ${response.status}`);
+                        }).catch(() => {
+                            // Fallback if response is not JSON or no message field
+                            throw new Error(`Server responded with status: ${response.status}`);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Upload successful:', data);
+                    modal.show(); // Show success modal
+                    // Potentially trigger an update in the aquarium if the server confirms success
+                    if (window.game && window.game.scene.scenes[0] && typeof window.game.scene.scenes[0].addFish === 'function' && data.imgPath && data.name) {
+                        // Assuming your server returns imgPath and name for the new fish
+                        // And ASSET_BASE is globally available for constructing the full URL
+                        const fullImgUrl = `${window.ASSET_BASE}/${data.imgPath}`;
+                        window.game.scene.scenes[0].addFish({ spriteKey: 'fish', spriteUrl: fullImgUrl, frameWidth: 300, frameHeight: 300, name: data.name, type: data.type || 'user' });
+                    }
+                })
+                .catch(error => {
+                    console.error('Upload failed:', error);
+                    alert('Upload failed: ' + error.message);
+                });
+
             }, "image/webp");
         }
 

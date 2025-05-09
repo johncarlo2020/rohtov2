@@ -282,6 +282,9 @@ class StationController extends Controller
         // Determine if stations 1-4 are all completed
         $canAccessStation5 = $stations->filter(fn($s) => $s->id <= 4)->every(fn($s) => $s->status == true);
 
+        //check if user complete atlist one station
+
+
         if ($stationDone < 5) {
             return view('dashboard', compact('stations', 'stationDone', 'canAccessStation5'));
         } else {

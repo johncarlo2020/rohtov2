@@ -224,26 +224,28 @@ class StationController extends Controller
     public function welcome()
     {
         $userId = Auth::id();
-
-
-        $user = User::with('stationUser')->where('id', auth()->id())->first();
-        // dd($user->stationUser->count());
+        $user = User::with('stationUser')->where('id', $userId)->first();
 
         $stationDone = $user->stationUser->count();
         $stations = Station::get();
 
-        // Loop through each station and append a flag indicating if the user has it
-        foreach ($stations as $station) {
-            $userHasStation = $user
-                ->StationUser()
-                ->where('station_id', $station->id)
-                ->exists();
-            $station->status = $userHasStation;
-        }
-        // dd($stations);
+        $completedStationIds = $user->stationUser->pluck('id')->toArray();
 
-        return view('dashboard', compact('stations', 'stationDone'));
+        // Add status flag to each station
+        foreach ($stations as $station) {
+            $station->status = $user->stationUser->contains('station_id', $station->id);
+        }
+
+        // Determine if stations 1-4 are all completed
+        $canAccessStation5 = $stations->filter(fn($s) => $s->id <= 4)->every(fn($s) => $s->status == true);
+
+        if ($stationDone < 5) {
+            return view('dashboard', compact('stations', 'stationDone', 'canAccessStation5'));
+        } else {
+            return redirect()->route('congrats');
+        }
     }
+
 
     public function scan(Request $request)
     {

@@ -7,6 +7,25 @@
             <img class="welcome_img" src="{{ asset('images/hadalabobabies/welcome_image.webp') }}" alt="" />
             <button id="start" class="home-btn welcome-sign-btn btn rounded-pill mt-5"><span>Start</span></button>
         </div>
+<!-- Modal -->
+<div class="modal fade" id="notAllowedModal" tabindex="-1" aria-labelledby="notAllowedModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="notAllowedModalLabel">Access Denied</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                You must complete Stations 1 to 4 before accessing Station 5.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Okay</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
         <div class="sliders d-none w-100">
             <div class="container-fluid p-0 m-0">
                 <div class="row p-0 m-0 justify-content-center">
@@ -20,25 +39,24 @@
                         <!-- Slick Slider Component -->
                         <div class="slick-carousel mt-4">
                             @foreach ($stations as $station)
-                            <div id="1" class="slick-slide-item">
-                                {{-- add active --}}
-                                <div class="staion-container {{$station->status == true ? 'completed':''}} " onclick="gotoStation({{ $station->id }})">
-
-                                    <img src="{{ asset('images/hadalabobabies/station'.$station->id .'.webp') }}" class="station-img"
-                                        alt="Slide 1">
-                                    <div class="complete-indicator {{$station->status == true ? 'active':''}}">
+                            <div class="slick-slide-item">
+                                <div class="staion-container {{ $station->status ? 'completed' : '' }}" @if ($station->id == 5 &&
+                                    !$canAccessStation5)
+                                    data-bs-toggle="modal" data-bs-target="#notAllowedModal"
+                                    @else
+                                    onclick="gotoStation({{ $station->id }})"
+                                    @endif
+                                    >
+                                    <img src="{{ asset('images/hadalabobabies/station'.$station->id.'.webp') }}" class="station-img"
+                                        alt="Slide {{ $station->id }}">
+                                    <div class="complete-indicator {{ $station->status ? 'active' : '' }}">
                                         <p>CHECK-IN SUCCESSFUL</p>
                                     </div>
                                 </div>
-
-                                <!-- <div class="staion-container completed" onclick="gotoStation(1)">
-                                    <img src="{{ asset('images/hadalabobabies/station1.png') }}" class="station-img" alt="Slide 1">
-                                    <div class="complete-indicator active">
-                                        <p>CHECK-IN SUCCESSFUL</p>
-                                    </div>
-                                </div> -->
                             </div>
                             @endforeach
+
+
 
                         </div>
                     </div>
@@ -47,6 +65,8 @@
         </div>
     </div>
     <script>
+
+
            function gotoStation(id) {
                 var url = "{{ route('station', ['station' => ':id']) }}".replace(
                     ":id",

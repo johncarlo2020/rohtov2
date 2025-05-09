@@ -477,7 +477,7 @@ a:active {
     justify-content: center;
     align-items: center;
     .logo {
-        width: 40%;
+        width: 31%;
         height: auto;
     }
 }
@@ -1960,7 +1960,7 @@ body {
     color: #303030;
 
     .branding .logo {
-        width: 50%;
+        width: 31%;
         height: auto;
         margin-bottom: 20px;
     }
@@ -2254,10 +2254,20 @@ body {
         flex-direction: column;
 
         .skin-name-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 5vh;
+            margin-top: 20px;
+            position: relative;
+            z-index: 10;
+
+            p {
+                font-family: "Stella Demo";
+                font-size: 50px;
+                color: #14477a;
+                margin: 0;
+                line-height: 1;
+                width: 100%;
+                display: block;
+                text-align: center;
+            }
         }
 
         .character-finish {
@@ -2342,15 +2352,16 @@ body {
                 }
 
                 .skin-name-container {
-                    width: 30vw;
-                    height: 30vw;
-
-                    img {
-                        width: 100%;
-                        height: 100%;
-                        object-fit: contain;
-                    }
-                }
+                    text-align: center;
+                     p {
+                         font-family: 'Stella Demo';
+                         text-align: center;
+                         font-size: 50px;
+                         color: #14477A;
+                            margin: 0;
+                            line-height: 1;
+                     }
+                 }
 
                 .character-container {
                     position: relative;
@@ -2625,4 +2636,17 @@ body {
         bottom: 19px;
         right: 46px;
     }
+}
+.station {
+    .branding {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .logo {
+            width: 31%;
+            height: auto;
+        }
+    }
+
 }

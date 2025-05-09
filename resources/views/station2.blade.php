@@ -14,11 +14,12 @@
         <div id="getName" class="get-name-container px-4">
             <h5 class="text-center text-primary">PLEASE INSERT YOUR NAME</h5>
             <div class="mb-3">
-                <input type="text" class="form-control rounded-pill get-name" id="name" placeholder="Your name" maxlength="5">
+                <input type="text" class="form-control rounded-pill get-name" id="name" placeholder="Your name"
+                    maxlength="5">
                 <div id="emailHelp" class="form-text">*Maximum 5 character</div>
             </div>
             <button onclick="addName()" class="station-button main-btn btn btn-primary">
-               Start
+                Start
             </button>
         </div>
         <div id="selectCharacter" class="px-4 hidden">
@@ -28,20 +29,23 @@
                     <div class="row p-0 m-0 justify-content-center">
                         <div class="col-md-10 slider-container">
                             <div class="slider-prev slider-navigation">
-                                <button id="prev" class="slider-btn"><i class="fa-solid fa-caret-left"></i></button>
+                                <button id="prev" class="slider-btn"><i
+                                        class="fa-solid fa-caret-left"></i></button>
                             </div>
                             <div class="slider-next slider-navigation">
-                                <button id="next" class="slider-btn"><i class="fa-solid fa-caret-right"></i></button>
+                                <button id="next" class="slider-btn"><i
+                                        class="fa-solid fa-caret-right"></i></button>
                             </div>
                             <!-- Slick Slider Component -->
                             <div class="slick-carousel mt-4">
                                 @for ($i = 1; $i <= 5; $i++)
-                                <div class="slick-slide-item" onclick="selectSkin({{ $i }})">
-                                    <div class="station-container d-flex justify-content-center align-items-center">
-                                        <img class="station-img" src="{{ asset('images/character/bubbles/' . $i . '.webp') }}"
-                                        alt="Character {{ $i }}" />
+                                    <div class="slick-slide-item" onclick="selectSkin({{ $i }})">
+                                        <div class="station-container d-flex justify-content-center align-items-center">
+                                            <img class="station-img"
+                                                src="{{ asset('images/character/bubbles/' . $i . '.webp') }}"
+                                                alt="Character {{ $i }}" />
+                                        </div>
                                     </div>
-                                </div>
                                 @endfor
                             </div>
                         </div>
@@ -75,21 +79,12 @@
                                 </div>
                             </div>
                             <div class="slider">
-                                <button class="item" onclick="selectItem('hair', 1, this)">
-                                    <img src="{{ asset('images/character/choises/hair/1.webp') }}" alt="Hair 1" />
-                                </button>
-                                <button class="item" onclick="selectItem('hair', 2, this)">
-                                    <img src="{{ asset('images/character/choises/hair/2.webp') }}" alt="Hair 2" />
-                                </button>
-                                <button class="item" onclick="selectItem('hair', 3, this)">
-                                    <img src="{{ asset('images/character/choises/hair/3.webp') }}" alt="Hair 1" />
-                                </button>
-                                <button class="item" onclick="selectItem('hair', 4, this)">
-                                    <img src="{{ asset('images/character/choises/hair/4.webp') }}" alt="Hair 2" />
-                                </button>
-                                <button class="item" onclick="selectItem('hair', 5, this)">
-                                    <img src="{{ asset('images/character/choises/hair/5.webp') }}" alt="Hair 2" />
-                                </button>
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <button class="item" onclick="selectItem('hair', {{ $i }}, this)">
+                                        <img src="{{ asset('images/character/choises/hair/' . $i . '.webp') }}"
+                                            alt="Hair {{ $i }}" />
+                                    </button>
+                                @endfor
                             </div>
                             <div class="right-nav">
                                 <div class="nav-items">
@@ -116,21 +111,12 @@
                                 </div>
                             </div>
                             <div class="slider">
-                                <button class="item" onclick="selectItem('face', 1, this)">
-                                    <img src="{{ asset('images/character/choises/face/1.webp') }}" alt="Face 1" />
-                                </button>
-                                <button class="item" onclick="selectItem('face', 2, this)">
-                                    <img src="{{ asset('images/character/choises/face/2.webp') }}" alt="Face 2" />
-                                </button>
-                                <button class="item" onclick="selectItem('face', 3, this)">
-                                    <img src="{{ asset('images/character/choises/face/3.webp') }}" alt="Face 3" />
-                                </button>
-                                <button class="item" onclick="selectItem('face', 4, this)">
-                                    <img src="{{ asset('images/character/choises/face/4.webp') }}" alt="Face 4" />
-                                </button>
-                                <button class="item" onclick="selectItem('face', 5, this)">
-                                    <img src="{{ asset('images/character/choises/face/5.webp') }}" alt="Face 4" />
-                                </button>
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <button class="item" onclick="selectItem('face', {{ $i }}, this)">
+                                        <img src="{{ asset('images/character/choises/face/' . $i . '.webp') }}"
+                                            alt="Face {{ $i }}" />
+                                    </button>
+                                @endfor
                             </div>
                             <div class="right-nav">
                                 <div class="nav-items">
@@ -155,10 +141,16 @@
                     const slider = itemsContainer.querySelector('.slider');
 
                     leftNav.addEventListener('click', () => {
-                        slider.scrollBy({ left: -200, behavior: 'smooth' });
+                        slider.scrollBy({
+                            left: -200,
+                            behavior: 'smooth'
+                        });
                     });
                     rightNav.addEventListener('click', () => {
-                        slider.scrollBy({ left: 200, behavior: 'smooth' });
+                        slider.scrollBy({
+                            left: 200,
+                            behavior: 'smooth'
+                        });
                     });
                 });
             </script>
@@ -171,13 +163,14 @@
 
                     <div class="selected-skin-container">
                         <div class="with-bg">
-                            <img class="background-img" src="{{ asset('images/finighPage.webp') }}" alt="Face 4" />
+                            <img class="background-img" src="{{ asset('images/finighPage.webp') }}"
+                                alt="Face 4" />
                             <div id="finishedCharacterContainer" class="finish-character-container">
                             </div>
                         </div>
 
                         <div class="with-bubble">
-                             <img class="bubble" src="{{ asset('images/bubble.webp') }}" alt="Face 4" />
+                            <img class="bubble" src="{{ asset('images/bubble.webp') }}" alt="Face 4" />
                             <div id="characterNameFinish" class="skin-name-container">
                             </div>
                         </div>
@@ -187,10 +180,12 @@
                     Download Sprite Sheet
                 </a>
 
-                <button onclick="uploadSpriteSheet()" class="next-button mt-5 w-100"><span>Share to screen and check in</span></button>
+                <button onclick="uploadSpriteSheet()" class="next-button mt-5 w-100"><span>Share to screen and check
+                        in</span></button>
                 <button onclick="downloadGif()" class="next-button mt-2 w-100"><span>Download</span></button>
             </div>
-            <form id="uploadForm" action="{{ route('upload.baby') }}" method="POST" enctype="multipart/form-data" style="display:none;">
+            <form id="uploadForm" action="{{ route('upload.baby') }}" method="POST" enctype="multipart/form-data"
+                style="display:none;">
                 @csrf
                 <input type="file" name="baby_img" id="baby_img" accept="image/webp">
                 <input type="text" name="baby_name" id="baby_name">
@@ -199,21 +194,22 @@
         </div>
     </div>
 
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
 
                 <div class="modal-body text-center">
-                <i class="fa-solid fa-circle-check modal-icon"></i>
-                  <h2>Station 2</h2>
-                  <p>Check-in Successful</p>
-                  <button class="next-button mt-2"><span>okay</span></button>
+                    <i class="fa-solid fa-circle-check modal-icon"></i>
+                    <h2>Station 2</h2>
+                    <p>Check-in Successful</p>
+                    <button class="next-button mt-2"><span>okay</span></button>
                 </div>
 
             </div>
-            </div>
         </div>
+    </div>
 
     <script>
         const loaderContainer = document.querySelector('.loader-container');
@@ -221,25 +217,35 @@
         const characterStyleContainer = document.getElementById('characterStyle');
 
         const step = [{
-            elementId: 'getName',
-            completed: false,
-        },
-        {
-            elementId: 'selectCharacter',
-            completed: false,
-        }, {
-            elementId: 'editCharacter',
-            completed: false,
-        }, {
-            elementId: 'completeContainer',
-            completed: false,
-        }];
+                elementId: 'getName',
+                completed: false,
+            },
+            {
+                elementId: 'selectCharacter',
+                completed: false,
+            }, {
+                elementId: 'editCharacter',
+                completed: false,
+            }, {
+                elementId: 'completeContainer',
+                completed: false,
+            }
+        ];
+
+        const characterNameMap = [
+            'Bounci',
+            'Chubbi',
+            'Globelle',
+            'mochimura',
+            'Dewy',
+        ]
 
         var selectedCharacter = {
             name: '',
             skin: '',
             hair: '',
             face: '',
+            character:'',
         };
 
         let stepIndex = 0;
@@ -248,7 +254,8 @@
             const characterName = 'characterName';
             const characterEditContainer = 'characterEditContainer';
             selectedCharacter.skin = skin;
-            initEditCharacter(characterName,characterEditContainer);
+            selectedCharacter.character = characterNameMap[skin - 1];
+            initEditCharacter(characterName, characterEditContainer);
             nextStep();
         }
 
@@ -300,13 +307,13 @@
 
             return;
             const uploadButton = document.getElementById('uploadButton');
-            const babyImgInput   = document.getElementById('baby_img');
-            const babyNameInput  = document.getElementById('baby_name');
+            const babyImgInput = document.getElementById('baby_img');
+            const babyNameInput = document.getElementById('baby_name');
 
             // draw the spriteSheetImageConverted into a canvas so we can call toBlob()
             const img = spriteSheetImageConverted;
             const canvas = document.createElement('canvas');
-            canvas.width  = img.naturalWidth || img.width;
+            canvas.width = img.naturalWidth || img.width;
             canvas.height = img.naturalHeight || img.height;
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0);
@@ -316,7 +323,9 @@
                     console.error('Failed to generate blob from sprite sheet.');
                     return;
                 }
-                const file = new File([blob], "sprite_sheet.webp", { type: "image/webp" });
+                const file = new File([blob], "sprite_sheet.webp", {
+                    type: "image/webp"
+                });
                 const dataTransfer = new DataTransfer();
                 dataTransfer.items.add(file);
                 babyImgInput.files = dataTransfer.files;
@@ -328,28 +337,35 @@
         }
 
         async function captureFrame(frameIndex) {
-            // Update character images for this frame, using custom face if provided
-            // skin.src = `/assets/green_0${frameIndex + 1}.webp`;
-            // hair.src = `/assets/green_hair0${frameIndex + 1}.webp`;
-            // face.src = customFaceSrc;
 
             // loop through selectedCharacter and update the src of each image
             const character = document.getElementById('finishedCharacterContainer');
+            // Store original style to revert later
+            const originalHeight = character.style.height;
+            const originalWidth = character.style.width; // Store original width
+            // Set fixed height for consistent capture - adjust '300px' as needed
+
+            console.log(character.style.height, character.style.width);
+            character.style.height = '300px';
+            character.style.width = '300px';
+
             const skin = character.querySelector('.skin');
             const hair = character.querySelector('.hair');
             const face = character.querySelector('.face');
 
+
+            // Directly set the src for each part using the correct selectedCharacter property
+            if (selectedCharacter.skin) {
+                skin.src = `{{ asset('images/character/skin/${selectedCharacter.skin}/${frameIndex}.webp') }}`;
+            }
+            if (selectedCharacter.hair) {
+                hair.src = `{{ asset('images/character/hair/${selectedCharacter.hair}/${frameIndex}.webp') }}`;
+            }
+            if (selectedCharacter.face) {
+                face.src = `{{ asset('images/character/face/${selectedCharacter.face}/${frameIndex}.webp') }}`;
+            }
+
             console.log(skin, hair, face);
-
-
-            Object.entries(selectedCharacter).forEach(([key, value]) => {
-                // Skip empty values if you want
-                if (key === 'name') return;
-
-                skin.src = `{{ asset('images/character/skin/${value}/${frameIndex}.webp') }}`;
-                hair.src = `{{ asset('images/character/hair/${value}/${frameIndex}.webp') }}`;
-                face.src = `{{ asset('images/character/face/${value}/${frameIndex}.webp') }}`;
-            });
 
             // Ensure all images load before capturing
             await Promise.all([
@@ -361,13 +377,27 @@
             // Small delay to allow DOM updates
             await new Promise((resolve) => setTimeout(resolve, 100));
 
-            return html2canvas(character, { backgroundColor: null });
+            let canvas;
+            try {
+                canvas = await html2canvas(character, {
+                    backgroundColor: null,
+                    scale: 1, // Use a 1:1 pixel scale, ignoring device pixel ratio
+                    width: 300, // Explicitly set the desired output canvas width
+                    height: 300 // Explicitly set the desired output canvas height
+                });
+
+            } finally {
+                // Revert to original style
+                character.style.height = originalHeight;
+                character.style.width = originalWidth; // Revert width
+            }
+            return canvas;
         }
 
         function waitForImageLoad(image) {
             return new Promise((resolve) => {
-            if (image.complete) resolve();
-            else image.onload = resolve;
+                if (image.complete) resolve();
+                else image.onload = resolve;
             });
         }
 
@@ -378,32 +408,32 @@
             const frameCount = 7;
 
             try {
-            const frames = [];
-            for (let i = 1; i < frameCount; i++) {
-                const frameCanvas = await captureFrame(i);
-                frames.push(frameCanvas);
-            }
+                const frames = [];
+                for (let i = 1; i < frameCount; i++) {
+                    const frameCanvas = await captureFrame(i);
+                    frames.push(frameCanvas);
+                }
 
-            // Create a single sprite sheet from the captured frames
-            const tempCanvas = document.createElement("canvas");
-            const tempCtx = tempCanvas.getContext("2d");
-            const frameWidth = frames[0].width;
-            const frameHeight = frames[0].height;
+                // Create a single sprite sheet from the captured frames
+                const tempCanvas = document.createElement("canvas");
+                const tempCtx = tempCanvas.getContext("2d");
+                const frameWidth = frames[0].width;
+                const frameHeight = frames[0].height;
 
-            tempCanvas.width = frameWidth * frameCount;
-            tempCanvas.height = frameHeight;
-            frames.forEach((frame, index) => {
-                tempCtx.drawImage(frame, index * frameWidth, 0);
-            });
+                tempCanvas.width = frameWidth * frameCount;
+                tempCanvas.height = frameHeight;
+                frames.forEach((frame, index) => {
+                    tempCtx.drawImage(frame, index * frameWidth, 0);
+                });
 
-            // Convert temporary canvas to image
-            const spriteSheetImage = new Image();
-            spriteSheetImage.src = tempCanvas.toDataURL("image/webp");
-            spriteSheetImageConverted.src = spriteSheetImage.src;
-            hideLoader();
+                // Convert temporary canvas to image
+                const spriteSheetImage = new Image();
+                spriteSheetImage.src = tempCanvas.toDataURL("image/webp");
+                spriteSheetImageConverted.src = spriteSheetImage.src;
+                hideLoader();
 
             } catch (error) {
-            console.error("Error creating sprite sheet:", error);
+                console.error("Error creating sprite sheet:", error);
             }
 
         }
@@ -448,13 +478,17 @@
                 characterContainer.innerHTML = ''; // Clear previous content
                 characterNameContainer.innerHTML = ''; // Clear previous content
                 const nameElement = document.createElement('p');
+
                 nameElement.textContent = selectedCharacter.character;
+
                 const skinImage = document.createElement('img');
-                skinImage.src = `{{ asset('images/character/skin/${selectedCharacter.skin}/${selectedCharacter.skin}.webp') }}`;
+                skinImage.src =
+                    `{{ asset('images/character/skin/${selectedCharacter.skin}/${selectedCharacter.skin}.webp') }}`;
                 skinImage.alt = 'Selected Skin';
                 skinImage.classList.add('skin');
                 nameElement.classList.add('selected-skin-name');
                 characterNameContainer.appendChild(nameElement);
+
                 characterContainer.appendChild(skinImage);
             }
 
@@ -462,16 +496,22 @@
 
             if (edit) {
                 const hairImage = document.createElement('img');
-                hairImage.src = `{{ asset('images/character/hair/${selectedCharacter.hair}/${selectedCharacter.hair}.webp') }}`;
+                hairImage.src =
+                    `{{ asset('images/character/hair/${selectedCharacter.hair}/${selectedCharacter.hair}.webp') }}`;
                 hairImage.alt = 'Selected Hair';
                 hairImage.classList.add('hair');
                 characterContainer.appendChild(hairImage);
 
                 const faceImage = document.createElement('img');
-                faceImage.src = `{{ asset('images/character/face/${selectedCharacter.face}/${selectedCharacter.face}.webp') }}`;
+                faceImage.src =
+                    `{{ asset('images/character/face/${selectedCharacter.face}/${selectedCharacter.face}.webp') }}`;
                 faceImage.alt = 'Selected Face';
                 faceImage.classList.add('face');
                 characterContainer.appendChild(faceImage);
+
+                const inputedName = document.createElement('p');
+                inputedName.textContent = selectedCharacter.name;
+                characterNameContainer.appendChild(inputedName);
             }
         }
 
@@ -485,7 +525,7 @@
             if (currentStepIndex !== -1 && currentStepIndex < step.length - 1) {
                 showStep(currentStepIndex + 1);
             } else if (currentStepIndex === -1 && step.length > 0) {
-                 showStep(0);
+                showStep(0);
             }
         }
 
@@ -507,11 +547,13 @@
                 quality: 10,
                 width: spriteSheetImageConverted.width,
                 height: spriteSheetImageConverted.height,
-                workerScript: '{{ asset("js/gif.worker.min.js") }}',
+                workerScript: '{{ asset('js/gif.worker.min.js') }}',
             });
             const frameCount = 7;
             for (let i = 0; i < frameCount; i++) {
-                gif.addFrame(spriteSheetImageConverted, { delay: 200 });
+                gif.addFrame(spriteSheetImageConverted, {
+                    delay: 200
+                });
             }
             gif.on('finished', function(blob) {
                 const downloadLink = document.getElementById('download');

@@ -778,7 +778,8 @@ a:active {
     position: relative;
 
     .register-main {
-        height: 100vh;
+    height: 100dvh; /* modern */
+    height: 100vh;  /* fallback */
         overflow: auto;
         padding-bottom: 30px;
 

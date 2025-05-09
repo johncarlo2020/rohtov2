@@ -197,7 +197,7 @@
                     console.error('Error sending QR Code message:', error);
                     $('.station-text').html('Failed');
                     $('.message').html('Invalid QR code. Please try again.');
-                    $('.check').attr('src', '{{ asset('error.webp') }}');
+                    $('.check').attr('src', '{{ asset('images/error.webp') }}');
                     $(scanCompleteModal).modal('show');
                 }
             });

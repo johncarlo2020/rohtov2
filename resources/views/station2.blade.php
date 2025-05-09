@@ -38,7 +38,7 @@
                                 @for ($i = 1; $i <= 5; $i++)
                                 <div class="slick-slide-item" onclick="selectSkin({{ $i }})">
                                     <div class="station-container d-flex justify-content-center align-items-center">
-                                        <img class="station-img" src="{{ asset('images/character/bubbles/bubble' . $i . '.png') }}"
+                                        <img class="station-img" src="{{ asset('images/character/bubbles/' . $i . '.webp') }}"
                                         alt="Character {{ $i }}" />
                                     </div>
                                 </div>
@@ -71,36 +71,36 @@
                             <div class="left-nav">
                                 <div class="nav-items">
                                     <i class="fa-solid fa-chevron-left"></i>
-                                    <img src="{{ asset('images/navbacground.png') }}" alt="Hair 1" />
+                                    <img src="{{ asset('images/navbacground.webp') }}" alt="Hair 1" />
                                 </div>
                             </div>
                             <div class="slider">
                                 <button class="item" onclick="selectItem('hair', 1, this)">
-                                    <img src="{{ asset('images/character/choises/hair/1.png') }}" alt="Hair 1" />
+                                    <img src="{{ asset('images/character/choises/hair/1.webp') }}" alt="Hair 1" />
                                 </button>
                                 <button class="item" onclick="selectItem('hair', 2, this)">
-                                    <img src="{{ asset('images/character/choises/hair/2.png') }}" alt="Hair 2" />
+                                    <img src="{{ asset('images/character/choises/hair/2.webp') }}" alt="Hair 2" />
                                 </button>
                                 <button class="item" onclick="selectItem('hair', 3, this)">
-                                    <img src="{{ asset('images/character/choises/hair/3.png') }}" alt="Hair 1" />
+                                    <img src="{{ asset('images/character/choises/hair/3.webp') }}" alt="Hair 1" />
                                 </button>
                                 <button class="item" onclick="selectItem('hair', 4, this)">
-                                    <img src="{{ asset('images/character/choises/hair/4.png') }}" alt="Hair 2" />
+                                    <img src="{{ asset('images/character/choises/hair/4.webp') }}" alt="Hair 2" />
                                 </button>
                                 <button class="item" onclick="selectItem('hair', 5, this)">
-                                    <img src="{{ asset('images/character/choises/hair/5.png') }}" alt="Hair 2" />
+                                    <img src="{{ asset('images/character/choises/hair/5.webp') }}" alt="Hair 2" />
                                 </button>
                             </div>
                             <div class="right-nav">
                                 <div class="nav-items">
-                                    <img src="{{ asset('images/navbacground.png') }}" alt="Hair 1" />
+                                    <img src="{{ asset('images/navbacground.webp') }}" alt="Hair 1" />
                                     <i class="fa-solid fa-chevron-right"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="devider">
-                        <img src="{{ asset('images/line.png') }}" alt="Item 2" />
+                        <img src="{{ asset('images/line.webp') }}" alt="Item 2" />
                     </div>
                     <div class="option">
                         <div class="button-container">
@@ -112,29 +112,29 @@
                             <div class="left-nav">
                                 <div class="nav-items">
                                     <i class="fa-solid fa-chevron-left"></i>
-                                    <img src="{{ asset('images/navbacground.png') }}" alt="Previous" />
+                                    <img src="{{ asset('images/navbacground.webp') }}" alt="Previous" />
                                 </div>
                             </div>
                             <div class="slider">
                                 <button class="item" onclick="selectItem('face', 1, this)">
-                                    <img src="{{ asset('images/character/choises/face/1.png') }}" alt="Face 1" />
+                                    <img src="{{ asset('images/character/choises/face/1.webp') }}" alt="Face 1" />
                                 </button>
                                 <button class="item" onclick="selectItem('face', 2, this)">
-                                    <img src="{{ asset('images/character/choises/face/2.png') }}" alt="Face 2" />
+                                    <img src="{{ asset('images/character/choises/face/2.webp') }}" alt="Face 2" />
                                 </button>
                                 <button class="item" onclick="selectItem('face', 3, this)">
-                                    <img src="{{ asset('images/character/choises/face/3.png') }}" alt="Face 3" />
+                                    <img src="{{ asset('images/character/choises/face/3.webp') }}" alt="Face 3" />
                                 </button>
                                 <button class="item" onclick="selectItem('face', 4, this)">
-                                    <img src="{{ asset('images/character/choises/face/4.png') }}" alt="Face 4" />
+                                    <img src="{{ asset('images/character/choises/face/4.webp') }}" alt="Face 4" />
                                 </button>
                                 <button class="item" onclick="selectItem('face', 5, this)">
-                                    <img src="{{ asset('images/character/choises/face/5.png') }}" alt="Face 4" />
+                                    <img src="{{ asset('images/character/choises/face/5.webp') }}" alt="Face 4" />
                                 </button>
                             </div>
                             <div class="right-nav">
                                 <div class="nav-items">
-                                    <img src="{{ asset('images/navbacground.png') }}" alt="Next" />
+                                    <img src="{{ asset('images/navbacground.webp') }}" alt="Next" />
                                     <i class="fa-solid fa-chevron-right"></i>
                                 </div>
                             </div>
@@ -171,13 +171,13 @@
 
                     <div class="selected-skin-container">
                         <div class="with-bg">
-                            <img class="background-img" src="{{ asset('images/finighPage.png') }}" alt="Face 4" />
+                            <img class="background-img" src="{{ asset('images/finighPage.webp') }}" alt="Face 4" />
                             <div id="finishedCharacterContainer" class="finish-character-container">
                             </div>
                         </div>
 
                         <div class="with-bubble">
-                             <img class="bubble" src="{{ asset('images/bubble.png') }}" alt="Face 4" />
+                             <img class="bubble" src="{{ asset('images/bubble.webp') }}" alt="Face 4" />
                             <div id="characterNameFinish" class="skin-name-container">
                             </div>
                         </div>
@@ -192,7 +192,7 @@
             </div>
             <form id="uploadForm" action="{{ route('upload.baby') }}" method="POST" enctype="multipart/form-data" style="display:none;">
                 @csrf
-                <input type="file" name="baby_img" id="baby_img" accept="image/png">
+                <input type="file" name="baby_img" id="baby_img" accept="image/webp">
                 <input type="text" name="baby_name" id="baby_name">
                 <button type="submit" id="uploadButton"></button>
             </form>
@@ -316,7 +316,7 @@
                     console.error('Failed to generate blob from sprite sheet.');
                     return;
                 }
-                const file = new File([blob], "sprite_sheet.png", { type: "image/png" });
+                const file = new File([blob], "sprite_sheet.webp", { type: "image/webp" });
                 const dataTransfer = new DataTransfer();
                 dataTransfer.items.add(file);
                 babyImgInput.files = dataTransfer.files;
@@ -324,13 +324,13 @@
 
                 // Submit the form
                 uploadButton.click();
-            }, "image/png");
+            }, "image/webp");
         }
 
         async function captureFrame(frameIndex) {
             // Update character images for this frame, using custom face if provided
-            // skin.src = `/assets/green_0${frameIndex + 1}.png`;
-            // hair.src = `/assets/green_hair0${frameIndex + 1}.png`;
+            // skin.src = `/assets/green_0${frameIndex + 1}.webp`;
+            // hair.src = `/assets/green_hair0${frameIndex + 1}.webp`;
             // face.src = customFaceSrc;
 
             // loop through selectedCharacter and update the src of each image
@@ -346,9 +346,9 @@
                 // Skip empty values if you want
                 if (key === 'name') return;
 
-                skin.src = `{{ asset('images/character/skin/${value}/${frameIndex}.png') }}`;
-                hair.src = `{{ asset('images/character/hair/${value}/${frameIndex}.png') }}`;
-                face.src = `{{ asset('images/character/face/${value}/${frameIndex}.png') }}`;
+                skin.src = `{{ asset('images/character/skin/${value}/${frameIndex}.webp') }}`;
+                hair.src = `{{ asset('images/character/hair/${value}/${frameIndex}.webp') }}`;
+                face.src = `{{ asset('images/character/face/${value}/${frameIndex}.webp') }}`;
             });
 
             // Ensure all images load before capturing
@@ -398,7 +398,7 @@
 
             // Convert temporary canvas to image
             const spriteSheetImage = new Image();
-            spriteSheetImage.src = tempCanvas.toDataURL("image/png");
+            spriteSheetImage.src = tempCanvas.toDataURL("image/webp");
             spriteSheetImageConverted.src = spriteSheetImage.src;
             hideLoader();
 
@@ -435,7 +435,7 @@
             const part = document.createElement('img');
             part.classList.add(type);
             part.classList.add('parts');
-            part.src = `{{ asset('images/character/${type}/${index}/${index}.png') }}`;
+            part.src = `{{ asset('images/character/${type}/${index}/${index}.webp') }}`;
             part.alt = `Item ${index}`;
             characterContainer.appendChild(part);
         }
@@ -447,13 +447,12 @@
             if (characterContainer) {
                 characterContainer.innerHTML = ''; // Clear previous content
                 characterNameContainer.innerHTML = ''; // Clear previous content
-                const nameElement = document.createElement('img');
-                nameElement.src = `{{ asset('images/character/name/${selectedCharacter.skin}.png') }}`;
+                const nameElement = document.createElement('p');
+                nameElement.textContent = selectedCharacter.character;
                 const skinImage = document.createElement('img');
-                skinImage.src = `{{ asset('images/character/skin/${selectedCharacter.skin}/${selectedCharacter.skin}.png') }}`;
+                skinImage.src = `{{ asset('images/character/skin/${selectedCharacter.skin}/${selectedCharacter.skin}.webp') }}`;
                 skinImage.alt = 'Selected Skin';
                 skinImage.classList.add('skin');
-                nameElement.alt = 'Selected Name';
                 nameElement.classList.add('selected-skin-name');
                 characterNameContainer.appendChild(nameElement);
                 characterContainer.appendChild(skinImage);
@@ -463,13 +462,13 @@
 
             if (edit) {
                 const hairImage = document.createElement('img');
-                hairImage.src = `{{ asset('images/character/hair/${selectedCharacter.hair}/${selectedCharacter.hair}.png') }}`;
+                hairImage.src = `{{ asset('images/character/hair/${selectedCharacter.hair}/${selectedCharacter.hair}.webp') }}`;
                 hairImage.alt = 'Selected Hair';
                 hairImage.classList.add('hair');
                 characterContainer.appendChild(hairImage);
 
                 const faceImage = document.createElement('img');
-                faceImage.src = `{{ asset('images/character/face/${selectedCharacter.face}/${selectedCharacter.face}.png') }}`;
+                faceImage.src = `{{ asset('images/character/face/${selectedCharacter.face}/${selectedCharacter.face}.webp') }}`;
                 faceImage.alt = 'Selected Face';
                 faceImage.classList.add('face');
                 characterContainer.appendChild(faceImage);

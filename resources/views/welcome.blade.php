@@ -55,7 +55,7 @@
     <div class="py-5 container-fluid main-content">
         <div class="row mt-5">
             <div class="col-12 d-flex justify-content-center align-items-center">
-                <img class="welcome_img" src="{{ asset('images/hadalabobabies/welcome_image.png') }}" alt="" />
+                <img class="welcome_img" src="{{ asset('images/hadalabobabies/welcome_image.webp') }}" alt="" />
             </div>
             <div class="text-center bottom-text-welcome col-12 mt-5">
                 <a href="{{ route('register') }}" class="home-btn welcome-sign-btn btn rounded-pill"><span>Sign Up</span></a>

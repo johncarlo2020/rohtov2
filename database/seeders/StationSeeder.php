@@ -21,86 +21,25 @@ class StationSeeder extends Seeder
     public function run()
     {
         Station::create([
-            'name' => 'History Wall',
-            'required' => true,
-            'nurse' => 'Rohto',
+            'name' => 'Skin Analysis',
         ]);
 
         Station::create([
-            'name' => 'Best Seller',
-            'required' => true,
-            'nurse' => 'Rohto',
+            'name' => 'Hada Baby Aqua Lab',
         ]);
 
         Station::create([
-            'name' => 'Haircare (Scalp Check)',
-            'required' => true,
-            'nurse' => 'Selsun',
+            'name' => 'Product Experiences',
         ]);
 
         Station::create([
-            'name' => 'Skin Care (Skin Check)',
-            'required' => true,
-            'nurse' => 'Hada Labo',
-        ]);
-
-        Station::create([
-            'name' => 'Photobooth',
-            'required' => false,
-            'nurse' => 'Rohto',
-        ]);
-
-        Station::create([
-            'name' => 'Sun Protection (UV Camera)',
-            'required' => false,
-            'nurse' => 'Sunplay',
-        ]);
-
-        Station::create([
-            'name' => 'Lip Care (Puzzle)',
-            'required' => false,
-            'nurse' => 'Mentholatum',
-        ]);
-
-        Station::create([
-            'name' => 'Acne & Eye Care (Eye Check)',
-            'required' => false,
-            'nurse' => 'OXY',
+            'name' => 'Photo Op',
         ]);
 
         Station::create([
             'name' => 'Gift Redemption',
-            'required' => false,
-            'nurse' => 'Gift',
         ]);
 
-        Brand::create([
-            'name' => 'Hada Labo',
-        ]);
-
-        Brand::create([
-            'name' => 'Sunplay',
-        ]);
-
-        Brand::create([
-            'name' => 'OXY',
-        ]);
-
-        Brand::create([
-            'name' => 'Mentholatum Lipcare',
-        ]);
-
-        Brand::create([
-            'name' => 'Selsun Blue',
-        ]);
-
-        Brand::create([
-            'name' => '50 Megumi',
-        ]);
-
-        Brand::create([
-            'name' => 'Rohto',
-        ]);
 
         $role = Role::create(['name' => 'client']);
 

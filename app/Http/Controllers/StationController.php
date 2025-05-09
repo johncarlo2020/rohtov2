@@ -225,49 +225,6 @@ class StationController extends Controller
     {
         $userId = Auth::id();
 
-        $required = DB::table('stations')
-            ->leftJoin('station_users', function ($join) use ($userId) {
-                $join->on('stations.id', '=', 'station_users.station_id')->where('station_users.user_id', '=', $userId);
-            })
-            ->select('stations.id as station_id', 'stations.name as station_name', DB::raw('IF(station_users.station_id IS NULL, false, true) as is_gotten'))
-            ->distinct()
-            ->orderByRaw('is_gotten DESC')
-            ->where('required', 1)
-            ->get();
-        $notRequired = DB::table('stations')
-            ->leftJoin('station_users', function ($join) use ($userId) {
-                $join->on('stations.id', '=', 'station_users.station_id')->where('station_users.user_id', '=', $userId);
-            })
-            ->select('stations.id as station_id', 'stations.name as station_name', DB::raw('IF(station_users.station_id IS NULL, false, true) as is_gotten'))
-            ->distinct()
-            ->orderByRaw('is_gotten DESC')
-            ->where('required', 0)
-            ->limit(2)
-            ->get();
-
-        $giftRequired = DB::table('stations')
-            ->leftJoin('station_users', function ($join) use ($userId) {
-                $join->on('stations.id', '=', 'station_users.station_id')->where('station_users.user_id', '=', $userId);
-            })
-            ->select('stations.id as station_id', 'stations.name as station_name', DB::raw('IF(station_users.station_id IS NULL, false, true) as is_gotten'))
-            ->distinct()
-            ->orderByRaw('is_gotten DESC')
-            ->where('required', 1)
-            ->having('is_gotten', true)
-            ->get();
-        $giftNotRequired = DB::table('stations')
-            ->leftJoin('station_users', function ($join) use ($userId) {
-                $join->on('stations.id', '=', 'station_users.station_id')->where('station_users.user_id', '=', $userId);
-            })
-            ->select('stations.id as station_id', 'stations.name as station_name', DB::raw('IF(station_users.station_id IS NULL, false, true) as is_gotten'))
-            ->distinct()
-            ->orderByRaw('is_gotten DESC')
-            ->where('required', 0)
-            ->limit(2)
-            ->having('is_gotten', true)
-            ->get();
-        $claim = count($giftRequired) + count($giftNotRequired);
-        //dd($claim);
 
         $user = User::with('stationUser')->where('id', auth()->id())->first();
         // dd($user->stationUser->count());
@@ -283,8 +240,9 @@ class StationController extends Controller
                 ->exists();
             $station->status = $userHasStation;
         }
+        // dd($stations);
 
-        return view('dashboard', compact('stations', 'stationDone', 'required', 'notRequired', 'claim'));
+        return view('dashboard', compact('stations', 'stationDone'));
     }
 
     public function scan(Request $request)

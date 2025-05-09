@@ -51,25 +51,14 @@
                 {{ $station->id }}
             </h1>
             <h2 class="station-subheading mt-3">{{ $station->name }}</h2>
-            <img class="mt-5 station-image" src="{{ asset('images/n_S' . $station->id . '.png') }}"
+            <img class="mt-5 station-image" src="{{ asset('images/hadalabobabies/station'.$station->id .'.webp') }}"
                 alt="Station Image">
             @if ($user != true)
-                @if ($user == false && $station->id == 1)
-                    <div class="scanner-button">
-                        <a href="{{ route('station.extension', ['station' => $station->id]) }}" class="button">
-                            BEGIN
-                        </a>
-                    @elseif($user == false && $station->id == 2)
-                        <div class="scanner-button">
-                            <a href="{{ route('station.brand', ['station' => $station->id]) }}" class="button">
-                                BEGIN
-                            </a>
-                        </div>
-                    @else
+
                         <button id="start-scanner" class="mx-auto mt-4 camera-btn"><img
-                                src="{{ asset('images/camera.svg') }}" alt=""></button>
+                                src="{{ asset('images/camera.webp') }}" alt=""></button>
                         <p class="px-4 mt-3 bottom-text main-color font-medium small-width">Scan the QR code at the station to proceed</p>
-                @endif
+
             @else
                 <p class="mt-3 bottom-text main-color font-medium">Checked-in Succesful</p>
 
@@ -97,7 +86,7 @@
 
     <div class="end-text">
         <p>Powered by WOWSOME®️ 2025</p>
-        <img src="{{ asset('images/logo-rounded.png') }}" alt="Item 2" />
+        <img src="{{ asset('images/logo-rounded.webp') }}" alt="Item 2" />
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>

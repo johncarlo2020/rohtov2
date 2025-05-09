@@ -4,7 +4,7 @@
             @include('components.branding')
         </div>
         <div id="startpage" class="d-flex justify-content-center align-items-center h-100 flex-column mt-4">
-            <img class="welcome_img" src="{{ asset('images/hadalabobabies/welcome_image.png') }}" alt="" />
+            <img class="welcome_img" src="{{ asset('images/hadalabobabies/welcome_image.webp') }}" alt="" />
             <button id="start" class="home-btn welcome-sign-btn btn rounded-pill mt-5"><span>Start</span></button>
         </div>
         <div class="sliders d-none w-100">
@@ -19,28 +19,27 @@
                         </div>
                         <!-- Slick Slider Component -->
                         <div class="slick-carousel mt-4">
+                            @foreach ($stations as $station)
                             <div id="1" class="slick-slide-item">
                                 {{-- add active --}}
-                                <div class="staion-container completed" onclick="gotoStation(1)">
-                                    <img src="{{ asset('images/hadalabobabies/station1.png') }}" class="station-img"
+                                <div class="staion-container {{$station->status == true ? 'completed':''}} " onclick="gotoStation({{ $station->id }})">
+
+                                    <img src="{{ asset('images/hadalabobabies/station'.$station->id .'.webp') }}" class="station-img"
                                         alt="Slide 1">
+                                    <div class="complete-indicator {{$station->status == true ? 'active':''}}">
+                                        <p>CHECK-IN SUCCESSFUL</p>
+                                    </div>
+                                </div>
+
+                                <!-- <div class="staion-container completed" onclick="gotoStation(1)">
+                                    <img src="{{ asset('images/hadalabobabies/station1.png') }}" class="station-img" alt="Slide 1">
                                     <div class="complete-indicator active">
                                         <p>CHECK-IN SUCCESSFUL</p>
                                     </div>
-                                </div>
-
+                                </div> -->
                             </div>
-                            <div id="2" class="slick-slide-item">
+                            @endforeach
 
-                                <div class="staion-container" onclick="gotoStation(2)">
-                                    <img src="{{ asset('images/hadalabobabies/station2.png') }}" class="station-img"
-                                        alt="Slide 1">
-                                    <div class="complete-indicator">
-                                        <p>CHECK-IN SUCCESSFUL</p>
-                                    </div>
-                                </div>
-
-                            </div>
                         </div>
                     </div>
                 </div>

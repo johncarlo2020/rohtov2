@@ -184,7 +184,6 @@
                     const lastCharacter = trimmedMessage.charAt(trimmedMessage.length - 1);
 
                     $('.station_id').html(lastCharacter);
-                    const dynamicImage = `{{ asset('images/badge') }}${lastCharacter}.png`;
                     $('#badge').attr('src', dynamicImage);
 
                     if (lastCharacter == 9) {

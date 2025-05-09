@@ -16,17 +16,20 @@ class babyEvent implements ShouldBroadcast
 
     public $img;
     public $name;
-
     public $type;
+
+    public $charname;
+
 
     /**
      * Create a new event instance.
      */
-    public function __construct($img, $name,$type)
+    public function __construct($img, $name,$type,$charname)
     {
         $this->img = $img;
         $this->name = $name;
         $this->type = $type;
+        $this->charname = $charname;
     }
 
     /**

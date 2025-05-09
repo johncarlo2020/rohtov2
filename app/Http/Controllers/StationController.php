@@ -20,6 +20,7 @@ class StationController extends Controller
         $request->validate([
             'baby_img' => 'required|image|max:2048', // max 2MB
             'baby_name' => 'string|max:255',
+            'charname' => 'string|max:255',
         ]);
 
         $user = Auth::user();
@@ -63,9 +64,11 @@ class StationController extends Controller
 
             $user->baby_img = $publicPath;
         $user->baby_name = $request->baby_name;
+        $user->charname = $request->charname;
+
         $user->save();
         // Fire the event
-        broadcast(new babyEvent($publicPath, $user->baby_name,'dj'))->toOthers();
+        broadcast(new babyEvent($publicPath, $user->baby_name,'dj',$user->charname))->toOthers();
 
 
             DB::commit();
@@ -102,7 +105,7 @@ class StationController extends Controller
         }
 
         // Fire the event
-        broadcast(new babyEvent($publicPath, 'noname','ipad'))->toOthers();
+        broadcast(new babyEvent($publicPath, 'ipad','ipad','ipad'))->toOthers();
 
         return redirect()->back();
     }

@@ -22,6 +22,8 @@ return new class extends Migration
             $table->string('country');
             $table->string('baby_img')->nullable();
             $table->string('baby_name')->nullable();
+            $table->string('baby_charname')->nullable();
+
             $table->string('email')->unique();
             $table->timestamp('last_login_at')->nullable();
             $table->timestamp('email_verified_at')->nullable();

@@ -49,7 +49,7 @@
                                     >
                                     <img src="{{ asset('images/hadalabobabies/station'.$station->id.'.webp') }}" class="station-img"
                                         alt="Slide {{ $station->id }}">
-                                    <p class="staion-name text-center font-medium main-color text-md">
+                                    <p class="staion-name text-center font-medium main-color text-md mt-4">
                                         {{ $station->name }}
                                     </p>
                                     <div class="complete-indicator {{ $station->status ? 'active' : '' }}">

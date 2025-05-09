@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="container station p-0 pb-5">
-        <div class="mb-3 branding-container mt-5">
+        <div class="mb-0 branding-container mt-5">
             @include('components.branding')
         </div>
         <button onclick="prevStep()" class="back-btn d-none">
@@ -180,7 +180,7 @@
                     Download Sprite Sheet
                 </a>
 
-                <button onclick="uploadSpriteSheet()" class="next-button mt-5 w-100"><span>Share to screen and check
+                <button onclick="uploadSpriteSheet()" class="next-button mt-2 w-100 "><span>Share to screen and check
                         in</span></button>
                 <button onclick="downloadGif()" class="next-button mt-2 w-100"><span>Download</span></button>
             </div>

@@ -19,13 +19,10 @@
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="text-center content">
-                        <i class="fa-solid fa-circle-check modal-icon"></i>
+                        <img class="check mx-auto mb-4" id="badge" src="">
                         <div class="text-content mt-0">
-                            <img class="icon-badge" id="badge" src="">
-                            <img class="check" id="badge" src="">
-
-                            <p class="station-text mb-2">Station <span class="station_id"></span></p>
-                            <p class="message">
+                            <p class="station-text mb-2 text-dark">Station <span class="station_id"></span></p>
+                            <p class="message text-dark">
                                 Check-in Successful
                             </p>
                         </div>
@@ -186,7 +183,7 @@
                     const lastCharacter = trimmedMessage.charAt(trimmedMessage.length - 1);
 
                     $('.station_id').html(lastCharacter);
-                    $('#badge').attr('src', dynamicImage);
+                    $('#badge').attr('src', '{{ asset('images/check.png') }}');
 
                     if (lastCharacter == 9) {
                         document.getElementById('routeBtn').setAttribute('href', '{{ route('congrats') }}');
@@ -195,6 +192,7 @@
                 },
                 error: function(xhr, status, error) {
                     console.error('Error sending QR Code message:', error);
+                     $('.modal-icon').classList.add('d-none');
                     $('.station-text').html('Failed');
                     $('.message').html('Invalid QR code. Please try again.');
                     $('.check').attr('src', '{{ asset('images/error.webp') }}');

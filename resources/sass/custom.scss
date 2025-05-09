@@ -2669,3 +2669,9 @@ body {
         color : #ffffff;
     }
 }
+
+.register {
+    #form {
+            padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 100px);
+    }
+}

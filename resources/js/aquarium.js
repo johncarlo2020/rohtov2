@@ -173,11 +173,11 @@ function create() {
         // Check if the entities are active and have bodies before processing collision
         if (entity1 && entity1.active && entity1.body && entity2 && entity2.active && entity2.body) {
             // Randomly choose one entity to spin
-            if (Phaser.Math.Between(0, 1) === 0) {
+            /* if (Phaser.Math.Between(0, 1) === 0) {
                 handleCollisionSpin(entity1, this);
             } else {
                 handleCollisionSpin(entity2, this);
-            }
+            } */
 
             // Custom push logic for stronger collisions
             const body1 = entity1.body;

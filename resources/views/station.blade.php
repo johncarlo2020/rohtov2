@@ -169,6 +169,7 @@
                             y: 0.6
                         }
                     });
+                    $('#badge').attr('src', '{{ asset('images/check.png') }}');
 
                        $('#scanCompleteModal').modal('show');
 
@@ -183,7 +184,7 @@
                     const lastCharacter = trimmedMessage.charAt(trimmedMessage.length - 1);
 
                     $('.station_id').html(lastCharacter);
-                    $('#badge').attr('src', '{{ asset('images/check.png') }}');
+
 
                     if (lastCharacter == 9) {
                         document.getElementById('routeBtn').setAttribute('href', '{{ route('congrats') }}');
@@ -192,7 +193,7 @@
                 },
                 error: function(xhr, status, error) {
                     console.error('Error sending QR Code message:', error);
-                     $('.modal-icon').classList.add('d-none');
+                         $('.modal-icon').addClass('d-none');
                     $('.station-text').html('Failed');
                     $('.message').html('Invalid QR code. Please try again.');
                     $('.check').attr('src', '{{ asset('images/error.webp') }}');

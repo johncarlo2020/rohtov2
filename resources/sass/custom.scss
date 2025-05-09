@@ -2684,3 +2684,11 @@ body {
 #stationPage {
    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 100px) !important;
 }
+
+
+.next-button {
+    &:focus {
+        outline: none;
+        color: #fff;
+    }
+}

@@ -443,7 +443,7 @@
             try {
                 canvas = await html2canvas(character, {
                     backgroundColor: null,
-                    scale: 1, // Use a 1:1 pixel scale, ignoring device pixel ratio
+                    scale: 2, // Use a 1:1 pixel scale, ignoring device pixel ratio
                     width: 300, // Explicitly set the desired output canvas width
                     height: 300 // Explicitly set the desired output canvas height
                 });
@@ -735,7 +735,7 @@
                 // frameDuration: 6, // Changed from 0.6 to 0.1 to speed up animation
                 // numFrames: gifFrameDataUrls.length, // Optional, gifshot infers from images array
                 interval: 0.5, // Alternative to frameDuration
-                // sampleInterval: 10, // Lower for better quality, higher for faster processing
+                sampleInterval: 1, // Lower for better quality, higher for faster processing
                 // numWorkers: 2, // Number of web workers to use
             }, function(obj) {
                 if (!obj.error) {

@@ -27,7 +27,7 @@
         />
         <link rel="icon" type="image/png" href="images/logo.svg" />
         <meta name="csrf-token" content="{{ csrf_token() }}" />
-        <title>Rohto</title>
+        <title>Hadalabo Experience</title>
         <!--     Fonts and icons     -->
         <link
             href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700"

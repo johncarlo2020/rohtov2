@@ -123,7 +123,7 @@
                                     id="marketing" required />
                                 <label class="form-check-label" for="marketing">
                                     I agree to receive marketing and promotional
-                                    communications from Rohto Mentholatum Malaysia (RMM) via e-mail and
+                                    communications from Hadalabo Experience Malaysia (RMM) via e-mail and
                                     text messages (including SMS/WhatsApp).
                                 </label>
                             </div>

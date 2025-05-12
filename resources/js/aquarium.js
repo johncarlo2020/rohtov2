@@ -71,7 +71,7 @@ const TEMP_CHAR_SCALE = 0.6; // scale for temp characters (Previously hardcoded 
 // tempCharacter spritesheet frame count (25000px width ÷ 200px frame = 125 frames)
 const TEMP_FRAME_COUNT = 125;
 
-const MAX_TOTAL_CHARACTERS = 10;
+const MAX_TOTAL_CHARACTERS = 15;
 const NUM_DEFAULT_TEMP_CHARACTERS = 5;
 
 function preload() {
@@ -107,6 +107,11 @@ function create() {
     setupCanvas.call(this);
     window.addEventListener("resize", () => resizeGame.call(this));
 
+    this.fishQueue = []; // Initialize the fish queue
+    this.isRealFishEntering = false; // Flag to track if a 'real' fish is in its entry animation
+
+    loadAquariumState.call(this); // Load saved state
+
     // Pusher subscription inside scene to ensure correct context
     Pusher.logToConsole = true;
     const pusher = new Pusher(import.meta.env.VITE_PUSHER_APP_KEY, {
@@ -115,11 +120,21 @@ function create() {
     });
     const channel = pusher.subscribe('baby-channel');
     channel.bind('baby-event', (data) => {
-
-        const imgUrl = `${ASSET}/${data.img}`;
-        addFish.call(this, { spriteKey: 'fish', spriteUrl: imgUrl, frameWidth: FISH_FRAME_WIDTH, frameHeight: FISH_FRAME_HEIGHT, name: data.name, type:data.type });
-
-        console.log(data.img);
+        const fishData = {
+            spriteKey: 'fish', // Pusher events are for 'real' fish
+            spriteUrl: `${ASSET}/${data.img}`,
+            frameWidth: FISH_FRAME_WIDTH,
+            frameHeight: FISH_FRAME_HEIGHT,
+            name: data.name,
+            type: data.type,
+            // Indicate that this fish is new and should perform entry animation
+            isNewFromPusher: true
+        };
+        this.fishQueue.push(fishData);
+        saveAquariumState.call(this); // Save queue
+        // console.log(`Fish '${data.name}' added to queue. Queue size: ${this.fishQueue.length}`);
+        tryProcessFishQueue.call(this);
+        // console.log(data.img); // Original console log, kept for reference
     });
 
     // idle animation for tempCharacter
@@ -217,6 +232,9 @@ function create() {
 
     // add character count display
     this.countText = this.add.text(10, 10, '', { font: '20px Arial', fill: '#ffffff' }).setDepth(10);
+
+    // Initial call to process queue if needed (e.g., for items added before Pusher connects or from localStorage)
+    tryProcessFishQueue.call(this);
 }
 
 function setupCanvas() {
@@ -226,7 +244,8 @@ function setupCanvas() {
 }
 
 // spawn a fish with dynamic sprite and optional name
-function addFish({ spriteKey, spriteUrl, frameWidth, frameHeight, name = null, type = null } = {}, callback) {
+// Modified signature to include onFishSpawnedCallback (original callback) and onEntryCompleteCallback
+function addFish({ spriteKey, spriteUrl, frameWidth, frameHeight, name = null, type = null, isNewFromPusher = false, savedState = null } = {}, onFishSpawnedCallback, onEntryCompleteCallback) {
     if (!this.entities) { this.entities = this.add.group(); }
 
     let effectiveTextureKey;
@@ -267,7 +286,7 @@ function addFish({ spriteKey, spriteUrl, frameWidth, frameHeight, name = null, t
     // but the original `spriteKey` (from addFish args) for behavioral decisions.
     const spawnFishEntity = () => {
         // Max character handling (uses original spriteKey to differentiate fish vs temp)
-        if (this.entities.getLength() >= MAX_TOTAL_CHARACTERS) {
+        if (!savedState && this.entities.getLength() >= MAX_TOTAL_CHARACTERS) { // Don't apply for rehydrated fish
             if (spriteKey === 'fish' || isDynamicSprite) { // Check original intent or if it's a dynamic fish
                 // Find the oldest "fish" (first in the group that is a fish)
                 const oldestFish = this.entities.getChildren().find(entity =>
@@ -280,15 +299,18 @@ function addFish({ spriteKey, spriteUrl, frameWidth, frameHeight, name = null, t
                         oldestFish.bubble.text.destroy();
                     }
                     this.entities.remove(oldestFish, true, true); // Remove from group and destroy
+                    saveAquariumState.call(this); // Save state after removal
                 } else {
                     // Max capacity reached, and all are tempCharacters (or no fish to remove)
                     console.log(`Max capacity (${MAX_TOTAL_CHARACTERS}) reached, but no removable fish found. New fish not added.`);
-                    if (typeof callback === 'function') callback(null);
+                    if (typeof onFishSpawnedCallback === 'function') onFishSpawnedCallback(null);
+                    if (typeof onEntryCompleteCallback === 'function') onEntryCompleteCallback(null); // Ensure queue proceeds
                     return null; // Do not add the new fish
                 }
             } else { // Trying to add a tempCharacter when at max capacity
                 console.log(`Max capacity (${MAX_TOTAL_CHARACTERS}) reached. New temp character not added.`);
-                if (typeof callback === 'function') callback(null);
+                if (typeof onFishSpawnedCallback === 'function') onFishSpawnedCallback(null);
+                if (typeof onEntryCompleteCallback === 'function') onEntryCompleteCallback(null); // Ensure queue proceeds
                 return null; // Do not add new temp character
             }
         }
@@ -296,14 +318,23 @@ function addFish({ spriteKey, spriteUrl, frameWidth, frameHeight, name = null, t
         const scaleFactor = (spriteKey === 'fish') ? FISH_SCALE : TEMP_CHAR_SCALE; // Use new TEMP_CHAR_SCALE
         let startX, startY, targetX, targetY, initialActualScale, initialAngle;
 
-        if (spriteKey === 'fish') { // Entry animation style based on original spriteKey
+        if (savedState) {
+            initialActualScale = savedState.scale;
+            initialAngle = savedState.angle;
+            startX = savedState.x;
+            startY = savedState.y;
+            // No targetX/Y for saved fish, they are already placed.
+        } else if (spriteKey === 'fish') { // Entry animation style based on original spriteKey
             const fishEntryScaleMultiplier = 1.5;
             initialActualScale = scaleFactor * fishEntryScaleMultiplier;
             initialAngle = Phaser.Math.Between(-15, 15); // Slight random tilt
 
-            // Starting position for 'fish': Middle-right, slightly off-screen
-            startX = window.innerWidth + (frameWidth * initialActualScale / 2); // Use actual initial scale for offset
-            startY = window.innerHeight / 2; // Vertical middle
+            // Starting position for 'fish': Randomly from the right, slightly off-screen
+            startX = window.innerWidth + (frameWidth * initialActualScale / 2);
+            // Adjust Y to be random within a margin
+            const marginY = (frameHeight * initialActualScale / 2) + 50; // Ensure fish is fully visible vertically
+            startY = Phaser.Math.Between(marginY, window.innerHeight - marginY);
+
 
             // Target position for 'fish': Center of the screen
             targetX = window.innerWidth / 2;
@@ -340,7 +371,26 @@ function addFish({ spriteKey, spriteUrl, frameWidth, frameHeight, name = null, t
 
         const fish = this.physics.add.sprite(startX, startY, effectiveTextureKey); // Use unique texture key
 
-        if (spriteKey === 'fish') {
+        if (savedState) {
+            fish.setAlpha(1); // Saved fish are already visible
+            fish.setScale(savedState.scale);
+            fish.setAngle(savedState.angle);
+            fish.flipX = savedState.flipX;
+            // Restore dynamic properties
+            fish.baseSpeedMultiplier = savedState.baseSpeedMultiplier;
+            fish.personalFloatSpeed = savedState.personalFloatSpeed;
+            fish.personalFloatFrequency = savedState.personalFloatFrequency;
+            fish.isDarting = savedState.isDarting;
+            fish.dartTimer = savedState.dartTimer;
+            fish.dartCooldown = savedState.dartCooldown;
+            fish.floatTime = savedState.floatTime;
+            fish.floatDirection = savedState.floatDirection;
+
+            if (savedState.velocityX && savedState.velocityY) {
+                 fish.body.setVelocity(savedState.velocityX, savedState.velocityY);
+            }
+
+        } else if (spriteKey === 'fish') {
             fish.setAlpha(0); // Real fish start transparent for their fade-in entry
         } else {
             fish.setAlpha(1); // Temp characters start fully opaque
@@ -350,14 +400,17 @@ function addFish({ spriteKey, spriteUrl, frameWidth, frameHeight, name = null, t
         fish.setAngle(initialAngle);
         fish.isSpinning = false; // Initialize isSpinning flag
 
-        // Movement dynamics properties
-        fish.baseSpeedMultiplier = Phaser.Math.FloatBetween(0.85, 1.15); // Slight variation in base speed
-        fish.personalFloatSpeed = FLOAT_SPEED * Phaser.Math.FloatBetween(0.7, 1.3);
-        fish.personalFloatFrequency = FLOAT_FREQUENCY * Phaser.Math.FloatBetween(0.8, 1.2);
-        fish.isDarting = false;
-        fish.dartTimer = 0;
-        // Initial dart cooldown so they don't all dart at the start
-        fish.dartCooldown = Phaser.Math.FloatBetween(1.0, DART_COOLDOWN_MAX / 2);
+        // Movement dynamics properties (only if not from savedState)
+        if (!savedState) {
+            fish.baseSpeedMultiplier = Phaser.Math.FloatBetween(0.85, 1.15); // Slight variation in base speed
+            fish.personalFloatSpeed = FLOAT_SPEED * Phaser.Math.FloatBetween(0.7, 1.3);
+            fish.personalFloatFrequency = FLOAT_FREQUENCY * Phaser.Math.FloatBetween(0.8, 1.2);
+            fish.isDarting = false;
+            fish.dartTimer = 0;
+            fish.dartCooldown = Phaser.Math.FloatBetween(1.0, DART_COOLDOWN_MAX / 2);
+            fish.floatTime = 0;
+            fish.floatDirection = Math.random() < 0.5 ? 1 : -1;
+        }
 
         // Adjust physics body size and offset to better match visible sprite
         // frameWidth and frameHeight are arguments to addFish, representing the original sprite frame dimensions
@@ -405,64 +458,102 @@ function addFish({ spriteKey, spriteUrl, frameWidth, frameHeight, name = null, t
             }
         }
 
-        // Apply tweens based on original spriteKey
-        if (spriteKey === 'fish') {
-            // Main entry tween for 'fish' type entities
-            this.tweens.add({
-                targets: fish,
-                x: targetX,
-                y: targetY,
-                alpha: 1,                               // Fade in
-                scale: scaleFactor,                     // Animate to its final intended scale (downsizing)
-                angle: 0,                               // Straighten out from the initial tilt
-                duration: 4000,                         // Duration for the entry (Increased from 3000)
-                ease: 'Cubic.InOut',                    // Smooth acceleration and deceleration
-                onComplete: () => {
-                    // Optional: a very subtle "settle" animation once arrived
-                    if (fish && fish.active) {
-                        this.tweens.add({
-                            targets: fish,
-                            scale: scaleFactor * 1.03, // Very subtle bounce
-                            duration: 300,
-                            ease: 'Sine.easeInOut',
-                            yoyo: true
+        // Apply tweens based on original spriteKey (only if not from savedState or if it's a new fish from Pusher)
+        if (!savedState && (isNewFromPusher || spriteKey !== 'fish')) { // Apply entry for new pusher fish or temp chars
+            if (spriteKey === 'fish') {
+                this.isRealFishEntering = true; // Set flag for 'real' fish entry
+                // Main entry tween for 'fish' type entities
+                this.tweens.add({
+                    targets: fish,
+                    x: targetX,
+                    y: targetY,
+                    alpha: 1,                               // Fade in
+                    scale: scaleFactor,                     // Animate to its final intended scale (downsizing)
+                    angle: 0,                               // Straighten out from the initial tilt
+                    duration: 4000,                         // Duration for the entry (Increased from 3000)
+                    ease: 'Cubic.InOut',                    // Smooth acceleration and deceleration
+                    onComplete: () => {
+                        this.isRealFishEntering = false; // Clear flag
+                        // Optional: a very subtle "settle" animation once arrived
+                        if (fish && fish.active) {
+                            this.tweens.add({
+                                targets: fish,
+                                scale: scaleFactor * 1.03, // Very subtle bounce
+                                duration: 300,
+                                ease: 'Sine.easeInOut',
+                                yoyo: true
+                            });
+                        }
+                        if (typeof onEntryCompleteCallback === 'function') {
+                            onEntryCompleteCallback(fish);
+                            saveAquariumState.call(this); // Save state after entry
+                        }
+                    }
+                });
+            } else { // For tempCharacters (original spriteKey starts with 'tempCharacter')
+                // Entry tween: move from off-screen start to in-frame target, and adjust angle (alpha removed)
+                const movementTween = this.tweens.add({
+                    targets: fish,
+                    x: targetX,
+                    y: targetY,
+                    // alpha: 1, // REMOVED - Temp characters no longer fade in via this tween
+                    angle: 0, // Straighten out as it arrives
+                    duration: 3000, // Gentler arrival duration
+                    ease: 'Sine.InOut' // Smoother easing for movement and angle
+                });
+
+                // Scale pop animation: scale up then back to normal - made more subtle
+                this.tweens.add({
+                    targets: fish,
+                    scale: initialActualScale * 1.2, // More pronounced pop (Increased from 1.1)
+                    duration: 700, // Slightly longer duration for the pop (Increased from 500)
+                    ease: 'Sine.easeOut', // Smoother, less bouncy pop
+                    yoyo: true,
+                    delay: 2300 // Start pop as movement nears completion (Adjusted from 1500 due to increased movement duration)
+                });
+
+                if (typeof onEntryCompleteCallback === 'function') {
+                    if (movementTween) {
+                        movementTween.on('complete', () => {
+                            // It's possible the scale pop tween is still running.
+                            // A small delay can help ensure the entity is in a more stable state.
+                            this.time.delayedCall(200, () => { // Small delay for other tweens to settle
+                               if (fish && fish.active) onEntryCompleteCallback(fish);
+                               else onEntryCompleteCallback(null); // Pass null if fish became inactive
+                               saveAquariumState.call(this); // Save state after entry
+                            });
+                        });
+                    } else {
+                        // Fallback if movementTween somehow isn't defined (should not happen)
+                        // Call after the expected duration of movement + pop
+                        this.time.delayedCall(3000 + 700, () => {
+                            if (fish && fish.active) onEntryCompleteCallback(fish);
+                            else onEntryCompleteCallback(null);
+                            saveAquariumState.call(this); // Save state after entry
                         });
                     }
                 }
-            });
-        } else { // For tempCharacters (original spriteKey starts with 'tempCharacter')
-            // Entry tween: move from off-screen start to in-frame target, and adjust angle (alpha removed)
-            this.tweens.add({
-                targets: fish,
-                x: targetX,
-                y: targetY,
-                // alpha: 1, // REMOVED - Temp characters no longer fade in via this tween
-                angle: 0, // Straighten out as it arrives
-                duration: 3000, // Gentler arrival duration
-                ease: 'Sine.InOut' // Smoother easing for movement and angle
-            });
-
-            // Scale pop animation: scale up then back to normal - made more subtle
-            this.tweens.add({
-                targets: fish,
-                scale: initialActualScale * 1.2, // More pronounced pop (Increased from 1.1)
-                duration: 700, // Slightly longer duration for the pop (Increased from 500)
-                ease: 'Sine.easeOut', // Smoother, less bouncy pop
-                yoyo: true,
-                delay: 2300 // Start pop as movement nears completion (Adjusted from 1500 due to increased movement duration)
-            });
+            }
+        } else if (savedState) { // Fish loaded from storage, no full entry animation
+             if (typeof onEntryCompleteCallback === 'function') {
+                onEntryCompleteCallback(fish); // Call immediately
+            }
         }
 
-        // movement properties (based on original spriteKey)
-        if (spriteKey === 'fish') {
-            fish.vx = Phaser.Math.FloatBetween(-FISH_SPEED, FISH_SPEED);
-            fish.vy = Phaser.Math.FloatBetween(-FISH_SPEED, FISH_SPEED);
-        } else {
-            fish.vx = Phaser.Math.FloatBetween(-TEMP_SPEED, TEMP_SPEED);
-            fish.vy = Phaser.Math.FloatBetween(-TEMP_SPEED, TEMP_SPEED);
+        // movement properties (based on original spriteKey) - only if not from savedState and no velocity set yet
+        if (!savedState && (!fish.body || (fish.body.velocity.x === 0 && fish.body.velocity.y === 0))) {
+            if (spriteKey === 'fish') {
+                fish.vx = Phaser.Math.FloatBetween(-FISH_SPEED, FISH_SPEED); // These are legacy, physics body velocity is prime
+                fish.vy = Phaser.Math.FloatBetween(-FISH_SPEED, FISH_SPEED);
+            } else {
+                fish.vx = Phaser.Math.FloatBetween(-TEMP_SPEED, TEMP_SPEED);
+                fish.vy = Phaser.Math.FloatBetween(-TEMP_SPEED, TEMP_SPEED);
+            }
         }
-        fish.floatTime = 0;
-        fish.floatDirection = Math.random() < 0.5 ? 1 : -1;
+        if (!savedState) { // Only set for new fish
+            fish.floatTime = 0;
+            fish.floatDirection = Math.random() < 0.5 ? 1 : -1;
+        }
         // no spin effect, keep horizontal orientation
         // attach bubble only if name provided and type is 'dj'
         if (name && name.trim().length > 0 && type === 'dj') {
@@ -484,15 +575,19 @@ function addFish({ spriteKey, spriteUrl, frameWidth, frameHeight, name = null, t
         // enable arcade physics bounce and collision
         fish.body.setCollideWorldBounds(true);
         fish.body.setBounce(0.92); // Increased bounce for stronger push (was 0.85, then 0.6)
-        // apply initial velocity from vx/vy, now incorporating baseSpeedMultiplier
-        const baseSpeed = (spriteKey === 'fish' ? FISH_SPEED : TEMP_SPEED) * fish.baseSpeedMultiplier;
-        const initialBodyAngle = Phaser.Math.Angle.Random(); // Renamed to avoid conflict with fish.angle
-        fish.body.setVelocity(Math.cos(initialBodyAngle) * baseSpeed, Math.sin(initialBodyAngle) * baseSpeed);
+
+        // apply initial velocity from vx/vy, now incorporating baseSpeedMultiplier (only if not from savedState and no velocity set)
+        if (!savedState && (!fish.body.velocity.x && !fish.body.velocity.y)) {
+            const baseSpeed = (spriteKey === 'fish' ? FISH_SPEED : TEMP_SPEED) * fish.baseSpeedMultiplier;
+            const initialBodyAngle = Phaser.Math.Angle.Random(); // Renamed to avoid conflict with fish.angle
+            fish.body.setVelocity(Math.cos(initialBodyAngle) * baseSpeed, Math.sin(initialBodyAngle) * baseSpeed);
+        }
 
         if (name && spriteKey === 'fish') { // Emit event if it's a named fish (typically dynamic ones)
             this.events.emit('fishAdded', fish);
         }
-        if (typeof callback === 'function') callback(fish);
+        if (typeof onFishSpawnedCallback === 'function') onFishSpawnedCallback(fish);
+        if (!savedState) saveAquariumState.call(this); // Save state when a new fish is fully added
         return fish;
     };
     // dynamically load asset if needed
@@ -509,7 +604,7 @@ function addFish({ spriteKey, spriteUrl, frameWidth, frameHeight, name = null, t
                     repeat: -1
                 });
             }
-            spawnFishEntity(); // Call the main spawning logic
+            spawnFishEntity(); // Call the main spawning logic, which will use the callbacks passed to addFish
         }, this);
         this.load.start();
         return; // Async path, function returns undefined here
@@ -518,7 +613,11 @@ function addFish({ spriteKey, spriteUrl, frameWidth, frameHeight, name = null, t
     // or if it's a preloaded sprite (isDynamicSprite is false)
     if (!isDynamicSprite && !this.textures.exists(effectiveTextureKey)){
         console.error(`Error: Preloaded texture ${effectiveTextureKey} for ${spriteKey} not found.`);
-        if (typeof callback === 'function') callback(null);
+        if (typeof onFishSpawnedCallback === 'function') onFishSpawnedCallback(null);
+        if (typeof onEntryCompleteCallback === 'function') {
+            onEntryCompleteCallback(null); // Ensure queue proceeds
+            saveAquariumState.call(this); // Save queue state even if fish failed
+        }
         return null;
     }
 
@@ -676,4 +775,173 @@ function handleCollisionSpin(entity, scene) {
             }
         }
     });
+}
+
+// New function to process the fish queue
+function tryProcessFishQueue() {
+    if (!this.fishQueue || this.fishQueue.length === 0) {
+        // console.log("Queue is empty or not initialized.");
+        return;
+    }
+
+    if (!this.entities) {
+        // console.log("Entities group not initialized yet, cannot process queue.");
+        return;
+    }
+
+    const nextFishData = this.fishQueue[0]; // Peek at the next fish
+    const isNextFishRealType = nextFishData.spriteKey === 'fish' || !!nextFishData.spriteUrl;
+    const isAquariumFull = this.entities.getLength() >= MAX_TOTAL_CHARACTERS;
+
+    // Scenario 1: Aquarium is NOT full
+    if (!isAquariumFull) {
+        if (!isNextFishRealType) { // Next is a TEMP fish
+            // Spawn the TEMP fish (temp fish don't care about isRealFishEntering flag)
+            const fishDataToSpawn = this.fishQueue.shift(); // Dequeue
+            // console.log(`Spawning TEMP fish '${fishDataToSpawn.spriteKey}' (aquarium not full). Queue: ${this.fishQueue.length}`);
+            addFish.call(this,
+                fishDataToSpawn,
+                null, // onFishSpawnedCallback
+                (spawnedFish) => { // onEntryCompleteCallback
+                    tryProcessFishQueue.call(this); // Attempt to process next in queue
+                }
+            );
+        } else { // Next is a REAL fish
+            if (!this.isRealFishEntering) { // And no other real fish is currently entering
+                // Spawn the REAL fish
+                const fishDataToSpawn = this.fishQueue.shift(); // Dequeue
+                // console.log(`Spawning REAL fish '${fishDataToSpawn.name}' (aquarium not full, no other real fish entering). Queue: ${this.fishQueue.length}`);
+                addFish.call(this,
+                    fishDataToSpawn,
+                    null, // onFishSpawnedCallback
+                    (spawnedFish) => { // onEntryCompleteCallback
+                        // isRealFishEntering is handled by addFish's animation onComplete
+                        tryProcessFishQueue.call(this); // Attempt to process next in queue
+                    }
+                );
+            } else {
+                // HOLD: Aquarium not full, next is REAL, but another REAL fish is currently entering.
+                // console.log(`Holding queue (not full): Next is REAL ('${nextFishData.name}'), but a REAL fish is already entering. Queue: ${this.fishQueue.length}`);
+            }
+        }
+    }
+    // Scenario 2: Aquarium IS full
+    else { // isAquariumFull is true
+        if (!isNextFishRealType) { // Next is a TEMP fish
+            // Discard the TEMP fish (aquarium is full, temp fish don't replace)
+            const discardedTempFish = this.fishQueue.shift(); // Dequeue and discard
+            saveAquariumState.call(this); // Save queue after discarding
+            // console.log(`Aquarium full. Discarding TEMP fish from queue: ${discardedTempFish.spriteKey}. Queue: ${this.fishQueue.length}`);
+            tryProcessFishQueue.call(this); // Attempt to process the next item immediately
+        } else { // Next is a REAL fish
+            if (!this.isRealFishEntering) { // And no other real fish is currently entering
+                // Attempt to spawn the REAL fish (addFish will handle replacement logic)
+                const fishDataToSpawn = this.fishQueue.shift(); // Dequeue
+                // console.log(`Spawning REAL fish '${fishDataToSpawn.name}' (aquarium full, attempting replacement, no other real fish entering). Queue: ${this.fishQueue.length}`);
+                addFish.call(this,
+                    fishDataToSpawn,
+                    null, // onFishSpawnedCallback
+                    (spawnedFish) => { // onEntryCompleteCallback
+                        // isRealFishEntering is handled by addFish's animation onComplete
+                        tryProcessFishQueue.call(this); // Attempt to process next in queue
+                    }
+                );
+            } else {
+                // HOLD: Aquarium full, next is REAL, but another REAL fish is currently entering.
+                // console.log(`Holding queue (full): Next is REAL ('${nextFishData.name}'), but a REAL fish is already entering. Queue: ${this.fishQueue.length}`);
+            }
+        }
+    }
+}
+
+// Local Storage Functions
+const AQUARIUM_STATE_KEY = 'aquariumState';
+
+function saveAquariumState() {
+    if (!this.entities) return;
+
+    const simplifiedEntities = this.entities.getChildren().map(entity => {
+        if (!entity || !entity.texture) return null; // Skip if entity is invalid
+        return {
+            spriteKey: entity.texture.key.startsWith('dyn_') ? (entity.texture.key.includes('_fish_') ? 'fish' : 'unknown_dyn') : entity.texture.key, // Store original intent
+            spriteUrl: entity.texture.key.startsWith('dyn_') ? entity.texture.url : null, // Assuming texture.url holds it for dynamic ones
+            frameWidth: entity.frame ? entity.frame.cutWidth : (entity.texture.key === 'fish' || entity.texture.key.startsWith('dyn_fish_') ? FISH_FRAME_WIDTH : TEMP_CHAR_FRAME_WIDTH),
+            frameHeight: entity.frame ? entity.frame.cutHeight : (entity.texture.key === 'fish' || entity.texture.key.startsWith('dyn_fish_') ? FISH_FRAME_HEIGHT : TEMP_CHAR_FRAME_HEIGHT),
+            name: entity.bubble ? entity.bubble.text.text : null,
+            type: entity.bubble ? (entity.bubble.text.text.includes("DJ") ? "dj" : null) : null, // This is a guess, adjust if type is stored elsewhere
+            x: entity.x,
+            y: entity.y,
+            scale: entity.scale,
+            angle: entity.angle,
+            flipX: entity.flipX,
+            velocityX: entity.body ? entity.body.velocity.x : 0,
+            velocityY: entity.body ? entity.body.velocity.y : 0,
+            // Movement dynamics
+            baseSpeedMultiplier: entity.baseSpeedMultiplier,
+            personalFloatSpeed: entity.personalFloatSpeed,
+            personalFloatFrequency: entity.personalFloatFrequency,
+            isDarting: entity.isDarting,
+            dartTimer: entity.dartTimer,
+            dartCooldown: entity.dartCooldown,
+            floatTime: entity.floatTime,
+            floatDirection: entity.floatDirection,
+            // Store effectiveTextureKey to help with reloading dynamic sprites
+            effectiveTextureKey: entity.texture.key
+        };
+    }).filter(e => e !== null);
+
+    const state = {
+        fishQueue: this.fishQueue,
+        entities: simplifiedEntities
+    };
+
+    try {
+        localStorage.setItem(AQUARIUM_STATE_KEY, JSON.stringify(state));
+        // console.log('Aquarium state saved.');
+    } catch (e) {
+        console.error('Failed to save aquarium state:', e);
+    }
+}
+
+function loadAquariumState() {
+    try {
+        const savedStateString = localStorage.getItem(AQUARIUM_STATE_KEY);
+        if (savedStateString) {
+            const savedState = JSON.parse(savedStateString);
+            if (savedState.fishQueue) {
+                this.fishQueue = savedState.fishQueue;
+                // console.log('Fish queue loaded:', this.fishQueue.length);
+            }
+            if (savedState.entities && this.entities) {
+                // console.log('Loading entities from storage:', savedState.entities.length);
+                savedState.entities.forEach(entityData => {
+                    if (entityData) {
+                        // Need to ensure texture is available before creating sprite
+                        const isDynamic = !!entityData.spriteUrl;
+                        if (isDynamic && !this.textures.exists(entityData.effectiveTextureKey)) {
+                            this.load.spritesheet(entityData.effectiveTextureKey, entityData.spriteUrl, { frameWidth: entityData.frameWidth, frameHeight: entityData.frameHeight });
+                            this.load.once('complete', () => {
+                                if (!this.anims.exists(`${entityData.effectiveTextureKey}_anim`)) {
+                                     this.anims.create({
+                                        key: `${entityData.effectiveTextureKey}_anim`,
+                                        frames: this.anims.generateFrameNumbers(entityData.effectiveTextureKey, { start: 0, end: (entityData.spriteKey === 'fish' ? FISH_FRAME_COUNT : TEMP_FRAME_COUNT) - 1 }),
+                                        frameRate: FRAME_RATE_NORMAL,
+                                        repeat: -1
+                                    });
+                                }
+                                addFish.call(this, { ...entityData, savedState: entityData }, null, null);
+                            });
+                            this.load.start();
+                        } else {
+                             // For preloaded or already loaded dynamic textures
+                            addFish.call(this, { ...entityData, savedState: entityData }, null, null);
+                        }
+                    }
+                });
+            }
+        }
+    } catch (e) {
+        console.error('Failed to load aquarium state:', e);
+        this.fishQueue = []; // Reset queue on error
+    }
 }

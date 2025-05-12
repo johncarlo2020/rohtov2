@@ -56,6 +56,14 @@ const DART_COOLDOWN_MIN = 4.0;      // Minimum cooldown between darts (seconds)
 const DART_COOLDOWN_MAX = 10.0;     // Maximum cooldown between darts (seconds)
 const MAX_NORMAL_SPEED_FACTOR = 1.3;// Max speed during normal floating (1.3x base speed)
 
+// Entry Bubble Animation Constants
+const ENTRY_BUBBLE_SPRITESHEET_KEY = 'entryBubbleSheet';
+const ENTRY_BUBBLE_ANIM_KEY = 'entryBubblePopAnim';
+const ENTRY_BUBBLE_FRAME_WIDTH = 400;
+const ENTRY_BUBBLE_FRAME_HEIGHT = 400;
+const ENTRY_BUBBLE_FRAME_COUNT = 9;
+const ENTRY_BUBBLE_ANIM_FRAMERATE = 10; // FPS, results in 3 second animation (30 frames / 10 FPS) - SLOWED DOWN from 20
+
 // fish spritesheet settings
 const FISH_FRAME_WIDTH = 300;
 const FISH_FRAME_HEIGHT = 300;
@@ -77,6 +85,13 @@ const NUM_DEFAULT_TEMP_CHARACTERS = 5;
 function preload() {
     this.load.video("aquarium", `${ASSET}/images/hadalabobabies/Aqua HL v2.mp4`);
     this.load.image("bubble", `${ASSET}/images/bubble.webp`);
+
+    // Load the entry bubble spritesheet
+    this.load.spritesheet(
+        ENTRY_BUBBLE_SPRITESHEET_KEY,
+        `${ASSET}/images/bubble_animation.webp`,
+        { frameWidth: ENTRY_BUBBLE_FRAME_WIDTH, frameHeight: ENTRY_BUBBLE_FRAME_HEIGHT, endFrame: ENTRY_BUBBLE_FRAME_COUNT - 1 }
+    );
 
     // load fish as spritesheet instead of static image
     this.load.spritesheet(
@@ -155,6 +170,14 @@ function create() {
     this.anims.create({ key: "idle3", frames: this.anims.generateFrameNumbers("tempCharacter3", { start: 0, end: TEMP_FRAME_COUNT - 1 }), frameRate: FRAME_RATE_FAST, repeat: -1 });
     this.anims.create({ key: "idle4", frames: this.anims.generateFrameNumbers("tempCharacter4", { start: 0, end: TEMP_FRAME_COUNT - 1 }), frameRate: FRAME_RATE_FAST, repeat: -1 });
     this.anims.create({ key: "idle5", frames: this.anims.generateFrameNumbers("tempCharacter5", { start: 0, end: TEMP_FRAME_COUNT - 1 }), frameRate: FRAME_RATE_FAST, repeat: -1 });
+
+    // Create the entry bubble animation
+    this.anims.create({
+        key: ENTRY_BUBBLE_ANIM_KEY,
+        frames: this.anims.generateFrameNumbers(ENTRY_BUBBLE_SPRITESHEET_KEY, { start: 0, end: ENTRY_BUBBLE_FRAME_COUNT - 1 }),
+        frameRate: ENTRY_BUBBLE_ANIM_FRAMERATE,
+        repeat: 0 // Play once
+    });
 
     // unify all characters (temps & real fish) into one physics group
     this.entities = this.physics.add.group();
@@ -410,6 +433,7 @@ function addFish({ spriteKey, spriteUrl, frameWidth, frameHeight, name = null, t
             fish.dartCooldown = Phaser.Math.FloatBetween(1.0, DART_COOLDOWN_MAX / 2);
             fish.floatTime = 0;
             fish.floatDirection = Math.random() < 0.5 ? 1 : -1;
+            fish.isPerformingEntryAnimation = false; // Initialize the flag
         }
 
         // Adjust physics body size and offset to better match visible sprite
@@ -462,34 +486,129 @@ function addFish({ spriteKey, spriteUrl, frameWidth, frameHeight, name = null, t
         if (!savedState && (isNewFromPusher || spriteKey !== 'fish')) { // Apply entry for new pusher fish or temp chars
             if (spriteKey === 'fish') {
                 this.isRealFishEntering = true; // Set flag for 'real' fish entry
-                // Main entry tween for 'fish' type entities
+                fish.isPerformingEntryAnimation = true;
+                fish.body.enable = false; // Disable physics body during tween-controlled entry
+
+                // Ensure fish is rendered on top of the bubble
+                fish.setDepth(11); // Higher depth for fish
+
+                // Create the entry bubble
+                const entryBubble = this.add.sprite(fish.x, fish.y, ENTRY_BUBBLE_SPRITESHEET_KEY);
+                entryBubble.setDepth(10); // Lower depth for bubble
+                entryBubble.setAlpha(0.8); // DEBUG: Make it slightly transparent & ensure alpha > 0
+                entryBubble.setFrame(0); // Show the first frame (intact bubble)
+
+                // Define intermediate points for dynamic movement
+                const screenCenterX = window.innerWidth / 2;
+                const screenCenterY = window.innerHeight / 2;
+                const wanderRange = 120; // How far to wander from the center
+                // initialActualScale is the starting scale (e.g., scaleFactor * 1.5)
+                // scaleFactor is the final target scale for the fish
+
+                // Stage 1 target: move towards a random point near center, partially scale down
+                const intermediateX1 = Phaser.Math.Between(screenCenterX - wanderRange, screenCenterX + wanderRange);
+                const intermediateY1 = Phaser.Math.Between(screenCenterY - wanderRange / 1.5, screenCenterY + wanderRange / 1.5);
+                const scaleStage1 = (initialActualScale + scaleFactor) / 2; // Midway scale
+
+                // Stage 2 target: move to another random point near center, scale to final size
+                const intermediateX2 = Phaser.Math.Between(screenCenterX - wanderRange / 1.5, screenCenterX + wanderRange / 1.5);
+                const intermediateY2 = Phaser.Math.Between(screenCenterY - wanderRange, screenCenterY + wanderRange);
+
+                const entryDurationStage1 = 3000; // Duration for the first part of the movement
+                const entryDurationStage2 = 5000; // Duration for the second part of the movement
+                const bubbleStaticHoldDuration = 5000; // Total time fish moves before bubble pop sequence starts
+                                                    // This is separate from the tweens' duration.
+                                                    // The bubble pop animation itself takes 3s (30frames / 10fps)
+
+                // Tween for Stage 1 movement
                 this.tweens.add({
                     targets: fish,
-                    x: targetX,
-                    y: targetY,
-                    alpha: 1,                               // Fade in
-                    scale: scaleFactor,                     // Animate to its final intended scale (downsizing)
-                    angle: 0,                               // Straighten out from the initial tilt
-                    duration: 4000,                         // Duration for the entry (Increased from 3000)
-                    ease: 'Cubic.InOut',                    // Smooth acceleration and deceleration
-                    onComplete: () => {
-                        this.isRealFishEntering = false; // Clear flag
-                        // Optional: a very subtle "settle" animation once arrived
-                        if (fish && fish.active) {
-                            this.tweens.add({
-                                targets: fish,
-                                scale: scaleFactor * 1.03, // Very subtle bounce
-                                duration: 300,
-                                ease: 'Sine.easeInOut',
-                                yoyo: true
-                            });
+                    x: intermediateX1,
+                    y: intermediateY1,
+                    alpha: 1, // Fade in during the first stage
+                    scale: scaleStage1,
+                    angle: Phaser.Math.Between(-12, 12), // Initial turn
+                    duration: entryDurationStage1,
+                    ease: 'Sine.InOut',
+                    onUpdate: () => {
+                        if (entryBubble.active) {
+                            entryBubble.setPosition(fish.x, fish.y);
+                            entryBubble.setScale(fish.scale * 1.05); // Bubble scales with fish
                         }
-                        if (typeof onEntryCompleteCallback === 'function') {
-                            onEntryCompleteCallback(fish);
-                            saveAquariumState.call(this); // Save state after entry
+                    },
+                    onComplete: () => {
+                        // Tween for Stage 2 movement
+                        this.tweens.add({
+                            targets: fish,
+                            x: intermediateX2,
+                            y: intermediateY2,
+                            scale: scaleFactor, // Arrive at final scale
+                            angle: 0, // Straighten out
+                            duration: entryDurationStage2,
+                            ease: 'Sine.InOut',
+                            onUpdate: () => {
+                                if (entryBubble.active) {
+                                    entryBubble.setPosition(fish.x, fish.y);
+                                    entryBubble.setScale(fish.scale * 1.05);
+                                }
+                            },
+                            onComplete: () => {
+                                // Fish movement is complete. Now hold the static bubble, then play pop animation.
+                                // The total movement time is entryDurationStage1 + entryDurationStage2.
+                                // The bubble pop animation is triggered by a timer that starts when fish is created.
+                                // The original delayedCall for bubble pop is 3000ms. We need to ensure it fires *after* these movements.
+                                // Let's adjust the bubble pop trigger logic slightly.
+                                // The bubble pop animation will be triggered by the entryBubble.on('animationcomplete') of a *dummy* short animation
+                                // or simply by the main delayedCall if we ensure its timing is correct.
+
+                                // The existing delayedCall for bubble pop is: this.time.delayedCall(3000, ...)
+                                // This should remain, as it dictates when the *pop sequence starts* relative to bubble creation.
+                                // The fish movement tweens (1.5s + 1.5s = 3s) will happen concurrently with this timer.
+                                // So, the bubble will show its first frame for 3s, during which the fish moves, then the pop animation plays.
+                            }
+                        });
+                    }
+                });
+
+                // This delayedCall initiates the bubble pop animation sequence after 3 seconds
+                // The fish completes its 2-stage movement within these 3 seconds.
+                this.time.delayedCall(bubbleStaticHoldDuration, () => {
+                    if (entryBubble.active) {
+                        entryBubble.play(ENTRY_BUBBLE_ANIM_KEY);
+                    }
+                }, [], this);
+
+                // This onComplete is for the BUBBLE's pop animation
+                entryBubble.on('animationcomplete', () => {
+                    if (entryBubble.active) {
+                        entryBubble.destroy();
+                    }
+
+                    // Fish finalization logic, happens after bubble pops
+                    if (fish.active) {
+                        fish.body.enable = true;
+                        const baseSpeed = FISH_SPEED * fish.baseSpeedMultiplier;
+                        const initialBodyAngle = Phaser.Math.Angle.Random();
+                        fish.body.setVelocity(Math.cos(initialBodyAngle) * baseSpeed, Math.sin(initialBodyAngle) * baseSpeed);
+                        fish.isPerformingEntryAnimation = false;
+                    }
+
+                    this.isRealFishEntering = false;
+                    saveAquariumState.call(this);
+                    tryProcessFishQueue.call(this);
+
+                    if (typeof onEntryCompleteCallback === 'function') {
+                        onEntryCompleteCallback(fish.active ? fish : null);
+                    }
+
+                    if (fish.active && name && name.trim().length > 0 && type === 'dj') {
+                        if (!fish.bubble && !savedState) {
+                            createNameBubble.call(this, fish, name);
+                            saveAquariumState.call(this);
                         }
                     }
                 });
+                // NOTE: The original single large tween for fish entry is now replaced by the two-stage tween above.
             } else { // For tempCharacters (original spriteKey starts with 'tempCharacter')
                 // Entry tween: move from off-screen start to in-frame target, and adjust angle (alpha removed)
                 const movementTween = this.tweens.add({
@@ -535,6 +654,7 @@ function addFish({ spriteKey, spriteUrl, frameWidth, frameHeight, name = null, t
                 }
             }
         } else if (savedState) { // Fish loaded from storage, no full entry animation
+             fish.isPerformingEntryAnimation = false; // Ensure flag is false for restored fish
              if (typeof onEntryCompleteCallback === 'function') {
                 onEntryCompleteCallback(fish); // Call immediately
             }
@@ -577,7 +697,7 @@ function addFish({ spriteKey, spriteUrl, frameWidth, frameHeight, name = null, t
         fish.body.setBounce(0.92); // Increased bounce for stronger push (was 0.85, then 0.6)
 
         // apply initial velocity from vx/vy, now incorporating baseSpeedMultiplier (only if not from savedState and no velocity set)
-        if (!savedState && (!fish.body.velocity.x && !fish.body.velocity.y)) {
+        if (!savedState && fish.body && (fish.body.velocity.x === 0 && fish.body.velocity.y === 0) && !fish.isPerformingEntryAnimation) {
             const baseSpeed = (spriteKey === 'fish' ? FISH_SPEED : TEMP_SPEED) * fish.baseSpeedMultiplier;
             const initialBodyAngle = Phaser.Math.Angle.Random(); // Renamed to avoid conflict with fish.angle
             fish.body.setVelocity(Math.cos(initialBodyAngle) * baseSpeed, Math.sin(initialBodyAngle) * baseSpeed);

@@ -254,7 +254,7 @@ function create() {
     }, null, this);
 
     // add character count display
-    this.countText = this.add.text(10, 10, '', { font: '20px Arial', fill: '#ffffff' }).setDepth(10);
+    // this.countText = this.add.text(10, 10, '', { font: '20px Arial', fill: '#D9D9D9' }).setDepth(10);
 
     // Initial call to process queue if needed (e.g., for items added before Pusher connects or from localStorage)
     tryProcessFishQueue.call(this);
@@ -770,7 +770,7 @@ function update(time, delta) {
     const moveFactor = dt; // use direct dt since vx/vy are in pixels/sec
 
     const numEntities = this.entities ? this.entities.getLength() : 0;
-    this.countText.setText(`Count: ${numEntities}`);
+    // this.countText.setText(`Count: ${numEntities}`);
 
     // update entities group only when there are entities
     if (this.entities && this.entities.getChildren().length > 0) {

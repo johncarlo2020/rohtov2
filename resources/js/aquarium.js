@@ -485,18 +485,17 @@ function addFish({ spriteKey, spriteUrl, frameWidth, frameHeight, name = null, t
         // Apply tweens based on original spriteKey (only if not from savedState or if it's a new fish from Pusher)
         if (!savedState && (isNewFromPusher || spriteKey !== 'fish')) { // Apply entry for new pusher fish or temp chars
             if (spriteKey === 'fish') {
-                this.isRealFishEntering = true; // Set flag for 'real' fish entry
-                fish.isPerformingEntryAnimation = true;
-                fish.body.enable = false; // Disable physics body during tween-controlled entry
+                this.isRealFishEntering = true;                fish.isPerformingEntryAnimation = true;
+                fish.body.enable = false; // Disable physics during entry tween
 
-                // Ensure fish is rendered on top of the bubble
-                fish.setDepth(11); // Higher depth for fish
+                // Ensure bubble is rendered on top of the fish
+                fish.setDepth(10); // Fish is behind the bubble
 
                 // Create the entry bubble
                 const entryBubble = this.add.sprite(fish.x, fish.y, ENTRY_BUBBLE_SPRITESHEET_KEY);
-                entryBubble.setDepth(10); // Lower depth for bubble
-                entryBubble.setAlpha(0.8); // DEBUG: Make it slightly transparent & ensure alpha > 0
-                entryBubble.setFrame(0); // Show the first frame (intact bubble)
+                entryBubble.setFrame(0); // Start with the first frame of the bubble
+                entryBubble.setScale(fish.scale * 1.05); // Slightly larger than the fish
+                entryBubble.setDepth(13); // Bubble is in front of the fish and name bubble
 
                 // Define intermediate points for dynamic movement
                 const screenCenterX = window.innerWidth / 2;
@@ -680,6 +679,7 @@ function addFish({ spriteKey, spriteUrl, frameWidth, frameHeight, name = null, t
             // Replace circle with the loaded bubble image
             const bubbleImage = this.add.image(fish.x + BUBBLE_OFFSET_X, fish.y + BUBBLE_OFFSET_Y, 'bubble');
             bubbleImage.setScale(0.5);
+            bubbleImage.setDepth(11); // Name bubble image above fish
             // It might be necessary to scale the bubble image if its original size is not appropriate
             // bubbleImage.setScale(0.5); // Example: scale to 50%
             // Adjust BUBBLE_RADIUS or use image dimensions for text centering if needed
@@ -688,7 +688,7 @@ function addFish({ spriteKey, spriteUrl, frameWidth, frameHeight, name = null, t
                 fontFamily: 'Arial',
                 fontStyle: 'bold',
                 fill: '#14477A' })
-                .setOrigin(0.5).setDepth(1);
+                .setOrigin(0.5).setDepth(12); // Name text above name bubble image
             fish.bubble = { bubble: bubbleImage, text: textObj }; // Store image as bubble
         }
         this.entities.add(fish);

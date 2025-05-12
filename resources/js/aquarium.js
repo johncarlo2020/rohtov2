@@ -930,13 +930,16 @@ function tryProcessFishQueue() {
             if (!this.isRealFishEntering) { // And no other real fish is currently entering
                 // Spawn the REAL fish
                 const fishDataToSpawn = this.fishQueue.shift(); // Dequeue
-                // console.log(`Spawning REAL fish '${fishDataToSpawn.name}' (aquarium not full, no other real fish entering). Queue: ${this.fishQueue.length}`);
+                this.isRealFishEntering = true; // Set flag BEFORE addFish
+                // console.log(`Set isRealFishEntering=true. Spawning REAL fish '${fishDataToSpawn.name}' (aquarium not full). Queue: ${this.fishQueue.length}`);
                 addFish.call(this,
                     fishDataToSpawn,
                     null, // onFishSpawnedCallback
-                    (spawnedFish) => { // onEntryCompleteCallback
-                        // isRealFishEntering is handled by addFish's animation onComplete
-                        tryProcessFishQueue.call(this); // Attempt to process next in queue
+                    (spawnedFish) => { // onEntryCompleteCallback for REAL fish
+                        // addFish's internal animation complete handler for real fish
+                        // already sets isRealFishEntering = false and calls tryProcessFishQueue.
+                        // This callback is now primarily for consistency in addFish's signature.
+                        // console.log(`Entry complete for REAL fish: ${fishDataToSpawn.name}. Queue processing handled by addFish.`);
                     }
                 );
             } else {
@@ -957,13 +960,16 @@ function tryProcessFishQueue() {
             if (!this.isRealFishEntering) { // And no other real fish is currently entering
                 // Attempt to spawn the REAL fish (addFish will handle replacement logic)
                 const fishDataToSpawn = this.fishQueue.shift(); // Dequeue
-                // console.log(`Spawning REAL fish '${fishDataToSpawn.name}' (aquarium full, attempting replacement, no other real fish entering). Queue: ${this.fishQueue.length}`);
+                this.isRealFishEntering = true; // Set flag BEFORE addFish
+                // console.log(`Set isRealFishEntering=true. Spawning REAL fish '${fishDataToSpawn.name}' (aquarium full, attempting replacement). Queue: ${this.fishQueue.length}`);
                 addFish.call(this,
                     fishDataToSpawn,
                     null, // onFishSpawnedCallback
-                    (spawnedFish) => { // onEntryCompleteCallback
-                        // isRealFishEntering is handled by addFish's animation onComplete
-                        tryProcessFishQueue.call(this); // Attempt to process next in queue
+                    (spawnedFish) => { // onEntryCompleteCallback for REAL fish
+                        // addFish's internal animation complete handler for real fish
+                        // already sets isRealFishEntering = false and calls tryProcessFishQueue.
+                        // This callback is now primarily for consistency in addFish's signature.
+                        // console.log(`Entry complete for REAL fish: ${fishDataToSpawn.name} (replacement attempt). Queue processing handled by addFish.`);
                     }
                 );
             } else {

@@ -14,61 +14,46 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
         rel="stylesheet" />
 </head>
-<style>
-    body,
-    html {
-        height: 100%;
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-        font-family: "Nunito", sans-serif;
-        font-size: 16px;
-    }
 
-    .container-fluid {
-        flex: 1;
-    }
-
-    footer {
-        font-size: 12px;
-        text-align: center;
-        padding: 10px 0;
-    }
-
-    footer a {
-        text-decoration: none;
-        color: inherit;
-    }
-    .welcome_img {
-        width: 80vw;
-        height: auto;
-        object-fit: contain
-    }
-
-    .welcome-sign-btn {
-        width: 40vw !important;
-        min-width: unset !important;
-    }
-</style>
-
-<body class="antialiased welcome-page main-background hadalabo">
-    <div class="py-5 container-fluid main-content">
-        <div class="row mt-5">
-            <div class="col-12 d-flex justify-content-center align-items-center">
-                <img class="welcome_img" src="{{ asset('images/hadalabobabies/welcome_image.webp') }}" alt="" />
-            </div>
-            <div class="text-center bottom-text-welcome col-12 mt-5">
-                <a href="{{ route('register') }}" class="home-btn welcome-sign-btn btn rounded-pill"><span>Sign Up</span></a>
-                <p class="mt-5 p-0 m-0">Already Registered</p>
-                <p class="m-0 p-0">
-                    Please Login
-                    <a class="underline" href="{{ route('login') }}" class="">here</a>
-                </p>
+<body class="antialiased welcome-page">
+    <div class="content-box main-background">
+        <div class="container">
+            <div>
+                @include('components.branding')
             </div>
         </div>
-    </div>
-    <div class="register-main">
-        <a class="footer-text" href="https://wowsome.com.my/">Powered by WOWSOME®2025</a>
+        <div class="ocean-img mb-3">
+            <img src="{{ asset('files/main/ocean_photo.webp') }}" />
+        </div>
+        <div class="info-box px-5 mb-3">
+            <p class="pharagraph-text text-center">Discover our very first <strong>Ocean or Plastic</strong> Roadshow—.
+                an immersive exploration of where your plastic ends
+                up
+                and how small choices
+                lead to lasting impact
+            </p>
+            <p class="pharagraph-text text-center">
+                As part of the journey, uncover beauty that cares: enjoy personalised services for hair, skin, and body,
+                and discover
+                thoughtful ways to make choices that are gentler on the planet.
+            </p>
+            <img class="info-img mb-3" src="{{ asset('files/main/welcome_info_img.webp') }}" />
+            <p class="pharagraph-text text-center mb-0">Date: 27 May – 2 June 2025</p>
+            <p class="pharagraph-text text-center mb-0">
+                Time: 10am – 10pm</p>
+            <p class="pharagraph-text text-center mb-0">
+                Venue: IOI City Mall, Putrajaya –</p>
+            <p class="pharagraph-text text-center mb-0">
+                West Court on Ground Floor</p>
+        </div>
+        <div class="button-container px-4">
+            <a href="" id="routeBtn" class="button-primary button mb-3">
+               Sign Up
+            </a>
+              <a href="" id="routeBtn" class="button-secondary button">
+                Sign In
+            </a>
+        </div>
     </div>
 </body>
 

@@ -1,5 +1,5 @@
 <a href="{{ route('dashboard') }}">
     <div class="branding">
-        <img class="logo" src="{{ asset('images/hadalabobabies/logo.webp') }}" alt="" />
+        <img class="logo" src="{{ asset('files/main/logo.webp') }}" alt="" />
     </div>
 </a>

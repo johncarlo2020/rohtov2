@@ -1,6 +1,6 @@
 //add font to all elements
 .content-box {
-    font-family: 'Myriad Pro';
+    font-family: "Myriad Pro";
     .ocean-img {
         width: 100%;
         height: 332px;
@@ -23,4 +23,55 @@
             object-fit: contain;
         }
     }
+
+  .date-grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px; // Adjust gap as needed
+    margin-bottom: 20px;
+}
+
+.date-radio-input {
+    display: none;
+}
+
+.date-radio-label {
+    display: block;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 13px;
+    background-color: #F2E9DA;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+
+    &:hover {
+        background-color: #e9ecef;
+        border-color: #bbb;
+    }
+
+    &.disabled {
+        background-color: #e9ecef;
+        color: #6c757d;
+        cursor: not-allowed;
+    }
+}
+
+.date-radio-input:checked + .date-radio-label {
+    background-color: #F2BC00; // Selected background color
+    color: rgb(0, 0, 0);
+    border-color: #F2BC00;
+}
+
+.qr-code {
+    width: 100%;
+    height:  140px;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+}
 }

@@ -25,14 +25,15 @@ class StationController extends Controller
         $otp = implode('', $request->input('otp'));
 
         if ($otp == auth()->user()->otp) {
+
             // Success: Clear session OTP
             Session::forget(['otp', 'otp_sent_at']);
             $user= auth()->user();
             $user->otp_verified = 1;
             $user->save();
 
-            $data = $this->createSampleProfile();
-            dd($data);
+            $data = GlobalHelper::createSampleProfile();
+             dd($data);
 
             return redirect(RouteServiceProvider::HOME);
         }
@@ -55,74 +56,7 @@ class StationController extends Controller
         return $user;
     }
 
-    public function createSampleProfile()
-    {
-        // Retrieve the authenticated user's details
-        $user = Auth::user();
-
-        // Prepare the postfield data
-        $postfield = [
-            'first_name' => $user->fname,
-            'last_name' => $user->lname,
-            'number' => $user->number,
-            'email' => $user->email,
-            'source_id' => '4871', // Static value as in your example
-        ];
-
-        // Determine subscription status
-        $subscriptions = ['sms', 'email', 'call', 'whatsapp'];
-
-
-        // Set up the mobile number based on the country code
-
-        // $postfield['number'] = ltrim($postfield['number'], '+6');
-
-
-        // Prepare API post data
-        $postfield_api = [
-            'hpno' => $postfield['number'],
-            'firstname' => $postfield['first_name'],
-            'lastname' => $postfield['last_name'],
-            'email' => $postfield['email'],
-            'subscription' => $subscriptions,
-            'source_id' => $postfield['source_id'],
-        ];
-        //   dd($postfield_api);
-
-        // Determine API URL and client credentials based on mode
-        // if ($this->mode == 'test') {
-            $apiUrl = 'https://loccitanemy-uat.crmxs.com/?xs_app=';
-            $clientId = '5vus5fnhdeeghff5de8c2nrq46fhy8nh';
-            $clientSecret = 'sum388my7amm8jp7k3ru5pyb4hp8g87g';
-        // } elseif ($this->mode == 'prod') {
-        //     $apiUrl = 'https://loccitanemy.crmxs.com/?xs_app=';
-        //     $clientId = '5vus5fnhdeeghff5de8c2nrq46fhy8nh';
-        //     $clientSecret = 'sum388my7amm8jp7k3ru5pyb4hp8g87g';
-        // }
-
-        // Make the API request using Laravel's HTTP client
-        $response = Http::withHeaders([
-            'client_id' => $clientId,
-            'client_secret' => $clientSecret,
-            'Content-Type' => 'text/plain', // match API requirement
-        ])->withBody(
-            json_encode($postfield_api), 'text/plain'
-        )->post($apiUrl . 'endemande.createCustomerByEvent');
-        // dd($response);
-
-        // Handle the response
-        if ($response->successful()) {
-            return response()->json([
-                'message' => 'User profile sent successfully to CPRV.',
-                'response' => $response->json()
-            ]);
-        }
-
-        return response()->json([
-            'message' => 'Failed to send user profile to CPRV.',
-            'error' => $response->body()
-        ], $response->status());
-    }
+   
     public function uploadBaby(Request $request)
     {
         $request->validate([

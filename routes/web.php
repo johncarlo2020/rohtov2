@@ -21,6 +21,15 @@ Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
+Route::get('/otp', function () {
+    return view('otp');
+})->name('otp');
+
+// add the apointment blade
+Route::get('/appointment', function () {
+    return view('appointment');
+})->name('appointment');
+
 Route::get('/ipad', [IpadController::class, 'index'])->name('ipad.index');
 
 Route::get('/upload-baby', function () {

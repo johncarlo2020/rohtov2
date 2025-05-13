@@ -248,3 +248,36 @@ ol {
         object-fit: contain;
     }
 }
+
+.guest-btn {
+    background-color: transparent;
+    border: none;
+    color: $black;
+    outline: none;
+    text-align: left;
+
+    // when the button is clicked
+    &:active {
+        background-color: transparent;
+        color: $black;
+    }
+
+    // when the button is focused
+    &:focus {
+        background-color: $primary;
+        color: $black;
+        border-radius: 8px;
+    }
+
+    i {
+        font-size: 20px;
+        color: #BABABA;
+    }
+
+    &.completed {
+        i {
+            font-size: 20px;
+            color: #40A355;
+        }
+    }
+}

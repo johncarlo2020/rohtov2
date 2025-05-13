@@ -103,6 +103,11 @@ class StationController extends Controller
         return view('guestAndWin');
     }
 
+    public function embarckJourney()
+    {
+        return view('embarkJourney');
+    }
+
     public function preRegEvent(Request $request)
     {
 

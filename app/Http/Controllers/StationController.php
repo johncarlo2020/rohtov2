@@ -46,18 +46,38 @@ class StationController extends Controller
         $user = Auth::user();
         $appointment = Appointment::find($request->appointment_id);
 
-        // Check if the appointment has available slots
+
         if ($appointment->userAppointments()->count() >= $appointment->total) {
             return response()->json(['error' => 'No available slots for this appointment.'], 400);
         }
 
-        // Create a new user appointment
-        $user->userAppointments()->create([
-            'appointment_id' => $appointment->id,
-        ]);
+
+        $existing = $user->userAppointments()->first();
+
+        if ($existing) {
+
+            if ($existing->rescheduled) {
+                return response()->json(['error' => 'You can only reschedule once.'], 400);
+            }
+
+
+            $existing->update([
+                'appointment_id' => $appointment->id,
+                'rescheduled' => true,
+            ]);
+        } else {
+
+            $user->userAppointments()->create([
+                'appointment_id' => $appointment->id,
+                'rescheduled' => false,
+            ]);
+        }
 
         return response()->json(['message' => 'Appointment booked successfully.']);
     }
+
+
+
     public function verify(Request $request)
     {
         $otp = implode('', $request->input('otp'));
@@ -359,7 +379,7 @@ class StationController extends Controller
             return redirect()->route('otp');
         }
 
-        if($user->is_appointment == 0){
+        if ($user->userAppointments()->count() == 0) {
             return redirect()->route('appointment');
         }
 

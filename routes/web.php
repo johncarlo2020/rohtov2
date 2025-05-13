@@ -21,16 +21,8 @@ Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
-Route::get('/otp', function () {
-    return view('otp');
-})->name('otp');
 
-Route::get('/resend-otp', 'App\Http\Controllers\StationController@resend')->name('resend.otp');
-Route::post('/verify-otp', 'App\Http\Controllers\StationController@verify')->name('verify.otp');
 // add the apointment blade
-Route::get('/appointment', function () {
-    return view('appointment');
-})->name('appointment');
 
 Route::get('/ipad', [IpadController::class, 'index'])->name('ipad.index');
 
@@ -86,6 +78,17 @@ Route::group(['middleware' => ['client']], function () {
 
 
     Route::post('/upload', 'App\Http\Controllers\StationController@uploadBaby')->name('upload.baby');
+
+    Route::get('/otp', function () {
+    return view('otp');
+    })->name('otp');
+
+    Route::get('/resend-otp', 'App\Http\Controllers\StationController@resend')->name('resend.otp');
+    Route::post('/verify-otp', 'App\Http\Controllers\StationController@verify')->name('verify.otp');
+    Route::get('/appointment', 'App\Http\Controllers\StationController@appointment')->name('appointment');
+    Route::post('/appointment/submit', 'App\Http\Controllers\StationController@appointmentSubmit')->name('appointments.submit');
+
+
 });
 
 require __DIR__ . '/auth.php';

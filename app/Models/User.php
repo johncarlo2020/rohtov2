@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'lname', 'email','fname','number','password','last_login_at','dob','country','otp','otp_verified'
+        'is_appointment','lname', 'email','fname','number','password','last_login_at','dob','country','otp','otp_verified'
     ];
 
 
@@ -45,4 +45,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(StationUser::class);
     }
+
+    public function userAppointments()
+    {
+        return $this->hasMany(UserAppointment::class);
+    }
+
 }

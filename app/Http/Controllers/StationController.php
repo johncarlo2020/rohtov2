@@ -8,7 +8,9 @@ use App\Models\User;
 use App\Models\StationUser;
 use App\Models\Brand;
 use App\Models\Vote;
+use App\Models\Appointment;
 use App\Events\babyEvent;
+
 use DB;
 use Auth;
 use Carbon\Carbon;
@@ -20,10 +22,46 @@ use App\Helpers\GlobalHelper;
 
 class StationController extends Controller
 {
+
+    public function appointment()
+    {
+        $appointments = Appointment::withCount('userAppointments')
+        ->get()
+        ->map(function ($appointment) {
+            $available = max(0, $appointment->total - $appointment->user_appointments_count);
+            $appointment->available_slots = $available;
+            $appointment->status = $available === 0 ? 'full' : 'available';
+            return $appointment;
+        });
+
+        return view('appointment', compact('appointments'));
+    }
+
+    public function appointmentSubmit(Request $request)
+    {
+        $request->validate([
+            'appointment_id' => 'required|exists:appointments,id',
+        ]);
+
+        $user = Auth::user();
+        $appointment = Appointment::find($request->appointment_id);
+
+        // Check if the appointment has available slots
+        if ($appointment->userAppointments()->count() >= $appointment->total) {
+            return response()->json(['error' => 'No available slots for this appointment.'], 400);
+        }
+
+        // Create a new user appointment
+        $user->userAppointments()->create([
+            'appointment_id' => $appointment->id,
+        ]);
+
+        return response()->json(['message' => 'Appointment booked successfully.']);
+    }
     public function verify(Request $request)
     {
         $otp = implode('', $request->input('otp'));
-
+        // dd(auth()->user());
         if ($otp == auth()->user()->otp) {
 
             // Success: Clear session OTP
@@ -32,8 +70,8 @@ class StationController extends Controller
             $user->otp_verified = 1;
             $user->save();
 
-            $data = GlobalHelper::createSampleProfile();
-             dd($data);
+            // $data = GlobalHelper::createSampleProfile();
+            //  dd($data);
 
             return redirect(RouteServiceProvider::HOME);
         }
@@ -56,7 +94,7 @@ class StationController extends Controller
         return $user;
     }
 
-   
+
     public function uploadBaby(Request $request)
     {
         $request->validate([
@@ -319,6 +357,10 @@ class StationController extends Controller
 
         if($user->otp_verified == 0){
             return redirect()->route('otp');
+        }
+
+        if($user->is_appointment == 0){
+            return redirect()->route('appointment');
         }
 
         $stationDone = $user->stationUser->count();

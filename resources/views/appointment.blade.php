@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>Hadalabo Experience</title>
 
@@ -33,10 +34,9 @@
             </div>
         </div>
         <div id="dateForm" class=" bg-white p-3 rounded ">
-            <form method="POST">
                 @csrf
                 <div class="text-center mb-4 px-1">
-                    <h2 class="heading-text text-center mb-2">Hi Selena</h2>
+                    <h2 class="heading-text text-center mb-2">Hi {{auth()->user()->fname}}</h2>
                     <p class="sub-heading-text text-center">Please select your preferred date for the Ocean or Plastic
                         Roadshow visit and redemption.</p>
                     <p class="sub-heading-text text-center">Kindly note that redemption is only valid on the selected
@@ -47,53 +47,31 @@
                 <div class="date-picker">
                     <h2 class="heading-text text-center mb-2">Date selected: <span
                             id="selectedDateText">21-05-2025</span></h2>
+                    <h4 class="text-center mb-4">Available Slots: <span id="availableSlotsText">0</span></h4>
+
                     <div class="date-grid-container">
+                        @foreach($appointments as $appointment)
+                        @php
+                        $isFull = isset($appointment->status) && $appointment->status === 'full';
+                        @endphp
+
                         <div class="date-button-item">
-                            <input type="radio" id="date1" name="date" value="2025-05-21"
-                                class="date-radio-input" required>
-                            <label for="date1" class="date-radio-label disabled">21-05-2025</label>
+                            <input type="radio" id="date{{ $appointment->id }}" name="date" value="{{ $appointment->id }}"
+                                class="date-radio-input" data-name="{{ $appointment->name }}"
+                                data-available="{{ $appointment->available_slots }}" required {{ $isFull ? 'disabled' : '' }}>
+
+                            <label for="date{{ $appointment->id }}" class="date-radio-label {{ $isFull ? 'disabled' : '' }}">
+                                {{ $appointment->name }}
+                            </label>
                         </div>
-                        <div class="date-button-item">
-                            <input type="radio" id="date2" name="date" value="2025-05-22"
-                                class="date-radio-input">
-                            <label for="date2" class="date-radio-label">22-05-2025</label>
-                        </div>
-                        <div class="date-button-item">
-                            <input type="radio" id="date3" name="date" value="2025-05-23"
-                                class="date-radio-input">
-                            <label for="date3" class="date-radio-label">23-05-2025</label>
-                        </div>
-                        <div class="date-button-item">
-                            <input type="radio" id="date4" name="date" value="2025-05-24"
-                                class="date-radio-input">
-                            <label for="date4" class="date-radio-label">24-05-2025</label>
-                        </div>
-                        <div class="date-button-item">
-                            <input type="radio" id="date5" name="date" value="2025-05-25"
-                                class="date-radio-input">
-                            <label for="date5" class="date-radio-label">25-05-2025</label>
-                        </div>
-                        <div class="date-button-item">
-                            <input type="radio" id="date6" name="date" value="2025-05-26"
-                                class="date-radio-input">
-                            <label for="date6" class="date-radio-label">26-05-2025</label>
-                        </div>
-                        <div class="date-button-item">
-                            <input type="radio" id="date7" name="date" value="2025-05-27"
-                                class="date-radio-input">
-                            <label for="date7" class="date-radio-label">27-05-2025</label>
-                        </div>
-                        <div class="date-button-item">
-                            <input type="radio" id="date8" name="date" value="2025-05-28"
-                                class="date-radio-input">
-                            <label for="date8" class="date-radio-label">28-05-2025</label>
-                        </div>
+                        @endforeach
+
+
                     </div>
                 </div>
                 <div class="text-center mb-3">
-                    <button type="submit" class="button button-primary w-100">Submit</button>
+                    <button type="button" id="submitDate" class="button button-primary w-100">Submit</button>
                 </div>
-            </form>
         </div>
         <div id="qrContainer" class=" bg-white p-3 rounded d-none">
             <div class="text-center mb-2 px-1">
@@ -156,6 +134,16 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.date-radio-input').forEach(function (input) {
+                input.addEventListener('change', function () {
+                    const selectedName = this.dataset.name;
+                    const available = this.dataset.available;
+
+                    document.getElementById('selectedDateText').textContent = selectedName;
+                    document.getElementById('availableSlotsText').textContent = available;
+                });
+            });
+
             const dateInputs = document.querySelectorAll('.date-radio-input');
             const selectedDateText = document.getElementById('selectedDateText');
 
@@ -179,6 +167,37 @@
                         updateSelectedDate(this);
                     }
                 });
+            });
+
+            document.getElementById('submitDate').addEventListener('click', function () {
+                const selectedInput = document.querySelector('.date-radio-input:checked');
+
+                if (!selectedInput) {
+                    alert('Please select a date.');
+                    return;
+                }
+
+                const appointmentId = selectedInput.value;
+
+                fetch("{{ route('appointments.submit') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        appointment_id: appointmentId
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert('Appointment submitted successfully!');
+                        // You can handle redirection or UI update here
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Something went wrong.');
+                    });
             });
         });
     </script>

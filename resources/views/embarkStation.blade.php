@@ -1,0 +1,114 @@
+<x-app-layout>
+    <div class="content-box main-background d-flex flex-column min-vh-100 px-3">
+        <div class="container mb-5">
+            <div>
+                @include('components.branding')
+            </div>
+        </div>
+        <div class="photo-container d-none">
+            <div class="info-container bg-white p-3 rounded mb-5">
+                <h1 class="heading-text text-center mb-4">Task 2: Say No to Plastic Bags</h1>
+                <p class="pharagraph-text text-center">Skip single-use plastic bags and bring your own reusable bag when
+                    you shop.</p>
+                <p class="pharagraph-text text-center">Snap and upload a photo of you using a recycle bag while shopping.
+                </p>
+                <div class="upload">
+                    <div class="image-upload-container text-center my-3">
+                        <label for="file-upload" class="file-upload-label">
+                            <div id="image-preview" class="image-preview">
+                                <span class="upload-icon"><i class="fa-solid fa-cloud-arrow-up"></i></span>
+                                <span class="upload-text">Upload your image</span>
+                            </div>
+                        </label>
+                        <input type="file" class="form-control visually-hidden" id="file-upload" name="file-upload"
+                            accept="image/*">
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="button button-primary submit-btn w-100">Submit</button>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-auto px-4 d-flex justify-content-center">
+                <button type="button" class="button button-white w-50">Back</button>
+            </div>
+        </div>
+        <div class="success h-100 d-flex flex-column justify-content-center">
+            <div class="congrats-container mt-5 px-4">
+                <div class="congrats-icon mb-3">
+                    <img src="{{ asset('files/main/congratulations.webp') }}" alt="Congratulations" />
+                </div>
+                <h1 class="heading-text text-center">Your photo has been uploaded successfully.</h1>
+                <p class="pharagrap-text text-center px-5">Thank you for contributing to a greener future—every action helps reduce waste and protect the planet.</p>
+            </div>
+            <div class="button-container mt-auto">
+                <button id="rescheduleButton" type="button" class="button button-secondary w-100 mb-2 mt-auto"
+                    data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Reschedule
+                </button>
+                   <a id="homeButton" href="{{ route('preRegEvent') }}" class="button button-primary w-100">
+                    Home
+                </a>
+            </div>
+        </div>
+
+        <div class="footer-container p-4">
+            @include('components.footer')
+        </div>
+    </div>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <a type="button" class="modal-close" data-bs-dismiss="modal" aria-label="Close"><i
+                            class="fa-solid fa-xmark"></i></a>
+                    <div class="info-icon mb-3">
+                        <img src="{{ asset('files/main/info.png') }}" alt="" />
+                    </div>
+                    <p class="modal-main-text mb-4 px-5">Do you want to resubmit you photo?</p>
+                    {{-- <p class="warning-text text-center px-5">Note: You may reschedule your selected date
+                        <strong>only once</strong>.
+                    </p> --}}
+                    <div class="">
+                        <button id="confirmVisitButton" type="submit" class="button button-primary w-100 mb-2">
+                            YES
+                        </button>
+                        <button id="cancelModalButton" type="button" class="button button-secondary w-100 mb-2"
+                            data-bs-dismiss="modal">
+                            NO
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</x-app-layout>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const fileUpload = document.getElementById('file-upload');
+        const imagePreview = document.getElementById('image-preview');
+        const uploadText = imagePreview.querySelector('.upload-text');
+        const uploadIcon = imagePreview.querySelector('.upload-icon');
+
+        fileUpload.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // Clear previous preview content
+                    imagePreview.innerHTML = '';
+                    // Create img element
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    imagePreview.appendChild(img);
+                }
+                reader.readAsDataURL(file);
+            } else {
+                // Reset to default state if no file is selected
+                imagePreview.innerHTML =
+                    '<span class="upload-icon">+</span><span class="upload-text">Upload your image</span>';
+            }
+        });
+    });
+</script>

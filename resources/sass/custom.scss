@@ -65,6 +65,10 @@ ol {
         background: $secondary;
         color: $white;
     }
+    &-white {
+        background: $white;
+        color: $black;
+    }
 }
 
 .button-text {
@@ -255,6 +259,7 @@ ol {
     color: $black;
     outline: none;
     text-align: left;
+    text-decoration: none;
 
     // when the button is clicked
     &:active {
@@ -267,6 +272,7 @@ ol {
         background-color: $primary;
         color: $black;
         border-radius: 8px;
+        text-decoration: none;
     }
 
     i {
@@ -280,4 +286,78 @@ ol {
             color: #40A355;
         }
     }
+}
+
+.image-upload-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.file-upload-label {
+    display: inline-block;
+    cursor: pointer;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    width: 100%; /* Adjust as needed */
+    height: 200px; /* Adjust as needed */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #f8f9fa;
+    margin-bottom: 1rem;
+}
+
+.image-preview {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.image-preview img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.upload-icon {
+    font-size: 3rem;
+    color: #6c757d;
+}
+
+.upload-text {
+    margin-top: 0.5rem;
+    color: #6c757d;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.submit-btn {
+    background-color: #ffc107; /* Yellow background */
+    border-color: #ffc107;
+    color: #212529; /* Dark text for contrast */
+    padding: 10px 30px;
+    font-size: 1.1rem;
+    border-radius: 5px;
+}
+
+.submit-btn:hover {
+    background-color: #e0a800;
+    border-color: #d39e00;
 }

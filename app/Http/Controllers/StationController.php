@@ -107,6 +107,10 @@ class StationController extends Controller
     {
         return view('embarkJourney');
     }
+    public function embarckStation(Station $station)
+    {
+        return view('embarkStation', compact('station'));
+    }
 
     public function preRegEvent(Request $request)
     {

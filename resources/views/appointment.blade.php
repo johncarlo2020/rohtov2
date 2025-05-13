@@ -32,7 +32,7 @@
                 @include('components.branding')
             </div>
         </div>
-        <div id="dateForm" class=" bg-white p-3 rounded d-none">
+        <div id="dateForm" class=" bg-white p-3 rounded ">
             <form method="POST">
                 @csrf
                 <div class="text-center mb-4 px-1">
@@ -95,7 +95,7 @@
                 </div>
             </form>
         </div>
-        <div id="qrContainer" class=" bg-white p-3 rounded">
+        <div id="qrContainer" class=" bg-white p-3 rounded d-none">
             <div class="text-center mb-2 px-1">
                 <h2 class="heading-text text-center mb-2">Congratulations! Selena</h2>
                 <p class="pharagraph-text text-center">You’re among the first 2,000 sign-ups and eligible to redeem our

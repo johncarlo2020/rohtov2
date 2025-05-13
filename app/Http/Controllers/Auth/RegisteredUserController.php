@@ -41,7 +41,6 @@ class RegisteredUserController extends Controller
             'fname' => ['required', 'string', 'max:255'],
             'lname' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'where' => ['required', 'string', 'max:255'],
 
         ]);
         $marketing = false;
@@ -58,6 +57,7 @@ class RegisteredUserController extends Controller
 
         // Query the country based on the phone prefix
         $country = Countries::where('phone_code', $phonePrefix)->first();
+        $otp = rand(100000, 999999);
 
         $user = User::create([
             'fname' => $request->fname,
@@ -65,7 +65,7 @@ class RegisteredUserController extends Controller
             'dob' => $request->dob,
             'number' => $phoneNumber,
             'email' => $request->email,
-            'where' => $request->where,
+            'otp' => $otp,
             'country'=> $country->name,
             'marketing' => $marketing,
             'last_login_at' => Carbon::now(),
@@ -73,12 +73,33 @@ class RegisteredUserController extends Controller
         ]);
 
         $user->assignRole('client');
+        Auth::login($user);
 
         // Use the insert method to insert multiple records in one query
         event(new Registered($user));
 
-        Auth::login($user);
+           // ✅ Step 1: Generate and store OTP
+            session(['otp' => $otp, 'otp_user_id' => $user->id]);
 
-        return redirect(RouteServiceProvider::HOME);
+            // ✅ Step 2: Send OTP using your SMS API (Etracker)
+            $content = "L'OCCITANE: OTP code: $otp. NEVER share this code with others.";
+            $smsUrl = "http://www.etracker.cc/bulksms/mesapi.aspx?user=davino&pass=Wowsome%40820%23%23%23%23%21&type=0&to=" . urlencode($phoneNumber) . "&from=Loccitane&text=" . urlencode($content) . "&servid=MES01&title=EnDemande_MY_OceanOrPlastic2025";
+
+            $ch = curl_init();
+            curl_setopt_array($ch, [
+                CURLOPT_URL => $smsUrl,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_HTTPHEADER => [
+                    'Accept: application/json',
+                    'Content-Type: application/json',
+                ],
+            ]);
+
+            $server_respond = curl_exec($ch);
+            curl_close($ch);
+
+    // ✅ Step 3: Redirect to OTP verification screen
+    return redirect()->route('otp')->with('message', 'OTP has been sent to your phone.');
     }
 }

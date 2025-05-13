@@ -48,7 +48,6 @@ class StationSeeder extends Seeder
         $user = User::create([
             'fname' => 'admin',
             'lname' => 'admin',
-            'where' => 'admin',
             'dob' => 'admin',
             'number' => '0123456789',
             'email' => 'admin@gmail.com',

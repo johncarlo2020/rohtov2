@@ -20,7 +20,6 @@ class AddViewer extends Seeder
         $user = User::create([
             'fname' => 'viewer',
             'lname' => 'viewer',
-            'where' => 'viewer',
             'dob' => 'admin',
 
             'number' => '0123456789',

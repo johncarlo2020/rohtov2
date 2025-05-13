@@ -15,15 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('fname');
             $table->string('lname');
-            $table->string('where');
             $table->string('password');
             $table->string('dob');
             $table->string('number');
             $table->string('country');
-            $table->string('baby_img')->nullable();
-            $table->string('baby_name')->nullable();
-            $table->string('baby_charname')->nullable();
-
+            $table->string('otp')->nullable();
+            $table->boolean('otp_verified')->default(false);
             $table->string('email')->unique();
             $table->timestamp('last_login_at')->nullable();
             $table->timestamp('email_verified_at')->nullable();

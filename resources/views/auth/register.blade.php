@@ -80,9 +80,9 @@
                     <div class="col-12 input-group w-100 phone-number-input">
                         <label class="form-label" for="">Phone Number</label>
 
-                        <input id="number" type="number"
-                            class="input-text form-control w-100 @error('number') is-invalid @enderror d-block"
-                            name="number" value="{{ old('number') }}" required autocomplete="number" autofocus />
+                        <input id="number" type="tel" class="input-text form-control w-100 @error('number') is-invalid @enderror d-block"
+                            name="number" value="{{ old('number') }}" required autocomplete="tel" autofocus />
+
                     </div>
                     <div class="mt-2 col-12">
                         <span id="valid-msg" class="d-none text-danger"></span>

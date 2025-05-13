@@ -105,12 +105,11 @@
                 e.preventDefault();
 
                 fetch('{{ route('resend.otp') }}', {
-                    method: 'POST',
+                    method: 'GET',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ mobile: '{{ $mobile ?? '' }}' })
                 })
                     .then(response => response.json())
                     .then(data => {

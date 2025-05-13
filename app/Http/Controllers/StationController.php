@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Http;
 use App\Providers\RouteServiceProvider;
+use App\Helpers\GlobalHelper;
 
 class StationController extends Controller
 {
@@ -37,6 +38,21 @@ class StationController extends Controller
         }
 
         return back()->withErrors(['otp' => 'Invalid OTP']);
+    }
+
+    public function resend(Request $request)
+    {
+        $user = auth()->user();
+
+        $otp = rand(100000, 999999);
+
+        GlobalHelper::sendOtpSms($user->number, $otp);
+
+        $user->otp = $otp;
+        $user->save();
+
+
+        return $user;
     }
 
     public function createSampleProfile()

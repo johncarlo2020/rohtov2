@@ -25,7 +25,7 @@ Route::get('/otp', function () {
     return view('otp');
 })->name('otp');
 
-Route::post('/resend-otp', 'App\Http\Controllers\StationController@resend')->name('resend.otp');
+Route::get('/resend-otp', 'App\Http\Controllers\StationController@resend')->name('resend.otp');
 Route::post('/verify-otp', 'App\Http\Controllers\StationController@verify')->name('verify.otp');
 // add the apointment blade
 Route::get('/appointment', function () {

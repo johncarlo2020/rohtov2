@@ -87,6 +87,8 @@ Route::group(['middleware' => ['client']], function () {
     Route::post('/verify-otp', 'App\Http\Controllers\StationController@verify')->name('verify.otp');
     Route::get('/appointment', 'App\Http\Controllers\StationController@appointment')->name('appointment');
     Route::post('/appointment/submit', 'App\Http\Controllers\StationController@appointmentSubmit')->name('appointments.submit');
+    Route::get('/appointment/pre-reg-event', 'App\Http\Controllers\StationController@preRegEvent')->name('preRegEvent');
+       Route::get('/appointment/pre-reg-event/guestAndWin', 'App\Http\Controllers\StationController@guestAndWin')->name('guestAndWin');
 
 
 });

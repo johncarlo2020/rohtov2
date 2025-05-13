@@ -49,6 +49,14 @@ ol {
         opacity: 0.8;
     }
 
+    // disabled state
+
+    &.disabled {
+        background: $disabled !important;
+        color: $disabled-color !important;
+        cursor: not-allowed;
+    }
+
     &-primary {
         background: $primary;
         color: $black;

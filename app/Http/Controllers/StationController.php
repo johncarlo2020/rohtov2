@@ -97,7 +97,17 @@ class StationController extends Controller
         return response()->json(['message' => 'Appointment booked successfully.']);
     }
 
+      public function guestAndWin(Request $request)
+    {
 
+        return view('guestAndWin');
+    }
+
+    public function preRegEvent(Request $request)
+    {
+
+        return view('preRegisterView');
+    }
 
     public function verify(Request $request)
     {

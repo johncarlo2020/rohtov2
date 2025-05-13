@@ -1,28 +1,11 @@
 <x-app-layout>
-    <div class="content-box main-background px-3 d-flex flex-column min-vh-100">
+    <div class="content-box main-background d-flex flex-column min-vh-100">
         <div class="container mb-5">
             <div>
                 @include('components.branding')
             </div>
         </div>
-        <div class="info-container bg-white p-3 rounded">
-            {{-- Todo: Change with parameter --}}
-            <div id="withQr" class="d-none mb-3">
-                @include('components.containerWithQr')
-            </div>
-            <div id="withoutQr" class="mb-4">
-                @include('components.containerWithoutQr')
-            </div>
-            <div class="button-container">
-                <a id="homeButton" href="{{ route('preRegEvent') }}" class="button button-primary w-100 mb-2">
-                    Home
-                </a>
-                <button id="rescheduleButton" type="button" class="button button-secondary w-100"
-                    data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    Reschedule
-                </button>
-            </div>
-        </div>
+
 
         <!-- Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

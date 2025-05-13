@@ -25,6 +25,12 @@ class StationController extends Controller
 
     public function appointment()
     {
+        $user = Auth::user();
+
+        if($user->otp_verified == 0){
+            return redirect()->route('otp');
+        }
+
         $appointments = Appointment::withCount('userAppointments')
         ->get()
         ->map(function ($appointment) {
@@ -34,7 +40,22 @@ class StationController extends Controller
             return $appointment;
         });
 
-        return view('appointment', compact('appointments'));
+
+
+
+        $is2000 = User::where('otp_verified', 1)
+        ->orderBy('email_verified_at', 'asc')
+        ->take(2000)
+        ->pluck('id')
+        ->contains(auth()->id());
+
+        $userAppointment = $user->userAppointments()->count();
+
+
+
+        //check if user is on first 2000 verified users
+
+        return view('appointment', compact('appointments','user','is2000','userAppointment'));
     }
 
     public function appointmentSubmit(Request $request)
@@ -88,6 +109,7 @@ class StationController extends Controller
             Session::forget(['otp', 'otp_sent_at']);
             $user= auth()->user();
             $user->otp_verified = 1;
+            $user->email_verified_at = Carbon::now();
             $user->save();
 
             // $data = GlobalHelper::createSampleProfile();

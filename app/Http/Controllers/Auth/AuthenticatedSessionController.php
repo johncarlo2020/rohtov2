@@ -27,11 +27,11 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
+        dd('adasdas');
 
         $request->session()->regenerate();
 
         Auth::user()->update(['last_login_at' => Carbon::now()]);
-
 
         return redirect()->intended(RouteServiceProvider::HOME);
     }

@@ -81,9 +81,10 @@
                     Ocean or Plastic Roadshow.</p>
             </div>
             <div id="qrCode" class="qr-code mb-3">
-                <img src="{{ asset('files/main/sampleQR.png') }}" alt="" />
+
             </div>
-            <p class="sub-heading-text text-center mb-0">Date selected: 21 May 2025, Wednesday Venue: IOI City Mall,
+
+            <p class="sub-heading-text text-center mb-0">Date selected: <span id="selected-date"></span>, Wednesday Venue: IOI City Mall,
                 Putrajaya – West Court on Ground Floor</p>
             <div class="p-3">
                 <p class="pharagraph-text mb-0"><Strong>Terms & Conditions</Strong></p>
@@ -132,8 +133,20 @@
     </div>
        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
+<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+
+   <script>
         document.addEventListener('DOMContentLoaded', function() {
+            @if ($is2000 == 1)
+                const url = "{{ env('APP_URL') }}/user?id={{ $user->id }}";
+            generateQRCode(url);
+            @endif
+
+            @if ($userAppointment > 0)
+                document.getElementById('qrContainer').classList.remove('d-none');
+            document.getElementById('dateForm').classList.add('d-none');
+            @endif
+
             document.querySelectorAll('.date-radio-input').forEach(function (input) {
                 input.addEventListener('change', function () {
                     const selectedName = this.dataset.name;
@@ -157,8 +170,10 @@
 
             // Set initial selected date text based on checked input
             const initiallyCheckedInput = document.querySelector('.date-radio-input:checked');
+            const selectedDate = document.getElementById('selected-date');
             if (initiallyCheckedInput) {
                 updateSelectedDate(initiallyCheckedInput);
+                updateSelectedDate(selectedDate);
             }
 
             dateInputs.forEach(input => {
@@ -168,6 +183,19 @@
                     }
                 });
             });
+
+            function generateQRCode(url) {
+                var qrCodeContainer = document.getElementById("qrCode");
+                qrCodeContainer.innerHTML = ""; // Clear previous QR code
+                var qrCode = new QRCode(qrCodeContainer, {
+                    text: url,
+                    width: 256,
+                    height: 256,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H,
+                });
+            }
 
             document.getElementById('submitDate').addEventListener('click', function () {
                 const selectedInput = document.querySelector('.date-radio-input:checked');
@@ -191,8 +219,9 @@
                 })
                     .then(response => response.json())
                     .then(data => {
-                        alert('Appointment submitted successfully!');
-                        // You can handle redirection or UI update here
+                        document.getElementById('qrContainer').classList.remove('d-none');
+                        document.getElementById('dateForm').classList.add('d-none');
+
                     })
                     .catch(error => {
                         console.error('Error:', error);

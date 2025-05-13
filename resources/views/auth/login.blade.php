@@ -13,11 +13,11 @@
                 @csrf
                 <div class="mb-2 row">
                     <div class="col-12 input-group w-100 phone-number-input">
-                        <label class="form-label" for="">Phone Number</label>
+                        <label class="form-label" for="">Email</label>
 
-                        <input id="number" type="number"
-                            class="input-text form-control w-100 @error('number') is-invalid @enderror d-block"
-                            name="number" value="{{ old('number') }}" required autocomplete="number" autofocus />
+                        <input id="email" type="email"
+                            class="input-text form-control w-100 @error('email') is-invalid @enderror d-block"
+                            name="email" value="{{ old('email') }}" required autocomplete="email" autofocus />
                     </div>
                     <div class="mt-2 col-12">
                         <span id="valid-msg" class="d-none text-danger"></span>
@@ -44,56 +44,3 @@
     </div>
 </x-guest-layout>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const form = document.querySelector("#form");
-        const input = document.querySelector("#number");
-
-        const errorMsg = document.querySelector("#error-msg");
-        const validMsg = document.querySelector("#valid-msg");
-
-        // here, the index maps to the error code returned from getValidationError - see readme
-        const errorMap = [
-            "Invalid number",
-            "Invalid country code",
-            "Too short",
-            "Too long",
-            "Invalid number",
-        ];
-        const submitButton = document.querySelector("#submitButton");
-        const iti = window.intlTelInput(input, {
-            initialCountry: "my",
-            hiddenInput: "country",
-            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js", // just for formatting/placeholders etc
-        });
-
-        const reset = () => {
-            input.classList.remove("error");
-            errorMsg.innerHTML = "";
-            errorMsg.classList.add("d-none");
-            validMsg.classList.add("d-none");
-        };
-
-        const showError = (msg) => {
-            input.classList.add("error");
-            errorMsg.innerHTML = msg;
-            errorMsg.classList.remove("d-none");
-        };
-
-        input.addEventListener("keyup", function() {
-            reset();
-            if (!input.value.trim()) {
-                showError("Required");
-                submitButton.disabled = true;
-            } else if (iti.isValidNumber()) {
-                validMsg.classList.remove("d-none");
-                submitButton.disabled = false;
-            } else {
-                const errorCode = iti.getValidationError();
-                const msg = errorMap[errorCode] || "Invalid number";
-                showError(msg);
-                submitButton.disabled = true;
-            }
-        });
-    });
-</script>

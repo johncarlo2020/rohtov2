@@ -12,7 +12,6 @@ body {
 
 p, h1, h2, h3, h4, h5, h6 ,button, a ,span ,div ,li, ul, ol {
     font-family: $main-font;
-    font-size: 16px;
     line-height: 1.5;
     color: $text;
 }
@@ -30,7 +29,7 @@ p, h1, h2, h3, h4, h5, h6 ,button, a ,span ,div ,li, ul, ol {
     text-decoration: none !important;
     border-radius: 6px;
     text-align: center;
-
+    font-weight: bold;
 
     &:active,
     &:focus {
@@ -45,6 +44,13 @@ p, h1, h2, h3, h4, h5, h6 ,button, a ,span ,div ,li, ul, ol {
         background: $secondary;
         color: $white;
     }
+}
+
+.button-text {
+    font-size: 16px;
+    font-weight: 400;
+    color: $black;
+    text-decoration: none;
 }
 
 .heading-text {
@@ -63,8 +69,8 @@ p, h1, h2, h3, h4, h5, h6 ,button, a ,span ,div ,li, ul, ol {
 }
 
 .pharagraph-text {
-    font-size: 10px;
-    line-height: 1.2;
+    font-size: 12px;
+    line-height: 1.5;
     color: $text;
 }
 
@@ -138,10 +144,14 @@ p, h1, h2, h3, h4, h5, h6 ,button, a ,span ,div ,li, ul, ol {
 }
 
 .form-label {
-    font-size: 11px;
-    line-height: 1.2;
-     color: rgb(104, 104, 104);
+    color: rgb(104, 104, 104);
 }
+
+.form-label, .form-check-label {
+    font-size: 13px;
+    line-height: 1.5;
+}
+
 
 .input-text {
     color: rgb(170, 170, 170);
@@ -161,3 +171,5 @@ p, h1, h2, h3, h4, h5, h6 ,button, a ,span ,div ,li, ul, ol {
 .phone-number-input {
     flex-direction: column;
 }
+
+

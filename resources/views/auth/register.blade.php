@@ -168,14 +168,14 @@
                             {{ __('SUBMIT') }}
                         </button>
                         <div class="bottom-text text-center">
-                            <a href="{{ route('login') }}" class="">Back</a>
+                            <a class="button-text" href="{{ route('login') }}" class="">Back</a>
                         </div>
                     </div>
                 </div>
             </form>
-                <div class="footer-container p-4">
-             @include('components.footer')
-        </div>
+            <div class="footer-container p-4">
+                @include('components.footer')
+            </div>
         </div>
     </div>
 </x-guest-layout>

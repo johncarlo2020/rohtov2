@@ -1,8 +1,10 @@
 // Import _variables.scss
 @import "variables";
+@import "fonts"; // Added import for fonts
 // Bootstrap
 @import "bootstrap/scss/bootstrap";
 
 @import "custom";
 @import "utilities";
 @import "custom/brand-style.scss";
+

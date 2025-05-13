@@ -1,7 +1,35 @@
-// filepath: c:\xampp8.1\htdocs\rohtov2\resources\sass\fonts.scss
 @font-face {
     font-family: 'Myriad Pro';
-    src: url('/fonts/Myriad Pro Regular.ttf') format('truetype');
+    src: url('../font/Myriad Pro Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
+
+@font-face {
+    font-family: 'LOccitane Sans';
+    src: url('../font/LOccitaneSans-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'LOccitane Sans';
+    src: url('../font/LOccitaneSans-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'LOccitane Sans';
+    src: url('../font/LOccitaneSans-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'LOccitane Sans';
+    src: url('../font/LOccitaneSans-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+

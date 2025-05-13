@@ -51,28 +51,8 @@
         @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     </head>
 
-    <body class="main-background hadalabo">
-
-        <style>
-            @font-face {
-                font-family: 'Flamante-Roma-Medium';
-                src: url('{{ asset('images/font/Flamante-Roma-Medium.ttf') }}') format('truetype');
-                font-weight: normal;
-                font-style: normal;
-            }
-
-            @font-face {
-                font-family: 'Stella Demo';
-                src: url('{{ asset('images/font/Stella Demo.otf') }}') format('opentype');
-                font-weight: normal;
-                font-style: normal;
-            }
-
-
-        </style>
-        <main>
-            {{ $slot }}
-        </main>
+    <body class="">
+         {{ $slot }}
 
         {{-- <div class="end-text">
             <p>Powered by WOWSOME®️ 2025</p>

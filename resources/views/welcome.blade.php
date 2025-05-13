@@ -47,12 +47,15 @@
                 West Court on Ground Floor</p>
         </div>
         <div class="button-container px-4">
-            <a href="" id="routeBtn" class="button-primary button mb-3">
+            <a href="{{ route('register') }}" id="routeBtn" class="button-primary button mb-3">
                Sign Up
             </a>
-              <a href="" id="routeBtn" class="button-secondary button">
+              <a href="{{ route('login') }}" id="routeBtn" class="button-secondary button">
                 Sign In
             </a>
+        </div>
+        <div class="footer-container p-4">
+             @include('components.footer')
         </div>
     </div>
 </body>

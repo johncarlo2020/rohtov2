@@ -1,152 +1,181 @@
 <x-guest-layout>
-    <div class="register-main">
-        <div class="justify-content-center w-100">
-            <div class="mt-5 col-12 d-flex justify-content-center">
+    <div class="content-box main-background">
+        <div class="container">
+            <div>
                 @include('components.branding')
             </div>
-            <div class="mt-3 w-100 px-4">
-                <h1 class="mb-4 text-center login-text">SIGN UP</h1>
-                <form id="form" method="POST" action="{{ route('register') }}">
-                    @csrf
-                    <div class="mb-2 row">
-                        <div class="col-12">
-                            <label for="">First Name</label>
+        </div>
+        <div class="form-container px-4 mt-5">
+            <h1 class="heading-text mb-1 text-center">
+                YOU ARE ONE STEP AWAY
+            </h1>
+            <p class="sub-heading-text text-center">
+                Please fill in your details below to complete the registration.
+            </p>
+            <form id="form" method="POST" action="{{ route('register') }}">
+                @csrf
+                <div class="mb-2 row">
+                    <div class="col-12">
+                        <label class="form-label" for="">First Name</label>
 
-                            <input id="fname" placeholder="Enter your first name" type="text"
-                                class="input-text form-control @error('fname') is-invalid @enderror" name="fname"
-                                value="{{ old('fname') }}" required autocomplete="fname" autofocus />
-                            @error('fname')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
+                        <input id="fname" placeholder="Enter your first name" type="text"
+                            class="input-text form-control @error('fname') is-invalid @enderror" name="fname"
+                            value="{{ old('fname') }}" required autocomplete="fname" autofocus />
+                        @error('fname')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="mb-2 row">
+                    <div class="col-12">
+                        <label class="form-label" for="">Last Name</label>
+
+                        <input id="lname" placeholder="Enter your last name" type="text"
+                            class="input-text form-control @error('lname') is-invalid @enderror" name="lname"
+                            value="{{ old('lname') }}" required autocomplete="lname" autofocus />
+
+                        @error('lname')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="mb-2 row">
+                    <div class="col-12">
+                        <label class="form-label" for="">Date of Birth</label>
+                        <input id="dob" placeholder="Date of Birth" type="date"
+                            class="input-text form-control @error('dob') is-invalid @enderror" name="dob"
+                            value="{{ old('dob') }}" required autocomplete="dob" autofocus />
+
+                        @error('lname')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="mb-2 row">
+                    <div class="col-12">
+                        <label class="form-label" for="">Email Address</label>
+
+                        <input id="email" placeholder="example@email.com" type="email"
+                            class="input-text form-control @error('email') is-invalid @enderror" name="email"
+                            value="{{ old('email') }}" required autocomplete="email" />
+
+                        @error('email')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="mb-2 row">
+                    <div class="col-12 input-group w-100 phone-number-input">
+                        <label class="form-label" for="">Phone Number</label>
+
+                        <input id="number" type="number"
+                            class="input-text form-control w-100 @error('number') is-invalid @enderror d-block"
+                            name="number" value="{{ old('number') }}" required autocomplete="number" autofocus />
+                    </div>
+                    <div class="mt-2 col-12">
+                        <span id="valid-msg" class="d-none text-danger"></span>
+                        <span id="error-msg" class="d-none text-danger"></span>
+                    </div>
+                </div>
+                <p class="pharagraph-text">
+                    *Please make sure you are using an active phone number. Please fill in your mobile number. An OTP
+                    (One Time Passcode) will be sent for verification.
+                </p>
+
+                <p class="pharagraph-text">
+                    I agree to receive marketing information, latest promotions, products and services from Loccitane
+                    Malaysia via the following channels:
+                </p>
+
+                <div class="mt-4 mb-1 row">
+                    <div class="col-12">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="privacy_policy" value="1"
+                                id="privacyPolicy" required />
+                            <label class="form-check-label" for="privacyPolicy">
+                                Email
+                            </label>
                         </div>
                     </div>
-
-                    <div class="mb-2 row">
-                        <div class="col-12">
-                            <label for="">Last Name</label>
-
-                            <input id="lname" placeholder="Enter your last name" type="text"
-                                class="input-text form-control @error('lname') is-invalid @enderror" name="lname"
-                                value="{{ old('lname') }}" required autocomplete="lname" autofocus />
-
-                            @error('lname')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
+                </div>
+                <div class="mb-2 row">
+                    <div class="col-12">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="privacy_policy" value="1"
+                                id="privacyPolicy" required />
+                            <label class="form-check-label" for="privacyPolicy">
+                                Text Message (SMS/Whatsapp)
+                            </label>
+                            <p class="small-text pl-4">Note: Please tick to receive details on your GUESS & WIN
+                                submission; failure to do so will result in forfeiture.</p>
                         </div>
                     </div>
+                </div>
 
-                    <div class="mb-2 row">
-                        <div class="col-12">
-                            <label for="">Date of Birth</label>
-                            <input id="dob" placeholder="Date of Birth" type="date"
-                                class="input-text form-control @error('dob') is-invalid @enderror" name="dob"
-                                value="{{ old('dob') }}" required autocomplete="dob" autofocus />
+                <p class="sub-heading-text"><Strong>Data Protection and Privacy Policy</Strong></p>
+                <div class="box p-2 bg-white rounded mb-2">
+                    <p class="pharagraph-text">By submitting your particulars and/or by signing this form, you agree
+                        that L’OCCITANE Malaysia Sdn Bhd may collect, use and disclose your personal data obtained by us
+                        as a result of your membership, for purposes in accordance with the Personal Data Protection Act
+                        2010 and our privacy policy (available at our website https://my.loccitane.com). You understand
+                        that by signing this form, you consent to us processing your data. Please visit our website
+                        https://my.loccitane.com for how you may access and correct your personal data or withdraw
+                        consent to the collection, use or disclosure of your personal data.</p>
+                </div>
 
-                            @error('lname')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
+
+                <div class="mb-2 row">
+                    <div class="col-12">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="privacy_policy" value="1"
+                                id="privacyPolicy" required />
+                            <label class="form-check-label" for="privacyPolicy">
+                                *I agree to L'OCCITANE Malaysia group using and disclosing your personal information to
+                                contact you about other goods and services and using your information for direct
+                                marketing purposes including contact by phone, email, SMS or other electronic means.
+                            </label>
                         </div>
                     </div>
-
-                    <div class="mb-2 row">
-                        <div class="col-12">
-                            <label for="">Email Address</label>
-
-                            <input id="email" placeholder="example@email.com" type="email"
-                                class="input-text form-control @error('email') is-invalid @enderror" name="email"
-                                value="{{ old('email') }}" required autocomplete="email" />
-
-                            @error('email')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
+                </div>
+                <div class="mb-2 row">
+                    <div class="col-12">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="marketing" value="1"
+                                id="marketing" required />
+                            <label class="form-check-label" for="marketing">
+                                *I hereby consent to the Processing of my Personal Data for the above Purpose and agree
+                                to the terms in the Data Protection and Privacy Policy Notice.
+                            </label>
                         </div>
                     </div>
-
-                    <div class="mb-2 row">
-                        <div class="col-12 input-group w-100">
-                            <label for="">Phone Number</label>
-
-                            <input id="number" type="number"
-                                class="input-text form-control w-100 @error('number') is-invalid @enderror"
-                                name="number" value="{{ old('number') }}" required autocomplete="number" autofocus />
-                        </div>
-                        <div class="mt-2 col-12">
-                            <span id="valid-msg" class="d-none text-danger"></span>
-                            <span id="error-msg" class="d-none text-danger"></span>
+                </div>
+                <div class="capcha-box bg-white p-5 rounded mb-3"></div>
+                <div class="mb-0 row">
+                    <div class="col-12">
+                        <button id="submitButton" type="submit" class="button button-primary w-100 mb-2">
+                            {{ __('SUBMIT') }}
+                        </button>
+                        <div class="bottom-text text-center">
+                            <a href="{{ route('login') }}" class="">Back</a>
                         </div>
                     </div>
-
-                    <div class="mb-2 row">
-                        <div class="col-12 input-group">
-                            <select class="form-select input-text" name="where" aria-label="Default select example">
-                                <option selected disabled>
-                                    Where do you find this event ?
-                                </option>
-                                <option value="Facebook">Facebook</option>
-                                <option value="TikTok">TikTok</option>
-                                <option value="Instagram">Instagram</option>
-                                <option value="XiaoHongShu (小红书)">
-                                    XiaoHongShu (小红书)
-                                </option>
-                                <option value="Friend Referral">
-                                    Friend Referral
-                                </option>
-                                <option value="Walk-in  ">Walk-in</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="mt-4 mb-2 row">
-                        <div class="col-12">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="privacy_policy" value="1"
-                                    id="privacyPolicy" required />
-                                <label class="form-check-label" for="privacyPolicy">
-                                    I agree to the
-                                    <a href="http://mentholatum.com.my/sunplay/personal-data-protection-notice.pdf">Privacy
-                                        Policy</a>.
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mb-2 row">
-                        <div class="col-12">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="marketing" value="1"
-                                    id="marketing" required />
-                                <label class="form-check-label" for="marketing">
-                                    I agree to receive marketing and promotional
-                                    communications from Hadalabo Experience Malaysia (RMM) via e-mail and
-                                    text messages (including SMS/WhatsApp).
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mt-5 mb-0 row">
-                        <div class="col-12">
-                            <button id="submitButton" type="submit" class="main-btn btn btn-primary">
-                                {{ __('SUBMIT') }}
-                            </button>
-                            <div class="bottom-text">
-                                <p class="already-register">
-                                    Already Registered
-                                </p>
-                                <p class="already-register">
-                                    Please Login
-                                    <a href="{{ route('login') }}" class="">here</a>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
+                </div>
+            </form>
+                <div class="footer-container p-4">
+             @include('components.footer')
+        </div>
         </div>
     </div>
 </x-guest-layout>

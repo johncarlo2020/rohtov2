@@ -96,16 +96,11 @@
 
                         <!-- Main Content Area (with dotted border) -->
                         <div class="task-content-area flex-grow-1 py-1 px-2 me-2">
-                            <h6 class="task-title fw-bold mb-1">{{ $task['title'] }}</h6>
+                            <h6 class="task-title fw-bold mb-1">{{ $task['title'] }} <i class="fa-solid fa-circle-check ml-1"></i></h6>
                             <p class="task-description text-muted small mb-0 sub-heading-text-small"
                                 style="line-height: 1.3;">
                                 {{ $task['description'] }}
                             </p>
-                        </div>
-
-                        <!-- Checkmark Area -->
-                        <div class="task-status-checkmark d-flex align-items-center justify-content-center">
-                            <i class="fa-solid fa-circle-check"></i>
                         </div>
                     </a>
                 </div>

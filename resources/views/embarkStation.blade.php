@@ -5,107 +5,128 @@
                 @include('components.branding')
             </div>
         </div>
-        @if($station->id == 1)
-        <div class="success h-100 d-flex flex-column justify-content-center">
-            <div class="congrats-container mt-5 px-4">
-                <div class="congrats-icon mb-3">
-                    <img src="{{ asset('files/main/congratulations.webp') }}" alt="Congratulations" />
+        @if ($station->id == 1)
+            <div class="success h-100 d-flex flex-column justify-content-center">
+                <div class="congrats-container mt-5 px-4">
+                    <div class="congrats-icon mb-3">
+                        <img src="{{ asset('files/main/congratulations.webp') }}" alt="Congratulations" />
+                    </div>
+                    <h1 class="heading-text text-center">
+                        You're
+                        @if ($status == 'registered')
+                            now
+                        @else
+                            already
+                        @endif
+                        part of our Big Little Things community! Start recycling your beauty empties with us—every small
+                        action creates a
+                        big impact for the planet.
+                    </h1>
+                    <p class="pharagrap-text text-center px-5">Thank you!</p>
+
                 </div>
-                <h1 class="heading-text text-center">
-                    You're
-                    @if($status == 'registered')
-                    now
-                    @else
-                    already
-                    @endif
-                    part of our Big Little Things community! Start recycling your beauty empties with us—every small action creates a
-                    big impact for the planet.
-                </h1>
-                <p class="pharagrap-text text-center px-5">Thank you!</p>
-
+                <div class="button-container mt-auto">
+                    <a id="homeButton" href="{{ route('embarckJourney') }}" class="button button-primary w-100">
+                        Home
+                    </a>
+                </div>
             </div>
-            <div class="button-container mt-auto">
-                <a id="homeButton" href="{{ route('embarckJourney') }}" class="button button-primary w-100">
-                    Home
-                </a>
-            </div>
-        </div>
         @elseif($station->id == 2 || $station->id == 3)
-
-        <div class="photo-container ">
-            <div class="info-container bg-white p-3 rounded mb-5">
-                <h1 class="heading-text text-center mb-4">Task {{ $station->id }}: {{$station->name}}</h1>
-                <p class="pharagraph-text text-center">{{$station->description}}</p>
-                <p class="pharagraph-text text-center">Snap and upload a photo of you using a recycle bag while shopping.
-                </p>
-                <div class="upload">
-                    <div class="image-upload-container text-center my-3">
-
-
+            <div class="photo-container ">
+                <div class="info-container bg-white p-3 rounded mb-5">
+                    <h1 class="heading-text text-center mb-4">Task {{ $station->id }}: {{ $station->name }}</h1>
+                    <p class="pharagraph-text text-center">{{ $station->description }}</p>
+                    <p class="pharagraph-text text-center">Snap and upload a photo of you using a recycle bag while
+                        shopping.
+                    </p>
+                    <div class="upload">
+                        <div class="image-upload-container text-center my-3">
                             <label for="file-upload" class="file-upload-label">
                                 <div id="image-preview" class="image-preview">
                                     @php
-                                    $imageColumn = 'task_' . $station->id . '_image';
+                                        $imageColumn = 'task_' . $station->id . '_image';
                                     @endphp
-                                    @if(auth()->user()->$imageColumn)
-                                    <!-- Display the existing image if available -->
-                                    <img src="{{ asset('storage/uploads/' . auth()->user()->$imageColumn) }}" alt="Uploaded Image"
-                                        class="uploaded-image-preview">
+                                    @if (auth()->user()->$imageColumn)
+                                        <!-- Display the existing image if available -->
+                                        <img src="{{ asset('storage/uploads/' . auth()->user()->$imageColumn) }}"
+                                            alt="Uploaded Image" class="uploaded-image-preview">
                                     @else
-                                    <!-- Show the upload icon and text if no image is uploaded -->
-                                    <span class="upload-icon"><i class="fa-solid fa-cloud-arrow-up"></i></span>
-                                    <span class="upload-text">Upload your image</span>
+                                        <!-- Show the upload icon and text if no image is uploaded -->
+                                        <span class="upload-icon"><i class="fa-solid fa-cloud-arrow-up"></i></span>
+                                        <span class="upload-text">Upload your image</span>
                                     @endif
                                 </div>
                             </label>
 
-                        <form id="imageUploadForm" enctype="multipart/form-data">
-                            @csrf
-                            <input type="file" class="form-control visually-hidden" id="file-upload" name="image" accept="image/*">
-                            <input type="hidden" name="task_id" value="{{ $station->id }}">
-                        </form>
-                    </div>
-                    <div class="text-center">
-                        <button type="submit" class="button button-primary submit-btn w-100">Submit</button>
+                            <form id="imageUploadForm" enctype="multipart/form-data">
+                                @csrf
+                                <input type="file" class="form-control visually-hidden" id="file-upload"
+                                    name="image" accept="image/*">
+                                <input type="hidden" name="task_id" value="{{ $station->id }}">
+                            </form>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="button button-primary submit-btn w-100">Submit</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="text-center mt-auto px-4 d-flex justify-content-center">
+                <div class="text-center mt-auto px-4 d-flex justify-content-center">
 
-                <a class="button button-white w-50" href="{{ route('embarckJourney') }}">Back</a>
-            </div>
-        </div>
-        <div class="success h-100 d-flex flex-column justify-content-center d-none">
-            <div class="congrats-container mt-5 px-4">
-                <div class="congrats-icon mb-3">
-                    <img src="{{ asset('files/main/congratulations.webp') }}" alt="Congratulations" />
+                    <a class="button button-white w-50" href="{{ route('embarckJourney') }}">Back</a>
                 </div>
-                <h1 class="heading-text text-center">Your photo has been uploaded successfully.</h1>
-                <p class="pharagrap-text text-center px-5">Thank you for contributing to a greener future—every action helps reduce waste and protect the planet.</p>
             </div>
-            <div class="button-container mt-auto">
-                   <a id="homeButton" href="{{ route('embarckJourney') }}" class="button button-primary w-100">
-                    Home
-                </a>
+            <div class="success h-100 d-flex flex-column justify-content-center d-none">
+                <div class="congrats-container mt-5 px-4">
+                    <div class="congrats-icon mb-3">
+                        <img src="{{ asset('files/main/congratulations.webp') }}" alt="Congratulations" />
+                    </div>
+                    <h1 class="heading-text text-center">Your photo has been uploaded successfully.</h1>
+                    <p class="pharagrap-text text-center px-5">Thank you for contributing to a greener future—every
+                        action helps reduce waste and protect the planet.</p>
+                </div>
+                <div class="button-container mt-auto">
+                    <a id="homeButton" href="{{ route('embarckJourney') }}" class="button button-primary w-100">
+                        Home
+                    </a>
+                </div>
             </div>
-        </div>
+        @elseif($station->id == 4)
+            <div class="success h-100 d-flex flex-column justify-content-center">
+                <div class="congrats-container mt-3 px-4">
+                    <h1 class="heading-text text-center">Task 4: Switch to Eco-Refills</h1>
+                    <p class="pharagrap-text text-center px-2">
+                        Choose eco-refills for your favorite L'Occitane products and reduce waste with every purchase. <br/> <br/> Purchase any of L’Occitane’s Jumbo or Eco-Refills at the Ocean or Plastic Roadshow to complete this task.
+                    </p>
+                </div>
+                <div class="qr-container bg-white rounded h-75 mb-3">
 
+                </div>
+                 <p class="pharagrap-text text-center px-2">
+                       Notify our Beauty Advisor or Cashier at the point of purchase for QR code verification.
+                    </p>
+                <div class="button-container mt-auto d-flex justify-content-center">
+                    <a id="homeButton" href="{{ route('embarckJourney') }}" class="button button-white w-50 text-center">
+                        Home
+                    </a>
+                </div>
+            </div>
         @else
-        <div class="success h-100 d-flex flex-column justify-content-center ">
-            <div class="congrats-container mt-5 px-4">
-                <div class="congrats-icon mb-3">
-                    <img src="{{ asset('files/main/congratulations.webp') }}" alt="Congratulations" />
+            <div class="success h-100 d-flex flex-column justify-content-center ">
+                <div class="congrats-container mt-5 px-4">
+                    <div class="congrats-icon mb-3">
+                        <img src="{{ asset('files/main/congratulations.webp') }}" alt="Congratulations" />
+                    </div>
+                    <h1 class="heading-text text-center">Your photo has been uploaded successfully.</h1>
+                    <p class="pharagrap-text text-center px-5">Thank you for contributing to a greener future—every
+                        action helps
+                        reduce waste and protect the planet.</p>
                 </div>
-                <h1 class="heading-text text-center">Your photo has been uploaded successfully.</h1>
-                <p class="pharagrap-text text-center px-5">Thank you for contributing to a greener future—every action helps
-                    reduce waste and protect the planet.</p>
+                <div class="button-container mt-auto">
+                    <a id="homeButton" href="{{ route('embarckJourney') }}" class="button button-primary w-100">
+                        Home
+                    </a>
+                </div>
             </div>
-            <div class="button-container mt-auto">
-                <a id="homeButton" href="{{ route('embarckJourney') }}" class="button button-primary w-100">
-                    Home
-                </a>
-            </div>
-        </div>
         @endif
 
         <div class="footer-container p-4">
@@ -143,19 +164,19 @@
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const fileUpload = document.getElementById('file-upload');
         const imagePreview = document.getElementById('image-preview');
         const submitBtn = document.querySelector('.submit-btn');
         const form = document.getElementById('imageUploadForm');
 
-        fileUpload.addEventListener('change', function (event) {
+        fileUpload.addEventListener('change', function(event) {
             const file = event.target.files[0];
 
             if (file) {
                 const reader = new FileReader();
 
-                reader.onload = function (e) {
+                reader.onload = function(e) {
                     imagePreview.innerHTML = '';
 
                     const img = document.createElement('img');
@@ -173,7 +194,7 @@
             }
         });
 
-        submitBtn.addEventListener('click', function (e) {
+        submitBtn.addEventListener('click', function(e) {
             e.preventDefault();
 
             const file = fileUpload.files[0];
@@ -184,12 +205,12 @@
 
             const formData = new FormData(form);
             fetch("{{ route('upload.image') }}", {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
-                },
-                body: formData,
-            })
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                    },
+                    body: formData,
+                })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
@@ -206,4 +227,3 @@
         });
     });
 </script>
-

@@ -37,7 +37,10 @@
                 and discover
                 thoughtful ways to make choices that are gentler on the planet.
             </p>
-            <img class="info-img mb-3" src="{{ asset('files/main/welcome_info_img.webp') }}" />
+
+        </div>
+        <img class="info-img mb-3" src="{{ asset('files/main/welcome_info_img.webp') }}" />
+        <div class="info-box px-5 mb-3">
             <p class="pharagraph-text text-center mb-0">Date: 27 May – 2 June 2025</p>
             <p class="pharagraph-text text-center mb-0">
                 Time: 10am – 10pm</p>

@@ -6,7 +6,7 @@
             </div>
         </div>
 
-        <div id="form" class="guest-container rounded-3 bg-white p-3 mb-4">
+        <div id="form" class="guest-container rounded-3 bg-white p-3 mb-4 fade-in">
             <div class="d-flex justify-content-center align-items-center gap-3 px-4 mb-4">
                 <img src="{{ asset('files/main/turtle.webp') }}" alt="Sea Turtle" class="mb-3 turtle" />
                 <div>
@@ -32,7 +32,7 @@
 
             <div class="submission-area mb-4 text-center">
                 {{-- Placeholder for input field --}}
-                <input name="number" type="number" class="form-control w-100 mx-auto guest-input" value="{{ $user->guess }}" placeholder="000" max="999"
+                <input id="trashNumber" name="number" type="number" class="form-control w-100 mx-auto guest-input" value="{{ $user->guess }}" placeholder="000" max="999"
                     oninput="this.value = this.value.slice(0, 3)">
 
             </div>
@@ -69,14 +69,14 @@
             </div>
         </div>
 
-            <div class="confirm-container congrats-container mt-5  d-none">
+            <div class="confirm-container congrats-container mt-5  d-none fade-in">
                 <div class="congrats-icon mb-3">
                     <img src="{{ asset('files/main/congratulations.webp') }}" alt="Congratulations" />
                 </div>
                 <p class="fw-bold pharagrap-text text-center px-5">You answer have been submitted</p>
             </div>
 
-            <div class="confirm-container text-center mt-auto px-4 flex-self-end d-none">
+            <div class="confirm-container text-center mt-auto px-4 flex-self-end d-none fade-in">
                 <a id="homeButton" href="{{ route('preRegEvent') }}" class="button button-primary w-100 mb-2">
                     Home
                 </a>

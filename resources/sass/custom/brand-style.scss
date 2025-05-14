@@ -149,3 +149,11 @@
 #dateForm.d-none {
     display: none !important;
 }
+
+#trashNumber {
+    &:focus {
+        &::placeholder {
+            color: transparent; // Changed from display: none
+        }
+    }
+}

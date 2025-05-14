@@ -24,37 +24,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
         rel="stylesheet" />
-
-    <style>
-        /* Animation classes */
-        .fade-in {
-            animation: fadeIn 0.5s ease forwards;
-        }
-
-        .fade-out {
-            animation: fadeOut 0.3s ease forwards;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeOut {
-            from { opacity: 1; transform: translateY(0); }
-            to { opacity: 0; transform: translateY(-10px); }
-        }
-
-        /* Make sure containers are initially invisible but take up space */
-        #qrContainer, #dateForm {
-            opacity: 0;
-        }
-
-        /* When they're hidden, don't take up space */
-        #qrContainer.d-none, #dateForm.d-none {
-            display: none !important;
-        }
-    </style>
 </head>
 
 <body class="antialiased welcome-page">

@@ -6,7 +6,7 @@
             </div>
         </div>
 
-        <div class="guest-container">
+        <div class="guest-container fade-in">
             <div class="header-box rounded-3 bg-white p-3 mb-3 ">
                 <div class="d-flex justify-content-center align-items-center gap-3 px-4 mb-2">
                     <img src="{{ asset('files/main/globe.webp') }}" alt="Sea Turtle" class="mb-3 turtle" />

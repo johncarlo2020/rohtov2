@@ -6,12 +6,12 @@
             </div>
         </div>
         @if ($station->id == 1)
-            <div class="success h-100 d-flex flex-column justify-content-center">
+            <div class="success h-100 d-flex flex-column justify-content-center fade-in">
                 <div class="congrats-container mt-5 px-4">
                     <div class="congrats-icon mb-3">
                         <img src="{{ asset('files/main/congratulations.webp') }}" alt="Congratulations" />
                     </div>
-                    <h1 class="heading-text text-center">
+                    <h1 class="heading-text text-center mb-3">
                         You're
                         @if ($status == 'registered')
                             now
@@ -22,17 +22,17 @@
                         action creates a
                         big impact for the planet.
                     </h1>
-                    <p class="pharagrap-text text-center px-5">Thank you!</p>
+                    <p class="heading-text text-center px-5 fw-bold">Thank you!</p>
 
                 </div>
-                <div class="button-container mt-auto">
+                <div class="button-container mt-auto px-2">
                     <a id="homeButton" href="{{ route('embarckJourney') }}" class="button button-primary w-100">
                         Home
                     </a>
                 </div>
             </div>
         @elseif($station->id == 2 || $station->id == 3)
-            <div class="photo-container ">
+            <div class="photo-container fade-in">
                 <div class="info-container bg-white p-3 rounded mb-5">
                     <h1 class="heading-text text-center mb-4">Task {{ $station->id }}: {{ $station->name }}</h1>
                     <p class="pharagraph-text text-center">{{ $station->description }}</p>
@@ -75,7 +75,7 @@
                     <a class="button button-white w-50" href="{{ route('embarckJourney') }}">Back</a>
                 </div>
             </div>
-            <div class="success h-100 d-flex flex-column justify-content-center d-none">
+            <div class="success h-100 d-flex flex-column justify-content-center d-none fade-in">
                 <div class="congrats-container mt-5 px-4">
                     <div class="congrats-icon mb-3">
                         <img src="{{ asset('files/main/congratulations.webp') }}" alt="Congratulations" />
@@ -91,7 +91,7 @@
                 </div>
             </div>
         @elseif($station->id == 4)
-            <div class="photo-container ">
+            <div class="photo-container fade-in ">
 
                 <div class=" h-100 d-flex flex-column justify-content-center">
                     <div class="congrats-container mt-3 px-4">
@@ -113,7 +113,7 @@
                     </div>
                 </div>
             </div>
-            <div class="success h-100 d-flex flex-column justify-content-center d-none">
+            <div class="success h-100 d-flex flex-column justify-content-center d-none fade-in">
                 <div class="congrats-container mt-5 px-4">
                     <div class="congrats-icon mb-3">
                         <img src="{{ asset('files/main/congratulations.webp') }}" alt="Congratulations" />
@@ -129,7 +129,7 @@
                 </div>
             </div>
         @else
-            <div class="success h-100 d-flex flex-column justify-content-center ">
+            <div class="success h-100 d-flex flex-column justify-content-center fade-in ">
                 <div class="congrats-container mt-5 px-4">
                     <div class="congrats-icon mb-3">
                         <img src="{{ asset('files/main/congratulations.webp') }}" alt="Congratulations" />

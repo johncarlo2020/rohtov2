@@ -69,6 +69,7 @@ class RegisteredUserController extends Controller
             'otp' => $otp,
             'country'=> $country->name,
             'marketing' => $marketing,
+            'type'=>'pre-reg',
             'last_login_at' => Carbon::now(),
             'password' => Hash::make('password'),
         ]);

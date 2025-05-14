@@ -282,7 +282,7 @@ public function embarckJourney()
             $user->email_verified_at = Carbon::now();
             $user->save();
 
-            // $data = GlobalHelper::createSampleProfile();
+             $data = GlobalHelper::createSampleProfile();
             //  dd($data);
 
             return redirect(RouteServiceProvider::HOME);

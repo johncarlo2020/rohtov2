@@ -360,3 +360,16 @@ ol {
     background-color: #e0a800;
     border-color: #d39e00;
 }
+.accordion-button {
+    //remove  border when collapsed
+    border: none;
+    background-color: transparent;
+    color: $black;
+
+    &:focus {
+        box-shadow: none;
+        border: none;
+        outline: none;
+    }
+
+}

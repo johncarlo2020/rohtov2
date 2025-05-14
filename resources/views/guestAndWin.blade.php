@@ -87,6 +87,12 @@
         </div>
     </div>
     <script>
+        @if($user->guess != null)
+                document.querySelectorAll('.confirm-container').forEach(function (el) {
+                    el.classList.remove('d-none');
+                });
+            document.getElementById('form').classList.add('d-none');
+        @endif
           document.getElementById('guess').addEventListener('click', function () {
                 const selectedInput = document.querySelector('.guest-input');
 

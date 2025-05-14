@@ -92,7 +92,9 @@ class StationController extends Controller
     {
         $request->validate([
             'baby_img' => 'required|image|max:2048',
+            'baby_name' => 'required|string|max:255',
         ]);
+
 
 
         // Store the uploaded image in `public/babies`
@@ -106,10 +108,20 @@ class StationController extends Controller
             return response()->json(['error' => 'Image upload failed.'], 500);
         }
 
-        // Fire the event
-        broadcast(new babyEvent($publicPath, 'ipad','ipad','ipad'))->toOthers();
 
-        return redirect()->back();
+        // Get baby name from request or use default
+        $babyName = $request->baby_name ?? 'Baby';
+
+        // Fire the event
+        broadcast(new babyEvent($publicPath, $babyName, 'dj', 'ipad'))->toOthers();
+
+        // Return success response
+        return response()->json([
+            'success' => true,
+            'message' => 'Baby uploaded successfully',
+            'imgPath' => $publicPath,
+            'name' => $babyName
+        ]);
     }
 
     public function index(Station $station)

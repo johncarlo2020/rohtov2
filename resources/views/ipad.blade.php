@@ -15,6 +15,9 @@
             <div class="w-100" id="welcomeContiner">
                 @include('components.welcomeContainer')
             </div>
+            <div class="w-100" id="getName" class="hidden">
+                @include('components.getName')
+            </div>
             <div class="w-100" id="selectCharacter" class="hidden">
                 @include('components.selectCharacter')
             </div>
@@ -24,9 +27,10 @@
             <div class="w-100" id="completeContainer" class="hidden">
                 @include('components.completeContainer')
             </div>
-            <form id="uploadForm" action="{{ route('upload.babyIpad') }}" method="POST" enctype="multipart/form-data" style="display:none;">
+            <form id="uploadForm" action="{{ route('upload.babyIpad') }}" method="POST" enctype="multipart/form-data"
+                style="display:none;">
                 @csrf
-                <input type="file" name="baby_img" id="baby_img" accept="image/png">
+                <input type="file" name="baby_img" id="baby_img" accept="image/png, image/webp">
                 <input type="text" name="baby_name" id="baby_name">
                 <button type="submit" id="uploadButton"></button>
             </form>
@@ -35,19 +39,24 @@
     <script>
         const loaderContainer = document.querySelector('.loader-container');
         const step = [{
-            elementId: 'welcomeContiner',
-            completed: false,
-        },
-        {
-            elementId: 'selectCharacter',
-            completed: false,
-        }, {
-            elementId: 'editCharacter',
-            completed: false,
-        }, {
-            elementId: 'completeContainer',
-            completed: false,
-        }];
+                elementId: 'welcomeContiner',
+                completed: false,
+            },
+            {
+                elementId: 'getName',
+                completed: false,
+            },
+            {
+                elementId: 'selectCharacter',
+                completed: false,
+            }, {
+                elementId: 'editCharacter',
+                completed: false,
+            }, {
+                elementId: 'completeContainer',
+                completed: false,
+            }
+        ];
 
         const characterNameMap = [
             'Bounci',
@@ -62,7 +71,7 @@
             skin: '',
             hair: '',
             face: '',
-            character:'',
+            character: '',
         };
 
         function showStep(stepIndex) {
@@ -104,7 +113,7 @@
             if (currentStepIndex !== -1 && currentStepIndex < step.length - 1) {
                 showStep(currentStepIndex + 1);
             } else if (currentStepIndex === -1 && step.length > 0) {
-                 showStep(0);
+                showStep(0);
             }
         }
 
@@ -152,13 +161,6 @@
         }
 
         function selectSkin(skin) {
-            selectedCharacter = {
-                name: '',
-                skin: '',
-                hair: '',
-                face: '',
-                character:'',
-            };
 
             //remove active class from all buttons
             const characterButtons = document.querySelectorAll('.item');
@@ -171,7 +173,7 @@
             selectedCharacter.skin = skin;
             selectedCharacter.character = characterNameMap[skin - 1];
             console.log(selectedCharacter.skin, skin);
-            initEditCharacter(characterName,characterEditContainer);
+            initEditCharacter(characterName, characterEditContainer);
             nextStep();
         }
 
@@ -184,7 +186,8 @@
                 const nameElement = document.createElement('p');
                 nameElement.textContent = selectedCharacter.character;
                 const skinImage = document.createElement('img');
-                skinImage.src = `{{ asset('images/character/skin/${selectedCharacter.skin}/${selectedCharacter.skin}.webp') }}`;
+                skinImage.src =
+                    `{{ asset('images/character/skin/${selectedCharacter.skin}/${selectedCharacter.skin}.webp') }}`;
                 skinImage.alt = 'Selected Skin';
                 skinImage.classList.add('skin');
                 nameElement.classList.add('selected-skin-name');
@@ -196,13 +199,15 @@
 
             if (edit) {
                 const hairImage = document.createElement('img');
-                hairImage.src = `{{ asset('images/character/hair/${selectedCharacter.hair}/${selectedCharacter.hair}.webp') }}`;
+                hairImage.src =
+                    `{{ asset('images/character/hair/${selectedCharacter.hair}/${selectedCharacter.hair}.webp') }}`;
                 hairImage.alt = 'Selected Hair';
                 hairImage.classList.add('hair');
                 characterContainer.appendChild(hairImage);
 
                 const faceImage = document.createElement('img');
-                faceImage.src = `{{ asset('images/character/face/${selectedCharacter.face}/${selectedCharacter.face}.webp') }}`;
+                faceImage.src =
+                    `{{ asset('images/character/face/${selectedCharacter.face}/${selectedCharacter.face}.webp') }}`;
                 faceImage.alt = 'Selected Face';
                 faceImage.classList.add('face');
                 characterContainer.appendChild(faceImage);
@@ -218,70 +223,87 @@
             const characterEditContainer = 'finishedCharacterContainer';
             initEditCharacter(characterName, characterEditContainer, true);
             showLoader();
-            showStep(3);
+            showStep(4);
             createSpriteSheet();
         }
 
-        let sprites= [];
+        let sprites = [];
         const frameRate = 6;
 
         function waitForImageLoad(image) {
             return new Promise((resolve) => {
-            if (image.complete) resolve();
-            else image.onload = resolve;
+                if (image.complete) resolve();
+                else image.onload = resolve;
             });
         }
 
         let spriteSheetImageConverted = new Image();
 
-       async function createSpriteSheet() {
+        async function createSpriteSheet() {
             // Get entered character name or default to "Unnamed"
             const frameCount = 7;
 
             try {
-            const frames = [];
-            for (let i = 1; i < frameCount; i++) {
-                const frameCanvas = await captureFrame(i);
-                frames.push(frameCanvas);
-            }
+                const frames = [];
+                for (let i = 1; i < frameCount; i++) {
+                    const frameCanvas = await captureFrame(i);
+                    frames.push(frameCanvas);
+                }
 
-            // Create a single sprite sheet from the captured frames
-            const tempCanvas = document.createElement("canvas");
-            const tempCtx = tempCanvas.getContext("2d");
-            const frameWidth = frames[0].width;
-            const frameHeight = frames[0].height;
+                // Create a single sprite sheet from the captured frames
+                const tempCanvas = document.createElement("canvas");
+                const tempCtx = tempCanvas.getContext("2d");
+                const frameWidth = frames[0].width;
+                const frameHeight = frames[0].height;
 
-            tempCanvas.width = frameWidth * frameCount;
-            tempCanvas.height = frameHeight;
-            frames.forEach((frame, index) => {
-                tempCtx.drawImage(frame, index * frameWidth, 0);
-            });
+                tempCanvas.width = frameWidth * frameCount;
+                tempCanvas.height = frameHeight;
+                frames.forEach((frame, index) => {
+                    tempCtx.drawImage(frame, index * frameWidth, 0);
+                });
 
-            // Convert temporary canvas to image
-            const spriteSheetImage = new Image();
-            spriteSheetImage.src = tempCanvas.toDataURL("image/png");
+                // Convert temporary canvas to image
+                const spriteSheetImage = new Image();
+                spriteSheetImage.src = tempCanvas.toDataURL("image/png"); // Use PNG for best compatibility
 
-            // Clear the previous image source before assigning a new one
-            spriteSheetImageConverted.src = ""; // or null
-            spriteSheetImageConverted.src = spriteSheetImage.src;
+                // Clear the previous image source before assigning a new one
+                spriteSheetImageConverted.src = ""; // or null
+                spriteSheetImageConverted.src = spriteSheetImage.src;
 
-            hideLoader();
+                hideLoader();
 
             } catch (error) {
-            console.error("Error creating sprite sheet:", error);
+                console.error("Error creating sprite sheet:", error);
             }
 
         }
 
+        function addName() {
+            // Limit the name to 5 characters
+            nameInput.value = nameInput.value.substring(0, 5);
+            selectedCharacter.name = nameInput.value;
+
+            // Check if the name is empty
+            if (selectedCharacter.name.trim() === '') {
+                return;
+            }
+
+            console.log(selectedCharacter.name);
+            nextStep();
+        }
+
         function uploadSpriteSheet() {
-            const uploadButton = document.getElementById('uploadButton');
-            const babyImgInput   = document.getElementById('baby_img');
-            const babyNameInput  = document.getElementById('baby_name');
+
+            // Check if name is set
+            if (!selectedCharacter.name || selectedCharacter.name.trim() === '') {
+                alert('Please enter a name for your character.');
+                return;
+            }
 
             // draw the spriteSheetImageConverted into a canvas so we can call toBlob()
             const img = spriteSheetImageConverted;
             const canvas = document.createElement('canvas');
-            canvas.width  = img.naturalWidth || img.width;
+            canvas.width = img.naturalWidth || img.width;
             canvas.height = img.naturalHeight || img.height;
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0);
@@ -291,15 +313,54 @@
                     console.error('Failed to generate blob from sprite sheet.');
                     return;
                 }
-                const file = new File([blob], "sprite_sheet.webp", { type: "image/webp" });
-                const dataTransfer = new DataTransfer();
-                dataTransfer.items.add(file);
-                babyImgInput.files = dataTransfer.files;
-                babyNameInput.value = 'empty';
 
+                // Log the blob details
+                console.log('Blob type:', blob.type);
+                console.log('Blob size:', blob.size);
+
+                // Create File object with PNG type instead of WebP for better compatibility
+                const file = new File([blob], "sprite_sheet.png", {
+                    type: "image/png",
+                    lastModified: new Date().getTime()
+                });
+                console.log('File created:', file);
+
+                const csrfToken = document.querySelector('input[name="_token"]').value;
                 // Submit the form
-                uploadButton.click();
-            }, "image/webp");
+                const formData = new FormData();
+                formData.append('baby_img', file, "sprite_sheet.png"); // Include filename as 3rd parameter
+                formData.append('baby_name', selectedCharacter.name); // The name from selectedCharacter context
+                formData.append('_token', csrfToken); // CSRF token for Laravel
+
+                // Debug FormData contents
+                console.log('Sending data:');
+                console.log('baby_name:', selectedCharacter.name);
+                console.log('File type:', file.type);
+                console.log('File size:', file.size, 'bytes');
+
+                // Perform AJAX request
+                fetch('{{ route('upload.babyIpad') }}', {
+                        method: 'POST',
+                        body: formData, // FormData will set Content-Type to multipart/form-data with boundary
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken, // Standard CSRF header for Laravel
+                            'Accept': 'application/json', // Expect a JSON response
+                        }
+                    })
+                    .then(response => {
+                        // Always read the JSON response, even for error status codes
+                        if (!response.ok) {
+                          console.error('Network response was not ok:', response);
+                        }
+                    })
+                    .then(data => {
+                       //reload the page
+                        location.reload();
+                    })
+                    .catch(error => {
+                        console.error('Upload failed:', error);
+                    });
+            }, "image/png"); // Use PNG format instead of WebP for better compatibility
         }
 
         async function captureFrame(frameIndex) {
@@ -320,7 +381,7 @@
             const face = character.querySelector('.face');
 
 
-         // Directly set the src for each part using the correct selectedCharacter property
+            // Directly set the src for each part using the correct selectedCharacter property
             if (selectedCharacter.skin) {
                 skin.src = `{{ asset('images/character/skin/${selectedCharacter.skin}/${frameIndex}.webp') }}`;
             }

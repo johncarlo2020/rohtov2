@@ -32,7 +32,7 @@
                 <div class="mb-2 row">
                     <div class="col-12">
                         <label class="form-label" for="">Last Name</label>
-
+                        <input type="hidden" name="utm_source" value="{{ session('utm.source') }}">
                         <input id="lname" placeholder="Enter your last name" type="text"
                             class="input-text form-control @error('lname') is-invalid @enderror" name="lname"
                             value="{{ old('lname') }}" required autocomplete="lname" autofocus />

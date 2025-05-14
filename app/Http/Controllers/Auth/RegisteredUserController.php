@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Countries;
 use App\Models\Regime;
-use App\Models\RegimeUser;
+use App\Models\Utm;
 
 use Carbon\Carbon;
 
@@ -26,8 +26,11 @@ class RegisteredUserController extends Controller
     /**
      * Display the registration view.
      */
-    public function create(): View
+    public function create(Request $request): View
     {
+        if ($request->has('utm_source')) {
+            session(['utm.source' => $request->get('utm_source')]);
+        }
         return view('auth.register');
     }
 
@@ -63,6 +66,7 @@ class RegisteredUserController extends Controller
         $user = User::create([
             'fname' => $request->fname,
             'lname' => $request->lname,
+
             'dob' => $request->dob,
             'number' => $phoneNumber,
             'email' => $request->email,
@@ -73,6 +77,12 @@ class RegisteredUserController extends Controller
             'last_login_at' => Carbon::now(),
             'password' => Hash::make('password'),
         ]);
+
+        if ($request->filled('utm_source')) {
+            Utm::create([
+                'utm_source' => $request->input('utm_source'),
+            ]);
+        }
 
         $user->assignRole('client');
         Auth::login($user);

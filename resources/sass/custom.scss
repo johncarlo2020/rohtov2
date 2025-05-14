@@ -51,9 +51,13 @@ ol {
 
     // disabled state
 
-    &.disabled {
-        background: $disabled !important;
-        color: $disabled-color !important;
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+     &.disabled {
+        opacity: 0.5;
         cursor: not-allowed;
     }
 

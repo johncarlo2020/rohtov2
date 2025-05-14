@@ -16,7 +16,7 @@
             <a id="homeButton" href="{{ route('guestAndWin') }}" class="button button-primary w-100 mb-3">
                Guess & Win
             </a>
-            <a id="homeButton" href="{{ route('preRegEvent') }}" class="button button-primary w-100 mb-3 disabled">
+            <a id="homeButton" href="#" class="button button-primary w-100 mb-3 disabled">
                 Ocean Or Plastic Roadshow
             </a>
         </div>

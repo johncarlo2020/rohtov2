@@ -134,7 +134,6 @@ class StationController extends Controller
         $userAppointment = $user->userAppointments()->count();
         $selectedAppointment = $user->userAppointments()->with('appointment')->first() ?? '';
 
-
         //check if user is on first 2000 verified users
 
         return view('appointment', compact('appointments','user','is2000','userAppointment','selectedAppointment'));

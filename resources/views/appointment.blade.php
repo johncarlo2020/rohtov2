@@ -101,11 +101,11 @@
                         <a id="homeButton" href="{{ route('preRegEvent') }}" class="button button-primary w-100 mb-2">
                             Home
                         </a>
-                      <button type="button" class="button button-secondary w-100" data-bs-toggle="modal"
+
+                      <button type="button" class="button button-secondary w-100" @disabled(!is_object($selectedAppointment) || ($selectedAppointment->rescheduled == 1)) data-bs-toggle="modal"
                             data-bs-target="#exampleModal">
                             Reschedule
                         </button>
-                        {{-- <button id="reschedule" type="button" class="button button-secondary w-100" >Reschedule</button> --}}
                     </div>
             </div>
         </div>
@@ -257,23 +257,25 @@
                 })
                     .then(response => response.json())
                     .then(data => {
-                        // Fade out date form
-                        document.getElementById('dateForm').classList.remove('fade-in');
-                        document.getElementById('dateForm').classList.add('fade-out');
+                        // // Fade out date form
+                        // document.getElementById('dateForm').classList.remove('fade-in');
+                        // document.getElementById('dateForm').classList.add('fade-out');
 
-                        // After animation completes, hide date form and show QR with animation
-                        setTimeout(() => {
-                            document.getElementById('dateForm').classList.add('d-none');
-                            document.getElementById('qrContainer').classList.remove('d-none');
+                        // // After animation completes, hide date form and show QR with animation
+                        // setTimeout(() => {
+                        //     document.getElementById('dateForm').classList.add('d-none');
+                        //     document.getElementById('qrContainer').classList.remove('d-none');
 
-                            setTimeout(() => {
-                                document.getElementById('qrContainer').classList.add('fade-in');
-                            }, 50);
+                        //     if(data['appointment']['rescheduled'] == 1){
+                        //         document.getElementById('reschedule').classList.add('d-none');
+                        //     }
 
-                            if(data['appointment']['rescheduled'] == 1){
-                                document.getElementById('reschedule').classList.add('d-none');
-                            }
-                        }, 300);
+                        //     setTimeout(() => {
+                        //         document.getElementById('qrContainer').classList.add('fade-in');
+                        //     }, 50);
+                        // }, 300);
+
+                        window.location.reload();
                     })
                     .catch(error => {
 

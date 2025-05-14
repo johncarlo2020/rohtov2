@@ -68,9 +68,9 @@
                                 <div class="accordion-item border-0">
                                     <h2 class="accordion-header border-none" id="heading{{ $task->id }}">
                                         <button
-                                            class="accordion-button border-bottom guest-btn bg-white d-flex align-items-start p-3 {{ $task['status'] === 'completed' ? 'completed' : '' }}"
+                                            class="accordion-button collapsed  border-bottom guest-btn bg-white d-flex align-items-start p-3 {{ $task['status'] === 'completed' ? 'completed' : '' }}"
                                             type="button" data-bs-toggle="collapse"
-                                            data-bs-target="#collapse{{ $task->id }}" aria-expanded="true"
+                                            data-bs-target="#collapse{{ $task->id }}" aria-expanded="false"
                                             aria-controls="collapse{{ $task->id }}">
                                             <!-- Image Placeholder -->
                                             <div class="task-image-placeholder me-2">

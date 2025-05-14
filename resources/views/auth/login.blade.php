@@ -5,8 +5,8 @@
                 @include('components.branding')
             </div>
         </div>
-        <div class="form-container p-4 mt-5 bg-white rounded">
-            <h1 class="heading-text mb-4 text-center mb">
+        <div class="form-container p-4 mt-5 bg-white rounded fade-in">
+            <h1 class="heading-text mb-3 text-center">
                 LOG IN
             </h1>
             <form method="POST" action="{{ route('login') }}">

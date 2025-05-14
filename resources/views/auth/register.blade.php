@@ -5,7 +5,7 @@
                 @include('components.branding')
             </div>
         </div>
-        <div class="form-container px-4 mt-5">
+        <div class="form-container px-4 mt-5 fade-in">
             <h1 class="heading-text mb-1 text-center">
                 YOU ARE ONE STEP AWAY
             </h1>

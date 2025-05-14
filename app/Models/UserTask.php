@@ -5,18 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Appointment extends Model
+class UserTask extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'total',
+        'user_id',
+        'task_id',
+        'status', // pending, completed, in-progress
     ];
-
-    public function userAppointments()
-    {
-        return $this->hasMany(UserAppointment::class);
-    }
-
 }

@@ -6,7 +6,7 @@
             </div>
         </div>
 
-        <div class="guest-container rounded-3 bg-white p-3 mb-4 d-none">
+        <div id="form" class="guest-container rounded-3 bg-white p-3 mb-4">
             <div class="d-flex justify-content-center align-items-center gap-3 px-4 mb-4">
                 <img src="{{ asset('files/main/turtle.webp') }}" alt="Sea Turtle" class="mb-3 turtle" />
                 <div>
@@ -32,7 +32,9 @@
 
             <div class="submission-area mb-4 text-center">
                 {{-- Placeholder for input field --}}
-                <input type="number" class="form-control w-100 mx-auto guest-input" placeholder="000">
+                <input name="number" type="number" class="form-control w-100 mx-auto guest-input" value="{{ $user->guess }}" placeholder="000" max="999"
+                    oninput="this.value = this.value.slice(0, 3)">
+
             </div>
 
             <div class="terms-conditions small">
@@ -63,21 +65,56 @@
             </div>
 
             <div class="text-center">
-                <button type="button" class="button button-primary w-100">Confirm</button>
+                <button id="guess" type="button" class="button button-primary w-100">Confirm</button>
             </div>
-        </div>
-        <div class="congrats-container mt-5">
-            <div class="congrats-icon mb-3">
-                <img src="{{ asset('files/main/congratulations.webp') }}" alt="Congratulations" />
-            </div>
-            <p class="fw-bold pharagrap-text text-center px-5">You answer have been submitted</p>
         </div>
 
-         <div class="text-center mt-auto px-4 flex-self-end">
-                <button type="button" class="button button-primary w-100">Home</button>
-        </div>
+            <div class="confirm-container congrats-container mt-5  d-none">
+                <div class="congrats-icon mb-3">
+                    <img src="{{ asset('files/main/congratulations.webp') }}" alt="Congratulations" />
+                </div>
+                <p class="fw-bold pharagrap-text text-center px-5">You answer have been submitted</p>
+            </div>
+
+            <div class="confirm-container text-center mt-auto px-4 flex-self-end d-none">
+                <a id="homeButton" href="{{ route('preRegEvent') }}" class="button button-primary w-100 mb-2">
+                    Home
+                </a>
+            </div>
+
         <div class="footer-container p-4">
             @include('components.footer')
         </div>
     </div>
+    <script>
+          document.getElementById('guess').addEventListener('click', function () {
+                const selectedInput = document.querySelector('.guest-input');
+
+                const number = selectedInput.value;
+
+                fetch("{{ route('guess.submit') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        number: number
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        document.querySelectorAll('.confirm-container').forEach(function (el) {
+                            el.classList.remove('d-none');
+                        });
+                        document.getElementById('form').classList.add('d-none');
+
+
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        // Handle error here, e.g., show an error message to the user
+                    });
+            });
+    </script>
 </x-app-layout>

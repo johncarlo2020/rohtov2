@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\Appointment;
 use Illuminate\Database\Seeder;
 use App\Models\Station;
-use App\Models\Regime;
+use App\Models\Task;
 use Spatie\Permission\Models\Role;
 use App\Models\User;
 
@@ -71,6 +71,31 @@ class StationSeeder extends Seeder
         Appointment::create([
             'name' => '06-02-2025',
             'total' => '116',
+        ]);
+
+        Task::create([
+            'name' => 'Join our Big Little Things Recycling Program',
+            'description' => 'Sign up and start recycling your beauty empties with us—every small action helps reduce waste and protect the planet.'
+        ]);
+
+        Task::create([
+            'name' => 'Say No to Plastic Bags',
+            'description' => 'Skip single-use plastic bags and bring your own reusable bag when you shop.'
+        ]);
+
+        Task::create([
+            'name' => 'Skip Single-use Straw & Bottle or Cup',
+            'description' => 'Make a conscious choice to avoid plastic straws and bottles – opt for reusable alternatives.'
+        ]);
+
+        Task::create([
+            'name' => 'Switch to Eco-Refills',
+            'description' => "Choose eco-refills for your favorite L'Occitane products and reduce waste with every purchase."
+        ]);
+
+        Task::create([
+            'name' => 'Explore Sustainable Credit Card',
+            'description' => 'Show your support for greener banking—express interest in a sustainable credit card and take one more step toward a bigger environmental impact.'
         ]);
 
 

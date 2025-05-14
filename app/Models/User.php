@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'is_appointment','lname', 'email','fname','number','password','last_login_at','dob','country','otp','otp_verified'
+        'guess','is_appointment','lname', 'email','fname','number','password','last_login_at','dob','country','otp','otp_verified','task_2_image','task_3_image'
     ];
 
 
@@ -50,5 +50,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserAppointment::class);
     }
+    public function tasks()
+    {
+        return $this->belongsToMany(Task::class, 'user_tasks', 'user_id', 'task_id')
+                    ->withPivot('status');
+    }
+
 
 }

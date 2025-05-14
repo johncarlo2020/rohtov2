@@ -5,11 +5,37 @@
                 @include('components.branding')
             </div>
         </div>
-        <div class="photo-container d-none">
+        @if($station->id == 1)
+        <div class="success h-100 d-flex flex-column justify-content-center">
+            <div class="congrats-container mt-5 px-4">
+                <div class="congrats-icon mb-3">
+                    <img src="{{ asset('files/main/congratulations.webp') }}" alt="Congratulations" />
+                </div>
+                <h1 class="heading-text text-center">
+                    You're
+                    @if($status == 'registered')
+                    now
+                    @else
+                    already
+                    @endif
+                    part of our Big Little Things community! Start recycling your beauty empties with us—every small action creates a
+                    big impact for the planet.
+                </h1>
+                <p class="pharagrap-text text-center px-5">Thank you!</p>
+
+            </div>
+            <div class="button-container mt-auto">
+                <a id="homeButton" href="{{ route('embarckJourney') }}" class="button button-primary w-100">
+                    Home
+                </a>
+            </div>
+        </div>
+        @elseif($station->id == 2 || $station->id == 3)
+
+        <div class="photo-container ">
             <div class="info-container bg-white p-3 rounded mb-5">
-                <h1 class="heading-text text-center mb-4">Task 2: Say No to Plastic Bags</h1>
-                <p class="pharagraph-text text-center">Skip single-use plastic bags and bring your own reusable bag when
-                    you shop.</p>
+                <h1 class="heading-text text-center mb-4">Task {{ $station->id }}: {{$station->name}}</h1>
+                <p class="pharagraph-text text-center">{{$station->description}}</p>
                 <p class="pharagraph-text text-center">Snap and upload a photo of you using a recycle bag while shopping.
                 </p>
                 <div class="upload">
@@ -29,10 +55,11 @@
                 </div>
             </div>
             <div class="text-center mt-auto px-4 d-flex justify-content-center">
-                <button type="button" class="button button-white w-50">Back</button>
+
+                <a class="button button-white w-50" href="{{ route('embarckJourney') }}">Back</a>
             </div>
         </div>
-        <div class="success h-100 d-flex flex-column justify-content-center">
+        <div class="success h-100 d-flex flex-column justify-content-center d-none">
             <div class="congrats-container mt-5 px-4">
                 <div class="congrats-icon mb-3">
                     <img src="{{ asset('files/main/congratulations.webp') }}" alt="Congratulations" />
@@ -41,15 +68,29 @@
                 <p class="pharagrap-text text-center px-5">Thank you for contributing to a greener future—every action helps reduce waste and protect the planet.</p>
             </div>
             <div class="button-container mt-auto">
-                <button id="rescheduleButton" type="button" class="button button-secondary w-100 mb-2 mt-auto"
-                    data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    Reschedule
-                </button>
-                   <a id="homeButton" href="{{ route('preRegEvent') }}" class="button button-primary w-100">
+                   <a id="homeButton" href="{{ route('embarckJourney') }}" class="button button-primary w-100">
                     Home
                 </a>
             </div>
         </div>
+
+        @else
+        <div class="success h-100 d-flex flex-column justify-content-center ">
+            <div class="congrats-container mt-5 px-4">
+                <div class="congrats-icon mb-3">
+                    <img src="{{ asset('files/main/congratulations.webp') }}" alt="Congratulations" />
+                </div>
+                <h1 class="heading-text text-center">Your photo has been uploaded successfully.</h1>
+                <p class="pharagrap-text text-center px-5">Thank you for contributing to a greener future—every action helps
+                    reduce waste and protect the planet.</p>
+            </div>
+            <div class="button-container mt-auto">
+                <a id="homeButton" href="{{ route('embarckJourney') }}" class="button button-primary w-100">
+                    Home
+                </a>
+            </div>
+        </div>
+        @endif
 
         <div class="footer-container p-4">
             @include('components.footer')
@@ -83,6 +124,7 @@
         </div>
     </div>
 </x-app-layout>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

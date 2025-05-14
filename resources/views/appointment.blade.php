@@ -84,7 +84,7 @@
 
             </div>
 
-            <p class="sub-heading-text text-center mb-0">Date selected: <span id="selected-date"></span>, Wednesday Venue: IOI City Mall,
+            <p class="sub-heading-text text-center mb-0">Date selected: <span id="selected-date">{{ $selectedAppointment->appointment->name ?? '' }}</span>, Wednesday Venue: IOI City Mall,
                 Putrajaya – West Court on Ground Floor</p>
             <div class="p-3">
                 <p class="pharagraph-text mb-0"><Strong>Terms & Conditions</Strong></p>
@@ -97,23 +97,30 @@
                     <li class="pharagraph-text">Redemption must be made in person by the registered participant. It is
                         non-transferable and cannot be exchanged for cash, products, or services.</li>
                 </ol>
-                  <button id="submitButton" type="button" class="button button-primary w-100" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                          Home
-                    </button>
+                    <div class="button-container">
+                        <a id="homeButton" href="{{ route('preRegEvent') }}" class="button button-primary w-100 mb-2">
+                            Home
+                        </a>
+                        <!-- <button id="reschedule" type="button" class="button button-secondary w-100" data-bs-toggle="modal"
+                            data-bs-target="#exampleModal">
+                            Reschedule
+                        </button> -->
+                        <button id="reschedule" type="button" class="button button-secondary w-100" >Reschedule</button>
+                    </div>
             </div>
         </div>
 
         <!-- Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-              <div class="modal-body">
-                <a type="button" class="modal-close" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></a>
-                  <div  class="info-icon mb-3">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <a type="button" class="modal-close" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></a>
+                    <div  class="info-icon mb-3">
                     <img src="{{ asset('files/main/info.png') }}" alt="" />
                 </div>
-               <p class="modal-main-text mb-1">Do you want to pick this date for your visit ?</p>
-               <p class="warning-text text-center">Note: You may reschedule your selected date only once.</p>
+                <p class="modal-main-text mb-1">Do you want to pick this date for your visit ?</p>
+                <p class="warning-text text-center">Note: You may reschedule your selected date only once.</p>
                    <div class="">
                         <button id="submitButton" type="submit" class="button button-primary w-100 mb-2">
                            YES
@@ -122,9 +129,8 @@
                            NO
                         </button>
                     </div>
-              </div>
+                </div>
             </div>
-          </div>
         </div>
 
         <div class="footer-container p-4 mt-auto">
@@ -145,7 +151,13 @@
             @if ($userAppointment > 0)
                 document.getElementById('qrContainer').classList.remove('d-none');
             document.getElementById('dateForm').classList.add('d-none');
+                @if($selectedAppointment -> rescheduled == 1)
+                    document.getElementById('reschedule').classList.add('d-none');
+                @endif
+
             @endif
+
+
 
             document.querySelectorAll('.date-radio-input').forEach(function (input) {
                 input.addEventListener('change', function () {
@@ -159,18 +171,27 @@
 
             const dateInputs = document.querySelectorAll('.date-radio-input');
             const selectedDateText = document.getElementById('selectedDateText');
+            const reschedule = document.getElementById('reschedule');
+            reschedule.addEventListener('click', function () {
+                document.getElementById('qrContainer').classList.add('d-none');
+                document.getElementById('dateForm').classList.remove('d-none');
+            });
+
 
             // Function to update selected date text
             function updateSelectedDate(inputElement) {
                 const labelForInput = document.querySelector('label[for="' + inputElement.id + '"]');
+                const selectedDate = document.getElementById('selected-date');
                 if (labelForInput && selectedDateText) {
                     selectedDateText.textContent = labelForInput.textContent;
+                    selectedDate.textContent = labelForInput.textContent;
+
                 }
             }
 
             // Set initial selected date text based on checked input
             const initiallyCheckedInput = document.querySelector('.date-radio-input:checked');
-            const selectedDate = document.getElementById('selected-date');
+
             if (initiallyCheckedInput) {
                 updateSelectedDate(initiallyCheckedInput);
                 updateSelectedDate(selectedDate);
@@ -221,11 +242,12 @@
                     .then(data => {
                         document.getElementById('qrContainer').classList.remove('d-none');
                         document.getElementById('dateForm').classList.add('d-none');
-
+                        if(data['appointment']['rescheduled'] == 1){
+                            document.getElementById('reschedule').classList.add('d-none');
+                        }
                     })
                     .catch(error => {
-                        console.error('Error:', error);
-                        alert('Something went wrong.');
+
                     });
             });
         });

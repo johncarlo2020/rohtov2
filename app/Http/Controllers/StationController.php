@@ -8,6 +8,9 @@ use App\Models\User;
 use App\Models\StationUser;
 use App\Models\Brand;
 use App\Models\Vote;
+use App\Models\Task;
+use App\Models\UserTask;
+
 use App\Models\Appointment;
 use App\Events\babyEvent;
 
@@ -40,9 +43,6 @@ class StationController extends Controller
             return $appointment;
         });
 
-
-
-
         $is2000 = User::where('otp_verified', 1)
         ->orderBy('email_verified_at', 'asc')
         ->take(2000)
@@ -50,12 +50,12 @@ class StationController extends Controller
         ->contains(auth()->id());
 
         $userAppointment = $user->userAppointments()->count();
-
+        $selectedAppointment = $user->userAppointments()->with('appointment')->first() ?? '';
 
 
         //check if user is on first 2000 verified users
 
-        return view('appointment', compact('appointments','user','is2000','userAppointment'));
+        return view('appointment', compact('appointments','user','is2000','userAppointment','selectedAppointment'));
     }
 
     public function appointmentSubmit(Request $request)
@@ -94,22 +94,85 @@ class StationController extends Controller
             ]);
         }
 
-        return response()->json(['message' => 'Appointment booked successfully.']);
+        return response()->json(['message' => 'Appointment booked successfully.','appointment' => $existing]);
     }
 
-      public function guestAndWin(Request $request)
+    public function guessSubmit(Request $request)
     {
+        $request->validate([
+            'number' => 'required',
+        ]);
 
-        return view('guestAndWin');
+        $user = Auth::user();
+        $user->guess = $request->number;
+        $user->save();
+
+        return response()->json(['message' => 'Appointment booked successfully.','appointment' => $user]);
+    }
+
+    public function guestAndWin(Request $request)
+    {
+        $user = Auth::user();
+        return view('guestAndWin', compact('user'));
     }
 
     public function embarckJourney()
     {
-        return view('embarkJourney');
+        $user = Auth::user();
+
+
+    // Get user tasks with pivot 'status'
+    $userTasks = $user->tasks()->withPivot('status')->get()->keyBy('id'); // task_id as key
+
+    // Get all tasks and attach status
+    $tasks= Task::all()->map(function ($task) use ($userTasks) {
+        $task->status = $userTasks[$task->id]->pivot->status ?? 'pending';
+        return $task;
+    });
+
+    $userDone = UserTask::where('user_id', auth()->id())->where('status','completed')->count();
+    $totalTasks = Task::count();
+    $percentage = $totalTasks > 0 ? round(($userDone / $totalTasks) * 100) : 0;
+
+
+        //  dd(vars: $tasks);
+        return view('embarkJourney',compact('user','tasks','userDone','totalTasks','percentage'));
     }
-    public function embarckStation(Station $station)
+    public function embarckStation(Task $station)
     {
-        return view('embarkStation', compact('station'));
+       $status = '';
+        if($station->id == 1){
+            $check = UserTask::where('user_id', auth()->id())->where('task_id', 1)->exists();
+            $status = 'exists';
+            if(empty($check)){
+                $data = GlobalHelper::checkOrRegisterUser([
+                    'mobile' => auth()->user()->number,
+                    // 'mobile' => '+60123456786',
+                    'country_code' => '60',
+                    'first_name' => auth()->user()->fname,
+                    'last_name' => auth()->user()->lname,
+                    'email' => auth()->user()->email,
+                    'subscription' => ['sms', 'email'],
+                    'password' => 'Loccitane2025',
+                ]);
+
+                if($data['status'] == 'registered'){
+                    $task = new UserTask();
+                    $task->user_id = auth()->id();
+                    $task->task_id = 1;
+                    $task->status = 'completed';
+                    $task->save();
+                    $status = 'registered';
+                }
+                if($data['status'] == 'exists'){
+                    $status = 'exists';
+                }
+            }
+
+        }
+
+
+        return view('embarkStation', compact('station','status'));
     }
 
     public function preRegEvent(Request $request)

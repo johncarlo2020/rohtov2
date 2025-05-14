@@ -5,18 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Appointment extends Model
+class Task extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'name',
-        'total',
+        'description'
     ];
 
-    public function userAppointments()
+    public function users()
     {
-        return $this->hasMany(UserAppointment::class);
+        return $this->belongsToMany(User::class, 'user_tasks', 'task_id', 'user_id')
+                    ->withPivot('status');
     }
-
 }

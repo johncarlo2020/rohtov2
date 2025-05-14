@@ -88,9 +88,11 @@ Route::group(['middleware' => ['client']], function () {
     Route::get('/appointment', 'App\Http\Controllers\StationController@appointment')->name('appointment');
     Route::post('/appointment/submit', 'App\Http\Controllers\StationController@appointmentSubmit')->name('appointments.submit');
     Route::get('/pre-reg-event', 'App\Http\Controllers\StationController@preRegEvent')->name('preRegEvent');
-       Route::get('/pre-reg-event/guestAndWin', 'App\Http\Controllers\StationController@guestAndWin')->name('guestAndWin');
-       Route::get('/pre-reg-event/embarckJourney', 'App\Http\Controllers\StationController@embarckJourney')->name('embarckJourney');
-        Route::get('/pre-reg-event/embarckJourney/station/{station}', 'App\Http\Controllers\StationController@embarckStation')->name('embarckStation');
+    Route::get('/pre-reg-event/guestAndWin', 'App\Http\Controllers\StationController@guestAndWin')->name('guestAndWin');
+    Route::get('/pre-reg-event/embarckJourney', 'App\Http\Controllers\StationController@embarckJourney')->name('embarckJourney');
+    Route::get('/pre-reg-event/embarckJourney/station/{station}', 'App\Http\Controllers\StationController@embarckStation')->name('embarckStation');
+
+    Route::post('/guess/submit', 'App\Http\Controllers\StationController@guessSubmit')->name('guess.submit');
 
 
 });

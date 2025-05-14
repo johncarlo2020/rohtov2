@@ -49,7 +49,7 @@
                         <div class="task-content-area flex-grow-1 py-1 px-2 me-2">
                             <h6 class="task-title fw-bold mb-1">
                                 {{ $task['name'] }}
-                                @if($task['status'] === 'completed')
+                                @if($task['status'] === 'completed' || $task['status'] === 'in-progress')
                                 <i class="fa-solid fa-circle-check ml-1 text-success"></i>
                                 @endif
                             </h6>

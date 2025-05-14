@@ -94,6 +94,8 @@ Route::group(['middleware' => ['client']], function () {
 
     Route::post('/guess/submit', 'App\Http\Controllers\StationController@guessSubmit')->name('guess.submit');
     Route::post('/upload-image', 'App\Http\Controllers\StationController@uploadImage')->name('upload.image');
+    Route::post('/receipt', 'App\Http\Controllers\StationController@receipt')->name('receipt');
+    Route::post('/consent/submit', 'App\Http\Controllers\StationController@consent')->name('consent.submit');
 
 
 });

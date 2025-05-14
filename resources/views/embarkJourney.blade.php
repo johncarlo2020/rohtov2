@@ -49,7 +49,7 @@
                                 <div class="task-content-area flex-grow-1 py-1 px-2 me-2">
                                     <h6 class="task-title fw-bold mb-1">
                                         {{ $task['name'] }}
-                                        @if ($task['status'] === 'completed')
+                                        @if ($task['status'] === 'completed' || $task['status'] == 'in-progress')
                                             <i class="fa-solid fa-circle-check ml-1 text-success"></i>
                                         @endif
                                     </h6>
@@ -80,7 +80,7 @@
                                             <div class="task-content-area flex-grow-1 py-1 px-2 me-2">
                                                 <h6 class="task-title fw-bold mb-0">
                                                     {{ $task['name'] }}
-                                                    @if ($task['status'] === 'completed')
+                                                    @if ($task['status'] === 'completed' || $task['status'] == 'in-progress')
                                                         <i class="fa-solid fa-circle-check ml-1 text-success"></i>
                                                     @endif
                                                 </h6>
@@ -95,9 +95,13 @@
                                         aria-labelledby="heading{{ $task->id }}"
                                         data-bs-parent="#accordionTask{{ $task->id }}">
                                         <div class="accordion-body pt-0 pb-3 px-3">
+                                            <form action="{{ route('consent.submit') }}" method="POST">
+                                                @csrf
+
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                    id="checkDefault">
+                                                <input class="form-check-input consent-checkbox" type="checkbox" id="checkDefault{{ $task->id }}" name="consent"
+                                                    value="1" data-task-id="{{ $task->id }}">
+
                                                 <label class="form-check-label fw-bold" for="checkDefault">
                                                     Data Protection & Privacy Notice
                                                 </label>
@@ -114,11 +118,12 @@
                                                 You may withdraw your consent at any time by contacting Alliance Bank
                                                 directly.
                                             </div>
-                                             <div class="button-container mt-3 d-flex justify-content-end">
-                                                <a id="homeButton" href="{{ route('embarckJourney') }}" class="button py-2 px-3 small button-secondary w-25">
+                                            <div class="button-container mt-3 d-flex justify-content-end">
+                                                <button type="submit" class="button py-2 px-3 small button-secondary w-25">
                                                     Submit
-                                                </a>
+                                                </button>
                                             </div>
+                                        </form>
 
                                         </div>
                                     </div>

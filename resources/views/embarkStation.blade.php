@@ -91,21 +91,39 @@
                 </div>
             </div>
         @elseif($station->id == 4)
-            <div class="success h-100 d-flex flex-column justify-content-center">
-                <div class="congrats-container mt-3 px-4">
-                    <h1 class="heading-text text-center">Task 4: Switch to Eco-Refills</h1>
-                    <p class="pharagrap-text text-center px-2">
-                        Choose eco-refills for your favorite L'Occitane products and reduce waste with every purchase. <br/> <br/> Purchase any of L’Occitane’s Jumbo or Eco-Refills at the Ocean or Plastic Roadshow to complete this task.
-                    </p>
-                </div>
-                <div class="qr-container bg-white rounded h-75 mb-3">
+            <div class="photo-container ">
 
+                <div class=" h-100 d-flex flex-column justify-content-center">
+                    <div class="congrats-container mt-3 px-4">
+                        <h1 class="heading-text text-center">Task 4: Switch to Eco-Refills</h1>
+                        <p class="pharagrap-text text-center px-2">
+                            Choose eco-refills for your favorite L'Occitane products and reduce waste with every purchase. <br/> <br/> Purchase any of L’Occitane’s Jumbo or Eco-Refills at the Ocean or Plastic Roadshow to complete this task.
+                        </p>
+                    </div>
+                    <div id="reader" class="qr-container bg-white rounded h-75 mb-3">
+
+                    </div>
+                    <p class="pharagrap-text text-center px-2">
+                        Notify our Beauty Advisor or Cashier at the point of purchase for QR code verification.
+                        </p>
+                    <div class="button-container mt-auto d-flex justify-content-center">
+                        <a id="homeButton" href="{{ route('embarckJourney') }}" class="button button-white w-50 text-center">
+                            Home
+                        </a>
+                    </div>
                 </div>
-                 <p class="pharagrap-text text-center px-2">
-                       Notify our Beauty Advisor or Cashier at the point of purchase for QR code verification.
-                    </p>
-                <div class="button-container mt-auto d-flex justify-content-center">
-                    <a id="homeButton" href="{{ route('embarckJourney') }}" class="button button-white w-50 text-center">
+            </div>
+            <div class="success h-100 d-flex flex-column justify-content-center d-none">
+                <div class="congrats-container mt-5 px-4">
+                    <div class="congrats-icon mb-3">
+                        <img src="{{ asset('files/main/congratulations.webp') }}" alt="Congratulations" />
+                    </div>
+                    <h1 class="heading-text text-center">Your photo has been uploaded successfully.</h1>
+                    <p class="pharagrap-text text-center px-5">Thank you for contributing to a greener future—every
+                        action helps reduce waste and protect the planet.</p>
+                </div>
+                <div class="button-container mt-auto">
+                    <a id="homeButton" href="{{ route('embarckJourney') }}" class="button button-primary w-100">
                         Home
                     </a>
                 </div>
@@ -121,7 +139,7 @@
                         action helps
                         reduce waste and protect the planet.</p>
                 </div>
-                <div class="button-container mt-auto">
+                <div class="scanner-container mt-auto">
                     <a id="homeButton" href="{{ route('embarckJourney') }}" class="button button-primary w-100">
                         Home
                     </a>
@@ -165,18 +183,95 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const fileUpload = document.getElementById('file-upload');
-        const imagePreview = document.getElementById('image-preview');
-        const submitBtn = document.querySelector('.submit-btn');
-        const form = document.getElementById('imageUploadForm');
 
-        fileUpload.addEventListener('change', function(event) {
+        @if ($station->id == 4)
+                event.preventDefault();
+                //get permission to use camera dont start qr scanner until permission is granted
+
+                const html5QrCode = new Html5Qrcode("reader");
+
+                html5QrCode.start({
+                    facingMode: "environment"
+                }, {
+                    fps: 10,
+                    qrbox: 200,
+                    aspectRatio: 2 / 2 // Set the aspect ratio to 16:9
+                },
+                    qrCodeMessage => {
+                        sendMessage(`${qrCodeMessage}`);
+                        html5QrCode.stop();
+
+                    },
+                    errorMessage => {
+                        console.log(`QR Code no longer in front of camera.`);
+                    })
+                    .catch(err => {
+                        console.log(`Unable to start scanning, error: ${err}`);
+                    });
+
+                    function sendMessage(message) {
+                            // Fetch the CSRF token from the meta tag
+                            var csrfToken = $('meta[name="csrf-token"]').attr('content');
+                            console.log(message);
+
+                            $.ajax({
+                                url: '{{ route('receipt') }}', // Using Laravel's route() helper function
+                                type: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': csrfToken, // Include the CSRF token in the headers
+                                },
+                                data: {
+                                    qrCodeMessage: message,
+
+                                },
+                                success: function (response) {
+                                    document.querySelector('.photo-container').classList.add('d-none');
+                                    document.querySelector('.success').classList.remove('d-none');
+                                },
+                                error: function (xhr, status, error) {
+
+                                }
+                            });
+                        }
+        @endif
+
+        @if($station->id == 2 || $station->id == 3)
+            const fileUpload = document.getElementById('file-upload');
+
+        fileUpload.addEventListener('change', function (event) {
             const file = event.target.files[0];
 
             if (file) {
                 const reader = new FileReader();
 
-                reader.onload = function(e) {
+                reader.onload = function (e) {
+                    imagePreview.innerHTML = '';
+
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+
+                    imagePreview.appendChild(img);
+                };
+
+                reader.readAsDataURL(file);
+            } else {
+                imagePreview.innerHTML = `
+                        <span class="upload-icon"><i class="fa-solid fa-cloud-arrow-up"></i></span>
+                        <span class="upload-text">Upload your image</span>
+                    `;
+            }
+        });
+        const imagePreview = document.getElementById('image-preview');
+        const submitBtn = document.querySelector('.submit-btn');
+        const form = document.getElementById('imageUploadForm');
+
+        fileUpload.addEventListener('change', function (event) {
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
                     imagePreview.innerHTML = '';
 
                     const img = document.createElement('img');
@@ -194,7 +289,7 @@
             }
         });
 
-        submitBtn.addEventListener('click', function(e) {
+        submitBtn.addEventListener('click', function (e) {
             e.preventDefault();
 
             const file = fileUpload.files[0];
@@ -205,12 +300,12 @@
 
             const formData = new FormData(form);
             fetch("{{ route('upload.image') }}", {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
-                    },
-                    body: formData,
-                })
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                },
+                body: formData,
+            })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
@@ -225,5 +320,7 @@
                     alert('Something went wrong during upload.');
                 });
         });
+        @endif
+
     });
 </script>

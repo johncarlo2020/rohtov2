@@ -26,6 +26,34 @@ use App\Helpers\GlobalHelper;
 class StationController extends Controller
 {
 
+    public function receipt(Request $request)
+    {
+        $link = $request->qrCodeMessage;
+
+// Get the path from the URL
+        $path = parse_url($link, PHP_URL_PATH); // e.g. "/receipt=1"
+
+        // Remove leading slash and parse as query string
+        parse_str(ltrim($path, '/'), $params);
+
+        // Access the 'receipt' value
+        $receipt = $params['receipt'] ?? null;
+
+        if($receipt == 1){
+            $task = UserTask::updateOrCreate(
+                [
+                    'user_id' => auth()->id(),
+                    'task_id' => 4
+                ],
+                [
+                    'status' => 'completed'
+                ]
+            );
+        }
+
+        return $task;
+    }
+
     public function uploadImage(Request $request)
     {
         if ($request->hasFile('image')) {
@@ -58,6 +86,25 @@ class StationController extends Controller
         }
 
         return response()->json(['success' => false, 'message' => 'No image found.']);
+    }
+
+    public function consent(Request $request)
+    {
+        // dd($request->all());
+        if($request->consent == 1)
+        {
+            UserTask::updateOrCreate(
+                [
+                    'user_id' => auth()->id(),
+                    'task_id' => 5
+                ],
+                [
+                    'status' => 'completed'
+                ]
+            );
+        }
+
+        return back()->with('success', 'Consent updated successfully.');
     }
 
 
@@ -151,7 +198,7 @@ class StationController extends Controller
         return view('guestAndWin', compact('user'));
     }
 
-    public function embarckJourney()
+public function embarckJourney()
     {
         $user = Auth::user();
 
@@ -164,6 +211,7 @@ class StationController extends Controller
         $task->status = $userTasks[$task->id]->pivot->status ?? 'pending';
         return $task;
     });
+    // dd($tasks);
 
     $userDone = UserTask::where('user_id', auth()->id())->where('status','completed')->count();
     $totalTasks = Task::count();

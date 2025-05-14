@@ -29,8 +29,8 @@
                     </div>
                     <p class="sub-heading-text-small fw-bold mb-0">Completed {{ $userDone }}/5</p>
                 </div>
-                <div class="mb-2">
-                    <p class="warning-text text-center mb-0">*Once completed all 3 task, please walk in to our roadshow
+                <div class="mb-2 px-3">
+                    <p class="warning-text sub-heading-text-small small text-center mb-0">*Once completed all 3 task, please walk in to our roadshow
                         to
                         claim you voucher.</p>
                 </div>

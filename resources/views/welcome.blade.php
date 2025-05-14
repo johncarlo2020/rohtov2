@@ -16,13 +16,13 @@
 </head>
 
 <body class="antialiased welcome-page">
-    <div class="content-box main-background">
+    <div class="content-box main-background fade-in">
         <div class="container">
             <div>
                 @include('components.branding')
             </div>
         </div>
-        <div class="ocean-img mb-3">
+        <div class="ocean-img mb-4">
             <img src="{{ asset('files/main/ocean_photo.webp') }}" />
         </div>
         <div class="info-box px-5 mb-3">

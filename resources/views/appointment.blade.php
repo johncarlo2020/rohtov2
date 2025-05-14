@@ -101,13 +101,17 @@
                         <a id="homeButton" href="{{ route('preRegEvent') }}" class="button button-primary w-100 mb-2">
                             Home
                         </a>
-                        <!-- <button id="reschedule" type="button" class="button button-secondary w-100" data-bs-toggle="modal"
+                      <button type="button" class="button button-secondary w-100" data-bs-toggle="modal"
                             data-bs-target="#exampleModal">
                             Reschedule
-                        </button> -->
-                        <button id="reschedule" type="button" class="button button-secondary w-100" >Reschedule</button>
+                        </button>
+                        {{-- <button id="reschedule" type="button" class="button button-secondary w-100" >Reschedule</button> --}}
                     </div>
             </div>
+        </div>
+
+         <div class="footer-container p-4 mt-auto">
+            @include('components.footer')
         </div>
 
         <!-- Modal -->
@@ -119,22 +123,18 @@
                     <div  class="info-icon mb-3">
                     <img src="{{ asset('files/main/info.png') }}" alt="" />
                 </div>
-                <p class="modal-main-text mb-1">Do you want to pick this date for your visit ?</p>
-                <p class="warning-text text-center">Note: You may reschedule your selected date only once.</p>
+                <p class="modal-main-text mb-1">Are you you want to reschedule your visit ?</p>
+                <p class="warning-text text-center">Note: You may reschedule your selected date <strong>only once</strong>.</p>
                    <div class="">
-                        <button id="submitButton" type="submit" class="button button-primary w-100 mb-2">
+                        <button id="reschedule" data-bs-dismiss="modal" type="submit" class="button button-primary w-100 mb-2">
                            YES
                         </button>
-                         <button id="submitButton" type="submit" class="button button-secondary w-100 mb-2">
+                         <button id="submitButton" data-bs-dismiss="modal" type="submit" class="button button-secondary w-100 mb-2">
                            NO
                         </button>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="footer-container p-4 mt-auto">
-            @include('components.footer')
         </div>
     </div>
        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>

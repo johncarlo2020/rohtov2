@@ -26,6 +26,41 @@ use App\Helpers\GlobalHelper;
 class StationController extends Controller
 {
 
+    public function uploadImage(Request $request)
+    {
+        if ($request->hasFile('image')) {
+            $filename = time() . '.' . $request->image->extension();
+            $request->image->storeAs('public/uploads', $filename);
+
+            // Create or update the user task record
+            UserTask::updateOrCreate(
+                [
+                    'user_id' => auth()->id(),
+                    'task_id' => $request->task_id
+                ],
+                [
+                    'status' => 'in-progress'
+                ]
+            );
+
+            // Update the appropriate image field in users table
+            $user = User::find(auth()->id());
+
+            if ($request->task_id == 2) {
+                $user->task_2_image = $filename;
+            } elseif ($request->task_id == 3) {
+                $user->task_3_image = $filename;
+            }
+
+            $user->save();
+
+            return response()->json(['success' => true, 'filename' => $filename]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'No image found.']);
+    }
+
+
     public function appointment()
     {
         $user = Auth::user();
@@ -157,11 +192,16 @@ class StationController extends Controller
                 ]);
 
                 if($data['status'] == 'registered'){
-                    $task = new UserTask();
-                    $task->user_id = auth()->id();
-                    $task->task_id = 1;
-                    $task->status = 'completed';
-                    $task->save();
+                    $task = UserTask::updateOrCreate(
+                        [
+                            'user_id' => auth()->id(),
+                            'task_id' => 1
+                        ],
+                        [
+                            'status' => 'completed'
+                        ]
+                    );
+
                     $status = 'registered';
                 }
                 if($data['status'] == 'exists'){

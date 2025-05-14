@@ -93,6 +93,7 @@ Route::group(['middleware' => ['client']], function () {
     Route::get('/pre-reg-event/embarckJourney/station/{station}', 'App\Http\Controllers\StationController@embarckStation')->name('embarckStation');
 
     Route::post('/guess/submit', 'App\Http\Controllers\StationController@guessSubmit')->name('guess.submit');
+    Route::post('/upload-image', 'App\Http\Controllers\StationController@uploadImage')->name('upload.image');
 
 
 });

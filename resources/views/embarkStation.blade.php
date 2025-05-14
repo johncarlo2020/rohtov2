@@ -40,14 +40,30 @@
                 </p>
                 <div class="upload">
                     <div class="image-upload-container text-center my-3">
-                        <label for="file-upload" class="file-upload-label">
-                            <div id="image-preview" class="image-preview">
-                                <span class="upload-icon"><i class="fa-solid fa-cloud-arrow-up"></i></span>
-                                <span class="upload-text">Upload your image</span>
-                            </div>
-                        </label>
-                        <input type="file" class="form-control visually-hidden" id="file-upload" name="file-upload"
-                            accept="image/*">
+
+
+                            <label for="file-upload" class="file-upload-label">
+                                <div id="image-preview" class="image-preview">
+                                    @php
+                                    $imageColumn = 'task_' . $station->id . '_image';
+                                    @endphp
+                                    @if(auth()->user()->$imageColumn)
+                                    <!-- Display the existing image if available -->
+                                    <img src="{{ asset('storage/uploads/' . auth()->user()->$imageColumn) }}" alt="Uploaded Image"
+                                        class="uploaded-image-preview">
+                                    @else
+                                    <!-- Show the upload icon and text if no image is uploaded -->
+                                    <span class="upload-icon"><i class="fa-solid fa-cloud-arrow-up"></i></span>
+                                    <span class="upload-text">Upload your image</span>
+                                    @endif
+                                </div>
+                            </label>
+
+                        <form id="imageUploadForm" enctype="multipart/form-data">
+                            @csrf
+                            <input type="file" class="form-control visually-hidden" id="file-upload" name="image" accept="image/*">
+                            <input type="hidden" name="task_id" value="{{ $station->id }}">
+                        </form>
                     </div>
                     <div class="text-center">
                         <button type="submit" class="button button-primary submit-btn w-100">Submit</button>
@@ -127,30 +143,67 @@
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const fileUpload = document.getElementById('file-upload');
         const imagePreview = document.getElementById('image-preview');
-        const uploadText = imagePreview.querySelector('.upload-text');
-        const uploadIcon = imagePreview.querySelector('.upload-icon');
+        const submitBtn = document.querySelector('.submit-btn');
+        const form = document.getElementById('imageUploadForm');
 
-        fileUpload.addEventListener('change', function(event) {
+        fileUpload.addEventListener('change', function (event) {
             const file = event.target.files[0];
+
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
-                    // Clear previous preview content
+
+                reader.onload = function (e) {
                     imagePreview.innerHTML = '';
-                    // Create img element
+
                     const img = document.createElement('img');
                     img.src = e.target.result;
+
                     imagePreview.appendChild(img);
-                }
+                };
+
                 reader.readAsDataURL(file);
             } else {
-                // Reset to default state if no file is selected
-                imagePreview.innerHTML =
-                    '<span class="upload-icon">+</span><span class="upload-text">Upload your image</span>';
+                imagePreview.innerHTML = `
+                    <span class="upload-icon"><i class="fa-solid fa-cloud-arrow-up"></i></span>
+                    <span class="upload-text">Upload your image</span>
+                `;
             }
+        });
+
+        submitBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            const file = fileUpload.files[0];
+            if (!file) {
+                alert('Please select an image before submitting.');
+                return;
+            }
+
+            const formData = new FormData(form);
+            fetch("{{ route('upload.image') }}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                },
+                body: formData,
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.querySelector('.photo-container').classList.add('d-none');
+                        document.querySelector('.success').classList.remove('d-none');
+                    } else {
+                        alert('Upload failed.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Something went wrong during upload.');
+                });
         });
     });
 </script>
+

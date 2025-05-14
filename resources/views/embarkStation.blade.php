@@ -34,7 +34,7 @@
         @elseif($station->id == 2 || $station->id == 3)
             <div class="photo-container fade-in">
                 <div class="info-container bg-white p-3 rounded mb-5">
-                    <h1 class="heading-text text-center mb-4">Task {{ $station->id }}: {{ $station->name }}</h1>
+                    <h1 class="heading-text text-center mb-4  px-4">Task {{ $station->id }}: {{ $station->name }}</h1>
                     <p class="pharagraph-text text-center">{{ $station->description }}</p>
                     <p class="pharagraph-text text-center">Snap and upload a photo of you using a recycle bag while
                         shopping.
@@ -100,10 +100,10 @@
                             Choose eco-refills for your favorite L'Occitane products and reduce waste with every purchase. <br/> <br/> Purchase any of L’Occitane’s Jumbo or Eco-Refills at the Ocean or Plastic Roadshow to complete this task.
                         </p>
                     </div>
-                    <div id="reader" class="qr-container bg-white rounded h-75 mb-3">
+                    <div id="reader" class="qr-container bg-white rounded h-75 mb-4">
 
                     </div>
-                    <p class="pharagrap-text text-center px-2">
+                    <p class="pharagrap-text text-center px-2 mb-3">
                         Notify our Beauty Advisor or Cashier at the point of purchase for QR code verification.
                         </p>
                     <div class="button-container mt-auto d-flex justify-content-center">

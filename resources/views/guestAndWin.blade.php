@@ -70,10 +70,10 @@
         </div>
 
             <div class="confirm-container congrats-container mt-5  d-none fade-in">
-                <div class="congrats-icon mb-3">
+                <div class="congrats-icon mb-5">
                     <img src="{{ asset('files/main/congratulations.webp') }}" alt="Congratulations" />
                 </div>
-                <p class="fw-bold pharagrap-text text-center px-5">You answer have been submitted</p>
+                <p class="fw-bold heading-text text-center px-5">You answer have <br> been submitted</p>
             </div>
 
             <div class="confirm-container text-center mt-auto px-4 flex-self-end d-none fade-in">

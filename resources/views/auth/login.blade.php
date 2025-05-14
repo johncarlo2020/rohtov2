@@ -12,11 +12,11 @@
             <form method="POST" action="{{ route('login') }}">
                 @csrf
                 <div class="mb-2 row">
-                    <div class="col-12 input-group w-100 phone-number-input">
+                    <div class="col-12 w-100 phone-number-input">
                         <label class="form-label" for="">Email</label>
 
                         <input id="email" type="email"
-                            class="input-text form-control w-100 @error('email') is-invalid @enderror d-block"
+                            class="input-text form-control w-100 @error('email') is-invalid @enderror d-block" placeholder="example@email.com"
                             name="email" value="{{ old('email') }}" required autocomplete="email" autofocus />
                     </div>
                     <div class="mt-2 col-12">
@@ -32,7 +32,7 @@
                 <x-input-error :messages="$errors->get('password')" class="mt-2" />
 
                 <div class="flex items-center justify-end">
-                    <x-primary-button class="button button-secondary w-100 mb-2">
+                    <x-primary-button class="button button-secondary w-100">
                         Submit
                     </x-primary-button>
                 </div>

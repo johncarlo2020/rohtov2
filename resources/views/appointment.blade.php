@@ -24,6 +24,37 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
         rel="stylesheet" />
+
+    <style>
+        /* Animation classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .fade-out {
+            animation: fadeOut 0.3s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-10px); }
+        }
+
+        /* Make sure containers are initially invisible but take up space */
+        #qrContainer, #dateForm {
+            opacity: 0;
+        }
+
+        /* When they're hidden, don't take up space */
+        #qrContainer.d-none, #dateForm.d-none {
+            display: none !important;
+        }
+    </style>
 </head>
 
 <body class="antialiased welcome-page">
@@ -33,7 +64,7 @@
                 @include('components.branding')
             </div>
         </div>
-        <div id="dateForm" class=" bg-white p-3 rounded ">
+        <div id="dateForm" class=" bg-white p-3 rounded d-none">
                 @csrf
                 <div class="text-center mb-4 px-1">
                     <h2 class="heading-text text-center mb-2">Hi {{auth()->user()->fname}}</h2>
@@ -75,7 +106,7 @@
         </div>
         <div id="qrContainer" class=" bg-white p-3 rounded d-none">
             <div class="text-center mb-2 px-1">
-                <h2 class="heading-text text-center mb-2">Congratulations! Selena</h2>
+                <h2 class="heading-text text-center mb-2">Congratulations! {{auth()->user()->fname}}</h2>
                 <p class="pharagraph-text text-center">You’re among the first 2,000 sign-ups and eligible to redeem our
                     exclusive Upcycled Phone Charm!Kindly present this QR code at the redemption counter during our
                     Ocean or Plastic Roadshow.</p>
@@ -150,14 +181,20 @@
 
             @if ($userAppointment > 0)
                 document.getElementById('qrContainer').classList.remove('d-none');
-            document.getElementById('dateForm').classList.add('d-none');
+                setTimeout(() => {
+                    document.getElementById('qrContainer').classList.add('fade-in');
+                }, 100);
+                document.getElementById('dateForm').classList.add('d-none');
                 @if($selectedAppointment -> rescheduled == 1)
                     document.getElementById('reschedule').classList.add('d-none');
                 @endif
-
+            @else
+                document.getElementById('qrContainer').classList.add('d-none');
+                document.getElementById('dateForm').classList.remove('d-none');
+                setTimeout(() => {
+                    document.getElementById('dateForm').classList.add('fade-in');
+                }, 100);
             @endif
-
-
 
             document.querySelectorAll('.date-radio-input').forEach(function (input) {
                 input.addEventListener('change', function () {
@@ -173,8 +210,19 @@
             const selectedDateText = document.getElementById('selectedDateText');
             const reschedule = document.getElementById('reschedule');
             reschedule.addEventListener('click', function () {
-                document.getElementById('qrContainer').classList.add('d-none');
-                document.getElementById('dateForm').classList.remove('d-none');
+                // Fade out QR container
+                document.getElementById('qrContainer').classList.remove('fade-in');
+                document.getElementById('qrContainer').classList.add('fade-out');
+
+                // After animation completes, hide QR and show date form with animation
+                setTimeout(() => {
+                    document.getElementById('qrContainer').classList.add('d-none');
+                    document.getElementById('dateForm').classList.remove('d-none');
+
+                    setTimeout(() => {
+                        document.getElementById('dateForm').classList.add('fade-in');
+                    }, 50);
+                }, 300);
             });
 
 
@@ -240,11 +288,23 @@
                 })
                     .then(response => response.json())
                     .then(data => {
-                        document.getElementById('qrContainer').classList.remove('d-none');
-                        document.getElementById('dateForm').classList.add('d-none');
-                        if(data['appointment']['rescheduled'] == 1){
-                            document.getElementById('reschedule').classList.add('d-none');
-                        }
+                        // Fade out date form
+                        document.getElementById('dateForm').classList.remove('fade-in');
+                        document.getElementById('dateForm').classList.add('fade-out');
+
+                        // After animation completes, hide date form and show QR with animation
+                        setTimeout(() => {
+                            document.getElementById('dateForm').classList.add('d-none');
+                            document.getElementById('qrContainer').classList.remove('d-none');
+
+                            setTimeout(() => {
+                                document.getElementById('qrContainer').classList.add('fade-in');
+                            }, 50);
+
+                            if(data['appointment']['rescheduled'] == 1){
+                                document.getElementById('reschedule').classList.add('d-none');
+                            }
+                        }, 300);
                     })
                     .catch(error => {
 

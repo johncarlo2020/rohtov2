@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\IpadController;
+use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Route;
 
@@ -17,7 +18,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
+Route::get('/', function (Request $request) {
+    if ($request->has('utm_source')) {
+            session(['utm.source' => $request->get('utm_source')]);
+        }
+
+        if ($request->has('utm_medium')) {
+            session(['utm.medium' => $request->get('utm_medium')]);
+        }
+
     return view('welcome');
 })->name('welcome');
 

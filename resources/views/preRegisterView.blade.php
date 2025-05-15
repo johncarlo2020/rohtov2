@@ -1,18 +1,13 @@
 <x-app-layout>
     <div class="content-box main-background d-flex flex-column min-vh-100">
-        <div class="container mb-5 fade-in">
+        <div class="container mb-3s fade-in">
             <div>
                 @include('components.branding')
             </div>
         </div>
         <div class="ocean-img mb-4">
-            <img src="{{ asset('files/main/ocean_photo.webp') }}" />
+            <img src="{{ asset('files/main/ocean or plastic_v4-2.webp') }}" />
         </div>
-        <div class="footer mb-3">
-            <p class="pharagrap-text mb-0">In partnership with</p>
-            <div class="footer-logo mb-3">
-            <img src="{{ asset('files/main/Alliance Bank_Dark.webp') }}" alt="" />
-        <div>
 
         <div class="info-box px-5 mb-3">
             <p class="pharagraph-text text-center">Discover our very first <strong>Ocean or Plastic</strong> Roadshow—.

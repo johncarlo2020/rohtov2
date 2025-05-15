@@ -163,7 +163,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="capcha-box bg-white p-5 rounded mb-3">
+                <div class="mb-3">
                     <!-- Visible reCAPTCHA v2 widget -->
                     <div class="g-recaptcha" data-sitekey="6LfSnzorAAAAABAcoPooh89ujm8IKf5eyCsqm25y"></div>
                 </div>

@@ -73,7 +73,7 @@
         </div>
         <div id="qrContainer" class=" bg-white p-3 rounded d-none">
             <div class="text-center mb-2 px-1">
-                <h2 class="heading-text text-center mb-2">Congratulations! {{auth()->user()->fname}}</h2>
+                <h2 class="heading-text text-center mb-2">Congratulations, {{auth()->user()->fname}}!</h2>
                 <p class="pharagraph-text text-center">You’re among the first 2,000 sign-ups and eligible to redeem our exclusive Upcycled Marine Phone Charm!</p>
                 <br>
                 <p>Kindly present this QR code at the  redemption counter</p>

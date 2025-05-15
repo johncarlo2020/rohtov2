@@ -268,8 +268,13 @@ public function embarckJourney()
 
     public function preRegEvent(Request $request)
     {
+        $user = Auth::user();
+        $userAppointment = $user->userAppointments()->count();
 
-        return view('preRegisterView');
+        $selectedAppointment = $user->userAppointments()->with('appointment')->first() ?? '';
+
+
+        return view('preRegisterView', compact('userAppointment', 'selectedAppointment'));
     }
 
     public function verify(Request $request)

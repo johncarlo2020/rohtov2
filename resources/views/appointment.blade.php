@@ -45,7 +45,7 @@
                 <div class="date-picker">
                     <h2 class="heading-text text-center mb-2">Date selected: <span
                             id="selectedDateText">21-05-2025</span></h2>
-                    <h4 class="text-center mb-4">Available Slots: <span id="availableSlotsText">0</span></h4>
+                    <h4 class="text-center mb-4 d-none">Available Slots: <span id="availableSlotsText">0</span></h4>
 
                     <div class="date-grid-container">
                         @foreach($appointments as $appointment)

@@ -105,7 +105,7 @@
                     <div class="col-12">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="privacy_policy" value="1"
-                                id="privacyPolicy" required />
+                                id="privacyPolicy"  />
                             <label class="form-check-label" for="privacyPolicy">
                                 Email
                             </label>
@@ -116,7 +116,7 @@
                     <div class="col-12">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="privacy_policy" value="1"
-                                id="privacyPolicy" required />
+                                id="privacyPolicy"  />
                             <label class="form-check-label" for="privacyPolicy">
                                 Text Message (SMS/Whatsapp)
                             </label>

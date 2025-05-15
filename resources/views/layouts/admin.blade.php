@@ -27,7 +27,7 @@
         />
         <link rel="icon" type="image/png" href="images/logo.svg" />
         <meta name="csrf-token" content="{{ csrf_token() }}" />
-        <title>Hadalabo Experience</title>
+        <title>Ocean or Plastic</title>
         <!--     Fonts and icons     -->
         <link
             href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700"

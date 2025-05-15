@@ -74,7 +74,7 @@ class StationSeeder extends Seeder
         ]);
 
         Task::create([
-            'name' => 'Join our Big Little Things Recycling Program',
+            'name' => 'Join our Big Little Things Program',
             'description' => 'Sign up and start recycling your beauty empties with us.'
         ]);
 

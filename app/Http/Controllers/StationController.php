@@ -30,16 +30,16 @@ class StationController extends Controller
     {
         $link = $request->qrCodeMessage;
 
-// Get the path from the URL
-        $path = parse_url($link, PHP_URL_PATH); // e.g. "/receipt=1"
+        // Get the query part from the URL
+        $query = parse_url($link, PHP_URL_QUERY); // returns "purchase=1"
 
-        // Remove leading slash and parse as query string
-        parse_str(ltrim($path, '/'), $params);
+        // Parse query string into an array
+        parse_str($query, $params);
 
-        // Access the 'receipt' value
-        $receipt = $params['receipt'] ?? null;
+        // Access the 'purchase' value
+        $purchase = $params['purchase'] ?? null;
 
-        if($receipt == 1){
+        if($purchase == 1){
             $task = UserTask::updateOrCreate(
                 [
                     'user_id' => auth()->id(),
@@ -258,8 +258,10 @@ public function embarckJourney()
 
         }
 
+        $check = UserTask::where('user_id', auth()->id())->where('task_id', $station->id)->exists();
 
-        return view('embarkStation', compact('station','status'));
+
+        return view('embarkStation', compact('station','status','check'));
     }
 
     public function preRegEvent(Request $request)

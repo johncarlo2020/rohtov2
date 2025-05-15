@@ -118,7 +118,7 @@
                     <div class="congrats-icon mb-3">
                         <img src="{{ asset('files/main/congratulations.webp') }}" alt="Congratulations" />
                     </div>
-                    <h1 class="heading-text text-center">Your photo has been uploaded successfully.</h1>
+                    <h1 class="heading-text text-center">Your purchase has been recordedy.</h1>
                     <p class="pharagrap-text text-center px-5">Thank you for contributing to a greener future—every
                         action helps reduce waste and protect the planet.</p>
                 </div>
@@ -185,6 +185,7 @@
     document.addEventListener('DOMContentLoaded', function() {
 
         @if ($station->id == 4)
+                @if($check == null)
                 event.preventDefault();
                 //get permission to use camera dont start qr scanner until permission is granted
 
@@ -233,6 +234,11 @@
                                 }
                             });
                         }
+                        @else
+        document.querySelector('.photo-container').classList.add('d-none');
+        document.querySelector('.success').classList.remove('d-none');
+
+                        @endif
         @endif
 
         @if($station->id == 2 || $station->id == 3)

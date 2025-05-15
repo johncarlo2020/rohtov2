@@ -36,7 +36,7 @@
         <div id="dateForm" class=" bg-white p-3 rounded d-none">
                 @csrf
                 <div class="text-center mb-4 px-1">
-                    <h2 class="heading-text text-center mb-2">Hi {{auth()->user()->fname}}</h2>
+                    <h2 class="heading-text text-center mb-2">Hi, {{auth()->user()->fname}}!</h2>
                     <p class="sub-heading-text text-center">Please select your preferred date for the Ocean or Plastic
                         Roadshow visit and redemption.</p>
                     <p class="sub-heading-text text-center">Note: Redemption is only valid on the selected date and can be rescheduled once after submission.
@@ -122,7 +122,7 @@
                     <div  class="info-icon mb-3">
                     <img src="{{ asset('files/main/info.png') }}" alt="" />
                 </div>
-                <p class="modal-main-text mb-1">Are you want to reschedule your visit ?</p>
+                <p class="modal-main-text mb-1">Are you sure, you want to reschedule your visit?</p>
                 <p class="warning-text text-center">Note: You may reschedule your selected date <strong>only once</strong>.</p>
                    <div class="">
                         <button id="reschedule" data-bs-dismiss="modal" type="submit" class="button button-primary w-100 mb-2">

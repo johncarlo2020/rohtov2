@@ -127,8 +127,8 @@
                 </div>
 
                 <p class="sub-heading-text"><Strong>Data Protection and Privacy Policy</Strong></p>
-                <div class="box p-2 bg-white rounded mb-2">
-                    <p class="pharagraph-text">By submitting your particulars and/or by signing this form, you agree
+                <div class="box p-3 bg-white rounded mb-3">
+                    <p class="sub-heading-text-small">By submitting your particulars and/or by signing this form, you agree
                         that L’OCCITANE Malaysia Sdn Bhd may collect, use and disclose your personal data obtained by us
                         as a result of your membership, for purposes in accordance with the Personal Data Protection Act
                         2010 and our privacy policy (available at our website https://my.loccitane.com). You understand
@@ -165,11 +165,11 @@
                 </div>
                 <div class="mb-3">
                     <!-- Visible reCAPTCHA v2 widget -->
-                    <div class="g-recaptcha" data-sitekey="6LfSnzorAAAAABAcoPooh89ujm8IKf5eyCsqm25y"></div>
+                    <div class="g-recaptcha" data-sitekey="6LfSnzorAAAAABAcoPooh89ujm8IKf5eyCsqm25y" data-callback="onRecaptchaSuccess" data-expired-callback="onRecaptchaExpired"></div>
                 </div>
                 <div class="mb-0 row">
                     <div class="col-12">
-                        <button id="submitButton" type="submit" class="button button-primary w-100 mb-2">
+                        <button id="submitButton" type="submit" class="button button-primary w-100 mb-2" disabled>
                             {{ __('SUBMIT') }}
                         </button>
                         <div class="bottom-text text-center">
@@ -227,7 +227,7 @@
                 submitButton.disabled = true;
             } else if (iti.isValidNumber()) {
                 validMsg.classList.remove("d-none");
-                submitButton.disabled = false;
+                // leave disabled until reCAPTCHA is completed
             } else {
                 const errorCode = iti.getValidationError();
                 const msg = errorMap[errorCode] || "Invalid number";
@@ -236,4 +236,13 @@
             }
         });
     });
+
+    // reCAPTCHA callback functions
+    function onRecaptchaSuccess(token) {
+        document.getElementById('submitButton').disabled = false;
+    }
+
+    function onRecaptchaExpired() {
+        document.getElementById('submitButton').disabled = true;
+    }
 </script>

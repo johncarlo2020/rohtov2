@@ -14,6 +14,8 @@
             </p>
             <form id="form" method="POST" action="{{ route('register') }}">
                 @csrf
+                <!-- reCAPTCHA token -->
+                <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response" />
                 <div class="mb-2 row">
                     <div class="col-12">
                         <label class="form-label" for="">First Name</label>
@@ -161,7 +163,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="capcha-box bg-white p-5 rounded mb-3"></div>
+                <div class="capcha-box bg-white p-5 rounded mb-3">
+                    <!-- Visible reCAPTCHA v2 widget -->
+                    <div class="g-recaptcha" data-sitekey="6LfSnzorAAAAABAcoPooh89ujm8IKf5eyCsqm25y"></div>
+                </div>
                 <div class="mb-0 row">
                     <div class="col-12">
                         <button id="submitButton" type="submit" class="button button-primary w-100 mb-2">
@@ -179,10 +184,9 @@
         </div>
     </div>
 </x-guest-layout>
-
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        const form = document.querySelector("#form");
         const input = document.querySelector("#number");
 
         const errorMsg = document.querySelector("#error-msg");

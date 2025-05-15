@@ -3,13 +3,11 @@
     font-family: "Myriad Pro";
     .ocean-img {
         width: 100%;
-        height: 332px;
         margin-top: 3vh;
 
         img {
             width: 100%;
-            height: 100%;
-            object-fit: contain;
+            height: auto;
         }
     }
 

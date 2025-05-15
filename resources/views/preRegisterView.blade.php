@@ -5,8 +5,28 @@
                 @include('components.branding')
             </div>
         </div>
-        <div class="ocean-img mb-3 fade-in">
+        <div class="ocean-img mb-4">
             <img src="{{ asset('files/main/ocean_photo.webp') }}" />
+        </div>
+        <div class="footer">
+            <p class="pharagrap-text mb-0">in partnership with</p>
+            <div class="footer-logo mb-3">
+                <img src="{{ asset('files/main/Alliance Bank_Dark.webp') }}" alt="" />
+            <div><br>
+
+        <div class="info-box px-5 mb-3">
+            <p class="pharagraph-text text-center">Discover our very first <strong>Ocean or Plastic</strong> Roadshow—.
+                an immersive exploration of where your plastic ends
+                up
+                and how small choices
+                lead to lasting impact
+            </p>
+            <p class="pharagraph-text text-center">
+                As part of the journey, uncover beauty that cares: enjoy personalised services for hair, skin, and body,
+                and discover
+                thoughtful ways to make choices that are gentler on the planet.
+            </p>
+
         </div>
 
         <div class="button-container px-3 mt-5 fade-in">
@@ -21,8 +41,5 @@
             </a>
         </div>
 
-        <div class="footer-container p-4 mt-auto fade-in">
-            @include('components.footer')
-        </div>
     </div>
 </x-app-layout>

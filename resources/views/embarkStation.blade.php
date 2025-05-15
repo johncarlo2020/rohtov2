@@ -18,11 +18,9 @@
                         @else
                             already
                         @endif
-                        part of our Big Little Things community! Start recycling your beauty empties with us—every small
-                        action creates a
-                        big impact for the planet.
+                        part of our Big Little Things community!
                     </h1>
-                    <p class="heading-text text-center px-5 fw-bold">Thank you!</p>
+                    <p class="sub-heading-text text-center px-5 ">Start recycling your beauty empties with us—every small action creates a big impact for the planet.</p>
 
                 </div>
                 <div class="button-container mt-auto px-2">
@@ -36,8 +34,7 @@
                 <div class="info-container bg-white p-3 rounded mb-5">
                     <h1 class="heading-text text-center mb-4  px-4">Task {{ $station->id }}: {{ $station->name }}</h1>
                     <p class="pharagraph-text text-center">{{ $station->description }}</p>
-                    <p class="pharagraph-text text-center">Snap and upload a photo of you using a recycle bag while
-                        shopping.
+                    <p class="pharagraph-text text-center">Snap and upload a photo of you using a recycle bag
                     </p>
                     <div class="upload">
                         <div class="image-upload-container text-center my-3">

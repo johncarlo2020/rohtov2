@@ -39,9 +39,7 @@
                     <h2 class="heading-text text-center mb-2">Hi {{auth()->user()->fname}}</h2>
                     <p class="sub-heading-text text-center">Please select your preferred date for the Ocean or Plastic
                         Roadshow visit and redemption.</p>
-                    <p class="sub-heading-text text-center">Kindly note that redemption is only valid on the selected
-                        date. Redemption on a different date will not be accommodated. You may only reschedule once,
-                        after submission.
+                    <p class="sub-heading-text text-center">Note: Redemption is only valid on the selected date and can be rescheduled once after submission.
                     </p>
                 </div>
                 <div class="date-picker">
@@ -76,9 +74,9 @@
         <div id="qrContainer" class=" bg-white p-3 rounded d-none">
             <div class="text-center mb-2 px-1">
                 <h2 class="heading-text text-center mb-2">Congratulations! {{auth()->user()->fname}}</h2>
-                <p class="pharagraph-text text-center">You’re among the first 2,000 sign-ups and eligible to redeem our
-                    exclusive Upcycled Phone Charm!Kindly present this QR code at the redemption counter during our
-                    Ocean or Plastic Roadshow.</p>
+                <p class="pharagraph-text text-center">You’re among the first 2,000 sign-ups and eligible to redeem our exclusive Upcycled Marine Phone Charm!</p>
+                <br>
+                <p>Kindly present this QR code at the  redemption counter</p>
             </div>
             <div id="qrCode" class="qr-code mb-3">
 
@@ -88,14 +86,15 @@
                 Putrajaya – West Court on Ground Floor</p>
             <div class="p-3">
                 <p class="pharagraph-text mb-0"><Strong>Terms & Conditions</Strong></p>
+                <br>
                 <ol>
-                    <li class="pharagraph-text">Redemption of the Upcycled Phone Charm is only available upon
-                        completion of all five stations of the Ocean or Plastic Roadshow journey.</li>
-                    <li class="pharagraph-text">Redemption is strictly limited to the selected date and stated venue.
-                        Attempts to redeem on any other date or location will not be accepted under any circumstances.
-                    </li>
-                    <li class="pharagraph-text">Redemption must be made in person by the registered participant. It is
-                        non-transferable and cannot be exchanged for cash, products, or services.</li>
+                    <li class="pharagraph-text">Redemption of the Upcycled Phone Charm is only available upon completion of all five stations of the Ocean or Plastic
+                    Roadshow journey.</li> <br>
+                    <li class="pharagraph-text">Redemption is strictly limited to the selected date and stated venue. Attempts to redeem on any other date or location
+                    will not be accepted under any circumstances.
+                    </li> <br>
+                    <li class="pharagraph-text">Redemption must be made in person by the registered participant. It is non-transferable and cannot be exchanged for
+                    cash, products, or services.</li>
                 </ol>
                     <div class="button-container">
                         <a id="homeButton" href="{{ route('preRegEvent') }}" class="button button-primary w-100 mb-2">
@@ -123,7 +122,7 @@
                     <div  class="info-icon mb-3">
                     <img src="{{ asset('files/main/info.png') }}" alt="" />
                 </div>
-                <p class="modal-main-text mb-1">Are you you want to reschedule your visit ?</p>
+                <p class="modal-main-text mb-1">Are you want to reschedule your visit ?</p>
                 <p class="warning-text text-center">Note: You may reschedule your selected date <strong>only once</strong>.</p>
                    <div class="">
                         <button id="reschedule" data-bs-dismiss="modal" type="submit" class="button button-primary w-100 mb-2">

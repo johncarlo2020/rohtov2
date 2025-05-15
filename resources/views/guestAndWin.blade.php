@@ -10,14 +10,15 @@
             <div class="d-flex justify-content-center align-items-center gap-3 px-4 mb-4">
                 <img src="{{ asset('files/main/turtle.webp') }}" alt="Sea Turtle" class="mb-3 turtle" />
                 <div>
-                <h2 class="heading-text mb-0">Guess & Win!</h2>
-                <p class="sub-heading-text-small mb-0 fw-bold">Guess: How many plastic empties were used to create this sea turtle?</p>
-                <p class="sub-heading-text-small mb-0 fw-bold">Win: 3x RM500 L'Occitane gift set</p>
+                <h1 class="sub-heading-text mb-0 fw-bold">Guess how many plastic empties were recycled to create this sea turtle.</h1>
+                <p class="sub-heading-text-small mb-0 ">Be among the first 3 to guess right & win
+                L’Occitane gift set worth RM500!
+                    </p>
                 </div>
             </div>
 
             <div class="how-to-win mb-2">
-                <h4 class="pharagraph-text text-center">How to Win?</h4>
+                <h4 class="pharagraph-text text-center">How to Enter</h4>
                 <ol class="">
                     <li class="mb-1 pharagraph-text">Spot our Sea Turtle made from upcycled plastic waste at IOI City Mall – psst, it's at the West Entrance.</li>
                     <li class="mb-1 pharagraph-text">Guess how many plastic empties were used to create the Sea Turtle.</li>
@@ -45,7 +46,7 @@
                 </div>
                 <div class="mb-2">
                     <strong class="d-block sub-heading-text-small fw-bold">How to Win?</strong>
-                    <p class="mb-0 sub-heading-text-small">The first 3 correct entries will each win a RM500 L'Occitane gift set, based on submission time.</p>
+                    <p class="mb-0 sub-heading-text-small">The<span class="fw-bold"> first 3 correct entries</span> will each win a <span class="fw-bold">RM500 L'Occitane gift set ,</span> based on submission time.</p>
                 </div>
                 <div class="mb-2">
                     <strong class="d-block sub-heading-text-small fw-bold">The Prize?</strong>
@@ -56,7 +57,7 @@
                 </div>
                 <div class="mb-2">
                     <strong class="d-block sub-heading-text-small fw-bold">Winner Notification</strong>
-                    <p class="mb-0 sub-heading-text-small">Winners will be contacted via SMS or WhatsApp by <strong>15 June 2025</strong>. Ensure SMS/WhatsApp permissions were enabled during registration to qualify.</p>
+                    <p class="mb-0 sub-heading-text-small">Winners will be contacted via SMS or WhatsApp by <span class="fw-bold">15 June 2025</span>. Ensure SMS/WhatsApp permissions were enabled during registration to qualify.</p>
                 </div>
                 <div class="mb-3">
                     <strong class="d-block sub-heading-text-small fw-bold">Other Info</strong>

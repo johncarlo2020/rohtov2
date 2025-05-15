@@ -11,14 +11,11 @@
                 <div class="d-flex justify-content-center align-items-center gap-3 px-4 mb-2">
                     <img src="{{ asset('files/main/globe.webp') }}" alt="Sea Turtle" class="mb-3 turtle" />
                     <div>
-                        <h2 class="heading-text mb-0">Guess & Win!</h2>
-                        <p class="sub-heading-text-small mb-2">Join us on an eco-journey and make sustainable choices.
-                            The
-                            best part? Complete at least 3 out of 5 eco-challenges and receive a RM20 cash voucher (min.
-                            spend of RM150)!</p>
-                        <p class="sub-heading-text-small mb-0">Kindly note that voucher redemption is strictly only at
-                            the
-                            Ocean or Plastic Roadshow, IOI City Mall, from 27 May to 2 June.</p>
+                        <h2 class="heading-text mb-0">Be Part of The Change <br> & Get Rewarded</h2>
+                        <p class="sub-heading-text-small mb-2">Complete at least 3 of our 5 eco-challenges and earn a RM20 cash voucher (min. spend RM150).
+                        </p>
+                        <p class="sub-heading-text-small mb-0">Redeem exclusively at our Ocean or Plastic Roadshow, IOI City Mall, 27 May - 2 June.
+                        </p>
                     </div>
                 </div>
                 <div class="px-2 d-flex justify-content-between align-items-center mb-2">
@@ -30,9 +27,7 @@
                     <p class="sub-heading-text-small fw-bold mb-0">Completed {{ $userDone }}/5</p>
                 </div>
                 <div class="mb-2 px-3">
-                    <p class="warning-text sub-heading-text-small small text-center mb-0">*Once completed all 3 task, please walk in to our roadshow
-                        to
-                        claim you voucher.</p>
+                    <p class="warning-text sub-heading-text-small small text-left mb-0">Note: Once you complete at least 3 tasks, visit our roadshow to validate your participation and claim your voucher.</p>
                 </div>
             </div>
 
@@ -52,7 +47,11 @@
                                 <!-- Main Content Area -->
                                 <div class="task-content-area flex-grow-1 py-1 px-2 me-2">
                                     <h6 class="task-title fw-bold pr-4">
-                                        {{ $task['name'] }}
+                                        @if($task['id'] == 1)
+                                            Task {{ $task->id }} (Mandatory): {{ $task['name'] }}
+                                            @else
+                                        Task {{ $task->id }}: {{ $task['name'] }}
+                                        @endif
                                          <i class="fa-solid fa-circle-check ml-1"></i>
                                     </h6>
                                     <p class="task-description text-muted small mb-0" style="line-height: 1.3;">

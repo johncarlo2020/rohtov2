@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('utms', function (Blueprint $table) {
             $table->id();
             $table->string('utm_source')->nullable();
+            $table->string('utm_medium')->nullable();
             $table->timestamps();
         });
     }

@@ -31,6 +31,10 @@ class RegisteredUserController extends Controller
         if ($request->has('utm_source')) {
             session(['utm.source' => $request->get('utm_source')]);
         }
+
+        if ($request->has('utm_medium')) {
+            session(['utm.medium' => $request->get('utm_medium')]);
+        }
         return view('auth.register');
     }
 
@@ -78,10 +82,19 @@ class RegisteredUserController extends Controller
         ]);
 
         if ($request->filled('utm_source')) {
-            Utm::create([
-                'utm_source' => $request->input('utm_source'),
-            ]);
+            $utm = new Utm();
+            $utm->utm_source = $request->input('utm_source');
+            $utm->save();
+
             $user->utm_source = $request->input('utm_source');
+            $user->save();
+        }
+
+        if ($request->filled('utm_medium')) {
+            $utm->utm_medium = $request->input('utm_medium');
+            $utm->save();
+
+            $user->utm_medium = $request->input('utm_medium');
             $user->save();
         }
 

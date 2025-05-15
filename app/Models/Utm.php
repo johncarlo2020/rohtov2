@@ -10,6 +10,7 @@ class Utm extends Model
     use HasFactory;
 
     protected $fillable = [
-        'utm_source'
+        'utm_source',
+        'utm_medium',
     ];
 }

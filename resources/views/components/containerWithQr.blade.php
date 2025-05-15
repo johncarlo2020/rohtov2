@@ -1,7 +1,7 @@
 <div id="qrContainer">
     <div class="text-center mb-2 px-1">
         <h2 class="heading-text text-center mb-2">Congratulations! Selena</h2>
-        <p class="pharagraph-text text-center">You’re among the first 2,000 sign-ups and eligible to redeem our exclusive
+        <p class="pharagraph-text text-center">You’re among the first 1,000 sign-ups and eligible to redeem our exclusive
             Upcycled Phone Charm! Kindly present this QR code at the redemption counter during our Ocean or Plastic
             Roadshow.</p>
     </div>

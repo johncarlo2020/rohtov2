@@ -151,7 +151,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="mb-2 row">
+                <div class="mb-3 row">
                     <div class="col-12">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="marketing" value="1"
@@ -163,7 +163,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="mb-3">
+                <div class="mb-3 d-flex justify-content-center">
                     <!-- Visible reCAPTCHA v2 widget -->
                     <div class="g-recaptcha" data-sitekey="6LfSnzorAAAAABAcoPooh89ujm8IKf5eyCsqm25y" data-callback="onRecaptchaSuccess" data-expired-callback="onRecaptchaExpired"></div>
                 </div>

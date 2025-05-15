@@ -8,11 +8,11 @@
         <div class="ocean-img mb-4">
             <img src="{{ asset('files/main/ocean_photo.webp') }}" />
         </div>
-        <div class="footer">
+        <div class="footer mb-3">
             <p class="pharagrap-text mb-0">In partnership with</p>
             <div class="footer-logo mb-3">
-                <img src="{{ asset('files/main/Alliance Bank_Dark.webp') }}" alt="" />
-            <div><br>
+            <img src="{{ asset('files/main/Alliance Bank_Dark.webp') }}" alt="" />
+        <div>
 
         <div class="info-box px-5 mb-3">
             <p class="pharagraph-text text-center">Discover our very first <strong>Ocean or Plastic</strong> Roadshow—.
@@ -41,5 +41,6 @@
             </a>
         </div>
 
+        <div class="spacer"></div>
     </div>
 </x-app-layout>

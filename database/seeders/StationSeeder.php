@@ -75,17 +75,17 @@ class StationSeeder extends Seeder
 
         Task::create([
             'name' => 'Join our Big Little Things Recycling Program',
-            'description' => 'Sign up and start recycling your beauty empties with us—every small action helps reduce waste and protect the planet.'
+            'description' => 'Sign up and start recycling your beauty empties with us.'
         ]);
 
         Task::create([
             'name' => 'Say No to Plastic Bags',
-            'description' => 'Skip single-use plastic bags and bring your own reusable bag when you shop.'
+            'description' => 'Bring your own reusable bag when you shop.'
         ]);
 
         Task::create([
             'name' => 'Skip Single-use Straw & Bottle or Cup',
-            'description' => 'Make a conscious choice to avoid plastic straws and bottles – opt for reusable alternatives.'
+            'description' => 'Make a conscious choice to opt for reusable alternatives.'
         ]);
 
         Task::create([
@@ -95,7 +95,7 @@ class StationSeeder extends Seeder
 
         Task::create([
             'name' => 'Explore Sustainable Credit Card',
-            'description' => 'Show your support for greener banking—express interest in a sustainable credit card and take one more step toward a bigger environmental impact.'
+            'description' => 'Show your support for greener banking—express interest in Alliance Bank sustainable credit card.'
         ]);
 
 

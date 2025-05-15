@@ -9,7 +9,7 @@
             <img src="{{ asset('files/main/ocean_photo.webp') }}" />
         </div>
         <div class="footer">
-            <p class="pharagrap-text mb-0">in partnership with</p>
+            <p class="pharagrap-text mb-0">In partnership with</p>
             <div class="footer-logo mb-3">
                 <img src="{{ asset('files/main/Alliance Bank_Dark.webp') }}" alt="" />
             <div><br>

@@ -5,7 +5,7 @@
                 @include('components.branding')
             </div>
         </div>
-        <div class="ocean-img mb-4">
+        <div class="ocean-img mb-4 w-100">
             <img src="{{ asset('files/main/ocean or plastic_v4-2.webp') }}" />
         </div>
 

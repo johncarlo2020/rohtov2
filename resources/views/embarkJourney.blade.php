@@ -41,7 +41,7 @@
                     @if (!$loop->last)
                         <div class="custom-task-item pb-2 mb-3 rounded-3 bg-white">
                             <a href="{{ route('embarckStation', ['station' => $task->id]) }}"
-                                class="d-flex align-items-start guest-btn p-3 {{ $task['status'] === 'completed' ? 'completed' : '' }}">
+                                class="d-flex align-items-start guest-btn p-3 {{ ($task['status'] === 'completed' || $task['status'] === 'in-progress') ? 'completed' : '' }}">
                                 <!-- Image Placeholder -->
                                 <div class="task-image-placeholder me-2">
                                     <img src="{{ asset('files/main/task_' . $task->id . '_3x.webp') }}" alt="Task Image"
@@ -68,7 +68,7 @@
                                 <div class="accordion-item border-0">
                                     <h2 class="accordion-header border-none" id="heading{{ $task->id }}">
                                         <button
-                                            class="accordion-button collapsed  border-bottom guest-btn bg-white d-flex align-items-start p-3 {{ $task['status'] === 'completed' ? 'completed' : '' }}"
+                                            class="accordion-button collapsed  border-bottom guest-btn bg-white d-flex align-items-start p-3 {{ ($task['status'] === 'completed' || $task['status'] === 'in-progress') ? 'completed' : '' }}"
                                             type="button" data-bs-toggle="collapse"
                                             data-bs-target="#collapse{{ $task->id }}" aria-expanded="false"
                                             aria-controls="collapse{{ $task->id }}">

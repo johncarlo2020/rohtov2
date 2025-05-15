@@ -66,7 +66,6 @@ class RegisteredUserController extends Controller
         $user = User::create([
             'fname' => $request->fname,
             'lname' => $request->lname,
-
             'dob' => $request->dob,
             'number' => $phoneNumber,
             'email' => $request->email,
@@ -82,6 +81,8 @@ class RegisteredUserController extends Controller
             Utm::create([
                 'utm_source' => $request->input('utm_source'),
             ]);
+            $user->utm_source = $request->input('utm_source');
+            $user->save();
         }
 
         $user->assignRole('client');

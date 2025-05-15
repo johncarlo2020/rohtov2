@@ -80,7 +80,7 @@
                                             <!-- Main Content Area - Title Only -->
                                             <div class="task-content-area flex-grow-1 py-1 px-2 me-2">
                                                 <h6 class="task-title fw-bold pr-5">
-                                                    {{ $task['name'] }}
+                                                    Task {{ $task->id }}: {{ $task['name'] }}
                                                      <i class="fa-solid fa-circle-check ml-1"></i>
                                                 </h6>
                                                 <p class="task-description text-muted small mb-0"

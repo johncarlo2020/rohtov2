@@ -11,14 +11,13 @@
                 <img src="{{ asset('files/main/turtle.webp') }}" alt="Sea Turtle" class="mb-3 turtle" />
                 <div>
                 <h1 class="sub-heading-text mb-0 fw-bold">Guess how many plastic empties were recycled to create this sea turtle.</h1>
-                <p class="sub-heading-text-small mb-0 ">Be among the first 3 to guess right & win
-                L’Occitane gift set worth RM500!
+                <p class="sub-heading-text-small mb-0 ">Be among the first 3 to guess right & win L’Occitane gift set worth RM500!
                     </p>
                 </div>
             </div>
 
             <div class="how-to-win mb-2">
-                <h4 class="pharagraph-text text-center">How to Enter</h4>
+                <h4 class="pharagraph-text text-center">How to Enter?</h4>
                 <ol class="">
                     <li class="mb-1 pharagraph-text">Spot our Sea Turtle made from upcycled plastic waste at IOI City Mall – psst, it's at the West Entrance.</li>
                     <li class="mb-1 pharagraph-text">Guess how many plastic empties were used to create the Sea Turtle.</li>
@@ -27,9 +26,9 @@
                 <p class="small text-center">Note: Only one submission per registrant.</p>
             </div>
 
-            <div class="reward-highlight text-center fw-bold mb-4">
+            {{-- <div class="reward-highlight text-center fw-bold mb-4">
                 The first 3 correct entries will be rewarded with a RM500 L'Occitane gift set each!
-            </div>
+            </div> --}}
 
             <div class="submission-area mb-4 text-center">
                 {{-- Placeholder for input field --}}
@@ -38,18 +37,19 @@
 
             </div>
 
+
             <div class="terms-conditions small">
-                <h5 class="sub-heading-text-small fw-bold mb-1">Terms & Conditions</h5>
+                <h5 class="sub-heading-text-small fw-bold mb-1 underlined">Terms & Conditions</h5>
                 <div class="mb-2">
                     <strong class="d-block sub-heading-text-small fw-bold">Who Can Join?</strong>
-                    <p class="mb-0 sub-heading-text-small">Open to Ocean or Plastic Roadshow registrants with a valid local phone number, and who submit their answer via the official channel: <a href="http://oceanorplastic.experienceloccitane.com" target="_blank">oceanorplastic.experienceloccitane.com</a></p>
+                    <p class="mb-0 sub-heading-text-small">Open to any registrants with a valid local phone number, and who submit their answer via the official channel: <a href="http://oceanorplastic.experienceloccitane.com" target="_blank">oceanorplastic.experienceloccitane.com</a></p>
                 </div>
                 <div class="mb-2">
                     <strong class="d-block sub-heading-text-small fw-bold">How to Win?</strong>
                     <p class="mb-0 sub-heading-text-small">The<span class="fw-bold"> first 3 correct entries</span> will each win a <span class="fw-bold">RM500 L'Occitane gift set ,</span> based on submission time.</p>
                 </div>
                 <div class="mb-2">
-                    <strong class="d-block sub-heading-text-small fw-bold">The Prize?</strong>
+                    <strong class="d-block sub-heading-text-small fw-bold">The Prize</strong>
                     <ul class="list-unstyled ps-0 mb-0">
                         <li class="sub-heading-text-small">• Curated L'Occitane gift set worth RM500</li>
                         <li class="sub-heading-text-small">• Not customizable, transferable, or exchangeable</li>

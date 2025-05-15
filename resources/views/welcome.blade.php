@@ -16,39 +16,8 @@
 </head>
 
 <body class="antialiased welcome-page">
-    <div class="content-box main-background fade-in">
-        <div class="container">
-            <div>
-                @include('components.branding')
-            </div>
-        </div>
-        <div class="ocean-img mb-4">
-            <img src="{{ asset('files/main/ocean_photo.webp') }}" />
-        </div>
-        <div class="info-box px-5 mb-3">
-            <p class="pharagraph-text text-center">Discover our very first <strong>Ocean or Plastic</strong> Roadshow—.
-                an immersive exploration of where your plastic ends
-                up
-                and how small choices
-                lead to lasting impact
-            </p>
-            <p class="pharagraph-text text-center">
-                As part of the journey, uncover beauty that cares: enjoy personalised services for hair, skin, and body,
-                and discover
-                thoughtful ways to make choices that are gentler on the planet.
-            </p>
-
-        </div>
-        <img class="info-img mb-3" src="{{ asset('files/main/welcome_info_img.webp') }}" />
-        <div class="info-box px-5 mb-3">
-            <p class="pharagraph-text text-center mb-0">Date: 27 May – 2 June 2025</p>
-            <p class="pharagraph-text text-center mb-0">
-                Time: 10am – 10pm</p>
-            <p class="pharagraph-text text-center mb-0">
-                Venue: IOI City Mall, Putrajaya –</p>
-            <p class="pharagraph-text text-center mb-0">
-                West Court on Ground Floor</p>
-        </div>
+    <div class="content-box main-background fade-in pt-0">
+        <img class="w-100 mb-4" src="{{ asset('files/main/ocean or plastic_microsite_v4-02.jpg') }}" />
         <div class="button-container px-4">
             <a href="{{ route('register') }}" id="routeBtn" class="button-primary button mb-3">
                Sign Up
@@ -56,9 +25,6 @@
               <a href="{{ route('login') }}" id="routeBtn" class="button-secondary button">
                 Sign In
             </a>
-        </div>
-        <div class="footer-container p-4">
-             @include('components.footer')
         </div>
     </div>
 </body>

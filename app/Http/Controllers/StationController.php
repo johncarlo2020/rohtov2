@@ -239,7 +239,14 @@ public function embarckJourney()
                 ]);
 
                 if($data['status'] == 'registered'){
-                    $task = UserTask::updateOrCreate(
+
+                    $status = 'registered';
+                }
+                if($data['status'] == 'exists'){
+                    $status = 'exists';
+                }
+
+                $task = UserTask::updateOrCreate(
                         [
                             'user_id' => auth()->id(),
                             'task_id' => 1
@@ -249,11 +256,6 @@ public function embarckJourney()
                         ]
                     );
 
-                    $status = 'registered';
-                }
-                if($data['status'] == 'exists'){
-                    $status = 'exists';
-                }
             }
 
         }

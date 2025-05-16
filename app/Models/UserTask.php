@@ -12,6 +12,7 @@ class UserTask extends Model
     protected $fillable = [
         'user_id',
         'task_id',
-        'status', // pending, completed, in-progress
+        'status',
+        'images' // pending, completed, in-progress
     ];
 }

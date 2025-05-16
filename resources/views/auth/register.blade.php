@@ -56,7 +56,7 @@
                             class="input-text form-control @error('dob') is-invalid @enderror" name="dob"
                             value="{{ old('dob') }}" required autocomplete="dob" autofocus />
 
-                        @error('lname')
+                        @error('dob')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>

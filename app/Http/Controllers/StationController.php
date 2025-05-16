@@ -67,7 +67,8 @@ class StationController extends Controller
                     'task_id' => $request->task_id
                 ],
                 [
-                    'status' => 'in-progress'
+                    'status' => 'in-progress',
+                    'images' => $filename
                 ]
             );
 
@@ -689,16 +690,7 @@ public function embarckJourney()
         $data['userToday'] = User::whereDate('created_at', $today)->count();
         $data['country'] = User::selectRaw('country , COUNT(*) as count')->groupBy('country')->where('country' ,'!=','admin')->get();
 
-         $data['where'] = User::groupBy('where')
-    ->select('where', DB::raw('COUNT(*) as count'))
-    ->having('count', '>', 1) // Exclude entries with count = 1
-    ->orderBy('count', 'desc') // Order by count in descending order
-    ->get()
-    ->map(function ($item) {
-        return ['name' => $item->where, 'count' => $item->count];
-    })
-    ->values()
-    ->toArray();
+
 
         $usersWithSixStationUsers = User::with('stationUser')->whereDate('created_at', '>=', $startDate->toDateString())->has('stationUser', '>=', 5)->count();
         // dd($usersWithSixStationUsers);
@@ -807,6 +799,42 @@ public function embarckJourney()
         //  dd($data);
 
         return view('users', compact('data', 'permission'));
+    }
+
+    public function ambient()
+    {
+        $startDate = Carbon::create(2025, 5,15);
+        $permission = auth()->user()->getPermissionNames()->first();
+
+
+        $data['users'] = User::whereDate('created_at', '>=', $startDate->toDateString())->with('stationUser')->orderBy('id', 'desc')->get();
+        return view('ambient', compact('data'   , 'permission'));
+    }
+
+    public function embark()
+    {
+        $tasks = Task::all(); // Get all tasks
+
+$users = User::with('tasks')->get(); // Eager load tasks for all users
+
+$users = $users->map(function ($user) use ($tasks) {
+    // Key user's tasks by task id for fast lookup
+    $userTasks = $user->tasks->keyBy('id');
+
+    // Map all tasks and attach user-specific status or default to 'pending'
+    $user->all_tasks = $tasks->map(function ($task) use ($userTasks) {
+        $clonedTask = clone $task; // Avoid modifying the original task object
+        $clonedTask->status = $userTasks[$task->id]->pivot->status ?? 'pending';
+        $clonedTask->image = $userTasks[$task->id]->pivot->images ?? '';
+
+        return $clonedTask;
+    });
+
+    return $user;
+});
+
+
+        dd($users);
     }
 
     public function userData(User $user)

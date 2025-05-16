@@ -20,14 +20,12 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Name</th>
+                                <th>Phone Number</th>
+
                                 <th>Email</th>
-                                <th>Number</th>
-                                <th>Country</th>
+                                <th>Answer</th>
 
 
-                                @foreach ($data['stations'] as $station)
-                                    <th>{{ $station['name'] }}</th>
-                                @endforeach
                             </tr>
                         </thead>
                         <tbody>
@@ -35,14 +33,10 @@
                                 <tr data-user-id="{{ $user->id }}">
                                     <td>{{ $user->id }}</td>
                                     <td>{{ $user->fname }} {{ $user->lname }}</td>
+                                    <td>{{ $user->number ?? 'none' }} </td>
                                     <td>{{ $user->email }}</td>
-                                    <td>{{ $user->number }}</td>
-                                    <td>{{ $user->country }}</td>
+                                    <td>{{ $user->guess ?? 'none' }} </td>
 
-                                    @foreach ($user['stations'] as $station)
-                                        <td class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-danger' }}">
-                                            {{ $station['value'] ? 'Yes' : 'No' }}</td>
-                                    @endforeach
                                 </tr>
                             @endforeach
                         </tbody>

@@ -33,9 +33,15 @@
             <div class="photo-container fade-in">
                 <div class="info-container bg-white p-3 rounded mb-5">
                     <h1 class="heading-text text-center mb-4  px-4">Task {{ $station->id }}: {{ $station->name }}</h1>
-                    <p class="pharagraph-text text-center">Skip single-use plastic bags and bring your own reusable bag when you shop.</p>
-                    <p class="pharagraph-text text-center">Snap and upload a photo of you using a recycle bag
-                    </p>
+                    @if ($station->id == 2)
+                           <p class="pharagraph-text text-center">Skip single-use plastic bags and bring your own reusable bag when you shop.</p>
+                            <p class="pharagraph-text text-center">Snap and upload a photo of you using a recycle bag
+                    @endif
+                        @if ($station->id == 3)
+                           <p class="pharagraph-text text-center">Make a conscious choice to avoid plastic straws and bottles – opt for reusable alternatives.</p>
+                            <p class="pharagraph-text text-center">Snap and upload a photo of you using a reusable straw, cup or bottle. </p>
+                    @endif
+
                     <div class="upload">
                         <div class="image-upload-container text-center my-3">
                             <label for="file-upload" class="file-upload-label">

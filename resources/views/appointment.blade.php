@@ -82,7 +82,7 @@
 
             </div>
 
-            <p class="sub-heading-text text-center mb-0">Date selected: <span id="selected-date">{{ $selectedAppointment->appointment->name ?? '' }}</span>, Wednesday Venue: IOI City Mall,
+            <p class="sub-heading-text text-center mb-0">Date selected: <span id="selected-date">{{ $selectedAppointment->appointment->name ?? '' }}</span>, Wednesday <br/> Venue: IOI City Mall,
                 Putrajaya – West Court on Ground Floor</p>
             <div class="p-3">
                 <p class="pharagraph-text mb-0"><Strong>Terms & Conditions</Strong></p>

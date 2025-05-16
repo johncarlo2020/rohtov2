@@ -17,13 +17,12 @@
             </div>
 
             <div class="how-to-win mb-2">
-                <h4 class="pharagraph-text text-center">How to Enter?</h4>
+                <h4 class="pharagraph-text text-center">How to Enter</h4>
                 <ol class="">
                     <li class="mb-1 pharagraph-text">Spot our Sea Turtle made from upcycled plastic waste at IOI City Mall – psst, it's at the West Entrance.</li>
                     <li class="mb-1 pharagraph-text">Guess how many plastic empties were used to create the Sea Turtle.</li>
-                    <li class="mb-1 pharagraph-text">Submit your answer below.</li>
+                    <li class="mb-1 pharagraph-text">Submit your answer below. <br> Note: Only one submission per registrant.</li>
                 </ol>
-                <p class="small text-center">Note: Only one submission per registrant.</p>
             </div>
 
             {{-- <div class="reward-highlight text-center fw-bold mb-4">
@@ -39,28 +38,27 @@
 
 
             <div class="terms-conditions small">
-                <h5 class="sub-heading-text-small fw-bold mb-1 underlined">Terms & Conditions</h5>
+                <h5 class="sub-heading-text-small fw-bold mb-2 underlined">Terms & Conditions</h5>
                 <div class="mb-2">
-                    <strong class="d-block sub-heading-text-small fw-bold">Who Can Join?</strong>
+                    <strong class="d-block sub-heading-text-small fw-bold">Who Can Join</strong>
                     <p class="mb-0 sub-heading-text-small">Open to any registrants with a valid local phone number, and who submit their answer via the official channel: <a href="http://oceanorplastic.experienceloccitane.com" target="_blank">oceanorplastic.experienceloccitane.com</a></p>
                 </div>
                 <div class="mb-2">
-                    <strong class="d-block sub-heading-text-small fw-bold">How to Win?</strong>
+                    <strong class="d-block sub-heading-text-small fw-bold">How to Win</strong>
                     <p class="mb-0 sub-heading-text-small">The<span class="fw-bold"> first 3 correct entries</span> will each win a <span class="fw-bold">RM500 L'Occitane gift set ,</span> based on submission time.</p>
                 </div>
                 <div class="mb-2">
                     <strong class="d-block sub-heading-text-small fw-bold">The Prize</strong>
-                    <ul class="list-unstyled ps-0 mb-0">
+                    <ul class="list-unstyled ps-0 mb-0 ml-2">
                         <li class="sub-heading-text-small">• Curated L'Occitane gift set worth RM500</li>
                         <li class="sub-heading-text-small">• Not customizable, transferable, or exchangeable</li>
                     </ul>
                 </div>
                 <div class="mb-2">
                     <strong class="d-block sub-heading-text-small fw-bold">Winner Notification</strong>
-                    <p class="mb-0 sub-heading-text-small">Winners will be contacted via SMS or WhatsApp by <span class="fw-bold">15 June 2025</span>. Ensure SMS/WhatsApp permissions were enabled during registration to qualify.</p>
+                    <p class="mb-0 sub-heading-text-small">Winners will be contacted via SMS or WhatsApp by <span class="fw-bold">15 June 2025</span>. <span class="text-italic">Ensure SMS/WhatsApp permissions were enabled during registration to qualify.</span></p>
                 </div>
                 <div class="mb-3">
-                    <strong class="d-block sub-heading-text-small fw-bold">Other Info</strong>
                     <p class="mb-0 sub-heading-text-small">L'Occitane may amend or cancel the contest at any time. By entering, you agree to these terms and the organiser's decisions.</p>
                 </div>
             </div>

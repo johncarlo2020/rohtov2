@@ -6,16 +6,15 @@
             </div>
         </div>
         <div class="ocean-img mb-4 w-100">
-            <img src="{{ asset('files/main/ocean or plastic_v4-2.webp') }}" />
+            <img src="{{ asset('files/main/ocean or plastic_adaptation_v2.webp') }}" />
         </div>
 
-        <div class="info-box px-5 mb-3">
-            <p class="pharagraph-text text-center">Discover our very first <strong>Ocean or Plastic</strong> Roadshow—.
-                an immersive exploration of where your plastic ends
+        <div class="info-box px-2 mb-3">
+            <p class="pharagraph-text text-center mb-0">Discover our very first <strong>Ocean or Plastic</strong> Roadshow—.</p>
+            <p class="pharagraph-text text-center"> an immersive exploration of where your plastic ends
                 up
                 and how small choices
-                lead to lasting impact
-            </p>
+                lead to lasting impact.</p>
             <p class="pharagraph-text text-center">
                 As part of the journey, uncover beauty that cares: enjoy personalised services for hair, skin, and body,
                 and discover

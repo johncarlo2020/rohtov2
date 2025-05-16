@@ -161,7 +161,7 @@
 </script>
 
 <!-- Facebook Pixel Code -->
-<script>
+<!-- <script>
     !function (f, b, e, v, n, t, s) {
         if (f.fbq) return;
         n = f.fbq = function () {
@@ -182,7 +182,7 @@
         'https://connect.facebook.net/en_US/fbevents.js');
     fbq('init', '800121447587288');
     fbq('track', 'CompleteRegistration');
-</script>
+</script> -->
 
 <!-- Facebook Pixel Code -->
 <script>

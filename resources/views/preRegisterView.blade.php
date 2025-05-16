@@ -30,7 +30,8 @@
             <a id="homeButton" href="{{ route('guestAndWin') }}" class="button button-primary w-100 mb-3">
                Guess & Win
             </a>
-            <a id="homeButton" href="#" class="button button-primary w-100 mb-3 disabled">
+            <a id="homeButton" href="#" class="button button-primary w-100 mb-3"  data-bs-toggle="modal"
+                            data-bs-target="#exampleModal">
                 Ocean Or Plastic Roadshow
             </a>
             <a id="reschedule" href="{{ route('appointment') }}" class="button button-secondary w-100 mb-3"">
@@ -39,6 +40,25 @@
         </div>
 
         <div class="spacer"></div>
+           <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <a type="button" class="modal-close" data-bs-dismiss="modal" aria-label="Close"><i
+                            class="fa-solid fa-xmark"></i></a>
+
+                    <p class="heading-text text-center mb-2">Ocean Or Plastic Roadshow</p>
+                      <div class="map-img mb-3">
+                        <img src="{{ asset('files/main/map.webp') }}" alt="" />
+                    </div>
+                       <p class="modal-main-text mb-4 px-2">This section will be available starting 27 May, see you then!</p>
+                    {{-- <p class="warning-text text-center px-5">Note: You may reschedule your selected date
+                        <strong>only once</strong>.
+                    </p> --}}
+                </div>
+            </div>
+        </div>
+    </div>
     </div>
 
     <script>

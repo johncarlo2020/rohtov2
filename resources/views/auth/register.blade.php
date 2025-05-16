@@ -103,6 +103,54 @@
                             </select>
                         </div>
                     </div>
+
+                    <div class="mb-2 row">
+                        <div class="col-12 input-group">
+                            <select class="form-select input-text" name="existing" aria-label="Default select example">
+                                <option selected disabled>
+                                    Are you existing Hada Labo customer ?
+                                </option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-2 row">
+                        <div class="col-12 input-group">
+                            <select class="form-select input-text" name="social_media" aria-label="Default select example">
+                                <option selected disabled>
+                                    Do you follow us on social media ?
+                                </option>
+                                <option value="Facebook">Facebook</option>
+                                <option value="TikTok">TikTok</option>
+                                <option value="Instagram">Instagram</option>
+                                <option value="XiaoHongShu (小红书)">
+                                    XiaoHongShu (小红书)
+                                </option>
+                                <option value="Friend Referral">
+                                    Friend Referral
+                                </option>
+                                <option value="Walk-in  ">Walk-in</option>
+                                <option value="no">No</option>
+
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-2 row">
+                        <div class="col-12 input-group">
+                            <select class="form-select input-text" name="appeal" aria-label="Default select example">
+                                <option selected disabled>
+                                    Which of the following appeals to you the most ?
+                                </option>
+                                <option value="Promotional Discounts">A) Promotional Discounts</option>
+                                <option value="Event design/theme">B) Event design/theme</option>
+                                <option value="Free gifts and merchandise">C) Free gifts and merchandise</option>
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="mt-4 mb-2 row">
                         <div class="col-12">
                             <div class="form-check">

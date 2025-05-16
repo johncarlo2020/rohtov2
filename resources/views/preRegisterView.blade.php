@@ -6,7 +6,7 @@
             </div>
         </div>
         <div class="ocean-img mb-4 w-100">
-            <img src="{{ asset('files/main/ocean or plastic_v4-2.webp') }}" />
+            <img src="{{ asset('files/main/ocean or plastic_adaptation_v2.webp') }}" />
         </div>
 
         <div class="info-box px-5 mb-3">

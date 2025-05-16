@@ -17,7 +17,7 @@
 
 <body class="antialiased welcome-page">
     <div class="content-box main-background fade-in pt-0">
-        <img class="w-100 mb-4" src="{{ asset('files/main/ocean or plastic_microsite_v4-02.jpg') }}" />
+        <img class="w-100 mb-4" src="{{ asset('files/main/ocean or plastic_microsite_v4-02.webp') }}" />
         <div class="button-container px-4">
             <a href="{{ route('register') }}" id="routeBtn" class="button-primary button mb-3">
                Sign Up

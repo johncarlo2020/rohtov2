@@ -49,7 +49,7 @@
 
                     <p class="heading-text text-center mb-2">Ocean Or Plastic Roadshow</p>
                       <div class="map-img mb-3">
-                        <img src="{{ asset('files/main/map.webp') }}" alt="" />
+                        <img src="{{ asset('files/main/map2.webp') }}" alt="" />
                     </div>
                        <p class="modal-main-text mb-4 px-2">This section will be available starting 27 May, see you then!</p>
                     {{-- <p class="warning-text text-center px-5">Note: You may reschedule your selected date

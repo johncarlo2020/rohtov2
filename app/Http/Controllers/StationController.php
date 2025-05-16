@@ -213,7 +213,7 @@ public function embarckJourney()
     });
     // dd($tasks);
 
-    $userDone = UserTask::where('user_id', auth()->id())->where('status','completed')->count();
+    $userDone = UserTask::where('user_id', auth()->id())->where('status','!=','pending')->count();
     $totalTasks = Task::count();
     $percentage = $totalTasks > 0 ? round(($userDone / $totalTasks) * 100) : 0;
 

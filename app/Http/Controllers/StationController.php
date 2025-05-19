@@ -134,10 +134,19 @@ class StationController extends Controller
 
         $userAppointment = $user->userAppointments()->count();
         $selectedAppointment = $user->userAppointments()->with('appointment')->first() ?? '';
+        $convertedDate = '';
+        if ($selectedAppointment && isset($selectedAppointment->appointment->name)) {
+            try {
+                $convertedDate = Carbon::createFromFormat('m-d-Y', $selectedAppointment->appointment->name)->format('l');
+            } catch (\Exception $e) {
+                // Handle potential parsing errors, e.g., log or set a default
+                $convertedDate = 'Invalid Date';
+            }
+        }
 
         //check if user is on first 2000 verified users
 
-        return view('appointment', compact('appointments','user','is2000','userAppointment','selectedAppointment'));
+        return view('appointment', compact('appointments','user','is2000','userAppointment','selectedAppointment','convertedDate'));
     }
 
     public function appointmentSubmit(Request $request)

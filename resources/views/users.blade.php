@@ -23,6 +23,8 @@
                                 <th>Email</th>
                                 <th>Number</th>
                                 <th>Country</th>
+                                <th>UTM Source</th>
+
 
 
                                 @foreach ($data['stations'] as $station)
@@ -38,6 +40,7 @@
                                     <td>{{ $user->email }}</td>
                                     <td>{{ $user->number }}</td>
                                     <td>{{ $user->country }}</td>
+                                    <td>{{ $user->utm_source }}</td>
 
                                     @foreach ($user['stations'] as $station)
                                         <td class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-danger' }}">

@@ -54,6 +54,15 @@ class RegisteredUserController extends Controller
                     $fail('You must be at least 18 years old to register.');
                 }
             }],
+            'country' => [
+                'required',
+                'string',
+                function ($attribute, $value, $fail) {
+                    if (User::where('number', $value)->exists()) {
+                        $fail('This phone number is already registered with another e-mail');
+                    }
+                }
+            ],
         ]);
 
         $marketing = false;

@@ -84,13 +84,18 @@
                     <div class="col-12 input-group w-100 phone-number-input">
                         <label class="form-label" for="">Phone Number</label>
 
-                        <input id="number" type="tel" class="input-text form-control w-100 @error('number') is-invalid @enderror d-block"
+                        <input id="number" type="tel" class="input-text form-control w-100 @error('country') is-invalid @enderror d-block"
                             name="number" value="{{ old('number') }}" required autocomplete="tel" autofocus />
 
                     </div>
                     <div class="mt-2 col-12">
                         <span id="valid-msg" class="d-none text-danger"></span>
                         <span id="error-msg" class="d-none text-danger"></span>
+                        @error('country')
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
                     </div>
                 </div>
                 <p class="pharagraph-text">

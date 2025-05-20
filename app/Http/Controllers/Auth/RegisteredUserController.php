@@ -92,7 +92,7 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
 
 
-        GlobalHelper::sendOtpSms($phoneNumber, $otp);
+        // GlobalHelper::sendOtpSms($phoneNumber, $otp);
 
     // ✅ Step 3: Redirect to OTP verification screen
     return redirect()->route('dashboard')->with('message', 'Registration successful! Welcome to the dashboard.');

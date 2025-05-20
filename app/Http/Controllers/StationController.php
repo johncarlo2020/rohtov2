@@ -427,7 +427,10 @@ public function embarckJourney()
         $user = User::with('stationUser')->where('id', auth()->id())->first();
         $stationDone = $user->stationUser->count();
 
+        dd($stationDone);
+
         return response()->json(['count' => $stationDone]);
+
     }
 
 
@@ -643,6 +646,8 @@ public function embarckJourney()
             }
         }
 
+        $completedStationCount = StationUser::where('user_id', auth()->id())->count();
+
         // Assume that `$station_id` is validated before this point
 
         try {
@@ -679,8 +684,12 @@ public function embarckJourney()
             $stationUser->time_spent = $secondsSpent;
             $stationUser->save();
             DB::commit();
+
+            // Recalculate count after saving and committing
+            $completedStationCount = StationUser::where('user_id', auth()->id())->count();
+
             // Success response
-            return response()->json(['message' => 'Station ID updated successfully'], 200);
+            return response()->json(['message' => 'Station ID updated successfully', 'completedStationCount' => $completedStationCount], 200);
         } catch (\Exception $e) {
             DB::rollback();
 

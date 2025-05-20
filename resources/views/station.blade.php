@@ -114,10 +114,6 @@
         var message = '';
         var count = 0;
         var lastClick = 0;
-        retryScanner.addEventListener('click', function(event) {
-           startScanner();
-
-        });
 
 
         document.getElementById('start-scanner').addEventListener('click', function(event) {
@@ -156,23 +152,10 @@
         }
 
         function showCongrats() {
+            var csrfToken = $('meta[name="csrf-token"]').attr('content');
             mainContent.classList.add('d-none');
             scannerContainer.classList.add('d-none');
             congratsContainer.classList.remove('d-none');
-
-               $.ajax({
-                url: '{{ route('station.getCount') }}',
-                type: 'get',
-                headers: {
-                    'X-CSRF-TOKEN': csrfToken,
-                },
-                success: function(response) {
-                  console.log(response);
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error sending QR Code message:', error);
-                }
-            });
         }
 
 
@@ -192,6 +175,27 @@
                     station: {{ $station->id }}
                 },
                 success: function(response) {
+
+                    const completedStationCount = response.completedStationCount;
+
+                    // Update circular progress bar
+                    const circularProgress = document.querySelector('.circular-progress');
+                    if (circularProgress) {
+                        circularProgress.style.setProperty('--progress-percent', (completedStationCount / 4) * 100 + '%');
+                    }
+
+                    // Update current step display
+                    const currentStepDisplay = document.querySelector('.current-step-display');
+                    if (currentStepDisplay) {
+                        currentStepDisplay.textContent = completedStationCount;
+                    }
+
+                    // Update progress label below
+                    const progressLabelBelow = document.querySelector('.progress-label-below');
+                    if (progressLabelBelow) {
+                        progressLabelBelow.textContent = completedStationCount + '/4 Check-In Completed';
+                    }
+
                     showCongrats();
                 },
                 error: function(xhr, status, error) {
@@ -202,20 +206,6 @@
                 }
             });
         }
-
-        // document.getElementById('btn_manual').addEventListener('click', function() {
-        //     var password = $('#password').val();
-
-        //     if (password == 8888) {
-        //         sendMessage({{ $station->id }});
-        //         $('#manualQR').modal('hide');
-        //     } else {
-        //         $('#manualQR').modal('hide');
-        //         $('#password').val('');
-        //         alert('wrong password');
-        //     }
-        //     console.log(password);
-        // });
 
         document.getElementById('forceQr').addEventListener('click', function() {
             console.log('clicked');
@@ -234,13 +224,5 @@
             }
             lastClick = now;
         });
-
-
-        // document.getElementById('close').addEventListener('click', function(event) {
-        //     event.preventDefault();
-        //     mainContent.classList.remove('d-none');
-        //     scannerContainer.classList.add('d-none');
-        //     html5QrCode.stop();
-        // });
     </script>
 </x-app-layout>

@@ -90,7 +90,6 @@ class RegisteredUserController extends Controller
             'otp' => $otp,
             'country'=> $country->name,
             'marketing' => $marketing,
-            'type'=>'pre-reg',
             'last_login_at' => Carbon::now(),
             'password' => Hash::make('password'),
         ]);
@@ -101,6 +100,7 @@ class RegisteredUserController extends Controller
             $utm->save();
 
             $user->utm_source = $request->input('utm_source');
+            $user->type = 'pre-reg';
             $user->save();
         }
 

@@ -7,14 +7,14 @@
             </div>
         </div>
         <div class="form-container px-4 mt-5 fade-in">
-            <h1 class="heading-text mb-1 text-center">
-                YOU ARE ONE STEP AWAY
-            </h1>
-            <p class="sub-heading-text text-center">
-                Please fill in your details below to complete the registration.
-            </p>
             <form id="form" method="POST" action="{{ route('register') }}">
                 @csrf
+                {{-- <div class="upload-picture text-center mb-3">
+                    <img id="imagePreview" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSI3NSIgY3k9Ijc1IiByPSI3MCIgZmlsbD0iI2VlZSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMnB4IiBmaWxsPSIjNzc3Ij5VcGxvYWQ8L3RleHQ+PC9zdmc+" alt="Image Preview" class="img-fluid rounded-circle mb-2"
+                        style="width: 150px; height: 150px; object-fit: cover; display: block; margin: 0 auto;" />
+                    <input type="file" name="profile_picture" id="profile_picture" style="display: none;" accept="image/*">
+                    <label for="profile_picture" class="button button-secondary w-100 mt-2">Upload Picture</label>
+                </div> --}}
                 <!-- reCAPTCHA token -->
                 <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response" />
                 <div class="mb-2 row">
@@ -84,7 +84,8 @@
                     <div class="col-12 input-group w-100 phone-number-input">
                         <label class="form-label" for="">Phone Number</label>
 
-                        <input id="number" type="tel" class="input-text form-control w-100 @error('country') is-invalid @enderror d-block"
+                        <input id="number" type="tel"
+                            class="input-text form-control w-100 @error('country') is-invalid @enderror d-block"
                             name="number" value="{{ old('number') }}" required autocomplete="tel" autofocus />
 
                     </div>
@@ -112,7 +113,7 @@
                     <div class="col-12">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="privacy_policy" value="1"
-                                id="privacyPolicy"  />
+                                id="privacyPolicy" />
                             <label class="form-check-label" for="privacyPolicy">
                                 Email
                             </label>
@@ -123,7 +124,7 @@
                     <div class="col-12">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="privacy_policy" value="1"
-                                id="privacyPolicy"  />
+                                id="privacyPolicy" />
                             <label class="form-check-label" for="privacyPolicy">
                                 Text Message (SMS/Whatsapp)
                             </label>
@@ -135,7 +136,8 @@
 
                 <p class="sub-heading-text"><Strong>Data Protection and Privacy Policy</Strong></p>
                 <div class="box p-3 bg-white rounded mb-3">
-                    <p class="sub-heading-text-small">By submitting your particulars and/or by signing this form, you agree
+                    <p class="sub-heading-text-small">By submitting your particulars and/or by signing this form, you
+                        agree
                         that L’OCCITANE Malaysia Sdn Bhd may collect, use and disclose your personal data obtained by us
                         as a result of your membership, for purposes in accordance with the Personal Data Protection Act
                         2010 and our privacy policy (available at our website https://my.loccitane.com). You understand
@@ -172,7 +174,8 @@
                 </div>
                 <div class="mb-3 d-flex justify-content-center">
                     <!-- Visible reCAPTCHA v2 widget -->
-                    <div class="g-recaptcha" data-sitekey="6LfSnzorAAAAABAcoPooh89ujm8IKf5eyCsqm25y" data-callback="onRecaptchaSuccess" data-expired-callback="onRecaptchaExpired"></div>
+                    <div class="g-recaptcha" data-sitekey="6LfSnzorAAAAABAcoPooh89ujm8IKf5eyCsqm25y"
+                        data-callback="onRecaptchaSuccess" data-expired-callback="onRecaptchaExpired"></div>
                 </div>
                 <div class="mb-0 row">
                     <div class="col-12">
@@ -193,14 +196,32 @@
 </x-guest-layout>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <script>
+    ! function(w, d, t) {
 
-    !function (w, d, t) {
-
-        w.TiktokAnalyticsObject = t; var ttq = w[t] = w[t] || []; ttq.methods = ["page", "track", "identify", "instances", "debug", "on", "off", "once", "ready", "alias", "group", "enableCookie", "disableCookie"], ttq.setAndDefer = function (t, e) { t[e] = function () { t.push([e].concat(Array.prototype.slice.call(arguments, 0))) } }; for (var i = 0; i < ttq.methods.length; i++)ttq.setAndDefer(ttq, ttq.methods[i]); ttq.instance = function (t) {
+        w.TiktokAnalyticsObject = t;
+        var ttq = w[t] = w[t] || [];
+        ttq.methods = ["page", "track", "identify", "instances", "debug", "on", "off", "once", "ready", "alias",
+            "group", "enableCookie", "disableCookie"
+        ], ttq.setAndDefer = function(t, e) {
+            t[e] = function() {
+                t.push([e].concat(Array.prototype.slice.call(arguments, 0)))
+            }
+        };
+        for (var i = 0; i < ttq.methods.length; i++) ttq.setAndDefer(ttq, ttq.methods[i]);
+        ttq.instance = function(t) {
             for (var e = ttq._i[t] || [], n = 0; n < ttq.methods.length; n++
 
-            )ttq.setAndDefer(e, ttq.methods[n]); return e
-        }, ttq.load = function (e, n) { var i = "https://analytics.tiktok.com/i18n/pixel/events.js"; ttq._i = ttq._i || {}, ttq._i[e] = [], ttq._i[e]._u = i, ttq._t = ttq._t || {}, ttq._t[e] = +new Date, ttq._o = ttq._o || {}, ttq._o[e] = n || {}; n = document.createElement("script"); n.type = "text/javascript", n.async = !0, n.src = i + "?sdkid=" + e + "&lib=" + t; e = document.getElementsByTagName("script")[0]; e.parentNode.insertBefore(n, e) };
+            ) ttq.setAndDefer(e, ttq.methods[n]);
+            return e
+        }, ttq.load = function(e, n) {
+            var i = "https://analytics.tiktok.com/i18n/pixel/events.js";
+            ttq._i = ttq._i || {}, ttq._i[e] = [], ttq._i[e]._u = i, ttq._t = ttq._t || {}, ttq._t[e] = +new Date,
+                ttq._o = ttq._o || {}, ttq._o[e] = n || {};
+            n = document.createElement("script");
+            n.type = "text/javascript", n.async = !0, n.src = i + "?sdkid=" + e + "&lib=" + t;
+            e = document.getElementsByTagName("script")[0];
+            e.parentNode.insertBefore(n, e)
+        };
 
         ttq.track('PageView');
 
@@ -209,14 +230,13 @@
         ttq.page();
 
     }(window, document, 'ttq');
-
 </script>
 
 <!-- Facebook Pixel Code -->
 <!-- <script>
-    !function (f, b, e, v, n, t, s) {
+    ! function(f, b, e, v, n, t, s) {
         if (f.fbq) return;
-        n = f.fbq = function () {
+        n = f.fbq = function() {
             n.callMethod ?
                 n.callMethod.apply(n, arguments) : n.queue.push(arguments)
         };
@@ -238,9 +258,9 @@
 
 <!-- Facebook Pixel Code -->
 <script>
-    !function (f, b, e, v, n, t, s) {
+    ! function(f, b, e, v, n, t, s) {
         if (f.fbq) return;
-        n = f.fbq = function () {
+        n = f.fbq = function() {
             n.callMethod ?
                 n.callMethod.apply(n, arguments) : n.queue.push(arguments)
         };
@@ -261,6 +281,25 @@
 </script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+        const profilePictureInput = document.querySelector("#profile_picture");
+        const imagePreview = document.querySelector("#imagePreview");
+        const placeholderSrc = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSI3NSIgY3k9Ijc1IiByPSI3MCIgZmlsbD0iI2VlZSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMnB4IiBmaWxsPSIjNzc3Ij5VcGxvYWQ8L3RleHQ+PC9zdmc+";
+
+        profilePictureInput.addEventListener("change", function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            } else {
+                imagePreview.src = placeholderSrc;
+                imagePreview.style.display = 'block';
+            }
+        });
+
         const input = document.querySelector("#number");
 
         const errorMsg = document.querySelector("#error-msg");

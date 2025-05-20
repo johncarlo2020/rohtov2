@@ -1,81 +1,7 @@
-//add font to all elements
 .content-box {
-    font-family: "Myriad Pro";
-    .ocean-img {
+    .welcome-logo {
         width: 100%;
-        margin-top: 3vh;
-
-        img {
-            width: 100%;
-            height: auto;
-        }
-    }
-
-    .info-img {
-        width: 100%;
-        height: 243px;
-
-        img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-    }
-
-    .date-grid-container {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 10px; // Adjust gap as needed
-        margin-bottom: 20px;
-    }
-
-    .date-radio-input {
-        display: none;
-    }
-
-    .date-radio-label {
-        display: block;
-        padding: 10px 15px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        text-align: center;
-        cursor: pointer;
-        font-size: 13px;
-        background-color: #f2e9da;
-        transition: background-color 0.3s ease, border-color 0.3s ease;
-
-        &:hover {
-            background-color: #e9ecef;
-            border-color: #bbb;
-        }
-
-        &.disabled {
-            background-color: #e9ecef;
-            color: #6c757d;
-            cursor: not-allowed;
-        }
-    }
-
-    .date-radio-input:checked + .date-radio-label {
-        background-color: #f2bc00; // Selected background color
-        color: rgb(0, 0, 0);
-        border-color: #f2bc00;
-    }
-
-    .qr-code {
-        width: 100%;
-        height: 140px;
-
-        img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-    }
-
-    .turtle {
-        width: 70px;
-        height: 70px;
+        height: 115px;
 
         img {
             width: 100%;
@@ -85,83 +11,26 @@
     }
 }
 
-.guest-input {
-    height: 77px;
-    width: 100%;
-    border: 1px solid #9e9e9e;
-    background-color: #f2e9da;
-    text-align: center;
-    font-size: 40px;
-    font-weight: bold;
-    color: #000000;
+.welcome-background {
+    background-image: url("../images/adidas_welcome.webp");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 
-    &::placeholder {
-        color: #000000;
-        font-weight: bold;
-    }
 
-    &:focus {
-        border: 1px solid #9e9e9e;
-        background-color: #f2e9da;
-    }
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+
+    min-height: calc(100svh + env(safe-area-inset-bottom, 0px));
 }
 
-.fade-in {
-    animation: fadeIn 0.5s ease forwards;
-}
+.main_bg {
+    background-image: url("../images/main_bg.webp");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 
-.fade-out {
-    animation: fadeOut 0.3s ease forwards;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes fadeOut {
-    from {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    to {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-}
-
-/* Make sure containers are initially invisible but take up space */
-#qrContainer,
-#dateForm {
-    opacity: 0;
-}
-
-/* When they're hidden, don't take up space */
-#qrContainer.d-none,
-#dateForm.d-none {
-    display: none !important;
-}
-
-#trashNumber {
-    &:focus {
-        &::placeholder {
-            color: transparent; // Changed from display: none
-        }
-    }
-}
-.map-img {
-    width: 100%;
-    height: 122px;
-
-    img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-    }
 }

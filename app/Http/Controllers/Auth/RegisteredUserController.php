@@ -28,13 +28,6 @@ class RegisteredUserController extends Controller
      */
     public function create(Request $request): View
     {
-        if ($request->has('utm_source')) {
-            session(['utm.source' => $request->get('utm_source')]);
-        }
-
-        if ($request->has('utm_medium')) {
-            session(['utm.medium' => $request->get('utm_medium')]);
-        }
         return view('auth.register');
     }
 
@@ -49,11 +42,7 @@ class RegisteredUserController extends Controller
             'fname' => ['required', 'string', 'max:255'],
             'lname' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-            'dob' => ['required', 'date', function ($attribute, $value, $fail) {
-                if (Carbon::parse($value)->age < 18) {
-                    $fail('You must be at least 18 years old to register.');
-                }
-            }],
+            'age_group' => ['required', 'string', 'max:255'],
             'country' => [
                 'required',
                 'string',
@@ -84,7 +73,7 @@ class RegisteredUserController extends Controller
         $user = User::create([
             'fname' => $request->fname,
             'lname' => $request->lname,
-            'dob' => $request->dob,
+            'age_group' => $request->age_group,
             'number' => $phoneNumber,
             'email' => $request->email,
             'otp' => $otp,
@@ -95,22 +84,6 @@ class RegisteredUserController extends Controller
             'password' => Hash::make('password'),
         ]);
 
-        if ($request->filled('utm_source')) {
-            $utm = new Utm();
-            $utm->utm_source = $request->input('utm_source');
-            $utm->save();
-
-            $user->utm_source = $request->input('utm_source');
-            $user->save();
-        }
-
-        if ($request->filled('utm_medium')) {
-            $utm->utm_medium = $request->input('utm_medium');
-            $utm->save();
-
-            $user->utm_medium = $request->input('utm_medium');
-            $user->save();
-        }
 
         $user->assignRole('client');
         Auth::login($user);

@@ -644,7 +644,7 @@ public function embarckJourney()
         //check if user complete atlist one station
 
 
-        if ($stationDone < $stations()->count()) {
+        if ($stationDone < $stations->count()) {
             return view('dashboard', compact('stations', 'stationDone', 'canAccessStation5'));
         } else {
             return redirect()->route('congrats');

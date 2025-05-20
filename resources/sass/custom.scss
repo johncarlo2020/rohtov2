@@ -186,12 +186,13 @@ ol {
 
 .form-label {
     color: $text;
+    font-family: "Roboto Condensed", sans-serif;
 }
 
 .form-label,
 .form-check-label {
     font-size: 13px;
-
+        font-family: "Roboto Condensed", sans-serif;
     line-height: 1.5;
 }
 
@@ -199,11 +200,13 @@ ol {
     color: #474747;
     padding: 10px 30px;
     border-radius: 50px;
+    font-family: "Roboto Condensed", sans-serif;
 
     &::placeholder {
         color: #474747;
         font-weight: 400;
         font-size: 14px;
+         font-family: "Roboto Condensed", sans-serif;
     }
 }
 
@@ -580,4 +583,16 @@ ol {
 .station-done {
     background-color: #fff !important;
     color:#40A355 !important; ;
+}
+
+.text-heading {
+    p {
+        font-size: 23px;
+        margin-bottom: 0 !important;
+    }
+
+    h1 {
+        font-size: 33px;
+        margin-bottom: 0 !important;
+    }
 }

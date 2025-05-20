@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('fname');
             $table->string('lname');
             $table->string('password');
-            $table->string('dob');
+            $table->string('age_group');
             $table->string('number');
             $table->string('vote_id')->nullable();
             $table->string('country');

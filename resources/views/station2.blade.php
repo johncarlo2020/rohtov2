@@ -57,8 +57,13 @@
         </div>
 
         <div class="check-in-successful mt-5 d-none">
-            <div class="check-in-successful-img">
+            {{-- <div class="check-in-successful-img">
                 <img src="{{ asset('files/main/successful_img.webp') }}" alt="">
+            </div> --}}
+
+            <div class="text-heading text-center">
+                 <p class="pharagraph-text text-center">VOTE</p>
+                <h1 class="heading-text text-center">SUCCESSFUL</h1>
             </div>
             <div class="main-img">
                 <img class="station-image" src="{{ asset('files/congrats/c' . $station->id . '.webp') }}" alt="">

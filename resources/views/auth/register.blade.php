@@ -35,8 +35,6 @@
                 <div class="mb-2 row">
                     <div class="col-12">
                         <label class="form-label" for="">Last Name</label>
-                        <input type="hidden" name="utm_source" value="{{ session('utm.source') }}">
-                        <input type="hidden" name="utm_medium" value="{{ session('utm.medium') }}">
                         <input id="lname" placeholder="Enter your last name" type="text"
                             class="input-text form-control @error('lname') is-invalid @enderror" name="lname"
                             value="{{ old('lname') }}" required autocomplete="lname" autofocus />
@@ -51,12 +49,19 @@
 
                 <div class="mb-2 row">
                     <div class="col-12">
-                        <label class="form-label" for="">Date of Birth</label>
-                        <input id="dob" placeholder="Date of Birth" type="date"
-                            class="input-text form-control @error('dob') is-invalid @enderror" name="dob"
-                            value="{{ old('dob') }}" required autocomplete="dob" autofocus />
+                        <label class="form-label" for="age_group">Age Group</label>
+                        <select id="age_group" name="age_group" class="form-select input-text form-control @error('age_group') is-invalid @enderror" required>
+                            <option value="" selected>Select Age Group</option>
+                            <option value="13-19">13-19</option>
+                            <option value="20-29">20-29</option>
+                            <option value="30-39">30-39</option>
+                            <option value="40-49">40-49</option>
+                            <option value="50-59">50-59</option>
+                            <option value="60-69">60-69</option>
+                            <option value="Others">Others</option>
+                        </select>
 
-                        @error('dob')
+                        @error('age_group')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
@@ -123,14 +128,14 @@
                         </div>
                     </div>
                 </div>
-                <div class="mb-3 d-flex justify-content-center">
+                {{-- <div class="mb-3 d-flex justify-content-center">
                     <!-- Visible reCAPTCHA v2 widget -->
                     <div class="g-recaptcha" data-sitekey="6LfSnzorAAAAABAcoPooh89ujm8IKf5eyCsqm25y"
                         data-callback="onRecaptchaSuccess" data-expired-callback="onRecaptchaExpired"></div>
-                </div>
+                </div> --}}
                 <div class="mb-0 row">
                     <div class="col-12">
-                        <button id="submitButton" type="submit" class="button button-primary w-100 mb-4" disabled>
+                        <button id="submitButton" type="submit" class="button button-primary w-100 mb-4" >
                             {{ __('SUBMIT') }}
                         </button>
                         <div class="bottom-text text-center">
@@ -147,90 +152,6 @@
     </div>
 </x-guest-layout>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-<script>
-    ! function(w, d, t) {
-
-        w.TiktokAnalyticsObject = t;
-        var ttq = w[t] = w[t] || [];
-        ttq.methods = ["page", "track", "identify", "instances", "debug", "on", "off", "once", "ready", "alias",
-            "group", "enableCookie", "disableCookie"
-        ], ttq.setAndDefer = function(t, e) {
-            t[e] = function() {
-                t.push([e].concat(Array.prototype.slice.call(arguments, 0)))
-            }
-        };
-        for (var i = 0; i < ttq.methods.length; i++) ttq.setAndDefer(ttq, ttq.methods[i]);
-        ttq.instance = function(t) {
-            for (var e = ttq._i[t] || [], n = 0; n < ttq.methods.length; n++
-
-            ) ttq.setAndDefer(e, ttq.methods[n]);
-            return e
-        }, ttq.load = function(e, n) {
-            var i = "https://analytics.tiktok.com/i18n/pixel/events.js";
-            ttq._i = ttq._i || {}, ttq._i[e] = [], ttq._i[e]._u = i, ttq._t = ttq._t || {}, ttq._t[e] = +new Date,
-                ttq._o = ttq._o || {}, ttq._o[e] = n || {};
-            n = document.createElement("script");
-            n.type = "text/javascript", n.async = !0, n.src = i + "?sdkid=" + e + "&lib=" + t;
-            e = document.getElementsByTagName("script")[0];
-            e.parentNode.insertBefore(n, e)
-        };
-
-        ttq.track('PageView');
-
-        ttq.load('CIHP63RC77U9G5MV8B0G');
-
-        ttq.page();
-
-    }(window, document, 'ttq');
-</script>
-
-<!-- Facebook Pixel Code -->
-<!-- <script>
-    ! function(f, b, e, v, n, t, s) {
-        if (f.fbq) return;
-        n = f.fbq = function() {
-            n.callMethod ?
-                n.callMethod.apply(n, arguments) : n.queue.push(arguments)
-        };
-        if (!f._fbq) f._fbq = n;
-        n.push = n;
-        n.loaded = !0;
-        n.version = '2.0';
-        n.queue = [];
-        t = b.createElement(e);
-        t.async = !0;
-        t.src = v;
-        s = b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t, s)
-    }(window, document, 'script',
-        'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '800121447587288');
-    fbq('track', 'PageView');
-</script> -->
-
-<!-- Facebook Pixel Code -->
-<script>
-    ! function(f, b, e, v, n, t, s) {
-        if (f.fbq) return;
-        n = f.fbq = function() {
-            n.callMethod ?
-                n.callMethod.apply(n, arguments) : n.queue.push(arguments)
-        };
-        if (!f._fbq) f._fbq = n;
-        n.push = n;
-        n.loaded = !0;
-        n.version = '2.0';
-        n.queue = [];
-        t = b.createElement(e);
-        t.async = !0;
-        t.src = v;
-        s = b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t, s)
-    }(window, document, 'script',
-        'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '1857983581193229');
-    fbq('track', 'PageView');
-</script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         /*
@@ -306,10 +227,10 @@
 
     // reCAPTCHA callback functions
     function onRecaptchaSuccess(token) {
-        document.getElementById('submitButton').disabled = false;
+        // document.getElementById('submitButton').disabled = false;
     }
 
     function onRecaptchaExpired() {
-        document.getElementById('submitButton').disabled = true;
+        // document.getElementById('submitButton').disabled = true;
     }
 </script>

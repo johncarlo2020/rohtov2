@@ -12,10 +12,10 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\LoginController;
 
 use Illuminate\Support\Facades\Route;
-    Route::post('pre-reg', [RegisteredUserController::class, 'store']);
+    Route::post('register', [RegisteredUserController::class, 'store']);
 
 
-    Route::get('pre-reg', [RegisteredUserController::class, 'create'])
+    Route::get('register', [RegisteredUserController::class, 'create'])
                 ->name('register');
 
 

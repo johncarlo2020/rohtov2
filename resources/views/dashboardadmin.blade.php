@@ -141,7 +141,7 @@
     </div>
 
     <div class="row mt-4">
-        <div class="col-lg-8 mb-lg-0 mb-4">
+        <!-- <div class="col-lg-8 mb-lg-0 mb-4">
             <div class="card z-index-2 h-100">
                 <div class="card-header pb-0 pt-3 bg-transparent">
                     <div class="row align-items-center">
@@ -166,7 +166,7 @@
                     </figure>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <div class="col-lg-2">
             <div class="card">
@@ -212,7 +212,73 @@
                 </div>
             </div>
         </div>
-    </div>
+        <div class="col-lg-2">
+            <div class="card">
+                <div class="card-header pb-0 p-3">
+                    <h6 class="mb-0">Social Media</h6>
+                </div>
+                <div class="card-body p-3">
+                    <ul class="list-group">
+                        @foreach ($data['social_media'] as $location)
+                        <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                            <div class="d-flex align-items-center">
+                                <div class="d-flex flex-column">
+                                    <h6 class="mb-1 text-dark text-sm">{{ $location['social_media']}}</h6>
+                                    <span class="text-xs">Count : <span class="font-weight-bold">{{ $location['count']
+                                            }}</span></span>
+                                </div>
+                            </div>
+                        </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="card">
+                <div class="card-header pb-0 p-3">
+                    <h6 class="mb-0">Existing</h6>
+                </div>
+                <div class="card-body p-3">
+                    <ul class="list-group">
+                        @foreach ($data['existing'] as $location)
+                        <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                            <div class="d-flex align-items-center">
+                                <div class="d-flex flex-column">
+                                    <h6 class="mb-1 text-dark text-sm">{{ $location['existing']}}</h6>
+                                    <span class="text-xs">Count : <span class="font-weight-bold">{{ $location['count']
+                                            }}</span></span>
+                                </div>
+                            </div>
+                        </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-lg-2">
+            <div class="card">
+                <div class="card-header pb-0 p-3">
+                    <h6 class="mb-0">Appeal</h6>
+                </div>
+                <div class="card-body p-3">
+                    <ul class="list-group">
+                        @foreach ($data['appeal'] as $location)
+                        <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                            <div class="d-flex align-items-center">
+                                <div class="d-flex flex-column">
+                                    <h6 class="mb-1 text-dark text-sm">{{ $location['appeal']}}</h6>
+                                    <span class="text-xs">Count : <span class="font-weight-bold">{{ $location['count']
+                                            }}</span></span>
+                                </div>
+                            </div>
+                        </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        </div>
 
     <div class="row mt-4">
         <div class="col-lg-12 mb-lg-0 mb-4">

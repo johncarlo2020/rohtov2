@@ -392,16 +392,23 @@ class StationController extends Controller
         $data['userToday'] = User::whereDate('created_at', $today)->count();
         $data['country'] = User::selectRaw('country , COUNT(*) as count')->groupBy('country')->where('country' ,'!=','admin')->get();
 
-         $data['where'] = User::groupBy('where')
-    ->select('where', DB::raw('COUNT(*) as count'))
-    ->having('count', '>', 1) // Exclude entries with count = 1
-    ->orderBy('count', 'desc') // Order by count in descending order
-    ->get()
-    ->map(function ($item) {
-        return ['name' => $item->where, 'count' => $item->count];
-    })
-    ->values()
-    ->toArray();
+        $data['where'] = User::groupBy('where')
+            ->select('where', DB::raw('COUNT(*) as count'))
+            ->having('count', '>', 1) // Exclude entries with count = 1
+            ->orderBy('count', 'desc') // Order by count in descending order
+            ->get()
+            ->map(function ($item) {
+                return ['name' => $item->where, 'count' => $item->count];
+            })
+        ->values()
+        ->toArray();
+
+        $data['existing'] = User::selectRaw('existing , COUNT(*) as count')->groupBy('existing')->where('existing' ,'!=','')->get();
+        $data['social_media'] = User::selectRaw('social_media , COUNT(*) as count')->groupBy('social_media')->where('social_media' ,'!=','')->get();
+        $data['appeal'] = User::selectRaw('appeal , COUNT(*) as count')->groupBy('appeal')->where('appeal' ,'!=','')->get();
+        // $data['where'] = User::selectRaw('where , COUNT(*) as count')->groupBy('where')->where('where' ,'!=','admin')->get();
+
+        //   dd($data['where']);
 
         $usersWithSixStationUsers = User::with('stationUser')->whereDate('created_at', '>=', $startDate->toDateString())->has('stationUser', '>=', 5)->count();
         // dd($usersWithSixStationUsers);

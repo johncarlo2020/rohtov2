@@ -13,6 +13,53 @@
         .logo-img {
             width: 100px;
         }
+
+        .vote-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 2 columns */
+            gap: 15px; /* Space between items */
+            padding: 10px;
+        }
+
+        .vote-item {
+            border: 2px solid transparent; /* For selection indication */
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            position: relative; /* For absolute positioning of radio button if needed */
+        }
+
+        .vote-item img {
+            width: 100%;
+            max-width: 150px; /* Adjust as needed */
+            height: auto;
+            border-radius: 6px;
+            display: block;
+        }
+
+        .vote-item .form-check-input {
+            display: none; /* Hide the actual radio button */
+        }
+
+        .vote-item .form-check-label {
+            font-size: 0.9em;
+            color: #333;
+        }
+
+        /* Style for selected item */
+        .vote-item input label {
+            border-color: #007bff;
+            background-color: rgba(88, 88, 88, 0.1);
+        }
+
+           .vote-item input:checked+label {
+            border-color: #007bff; /* Example selection color */
+            background-color: rgba(88, 88, 88, 0.1);
+        }
+
+        .vote-item input:checked+label img {
+            opacity: 0.8;
+        }
     </style>
     <div class="modal fade" id="scanCompleteModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
@@ -44,11 +91,11 @@
             <div id="{{ $user ? '' : 'forceQr' }}" class="mt-4 icon-container">
             </div>
 
-            <h1 class=" station-heading my-5">
+            <h1 class=" station-heading mt-5">
                 {{ $station->name }}
             </h1>
 
-            <div id="start" class="mb-5">
+            <div id="start" class="mb-5 d-none">
                 <div class="instruction-text">
                     <h2>How to Participate</h2>
                     <ol>
@@ -67,12 +114,23 @@
             </div>
 
             <div id="picker">
+                <p class="pharagraph-text">Please pick one to vote</p>
+                <div class="vote-container">
+                    @for ($index = 1; $index <= 6; $index++)
+                         <div class="vote-item">
+                        <input class="form-check-input" type="radio" name="fragrance" id="vote_option_{{ $index }}" value="Option {{ $index }}">
+                        <label class="form-check-label" for="vote_option_{{ $index }}">
+                            <img src="{{ asset('files/vote/'.$index.'.webp') }}" alt="Option {{ $index }}">
+                        </label>
+                    </div>
 
+                    @endfor
+                </div>
             </div>
 
-            <div class="button-group d-flex flex-column justify-content-center align-items-center">
-                <button class="button button-primary w-50 text-center mb-3">NEXT</button>
-                 <a href="{{ route('dashboard') }}" class="button button-primary w-50 mx-auto">
+            <div class="button-group d-flex flex-column justify-content-center align-items-center px-5">
+                <button class="button button-primary w-100 text-center mb-3">NEXT</button>
+                 <a href="{{ route('dashboard') }}" class="button button-primary w-100 mx-auto">
                         BACK
                 </a>
             </div>
@@ -98,6 +156,7 @@
         var message = '';
         var count = 0;
         var lastClick = 0;
+        var selectedVote = null
         document.getElementById('start-scanner').addEventListener('click', function(event) {
             event.preventDefault();
 

@@ -113,7 +113,11 @@
                     adaptiveHeight: true,
                     customPaging: function(slider, i) {
                         // Use station ID for the dot, fallback to index + 1
-                        var stationId = stations[i] && stations[i].id !== undefined ? stations[i].id : (i + 1);
+                        var station = stations[i];
+                        if (station && station.is_completed) {
+                            return '<button type="button"><i class="fa-solid fa-check"></i></button>';
+                        }
+                        var stationId = station && station.id !== undefined ? station.id : (i + 1);
                         return '<button type="button">' + stationId + '</button>';
                     }
                 });

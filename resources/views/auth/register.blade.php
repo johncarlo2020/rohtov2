@@ -123,7 +123,7 @@
                             <input class="form-check-input" type="checkbox" name="privacy_policy" value="1"
                                 id="privacyPolicy" required />
                             <label class="form-check-label" for="privacyPolicy">
-                                I agree to receive marketing and promotional communications from Wardah via e-mail and text messages (including SMS/WhatsApp).
+                                I agree to receive marketing and promotional communications from Adidas via e-mail and text messages (including SMS/WhatsApp).
                             </label>
                         </div>
                     </div>
@@ -212,7 +212,7 @@
             reset();
             if (!input.value.trim()) {
                 showError("Required");
-                submitButton.disabled = true;
+                // submitButton.disabled = true;
             } else if (iti.isValidNumber()) {
                 validMsg.classList.remove("d-none");
                 // leave disabled until reCAPTCHA is completed
@@ -220,7 +220,7 @@
                 const errorCode = iti.getValidationError();
                 const msg = errorMap[errorCode] || "Invalid number";
                 showError(msg);
-                submitButton.disabled = true;
+                // submitButton.disabled = true;
             }
         });
     });

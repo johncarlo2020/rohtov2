@@ -128,10 +128,6 @@
                                 <option value="XiaoHongShu (小红书)">
                                     XiaoHongShu (小红书)
                                 </option>
-                                <option value="Friend Referral">
-                                    Friend Referral
-                                </option>
-                                <option value="Walk-in  ">Walk-in</option>
                                 <option value="no">No</option>
 
                             </select>

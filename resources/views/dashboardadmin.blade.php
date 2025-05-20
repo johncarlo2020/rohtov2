@@ -170,7 +170,6 @@
     </div>
 
     <div class="row mt-4">
-
         <div class="col-lg-2">
             <div class="card">
                 <div class="card-header pb-0 p-3">

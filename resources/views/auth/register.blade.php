@@ -1,7 +1,7 @@
 <x-guest-layout>
 
     <div class="content-box main-background">
-        <div class="container">
+        <div class="container">pregister
             <div>
                 @include('components.branding')
             </div>
@@ -234,6 +234,7 @@
 </script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+        /*
         const profilePictureInput = document.querySelector("#profile_picture");
         const imagePreview = document.querySelector("#imagePreview");
         const placeholderSrc = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSI3NSIgY3k9Ijc1IiByPSI3MCIgZmlsbD0iI2VlZSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMnB4IiBmaWxsPSIjNzc3Ij5VcGxvYWQ8L3RleHQ+PC9zdmc+";
@@ -244,14 +245,15 @@
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     imagePreview.src = e.target.result;
-                    imagePreview.style.display = 'block';
+                    imagePreview.style.display = \'block\';
                 }
                 reader.readAsDataURL(file);
             } else {
                 imagePreview.src = placeholderSrc;
-                imagePreview.style.display = 'block';
+                imagePreview.style.display = \'block\';
             }
         });
+        */
 
         const input = document.querySelector("#number");
 

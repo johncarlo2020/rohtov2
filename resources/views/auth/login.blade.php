@@ -5,7 +5,7 @@
                 @include('components.branding')
             </div>
         </div>
-        <div class="form-container p-4 mt-5 bg-white rounded fade-in">
+        <div class="form-container p-4 mt-5 fade-in">
             <h1 class="heading-text mb-3 text-center">
                 LOG IN
             </h1>

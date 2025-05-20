@@ -9,6 +9,7 @@
         <div class="form-container px-4 mt-5 fade-in">
             <form id="form" method="POST" action="{{ route('register') }}">
                 @csrf
+                <h1 class="heading-text text-center">SIGN UP</h1>
                 {{-- <div class="upload-picture text-center mb-3">
                     <img id="imagePreview" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSI3NSIgY3k9Ijc1IiByPSI3MCIgZmlsbD0iI2VlZSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMnB4IiBmaWxsPSIjNzc3Ij5VcGxvYWQ8L3RleHQ+PC9zdmc+" alt="Image Preview" class="img-fluid rounded-circle mb-2"
                         style="width: 150px; height: 150px; object-fit: cover; display: block; margin: 0 auto;" />
@@ -99,75 +100,26 @@
                         @enderror
                     </div>
                 </div>
-                <p class="pharagraph-text">
-                    *Please make sure you are using an active phone number. Please fill in your mobile number. An OTP
-                    (One Time Passcode) will be sent for verification.
-                </p>
-
-                <p class="pharagraph-text">
-                    I agree to receive marketing information, latest promotions, products and services from Loccitane
-                    Malaysia via the following channels:
-                </p>
-
-                <div class="mt-4 mb-1 row">
-                    <div class="col-12">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="privacy_policy" value="1"
-                                id="privacyPolicy" />
-                            <label class="form-check-label" for="privacyPolicy">
-                                Email
-                            </label>
-                        </div>
-                    </div>
-                </div>
+                <div class="devider w-100 h-25 border-dashed border-bottom mb-3"></div>
                 <div class="mb-2 row">
                     <div class="col-12">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="privacy_policy" value="1"
                                 id="privacyPolicy" />
                             <label class="form-check-label" for="privacyPolicy">
-                                Text Message (SMS/Whatsapp)
+                               I have read and agree to the Terms and Conditions and Privacy Policy.
                             </label>
-                            <p class="small-text pl-4">Note: Please tick to receive details on your GUESS & WIN
-                                submission; failure to do so will result in forfeiture.</p>
+
                         </div>
                     </div>
                 </div>
-
-                <p class="sub-heading-text"><Strong>Data Protection and Privacy Policy</Strong></p>
-                <div class="box p-3 bg-white rounded mb-3">
-                    <p class="sub-heading-text-small">By submitting your particulars and/or by signing this form, you
-                        agree
-                        that L’OCCITANE Malaysia Sdn Bhd may collect, use and disclose your personal data obtained by us
-                        as a result of your membership, for purposes in accordance with the Personal Data Protection Act
-                        2010 and our privacy policy (available at our website https://my.loccitane.com). You understand
-                        that by signing this form, you consent to us processing your data. Please visit our website
-                        https://my.loccitane.com for how you may access and correct your personal data or withdraw
-                        consent to the collection, use or disclosure of your personal data.</p>
-                </div>
-
-
                 <div class="mb-2 row">
                     <div class="col-12">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="privacy_policy" value="1"
                                 id="privacyPolicy" required />
                             <label class="form-check-label" for="privacyPolicy">
-                                *I agree to L'OCCITANE Malaysia group using and disclosing your personal information to
-                                contact you about other goods and services and using your information for direct
-                                marketing purposes including contact by phone, email, SMS or other electronic means.
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="mb-3 row">
-                    <div class="col-12">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="marketing" value="1"
-                                id="marketing" required />
-                            <label class="form-check-label" for="marketing">
-                                *I hereby consent to the Processing of my Personal Data for the above Purpose and agree
-                                to the terms in the Data Protection and Privacy Policy Notice.
+                                I agree to receive marketing and promotional communications from Wardah via e-mail and text messages (including SMS/WhatsApp).
                             </label>
                         </div>
                     </div>
@@ -179,11 +131,12 @@
                 </div>
                 <div class="mb-0 row">
                     <div class="col-12">
-                        <button id="submitButton" type="submit" class="button button-primary w-100 mb-2" disabled>
+                        <button id="submitButton" type="submit" class="button button-primary w-100 mb-4" disabled>
                             {{ __('SUBMIT') }}
                         </button>
                         <div class="bottom-text text-center">
-                            <a class="button-text" href="{{ route('login') }}" class="">Back</a>
+                            <p class="pharagraph-text mb-0">Already Register</p>
+                            <p class="pharagraph-text">Please log in here  <a class="" href="{{ route('login') }}" class="">here</a></p>
                         </div>
                     </div>
                 </div>

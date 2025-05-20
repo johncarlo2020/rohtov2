@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('dob');
             $table->string('number');
+            $table->string('vote_id')->nullable();
             $table->string('country');
             $table->string('otp')->nullable();
             $table->boolean('otp_verified')->default(false);

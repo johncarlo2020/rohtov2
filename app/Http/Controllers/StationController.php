@@ -572,6 +572,33 @@ public function embarckJourney()
         return $vote;
     }
 
+    public function addVote( Request $request)
+    {
+       $vote = $request->input('vote');
+
+       // update  users vote_id
+         $user = User::find(auth()->id());
+            $user->vote_id = $vote;
+            $user->save();
+
+
+        // add entry for station_users station is station_id 3
+        $stationUser = StationUser::where('user_id', auth()->id())->where('station_id', 3)->first();
+        if ($stationUser) {
+            $stationUser->save();
+        } else {
+            StationUser::create([
+                'user_id' => auth()->id(),
+                'station_id' => 3,
+            ]);
+        }
+
+        $stationCompletedCount = StationUser::where('user_id', auth()->id())->count();
+
+        // return response
+        return response()->json(['message' => 'Vote added successfully.', 'stationCompletedCount' => $stationCompletedCount], 200);
+    }
+
     public function brands()
     {
         $brands = DB::table('brands')->leftJoin('users', 'brands.id', '=', 'users.brand_id')->select('brands.id as brand_id', 'brands.name as brand_name', DB::raw('COUNT(users.id) as count'))->groupBy('brands.id', 'brands.name')->get();
@@ -591,6 +618,7 @@ public function embarckJourney()
         $brands = DB::table('brands')->leftJoin('votes', 'brands.id', '=', 'votes.brand_id')->select('brands.id as brand_id', 'brands.name as brand_name', DB::raw('COUNT(votes.id) as count'))->groupBy('brands.id', 'brands.name')->get();
         //dd($brands);
         return view('votes', compact('brands'));
+
     }
 
     public function welcome()
@@ -614,6 +642,7 @@ public function embarckJourney()
         $canAccessStation5 = $stations->filter(fn($s) => $s->id <= 4)->every(fn($s) => $s->status == true);
 
         //check if user complete atlist one station
+
 
         if ($stationDone < 5) {
             return view('dashboard', compact('stations', 'stationDone', 'canAccessStation5'));

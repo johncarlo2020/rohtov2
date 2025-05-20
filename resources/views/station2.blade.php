@@ -12,7 +12,7 @@
                 {{ $station->name }}
             </h1>
 
-            <div id="start" class="mb-5 d-none">
+            <div id="start" class="mb-5">
                 <div class="instruction-text">
                     <h2>How to Participate</h2>
                     <ol>
@@ -33,7 +33,7 @@
 
             </div>
 
-            <div id="picker" class="mb-3">
+            <div id="picker" class="mb-3 d-none">
                 <p class="pharagraph-text">Please pick one to vote</p>
                 <div class="vote-container">
                     @for ($index = 1; $index <= 6; $index++)
@@ -107,13 +107,23 @@
 
     <script>
         document.getElementById('nextButton').addEventListener('click', function() {
-            const selectedFragrance = document.querySelector('input[name="fragrance"]:checked');
-            if (selectedFragrance) {
-                const value = selectedFragrance.value;
-                addVote(value);
+            // check if start has d-none class
+            const start = document.getElementById('start');
+            const picker = document.getElementById('picker');
+
+            if( start.classList.contains('d-none')) {
+                  const selectedFragrance = document.querySelector('input[name="fragrance"]:checked');
+                if (selectedFragrance) {
+                    const value = selectedFragrance.value;
+                    addVote(value);
+                } else {
+                    console.log('No fragrance selected');
+                }
             } else {
-                console.log('No fragrance selected');
+                start.classList.add('d-none');
+                picker.classList.remove('d-none');
             }
+
         });
 
         function addVote(vote) {

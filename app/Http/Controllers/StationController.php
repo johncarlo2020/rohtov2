@@ -824,26 +824,25 @@ public function embarckJourney()
     {
         $tasks = Task::all(); // Get all tasks
 
-$users = User::with('tasks')->get(); // Eager load tasks for all users
+        $users = User::with('tasks')->get(); // Eager load tasks for all users
 
-$users = $users->map(function ($user) use ($tasks) {
-    // Key user's tasks by task id for fast lookup
-    $userTasks = $user->tasks->keyBy('id');
+        $users = $users->map(function ($user) use ($tasks) {
+            // Key user's tasks by task id for fast lookup
+            $userTasks = $user->tasks->keyBy('id');
 
-    // Map all tasks and attach user-specific status or default to 'pending'
-    $user->all_tasks = $tasks->map(function ($task) use ($userTasks) {
-        $clonedTask = clone $task; // Avoid modifying the original task object
-        $clonedTask->status = $userTasks[$task->id]->pivot->status ?? 'pending';
-        $clonedTask->image = $userTasks[$task->id]->pivot->images ?? '';
+            // Map all tasks and attach user-specific status or default to 'pending'
+            $user->all_tasks = $tasks->map(function ($task) use ($userTasks) {
+                $clonedTask = clone $task; // Avoid modifying the original task object
+                $clonedTask->status = $userTasks[$task->id]->pivot->status ?? 'pending';
+                $clonedTask->image = $userTasks[$task->id]->pivot->images ?? '';
 
-        return $clonedTask;
-    });
+                return $clonedTask;
+            });
 
-    return $user;
-});
+            return $user;
+        });
 
-
-        dd($users);
+        return view('embark', compact('users'));
     }
 
     public function userData(User $user)

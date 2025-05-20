@@ -53,10 +53,13 @@
         <div id="stationSelector" class="carosel">
             @foreach ($stations as $station)
                 <div class="item">
-                    <a href="{{ route('station', ['station' => $station->id]) }}" class="station-item">
+                    <a href="{{ route('station', ['station' => $station->id]) }}" class="station-item completed">
                         {{-- <img class="station-bg" src="{{ asset('files/main/station_slection_background.webp') }}"
                             alt="" /> --}}
                           <img class="station-img" src="{{ asset('files/station/' . $station->id . '.webp') }}" alt="">
+                          <p class="complete-text">
+                            CHECK-IN SUCCESSFUL
+                          </p>
                     </a>
                 </div>
             @endforeach
@@ -68,25 +71,26 @@
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
-                    <div class="modal-body">
-                        <a type="button" class="modal-close" data-bs-dismiss="modal" aria-label="Close"><i
-                                class="fa-solid fa-xmark"></i></a>
-                        <div class="info-icon mb-3">
-                            <img src="{{ asset('files/main/info.png') }}" alt="" />
+                    <div class="modal-body complete-progress">
+                         <div class="info-progress d-flex gap-3">
+                    <div class="station-progress border-right px-4">
+                        <div class="circular-progress-container">
+                            <div class="circular-progress" style="--progress-percent: {{ ($station->id / 4) * 100 }}%;">
+                                <div class="progress-value-center">
+                                    <span class="current-step-display">{{ $station->id }}</span><span class="separator">/</span><span class="total-steps-display">4</span>
+                                </div>
+                            </div>
                         </div>
-                        <p class="modal-main-text mb-1">Do you want to reschedule your visit ?</p>
-                        <p class="warning-text text-center px-5">Note: You may reschedule your selected date
-                            <strong>only once</strong>.
-                        </p>
-                        <div class="">
-                            <button id="confirmVisitButton" type="submit" class="button button-primary w-100 mb-2">
-                                YES
-                            </button>
-                            <button id="cancelModalButton" type="button" class="button button-secondary w-100 mb-2"
-                                data-bs-dismiss="modal">
-                                NO
-                            </button>
+                        <div class="progress-label-below">
+                            {{ $station->id }}/4 Check-In Completed
                         </div>
+                    </div>
+                    <div class="info-text px-2 mt-3">
+                        <h2 class="mb-0">Oppss!</h2>
+                        <h1 class="mb-0">The journey’s still going!</h1>
+                        <p class="mb-0">Complete all checkpoints to redeem an exclusive gift.</p>
+                    </div>
+                </div>
                     </div>
                 </div>
             </div>
@@ -101,6 +105,11 @@
         {{-- jQuery and Slick JS are already in app.blade.php --}}
         <script type="text/javascript">
             $(document).ready(function() {
+
+                //show exampleModal
+                   $('#exampleModal').modal('show'); // Show the modal
+
+
                 var stations = @json($stations); // Make stations data available to JS
                 var stationNameH1 = $('.station-name h1');
 

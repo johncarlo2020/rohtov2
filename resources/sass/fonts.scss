@@ -33,3 +33,77 @@
     font-style: normal;
 }
 
+@font-face {
+    font-family: 'ITC AVANT GARDE';
+    src: url('../font/ITC AVANT GARDE.OTF') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'AVANTGARDEITCBYBT';
+    src: url('../font/AVANTGARDEITCBYBT-DEMI.OTF') format('opentype');
+    font-weight: 600; // Demi-bold typically corresponds to 600
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Flamante-Roma';
+    src: url('../font/Flamante-Roma-Medium.ttf') format('truetype');
+    font-weight: 500; // Medium typically corresponds to 500
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'ITC AVANT GARDE GOTHIC';
+    src: url('../font/ITC AVANT GARDE GOTHIC BOLD CONDENSED.OTF') format('opentype');
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: condensed;
+}
+
+@font-face {
+    font-family: 'ITC AVANT GARDE GOTHIC';
+    src: url('../font/ITC AVANT GARDE GOTHIC BOLD.OTF') format('opentype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'ITC AVANT GARDE GOTHIC';
+    src: url('../font/ITC AVANT GARDE GOTHIC BOOK CONDENSED.OTF') format('opentype');
+    font-weight: normal; // Book typically corresponds to normal
+    font-style: normal;
+    font-stretch: condensed;
+}
+
+@font-face {
+    font-family: 'ITC AVANT GARDE GOTHIC';
+    src: url('../font/ITC AVANT GARDE GOTHIC DEMI CONDENSED.OTF') format('opentype');
+    font-weight: 600; // Demi-bold
+    font-style: normal;
+    font-stretch: condensed;
+}
+
+@font-face {
+    font-family: 'ITC AVANT GARDE GOTHIC';
+    src: url('../font/ITC AVANT GARDE GOTHIC MEDIUM CONDENSED.OTF') format('opentype');
+    font-weight: 500; // Medium
+    font-style: normal;
+    font-stretch: condensed;
+}
+
+@font-face {
+    font-family: 'ITC AVANT GARDE GOTHIC';
+    src: url('../font/ITC AVANT GARDE GOTHIC MEDIUM.OTF') format('opentype');
+    font-weight: 500; // Medium
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'LOccitane Sans';
+    src: url('../font/LOccitaneSans-Medium.ttf') format('truetype');
+    font-weight: 500; // Medium
+    font-style: normal;
+}
+

@@ -1,21 +1,24 @@
 <x-app-layout>
-    <div class="container-fluid home start completed-screen pt-4">
-        <div class="mb-3 branding-container">
-            @include('components.branding')
-        </div>
-        <div class="congrats-container">
-            <h1 class="text-center main-color font-medium mb-2">Visit</h1>
-            <div class="product-image mb-3 px-5">
-                <a href="https://hadalabo.com.my">
-
-                <img class="" src="{{ asset('images/congrats.webp') }}" alt="" />
-
-                </a>
+    <div class="content-box welcome-background fade-in">
+        <div class="container">
+            <div>
+                @include('components.branding')
             </div>
-           <p class="text-center main-color font-medium mb-3 ">
-             for more information
-           </p>
         </div>
-    </div>
+        <div id="goto" class="congrats-img mt-auto">
+            <img src="{{ asset('files/main/congrats_img.webp') }}" alt="" />
+        </div>
+        <div class="footer-container p-4 mt-auto">
+            @include('components.footer')
+        </div>
     </div>
 </x-app-layout>
+
+<script>
+    const goto = document.getElementById('goto');
+    // add event listener to the element
+    goto.addEventListener('click', function() {
+        // redirect to the desired URL
+        window.location.href = "/";
+    });
+</script>

@@ -9,6 +9,17 @@
             object-fit: contain;
         }
     }
+
+    .congrats-img {
+        width: 100%;
+        height: 240px;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+    }
 }
 
 .welcome-background {
@@ -85,7 +96,7 @@
 
 .complete-progress {
     background-color: white;
-    border-radius: 22px;
+    border-radius: 22px !important;
     width: 90vw;
 
     .info-text {
@@ -145,11 +156,11 @@
         transition: all 0.3s ease;
 
         &.slick-active {
-           button {
-            background: #563f9f;
-            color: #fff;
-            border: solid 2px #15FFC8;
-            border-radius: 50%;
+            button {
+                background: #563f9f;
+                color: #fff;
+                border: solid 2px #15ffc8;
+                border-radius: 50%;
             }
         }
 
@@ -177,4 +188,143 @@
         z-index: 1;
         border-radius: 10px;
     }
+}
+
+.icon-badge {
+    width: 150px;
+    height: auto;
+    margin-bottom: 25px;
+}
+
+.iconNew {
+    width: 60px;
+}
+
+.logo-img {
+    width: 100px;
+}
+
+/* Progress Circle Styles */
+.station-progress {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px; /* Spacing below the entire component */
+}
+
+.circular-progress-container {
+    margin-bottom: 15px; /* Space between circle and label below */
+}
+
+.circular-progress {
+    width: 100px; /* Adjusted from 40vw */
+    height: 100px; /* Adjusted from 40vw */
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* The --progress-percent variable is set inline in the HTML */
+    background: conic-gradient(
+        #007bff 0%,
+        var(--progress-percent, 25%),
+        #e9ecef var(--progress-percent, 25%) 100%
+    );
+}
+
+.circular-progress::before {
+    content: "";
+    position: absolute;
+    width: 80px; /* Adjusted from 140px */
+    height: 80px; /* Adjusted from 140px */
+    background: #ffffff; /* White background for the inner part */
+    border-radius: 50%;
+    z-index: 1; /* Below text, above gradient */
+}
+
+.progress-value-center {
+    position: relative;
+    z-index: 2; /* Above inner circle */
+    font-size: 24px; /* Adjusted from 48px */
+    font-weight: 500; /* Medium weight for the fraction */
+    color: #adb5bd; /* Default color for '/4' part */
+}
+
+.progress-value-center .current-step-display {
+    color: #007bff; /* Blue for the current step '1' */
+    font-weight: bold; /* Bold for current step */
+}
+.progress-value-center .separator,
+.progress-value-center .total-steps-display {
+    color: #adb5bd; /* Grey for separator '/' and total steps '4' */
+}
+
+.progress-label-below {
+    font-size: 10px; /* Adjusted from 18px */
+    color: #adb5bd; /* Light grey for the text */
+    text-align: center;
+    font-weight: 400; /* Normal weight */
+}
+
+.icon-badge {
+    width: 150px;
+    height: auto;
+    margin-bottom: 25px;
+}
+
+.iconNew {
+    width: 60px;
+}
+
+.logo-img {
+    width: 100px;
+}
+
+.vote-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 columns */
+    gap: 15px; /* Space between items */
+    padding: 10px;
+}
+
+.vote-item {
+    border: 2px solid transparent; /* For selection indication */
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    position: relative; /* For absolute positioning of radio button if needed */
+}
+
+.vote-item img {
+    width: 100%;
+    max-width: 150px; /* Adjust as needed */
+    height: auto;
+    border-radius: 6px;
+    display: block;
+}
+
+.vote-item .form-check-input {
+    display: none; /* Hide the actual radio button */
+}
+
+.vote-item .form-check-label {
+    font-size: 0.9em;
+    color: #333;
+    box-sizing: border-box;
+}
+
+/* Style for selected item */
+
+.vote-item input:checked + label img {
+    outline-color:#15FFC8 !important; /* Example selection color */
+    outline-style: solid;
+    outline-width: 2px;
+    outline-offset: -2px; /* Negative offset to draw inside */
+    border-radius: 8px;
+    opacity: 1;
+     filter: brightness(100%) ;
+}
+
+.vote-item .form-check-label img {
+   filter: brightness(70%) ;
 }

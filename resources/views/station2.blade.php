@@ -1,66 +1,4 @@
 <x-app-layout>
-    <style>
-        .icon-badge {
-            width: 150px;
-            height: auto;
-            margin-bottom: 25px;
-        }
-
-        .iconNew {
-            width: 60px;
-        }
-
-        .logo-img {
-            width: 100px;
-        }
-
-        .vote-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr); /* 2 columns */
-            gap: 15px; /* Space between items */
-            padding: 10px;
-        }
-
-        .vote-item {
-            border: 2px solid transparent; /* For selection indication */
-            border-radius: 8px;
-            cursor: pointer;
-            text-align: center;
-            position: relative; /* For absolute positioning of radio button if needed */
-        }
-
-        .vote-item img {
-            width: 100%;
-            max-width: 150px; /* Adjust as needed */
-            height: auto;
-            border-radius: 6px;
-            display: block;
-        }
-
-        .vote-item .form-check-input {
-            display: none; /* Hide the actual radio button */
-        }
-
-        .vote-item .form-check-label {
-            font-size: 0.9em;
-            color: #333;
-        }
-
-        /* Style for selected item */
-        .vote-item input label {
-            border-color: #007bff;
-            background-color: rgba(88, 88, 88, 0.1);
-        }
-
-           .vote-item input:checked+label {
-            border-color: #007bff; /* Example selection color */
-            background-color: rgba(88, 88, 88, 0.1);
-        }
-
-        .vote-item input:checked+label img {
-            opacity: 0.8;
-        }
-    </style>
     <div class="modal fade" id="scanCompleteModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -113,7 +51,7 @@
 
             </div>
 
-            <div id="picker">
+            <div id="picker" class="mb-3">
                 <p class="pharagraph-text">Please pick one to vote</p>
                 <div class="vote-container">
                     @for ($index = 1; $index <= 6; $index++)
@@ -134,9 +72,37 @@
                         BACK
                 </a>
             </div>
+        </div>
 
-
-
+        <div class="check-in-successful mt-5 d-none">
+              <div class="check-in-successful-img">
+                <img src="{{ asset('files/main/successful_img.webp') }}" alt="">
+            </div>
+            <div class="main-img">
+                <img class="station-image" src="{{ asset('files/congrats/c'. $station->id . '.webp') }}" alt="">
+            </div>
+            <div class="complete-progress p-3 mx-auto">
+                <div class="info-progress d-flex gap-3">
+                    <div class="station-progress border-right px-4">
+                        <div class="circular-progress-container">
+                            <div class="circular-progress" style="--progress-percent: {{ ($station->id / 4) * 100 }}%;">
+                                <div class="progress-value-center">
+                                    <span class="current-step-display">{{ $station->id }}</span><span class="separator">/</span><span class="total-steps-display">4</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="progress-label-below">
+                            {{ $station->id }}/4 Check-In Completed
+                        </div>
+                    </div>
+                    <div class="info-text px-2 mt-3">
+                        <h2 class="mb-0">Well Done!</h2>
+                        <h1 class="mb-0">You've just checked in!</h1>
+                        <p class="mb-0">Complete all checkpoints to redeem an exclusive gift.</p>
+                    </div>
+                </div>
+                <a href="" class="button button-black w-100 uppercase">back to main journey</a>
+            </div>
         </div>
 
         <div class="footer-container p-4 mt-auto">

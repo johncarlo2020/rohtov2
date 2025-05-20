@@ -54,6 +54,27 @@ class StationController extends Controller
         return $task;
     }
 
+    public function tasksComplete(Request $request)
+    {
+        $task = UserTask::updateOrCreate(
+            [
+                'user_id' => $request->user_id,
+                'task_id' => $request->task_id
+            ],
+            [
+                'status' => 'completed'
+            ]
+        );
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Task marked as completed',
+            'data' => $task
+        ]);
+    }
+
+
+
     public function uploadImage(Request $request)
     {
         if ($request->hasFile('image')) {

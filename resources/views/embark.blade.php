@@ -136,36 +136,47 @@
 
 
         $(document).ready(function () {
-                let selectedTaskId = null;
-                let selectedUserId = null;
+            let selectedTaskId = null;
+            let selectedUserId = null;
 
-                $('.clickable-image').on('click', function () {
-                    selectedTaskId = $(this).data('task-id');
-                    selectedUserId = $(this).data('user-id');
-                    const imageUrl = $(this).data('image');
-
-                    $('#modal-task-image').attr('src', imageUrl);
-                    $('#taskImageModal').modal('show');
+            document.querySelectorAll('.clickable-image').forEach(img => {
+                img.addEventListener('click', () => {
+                    selectedTaskId = img.dataset.taskId;
+                    selectedUserId = img.dataset.userId;
+                    document.getElementById('modal-task-image').src = img.dataset.image;
+                    new bootstrap.Modal(document.getElementById('taskImageModal')).show();
                 });
+            });
 
-                $('#confirm-completion').on('click', function () {
-                    $.ajax({
-                        url: '/tasks/complete',
-                        method: 'POST',
-                        data: {
-                            _token: '{{ csrf_token() }}',
-                            user_id: selectedUserId,
-                            task_id: selectedTaskId
-                        },
-                        success: function (response) {
-                            $('#taskImageModal').modal('hide');
-                            location.reload(); // or just update the row with JS
-                        },
-                        error: function () {
-                            alert('Failed to update status.');
+            document.getElementById('confirm-completion').addEventListener('click', async () => {
+                const formData = new FormData();
+                formData.append('user_id', selectedUserId);
+                formData.append('task_id', selectedTaskId);
+
+                fetch("{{ route('tasks.complete') }}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    },
+                    body: formData,
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // ✅ Update status in the table
+                           location.reload();
+
+                            // alert('Task marked as completed!');
+                        } else {
+                            alert('Task update failed.');
                         }
+                    })
+                    .catch(error => {
+                        console.log('Error:', error);
+                        alert('Something went wrong while completing the task.');
                     });
-                });
+            });
+
             });
 
 

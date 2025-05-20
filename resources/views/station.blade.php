@@ -92,7 +92,7 @@
                         <p class="mb-0">Complete all checkpoints to redeem an exclusive gift.</p>
                     </div>
                 </div>
-                <a href="" class="button button-black w-100 uppercase">back to main journey</a>
+                <a href="{{ route('dashboard')}}" class="button button-black w-100 uppercase">back to main journey</a>
             </div>
         </div>
 

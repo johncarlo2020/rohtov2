@@ -427,16 +427,19 @@ public function embarckJourney()
         $user = StationUser::where('user_id', auth()->id())
             ->where('station_id', $station->id)
             ->exists();
+
+        //get station count
+        $completedStationCount = StationUser::where('user_id', auth()->id())->count();
+
         if ($station->id == 9 && $user == true) {
             return view('congrats');
         }
 
 
-
         if ($station->id != 3 ) {
-            return view('station', compact('station', 'user'));
+            return view('station', compact('station', 'user', 'completedStationCount'));
         }else {
-            return view('station2', compact('station', 'user'));
+            return view('station2', compact('station', 'user', 'completedStationCount'));
         }
 
     }

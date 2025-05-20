@@ -53,7 +53,7 @@
         <div id="stationSelector" class="carosel">
             @foreach ($stations as $station)
                 <div class="item">
-                    <a href="{{ route('station', ['station' => $station->id]) }}" class="station-item completed">
+                    <a href="{{ route('station', ['station' => $station->id]) }}" class="station-item @if( $stationDone >= $station->id + 1) completed @endif">
                         {{-- <img class="station-bg" src="{{ asset('files/main/station_slection_background.webp') }}"
                             alt="" /> --}}
                           <img class="station-img" src="{{ asset('files/station/' . $station->id . '.webp') }}" alt="">
@@ -105,10 +105,6 @@
         {{-- jQuery and Slick JS are already in app.blade.php --}}
         <script type="text/javascript">
             $(document).ready(function() {
-
-                //show exampleModal
-                   $('#exampleModal').modal('show'); // Show the modal
-
 
                 var stations = @json($stations); // Make stations data available to JS
                 var stationNameH1 = $('.station-name h1');

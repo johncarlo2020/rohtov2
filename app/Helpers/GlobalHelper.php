@@ -40,8 +40,8 @@ class GlobalHelper
             'last_name' => $user->lname,
             'number' => $user->number,
             // 'number' => '0123456789',
-            'email' => 'test@email.com',
-            'source_id' => '4871', // Static value as in your example
+            'email' => $user->email,
+            'source_id' => '4878', // Static value as in your example
         ];
         $subscriptions = ['sms', 'email', 'call', 'whatsapp'];
 

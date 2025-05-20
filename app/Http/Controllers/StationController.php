@@ -207,7 +207,7 @@ class StationController extends Controller
         return view('guestAndWin', compact('user'));
     }
 
-public function embarckJourney()
+    public function embarckJourney()
     {
         $user = Auth::user();
 
@@ -824,7 +824,9 @@ public function embarckJourney()
     {
         $tasks = Task::all(); // Get all tasks
 
-        $users = User::with('tasks')->get(); // Eager load tasks for all users
+        $users = User::with(['tasks' => function ($query) {
+            $query->withPivot('status', 'images'); // Eager load pivot fields
+        }])->get();
 
         $users = $users->map(function ($user) use ($tasks) {
             // Key user's tasks by task id for fast lookup
@@ -841,6 +843,8 @@ public function embarckJourney()
 
             return $user;
         });
+
+        // dd($users);
 
         return view('embark', compact('users'));
     }

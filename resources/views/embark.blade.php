@@ -27,44 +27,39 @@
                                 <th>Name</th>
                                 <th>Phone Number</th>
                                 <th>Email</th>
-                                <!-- Add headers for tasks -->
                                 @if($users->isNotEmpty() && $users->first()->all_tasks->isNotEmpty())
-                                    @foreach ($users->first()->all_tasks as $task)
-                                        <th>{{ $task->name }} Status</th>
-                                        <th>{{ $task->name }} Image</th>
-                                    @endforeach
+                                @foreach ($users->first()->all_tasks as $task)
+                                <th>{{ $task->name }} (Status/Image)</th>
+                                @endforeach
                                 @endif
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($users as $user)
-                                <tr data-user-id="{{ $user->id }}">
-                                    <td>{{ $user->id }}</td>
-                                    <td>{{ $user->fname }} {{ $user->lname }}</td>
-                                    <td>{{ $user->number ?? 'none' }} </td>
-                                    <td>{{ $user->email }}</td>
-                                    <!-- Display task status and image for each task -->
-                                    @if($user->all_tasks->isNotEmpty())
-                                        @foreach ($user->all_tasks as $task)
-                                            <td>{{ $task->status }}</td>
-                                            <td>
-                                                @if($task->image)
-                                                    <img src="{{ asset('storage/' . $task->image) }}" alt="{{ $task->name }} Image" class="task-image">
-                                                @else
-                                                    No Image
-                                                @endif
-                                            </td>
-                                        @endforeach
+                            <tr data-user-id="{{ $user->id }}">
+                                <td>{{ $user->id }}</td>
+                                <td>{{ $user->fname }} {{ $user->lname }}</td>
+                                <td>{{ $user->number ?? 'none' }}</td>
+                                <td>{{ $user->email }}</td>
+
+                            <!-- Inside your table row generation loop -->
+                                @foreach ($user->all_tasks as $task)
+                                <td>
+                                    @php
+                                    $imageColumn = 'task_' . $task->id . '_image';
+                                    @endphp
+                                    @if (ucfirst($task->status) == 'In-progress' && !empty($user->$imageColumn))
+                                    <img src="{{ asset('storage/uploads/' . $user->$imageColumn) }}" alt="Task Image" class="clickable-image"
+                                        data-task-id="{{ $task->id }}" data-user-id="{{ $user->id }}"
+                                        data-image="{{ asset('storage/uploads/' . $user->$imageColumn) }}"
+                                        style="max-width: 60px; max-height: 60px; cursor: pointer;">
                                     @else
-                                        <!-- Handle case where a user might not have tasks or all_tasks is empty -->
-                                        @if($users->isNotEmpty() && $users->first()->all_tasks->isNotEmpty())
-                                            @foreach ($users->first()->all_tasks as $task)
-                                                <td>Pending</td>
-                                                <td>No Image</td>
-                                            @endforeach
-                                        @endif
+                                    {{ ucfirst($task->status) }}
                                     @endif
-                                </tr>
+                                </td>
+                                @endforeach
+
+                            </tr>
                             @endforeach
                         </tbody>
                     </table>
@@ -72,6 +67,23 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="taskImageModal" tabindex="-1" aria-labelledby="taskImageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Completion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img id="modal-task-image" src="" alt="Task Image" class="img-fluid mb-3">
+                    <button id="confirm-completion" class="btn btn-success">Mark as Completed</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Include DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.css">
@@ -122,16 +134,40 @@
         $('.dataTables_filter').addClass('float-start');
         $('.dataTables_filter label').addClass('w-100');
 
-        $('#customer-table tbody').on('click', 'tr', function() {
 
-            // Get data from the clicked row
-            var data = table.row(this).data();
+        $(document).ready(function () {
+                let selectedTaskId = null;
+                let selectedUserId = null;
 
-            // Extract user ID from the clicked row's data
-            var userId = $(this).data('user-id');
+                $('.clickable-image').on('click', function () {
+                    selectedTaskId = $(this).data('task-id');
+                    selectedUserId = $(this).data('user-id');
+                    const imageUrl = $(this).data('image');
 
-            // Redirect to the user data route with the user ID
-            window.location.href = "{{ route('userData', ['user' => ':userId']) }}".replace(':userId', userId);
-        });
+                    $('#modal-task-image').attr('src', imageUrl);
+                    $('#taskImageModal').modal('show');
+                });
+
+                $('#confirm-completion').on('click', function () {
+                    $.ajax({
+                        url: '/tasks/complete',
+                        method: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            user_id: selectedUserId,
+                            task_id: selectedTaskId
+                        },
+                        success: function (response) {
+                            $('#taskImageModal').modal('hide');
+                            location.reload(); // or just update the row with JS
+                        },
+                        error: function () {
+                            alert('Failed to update status.');
+                        }
+                    });
+                });
+            });
+
+
     </script>
 @endsection

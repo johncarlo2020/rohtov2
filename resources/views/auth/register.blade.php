@@ -176,7 +176,7 @@
                 </div>
                 <div class="mb-0 row">
                     <div class="col-12">
-                        <button id="submitButton" type="submit" class="button button-primary w-100 mb-2" disabled>
+                        <button id="submitButton" type="submit" class="button button-primary w-100 mb-2" >
                             {{ __('SUBMIT') }}
                         </button>
                         <div class="bottom-text text-center">

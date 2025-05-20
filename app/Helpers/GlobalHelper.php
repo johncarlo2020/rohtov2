@@ -41,9 +41,9 @@ class GlobalHelper
             'number' => $user->number,
             // 'number' => '0123456789',
             'email' => $user->email,
-            'source_id' => '4878', // Static value as in your example
+            'source_id' => '7122', // Static value as in your example
         ];
-        $subscriptions = ['sms', 'email', 'call', 'whatsapp'];
+        $subscriptions = ['sms', 'email'];
 
         $postfield_api = [
             'hpno' => $postfield['number'],
@@ -56,13 +56,13 @@ class GlobalHelper
 
         // Determine API URL and client credentials based on mode
         // if ($this->mode == 'test') {
-            $apiUrl = 'https://loccitanemy-uat.crmxs.com/?xs_app=';
+            // $apiUrl = 'https://loccitanemy-uat.crmxs.com/?xs_app=';
+            // $clientId = '5vus5fnhdeeghff5de8c2nrq46fhy8nh';
+            // $clientSecret = 'sum388my7amm8jp7k3ru5pyb4hp8g87g';
+        // } elseif ($this->mode == 'prod') {
+            $apiUrl = 'https://loccitanemy.crmxs.com/?xs_app=';
             $clientId = '5vus5fnhdeeghff5de8c2nrq46fhy8nh';
             $clientSecret = 'sum388my7amm8jp7k3ru5pyb4hp8g87g';
-        // } elseif ($this->mode == 'prod') {
-            // $apiUrl = 'https://loccitanemy.crmxs.com/?xs_app=';
-        //     $clientId = '5vus5fnhdeeghff5de8c2nrq46fhy8nh';
-        //     $clientSecret = 'sum388my7amm8jp7k3ru5pyb4hp8g87g';
         // }
 
         $response = Http::withHeaders([

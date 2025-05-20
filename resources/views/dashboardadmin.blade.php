@@ -141,7 +141,7 @@
     </div>
 
     <div class="row mt-4">
-        <!-- <div class="col-lg-8 mb-lg-0 mb-4">
+        <div class="col-lg-8 mb-lg-0 mb-4">
             <div class="card z-index-2 h-100">
                 <div class="card-header pb-0 pt-3 bg-transparent">
                     <div class="row align-items-center">
@@ -166,7 +166,10 @@
                     </figure>
                 </div>
             </div>
-        </div> -->
+        </div>
+    </div>
+
+    <div class="row mt-4">
 
         <div class="col-lg-2">
             <div class="card">

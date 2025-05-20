@@ -424,18 +424,16 @@ public function embarckJourney()
 
     public function index(Station $station)
     {
-        $user = StationUser::where('user_id', auth()->id())
+        $user = StationUser::where('user_id', auth()->id())sta
             ->where('station_id', $station->id)
             ->exists();
         if ($station->id == 9 && $user == true) {
             return view('congrats');
         }
 
-        if($station->id == 2 && $user == true) {
-            return view('station', compact('station', 'user'));
-        }
 
-        if ($station->id != 2 ) {
+
+        if ($station->id != 3 ) {
             return view('station', compact('station', 'user'));
         }else {
             return view('station2', compact('station', 'user'));
@@ -585,13 +583,6 @@ public function embarckJourney()
 
         $user = User::with('stationUser')->where('id', $userId)->first();
 
-        if($user->otp_verified == 0){
-            return redirect()->route('otp');
-        }
-
-        if ($user->userAppointments()->count() == 0) {
-            return redirect()->route('appointment');
-        }
 
         $stationDone = $user->stationUser->count();
         $stations = Station::get();
@@ -607,7 +598,6 @@ public function embarckJourney()
         $canAccessStation5 = $stations->filter(fn($s) => $s->id <= 4)->every(fn($s) => $s->status == true);
 
         //check if user complete atlist one station
-
 
         if ($stationDone < 5) {
             return view('dashboard', compact('stations', 'stationDone', 'canAccessStation5'));

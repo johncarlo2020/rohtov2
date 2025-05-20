@@ -55,7 +55,7 @@ ol {
         cursor: not-allowed;
     }
 
-     &.disabled {
+    &.disabled {
         opacity: 0.5;
         cursor: not-allowed;
     }
@@ -65,7 +65,7 @@ ol {
         color: $black;
     }
     &-secondary {
-      background: $white;
+        background: $white;
         color: $black;
     }
     &-white {
@@ -147,7 +147,6 @@ ol {
     text-decoration: underline;
 }
 
-
 .spacer {
     height: 10vh;
     width: 100%;
@@ -181,12 +180,12 @@ ol {
 
 .form-label {
     color: $text;
-    padding-left: 20px;
 }
 
 .form-label,
 .form-check-label {
     font-size: 13px;
+
     line-height: 1.5;
 }
 
@@ -196,7 +195,7 @@ ol {
     border-radius: 50px;
 
     &::placeholder {
-         color: #474747;
+        color: #474747;
         font-weight: 400;
         font-size: 14px;
     }
@@ -293,12 +292,12 @@ ol {
 
     i {
         font-size: 15px;
-        color: #BABABA;
+        color: #bababa;
     }
 
     &.completed {
         i {
-            color: #40A355;
+            color: #40a355;
         }
     }
 }
@@ -387,9 +386,127 @@ ol {
         border: none;
         outline: none;
     }
-
 }
 
 .text-italic {
     font-style: italic;
+}
+
+#stationSelector {
+    .station-item {
+        width: 70vw;
+        height: 70vw;
+        position: relative;
+        display: block;
+        margin: auto auto;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            position: absolute;
+        }
+    }
+}
+
+// Custom Slick Carousel Styles from dashboard.blade.php
+
+// Arrows
+.slick-prev,
+.slick-next {
+    &:before {
+        font-family: "Font Awesome 5 Free"; // Or your specific Font Awesome version
+        font-weight: 900;
+        font-size: 40px;
+    }
+}
+
+.slick-prev {
+    left: -7px;
+    &:before {
+        content: "\f0d9"; // Font Awesome solid triangle left icon
+    }
+}
+
+.slick-next {
+    right: -7px;
+    &:before {
+        content: "\f0da"; // Font Awesome solid triangle right icon
+    }
+}
+
+// Carousel container and slides
+.carosel {
+    width: 100%; // Ensure the carousel container has a defined width
+
+    .slick-slide {
+        line-height: 0; // Helps remove extra space if image is inline or fails
+
+        img {
+            display: block;
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            margin: 0 auto;
+        }
+    }
+}
+
+// Slick Dots Styling
+.slick-dots {
+    bottom: -30px;
+
+    li {
+        margin: 0 5px;
+
+        button {
+            font-size: 1rem;
+            line-height: 20px;
+            width: 20px;
+            height: 20px;
+            padding: 0;
+            border: 1px solid #ccc;
+            border-radius: 50%;
+            background-color: #fff;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+
+            &:hover {
+                background-color: #eee;
+                border-color: #bbb;
+            }
+
+            // Hide the default ::before pseudo-element if customPaging is used for numbers
+            &:before {
+                content: none;
+            }
+        }
+
+        &.slick-active {
+            button {
+                background-color: black;
+                color: white;
+                border-color: black;
+            }
+        }
+    }
+}
+
+#stationPage {
+    .stationn-image-container {
+        width: 70vw;
+        margin: 0 auto;
+        height: 70vw;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+    }
 }

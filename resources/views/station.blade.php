@@ -36,7 +36,7 @@
             </div>
         </div>
     </div>
-    <div id="stationPage" class="station-page home">
+    <div id="stationPage" class="station-page home content-box main-background">
         <div class="mb-3 branding-container">
             @include('components.branding')
         </div>
@@ -44,30 +44,31 @@
             <div id="{{ $user ? '' : 'forceQr' }}" class="mt-4 icon-container">
             </div>
 
-            <h1 class=" station-heading mt-2 mb-3">
-                {{ $station->id }}
+            <h1 class=" station-heading mt-2 mb-4">
+                {{ $station->name }}
             </h1>
-            <h2 class="station-subheading mt-2">{{ $station->name }}</h2>
-            <img class="mt-2 station-image" src="{{ asset('images/hadalabobabies/station'.$station->id .'.webp') }}"
-                alt="Station Image">
+            <div class="stationn-image-container mb-3">
+                <img class="station-image" src="{{ asset('files/station/' . $station->id . '.webp') }}" alt="">
+            </div>
             @if ($user != true)
-
-                        <button id="start-scanner" class="mx-auto mt-2 camera-btn"><img
-                                src="{{ asset('images/camera.webp') }}" alt=""></button>
-                        <p class="px-4 mt-4 bottom-text main-color font-medium small-width">Scan the QR code at the station to proceed</p>
-
+                <button id="start-scanner" class="mx-auto mt-2 button button-primary px-4 py-1">
+                    <i class="fa-solid fa-camera"></i>
+                </button>
+                <p class="px-4 mt-4 bottom-text main-color font-medium small-width">Scan the QR code at the station to
+                    proceed</p>
             @else
                 <p class="mt-2 bottom-text main-color font-medium">Checked-in Succesful</p>
-
-                <div class="scanner-button">
-                    <a href="{{ route('dashboard') }}" class="button">
-                        BACK
-                    </a>
-                </div>
             @endif
 
+            <div class="scanner-button">
+                <a href="{{ route('dashboard') }}" class="button button-primary w-50 mx-auto">
+                    BACK
+                </a>
+            </div>
+
         </div>
-        <div id="scannerContainer" class="scanner-container d-none">
+
+        <div id="scannerContainer" class="scanner-container d-none mt-5">
             <!-- <button id="close" class="mx-auto mt-4 camera-btn">x</button> -->
             <div id="reader"></div>
             {{-- <div>
@@ -75,12 +76,12 @@
                     BACK
                 </a>
             </div> --}}
+            <p class="px-4 mt-4 bottom-text main-color font-medium small-width text-center">Scan the QR code at the station to
+                proceed</p>
         </div>
-    </div>
-
-    <div class="end-text mt-4">
-        <p>Powered by WOWSOME®️ 2025</p>
-        <img src="{{ asset('images/logo-rounded.webp') }}" alt="Item 2" />
+        <div class="footer-container p-4 mt-auto">
+            @include('components.footer')
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
@@ -168,7 +169,7 @@
                     });
                     $('#badge').attr('src', '{{ asset('images/check.png') }}');
 
-                       $('#scanCompleteModal').modal('show');
+                    $('#scanCompleteModal').modal('show');
 
                     // Optional: Remove the canvas after a short delay
                     setTimeout(() => {
@@ -190,7 +191,7 @@
                 },
                 error: function(xhr, status, error) {
                     console.error('Error sending QR Code message:', error);
-                         $('.modal-icon').addClass('d-none');
+                    $('.modal-icon').addClass('d-none');
                     $('.station-text').html('Failed');
                     $('.message').html('Invalid QR code. Please try again.');
                     $('.check').attr('src', '{{ asset('images/error.webp') }}');

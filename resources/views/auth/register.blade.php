@@ -1,7 +1,6 @@
 <x-guest-layout>
-
     <div class="content-box main-background">
-        <div class="container">pregister
+        <div class="container">
             <div>
                 @include('components.branding')
             </div>

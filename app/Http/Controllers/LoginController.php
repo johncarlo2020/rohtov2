@@ -14,19 +14,27 @@ class LoginController extends Controller
     public function authenticate(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
-            'email' => ['required', 'email'],
+            'number' => ['required', 'string'], // Changed from email to number
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt($credentials)) {
+        // Prepare credentials for Auth::attempt
+        // Auth::attempt expects an array with 'email' or other unique identifier key that your User model uses for authentication.
+        // If your User model uses 'number' as the column for phone numbers, and you want to log in with it:
+        $authCredentials = [
+            'number' => $credentials['number'],
+            'password' => $credentials['password'],
+        ];
+
+        if (Auth::attempt($authCredentials)) {
             $request->session()->regenerate();
 
             return redirect()->intended('dashboard');
         }
 
         return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->onlyInput('email');
+            'number' => 'The provided credentials do not match our records.', // Changed from email to number
+        ])->onlyInput('number'); // Changed from email to number
     }
 
     public function authenticateAdmin(Request $request): RedirectResponse

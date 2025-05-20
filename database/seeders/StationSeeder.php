@@ -21,23 +21,19 @@ class StationSeeder extends Seeder
     public function run()
     {
         Station::create([
-            'name' => 'Skin Analysis',
+            'name' => 'POWER UP ZONE',
         ]);
 
         Station::create([
-            'name' => 'Hada Baby Aqua Lab',
+            'name' => 'RELAX ZONE',
         ]);
 
         Station::create([
-            'name' => 'Product Experiences',
+            'name' => 'ESCAPE ZONE',
         ]);
 
         Station::create([
-            'name' => 'Photo Op',
-        ]);
-
-        Station::create([
-            'name' => 'Gift Redemption',
+            'name' => 'REDEMPTION ZONE',
         ]);
 
         Appointment::create([

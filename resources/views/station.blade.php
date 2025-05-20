@@ -13,6 +13,69 @@
         .logo-img {
             width: 100px;
         }
+
+        /* Progress Circle Styles */
+        .station-progress {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px; /* Spacing below the entire component */
+        }
+
+        .circular-progress-container {
+            margin-bottom: 15px; /* Space between circle and label below */
+        }
+
+        .circular-progress {
+            width: 100px; /* Adjusted from 40vw */
+            height: 100px; /* Adjusted from 40vw */
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* The --progress-percent variable is set inline in the HTML */
+            background: conic-gradient(
+                #007bff 0%,
+                var(--progress-percent, 25%),
+                #e9ecef var(--progress-percent, 25%) 100%
+            );
+        }
+
+        .circular-progress::before {
+            content: '';
+            position: absolute;
+            width: 80px; /* Adjusted from 140px */
+            height: 80px; /* Adjusted from 140px */
+            background: #ffffff; /* White background for the inner part */
+            border-radius: 50%;
+            z-index: 1; /* Below text, above gradient */
+        }
+
+        .progress-value-center {
+            position: relative;
+            z-index: 2; /* Above inner circle */
+            font-size: 24px; /* Adjusted from 48px */
+            font-weight: 500; /* Medium weight for the fraction */
+            color: #adb5bd; /* Default color for '/4' part */
+        }
+
+        .progress-value-center .current-step-display {
+            color: #007bff; /* Blue for the current step '1' */
+            font-weight: bold; /* Bold for current step */
+        }
+        .progress-value-center .separator,
+        .progress-value-center .total-steps-display {
+            color: #adb5bd; /* Grey for separator '/' and total steps '4' */
+        }
+
+        .progress-label-below {
+            font-size: 10px; /* Adjusted from 18px */
+            color: #adb5bd; /* Light grey for the text */
+            text-align: center;
+            font-weight: 400; /* Normal weight */
+        }
+        /* End Progress Circle Styles */
     </style>
     <div class="modal fade" id="scanCompleteModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
@@ -40,7 +103,7 @@
         <div class="mb-3 branding-container">
             @include('components.branding')
         </div>
-        <div id="mainContent" class="mt-1 mb-2 text-center col-12 text-content">
+        <div id="mainContent" class="mt-1 mb-2 text-center col-12 text-content d-none">
             <div id="{{ $user ? '' : 'forceQr' }}" class="mt-4 icon-container">
             </div>
 
@@ -79,6 +142,38 @@
             <p class="px-4 mt-4 bottom-text main-color font-medium small-width text-center">Scan the QR code at the station to
                 proceed</p>
         </div>
+
+        <div class="check-in-successful mt-5">
+              <div class="check-in-successful-img">
+                <img src="{{ asset('files/main/successful_img.webp') }}" alt="">
+            </div>
+            <div class="main-img">
+                <img class="station-image" src="{{ asset('files/congrats/c'. $station->id . '.webp') }}" alt="">
+            </div>
+            <div class="complete-progress p-3 mx-auto">
+                <div class="info-progress d-flex gap-3">
+                    <div class="station-progress border-right px-4">
+                        <div class="circular-progress-container">
+                            <div class="circular-progress" style="--progress-percent: {{ ($station->id / 4) * 100 }}%;">
+                                <div class="progress-value-center">
+                                    <span class="current-step-display">{{ $station->id }}</span><span class="separator">/</span><span class="total-steps-display">4</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="progress-label-below">
+                            {{ $station->id }}/4 Check-In Completed
+                        </div>
+                    </div>
+                    <div class="info-text px-2 mt-3">
+                        <h2 class="mb-0">Well Done!</h2>
+                        <h1 class="mb-0">You've just checked in!</h1>
+                        <p class="mb-0">Complete all checkpoints to redeem an exclusive gift.</p>
+                    </div>
+                </div>
+                <a href="" class="button button-black w-100 uppercase">back to main journey</a>
+            </div>
+        </div>
+
         <div class="footer-container p-4 mt-auto">
             @include('components.footer')
         </div>

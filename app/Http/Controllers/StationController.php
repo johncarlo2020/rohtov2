@@ -424,7 +424,7 @@ public function embarckJourney()
 
     public function index(Station $station)
     {
-        $user = StationUser::where('user_id', auth()->id())sta
+        $user = StationUser::where('user_id', auth()->id())
             ->where('station_id', $station->id)
             ->exists();
         if ($station->id == 9 && $user == true) {

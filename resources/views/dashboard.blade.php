@@ -3,8 +3,45 @@
     <head>
         {{-- Slick Carousel CSS is already in app.blade.php --}}
         {{-- Styles moved to resources/sass/custom.scss --}}
+        <style>
+            .spinner-overlay { /* New style for overlay */
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+                z-index: 9998; /* Below spinner, above content */
+            }
+
+            .spinner {
+                position: fixed; /* Or absolute if you prefer */
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 56px;
+                height: 56px;
+                border-radius: 50%;
+                background: radial-gradient(farthest-side, #474bff 94%, #0000) top/9px 9px no-repeat,
+                    conic-gradient(#0000 30%, #474bff);
+                -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 9px), #000 0);
+                animation: spinner-c7wet2 1s infinite linear;
+                z-index: 9999; /* Ensure it's on top */
+            }
+
+            @keyframes spinner-c7wet2 {
+                100% {
+                    transform: translate(-50%, -50%) rotate(1turn); /* Keep translate for centering */
+                }
+            }
+            .content-box.loading-content {
+                visibility: hidden; /* Hide content initially */
+            }
+        </style>
     </head>
-    <div class="content-box main-background px-3 d-flex flex-column min-vh-100">
+    <div class="content-box main-background px-3 d-flex flex-column min-vh-100 loading-content"> <!-- Added loading-content class -->
+        <div class="spinner-overlay"></div> <!-- Overlay HTML added here -->
+        <div class="spinner"></div> <!-- Spinner HTML added here -->
         <div class="container mb-5">
             <div>
                 @include('components.branding')
@@ -100,10 +137,13 @@
                     updateStationName(currentSlide);
                 });
 
-                // Refresh Slick's position after all assets are loaded
-                // $(window).on('load', function() {
-                //     $('#stationSelector').slick('setPosition');
-                // });
+                // Hide spinner and overlay, and show content after all assets are loaded and Slick is ready
+                $(window).on('load', function() {
+                    $('#stationSelector').slick('setPosition'); // Ensure slider is correctly positioned
+                    $('.spinner').hide(); // Hide the spinner
+                    $('.spinner-overlay').hide(); // Hide the overlay
+                    $('.content-box').removeClass('loading-content'); // Show the content
+                });
             });
         </script>
     @endpush

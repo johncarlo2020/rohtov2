@@ -53,7 +53,7 @@
         <div id="stationSelector" class="carosel">
             @foreach ($stations as $station)
                 <div class="item">
-                    <a href="{{ route('station', ['station' => $station->id]) }}" class="station-item @if( $stationDone >= $station->id + 1) completed @endif">
+                    <a href="{{ route('station', ['station' => $station->id]) }}" class="station-item @if( $stationDone >= $station->id) completed @endif">
                         {{-- <img class="station-bg" src="{{ asset('files/main/station_slection_background.webp') }}"
                             alt="" /> --}}
                           <img class="station-img" src="{{ asset('files/station/' . $station->id . '.webp') }}" alt="">
@@ -107,6 +107,7 @@
             $(document).ready(function() {
 
                 var stations = @json($stations); // Make stations data available to JS
+                var stationDone = {{ $stationDone }}; // Make stationDone data available to JS
                 var stationNameH1 = $('.station-name h1');
 
                 $('#stationSelector').slick({
@@ -119,8 +120,8 @@
                     customPaging: function(slider, i) {
                         // Use station ID for the dot, fallback to index + 1
                         var station = stations[i];
-                        if (station && station.is_completed) {
-                            return '<button type="button"><i class="fa-solid fa-check"></i></button>';
+                        if (station && stationDone >= station.id) {
+                            return '<button class="station-done" type="button"><i class="fa-solid fa-check"></i></button>';
                         }
                         var stationId = station && station.id !== undefined ? station.id : (i + 1);
                         return '<button type="button">' + stationId + '</button>';

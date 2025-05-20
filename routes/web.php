@@ -87,6 +87,8 @@ Route::group(['middleware' => ['client']], function () {
     Route::get('/station/{station}/brand', 'App\Http\Controllers\StationController@brand')->name('station.brand');
     Route::get('/puzzle', 'App\Http\Controllers\StationController@puzzle')->name('station.puzzle');
     Route::get('/brands', 'App\Http\Controllers\StationController@brands')->name('station.brands');
+    Route::get('/station/count', 'App\Http\Controllers\StationController@getCount')->name('station.getCount');
+
 
 
     Route::post('/upload', 'App\Http\Controllers\StationController@uploadBaby')->name('upload.baby');

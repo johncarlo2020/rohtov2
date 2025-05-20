@@ -416,6 +416,8 @@ ol {
         }
 
         &.completed {
+            // no click
+            pointer-events: none;
             &::after {
                 content: "";
                 position: absolute;
@@ -573,4 +575,9 @@ ol {
 .station-heading {
     font-weight: 700;
     letter-spacing: 3px;
+}
+
+.station-done {
+    background-color: #fff !important;
+    color:#40A355 !important; ;
 }

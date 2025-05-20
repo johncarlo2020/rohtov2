@@ -422,6 +422,15 @@ public function embarckJourney()
         return redirect()->back();
     }
 
+    public function getCount()
+    {
+        $user = User::with('stationUser')->where('id', auth()->id())->first();
+        $stationDone = $user->stationUser->count();
+
+        return response()->json(['count' => $stationDone]);
+    }
+
+
     public function index(Station $station)
     {
         $user = StationUser::where('user_id', auth()->id())
@@ -429,6 +438,7 @@ public function embarckJourney()
             ->exists();
 
         //get station count
+
         $completedStationCount = StationUser::where('user_id', auth()->id())->count();
 
         if ($station->id == 9 && $user == true) {
@@ -439,7 +449,7 @@ public function embarckJourney()
         if ($station->id != 3 ) {
             return view('station', compact('station', 'user', 'completedStationCount'));
         }else {
-            return view('station2', compact('station', 'user', 'completedStationCount'));
+            return view('station2', compact('station', 'user','completedStationCount'));
         }
 
     }

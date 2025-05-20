@@ -4,7 +4,7 @@
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="text-center content">
-                        <img class="check mx-auto mb-4" id="badge" src="">
+
                         <div class="text-content mt-0">
                             <p class="station-text mb-2 text-dark">Station <span class="station_id"></span></p>
                             <p class="message text-dark">
@@ -12,9 +12,9 @@
                             </p>
                         </div>
                         <div class="">
-                            <a href="{{ route('dashboard') }}" id="routeBtn" class="button">
-                                okay
-                            </a>
+                             <button id="retry-scanner" class="mx-auto mt-2 button button-black px-4 py-1" data-bs-dismiss="modal">
+                                Retry
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -25,7 +25,7 @@
         <div class="mb-3 branding-container">
             @include('components.branding')
         </div>
-        <div id="mainContent" class="mt-1 mb-2 text-center col-12 text-content d-none">
+        <div id="mainContent" class="mt-1 mb-2 text-center col-12 text-content">
             <div id="{{ $user ? '' : 'forceQr' }}" class="mt-4 icon-container">
             </div>
 
@@ -50,7 +50,6 @@
                     BACK
                 </a>
             </div>
-
         </div>
 
         <div id="scannerContainer" class="scanner-container d-none mt-5">
@@ -65,7 +64,7 @@
                 proceed</p>
         </div>
 
-        <div class="check-in-successful mt-5">
+        <div id="congrats-container" class="check-in-successful mt-5 d-none">
               <div class="check-in-successful-img">
                 <img src="{{ asset('files/main/successful_img.webp') }}" alt="">
             </div>
@@ -76,14 +75,14 @@
                 <div class="info-progress d-flex gap-3">
                     <div class="station-progress border-right px-4">
                         <div class="circular-progress-container">
-                            <div class="circular-progress" style="--progress-percent: {{ ($station->id / 4) * 100 }}%;">
+                            <div class="circular-progress" style="--progress-percent: {{ ( $completedStationCount / 4) * 100 }}%;">
                                 <div class="progress-value-center">
-                                    <span class="current-step-display">{{ $station->id }}</span><span class="separator">/</span><span class="total-steps-display">4</span>
+                                    <span class="current-step-display">{{ $completedStationCount }}</span><span class="separator">/</span><span class="total-steps-display">4</span>
                                 </div>
                             </div>
                         </div>
                         <div class="progress-label-below">
-                            {{ $station->id }}/4 Check-In Completed
+                            {{ $completedStationCount }}/4 Check-In Completed
                         </div>
                     </div>
                     <div class="info-text px-2 mt-3">
@@ -110,9 +109,17 @@
     <script>
         const mainContent = document.getElementById('mainContent');
         const scannerContainer = document.getElementById('scannerContainer');
+        const congratsContainer = document.getElementById('congrats-container');
+        const retryScanner = document.getElementById('retry-scanner');
         var message = '';
         var count = 0;
         var lastClick = 0;
+        retryScanner.addEventListener('click', function(event) {
+           startScanner();
+
+        });
+
+
         document.getElementById('start-scanner').addEventListener('click', function(event) {
             event.preventDefault();
 
@@ -120,7 +127,12 @@
             scannerContainer.classList.remove('d-none');
 
             //get permission to use camera dont start qr scanner until permission is granted
+            startScanner();
 
+        });
+
+
+        function startScanner() {
             const html5QrCode = new Html5Qrcode("reader");
 
             html5QrCode.start({
@@ -141,8 +153,28 @@
                 .catch(err => {
                     console.log(`Unable to start scanning, error: ${err}`);
                 });
+        }
 
-        });
+        function showCongrats() {
+            mainContent.classList.add('d-none');
+            scannerContainer.classList.add('d-none');
+            congratsContainer.classList.remove('d-none');
+
+               $.ajax({
+                url: '{{ route('station.getCount') }}',
+                type: 'get',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                },
+                success: function(response) {
+                  console.log(response);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error sending QR Code message:', error);
+                }
+            });
+        }
+
 
         function sendMessage(message) {
             // Fetch the CSRF token from the meta tag
@@ -160,58 +192,12 @@
                     station: {{ $station->id }}
                 },
                 success: function(response) {
-                    // Create a new canvas element for confetti
-                    const confettiCanvas = document.createElement('canvas');
-                    confettiCanvas.style.position = 'fixed';
-                    confettiCanvas.style.top = 0;
-                    confettiCanvas.style.left = 0;
-                    confettiCanvas.style.width = '100%';
-                    confettiCanvas.style.height = '100%';
-                    confettiCanvas.style.pointerEvents = 'none';
-                    confettiCanvas.style.zIndex = 9999;
-                    document.body.appendChild(confettiCanvas);
-
-                    // Trigger confetti using the new canvas
-                    const myConfetti = confetti.create(confettiCanvas, {
-                        resize: true,
-                        useWorker: true
-                    });
-
-                    myConfetti({
-                        particleCount: 100,
-                        spread: 70,
-                        origin: {
-                            y: 0.6
-                        }
-                    });
-                    $('#badge').attr('src', '{{ asset('images/check.png') }}');
-
-                    $('#scanCompleteModal').modal('show');
-
-                    // Optional: Remove the canvas after a short delay
-                    setTimeout(() => {
-                        document.body.removeChild(confettiCanvas);
-                    }, 5000);
-                    console.log('QR Code message sent successfully:', response);
-                    // Handle success response if needed
-                    const trimmedMessage = message.trim();
-                    // Get the last character of the QR code message
-                    const lastCharacter = trimmedMessage.charAt(trimmedMessage.length - 1);
-
-                    $('.station_id').html(lastCharacter);
-
-
-                    if (lastCharacter == 9) {
-                        document.getElementById('routeBtn').setAttribute('href', '{{ route('congrats') }}');
-                    }
-
+                    showCongrats();
                 },
                 error: function(xhr, status, error) {
                     console.error('Error sending QR Code message:', error);
-                    $('.modal-icon').addClass('d-none');
                     $('.station-text').html('Failed');
                     $('.message').html('Invalid QR code. Please try again.');
-                    $('.check').attr('src', '{{ asset('images/error.webp') }}');
                     $('#scanCompleteModal').modal('show');
                 }
             });

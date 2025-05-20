@@ -171,12 +171,12 @@
                 });
 
                 // Hide spinner and overlay, and show content after all assets are loaded and Slick is ready
-                $(window).on('load', function() {
+                setTimeout(() => {
                     $('#stationSelector').slick('setPosition'); // Ensure slider is correctly positioned
                     $('.spinner').hide(); // Hide the spinner
                     $('.spinner-overlay').hide(); // Hide the overlay
                     $('.content-box').removeClass('loading-content'); // Show the content
-                });
+                }, 500);
             });
         </script>
     @endpush

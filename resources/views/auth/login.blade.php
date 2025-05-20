@@ -11,7 +11,7 @@
                 @include('components.branding')
             </div>
         </div>
-        <div class="form-container p-4 mt-5 fade-in">
+        <div class="form-container p-4 mt-5 fade-in min-100">
             <h1 class="heading-text mb-3 text-center">
                 LOG IN
             </h1>
@@ -53,8 +53,13 @@
                     </x-primary-button>
                 </div>
             </form>
+
         </div>
-        <div class="footer-container p-4 mt-auto">
+        <div class="bottom-text text-center mt-auto">
+                            <p class="pharagraph-text mb-0">Don’t have account yet!</p>
+                            <p class="pharagraph-text">Register <a class="" href="{{ route('register') }}" class="">here</a></p>
+                        </div>
+        <div class="footer-container p-4">
             @include('components.footer')
         </div>
     </div>

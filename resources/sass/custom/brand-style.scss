@@ -60,7 +60,7 @@
 }
 .instruction-text {
     background-color: #563f9f;
-    padding: 2rem;
+    padding: 1.3rem;
     border-radius: 15px;
     border: solid 4px #15ffc8;
 
@@ -68,6 +68,9 @@
         li {
             text-align: left;
             margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: 400;
+            font-family: 'Roboto condensed', sans-serif;
         }
     }
 }

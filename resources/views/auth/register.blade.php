@@ -109,7 +109,7 @@
                     <div class="col-12">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="privacy_policy" value="1"
-                                id="privacyPolicy" />
+                                id="privacyPolicy" required />
                             <label class="form-check-label" for="privacyPolicy">
                                I have read and agree to the Terms and Conditions and Privacy Policy.
                             </label>

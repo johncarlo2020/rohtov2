@@ -87,7 +87,7 @@
                             <div class="station-progress border-right px-4">
                                 <div class="circular-progress-container">
                                     <div class="circular-progress"
-                                        style="--progress-percent: {{ ($station->id / 4) * 100 }}%;">
+                                        style="--progress-percent: {{ ($stationDone / 4) * 100 }}%;">
                                         <div class="progress-value-center">
                                             <span class="current-step-display">{{ $stationDone }}</span><span
                                                 class="separator">/</span><span class="total-steps-display">4</span>
@@ -95,7 +95,7 @@
                                     </div>
                                 </div>
                                 <div class="progress-label-below">
-                                    {{ $station->id }}/4 Check-In Completed
+                                    {{ $stationDone }}/4 Check-In Completed
                                 </div>
                             </div>
                             <div class="info-text px-2 mt-3">

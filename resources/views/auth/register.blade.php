@@ -196,10 +196,24 @@
         });
 
         const reset = () => {
-            input.classList.remove("error");
-            errorMsg.innerHTML = "";
+            // Client-side intl-tel-input error reset
+            input.classList.remove("error"); // Removes client-side error class from intl-tel-input
+            errorMsg.innerHTML = ""; // Clears client-side JS error message span
             errorMsg.classList.add("d-none");
             validMsg.classList.add("d-none");
+
+            // Server-side Laravel validation error reset for the phone number
+            input.classList.remove("is-invalid"); // Removes Bootstrap's 'is-invalid' class from the input
+
+            // Find and hide the server-side error message span for the 'country' (phone number) field
+            const backendErrorContainer = input.closest('.mb-2.row'); // Get the parent row of the input
+            if (backendErrorContainer) {
+                const backendErrorSpan = backendErrorContainer.querySelector('.mt-2.col-12 .invalid-feedback[role="alert"]');
+                if (backendErrorSpan) {
+                    backendErrorSpan.classList.add("d-none"); // Hide the span
+                    backendErrorSpan.classList.remove("d-block"); // Ensure d-block is removed if present
+                }
+            }
         };
 
         const showError = (msg) => {
@@ -222,8 +236,30 @@
                 showError(msg);
                 // submitButton.disabled = true;
             }
-        });
-    });
+        }); // End of keyup listener for #number (phone)
+
+        // Handle validation message for email input
+        const emailInput = document.querySelector("#email");
+        if (emailInput) {
+            emailInput.addEventListener("keyup", function() {
+                // Remove the 'is-invalid' class from the input field
+                emailInput.classList.remove("is-invalid");
+
+                // Find the corresponding error message span and hide it
+                // The error span is a sibling of the input within the same parent div.col-12
+                const parentCol = emailInput.parentElement;
+                if (parentCol) {
+                    const emailErrorSpan = parentCol.querySelector('span.invalid-feedback[role="alert"]');
+                    if (emailErrorSpan) {
+                        // Add 'd-none' to hide the span. Bootstrap 5 should also hide it
+                        // when 'is-invalid' is removed from the input, but this is a safeguard.
+                        emailErrorSpan.classList.add("d-none");
+                    }
+                }
+            });
+        }
+
+    }); // End of DOMContentLoaded
 
     // reCAPTCHA callback functions
     function onRecaptchaSuccess(token) {

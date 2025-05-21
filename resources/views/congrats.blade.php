@@ -19,6 +19,6 @@
     // add event listener to the element
     goto.addEventListener('click', function() {
         // redirect to the desired URL
-        window.location.href = "/";
+        window.location.href = "{{ route('dashboard') }}";
     });
 </script>

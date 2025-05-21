@@ -193,6 +193,14 @@
             initialCountry: "my",
             hiddenInput: "country",
             utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js", // just for formatting/placeholders etc
+            autoPlaceholder: "aggressive",
+            nationalMode: false,
+            separateDialCode: true, // Add this line
+            customPlaceholder: function(selectedCountryPlaceholder, selectedCountryData) {
+              // selectedCountryPlaceholder will now be the national part, e.g., "12-345 6789"
+              // This will remove only the dashes
+              return selectedCountryPlaceholder.replace(/-/g, "");
+            }
         });
 
         const reset = () => {

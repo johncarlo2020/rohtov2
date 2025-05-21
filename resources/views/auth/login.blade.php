@@ -73,20 +73,16 @@
             const errorMap = ["Invalid number", "Invalid country code", "Too short", "Too long", "Invalid number"];
 
             const phoneInput = window.intlTelInput(phoneInputField, {
-                initialCountry: "auto",
-                geoIpLookup: function(callback) {
-                    fetch("https://ipapi.co/json")
-                        .then(function(res) {
-                            return res.json();
-                        })
-                        .then(function(data) {
-                            callback(data.country_code);
-                        })
-                        .catch(function() {
-                            callback("us");
-                        });
-                },
-                utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
+                initialCountry: "my",
+                hiddenInput: "country", // Added for consistency, backend might not use it for login
+                utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+                autoPlaceholder: "aggressive",
+                nationalMode: false,
+                separateDialCode: true,
+                customPlaceholder: function(selectedCountryPlaceholder, selectedCountryData) {
+                  // selectedCountryPlaceholder will be the national part, e.g., "12345 6789"
+                  return selectedCountryPlaceholder.replace(/-/g, "");
+                }
             });
 
             const reset = function() {

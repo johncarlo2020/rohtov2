@@ -17,16 +17,14 @@
                     <h2>How to Participate</h2>
                     <ol>
                         <li>
-                            <strong>Smell & Vote</strong> - Explore all 6 fragrances and vote for the one that best
-                            matches your current mood.
+                            <strong>Smell & Vote</strong> - Try out all 6 fragrances and pick one your favourite.
                         </li>
                         <li>
-                            <strong>Snap & Share</strong> - Take a stylish photo of yourself at the experience area.
-                            Upload your photo to Instagram or Facebook. Don’t forget to tag us and #AdidasVibes
+                            <strong>Snap & Share</strong> - Take a photo with your VIBE and upload to IG / FB with hashtag #adidasfragrance #adidasmalaysia
+
                         </li>
                         <li>
-                            <strong>Redeem Your Gift</strong> - Show your social media post at the Gift Redemption
-                            Counter to claim your exclusive reward.
+                            <strong>Redeem Your Gift</strong> - ⁠Show your social media post at the Redemption counter to claim your gift after you completed 3 zones.
                         </li>
                     </ol>
                 </div>
@@ -34,7 +32,7 @@
             </div>
 
             <div id="picker" class="mb-3 d-none">
-                <p class="pharagraph-text">Please pick one to vote</p>
+                <p class="pharagraph-text">Pick your favorite scent</p>
                 <div class="vote-container">
                     @for ($index = 1; $index <= 6; $index++)
                         <div class="vote-item">

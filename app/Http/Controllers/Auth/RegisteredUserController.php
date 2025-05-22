@@ -66,11 +66,19 @@ class RegisteredUserController extends Controller
         ]);
 
         $marketing = false;
+        $email_consent = false;
+        $sms_consent = false;
+
+        if($request->has('email_consent')){
+            $email_consent = true;
+        }
+        if($request->has('sms_consent')){
+            $sms_consent = true;
+        }
 
         if($request->has('marketing')){
             $marketing = true;
         }
-
         // After validation, fetch country by phone number
         $phoneNumber = $request->input('country');
 
@@ -90,6 +98,8 @@ class RegisteredUserController extends Controller
             'otp' => $otp,
             'country'=> $country->name,
             'marketing' => $marketing,
+            'email_consent' => $email_consent,
+            'sms_consent' => $sms_consent,
             'last_login_at' => Carbon::now(),
             'password' => Hash::make('password'),
         ]);

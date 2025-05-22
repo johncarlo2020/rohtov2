@@ -111,9 +111,9 @@
                 <div class="mt-4 mb-1 row">
                     <div class="col-12">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="privacy_policy" value="1"
-                                id="privacyPolicy"  />
-                            <label class="form-check-label" for="privacyPolicy">
+                            <input class="form-check-input" type="checkbox" name="email_consent" value="0"
+                                id="emailConsent"  />
+                            <label class="form-check-label" for="emailConsent">
                                 Email
                             </label>
                         </div>
@@ -122,9 +122,9 @@
                 <div class="mb-2 row">
                     <div class="col-12">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="privacy_policy" value="1"
-                                id="privacyPolicy"  />
-                            <label class="form-check-label" for="privacyPolicy">
+                            <input class="form-check-input" type="checkbox" name="sms_consent" value="0"
+                                id="smsConsent"  />
+                            <label class="form-check-label" for="smsConsent">
                                 Text Message (SMS/Whatsapp)
                             </label>
                             <p class="small-text pl-4">Note: Please tick to receive details on your GUESS & WIN
@@ -298,7 +298,7 @@
             reset();
             if (!input.value.trim()) {
                 showError("Required");
-                submitButton.disabled = true;
+                // submitButton.disabled = true;
             } else if (iti.isValidNumber()) {
                 validMsg.classList.remove("d-none");
                 // leave disabled until reCAPTCHA is completed
@@ -306,7 +306,7 @@
                 const errorCode = iti.getValidationError();
                 const msg = errorMap[errorCode] || "Invalid number";
                 showError(msg);
-                submitButton.disabled = true;
+                // submitButton.disabled = true;
             }
         });
     });

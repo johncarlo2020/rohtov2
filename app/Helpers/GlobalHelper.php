@@ -43,7 +43,16 @@ class GlobalHelper
             'email' => $user->email,
             'source_id' => '7122', // Static value as in your example
         ];
-        $subscriptions = ['sms', 'email'];
+        $subscriptions = [];
+
+        if ($user->sms_consent == 1) {
+            array_push($subscriptions, 'sms');
+            array_push($subscriptions, 'whatsapp');
+        }
+
+        if ($user->email_consent == 1) {
+            array_push($subscriptions, 'email');
+        }
 
         $postfield_api = [
             'hpno' => $postfield['number'],

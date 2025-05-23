@@ -13,6 +13,7 @@ class UserAppointment extends Model
         'user_id',
         'appointment_id',
         'rescheduled',
+        'is_attended',
     ];
 
     public function appointment()

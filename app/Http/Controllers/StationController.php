@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\UserAppointment;
 use Illuminate\Http\Request;
 use App\Models\Station;
 use App\Models\User;
@@ -615,7 +616,7 @@ class StationController extends Controller
         }
 
         $stationDone = $user->stationUser->count();
-        $stations = Station::get();
+        $stations = Station::where('station_id','!=','7')->get();
 
         $completedStationIds = $user->stationUser->pluck('id')->toArray();
 
@@ -637,6 +638,11 @@ class StationController extends Controller
         }
     }
 
+    public function scanner()
+    {
+        return view('scanner');
+    }
+
 
     public function scan(Request $request)
     {
@@ -647,28 +653,34 @@ class StationController extends Controller
         // Get the last character of the QR code message
         $station_id = substr($qrCodeMessage, -1);
 
-        if ($request->has('brand')) {
-            // Fetch the authenticated user
-            $user = User::with('stationUser')->find(auth()->id());
-
-            if ($user) {
-                // Update the user's brand_id
-                $user->brand_id = $request->brand;
-                $user->save();
-            } else {
-                // Handle case where user is not found (optional)
-                return response()->json(['error' => 'User not found.'], 404);
-            }
-        }
 
         // Assume that `$station_id` is validated before this point
 
         try {
             DB::beginTransaction();
 
+            if($request->station == 7){
+
+                $stationUser = new StationUser();
+                $stationUser->user_id = $station_id;
+                $stationUser->station_id = $request->station;
+                $stationUser->time_spent = 0;
+                $stationUser->save();
+
+                $userAppointment = UserAppointment::where('user_id', $station_id)->where('is_attended', 0)->first();
+                $userAppointment->is_attended = 1;
+                $userAppointment->save();
+                DB::commit();
+
+                return response()->json(['message' => 'attended already', 'status' => 'success'], 401);
+
+            }
+
             if ($station_id != $request->station) {
                 return response()->json(['message' => 'Invalid Qr', 'status' => 'error'], 401);
             }
+
+
 
             $lastStation = StationUser::where('user_id', auth()->id())->orderBy('id', 'desc')->first();
 

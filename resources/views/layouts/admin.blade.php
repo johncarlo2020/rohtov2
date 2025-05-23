@@ -35,6 +35,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
         integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
     <link rel="stylesheet" type="text/css"
         href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css" />
 
@@ -92,6 +94,15 @@
                             <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
                         </div>
                         <span class="nav-link-text ms-1">Embark Journey</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('scanner') ? 'active' : '' }}" href="{{ route('scanner') }}">
+                        <div
+                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="ni ni-mobile-button text-warning text-sm opacity-10"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Scanner</span>
                     </a>
                 </li>
             </ul>

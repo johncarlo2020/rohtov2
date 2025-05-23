@@ -65,6 +65,7 @@ Route::get('/vote', 'App\Http\Controllers\StationController@vote')->name('vote')
 Route::post('/castVote', 'App\Http\Controllers\StationController@castVote')->name('castVote');
 Route::get('/voteData', 'App\Http\Controllers\StationController@voteData')->name('voteData');
 Route::get('/congratsVote', 'App\Http\Controllers\StationController@congratsVote')->name('congratsVote');
+Route::post('/process_qr_code', 'App\Http\Controllers\StationController@scan')->name('process_qr_code');
 
 Route::group(['middleware' => ['admin']], function () {
     Route::get('/admin', 'App\Http\Controllers\StationController@admin')->name('admin');
@@ -72,6 +73,7 @@ Route::group(['middleware' => ['admin']], function () {
     Route::get('/admin/ambient', 'App\Http\Controllers\StationController@ambient')->name('ambient');
     Route::get('/admin/embark', 'App\Http\Controllers\StationController@embark')->name('embark');
     Route::post('/tasks/complete', 'App\Http\Controllers\StationController@tasksComplete')->name('tasks.complete');
+    Route::get('/admin/scanner', 'App\Http\Controllers\StationController@scanner')->name('scanner');
 
     Route::get('/admin/{user}', 'App\Http\Controllers\StationController@userData')->name('userData');
     Route::post('/admin/check', 'App\Http\Controllers\StationController@check')->name('check');
@@ -83,7 +85,6 @@ Route::group(['middleware' => ['client']], function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/station/{station}', 'App\Http\Controllers\StationController@index')->name('station');
     Route::get('/dashboard', 'App\Http\Controllers\StationController@welcome')->name('dashboard');
-    Route::post('/process_qr_code', 'App\Http\Controllers\StationController@scan')->name('process_qr_code');
     Route::get('/station/{station}/extension', 'App\Http\Controllers\StationController@extension')->name('station.extension');
     Route::get('/station/{station}/brand', 'App\Http\Controllers\StationController@brand')->name('station.brand');
     Route::get('/puzzle', 'App\Http\Controllers\StationController@puzzle')->name('station.puzzle');

@@ -147,7 +147,7 @@
                             return '<button class="station-done" type="button"><i class="fa-solid fa-check"></i></button>';
                         }
                         var stationId = station && station.id !== undefined ? station.id : (i + 1);
-                        return '<button type="button">' + stationId + '</button>';
+                        return '<button type="button"> <span class="bottom-dots-text"> ' + stationId + '</span> </button>';
                     }
                 });
 

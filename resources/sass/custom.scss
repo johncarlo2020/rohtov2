@@ -513,8 +513,8 @@ ol {
         button {
             font-size: 1rem;
             line-height: 20px;
-            width: 20px;
-            height: 20px;
+            width: 30px !important;
+            height: 30px !important;
             padding: 0;
             border: 1px solid #ccc;
             border-radius: 50%;
@@ -522,6 +522,10 @@ ol {
             color: #333;
             cursor: pointer;
             transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
 
             &:hover {
                 background-color: #eee;
@@ -531,6 +535,14 @@ ol {
             // Hide the default ::before pseudo-element if customPaging is used for numbers
             &:before {
                 content: none;
+            }
+
+            .bottom-dots-text {
+                font-size: 14px;
+                display: block;
+                text-align: center;
+                letter-spacing: 0px !important;
+                line-height: 14px !important;
             }
         }
 

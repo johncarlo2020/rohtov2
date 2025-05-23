@@ -198,8 +198,8 @@
             separateDialCode: true, // Add this line
             customPlaceholder: function(selectedCountryPlaceholder, selectedCountryData) {
               // selectedCountryPlaceholder will now be the national part, e.g., "12-345 6789"
-              // This will remove only the dashes
-              return selectedCountryPlaceholder.replace(/-/g, "");
+              // This will remove only the dashes and spaces
+              return selectedCountryPlaceholder.replace(/-|\s/g, "");
             }
         });
 

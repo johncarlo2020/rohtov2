@@ -24,7 +24,7 @@ class StaffSeeder extends Seeder
 
         foreach ($staffIds as $staffId) {
             DB::table('staff')->insert([
-                'staff_id' => $staffId,
+                'name' => $staffId,
             ]);
         }
     }

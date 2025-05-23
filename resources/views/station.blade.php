@@ -234,7 +234,8 @@
                         $('.station-text').html('Failed');
                         $('.message').html('Invalid QR code. Please try again.');
                         // $('#scanCompleteModal').modal('show');
-                        window.location.reload();
+                        // go to dashboard
+                        window.location.href = "{{ route('dashboard') }}";
                     }
                 });
             }

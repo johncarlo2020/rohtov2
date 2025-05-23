@@ -140,12 +140,12 @@
                         </button>
                         <div class="bottom-text text-center">
                             <p class="pharagraph-text mb-0">Already Register</p>
-                            <p class="pharagraph-text">Please log in here  <a class="" href="{{ route('login') }}" class="">here</a></p>
+                            <p class="pharagraph-text">Please log in <a class="" href="{{ route('login') }}" class="">here</a></p>
                         </div>
                     </div>
                 </div>
             </form>
-            <div class="footer-container p-4">
+            <div class="footer-container mt-auto">
                 @include('components.footer')
             </div>
         </div>

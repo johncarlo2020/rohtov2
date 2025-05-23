@@ -145,7 +145,7 @@
         <div class="text-center mt-auto px-4 d-flex justify-content-center">
             <a href="{{ route('preRegEvent') }}" class="button button-white w-50">Back</a>
         </div>
-        <div class="footer-container p-4">
+        <div class="footer-container  mt-auto">
             @include('components.footer')
         </div>
     </div>

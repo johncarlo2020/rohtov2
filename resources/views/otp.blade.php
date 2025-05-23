@@ -50,7 +50,7 @@
                 <button type="submit" class="btn btn-primary w-100">Verify OTP</button>     </form>
         </div>
 
-        <div class="footer-container p-4 mt-auto">
+        <div class="footer-container mt-auto">
             @include('components.footer')
         </div>
     </div>

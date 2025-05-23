@@ -8,7 +8,7 @@
         <div id="goto" class="congrats-img mt-auto">
             <img src="{{ asset('files/main/congrats_img.webp') }}" alt="" />
         </div>
-        <div class="footer-container p-4 mt-auto">
+        <div class="footer-container  mt-auto">
             @include('components.footer')
         </div>
     </div>

@@ -138,7 +138,7 @@ ol {
     height: 100svh;
     overflow-y: auto;
     padding-top: 7vh;
-    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 100px);
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 0px);
     // on big screens
     @media (min-width: 768px) {
         width: 600px;

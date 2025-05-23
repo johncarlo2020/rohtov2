@@ -92,7 +92,7 @@
             </div>
         </div>
 
-        <div class="footer-container p-4 mt-auto">
+        <div class="footer-container mt-auto">
             @include('components.footer')
         </div>
     </div>

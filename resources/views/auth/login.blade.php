@@ -59,7 +59,7 @@
                             <p class="pharagraph-text mb-0">Don’t have account yet!</p>
                             <p class="pharagraph-text">Register <a class="" href="{{ route('register') }}" class="">here</a></p>
                         </div>
-        <div class="footer-container p-4">
+        <div class="footer-container mt-auto">
             @include('components.footer')
         </div>
     </div>

@@ -75,7 +75,7 @@
 
             <div class="text-heading mb-3">
                 @if ($station->id != 4)
-                    <p class="pharagraph-text text-center">CHECK IN</p>
+                    <p class="pharagraph-text text-center">CHECK-IN</p>
                 @else
                     <p class="pharagraph-text text-center">REDEMPTION</p>
                 @endif
@@ -117,7 +117,7 @@
             </div>
         </div>
 
-        <div class="footer-container p-4 mt-auto">
+        <div class="footer-container  mt-auto">
             @include('components.footer')
         </div>
     </div>

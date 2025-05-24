@@ -30,7 +30,8 @@
             <a id="homeButton" href="{{ route('guestAndWin') }}" class="button button-primary w-100 mb-3">
                Guess & Win
             </a>
-            <a id="homeButton" href="{{ route('map') }}" class="button button-primary w-100 mb-3">
+             <a id="homeButton" href="#" class="button button-primary w-100 mb-3"  data-bs-toggle="modal"
+                            data-bs-target="#exampleModal">
                 Ocean Or Plastic Roadshow
             </a>
             <a id="reschedule" href="{{ route('appointment') }}" class="button button-secondary w-100 mb-3"">

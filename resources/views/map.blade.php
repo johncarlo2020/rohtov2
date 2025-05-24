@@ -16,8 +16,9 @@
         <div class="map mb-5">
             <img class="map-img" src="{{ asset('files/main/Loccitane Map.webp') }}" alt="" />
             {{-- loop trough the $stations --}}
+             <a class="map-pin start-pin" href="">START</a>
             @foreach ($stations as $station)
-                <a class="map-pin" href="">{{ $station->id }}</a>
+                <a class="map-pin  station-{{$station->id}}" href="">{{ $station->id }}</a>
             @endforeach
         </div>
         <div class="redeem mb-5">

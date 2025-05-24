@@ -16,41 +16,45 @@
                 </div>
                 <div class="table-responsive">
                     <table id="customer-table" class="display nowrap" style="width:100%">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Number</th>
-                                <th>Country</th>
-                                <th>UTM Source</th>
-                                <th>Created At</th> {{-- New column header --}}
-
-
-
-                                @foreach ($data['stations'] as $station)
-                                    <th>{{ $station['name'] }}</th>
+                     <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Number</th>
+                            <th>Country</th>
+                            <th>UTM Source</th>
+                            <th>Created At</th>
+                            <th>Appointments</th> {{-- Add this --}}
+                            @foreach ($data['stations'] as $station)
+                                <th>{{ $station['name'] }}</th>
+                            @endforeach
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($data['users'] as $user)
+                            <tr data-user-id="{{ $user->id }}">
+                                <td>{{ $user->id }}</td>
+                                <td>{{ $user->fname }} {{ $user->lname }}</td>
+                                <td>{{ $user->email }}</td>
+                                <td>{{ $user->number }}</td>
+                                <td>{{ $user->country }}</td>
+                                <td>{{ $user->utm_source }}</td>
+                                <td>{{ $user->created_at ? \Carbon\Carbon::parse($user->created_at)->format('d M h:i A') : 'N/A' }}
+                                </td>
+                                <td>
+                                    @foreach ($user->userAppointments as $ua)
+                                        <div> {{ \Carbon\Carbon::parse($ua->appointment->name)->format('d M') }}</div>
+                                    @endforeach
+                                </td>
+                                @foreach ($user['stations'] as $station)
+                                    <td class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-danger' }}">
+                                        {{ $station['value'] ? 'Yes' : 'No' }}
+                                    </td>
                                 @endforeach
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($data['users'] as $user)
-                                <tr data-user-id="{{ $user->id }}">
-                                    <td>{{ $user->id }}</td>
-                                    <td>{{ $user->fname }} {{ $user->lname }}</td>
-                                    <td>{{ $user->email }}</td>
-                                    <td>{{ $user->number }}</td>
-                                    <td>{{ $user->country }}</td>
-                                    <td>{{ $user->utm_source }}</td>
-                                    <td>{{ $user->created_at ? \Carbon\Carbon::parse($user->created_at)->format('d M h:i A') : 'N/A' }}</td> {{-- Formatted date and time with AM/PM --}}
-
-                                    @foreach ($user['stations'] as $station)
-                                        <td class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-danger' }}">
-                                            {{ $station['value'] ? 'Yes' : 'No' }}</td>
-                                    @endforeach
-                                </tr>
-                            @endforeach
-                        </tbody>
+                        @endforeach
+                    </tbody>
                     </table>
                 </div>
             </div>

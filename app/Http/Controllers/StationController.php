@@ -832,7 +832,13 @@ class StationController extends Controller
         $permission = auth()->user()->getPermissionNames()->first();
 
         $startDate = Carbon::create(2024, 5, 24);
-        $data['users'] = User::whereDate('created_at', '>=', $startDate->toDateString())->with('stationUser')->orderBy('id', 'desc')->get();
+        $data['users'] = User::whereDate('created_at', '>=', $startDate->toDateString())
+        ->with([
+            'stationUser',
+            'userAppointments.appointment:id,name'
+        ])
+        ->orderBy('id', 'desc')
+        ->get();
 
         $averageTimespentByStation = StationUser::select('station_id', \DB::raw('AVG(time_spent) as average_timespent'))->groupBy('station_id')->get()->keyBy('station_id');
 
@@ -854,9 +860,7 @@ class StationController extends Controller
                 'average_timespent' => number_format(($averageTimespentByStation->get($id)['average_timespent'] ?? 0) / 60, 2),
             ];
         });
-        //dd($data['users'][0]['stations']);
-        //  dd($data);
-
+        // dd($data);
         return view('users', compact('data', 'permission'));
     }
 

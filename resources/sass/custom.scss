@@ -424,19 +424,67 @@ ol {
     }
 
     .map-pin {
-        display: inline-block;
-        width: 5vw;
-        height: 5vw;
-        background-color: #ffcc00; /* Yellow inner circle */
-        color: #002f5f; /* Dark blue text */
-        font-weight: bold;
-        font-size: 10px;
+        display: block;
+        width: 7vw;
+        height: 7vw;
+        background-color: #ffcc00;
+        color: #002f5f;
+        font-weight: 700;
+        font-size: 12px;
         text-decoration: none;
         text-align: center;
-        line-height: 20px;
+        line-height: 29px;
         border-radius: 50%;
-        position: relative;
-        box-shadow: 0 0 0 5px #002f5f; /* Dark blue outer ring */
+        box-shadow: 0 0 0 5px #002f5f;
+        position: absolute;
+
+        &.station-1 {
+            bottom: 21vw;
+            left: 52vw;
+            z-index: 999;
+        }
+
+        &.station-2 {
+            bottom: 40vw;
+            left: 43vw;
+            z-index: 999;
+        }
+
+        &.station-3 {
+            bottom: 71vw;
+            left: 42vw;
+            z-index: 999;
+        }
+
+        &.station-4 {
+            bottom: 52vw;
+            left: 27vw;
+            z-index: 999;
+        }
+
+        &.station-5 {
+            bottom: 68vw;
+            left: 71vw;
+            z-index: 999;
+        }
+
+        &.station-6 {
+            bottom: 39vw;
+            left: 30vw;
+            z-index: 999;
+        }
+    }
+
+    .start-pin {
+        font-size: 7px;
+        color: #0889BD;
+        line-height: 28px;
+        background-color: #fff;
+        box-shadow: 0 0 0 5px #0889BD;
+
+        bottom: 39vw;
+        left: 10vw;
+        z-index: 999;
     }
 
     .map-pin::after {
@@ -451,6 +499,20 @@ ol {
         border-right: 7px solid transparent;
         border-top: 12px solid #002f5f; /* Triangle pointer */
     }
+
+    .start-pin::after {
+        content: "";
+        position: absolute;
+        bottom: -13px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 0;
+        border-left: 7px solid transparent;
+        border-right: 7px solid transparent;
+        border-top: 12px solid #0889BD; /* Triangle pointer */
+    }
+
 }
 
 .redeem {

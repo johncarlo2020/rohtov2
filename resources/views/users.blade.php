@@ -44,7 +44,7 @@
                                 </td>
                                 <td>
                                     @foreach ($user->userAppointments as $ua)
-                                        <div> {{ \Carbon\Carbon::parse($ua->appointment->name)->format('d M') }}</div>
+                                        <div> {{ \Carbon\Carbon::createFromFormat('m-d-Y', $ua->appointment->name)->format('d M') }}</div>
                                     @endforeach
                                 </td>
                                 @foreach ($user['stations'] as $station)

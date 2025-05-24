@@ -55,6 +55,23 @@ class StationController extends Controller
         return $task;
     }
 
+    public function map(){
+        $user = User::with('stationUser')->where('id', auth()->id())->first();
+        $stationDone = $user->stationUser->count();
+        $stations = Station::get();
+
+        // Loop through each station and append a flag indicating if the user has it
+        foreach ($stations as $station) {
+            $userHasStation = $user
+                ->StationUser()
+                ->where('station_id', $station->id)
+                ->exists();
+            $station->status = $userHasStation;
+        }
+
+        return view('map', compact('stations', 'stationDone'));
+    }
+
     public function tasksComplete(Request $request)
     {
         $task = UserTask::updateOrCreate(
@@ -858,7 +875,7 @@ class StationController extends Controller
         $tasks = Task::all(); // Get all tasks
 
         $users = User::with(['tasks' => function ($query) {
-            $query->withPivot('status', 'images'); // Eager load pivot fields
+            $query->withPivot('status', 'images', 'created_at', 'updated_at'); // Eager load pivot fields
         }])->get();
 
         $users = $users->map(function ($user) use ($tasks) {
@@ -867,9 +884,12 @@ class StationController extends Controller
 
             // Map all tasks and attach user-specific status or default to 'pending'
             $user->all_tasks = $tasks->map(function ($task) use ($userTasks) {
-                $clonedTask = clone $task; // Avoid modifying the original task object
-                $clonedTask->status = $userTasks[$task->id]->pivot->status ?? 'pending';
-                $clonedTask->image = $userTasks[$task->id]->pivot->images ?? '';
+                $clonedTask = clone $task; // Avoid mpodifying the original task object
+                $userTaskPivot = $userTasks->get($task->id); // Get the specific user task pivot data
+
+                $clonedTask->status = $userTaskPivot->pivot->status ?? 'pending';
+                $clonedTask->image = $userTaskPivot->pivot->images ?? '';
+                $clonedTask->submission_date = $userTaskPivot->pivot->updated_at ?? null; // Use updated_at or created_at
 
                 return $clonedTask;
             });
@@ -877,10 +897,9 @@ class StationController extends Controller
             return $user;
         });
 
-        // dd($users);
-
         return view('embark', compact('users'));
     }
+
 
     public function userData(User $user)
     {

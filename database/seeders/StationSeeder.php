@@ -21,23 +21,28 @@ class StationSeeder extends Seeder
     public function run()
     {
         Station::create([
-            'name' => 'Skin Analysis',
+            'name' => '#1: The Blue Paradox',
+            'description' => 'Experience the ocean’s wonder—and the urgent reality beneath the waves.',
         ]);
 
         Station::create([
-            'name' => 'Hada Baby Aqua Lab',
+            'name' => '#2: Big Little Things',
+               'description' => 'Drop off your used plastics here and discover how they’re transformed — not just recycled, but upcycled.',
         ]);
 
         Station::create([
-            'name' => 'Product Experiences',
+            'name' => '#3: Skin Consultation',
+               'description' => 'Experience a moment of indulgence — nourishing your skin with rich almond oil for a smoother body, softer skin, and a soothed sense',
         ]);
 
         Station::create([
-            'name' => 'Photo Op',
+            'name' => '#4: Almond Ritual',
+               'description' => '',
         ]);
 
         Station::create([
-            'name' => 'Gift Redemption',
+            'name' => '#5: Hair Diagnosis',
+               'description' => '',
         ]);
 
         Appointment::create([

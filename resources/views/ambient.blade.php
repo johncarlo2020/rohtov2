@@ -21,11 +21,9 @@
                                 <th>ID</th>
                                 <th>Name</th>
                                 <th>Phone Number</th>
-
                                 <th>Email</th>
                                 <th>Answer</th>
-
-
+                                <th>Created At</th> {{-- New column header --}}
                             </tr>
                         </thead>
                         <tbody>
@@ -36,7 +34,7 @@
                                     <td>{{ $user->number ?? 'none' }} </td>
                                     <td>{{ $user->email }}</td>
                                     <td>{{ $user->guess ?? 'none' }} </td>
-
+                                    <td>{{ $user->created_at ? \Carbon\Carbon::parse($user->created_at)->format('d M h:i A') : 'N/A' }}</td> {{-- Formatted date and time with AM/PM --}}
                                 </tr>
                             @endforeach
                         </tbody>

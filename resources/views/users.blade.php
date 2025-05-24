@@ -24,6 +24,7 @@
                                 <th>Number</th>
                                 <th>Country</th>
                                 <th>UTM Source</th>
+                                <th>Created At</th> {{-- New column header --}}
 
 
 
@@ -41,6 +42,7 @@
                                     <td>{{ $user->number }}</td>
                                     <td>{{ $user->country }}</td>
                                     <td>{{ $user->utm_source }}</td>
+                                    <td>{{ $user->created_at ? \Carbon\Carbon::parse($user->created_at)->format('d M h:i A') : 'N/A' }}</td> {{-- Formatted date and time with AM/PM --}}
 
                                     @foreach ($user['stations'] as $station)
                                         <td class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-danger' }}">

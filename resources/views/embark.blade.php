@@ -6,11 +6,12 @@
             cursor: pointer;
         }
         .task-image {
-            max-width: 50px; /* Adjust as needed */
-            max-height: 50px; /* Adjust as needed */
+            max-width: 50px;
+            max-height: 50px;
             margin: 2px;
         }
     </style>
+
     <div class="mt-4 row">
         <div class="mb-4 col-lg-12 mb-lg-0">
             <div class="card">
@@ -28,38 +29,37 @@
                                 <th>Phone Number</th>
                                 <th>Email</th>
                                 @if($users->isNotEmpty() && $users->first()->all_tasks->isNotEmpty())
-                                @foreach ($users->first()->all_tasks as $task)
-                                <th>{{ $task->name }} (Status/Image)</th>
-                                @endforeach
+                                    @foreach ($users->first()->all_tasks as $task)
+                                        <th>{{ $task->name }} (Status/Image)</th>
+                                        <th>{{ $task->name }} (Date)</th>
+                                    @endforeach
                                 @endif
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($users as $user)
-                            <tr data-user-id="{{ $user->id }}">
-                                <td>{{ $user->id }}</td>
-                                <td>{{ $user->fname }} {{ $user->lname }}</td>
-                                <td>{{ $user->number ?? 'none' }}</td>
-                                <td>{{ $user->email }}</td>
+                                <tr data-user-id="{{ $user->id }}">
+                                    <td>{{ $user->id }}</td>
+                                    <td>{{ $user->fname }} {{ $user->lname }}</td>
+                                    <td>{{ $user->number ?? 'none' }}</td>
+                                    <td>{{ $user->email }}</td>
 
-                            <!-- Inside your table row generation loop -->
-                                @foreach ($user->all_tasks as $task)
-                                <td>
-                                    @php
-                                    $imageColumn = 'task_' . $task->id . '_image';
-                                    @endphp
-                                    @if (ucfirst($task->status) == 'In-progress' && !empty($user->$imageColumn))
-                                    <img src="{{ asset('storage/uploads/' . $user->$imageColumn) }}" alt="Task Image" class="clickable-image"
-                                        data-task-id="{{ $task->id }}" data-user-id="{{ $user->id }}"
-                                        data-image="{{ asset('storage/uploads/' . $user->$imageColumn) }}"
-                                        style="max-width: 60px; max-height: 60px; cursor: pointer;">
-                                    @else
-                                    {{ ucfirst($task->status) }}
-                                    @endif
-                                </td>
-                                @endforeach
-
-                            </tr>
+                                    @foreach ($user->all_tasks as $task)
+                                        <td>
+                                            @if (ucfirst($task->status) === 'In-progress' && !empty($task->image))
+                                                <img src="{{ asset('storage/uploads/' . $task->image) }}" alt="Task Image" class="clickable-image"
+                                                    data-task-id="{{ $task->id }}" data-user-id="{{ $user->id }}"
+                                                    data-image="{{ asset('storage/uploads/' . $task->image) }}"
+                                                    style="max-width: 60px; max-height: 60px; cursor: pointer;">
+                                            @else
+                                                {{ ucfirst($task->status) }}
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <small>{{ $task->submission_date ? \Carbon\Carbon::parse($task->submission_date)->format('d M h:i A') : 'N/A' }}</small> {{-- Formatted date and time with AM/PM --}}
+                                        </td>
+                                    @endforeach
+                                </tr>
                             @endforeach
                         </tbody>
                     </table>
@@ -84,71 +84,48 @@
         </div>
     </div>
 
-
-    <!-- Include DataTables CSS -->
+    <!-- DataTables & Plugins -->
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.css">
-
-    <!-- Include DataTables Buttons CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.2/css/buttons.dataTables.css">
+
     <script src="{{ asset('assets/js/core/bootstrap.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/perfect-scrollbar.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/smooth-scrollbar.min.js') }}"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.0.2/js/dataTables.buttons.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.dataTables.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.print.min.js"></script>
 
-    <!-- Include DataTables Buttons JS -->
-
     <script>
-        // $(document).ready(function() {
-        //     $('#customer-table').DataTable({
-        //         dom: 'Bfrtip',
-        //         buttons: [
-        //             'copy', 'excel', 'pdf', 'csv'
-        //         ]
-        //     });
-        // });
-        var table = $('#customer-table').DataTable({
+        const table = $('#customer-table').DataTable({
             responsive: true,
             dom: "<'row'<'col-sm-12 col-md-3'l><'col-sm-6 col-md-6 align-items-end'B><'col-sm-12 col-md-3'f>>" +
-                "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
-            buttons: [
-                'copy', 'csv', 'excel', 'pdf', 'print'
-            ],
-            order: [
-                [0, 'desc']
-            ]
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+            buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+            order: [[0, 'desc']]
         });
 
-
-        // Move the search input to the left side
         $('.dataTables_filter').addClass('float-start');
         $('.dataTables_filter label').addClass('w-100');
-
 
         $(document).ready(function () {
             let selectedTaskId = null;
             let selectedUserId = null;
 
-            document.querySelectorAll('.clickable-image').forEach(img => {
-                img.addEventListener('click', () => {
-                    selectedTaskId = img.dataset.taskId;
-                    selectedUserId = img.dataset.userId;
-                    document.getElementById('modal-task-image').src = img.dataset.image;
-                    new bootstrap.Modal(document.getElementById('taskImageModal')).show();
-                });
+            $('.clickable-image').on('click', function () {
+                selectedTaskId = $(this).data('task-id');
+                selectedUserId = $(this).data('user-id');
+                $('#modal-task-image').attr('src', $(this).data('image'));
+                new bootstrap.Modal(document.getElementById('taskImageModal')).show();
             });
 
-            document.getElementById('confirm-completion').addEventListener('click', async () => {
+            $('#confirm-completion').on('click', function () {
                 const formData = new FormData();
                 formData.append('user_id', selectedUserId);
                 formData.append('task_id', selectedTaskId);
@@ -160,25 +137,19 @@
                     },
                     body: formData,
                 })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            // ✅ Update status in the table
-                           location.reload();
-
-                            // alert('Task marked as completed!');
-                        } else {
-                            alert('Task update failed.');
-                        }
-                    })
-                    .catch(error => {
-                        console.log('Error:', error);
-                        alert('Something went wrong while completing the task.');
-                    });
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert('Task update failed.');
+                    }
+                })
+                .catch(error => {
+                    console.log('Error:', error);
+                    alert('Something went wrong while completing the task.');
+                });
             });
-
-            });
-
-
+        });
     </script>
 @endsection

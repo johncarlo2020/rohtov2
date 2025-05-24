@@ -43,9 +43,11 @@
                                 <td>{{ $user->created_at ? \Carbon\Carbon::parse($user->created_at)->format('d M h:i A') : 'N/A' }}
                                 </td>
                                 <td>
-                                    @foreach ($user->userAppointments as $ua)
+                                    @forelse ($user->userAppointments as $ua)
                                         <div> {{ \Carbon\Carbon::createFromFormat('m-d-Y', $ua->appointment->name)->format('d M') }}</div>
-                                    @endforeach
+                                    @empty
+                                        <div>No dates are selected here</div>
+                                    @endforelse
                                 </td>
                                 @foreach ($user['stations'] as $station)
                                     <td class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-danger' }}">

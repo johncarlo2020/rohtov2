@@ -826,6 +826,35 @@ class StationController extends Controller
 
         return view('dashboardadmin', compact('data', 'permission'));
     }
+
+
+    public function logUser(){
+        // get all user with station user appointments and apointment names
+        $users = User::with(['stationUser', 'userAppointments.appointment:id,name'])
+            ->orderBy('id', 'desc')
+            ->get();
+        $averageTimespentByStation = StationUser::select('station_id', \DB::raw('AVG(time_spent) as average_timespent'))
+            ->groupBy('station_id')
+            ->get()
+            ->keyBy('station_id');
+        $stations = Station::pluck('name', 'id');
+
+
+
+        foreach ($users as $user) {
+            $userStations = $user->stationUser->pluck('station_id')->toArray();
+            $user->stations = $stations->map(function ($name, $id) use ($userStations, $averageTimespentByStation) {
+                return [
+                    'name' => $name,
+                    'value' => in_array($id, $userStations),
+                ];
+            });
+        }
+
+
+        dd($users);
+    }
+
     public function users()
     {
         $today = Carbon::today();

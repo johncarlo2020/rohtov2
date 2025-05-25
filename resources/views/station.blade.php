@@ -147,11 +147,11 @@
 
 
             @if ($user != true && $station->id == 3) {{-- For Station 3, trigger staff modal --}}
-                <button id="start-scanner" class="mx-auto mt-2 camera-btn" data-toggle="modal" data-target="#staffSelectionModal">
+                <button id="start-scanner"  class="btn btn-info mx-auto mt-2 camera-btn" >
                     <i class="fa-solid fa-camera"></i>
                 </button>
             @elseif ($user != true && $station->id == 5) {{-- For Station 5, trigger product modal --}}
-                <button id="start-scanner" type="button" class="btn btn-info mx-auto mt-2 camera-btn" data-toggle="modal" data-target="#productSelectionModal">
+                <button id="start-scanner" type="button" class="btn btn-info mx-auto mt-2 camera-btn">
                     <i class="fa-solid fa-camera"></i>
                 </button>
             @elseif ($user != true) {{-- For other stations when user is not logged in (and station is not 3 or 5) --}}
@@ -194,6 +194,17 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
 
     <script>
+        @if ($user != true && $station -> id == 3 && $selectedStaff == null)
+        document.addEventListener('DOMContentLoaded', function () {
+                $('#staffSelectionModal').modal('show');
+            });
+        @endif
+
+        @if ($user != true && $station -> id == 5 && $selectedProduct == null)
+                document.addEventListener('DOMContentLoaded', function () {
+                    $('#productSelectionModal').modal('show');
+                });
+            @endif
         const mainContent = document.getElementById('mainContent');
         const scannerContainer = document.getElementById('scannerContainer');
         var message = '';

@@ -60,13 +60,14 @@ class StationController extends Controller
 
     public function map(){
         $user = User::with('stationUser')->where('id', auth()->id())->first();
-        $stationDone = $user->stationUser->count();
-        $stations = Station::get();
+        $stationDone = $user->stationUser()->where('station_id', '!=', 7)->count();
+        $stations = Station::where('id', '!=', 7)->get();
+
 
         // Loop through each station and append a flag indicating if the user has it
         foreach ($stations as $station) {
             $userHasStation = $user
-                ->StationUser()
+                ->stationUser()
                 ->where('station_id', $station->id)
                 ->exists();
             $station->status = $userHasStation;
@@ -510,9 +511,6 @@ class StationController extends Controller
             ->where('station_id', $station->id)
             ->exists();
 
-        if ($station->id == 9 && $user == true) {
-            return view('congrats');
-        }
 
         // It seems there was a logic issue here. If station is 2 and user is true,
         // we still need to pass all relevant data for the station view.
@@ -727,7 +725,7 @@ class StationController extends Controller
         }
 
         $stationDone = $user->stationUser->count();
-        $stations = Station::where('station_id','!=','7')->get();
+        $stations = Station::where('id','!=','7')->get();
 
         $completedStationIds = $user->stationUser->pluck('id')->toArray();
 

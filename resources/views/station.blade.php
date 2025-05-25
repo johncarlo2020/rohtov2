@@ -144,7 +144,9 @@
                 <div class="selected-staff p-3 rounded bg-white w-75 mx-auto  mb-3">
                       <img class="small-logo mb-2" src="{{ asset('files/main/logo.webp') }}" alt="" />
                       <p class="mb-1 fw-bold">Personalised Hair Sample</p>
-                       <p class="selected-id">{{ $selectedProduct->name }}</p>
+                      @foreach ($selectedProduct as $product)
+                    <p class="selected-id">{{ $product->name }}</p>
+                    @endforeach
                 </div>
             @endif
 

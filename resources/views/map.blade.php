@@ -19,14 +19,27 @@
             {{-- loop trough the $stations --}}
             <a class="map-pin start-pin">START</a>
             @foreach ($stations as $station)
-                <a href="{{ route('station', $station) }}"
-                    class="map-pin station-{{ $station->id }}  @if ($station->status == true) completed @endif">
+                @if($canStation6 == false && $station->id == 6)
+                <a href="javascript:void(0);" class="map-pin station-{{ $station->id }} @if ($station->status == true) completed @endif"
+                    data-bs-toggle="modal" data-bs-target="#redemption">
                     @if ($station->status != true)
-                        {{ $station->id }}
+                    {{ $station->id }}
                     @else
-                        <i class="fa-solid fa-check"></i>
+                    <i class="fa-solid fa-check"></i>
                     @endif
                 </a>
+                @else
+                <a href="{{ route('station', $station) }}"
+                    class="map-pin station-{{ $station->id }} @if ($station->status == true) completed @endif">
+                    @if ($station->status != true)
+                    {{ $station->id }}
+                    @else
+                    <i class="fa-solid fa-check"></i>
+                    @endif
+                </a>
+                @endif
+
+
             @endforeach
         </div>
         <div class="redeem mb-5">
@@ -86,6 +99,7 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-body">
+                        <a type="button" class="modal-close" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></a>
                         <div class="container mb-3">
                             <div>
                                 @include('components.branding')
@@ -97,6 +111,25 @@
                         <p class="text-center mt-4"><span
                                 id="selected-date">{{ $selectedAppointment->appointment->name ?? '' }}</span>,
                             {{ $convertedDate }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="redemption" tabindex="-1" aria-labelledby="dateLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <a type="button" class="modal-close" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></a>
+                        <div class="container mb-3">
+                            <div>
+                                @include('components.branding')
+                            </div>
+                        </div>
+                        <p class="text-center">Oops, Complete all your stations to redeem your free gifts</p>
+                        <button id="close" data-bs-dismiss="modal" type="button" class="button button-primary w-100 mb-2">
+                            Close
+                        </button>
                     </div>
                 </div>
             </div>

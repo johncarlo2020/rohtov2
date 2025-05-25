@@ -61,6 +61,9 @@ class StationController extends Controller
     public function map(){
         $user = User::with('stationUser')->where('id', auth()->id())->first();
         $stationDone = $user->stationUser()->where('station_id', '!=', 7)->count();
+        $canStation6 = $user->stationUser()->where('station_id', '!=', 7)
+            ->where('station_id', '!=', 6)->count() == 5;
+            // dd($canStation6);
         $stations = Station::where('id', '!=', 7)->get();
 
 
@@ -100,7 +103,7 @@ class StationController extends Controller
             }
         }
 
-        return view('map', compact('stations', 'stationDone', 'appointments', 'is2000', 'userAppointment', 'selectedAppointment', 'convertedDate', 'user'));
+        return view('map', compact('canStation6','stations', 'stationDone', 'appointments', 'is2000', 'userAppointment', 'selectedAppointment', 'convertedDate', 'user'));
     }
 
     public function tasksComplete(Request $request)

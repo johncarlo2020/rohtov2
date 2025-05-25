@@ -520,17 +520,17 @@ class StationController extends Controller
         $stafs = Staff::all();
         $selectedStaff = Staff::find(Auth::user()->staff_id);
 
-        $products = Products::all(); // Fetch all products
 
         // Fetch user's selected product from user_products table
         // The user might have multiple entries in UserProducts if they change their selection.
         // We'll take the latest one based on creation order.
-        $userProductEntry = UserProducts::where('user_id', Auth::id())->latest()->first();
-        $selectedProduct = null;
-        if ($userProductEntry) {
-            // Now fetch the product details from the Products table using products_id
-            $selectedProduct = Products::find($userProductEntry->products_id);
-        }
+        $userProductEntries = UserProducts::where('user_id', Auth::id())->latest()->get();
+
+        $selectedProduct = Products::whereIn('id', $userProductEntries->pluck('products_id'))->get();
+// dd($selectedProducts->count());
+
+        $products = Products::whereNotIn('id', $userProductEntries->pluck('products_id'))->get(); // Fetch all products
+
 
         // dd($selectedProduct); // Original debug line, commented out as part of the fix
 

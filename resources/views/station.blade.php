@@ -130,10 +130,14 @@
             {{-- Display Selected Product (New) --}}
             {{-- This can be shown for a specific station or globally if a product is selected --}}
             @if ($station->id == 5 && $selectedProduct !== null) {{-- Or add a specific station condition e.g., $station->id == X && ... --}}
-                <div class="selected-product p-3 rounded bg-light w-75 mx-auto mt-3 border">
-                      <p class="mb-1 fw-bold">Your Selected Product:</p>
-                      <p class="selected-id">{{ $selectedProduct->name }}</p>
-                </div>
+
+                    <div class="selected-product p-3 rounded bg-light w-75 mx-auto mt-3 border">
+                        <p class="mb-1 fw-bold">Your Selected Product:</p>
+                        @foreach ($selectedProduct as $product)
+                        <p class="selected-id">{{ $product->name }}</p>
+                @endforeach
+
+                    </div>
             @endif
 
             @if ($station->id == 6 && $selectedProduct !== null)
@@ -200,11 +204,12 @@
             });
         @endif
 
-        @if ($user != true && $station -> id == 5 && $selectedProduct == null)
+        @if ($user != true && $station -> id == 5 && count($selectedProduct) < 2)
                 document.addEventListener('DOMContentLoaded', function () {
                     $('#productSelectionModal').modal('show');
                 });
-            @endif
+        @endif
+
         const mainContent = document.getElementById('mainContent');
         const scannerContainer = document.getElementById('scannerContainer');
         var message = '';
@@ -432,6 +437,7 @@
                         product_id: productIdValue
                     },
                     success: function(response) {
+                        location.reload(); // Reload the page to reflect changes
                         console.log('Product ID saved successfully:', response);
 
                         selectedProductId = productIdValue;

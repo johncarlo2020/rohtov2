@@ -438,6 +438,16 @@ ol {
         box-shadow: 0 0 0 5px #002f5f;
         position: absolute;
 
+
+        &.completed {
+           i {
+            background-color: #fff;
+            border-radius: 50%;
+            padding: 5px;
+            color : #40a355;
+           }
+        }
+
         &.station-1 {
             bottom: 21vw;
             left: 52vw;
@@ -477,10 +487,10 @@ ol {
 
     .start-pin {
         font-size: 7px;
-        color: #0889BD;
+        color: #0889bd;
         line-height: 28px;
         background-color: #fff;
-        box-shadow: 0 0 0 5px #0889BD;
+        box-shadow: 0 0 0 5px #0889bd;
 
         bottom: 39vw;
         left: 10vw;
@@ -510,9 +520,8 @@ ol {
         height: 0;
         border-left: 7px solid transparent;
         border-right: 7px solid transparent;
-        border-top: 12px solid #0889BD; /* Triangle pointer */
+        border-top: 12px solid #0889bd; /* Triangle pointer */
     }
-
 }
 
 .redeem {
@@ -522,6 +531,91 @@ ol {
     img {
         width: 100%;
         height: 100%;
+        object-fit: contain;
+    }
+}
+
+.station-page {
+    text-align: center;
+
+    .station-subheading {
+        font-size: 20px;
+        font-weight: bold;
+        color: $text;
+    }
+
+    .modal-body {
+        .station-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: $text;
+            margin-bottom: 20px;
+        }
+
+        i {
+            font-size: 50px;
+            color: #ffc700;
+           margin-bottom: 20px;
+        }
+    }
+    .station-image {
+        width: 100%;
+        height: 300px;
+        margin-bottom: 40px;
+        object-fit: cover;
+
+        &.station-img-2 {
+            object-fit: contain !important;
+        }
+    }
+    .camera-btn {
+        border: none;
+        background-color: #ffc700;
+        border-radius: 8px;
+        padding: 10px 20px;
+        color: $black;
+        font-size: 20px;
+        line-height: 1.2;
+
+        img {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+        }
+    }
+}
+
+.text-yellow {
+    color: #ffc700;
+}
+
+.stafSelection {
+    margin-top: -70px;
+    position: relative;
+    z-index: 999;
+
+
+    p {
+        font-weight: bold;
+    }
+}
+
+
+.small-logo {
+    width: 100%;
+    height: 20px;
+    object-fit: contain;
+}
+
+
+.selected-staff {
+  box-shadow: 0 0 10px rgba(255, 199, 0, 0.5);
+}
+
+.pledge-answer {
+    img {
+        width: 100%;
+        height: auto;
         object-fit: contain;
     }
 }

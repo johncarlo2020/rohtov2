@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use App\Models\UserAppointment;
 use Illuminate\Http\Request;
 use App\Models\Station;
@@ -11,12 +12,14 @@ use App\Models\Brand;
 use App\Models\Vote;
 use App\Models\Task;
 use App\Models\UserTask;
+use App\Models\Staff;
+use App\Models\Products; // Added for product selection
+use App\Models\UserProducts; // Added for saving to user_products table
 
 use App\Models\Appointment;
 use App\Events\babyEvent;
 
 use DB;
-use Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Session;
@@ -69,7 +72,34 @@ class StationController extends Controller
             $station->status = $userHasStation;
         }
 
-        return view('map', compact('stations', 'stationDone'));
+           $appointments = Appointment::withCount('userAppointments')
+        ->get()
+        ->map(function ($appointment) {
+            $available = max(0, $appointment->total - $appointment->user_appointments_count);
+            $appointment->available_slots = $available;
+            $appointment->status = $available === 0 ? 'full' : 'available';
+            return $appointment;
+        });
+
+        $is2000 = User::where('otp_verified', 1)
+        ->orderBy('email_verified_at', 'asc')
+        ->take(2000)
+        ->pluck('id')
+        ->contains(auth()->id());
+
+        $userAppointment = $user->userAppointments()->count();
+        $selectedAppointment = $user->userAppointments()->with('appointment')->first() ?? '';
+        $convertedDate = '';
+        if ($selectedAppointment && isset($selectedAppointment->appointment->name)) {
+            try {
+                $convertedDate = Carbon::createFromFormat('m-d-Y', $selectedAppointment->appointment->name)->format('l');
+            } catch (\Exception $e) {
+                // Handle potential parsing errors, e.g., log or set a default
+                $convertedDate = 'Invalid Date';
+            }
+        }
+
+        return view('map', compact('stations', 'stationDone', 'appointments', 'is2000', 'userAppointment', 'selectedAppointment', 'convertedDate', 'user'));
     }
 
     public function tasksComplete(Request $request)
@@ -463,24 +493,88 @@ class StationController extends Controller
 
     public function index(Station $station)
     {
+
+        $stationDescription = [
+            1 => 'Experience the ocean’s wonder—and the urgent reality beneath the waves',
+            2 => 'Drop off your used plastics here and discover how they’re transformed — not just recycled, but upcycled',
+            3 => 'Experience a personalised skin consultation and begin your journey to radiant skin',
+            4 => 'Experience a moment of indulgence — nourishing your skin with rich almond oil for a smoother body, softer skin, and a soothed sense',
+            5 => 'Experience a personalised hair and scalp analysis designed to uncover your unique needs',
+            6 => 'Redeem your complimentary 5-piece sample kit— beauty essentials crafted with care for a conscious choice',
+        ];
+
+
+        $selectedStationDescription = $stationDescription[$station->id];
+
         $user = StationUser::where('user_id', auth()->id())
             ->where('station_id', $station->id)
             ->exists();
+
         if ($station->id == 9 && $user == true) {
             return view('congrats');
         }
 
-        if($station->id == 2 && $user == true) {
-            return view('station', compact('station', 'user'));
+        // It seems there was a logic issue here. If station is 2 and user is true,
+        // we still need to pass all relevant data for the station view.
+        // The original code would only pass station and user, missing descriptions, staff, products etc.
+        // Let's ensure all necessary data is passed regardless of this specific condition if it renders the same 'station' view.
+
+        $stafs = Staff::all();
+        $selectedStaff = Staff::find(Auth::user()->staff_id);
+
+        $products = Products::all(); // Fetch all products
+
+        // Fetch user's selected product from user_products table
+        // The user might have multiple entries in UserProducts if they change their selection.
+        // We'll take the latest one based on creation order.
+        $userProductEntry = UserProducts::where('user_id', Auth::id())->latest()->first();
+        $selectedProduct = null;
+        if ($userProductEntry) {
+            // Now fetch the product details from the Products table using products_id
+            $selectedProduct = Products::find($userProductEntry->products_id);
         }
 
-        if ($station->id != 2 ) {
-            return view('station', compact('station', 'user'));
-        }else {
-            return view('station2', compact('station', 'user'));
-        }
+        // dd($selectedProduct); // Original debug line, commented out as part of the fix
 
+        return view('station', compact(
+            'station',
+            'user',
+            'selectedStationDescription',
+            'stafs',
+            'selectedStaff',
+            'products',         // Pass products to the view
+            'selectedProduct'   // Pass selected product to the view
+        ));
     }
+
+    public function saveStaff(Request $request)
+    {
+       // save staff_id on user table
+        $user = Auth::user();
+        $user->staff_id = $request->staff_id;
+        $user->save();
+
+        return response()->json(['message' => 'Staff saved successfully']);
+    }
+
+    // New method to save product selection
+    public function saveProduct(Request $request)
+    {
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+        ]);
+
+        $user = Auth::user();
+
+        // Save to user_products table
+        UserProducts::create([
+            'user_id' => $user->id,
+            'products_id' => $request->product_id,
+        ]);
+
+        return response()->json(['message' => 'Product saved successfully']);
+    }
+
     public function extension(Station $station)
     {
         return view('extension');

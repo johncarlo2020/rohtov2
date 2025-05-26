@@ -103,7 +103,13 @@ class StationController extends Controller
             }
         }
 
-        return view('map', compact('canStation6','stations', 'stationDone', 'appointments', 'is2000', 'userAppointment', 'selectedAppointment', 'convertedDate', 'user'));
+        if (is_null(Auth::user()->staff_id)) {
+            $selectedStaff = 'no staff id selected';
+        } else {
+            $selectedStaff = Staff::find(Auth::user()->staff_id);
+        }
+
+        return view('map', compact('canStation6','stations', 'stationDone', 'appointments', 'is2000', 'userAppointment', 'selectedAppointment', 'convertedDate', 'user', 'selectedStaff'));
     }
 
     public function tasksComplete(Request $request)

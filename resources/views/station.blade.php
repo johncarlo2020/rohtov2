@@ -206,7 +206,7 @@
             });
         @endif
 
-        @if ($user != true && $station -> id == 5 && count($selectedProduct) < 2)
+        @if ($user != true && $station -> id == 5 && count($selectedProduct) < 1)
                 document.addEventListener('DOMContentLoaded', function () {
                     $('#productSelectionModal').modal('show');
                 });

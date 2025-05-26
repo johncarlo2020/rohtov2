@@ -501,6 +501,17 @@ ol {
         bottom: 28vw;
         left: 8vw;
         z-index: 999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .start-text {
+            font-size: 7px;
+            color: #0889bd;
+            line-height: 7px !important;
+            display: block;
+            margin: 0;
+        }
     }
 
     .map-pin::after {

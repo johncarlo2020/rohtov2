@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="content-box main-background px-3 d-flex flex-column min-vh-100 pt-5 pb-3">
+    <div class="content-box main-background px-3 d-flex flex-column min-vh-100 pt-5">
         <div class="container mb-5">
             <div>
                 @include('components.branding')
@@ -108,7 +108,7 @@
                                 @include('components.branding')
                             </div>
                         </div>
-                        <p class="text-center">Flash your QR code at the Redemption Counter upon completing the Ocean or
+                        <p class="text-center">Flash your QR code at the Redemptiwon Counter upon completing the Ocean or
                             Plastic Roadshow Journey (5 stations) for verification.</p>
                         <div class="qr d-flex justify-content-center"></div>
                         <p class="text-center mt-4"><span

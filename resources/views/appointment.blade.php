@@ -71,43 +71,116 @@
                     <button type="button" id="submitDate" class="button button-primary w-100">Submit</button>
                 </div>
         </div>
+        @if($is2000 == 1 || $user->type=='pre-reg')
+            @if($is2000 == 1)
+                <div id="qrContainer" class=" bg-white p-3 rounded d-none">
+                    <div class="text-center mb-2 px-1">
+                        <h2 class="heading-text text-center mb-2">Congratulations, {{auth()->user()->fname}}!</h2>
+                        <p class="pharagraph-text text-center">You’re among the first 1,000 sign-ups and eligible to redeem our
+                            exclusive Upcycled Marine Phone Charm!</p>
+                        <br>
+                        <p>Kindly present this QR code at the redemption counter</p>
+                    </div>
+                    <div id="qrCode" class="qr-code mb-3">
+
+                    </div>
+
+                    <p class="sub-heading-text text-center mb-0">Date selected: <span id="selected-date">{{
+                            $selectedAppointment->appointment->name ?? '' }}</span>, {{ $convertedDate }} <br /> Venue: IOI City Mall,
+                        Putrajaya – West Court on Ground Floor</p>
+                    <div class="p-3">
+                        <p class="pharagraph-text mb-0"><Strong>Terms & Conditions</Strong></p>
+                        <br>
+                        <ol>
+                            <li class="pharagraph-text">Redemption of the Upcycled Phone Charm is only available upon completion of all
+                                five stations of the Ocean or Plastic
+                                Roadshow journey.</li> <br>
+                            <li class="pharagraph-text">Redemption is strictly limited to the selected date and stated venue. Attempts
+                                to redeem on any other date or location
+                                will not be accepted under any circumstances.
+                            </li> <br>
+                            <li class="pharagraph-text">Redemption must be made in person by the registered participant. It is
+                                non-transferable and cannot be exchanged for
+                                cash, products, or services.</li>
+                        </ol>
+                        <div class="button-container">
+                            <a id="homeButton" href="{{ route('preRegEvent') }}" class="button button-primary w-100 mb-2">
+                                Home
+                            </a>
+
+                            <button type="button" class="button button-secondary w-100" @disabled(!is_object($selectedAppointment) ||
+                                ($selectedAppointment->rescheduled == 1)) data-bs-toggle="modal"
+                                data-bs-target="#exampleModal">
+                                Reschedule
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            @else
+                <div id="qrContainer" class=" bg-white p-3 rounded d-none">
+                    <div class="text-center mb-2 px-1">
+                        <h2 class="heading-text text-center mb-2">Thank you, {{auth()->user()->fname}}!</h2>
+                        <p class="pharagraph-text text-center">Your registration is now complete.
+                        You may collect your 5-piece Sample Kit on:</p>
+                    </div>
+                    <div id="qrCode" class="qr-code mb-3 d-none">
+
+                    </div>
+                    <p class="sub-heading-text text-center mb-0">Date selected: <span id="selected-date">{{
+                            $selectedAppointment->appointment->name ?? '' }}</span>, {{ $convertedDate }} <br /> Venue: IOI City Mall,
+                        Putrajaya – West Court on Ground Floor</p>
+                    <div class="p-3">
+                        <p class="pharagraph-text text-center">We look forward to seeing you there!</p>
+                        <p class="pharagraph-text mb-0">Terms & Conditions</p>
+                        <br>
+                        <ol>
+                            <li class="pharagraph-text">Redemption of the Upcycled Phone Charm is only available upon completion of all
+                                five stations of the Ocean or Plastic
+                                Roadshow journey.</li> <br>
+                            <li class="pharagraph-text">Redemption is strictly limited to the selected date and stated venue. Attempts
+                                to redeem on any other date or location
+                                will not be accepted under any circumstances.
+                            </li> <br>
+                            <li class="pharagraph-text">Redemption must be made in person by the registered participant. It is
+                                non-transferable and cannot be exchanged for
+                                cash, products, or services.</li>
+                        </ol>
+                        <div class="button-container">
+                            <a id="homeButton" href="{{ route('preRegEvent') }}" class="button button-primary w-100 mb-2">
+                                Home
+                            </a>
+
+                            <button type="button" class="button button-secondary w-100" @disabled(!is_object($selectedAppointment) ||
+                                ($selectedAppointment->rescheduled == 1)) data-bs-toggle="modal"
+                                data-bs-target="#exampleModal">
+                                Reschedule
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+        @else
         <div id="qrContainer" class=" bg-white p-3 rounded d-none">
             <div class="text-center mb-2 px-1">
-                <h2 class="heading-text text-center mb-2">Congratulations, {{auth()->user()->fname}}!</h2>
-                <p class="pharagraph-text text-center">You’re among the first 1,000 sign-ups and eligible to redeem our exclusive Upcycled Marine Phone Charm!</p>
+                <h2 class="heading-text text-center mb-2">Thank you, {{auth()->user()->fname}}!</h2>
+                <p class="pharagraph-text text-center">Your registration is now complete.</p>
                 <br>
-                <p>Kindly present this QR code at the  redemption counter</p>
-            </div>
-            <div id="qrCode" class="qr-code mb-3">
+                <h1 class="pharagraph-text text-center" style="font-weight: bold;">Get ready to begin your immersive Ocean or Plastic Roadshow journey — where every step brings you closer to understanding
+                your impact and making a difference for our oceans.</h1>
+                <p class="pharagraph-text text-center">Complete the journey to redeem your complimentary 5-piece sample kit as a thank you for choosing to care.</p>
 
             </div>
 
-            <p class="sub-heading-text text-center mb-0">Date selected: <span id="selected-date">{{ $selectedAppointment->appointment->name ?? '' }}</span>, {{ $convertedDate }} <br/> Venue: IOI City Mall,
-                Putrajaya – West Court on Ground Floor</p>
             <div class="p-3">
-                <p class="pharagraph-text mb-0"><Strong>Terms & Conditions</Strong></p>
-                <br>
-                <ol>
-                    <li class="pharagraph-text">Redemption of the Upcycled Phone Charm is only available upon completion of all five stations of the Ocean or Plastic
-                    Roadshow journey.</li> <br>
-                    <li class="pharagraph-text">Redemption is strictly limited to the selected date and stated venue. Attempts to redeem on any other date or location
-                    will not be accepted under any circumstances.
-                    </li> <br>
-                    <li class="pharagraph-text">Redemption must be made in person by the registered participant. It is non-transferable and cannot be exchanged for
-                    cash, products, or services.</li>
-                </ol>
-                    <div class="button-container">
-                        <a id="homeButton" href="{{ route('preRegEvent') }}" class="button button-primary w-100 mb-2">
-                            Home
-                        </a>
-
-                      <button type="button" class="button button-secondary w-100" @disabled(!is_object($selectedAppointment) || ($selectedAppointment->rescheduled == 1)) data-bs-toggle="modal"
-                            data-bs-target="#exampleModal">
-                            Reschedule
-                        </button>
-                    </div>
+                <div class="button-container">
+                    <a id="homeButton" href="{{ route('preRegEvent') }}" class="button button-primary w-100 mb-2">
+                        Home
+                    </a>
+                </div>
             </div>
         </div>
+        @endif
 
          <div class="footer-container p-4 mt-auto">
             @include('components.footer')
@@ -210,27 +283,49 @@
 
    <script>
         document.addEventListener('DOMContentLoaded', function() {
-            @if ($is2000 == 1)
-                const url = "{{ env('APP_URL') }}user?id={{ $user->id }}";
-            generateQRCode(url);
-            @endif
+            //if user is pre-reg or first 2000 users
+            @if ($is2000 == 1 || $user->type=='pre-reg')
+                @if($is2000>=0)
+                    document.getElementById('qrContainer').classList.remove('d-none');
+                    setTimeout(() => {
+                        document.getElementById('qrContainer').classList.add('fade-in');
+                    }, 100);
+                @endif
 
-            @if ($userAppointment > 0)
-                document.getElementById('qrContainer').classList.remove('d-none');
+                const url = "{{ env('APP_URL') }}user?id={{ $user->id }}";
+
+                generateQRCode(url);
+
+                // Show QR container and hide date form
+                @if ($userAppointment > 0)
+                    document.getElementById('qrContainer').classList.remove('d-none');
                 setTimeout(() => {
                     document.getElementById('qrContainer').classList.add('fade-in');
                 }, 100);
                 document.getElementById('dateForm').classList.add('d-none');
-                @if($selectedAppointment -> rescheduled == 1)
-                    document.getElementById('reschedule').classList.add('d-none');
-                @endif
-            @else
+
+                    // If the appointment is rescheduled, hide the reschedule button
+                    @if ($selectedAppointment -> rescheduled == 1)
+                        document.getElementById('reschedule').classList.add('d-none');
+                    @endif
+                @else
+
+                // If the user has not selected an appointment, show the date form
                 document.getElementById('qrContainer').classList.add('d-none');
                 document.getElementById('dateForm').classList.remove('d-none');
                 setTimeout(() => {
                     document.getElementById('dateForm').classList.add('fade-in');
                 }, 100);
+                @endif
+                // If the user has selected an appointment, show the QR code
+            @else
+                document.getElementById('qrContainer').classList.remove('d-none');
+                setTimeout(() => {
+                    document.getElementById('qrContainer').classList.add('fade-in');
+                }, 100);
             @endif
+
+
 
             document.querySelectorAll('.date-radio-input').forEach(function (input) {
                 input.addEventListener('change', function () {

@@ -14,7 +14,7 @@
             width: 100px;
         }
     </style>
-    <div id="stationPage" class="station-page home content-box main-background d-flex flex-column min-vh-100 pt-5 pb-3">
+    <div id="stationPage" class="station-page home content-box main-background d-flex flex-column min-vh-100 pt-5">
         <div class="modal fade" id="scanCompleteModal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">

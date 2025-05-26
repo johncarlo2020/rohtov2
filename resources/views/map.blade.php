@@ -1,12 +1,13 @@
 <x-app-layout>
     <div class="content-box main-background px-3 d-flex flex-column min-vh-100 pt-5">
         <div class="container mb-4">
-            <div onclick="showStaffIdModal()">
+            <div ><a href="{{ route('preRegEvent') }}">
                 @include('components.branding')
+            </a>
             </div>
         </div>
         <div class="container mb-4">
-            <div class="station-logo">
+            <div class="station-logo" onclick="showStaffIdModal()">
                 <img id="station-branding" src="{{ asset('files/main/station_branding.webp') }}" alt="" />
             </div>
         </div>
@@ -43,7 +44,13 @@
             @endforeach
         </div>
         <div class="redeem mb-1">
+            @if($is2000 == true)
             <img onclick="showDateModal()" src="{{ asset('files/main/Loccitane Gift.webp') }}" alt="" />
+
+            @else
+            <img  src="{{ asset('files/main/Loccitane Gift.webp') }}" alt="" />
+
+            @endif
         </div>
         <!-- Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

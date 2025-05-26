@@ -15,7 +15,7 @@ use App\Models\UserTask;
 use App\Models\Staff;
 use App\Models\Products; // Added for product selection
 use App\Models\UserProducts; // Added for saving to user_products table
-
+use Illuminate\Support\Str;
 use App\Models\Appointment;
 use App\Events\babyEvent;
 
@@ -779,6 +779,25 @@ class StationController extends Controller
 
             if($request->station == 7){
 
+                $qrMessage = $request->qrCodeMessage;
+
+                $expectedBase = env('APP_URL') . 'user?id=';
+
+                if (!Str::startsWith($qrMessage, $expectedBase)) {
+                    return response()->json([
+                        'message' => 'Invalid QR code. Please try again.',
+                        'status' => 'invalid'
+                    ], 200);
+                }
+
+                $check = StationUser::where('user_id', $station_id)->where('station_id', 7)->exists();
+                if ($check) {
+                    return response()->json([
+                        'message' => 'You have already redeemed this QR code.',
+                        'status' => 'already_redeemed'
+                    ], 200);
+                }
+
                 $stationUser = new StationUser();
                 $stationUser->user_id = $station_id;
                 $stationUser->station_id = $request->station;
@@ -790,8 +809,10 @@ class StationController extends Controller
                 $userAppointment->save();
                 DB::commit();
 
-                return response()->json(['message' => 'attended already', 'status' => 'success'], 401);
-
+                return response()->json([
+                    'message' => 'Successfully attended.',
+                    'status' => 'success'
+                ], 200);
             }
 
             if ($station_id != $request->station) {

@@ -27,25 +27,26 @@
     </div>
 </div>
 
-<!-- QR Code Modal -->
-<div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+<!-- Response Message Modal -->
+<div class="modal fade" id="responseModal" tabindex="-1" aria-labelledby="responseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="qrModalLabel">QR Code</h5>
+                <h5 class="modal-title" id="responseModalLabel">QR Scan Result</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body d-flex justify-content-center align-items-center">
-                <div id="qr-code" style="width: 256px; height: 256px"></div>
+            <div class="modal-body text-center">
+                <span id="responseMessage" class="fs-5"></span>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closeModal">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closeResponseModal">
                     Close
                 </button>
             </div>
         </div>
     </div>
 </div>
+
 
 <!-- QuaggaJS Library -->
 <script src="{{ asset('assets/js/core/bootstrap.min.js') }}"></script>
@@ -71,7 +72,6 @@
             qrCodeMessage => {
                 sendMessage(`${qrCodeMessage}`);
                 html5QrCode.stop();
-
             },
             errorMessage => {
                 console.log(`QR Code no longer in front of camera.`);
@@ -98,10 +98,22 @@
                     qrCodeMessage: message,
                     station: 7
                 },
-                success: function(response) {
-                    // Create a new canvas element for confetti
-                    location.reload();
+                success: function (response) {
+                    // You can customize this based on your actual response
+                    let message = '';
 
+                    if (response.status === 'success') {
+                        message = '✅ Scanned Successfully ';
+                    } else if (response.status === 'already_redeemed') {
+                        message = '⚠️ Already Redeemed';
+                    } else if (response.status === 'invalid') {
+                        message = '❌ Invalid QR';
+                    } else {
+                        message = 'ℹ️ Unknown response';
+                    }
+
+                    $("#responseMessage").text(message);
+                    $("#responseModal").modal('show');
                 },
                 error: function(xhr, status, error) {
 
@@ -109,7 +121,7 @@
             });
         }
 
-    $("#closeModal").on("click", function () {
+    $("#closeResponseModal").on("click", function () {
         location.reload(); // Refresh the page
     });
 </script>

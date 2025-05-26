@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="content-box main-background px-3 d-flex flex-column min-vh-100 pt-5">
-        <div class="container mb-5">
+        <div class="container mb-4">
             <div onclick="showStaffIdModal()">
                 @include('components.branding')
             </div>
@@ -10,11 +10,11 @@
                 <img id="station-branding" src="{{ asset('files/main/station_branding.webp') }}" alt="" />
             </div>
         </div>
-        <div class="pledge mb-5">
+        <div class="pledge mb-4">
             <img id="pledge-image" onclick="showModal()" src="{{ asset('files/main/ocean_or_platic.webp') }}"
                 alt="" />
         </div>
-        <div class="map mb-5">
+        <div class="map mb-3">
             <img class="map-img" src="{{ asset('files/main/Loccitane Map.webp') }}" alt="" />
             {{-- loop trough the $stations --}}
             <a class="map-pin start-pin">START</a>
@@ -42,7 +42,7 @@
 
             @endforeach
         </div>
-        <div class="redeem mb-5">
+        <div class="redeem mb-1">
             <img onclick="showDateModal()" src="{{ asset('files/main/Loccitane Gift.webp') }}" alt="" />
         </div>
         <!-- Modal -->

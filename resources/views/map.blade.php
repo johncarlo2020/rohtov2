@@ -18,7 +18,7 @@
         <div class="map mb-3">
             <img class="map-img" src="{{ asset('files/main/Loccitane Map.webp') }}" alt="" />
             {{-- loop trough the $stations --}}
-            <a class="map-pin start-pin">START</a>
+            <a class="map-pin start-pin"><span class="start-text">BEGIN HERE</span></a>
             @foreach ($stations as $station)
                 @if($canStation6 == false && $station->id == 6)
                 <a href="javascript:void(0);" class="map-pin station-{{ $station->id }} @if ($station->status == true) completed @endif"

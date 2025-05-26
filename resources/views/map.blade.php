@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="content-box main-background px-3 d-flex flex-column min-vh-100 pt-5">
         <div class="container mb-5">
-            <div>
+            <div onclick="showStaffIdModal()">
                 @include('components.branding')
             </div>
         </div>
@@ -138,6 +138,24 @@
             </div>
         </div>
 
+        <div class="modal fade" id="staffId" tabindex="-1" aria-labelledby="dateLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <a type="button" class="modal-close" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></a>
+                        <div class="container mb-3">
+                            <div>
+                                @include('components.branding')
+                            </div>
+                        </div>
+                        <p class="text-center py-4 fw-bold">{{ $selectedStaff }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
         <div class="footer-container p-0 mt-auto">
             @include('components.footer')
         </div>
@@ -146,6 +164,10 @@
     <script>
         let pledgeModalInstance; // Instance for the pledge modal (exampleModal)
         let dateModalInstance; // Instance for the date modal
+
+        function showStaffIdModal() {
+            $('#staffId').modal('show');
+        }
 
         function showDateModal() {
             const modalElement = document.getElementById('date');

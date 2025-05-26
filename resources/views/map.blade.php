@@ -148,7 +148,7 @@
                                 @include('components.branding')
                             </div>
                         </div>
-                        <p class="text-center py-4 fw-bold">{{ $selectedStaff->name }}</p>
+                        <p class="text-center py-4 fw-bold">{{ $selectedStaff }}</p>
                     </div>
                 </div>
             </div>

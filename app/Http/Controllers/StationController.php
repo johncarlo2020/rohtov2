@@ -106,7 +106,7 @@ class StationController extends Controller
         if (is_null(Auth::user()->staff_id)) {
             $selectedStaff = 'no staff id selected';
         } else {
-            $selectedStaff = Staff::find(Auth::user()->staff_id);
+            $selectedStaff = Staff::find(Auth::user()->staff_id)->name;
         }
 
         return view('map', compact('canStation6','stations', 'stationDone', 'appointments', 'is2000', 'userAppointment', 'selectedAppointment', 'convertedDate', 'user', 'selectedStaff'));

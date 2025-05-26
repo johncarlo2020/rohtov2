@@ -99,7 +99,10 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <a type="button" class="modal-close" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></a>
+                        <button type="button" class="modal-close" data-bs-dismiss="modal" aria-label="Close"
+                            style="background: none; border: none;">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
                         <div class="container mb-3">
                             <div>
                                 @include('components.branding')
@@ -227,7 +230,7 @@
                 const storedPledge = localStorage.getItem('userPledgeChoice');
                 if (pledgeImage) { // Ensure pledgeImage element exists
                     if (storedPledge === 'yes') {
-                        pledgeImage.src = "{{ asset('files/main/pledge.png') }}";
+                        pledgeImage.src = "{{ asset('files/main/pledge.webp') }}";
                     } else { // Covers 'no' or null/undefined, reverting to default
                         pledgeImage.src = "{{ asset('files/main/ocean_or_platic.webp') }}";
                     }
@@ -257,7 +260,7 @@
                         modalImgSrc = "{{ asset('files/main/yes.png') }}";
                         if (pledgeImage) {
                             pledgeImage.src =
-                                "{{ asset('files/main/pledge.png') }}"; // Update main page image
+                                "{{ asset('files/main/pledge.webp') }}"; // Update main page image
                         }
                     } else if (pledgeNoRadio && pledgeNoRadio.checked) {
                         choiceValue = 'no';

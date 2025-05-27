@@ -87,7 +87,7 @@ class StationController extends Controller
 
         $is2000 = User::where('otp_verified', 1)
         ->orderBy('email_verified_at', 'asc')
-        ->take(2000)
+        ->take(1800)
         ->pluck('id')
         ->contains(auth()->id());
 
@@ -207,7 +207,7 @@ class StationController extends Controller
 
         $is2000 = User::where('otp_verified', 1)
         ->orderBy('email_verified_at', 'asc')
-        ->take(2000)
+        ->take(1800)
         ->pluck('id')
         ->contains(auth()->id());
 

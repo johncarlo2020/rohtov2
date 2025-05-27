@@ -71,8 +71,7 @@
                     <button type="button" id="submitDate" class="button button-primary w-100">Submit</button>
                 </div>
         </div>
-        @if($is2000 == 1 || $user->type=='pre-reg')
-            @if($is2000 == 1)
+        @if($is2000 == 1)
                 <div id="qrContainer" class=" bg-white p-3 rounded d-none">
                     <div class="text-center mb-2 px-1">
                         <h2 class="heading-text text-center mb-2">Congratulations, {{auth()->user()->fname}}!</h2>
@@ -116,49 +115,6 @@
                         </div>
                     </div>
                 </div>
-            @else
-                <div id="qrContainer" class=" bg-white p-3 rounded d-none">
-                    <div class="text-center mb-2 px-1">
-                        <h2 class="heading-text text-center mb-2">Thank you, {{auth()->user()->fname}}!</h2>
-                        <p class="pharagraph-text text-center">Your registration is now complete.
-                        You may collect your 5-piece Sample Kit on:</p>
-                    </div>
-                    <div id="qrCode" class="qr-code mb-3 d-none">
-
-                    </div>
-                    <p class="sub-heading-text text-center mb-0">Date selected: <span id="selected-date">{{
-                            $selectedAppointment->appointment->name ?? '' }}</span>, {{ $convertedDate }} <br /> Venue: IOI City Mall,
-                        Putrajaya – West Court on Ground Floor</p>
-                    <div class="p-3">
-                        <p class="pharagraph-text text-center">We look forward to seeing you there!</p>
-                        <p class="pharagraph-text mb-0">Terms & Conditions</p>
-                        <br>
-                        <ol>
-                            <li class="pharagraph-text">Redemption of the Upcycled Phone Charm is only available upon completion of all
-                                five stations of the Ocean or Plastic
-                                Roadshow journey.</li> <br>
-                            <li class="pharagraph-text">Redemption is strictly limited to the selected date and stated venue. Attempts
-                                to redeem on any other date or location
-                                will not be accepted under any circumstances.
-                            </li> <br>
-                            <li class="pharagraph-text">Redemption must be made in person by the registered participant. It is
-                                non-transferable and cannot be exchanged for
-                                cash, products, or services.</li>
-                        </ol>
-                        <div class="button-container">
-                            <a id="homeButton" href="{{ route('preRegEvent') }}" class="button button-primary w-100 mb-2">
-                                Home
-                            </a>
-
-                            <button type="button" class="button button-secondary w-100" @disabled(!is_object($selectedAppointment) ||
-                                ($selectedAppointment->rescheduled == 1)) data-bs-toggle="modal"
-                                data-bs-target="#exampleModal">
-                                Reschedule
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            @endif
 
         @else
         <div id="qrContainer" class=" bg-white p-3 rounded d-none">
@@ -166,9 +122,9 @@
                 <h2 class="heading-text text-center mb-2">Thank you, {{auth()->user()->fname}}!</h2>
                 <p class="pharagraph-text text-center">Your registration is now complete.</p>
                 <br>
-                <h1 class="pharagraph-text text-center" style="font-weight: bold;">Get ready to begin your immersive Ocean or Plastic Roadshow journey — where every step brings you closer to understanding
-                your impact and making a difference for our oceans.</h1>
-                <p class="pharagraph-text text-center">Complete the journey to redeem your complimentary 5-piece sample kit as a thank you for choosing to care.</p>
+                <h1 class="pharagraph-text text-center">Start your Ocean or Plastic journey to explore the impact of everyday choices — and redeem your complimentary 5-piece
+                sample kit upon completion.</h1>
+                <p class="pharagraph-text text-center">Let’s take a step toward a cleaner ocean, together.</p>
 
             </div>
 

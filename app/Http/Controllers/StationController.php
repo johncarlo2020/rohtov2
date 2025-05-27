@@ -210,6 +210,7 @@ class StationController extends Controller
         ->take(1800)
         ->pluck('id')
         ->contains(auth()->id());
+        // dd($is2000);
 
         $userAppointment = $user->userAppointments()->count();
         $selectedAppointment = $user->userAppointments()->with('appointment')->first() ?? '';

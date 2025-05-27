@@ -781,7 +781,11 @@ class StationController extends Controller
 
                 $qrMessage = $request->qrCodeMessage;
 
+
                 $expectedBase = env('APP_URL') . 'user?id=';
+                if (Str::startsWith($qrMessage, $expectedBase)) {
+                    $id = Str::after($qrMessage, $expectedBase);
+                }
 
                 if (!Str::startsWith($qrMessage, $expectedBase)) {
                     return response()->json([
@@ -790,7 +794,7 @@ class StationController extends Controller
                     ], 200);
                 }
 
-                $check = StationUser::where('user_id', $station_id)->where('station_id', 7)->exists();
+                $check = StationUser::where('user_id', $id)->where('station_id', 7)->exists();
                 if ($check) {
                     return response()->json([
                         'message' => 'You have already redeemed this QR code.',
@@ -799,12 +803,12 @@ class StationController extends Controller
                 }
 
                 $stationUser = new StationUser();
-                $stationUser->user_id = $station_id;
+                $stationUser->user_id = $id;
                 $stationUser->station_id = $request->station;
                 $stationUser->time_spent = 0;
                 $stationUser->save();
 
-                $userAppointment = UserAppointment::where('user_id', $station_id)->where('is_attended', 0)->first();
+                $userAppointment = UserAppointment::where('user_id', $id)->where('is_attended', 0)->first();
                 $userAppointment->is_attended = 1;
                 $userAppointment->save();
                 DB::commit();

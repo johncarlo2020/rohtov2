@@ -39,7 +39,20 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('admin');
+            $user = Auth::user();
+
+            if ($user->can('full')) {
+                return redirect()->intended('admin');
+            }
+
+            if ($user->can('view')) {
+                return redirect()->intended('admin/scanner');
+            }
+
+            Auth::logout();
+            return redirect()->route('login')->withErrors([
+                'email' => 'You do not have the required permissions.',
+            ]);
         }
 
         return back()->withErrors([

@@ -8,7 +8,7 @@
     </style>
     <div class="mt-4 row">
         <div class="mb-4 col-lg-12 mb-lg-0">
-            <div class="card">
+            <div class="card p-3">
                 <div class="p-3 pb-0 card-header">
                     <div class="d-flex justify-content-between">
                         <h6 class="mb-2">Customer</h6>

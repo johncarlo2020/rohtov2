@@ -1,5 +1,6 @@
 <x-app-layout>
     <div class="content-box main-background px-3 d-flex flex-column min-vh-100 pt-5">
+        <a href="{{route('preRegEvent')}}" class="go-home"><i class="fa-solid fa-house"></i></a>
         <div class="container mb-4">
             <div ><a href="{{ route('preRegEvent') }}">
                 @include('components.branding')

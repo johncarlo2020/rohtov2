@@ -633,3 +633,22 @@ ol {
         object-fit: contain;
     }
 }
+
+.go-home {
+    position: absolute;
+    top: 42px;
+    left: 20px;
+
+    z-index: 999;
+    width: 40px;
+    height: 40px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    color: #d39e00;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}

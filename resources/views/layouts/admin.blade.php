@@ -60,6 +60,8 @@
         <hr class="horizontal dark mt-0" />
         <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
             <ul class="navbar-nav">
+                @canany(['full'])
+
                 <li class="nav-item">
                     <a class="nav-link  w-100 {{ request()->routeIs('admin') ? 'active' : '' }}" href="{{ route('admin') }}">
                         <div
@@ -69,6 +71,9 @@
                         <span class="nav-link-text ms-1">Dashboard</span>
                     </a>
                 </li>
+                @endcan
+                @canany(['full'])
+
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('users') ? 'active' : '' }}" href="{{ route('users') }}">
                         <div
@@ -78,6 +83,10 @@
                         <span class="nav-link-text ms-1">Users</span>
                     </a>
                 </li>
+                @endcan
+
+                @canany(['view', 'full'])
+
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('ambient') ? 'active' : '' }}" href="{{ route('ambient') }}">
                         <div
@@ -87,6 +96,9 @@
                         <span class="nav-link-text ms-1">Ambient Display</span>
                     </a>
                 </li>
+                @endcan
+
+                @canany(['view', 'full'])
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('embark') ? 'active' : '' }}" href="{{ route('embark') }}">
                         <div
@@ -96,6 +108,9 @@
                         <span class="nav-link-text ms-1">Embark Journey</span>
                     </a>
                 </li>
+                @endcan
+
+                @canany(['view', 'full'])
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('scanner') ? 'active' : '' }}" href="{{ route('scanner') }}">
                         <div
@@ -105,6 +120,7 @@
                         <span class="nav-link-text ms-1">Scanner</span>
                     </a>
                 </li>
+                @endcan
             </ul>
         </div>
     </aside>

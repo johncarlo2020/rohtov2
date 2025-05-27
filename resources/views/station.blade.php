@@ -394,15 +394,7 @@
                         staff_id: staffIdValue // Use the obtained staff ID
                     },
                     success: function(response) {
-                        console.log('Staff ID saved successfully:', response);
-                        $('#staffSelectionModal').modal('hide');
-                        selectedStaffId = staffIdValue; // Store staff ID globally
-                        selectedStaffName = staffNameValue; // Store staff name globally
-                        // Update static display for staff if it exists
-                        if ($('.selected-staff').length) {
-                            $('.selected-staff .selected-id').text(selectedStaffName);
-                            $('.selected-staff').removeClass('d-none'); // Make it visible if it was hidden
-                        }
+                        location.reload(); // Reload the page to reflect changes
                     },
                     error: function(xhr, status, error) {
                         console.error('Error saving staff ID:', xhr.responseText);

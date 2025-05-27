@@ -19,7 +19,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('assets/img/apple-icon.png') }}" />
-    <link rel="icon" type="image/png" href="images/logo.svg" />
+    <link rel="icon" type="image/png" href="{{ asset('files/main/logo.webp') }}" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <title>Ocean or Plastic</title>
     <!--     Fonts and icons     -->
@@ -29,7 +29,6 @@
     <link href="{{ asset('assets/css/nucleo-svg.css') }}" rel="stylesheet" />
 
     <!-- Font Awesome Icons -->
-    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
     <link href="{{ asset('assets/css/nucleo-svg.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
@@ -54,7 +53,7 @@
             <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
                 aria-hidden="true" id="iconSidenav"></i>
             <a class="navbar-brand m-0" href="" target="_blank">
-                <img src="{{ asset('images/logo-large.png') }}" class="navbar-brand-img h-100" alt="main_logo" />
+                <img src="{{ asset('files/main/logo.webp') }}" class="navbar-brand-img h-100" alt="main_logo" />
             </a>
         </div>
         <hr class="horizontal dark mt-0" />

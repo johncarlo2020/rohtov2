@@ -122,6 +122,7 @@
                 selectedTaskId = $(this).data('task-id');
                 selectedUserId = $(this).data('user-id');
                 $('#modal-task-image').attr('src', $(this).data('image'));
+                console.log('Selected Task ID:', selectedTaskId);
                 new bootstrap.Modal(document.getElementById('taskImageModal')).show();
             });
 

@@ -8,13 +8,20 @@
     </style>
     <div class="mt-4 row">
         <div class="mb-4 col-lg-12 mb-lg-0">
-            <div class="card">
+            <div class="card p-3">
                 <div class="p-3 pb-0 card-header">
                     <div class="d-flex justify-content-between">
                         <h6 class="mb-2">Customer</h6>
                     </div>
                 </div>
-                <div class="table-responsive">
+                <!-- Loader shown while DataTable initializes -->
+                <div id="table-loader" class="text-center my-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <!-- Container hidden until DataTable init completes -->
+                <div id="table-container" class="table-responsive" style="display:none;">
                     <table id="customer-table" class="display nowrap" style="width:100%">
                         <thead>
                             <tr>
@@ -81,12 +88,13 @@
             responsive: true,
             dom: "<'row'<'col-sm-12 col-md-3'l><'col-sm-6 col-md-6 align-items-end'B><'col-sm-12 col-md-3'f>>" +
                 "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
-            buttons: [
-                'copy', 'csv', 'excel', 'pdf', 'print'
-            ],
-            order: [
-                [0, 'desc']
-            ]
+            buttons: [ 'copy', 'csv', 'excel', 'pdf', 'print' ],
+            order: [ [0, 'desc'] ],
+            initComplete: function () {
+                // Hide loader and display table container when initialized
+                $('#table-loader').hide();
+                $('#table-container').show();
+            }
         });
 
 

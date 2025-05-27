@@ -14,13 +14,20 @@
 
     <div class="mt-4 row">
         <div class="mb-4 col-lg-12 mb-lg-0">
-            <div class="card">
+            <div class="card p-3">
                 <div class="p-3 pb-0 card-header">
                     <div class="d-flex justify-content-between">
                         <h6 class="mb-2">Customer Tasks</h6>
                     </div>
                 </div>
-                <div class="table-responsive">
+                <!-- Loader shown while DataTable initializes -->
+                <div id="table-loader" class="text-center my-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <!-- Container hidden until DataTable init completes -->
+                <div id="table-container" class="table-responsive" style="display:none;">
                     <table id="customer-table" class="display nowrap" style="width:100%">
                         <thead>
                             <tr>
@@ -108,7 +115,12 @@
                 "<'row'<'col-sm-12'tr>>" +
                 "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
             buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
-            order: [[0, 'desc']]
+            order: [[0, 'desc']],
+            initComplete: function () {
+                // Hide loader and show table container when ready
+                $('#table-loader').hide();
+                $('#table-container').show();
+            }
         });
 
         $('.dataTables_filter').addClass('float-start');
@@ -118,10 +130,12 @@
             let selectedTaskId = null;
             let selectedUserId = null;
 
-            $('.clickable-image').on('click', function () {
+            // Delegate click event to handle images rendered by DataTables
+            $('#customer-table tbody').on('click', '.clickable-image', function () {
                 selectedTaskId = $(this).data('task-id');
                 selectedUserId = $(this).data('user-id');
                 $('#modal-task-image').attr('src', $(this).data('image'));
+                console.log('Selected Task ID:', selectedTaskId);
                 new bootstrap.Modal(document.getElementById('taskImageModal')).show();
             });
 

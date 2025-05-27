@@ -118,7 +118,8 @@
             let selectedTaskId = null;
             let selectedUserId = null;
 
-            $('.clickable-image').on('click', function () {
+            // Delegate click event to handle images rendered by DataTables
+            $('#customer-table tbody').on('click', '.clickable-image', function () {
                 selectedTaskId = $(this).data('task-id');
                 selectedUserId = $(this).data('user-id');
                 $('#modal-task-image').attr('src', $(this).data('image'));

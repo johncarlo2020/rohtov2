@@ -302,10 +302,6 @@
             e.preventDefault();
 
             const file = fileUpload.files[0];
-            if (!file) {
-                alert('Please select an image before submitting.');
-                return;
-            }
 
             const formData = new FormData(form);
             fetch("{{ route('upload.image') }}", {

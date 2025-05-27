@@ -116,7 +116,9 @@
                     $("#responseModal").modal('show');
                 },
                 error: function(xhr, status, error) {
-
+                    console.error('Error:', error);
+                    $("#responseMessage").text('❌ An error occurred while processing the QR code.');
+                    $("#responseModal").modal('show');
                 }
             });
         }

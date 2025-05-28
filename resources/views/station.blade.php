@@ -15,9 +15,10 @@
         }
     </style>
     <div id="stationPage" class="station-page home content-box main-background d-flex flex-column min-vh-100 pt-5">
-        <div class="modal fade" id="scanCompleteModal" tabindex="-1">
+        <div class="modal fade" data-bs-backdrop="static" id="scanCompleteModal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
+                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     <div class="modal-body">
                         <div class="text-center content">
                             <i class="fa-regular fa-circle-check text-yellow"></i>
@@ -37,9 +38,10 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="scanFailedModal" tabindex="-1">
+        <div class="modal fade" data-bs-backdrop="static" id="scanFailedModal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
+                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     <div class="modal-body">
                         <div class="text-center content">
                             <div class="text-content mt-0">
@@ -59,9 +61,10 @@
         </div>
 
         <!-- Staff Selection Modal -->
-        <div class="modal fade" id="staffSelectionModal" tabindex="-1" role="dialog" aria-labelledby="staffSelectionModalLabel" aria-hidden="true">
+        <div class="modal fade" data-bs-backdrop="static" id="staffSelectionModal" tabindex="-1" role="dialog" aria-labelledby="staffSelectionModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     <div class="modal-body">
                         <form id="staffForm">
                             <p class="fw-bold">Kindly have your Beauty Advisor to include their ID</p>
@@ -83,7 +86,7 @@
         </div>
 
         <!-- Product Selection Modal (New) -->
-        <div class="modal fade" id="productSelectionModal" tabindex="-1" role="dialog" aria-labelledby="productSelectionModalLabel" aria-hidden="true">
+        <div class="modal fade" data-bs-backdrop="static" id="productSelectionModal" tabindex="-1" role="dialog" aria-labelledby="productSelectionModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-body">

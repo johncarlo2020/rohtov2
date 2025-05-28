@@ -1002,12 +1002,13 @@ class StationController extends Controller
 
         foreach ($data['users'] as $user) {
             $userStations = $user->stationUser->pluck('station_id')->toArray();
+            $date = $user->created_at;
 
-            $user->stations = $stations->map(function ($station) use ($userStations, $averageTimespentByStation) {
+            $user->stations = $stations->map(function ($station) use ($userStations,$date, $averageTimespentByStation) {
                 return [
                     'name' => $station->name,
                     'id' => $station->id,
-                    'created_at' => $station->created_at,
+                    'created_at' => $date,
                     'value' => in_array($station->id, $userStations),
                 ];
             });

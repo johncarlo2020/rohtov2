@@ -1002,7 +1002,19 @@ class StationController extends Controller
 
         foreach ($data['users'] as $user) {
             $userStations = $user->stationUser->pluck('station_id')->toArray();
-            $date = $user->created_at;
+            $date = null;
+            foreach ($user->stationUser as $station) {
+                $date = $station->created_at;
+                // if($user->id == 2){
+                //     if($station->id == 19)
+                //     dd($station);
+                // }
+                // $stationId = $station->id;
+
+                // Now you can use $stationId and $createdAt as needed
+            }
+
+            // dd($date);
 
             $user->stations = $stations->map(function ($station) use ($userStations,$date, $averageTimespentByStation) {
                 return [

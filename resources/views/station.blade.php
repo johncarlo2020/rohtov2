@@ -18,7 +18,7 @@
         <div class="modal fade" data-bs-backdrop="static" id="scanCompleteModal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
-                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> --}}
                     <div class="modal-body">
                         <div class="text-center content">
                             <i class="fa-regular fa-circle-check text-yellow"></i>
@@ -41,7 +41,7 @@
         <div class="modal fade" data-bs-backdrop="static" id="scanFailedModal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
-                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> --}}
                     <div class="modal-body">
                         <div class="text-center content">
                             <div class="text-content mt-0">
@@ -61,15 +61,17 @@
         </div>
 
         <!-- Staff Selection Modal -->
-        <div class="modal fade" data-bs-backdrop="static" id="staffSelectionModal" tabindex="-1" role="dialog" aria-labelledby="staffSelectionModalLabel" aria-hidden="true">
+        <div class="modal fade" data-bs-backdrop="static" id="staffSelectionModal" tabindex="-1" role="dialog"
+            aria-labelledby="staffSelectionModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> --}}
                     <div class="modal-body">
                         <form id="staffForm">
                             <p class="fw-bold">Kindly have your Beauty Advisor to include their ID</p>
-                            <div class="form-group">
-                                <select class="form-select" id="floatingSelectStaff" name="staff_id" aria-label="Floating label select example">
+                            <div class="form-group mb-3">
+                                <select class="form-select" id="floatingSelectStaff" name="staff_id"
+                                    aria-label="Floating label select example">
                                     <option selected disabled value="">Select advisor ID</option>
                                     @if (isset($stafs))
                                         @foreach ($stafs as $staf)
@@ -78,7 +80,11 @@
                                     @endif
                                 </select>
                             </div>
-                            <button type="submit" class="button button-primary w-100" data-dismiss="modal" id="confirmStaffButton" disabled>Confirm</button>
+                            <button type="submit" class="button button-primary w-100 " data-dismiss="modal"
+                                id="confirmStaffButton" disabled>Confirm</button>
+                            <a href="{{ route('map') }}" class="button button-white mt-2 border-danger border text-danger w-100 text-center">
+                                Back
+                            </a>
                         </form>
                     </div>
                 </div>
@@ -86,23 +92,30 @@
         </div>
 
         <!-- Product Selection Modal (New) -->
-        <div class="modal fade" data-bs-backdrop="static" id="productSelectionModal" tabindex="-1" role="dialog" aria-labelledby="productSelectionModalLabel" aria-hidden="true">
+        <div class="modal fade" data-bs-backdrop="static" id="productSelectionModal" tabindex="-1" role="dialog"
+            aria-labelledby="productSelectionModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-body">
                         <form id="productForm">
                             <p class="fw-bold">Sample Selection</p>
                             <div class="form-group">
-                                <select class="form-select" id="floatingSelectProduct" name="product_id" aria-label="Floating label select example">
+                                <select class="form-select" id="floatingSelectProduct" name="product_id"
+                                    aria-label="Floating label select example">
                                     <option selected disabled value="">Select product</option>
                                     @if (isset($products))
                                         @foreach ($products as $product)
-                                            <option value="{{ $product->id }}">{{ $product->name }}</option> {{-- Assuming product has a 'name' attribute --}}
+                                            <option value="{{ $product->id }}">{{ $product->name }}</option>
+                                            {{-- Assuming product has a 'name' attribute --}}
                                         @endforeach
                                     @endif
                                 </select>
                             </div>
-                            <button type="submit" class="button button-primary w-100"  id="confirmProductButton" disabled>Confirm</button>
+                            <button type="submit" class="button button-primary w-100" id="confirmProductButton"
+                                disabled>Confirm</button>
+                                 <a href="{{ route('map') }}" class="button button-white border-danger border text-danger w-100 text-center">
+                                Back
+                            </a>
                         </form>
                     </div>
                 </div>
@@ -124,9 +137,9 @@
             {{-- Display Selected Staff --}}
             @if ($station->id == 3 && $selectedStaff !== null)
                 <div class="selected-staff p-3 rounded bg-white w-75 mx-auto mt-3">
-                      <img class="small-logo mb-2" src="{{ asset('files/main/logo.webp') }}" alt="" />
-                      <p class="mb-1 fw-bold">Your Beauty Advisor:</p>
-                      <p class="selected-id">{{ $selectedStaff->name }}</p>
+                    <img class="small-logo mb-2" src="{{ asset('files/main/logo.webp') }}" alt="" />
+                    <p class="mb-1 fw-bold">Your Beauty Advisor:</p>
+                    <p class="selected-id">{{ $selectedStaff->name }}</p>
                 </div>
             @endif
 
@@ -134,42 +147,45 @@
             {{-- This can be shown for a specific station or globally if a product is selected --}}
             @if ($station->id == 5 && $selectedProduct !== null) {{-- Or add a specific station condition e.g., $station->id == X && ... --}}
 
-                    <div class="selected-product p-3 rounded bg-light w-75 mx-auto mt-3 border">
-                        <p class="mb-1 fw-bold">Your Selected Product:</p>
-                        @foreach ($selectedProduct as $product)
+                <div class="selected-product p-3 rounded bg-light w-75 mx-auto mt-3 border">
+                    <p class="mb-1 fw-bold">Your Selected Product:</p>
+                    @foreach ($selectedProduct as $product)
                         <p class="selected-id">{{ $product->name }}</p>
-                @endforeach
+                    @endforeach
 
-                    </div>
+                </div>
             @endif
 
             @if ($station->id == 6 && $selectedProduct !== null)
                 <div class="selected-staff p-3 rounded bg-white w-75 mx-auto  mb-3">
-                      <img class="small-logo mb-2" src="{{ asset('files/main/logo.webp') }}" alt="" />
-                      <p class="mb-1 fw-bold">Personalised Hair Sample</p>
-                      @foreach ($selectedProduct as $product)
-                    <p class="selected-id">{{ $product->name }}</p>
+                    <img class="small-logo mb-2" src="{{ asset('files/main/logo.webp') }}" alt="" />
+                    <p class="mb-1 fw-bold">Personalised Hair Sample</p>
+                    @foreach ($selectedProduct as $product)
+                        <p class="selected-id">{{ $product->name }}</p>
                     @endforeach
                 </div>
             @endif
 
 
 
-            @if ($user != true && $station->id == 3) {{-- For Station 3, trigger staff modal --}}
-                <button id="start-scanner"  class="btn btn-info mx-auto mt-2 camera-btn" >
+            @if ($user != true && $station->id == 3)
+                {{-- For Station 3, trigger staff modal --}}
+                <button id="start-scanner" class="btn btn-info mx-auto mt-2 camera-btn">
                     <i class="fa-solid fa-camera"></i>
                 </button>
-            @elseif ($user != true && $station->id == 5) {{-- For Station 5, trigger product modal --}}
+            @elseif ($user != true && $station->id == 5)
+                {{-- For Station 5, trigger product modal --}}
                 <button id="start-scanner" type="button" class="btn btn-info mx-auto mt-2 camera-btn">
                     <i class="fa-solid fa-camera"></i>
                 </button>
-            @elseif ($user != true) {{-- For other stations when user is not logged in (and station is not 3 or 5) --}}
+            @elseif ($user != true)
+                {{-- For other stations when user is not logged in (and station is not 3 or 5) --}}
                 <button id="start-scanner" class="mx-auto mt-2 camera-btn">
                     <i class="fa-solid fa-camera"></i>
                 </button>
             @endif
 
-            </div>
+        </div>
         <div id="scannerContainer" class="scanner-container d-none">
             <!-- <button id="close" class="mx-auto mt-4 camera-btn">x</button> -->
             <div id="reader"></div>
@@ -203,16 +219,16 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
 
     <script>
-        @if ($user != true && $station -> id == 3 && $selectedStaff == null)
-        document.addEventListener('DOMContentLoaded', function () {
+        @if ($user != true && $station->id == 3 && $selectedStaff == null)
+            document.addEventListener('DOMContentLoaded', function() {
                 $('#staffSelectionModal').modal('show');
             });
         @endif
 
-        @if ($user != true && $station -> id == 5 && count($selectedProduct) < 1)
-                document.addEventListener('DOMContentLoaded', function () {
-                    $('#productSelectionModal').modal('show');
-                });
+        @if ($user != true && $station->id == 5 && count($selectedProduct) < 1)
+            document.addEventListener('DOMContentLoaded', function() {
+                $('#productSelectionModal').modal('show');
+            });
         @endif
 
         const mainContent = document.getElementById('mainContent');
@@ -324,14 +340,18 @@
                             const staffIdElement = $('.selected-staff .selected-id');
                             // Ensure the elements exist before trying to modify them
                             if (staffDisplayElement.length && staffIdElement.length) {
-                                staffIdElement.text(selectedStaffName ? selectedStaffName + ' (ID: ' + selectedStaffId + ')' : 'ID: ' + selectedStaffId);
+                                staffIdElement.text(selectedStaffName ? selectedStaffName + ' (ID: ' +
+                                    selectedStaffId + ')' : 'ID: ' + selectedStaffId);
                                 staffDisplayElement.removeClass('d-none');
                                 // Also update the static display if present
-                                if ($('.selected-staff').length && !$('.selected-staff').hasClass('d-none')){
-                                    $('.selected-staff .selected-id').text(selectedStaffName ? selectedStaffName : 'ID: ' + selectedStaffId);
+                                if ($('.selected-staff').length && !$('.selected-staff').hasClass('d-none')) {
+                                    $('.selected-staff .selected-id').text(selectedStaffName ?
+                                        selectedStaffName : 'ID: ' + selectedStaffId);
                                 }
                             } else {
-                                console.warn('.selected-staff or .selected-id element not found for station 3 display.');
+                                console.warn(
+                                    '.selected-staff or .selected-id element not found for station 3 display.'
+                                    );
                             }
                         } else {
                             // This case might occur if QR scan happens for station 3 without prior staff selection.
@@ -384,7 +404,8 @@
                 event.preventDefault(); // Prevent default form submission
 
                 var staffIdValue = $('#floatingSelectStaff').val(); // Get selected staff ID
-                var staffNameValue = $('#floatingSelectStaff option:selected').text(); // Get selected staff name
+                var staffNameValue = $('#floatingSelectStaff option:selected')
+            .text(); // Get selected staff name
                 var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
                 $.ajax({
@@ -425,7 +446,7 @@
                 var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
                 $.ajax({
-                    url: '{{ route("saveProduct") }}', // Ensure this route is defined in web.php
+                    url: '{{ route('saveProduct') }}', // Ensure this route is defined in web.php
                     type: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': csrfToken
@@ -458,17 +479,25 @@
                         console.log('Attempting to hide #productSelectionModal.');
 
                         var hiddenEventFired = false;
-                        $productModal.one('hidden.bs.modal', function () {
+                        $productModal.one('hidden.bs.modal', function() {
                             hiddenEventFired = true;
-                            console.log('#productSelectionModal hidden.bs.modal event fired.');
+                            console.log(
+                                '#productSelectionModal hidden.bs.modal event fired.'
+                                );
                             // Bootstrap should handle backdrop and body class, but double check
                             if ($('.modal-backdrop').length) {
-                                console.warn('Backdrop still present after hidden.bs.modal, removing.');
-                                $('.modal-backdrop').remove(); // Ensure backdrop is removed
+                                console.warn(
+                                    'Backdrop still present after hidden.bs.modal, removing.'
+                                    );
+                                $('.modal-backdrop')
+                            .remove(); // Ensure backdrop is removed
                             }
                             if ($('body').hasClass('modal-open')) {
-                                console.warn('body still has modal-open class after hidden.bs.modal, removing.');
-                                $('body').removeClass('modal-open'); // Ensure body class is removed
+                                console.warn(
+                                    'body still has modal-open class after hidden.bs.modal, removing.'
+                                    );
+                                $('body').removeClass(
+                                'modal-open'); // Ensure body class is removed
                             }
                         });
 
@@ -476,23 +505,34 @@
 
                         setTimeout(function() {
                             if (!hiddenEventFired) {
-                                console.warn('#productSelectionModal hidden.bs.modal event did NOT fire. Forcing cleanup.');
-                                if ($productModal.hasClass('show') || $productModal.is(':visible')) {
-                                    console.log('Modal still visible, applying manual hide steps.');
+                                console.warn(
+                                    '#productSelectionModal hidden.bs.modal event did NOT fire. Forcing cleanup.'
+                                    );
+                                if ($productModal.hasClass('show') || $productModal.is(
+                                        ':visible')) {
+                                    console.log(
+                                        'Modal still visible, applying manual hide steps.'
+                                        );
                                     $productModal.removeClass('show');
                                     $productModal.css('display', 'none');
                                     $productModal.attr('aria-hidden', 'true');
                                 }
                                 if ($('.modal-backdrop').length) {
-                                    console.log('Removing modal-backdrop manually due to timeout.');
+                                    console.log(
+                                        'Removing modal-backdrop manually due to timeout.'
+                                        );
                                     $('.modal-backdrop').remove();
                                 }
                                 if ($('body').hasClass('modal-open')) {
-                                    console.log('Removing modal-open from body manually due to timeout.');
+                                    console.log(
+                                        'Removing modal-open from body manually due to timeout.'
+                                        );
                                     $('body').removeClass('modal-open');
                                 }
                             } else {
-                                console.log('Modal hide process completed via hidden.bs.modal event.');
+                                console.log(
+                                    'Modal hide process completed via hidden.bs.modal event.'
+                                    );
                             }
                         }, 750); // Wait for animations (Bootstrap default is 300ms) + buffer
                     },

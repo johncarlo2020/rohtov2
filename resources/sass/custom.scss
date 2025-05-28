@@ -73,6 +73,11 @@ ol {
         background: $white;
         color: $black;
     }
+
+    &-danger {
+        background: $danger;
+        color: $white;
+    }
 }
 
 .button-text {

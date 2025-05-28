@@ -62,7 +62,7 @@
                                         @if($station['value'] && ($station['id'] == 6 || $station['id'] == 7))
                                             <br>
                                             <strong>Created At:</strong>
-                                        {{ $station['created_at'] ? \Carbon\Carbon::parse($station['created_at'])->format('d M h:i A') : 'N/A'}}
+                                        {{ $station['created_at'] ? \Carbon\Carbon::parse($station['created_at'])->format('M d') : 'N/A'}}
                                         @endif
                                     </td>
                                 @endforeach

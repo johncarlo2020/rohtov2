@@ -112,6 +112,20 @@ class StationController extends Controller
         return view('map', compact('canStation6','stations', 'stationDone', 'appointments', 'is2000', 'userAppointment', 'selectedAppointment', 'convertedDate', 'user', 'selectedStaff'));
     }
 
+    public function editUser(Request $request)
+    {
+        $user = User::find($request->id);
+
+        if ($user) {
+            $user->email = $request->email;
+            $user->save();
+
+            return response()->json(['success' => true, 'message' => 'User email updated successfully']);
+        }
+
+        return response()->json(['success' => false, 'message' => 'User not found'], 404);
+    }
+
     public function tasksComplete(Request $request)
     {
         $task = UserTask::updateOrCreate(

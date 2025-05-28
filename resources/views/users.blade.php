@@ -34,7 +34,7 @@
                             <th>Created At</th>
                             <th>Appointments</th> {{-- Add this --}}
                             @foreach ($data['stations'] as $station)
-                                <th>{{ $station['name'] }}</th>
+                                <th>{{ $station['name']['name'] }}</th>
                             @endforeach
                         </tr>
                     </thead>
@@ -59,6 +59,11 @@
                                 @foreach ($user['stations'] as $station)
                                     <td class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-danger' }}">
                                         {{ $station['value'] ? 'Yes' : 'No' }}
+                                        @if($station['value'] && ($station['id'] == 6 || $station['id'] == 7))
+                                            <br>
+                                            <strong>Created At:</strong>
+                                        {{ $station['created_at'] ? \Carbon\Carbon::parse($station['created_at'])->format('d M h:i A') : 'N/A'}}
+                                        @endif
                                     </td>
                                 @endforeach
                             </tr>

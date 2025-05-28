@@ -998,17 +998,22 @@ class StationController extends Controller
 
         $averageTimespentByStation = StationUser::select('station_id', \DB::raw('AVG(time_spent) as average_timespent'))->groupBy('station_id')->get()->keyBy('station_id');
 
-        $stations = Station::pluck('name', 'id');
+        $stations = Station::select('id', 'name', 'created_at')->get();
 
         foreach ($data['users'] as $user) {
             $userStations = $user->stationUser->pluck('station_id')->toArray();
-            $user->stations = $stations->map(function ($name, $id) use ($userStations, $averageTimespentByStation) {
+
+            $user->stations = $stations->map(function ($station) use ($userStations, $averageTimespentByStation) {
                 return [
-                    'name' => $name,
-                    'value' => in_array($id, $userStations),
+                    'name' => $station->name,
+                    'id' => $station->id,
+                    'created_at' => $station->created_at,
+                    'value' => in_array($station->id, $userStations),
                 ];
             });
         }
+
+        //  dd($data['users'][0]['stations']);
 
         $data['stations'] = $stations->map(function ($name, $id) use ($userStations, $averageTimespentByStation) {
             return [

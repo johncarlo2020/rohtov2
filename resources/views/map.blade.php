@@ -16,7 +16,7 @@
             <img id="pledge-image" onclick="showModal()" src="{{ asset('files/main/ocean_or_platic.webp') }}"
                 alt="" />
         </div>
-        <div class="map mb-3">
+        <div class="map mb-5">
             <img class="map-img" src="{{ asset('files/main/Loccitane Map.webp') }}" alt="" />
             {{-- loop trough the $stations --}}
             <a class="map-pin start-pin"><span class="start-text">BEGIN HERE</span></a>
@@ -44,7 +44,7 @@
 
             @endforeach
         </div>
-        <div class="redeem mb-1">
+        {{-- <div class="redeem mb-1">
             @if($is2000 == true)
             <img onclick="showDateModal()" src="{{ asset('files/main/Loccitane Gift.webp') }}" alt="" />
 
@@ -52,7 +52,7 @@
             <img  src="{{ asset('files/main/Loccitane Gift.webp') }}" alt="" />
 
             @endif
-        </div>
+        </div> --}}
         <!-- Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">

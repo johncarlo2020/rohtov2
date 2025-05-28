@@ -44,15 +44,11 @@
 
             @endforeach
         </div>
+        @if($is2000 == true)
         <div class="redeem mb-1">
-            @if($is2000 == true)
             <img onclick="showDateModal()" src="{{ asset('files/main/Loccitane Gift.webp') }}" alt="" />
-
-            @else
-            <img  src="{{ asset('files/main/Loccitane Gift.webp') }}" alt="" />
-
-            @endif
         </div>
+        @endif
         <!-- Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">

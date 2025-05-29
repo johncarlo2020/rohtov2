@@ -12,7 +12,7 @@
                     <img src="{{ asset('files/main/globe.webp') }}" alt="Sea Turtle" class="mb-3 turtle" />
                     <div>
                         <h2 class="heading-text mb-0">Be Part of The Change <br> & Get Rewarded</h2>
-                        <p class="sub-heading-text mb-2">Complete at least 3 of our 5 eco-challenges and earn a RM20 cash voucher (min. spend RM150).
+                        <p class="sub-heading-text mb-2">Complete at least 2 of our 5 eco-challenges and earn a RM20 cash voucher (min. spend RM150).
                         </p>
                         <p class="sub-heading-text mb-0">Redeem exclusively at our Ocean or Plastic Roadshow, IOI City Mall, 27 May - 2 June.
                         </p>
@@ -27,7 +27,7 @@
                     <p class="sub-heading-text-small fw-bold mb-0">Completed {{ $userDone }}/5</p>
                 </div>
                 <div class="mb-2 px-3">
-                    <p class="warning-text sub-heading-text-small small text-left mb-0">Note: Once you complete at least 3 tasks, kindly visit our Ocean Or Plastic roadshow for verification and voucher redemption.</p>
+                    <p class="warning-text sub-heading-text-small small text-left mb-0">Note: Once you complete at least 2 tasks, kindly visit our Ocean Or Plastic roadshow for verification and voucher redemption.</p>
                 </div>
             </div>
 

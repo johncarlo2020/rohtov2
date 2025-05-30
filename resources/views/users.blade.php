@@ -31,6 +31,9 @@
                             <th>Number</th>
                             <th>Country</th>
                             <th>UTM Source</th>
+                            <th>SMS</th>
+                            <th>Email</th>
+
                             <th>Created At</th>
                             <th>Appointments</th> {{-- Add this --}}
                             @foreach ($data['stations'] as $station)
@@ -47,6 +50,9 @@
                                 <td>{{ $user->number }}</td>
                                 <td>{{ $user->country }}</td>
                                 <td>{{ $user->utm_source }}</td>
+                                <td>{{ $user->sms_consent ? 'Yes':'No' }}</td>
+                                <td>{{ $user->email_consent ? 'Yes':'No' }}</td>
+
                                 <td>{{ $user->created_at ? \Carbon\Carbon::parse($user->created_at)->format('d M h:i A') : 'N/A' }}
                                 </td>
                                 <td>

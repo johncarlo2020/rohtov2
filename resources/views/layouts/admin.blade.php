@@ -21,7 +21,7 @@
     <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('assets/img/apple-icon.png') }}" />
     <link rel="icon" type="image/png" href="images/logo.svg" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <title>Ocean or Plastic</title>
+    <title>Admin page</title>
     <!--     Fonts and icons     -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
     <!-- Nucleo Icons -->
@@ -77,15 +77,15 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('ambient') ? 'active' : '' }}" href="{{ route('ambient') }}">
+                    <a class="nav-link {{ request()->routeIs('vote') ? 'active' : '' }}" href="{{ route('vote') }}">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
                         </div>
-                        <span class="nav-link-text ms-1">Ambient Display</span>
+                        <span class="nav-link-text ms-1">Vote</span>
                     </a>
                 </li>
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('embark') ? 'active' : '' }}" href="{{ route('embark') }}">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -93,7 +93,7 @@
                         </div>
                         <span class="nav-link-text ms-1">Embark Journey</span>
                     </a>
-                </li>
+                </li> --}}
             </ul>
         </div>
     </aside>

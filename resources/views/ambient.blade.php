@@ -5,38 +5,37 @@
         #customer-table tbody tr {
             cursor: pointer;
         }
+        .bottle-image {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+        }
     </style>
     <div class="mt-4 row">
         <div class="mb-4 col-lg-12 mb-lg-0">
-            <div class="card">
+            <div class="card px-3">
                 <div class="p-3 pb-0 card-header">
                     <div class="d-flex justify-content-between">
                         <h6 class="mb-2">Customer</h6>
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table id="customer-table" class="display nowrap" style="width:100%">
+                        <table id="vote-table" class="display nowrap" style="width:100%">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Phone Number</th>
+                                 <th>Bottle Image</th>
+                                <th>Bottle ID</th>
 
-                                <th>Email</th>
-                                <th>Answer</th>
-
-
+                                <th>Votes</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($data['users'] as $user)
-                                <tr data-user-id="{{ $user->id }}">
-                                    <td>{{ $user->id }}</td>
-                                    <td>{{ $user->fname }} {{ $user->lname }}</td>
-                                    <td>{{ $user->number ?? 'none' }} </td>
-                                    <td>{{ $user->email }}</td>
-                                    <td>{{ $user->guess ?? 'none' }} </td>
+                            @foreach($data['userVote'] as $bottleId => $voteData)
+                                <tr>
+                                    <td><img class="bottle-image" src="{{ asset('files/vote/' . $bottleId . '.webp') }}" alt="Option {{ $bottleId }}"></td>
+                                    <td>{{ $bottleId }}</td>
 
+                                    <td>{{ $voteData['count'] }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -79,9 +78,9 @@
         //     });
         // });
         var permissionName = "{{ $permission }}";
-        var table = $('#customer-table').DataTable({
+        var table = $('#vote-table').DataTable({
             responsive: true,
-            dom: "<'row'<'col-sm-12 col-md-3'l><'col-sm-6 col-md-6 align-items-end'B><'col-sm-12 col-md-3'f>>" +
+            dom: "<'row'<'col-sm-12 col-md-3'l><'col-sm-6 col-md-6'B><'col-sm-12 col-md-3'f>>" +
                 "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
             buttons: [
                 'copy', 'csv', 'excel', 'pdf', 'print'

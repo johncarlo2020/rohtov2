@@ -853,13 +853,40 @@ public function embarckJourney()
         return view('users', compact('data', 'permission'));
     }
 
-    public function ambient()
+    public function userVote()
     {
-        $startDate = Carbon::create(2025, 5,15);
-        $permission = auth()->user()->getPermissionNames()->first();
+        $startDate = Carbon::create(2025, 5, 15);
+        $permission = auth()->user()->getPermissionNames()->first(); // Preserving this line as it was in your original code
 
+        $allBottleIds = collect(range(1, 6)); // Define the 6 bottle IDs
 
-        $data['users'] = User::whereDate('created_at', '>=', $startDate->toDateString())->with('stationUser')->orderBy('id', 'desc')->get();
+        // Get users who voted for bottles 1-6 and meet other criteria
+        $usersWhoVoted = User::whereNotNull('vote_id')
+            ->whereIn('vote_id', $allBottleIds->all()) // Filter for vote_ids 1 through 6
+            ->whereDate('created_at', '>=', $startDate->toDateString())
+            ->orderBy('id', 'desc')
+            ->get();
+
+        // Group these users by their vote_id
+        $groupedVotes = $usersWhoVoted->groupBy('vote_id');
+
+        // Prepare the final structure, ensuring all bottles from 1 to 6 are present
+        $voteCounts = $allBottleIds->mapWithKeys(function ($bottleId) use ($groupedVotes) {
+            $usersForThisBottle = $groupedVotes->get($bottleId, collect()); // Get users for this bottleId, or an empty collection if none
+            return [
+                $bottleId => [
+                    'count' => $usersForThisBottle->count()
+                ]
+            ];
+        });
+
+        // Data to be passed to the view
+        $data['userVote'] = $voteCounts;
+
+        // dd($voteCounts); // This will display the structured data - commented out for view rendering
+
+        // Original commented out lines, preserved
+        // $data['users'] = User::whereDate('created_at', '>=', $startDate->toDateString())->with('stationUser')->orderBy('id', 'desc')->get();
         return view('ambient', compact('data'   , 'permission'));
     }
 

@@ -23,7 +23,7 @@
                         <table id="vote-table" class="display nowrap" style="width:100%">
                         <thead>
                             <tr>
-                                 <th>Bottle Image</th>
+                                 <th class="no-export">Bottle Image</th>
                                 <th>Bottle ID</th>
 
                                 <th>Votes</th>
@@ -83,7 +83,26 @@
             dom: "<'row'<'col-sm-12 col-md-3'l><'col-sm-6 col-md-6'B><'col-sm-12 col-md-3'f>>" +
                 "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
             buttons: [
-                'copy', 'csv', 'excel', 'pdf', 'print'
+                {
+                    extend: 'copy',
+                    exportOptions: { columns: ':not(.no-export)' }
+                },
+                {
+                    extend: 'csv',
+                    exportOptions: { columns: ':not(.no-export)' }
+                },
+                {
+                    extend: 'excel',
+                    exportOptions: { columns: ':not(.no-export)' }
+                },
+                {
+                    extend: 'pdf',
+                    exportOptions: { columns: ':not(.no-export)' }
+                },
+                {
+                    extend: 'print',
+                    exportOptions: { columns: ':not(.no-export)' }
+                }
             ],
             order: [
                 [0, 'desc']

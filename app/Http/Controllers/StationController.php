@@ -762,20 +762,14 @@ public function embarckJourney()
         //   dd($data['where']);
 
         $data['registrationsPerHour'] = User::select(
-            DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as date'),
-            DB::raw('CONCAT(
-                CASE WHEN (DATE_FORMAT(created_at, "%H") + 8) % 12 = 0 THEN 12 ELSE (DATE_FORMAT(created_at, "%H") + 8) % 12 END,
-                IF(((DATE_FORMAT(created_at, "%H") + 8) % 24) >= 12, "pm", "am")
-            ) as hour'),
-
-            DB::raw('COUNT(*) as registrations'),
+            DB::raw('DATE(CONVERT_TZ(created_at, "+00:00", "+08:00")) as date'),
+            DB::raw('DATE_FORMAT(CONVERT_TZ(created_at, "+00:00", "+08:00"), "%l%p") as hour'),
+            DB::raw('COUNT(*) as registrations')
         )
-            ->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
-
-            ->groupBy('date', 'hour')
-            ->get()
-            ->groupBy('date');
-        //  dd($data);
+        ->whereDate('created_at', '>=', $startDate->toDateString())
+        ->groupBy('date', 'hour')
+        ->get()
+        ->groupBy('date');
 
         foreach ($userCounts as $userCount) {
             if ($userCount['date'] >= $startDate->toDateString()) {

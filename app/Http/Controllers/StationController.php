@@ -765,7 +765,7 @@ public function embarckJourney()
             DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as date'),
             DB::raw('CONCAT(
                 CASE WHEN (DATE_FORMAT(created_at, "%H") + 8) % 12 = 0 THEN 12 ELSE (DATE_FORMAT(created_at, "%H") + 8) % 12 END,
-                IF((DATE_FORMAT(created_at, "%H") + 8) >= 12, "pm", "am")
+                IF(((DATE_FORMAT(created_at, "%H") + 8) % 24) >= 12, "pm", "am")
             ) as hour'),
 
             DB::raw('COUNT(*) as registrations'),

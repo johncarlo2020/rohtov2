@@ -23,7 +23,6 @@
                                 <th>Email</th>
                                 <th>Number</th>
                                 <th>Country</th>
-                                <th>UTM Source</th>
                                 <th>Created Date</th>
                                 <th>Created Time</th>
 
@@ -42,7 +41,6 @@
                                     <td>{{ $user->email }}</td>
                                     <td>{{ $user->number }}</td>
                                     <td>{{ $user->country }}</td>
-                                    <td>{{ $user->utm_source }}</td>
                                     <td>{{ $user->created_at->format('Y-m-d') }}</td>
                                     <td>{{ $user->created_at->format('h:i A') }}</td>
 

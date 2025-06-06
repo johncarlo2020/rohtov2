@@ -24,6 +24,8 @@
                                 <th>Number</th>
                                 <th>Country</th>
                                 <th>UTM Source</th>
+                                <th>Created Date</th>
+                                <th>Created Time</th>
 
 
 
@@ -41,6 +43,8 @@
                                     <td>{{ $user->number }}</td>
                                     <td>{{ $user->country }}</td>
                                     <td>{{ $user->utm_source }}</td>
+                                    <td>{{ $user->created_at->format('Y-m-d') }}</td>
+                                    <td>{{ $user->created_at->format('h:i A') }}</td>
 
                                     @foreach ($user['stations'] as $station)
                                         <td class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-danger' }}">

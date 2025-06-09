@@ -5,6 +5,11 @@
         #customer-table tbody tr {
             cursor: pointer;
         }
+            .bottle-image {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+        }
     </style>
     <div class="mt-4 row">
         <div class="mb-4 col-lg-12 mb-lg-0">
@@ -19,6 +24,7 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
+                                <th>Perfume</th>
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Number</th>
@@ -37,6 +43,13 @@
                             @foreach ($data['users'] as $user)
                                 <tr data-user-id="{{ $user->id }}">
                                     <td>{{ $user->id }}</td>
+                                    <td>
+                                        @if ($user->vote_id)
+                                          <span>{{$bottles[$user->vote_id - 1]}}</span>
+                                        @else
+                                            <span class="text-muted">Not completed</span>
+                                        @endif
+                                    </td>
                                     <td>{{ $user->fname }} {{ $user->lname }}</td>
                                     <td>{{ $user->email }}</td>
                                     <td>{{ $user->number }}</td>

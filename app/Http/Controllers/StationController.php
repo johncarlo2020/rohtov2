@@ -816,6 +816,15 @@ public function embarckJourney()
     }
     public function users()
     {
+        $bottles = [
+            'Chill Zone',
+            'Energy Drive',
+            'Full Recharge',
+            'Get Comfy',
+            'Happy Feels',
+            'Spark Up',
+        ];
+
         $today = Carbon::today();
         $permission = auth()->user()->getPermissionNames()->first();
 
@@ -845,7 +854,7 @@ public function embarckJourney()
         //dd($data['users'][0]['stations']);
         //  dd($data);
 
-        return view('users', compact('data', 'permission'));
+        return view('users', compact('data', 'permission','bottles', 'today'));
     }
 
     public function userVote()

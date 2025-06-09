@@ -762,8 +762,8 @@ public function embarckJourney()
         //   dd($data['where']);
 
         $data['registrationsPerHour'] = User::select(
-            DB::raw('DATE(created_at) as date'),
-            DB::raw('DATE_FORMAT(created_at, "%H:00") as hour'),
+             DB::raw('DATE(created_at) as date'),
+            DB::raw('DATE_FORMAT(created_at, "%l%p") as hour'),
             DB::raw('COUNT(*) as registrations')
         )
         ->whereDate('created_at', '>=', $startDate->toDateString())

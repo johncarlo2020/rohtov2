@@ -195,7 +195,8 @@
         <div class="col-lg-2">
             <div class="card">
                 <div class="card-header pb-0 p-3">
-                    <h6 class="mb-0">Where</h6>
+                    <h6 class="mb-0">How did you find this event ?
+                    </h6>
                 </div>
                 <div class="card-body p-3">
                     <ul class="list-group">
@@ -217,7 +218,8 @@
         <div class="col-lg-2">
             <div class="card">
                 <div class="card-header pb-0 p-3">
-                    <h6 class="mb-0">Social Media</h6>
+                    <h6 class="mb-0">Social Media Count
+                    </h6>
                 </div>
                 <div class="card-body p-3">
                     <ul class="list-group">
@@ -239,7 +241,8 @@
         <div class="col-lg-2">
             <div class="card">
                 <div class="card-header pb-0 p-3">
-                    <h6 class="mb-0">Existing</h6>
+                    <h6 class="mb-0">Existing Member ?
+                    </h6>
                 </div>
                 <div class="card-body p-3">
                     <ul class="list-group">
@@ -262,7 +265,7 @@
         <div class="col-lg-2">
             <div class="card">
                 <div class="card-header pb-0 p-3">
-                    <h6 class="mb-0">Appeal</h6>
+                    <h6 class="mb-0">What Appeals the Most ?</h6>
                 </div>
                 <div class="card-body p-3">
                     <ul class="list-group">

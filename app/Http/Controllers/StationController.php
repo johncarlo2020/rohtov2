@@ -407,8 +407,8 @@ class StationController extends Controller
         $data['social_media'] = User::selectRaw('social_media , COUNT(*) as count')
         ->groupBy('social_media')
         ->where('social_media' ,'!=','')
-        ->orWhere('social_media', '=', 'Friend Referral')
-        ->orWhere('social_media', '=', 'Walk-in')
+        ->Where('social_media', '!=', 'Friend Referral')
+        ->Where('social_media', '!=', 'Walk-in')
         ->get();
         $data['appeal'] = User::selectRaw('appeal , COUNT(*) as count')->groupBy('appeal')->where('appeal' ,'!=','')->get();
         // $data['where'] = User::selectRaw('where , COUNT(*) as count')->groupBy('where')->where('where' ,'!=','admin')->get();

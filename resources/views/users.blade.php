@@ -21,6 +21,8 @@
                                 <th>ID</th>
                                 <th>Name</th>
                                 <th>Email</th>
+                                <th>DOB</th>
+                                <th>Age</th>
                                 <th>Number</th>
                                 <th>Country</th>
                                 <th>Existing</th>
@@ -39,6 +41,10 @@
                                     <td>{{ $user->id }}</td>
                                     <td>{{ $user->fname }} {{ $user->lname }}</td>
                                     <td>{{ $user->email }}</td>
+                                    <td>{{ $user->dob }}</td>
+
+                                    <td>{{ $user->age }}</td>
+
                                     <td>{{ $user->number }}</td>
                                     <td>{{ $user->country }}</td>
                                     <td>{{ $user->existing }}</td>

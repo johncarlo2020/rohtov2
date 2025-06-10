@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Carbon\Carbon;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
@@ -20,7 +21,7 @@ class User extends Authenticatable
     protected $fillable = [
         'appeal','existing','social_media','existing','lname', 'email','fname','number','where','password','last_login_at','dob','country','baby_img','baby_name','charname'
     ];
-
+    protected $appends = ['age'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -40,6 +41,19 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function getAgeAttribute()
+{
+    if (!$this->dob || !strtotime($this->dob)) {
+        return null; // or return 'N/A'
+    }
+
+    try {
+        return Carbon::parse($this->dob)->age;
+    } catch (\Exception $e) {
+        return null; // or log error if needed
+    }
+}
 
     public function stationUser()
     {

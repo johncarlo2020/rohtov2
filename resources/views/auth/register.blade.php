@@ -44,7 +44,7 @@
                             <label for="">Age Group</label>
 
                             <select class="form-select input-text" name="dob" aria-label="Default select example">
-                                <option selected disabled></option>
+                                <option selected disabled>Select an option</option>
 
                                 <option value="Below 18 years old">Below 18 years old</option>
                                 <option value="18-24 years old">18-24 years old</option>
@@ -99,8 +99,9 @@
                         <div class="col-12 input-group">
 
                             <select class="form-select input-text" name="heard" aria-label="Default select example" required>
-                                <option value="No" selected>No</option>
+                                <option selected disabled>Select an option</option>
                                 <option value="Yes">Yes</option>
+                                <option value="No">No</option>
                             </select>
                         </div>
                     </div>
@@ -110,8 +111,9 @@
 
                         <div class="col-12 input-group">
                             <select class="form-select input-text" name="existing" aria-label="Default select example" required>
-                                <option value="No" selected>No</option>
+                                <option selected disabled>Select an option</option>
                                 <option value="Yes">Yes</option>
+                                <option value="No" >No</option>
                             </select>
                         </div>
                     </div>
@@ -124,8 +126,9 @@
 
                         <div class="col-12 input-group">
                             <select id="follow-select" class="form-select input-text" name="follow" required>
-                                <option value="No" selected>No</option>
+                                <option selected disabled>Select an option</option>
                                 <option value="Yes">Yes</option>
+                                <option value="No" >No</option>
 
                             </select>
                         </div>
@@ -152,7 +155,8 @@
                                 <label for="">Which of the following appeals to you the most? <span class="text-danger"> *Choose 1 only</span></label>
 
                             <select class="form-select input-text" name="appeal" aria-label="Default select example" required>
-                                 <option value="Promotional Discounts" selected> Promotional Discounts</option>
+                                <option selected disabled>Select an option</option>
+                                 <option value="Promotional Discounts" > Promotional Discounts</option>
                                 <option value="Event design/theme"> Event design/theme</option>
                                 <option value="Free gifts and merchandise"> Free gifts and merchandise</option>
                             </select>
@@ -166,6 +170,8 @@
                         <label for="">Where did you find out about our concourse? <span class="text-danger"> *Choose 1 only</span></label>
 
                             <select class="form-select input-text" name="find" aria-label="Default select example" required>
+                                <option selected disabled>Select an option</option>
+
                                 <option value="Facebook">Facebook</option>
                                 <option value="TikTok">TikTok</option>
                                 <option value="Instagram">Instagram</option>
@@ -175,7 +181,7 @@
                                 <option value="Passby">
                                     Passby
                                 </option>
-                                <option value="Word of mouth" selected>Word of mouth</option>
+                                <option value="Word of mouth" >Word of mouth</option>
                             </select>
                         </div>
                     </div>

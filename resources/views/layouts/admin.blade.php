@@ -76,9 +76,11 @@
             rel="stylesheet"
         />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+        {{-- Vite import for dashboard styles --}}
+        @vite(['resources/sass/dashboard.scss'])
     </head>
 
-    <body class="g-sidenav-show bg-gray-100">
+    <body class="g-sidenav-show bg-gray-100 dashboard-style">
         <div class="min-height-300 bg-primary position-absolute w-100"></div>
         <aside
             class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4"

@@ -143,24 +143,12 @@
     <div class="row mt-4">
         <div class="col-lg-8 mb-lg-0 mb-4">
             <div class="card z-index-2 h-100">
-                <div class="card-header pb-0 pt-3 bg-transparent">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <h6 class="text-capitalize mb-0"></h6>
-                        </div>
-                        <div class="col-auto">
-                            <div class="form-group mb-0 mr-3 ml-2">
-                                <select class="form-control form-control-sm" id="date-format-select">
+                <div class="card-body card-with-filter p-3">
+                     <select class="form-control form-control-sm" id="date-format-select">
                                     @foreach ($data['dates'] as $key => $date)
                                     <option value="{{ $date['date'] }}">{{ $date['date'] }}</option>
                                     @endforeach
                                 </select>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="card-body p-3">
                     <figure class="highcharts-figure">
                         <div id="container"></div>
                     </figure>

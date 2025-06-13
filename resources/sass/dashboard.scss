@@ -1,0 +1,17 @@
+// Dashboard specific styles
+
+// Import shared variables
+@import "variables";
+
+.dashboard-style {
+    .card-with-filter {
+        position: relative;
+        #date-format-select {
+              position: absolute;
+                top: 21px;
+                right: 62px;
+                z-index: 1000;
+                width: 200px;
+        }
+    }
+}

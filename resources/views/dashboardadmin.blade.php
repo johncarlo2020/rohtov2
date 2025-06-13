@@ -141,7 +141,7 @@
     </div>
 
     <div class="row mt-4">
-        <div class="col-lg-8 mb-lg-0 mb-4">
+        <div class="col-lg-12 mb-lg-0 mb-4">
             <div class="card z-index-2 h-100">
                 <div class="card-body card-with-filter p-3">
                      <select class="form-control form-control-sm" id="date-format-select">
@@ -486,7 +486,7 @@
 
         var high2 = Highcharts.chart('container2', {
             chart: {
-                type: 'column' // Set chart type to 'column'
+                type: 'line'
             },
             title: {
                 text: 'Customers Overview',
@@ -503,7 +503,7 @@
                     text: 'Hour'
                 },
                 accessibility: {
-                    rangeDescription: labels.join(', ') // Set range description using labels2
+                    rangeDescription: labels.join(', ')
                 }
             },
             legend: {
@@ -641,7 +641,7 @@
             'rgba(94, 114, 228, 0.0)');
         gradientStroke2.addColorStop(0, 'rgba(94, 114, 228, 0)');
         new Chart(ctx1, {
-            type: "bar",
+            type: "line", // changed from "bar" to "line"
             data: {
                 labels: labels,
                 datasets: [{
@@ -716,7 +716,7 @@
         });
 
         var chart2 = new Chart(ctx2, {
-            type: "bar",
+            type: "line", // changed from "bar" to "line"
             data: {
                 labels: labels2,
                 datasets: [{

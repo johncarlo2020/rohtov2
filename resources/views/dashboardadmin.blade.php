@@ -112,7 +112,7 @@
 
 
     <div class="col-lg-6">
-        <div class="card">
+        <div class="card h-100">
             <div class="card-header pb-0 p-3">
                 <h6 class="mb-0">Stations</h6>
             </div>
@@ -171,7 +171,7 @@
 
     <div class="row mt-4">
         <div class="col-lg-2">
-            <div class="card">
+            <div class="card card h-100">
                 <div class="card-header pb-0 p-3">
                     <h6 class="mb-0">Countries</h6>
                 </div>
@@ -193,7 +193,7 @@
             </div>
         </div>
         <div class="col-lg-2">
-            <div class="card">
+            <div class="card card h-100">
                 <div class="card-header pb-0 p-3">
                     <h6 class="mb-0">How did you find this event ?
                     </h6>
@@ -216,7 +216,7 @@
             </div>
         </div>
         <div class="col-lg-2">
-            <div class="card">
+            <div class="card card h-100">
                 <div class="card-header pb-0 p-3">
                     <h6 class="mb-0">Social Media Count
                     </h6>
@@ -235,7 +235,7 @@
             </div>
         </div>
         <div class="col-lg-2">
-            <div class="card">
+            <div class="card card h-100">
                 <div class="card-header pb-0 p-3">
                     <h6 class="mb-0">Existing Member ?
                     </h6>
@@ -259,7 +259,7 @@
 
         </div>
         <div class="col-lg-2">
-            <div class="card">
+            <div class="card card h-100">
                 <div class="card-header pb-0 p-3">
                     <h6 class="mb-0">What Appeals the Most ?</h6>
                 </div>
@@ -283,7 +283,7 @@
 
     <div class="row mt-4">
         <div class="col-lg-12 mb-lg-0 mb-4">
-            <div class="card ">
+            <div class="card card h-100">
                 <div class="card-header pb-0 p-3">
                     <div class="d-flex justify-content-between">
                         <h6 class="mb-2">Customer</h6>

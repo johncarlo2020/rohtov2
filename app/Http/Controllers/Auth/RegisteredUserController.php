@@ -41,7 +41,6 @@ class RegisteredUserController extends Controller
             'fname' => ['required', 'string', 'max:255'],
             'lname' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'where' => ['required', 'string', 'max:255'],
 
         ]);
         $marketing = false;
@@ -65,7 +64,7 @@ class RegisteredUserController extends Controller
             'dob' => $request->dob,
             'number' => $phoneNumber,
             'email' => $request->email,
-            'where' => $request->where,
+            'find' => $request->find,
             'existing' => $request->existing,
             'social_media' => json_encode($request->social_media),
 

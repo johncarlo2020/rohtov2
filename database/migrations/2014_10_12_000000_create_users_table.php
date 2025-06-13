@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('fname');
             $table->string('lname');
-            $table->string('where');
+            $table->string('find');
             $table->string('password');
             $table->string('dob');
             $table->string('number');

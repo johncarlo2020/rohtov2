@@ -392,16 +392,18 @@ class StationController extends Controller
         $data['userToday'] = User::whereDate('created_at', $today)->count();
         $data['country'] = User::selectRaw('country , COUNT(*) as count')->groupBy('country')->where('country' ,'!=','admin')->get();
 
-        $data['where'] = User::groupBy('where')
-            ->select('where', DB::raw('COUNT(*) as count'))
-            ->having('count', '>', 1) // Exclude entries with count = 1
-            ->orderBy('count', 'desc') // Order by count in descending order
-            ->get()
-            ->map(function ($item) {
-                return ['name' => $item->where, 'count' => $item->count];
-            })
-        ->values()
-        ->toArray();
+        // $data['where'] = User::groupBy('where')
+        //     ->select('where', DB::raw('COUNT(*) as count'))
+        //     ->having('count', '>', 1) // Exclude entries with count = 1
+        //     ->orderBy('count', 'desc') // Order by count in descending order
+        //     ->get()
+        //     ->map(function ($item) {
+        //         return ['name' => $item->where, 'count' => $item->count];
+        //     })
+        // ->values()
+        // ->toArray();
+        $data['where'] = User::selectRaw('find , COUNT(*) as count')->groupBy('find')->where('find' ,'!=','')->get();
+        //  dd($data['where']);
 
         $data['existing'] = User::selectRaw('existing , COUNT(*) as count')->groupBy('existing')->where('existing' ,'!=','')->get();
         $data['social_media'] =  User::whereNotNull('social_media')

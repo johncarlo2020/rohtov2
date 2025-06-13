@@ -41,10 +41,11 @@
 
                     <div class="mb-2 row">
                         <div class="col-12">
+                            <label for="">Age Group</label>
+
                             <select class="form-select input-text" name="dob" aria-label="Default select example">
-                                <option selected disabled>
-                                    Select Age Group ?
-                                </option>
+                                <option selected disabled></option>
+
                                 <option value="Below 18 years old">Below 18 years old</option>
                                 <option value="18-24 years old">18-24 years old</option>
                                 <option value="25-30 years old">25-30 years old</option>
@@ -93,25 +94,24 @@
                     </div>
 
                     <div class="mb-2 row">
+                        <label for="">Have you heard about Hada Labo?</label>
+
                         <div class="col-12 input-group">
-                            <select class="form-select input-text" name="heard" aria-label="Default select example">
-                                <option selected disabled>
-                                    Have you heard about Hada Labo?
-                                </option>
+
+                            <select class="form-select input-text" name="heard" aria-label="Default select example" required>
+                                <option value="No" selected>No</option>
                                 <option value="Yes">Yes</option>
-                                <option value="No">No</option>
                             </select>
                         </div>
                     </div>
 
                     <div class="mb-2 row">
+                        <label for="">Are you currently a Hada Labo user?</label>
+
                         <div class="col-12 input-group">
-                            <select class="form-select input-text" name="existing" aria-label="Default select example">
-                                <option selected disabled>
-                                    Are you currently Hada Labo user ?
-                                </option>
+                            <select class="form-select input-text" name="existing" aria-label="Default select example" required>
+                                <option value="No" selected>No</option>
                                 <option value="Yes">Yes</option>
-                                <option value="No">No</option>
                             </select>
                         </div>
                     </div>
@@ -120,17 +120,21 @@
 
                     <!-- First Dropdown: Do you follow us on social media? -->
                     <div class="mb-2 row">
+                        <label for="">Do you follow us on social media?</label>
+
                         <div class="col-12 input-group">
-                            <select id="follow-select" class="form-select" name="follow">
-                                <option selected disabled>Do you follow us on social media?</option>
+                            <select id="follow-select" class="form-select input-text" name="follow" required>
+                                <option value="No" selected>No</option>
                                 <option value="Yes">Yes</option>
-                                <option value="No">No</option>
+
                             </select>
                         </div>
                     </div>
 
                     <!-- Second Dropdown: What social media do you follow? -->
                     <div id="social-dropdown-group" class="mb-2 row d-none">
+                        <label for="">What social media do you follow? <span class="text-danger">*Multiple</span></label>
+
                         <div class="col-12 input-group">
                             <select id="social-select" class="form-select" name="social_media[]" multiple>
                                 <option value="Facebook">Facebook</option>
@@ -144,11 +148,11 @@
 
                     <div class="mb-2 row">
                         <div class="col-12 input-group">
-                            <select class="form-select input-text" name="appeal" aria-label="Default select example">
-                                <option selected disabled>
-                                    Which of the following appeals to you the most?
-                                </option>
-                                <option value="Promotional Discounts"> Promotional Discounts</option>
+
+                                <label for="">Which of the following appeals to you the most? <span class="text-danger"> *Choose 1 only</span></label>
+
+                            <select class="form-select input-text" name="appeal" aria-label="Default select example" required>
+                                 <option value="Promotional Discounts" selected> Promotional Discounts</option>
                                 <option value="Event design/theme"> Event design/theme</option>
                                 <option value="Free gifts and merchandise"> Free gifts and merchandise</option>
                             </select>
@@ -159,10 +163,9 @@
 
                     <div class="mb-2 row">
                         <div class="col-12 input-group">
-                            <select class="form-select input-text" name="find" aria-label="Default select example">
-                                <option selected disabled>
-                                    Where did you find out about our concourse?
-                                </option>
+                        <label for="">Where did you find out about our concourse? <span class="text-danger"> *Choose 1 only</span></label>
+
+                            <select class="form-select input-text" name="find" aria-label="Default select example" required>
                                 <option value="Facebook">Facebook</option>
                                 <option value="TikTok">TikTok</option>
                                 <option value="Instagram">Instagram</option>
@@ -172,7 +175,7 @@
                                 <option value="Passby">
                                     Passby
                                 </option>
-                                <option value="Word of mouth">Word of mouth</option>
+                                <option value="Word of mouth" selected>Word of mouth</option>
                             </select>
                         </div>
                     </div>

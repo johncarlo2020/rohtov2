@@ -14,7 +14,11 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->string('existing')->nullable()->after('email');
             $table->string('social_media')->nullable()->after('existing');
-            $table->string('appeal')->nullable()->after('social_media');
+            $table->string('heard')->nullable()->after('social_media');
+            $table->string('appeal')->nullable()->after('heard');
+            $table->string('follow')->nullable()->after('appeal');
+
+
         });
     }
 

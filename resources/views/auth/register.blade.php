@@ -16,9 +16,9 @@
                                 class="input-text form-control @error('fname') is-invalid @enderror" name="fname"
                                 value="{{ old('fname') }}" required autocomplete="fname" autofocus />
                             @error('fname')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
                             @enderror
                         </div>
                     </div>
@@ -32,24 +32,32 @@
                                 value="{{ old('lname') }}" required autocomplete="lname" autofocus />
 
                             @error('lname')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
                             @enderror
                         </div>
                     </div>
 
                     <div class="mb-2 row">
                         <div class="col-12">
-                            <label for="">Date of Birth</label>
-                            <input id="dob" placeholder="Date of Birth" type="date"
-                                class="input-text form-control @error('dob') is-invalid @enderror" name="dob"
-                                value="{{ old('dob') }}" required autocomplete="dob" autofocus />
+                            <select class="form-select input-text" name="dob" aria-label="Default select example">
+                                <option selected disabled>
+                                    Select Age Group ?
+                                </option>
+                                <option value="Below 18 years old">Below 18 years old</option>
+                                <option value="18-24 years old">18-24 years old</option>
+                                <option value="25-30 years old">25-30 years old</option>
+                                <option value="31-40 years old">31-40 years old</option>
+                                <option value="41-45 years old">41-45 years old</option>
+                                <option value="45 years and above">45 years and above</option>
+
+                            </select>
 
                             @error('lname')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
                             @enderror
                         </div>
                     </div>
@@ -63,9 +71,9 @@
                                 value="{{ old('email') }}" required autocomplete="email" />
 
                             @error('email')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
                             @enderror
                         </div>
                     </div>
@@ -86,29 +94,9 @@
 
                     <div class="mb-2 row">
                         <div class="col-12 input-group">
-                            <select class="form-select input-text" name="where" aria-label="Default select example">
+                            <select class="form-select input-text" name="heard" aria-label="Default select example">
                                 <option selected disabled>
-                                    Where do you find this event ?
-                                </option>
-                                <option value="Facebook">Facebook</option>
-                                <option value="TikTok">TikTok</option>
-                                <option value="Instagram">Instagram</option>
-                                <option value="XiaoHongShu (小红书)">
-                                    XiaoHongShu (小红书)
-                                </option>
-                                <option value="Friend Referral">
-                                    Friend Referral
-                                </option>
-                                <option value="Walk-in  ">Walk-in</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="mb-2 row">
-                        <div class="col-12 input-group">
-                            <select class="form-select input-text" name="existing" aria-label="Default select example">
-                                <option selected disabled>
-                                    Are you existing Hada Labo customer ?
+                                    Have you heard about Hada Labo?
                                 </option>
                                 <option value="Yes">Yes</option>
                                 <option value="No">No</option>
@@ -118,9 +106,62 @@
 
                     <div class="mb-2 row">
                         <div class="col-12 input-group">
-                            <select class="form-select input-text" name="social_media" aria-label="Default select example">
+                            <select class="form-select input-text" name="existing" aria-label="Default select example">
                                 <option selected disabled>
-                                    Do you follow us on social media ?
+                                    Are you currently Hada Labo user ?
+                                </option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+
+                    <!-- First Dropdown: Do you follow us on social media? -->
+                    <div class="mb-2 row">
+                        <div class="col-12 input-group">
+                            <select id="follow-select" class="form-select" name="follow">
+                                <option selected disabled>Do you follow us on social media?</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Second Dropdown: What social media do you follow? -->
+                    <div id="social-dropdown-group" class="mb-2 row d-none">
+                        <div class="col-12 input-group">
+                            <select id="social-select" class="form-select" name="social_media[]" multiple>
+                                <option value="Facebook">Facebook</option>
+                                <option value="TikTok">TikTok</option>
+                                <option value="Instagram">Instagram</option>
+                                <option value="XiaoHongShu">XiaoHongShu (小红书)</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="mb-2 row">
+                        <div class="col-12 input-group">
+                            <select class="form-select input-text" name="appeal" aria-label="Default select example">
+                                <option selected disabled>
+                                    Which of the following appeals to you the most?
+                                </option>
+                                <option value="Promotional Discounts"> Promotional Discounts</option>
+                                <option value="Event design/theme"> Event design/theme</option>
+                                <option value="Free gifts and merchandise"> Free gifts and merchandise</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+
+                    <div class="mb-2 row">
+                        <div class="col-12 input-group">
+                            <select class="form-select input-text" name="where" aria-label="Default select example">
+                                <option selected disabled>
+                                    Where did you find out about our concourse?
                                 </option>
                                 <option value="Facebook">Facebook</option>
                                 <option value="TikTok">TikTok</option>
@@ -128,21 +169,10 @@
                                 <option value="XiaoHongShu (小红书)">
                                     XiaoHongShu (小红书)
                                 </option>
-                                <option value="no">No</option>
-
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="mb-2 row">
-                        <div class="col-12 input-group">
-                            <select class="form-select input-text" name="appeal" aria-label="Default select example">
-                                <option selected disabled>
-                                    Which of the following appeals to you the most ?
+                                <option value="Passby">
+                                    Passby
                                 </option>
-                                <option value="Promotional Discounts">A) Promotional Discounts</option>
-                                <option value="Event design/theme">B) Event design/theme</option>
-                                <option value="Free gifts and merchandise">C) Free gifts and merchandise</option>
+                                <option value="Word of mouth">Word of mouth</option>
                             </select>
                         </div>
                     </div>
@@ -196,7 +226,7 @@
 </x-guest-layout>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         const form = document.querySelector("#form");
         const input = document.querySelector("#number");
 
@@ -231,7 +261,7 @@
             errorMsg.classList.remove("d-none");
         };
 
-        input.addEventListener("keyup", function() {
+        input.addEventListener("keyup", function () {
             reset();
             if (!input.value.trim()) {
                 showError("Required");
@@ -244,6 +274,19 @@
                 const msg = errorMap[errorCode] || "Invalid number";
                 showError(msg);
                 submitButton.disabled = true;
+            }
+        });
+
+        const followSelect = document.getElementById('follow-select');
+        const socialSection = document.getElementById('social-dropdown-group');
+
+        followSelect.addEventListener('change', function () {
+            if (this.value === 'Yes') {
+                socialSection.classList.remove('d-none');
+            } else {
+                socialSection.classList.add('d-none');
+                // Reset checkboxes
+                socialSection.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
             }
         });
     });

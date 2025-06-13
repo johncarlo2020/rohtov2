@@ -19,10 +19,8 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'appeal','existing','social_media','existing','lname', 'email','fname','number','where','password','last_login_at','dob','country','baby_img','baby_name','charname'
+        'heard','follow','appeal','existing','social_media','existing','lname', 'email','fname','number','where','password','last_login_at','dob','country','baby_img','baby_name','charname'
     ];
-    protected $appends = ['age'];
-
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -42,18 +40,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function getAgeAttribute()
-{
-    if (!$this->dob || !strtotime($this->dob)) {
-        return null; // or return 'N/A'
-    }
 
-    try {
-        return Carbon::parse($this->dob)->age;
-    } catch (\Exception $e) {
-        return null; // or log error if needed
-    }
-}
 
     public function stationUser()
     {

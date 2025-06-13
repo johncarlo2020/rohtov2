@@ -67,7 +67,10 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'where' => $request->where,
             'existing' => $request->existing,
-            'social_media' => $request->social_media,
+            'social_media' => json_encode($request->social_media),
+
+            'heard' => $request->heard,
+            'follow' => $request->follow,
             'appeal' => $request->appeal,
             'country'=> $country->name,
             'marketing' => $marketing,

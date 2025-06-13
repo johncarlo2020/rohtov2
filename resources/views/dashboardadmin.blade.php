@@ -221,21 +221,17 @@
                     <h6 class="mb-0">Social Media Count
                     </h6>
                 </div>
-                <div class="card-body p-3">
-                    <ul class="list-group">
-                        @foreach ($data['social_media'] as $location)
-                        <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
-                            <div class="d-flex align-items-center">
-                                <div class="d-flex flex-column">
-                                    <h6 class="mb-1 text-dark text-sm">{{ $location['social_media']}}</h6>
-                                    <span class="text-xs">Count : <span class="font-weight-bold">{{ $location['count']
-                                            }}</span></span>
-                                </div>
-                            </div>
-                        </li>
-                        @endforeach
-                    </ul>
-                </div>
+                @foreach ($data['social_media'] as $platform => $count)
+                <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                    <div class="d-flex align-items-center">
+                        <div class="d-flex flex-column">
+                            <h6 class="mb-1 text-dark text-sm">{{ $platform }}</h6>
+                            <span class="text-xs">Count : <span class="font-weight-bold">{{ $count }}</span></span>
+                        </div>
+                    </div>
+                </li>
+                @endforeach
+
             </div>
         </div>
         <div class="col-lg-2">

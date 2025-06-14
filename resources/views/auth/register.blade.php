@@ -43,8 +43,8 @@
                         <div class="col-12">
                             <label for="">Age Group</label>
 
-                            <select class="form-select input-text" name="dob" aria-label="Default select example">
-                                <option selected disabled>Select an option</option>
+                            <select class="form-select input-text" name="dob" aria-label="Default select example" required>
+                                <option value="" selected disabled>Select an option</option>
 
                                 <option value="Below 18 years old">Below 18 years old</option>
                                 <option value="18-24 years old">18-24 years old</option>
@@ -99,7 +99,8 @@
                         <div class="col-12 input-group">
 
                             <select class="form-select input-text" name="heard" aria-label="Default select example" required>
-                                <option selected disabled>Select an option</option>
+                                <option value="" selected disabled>Select an option</option>
+
                                 <option value="Yes">Yes</option>
                                 <option value="No">No</option>
                             </select>
@@ -111,7 +112,7 @@
 
                         <div class="col-12 input-group">
                             <select class="form-select input-text" name="existing" aria-label="Default select example" required>
-                                <option selected disabled>Select an option</option>
+                                <option value="" selected disabled>Select an option</option>
                                 <option value="Yes">Yes</option>
                                 <option value="No" >No</option>
                             </select>
@@ -126,7 +127,7 @@
 
                         <div class="col-12 input-group">
                             <select id="follow-select" class="form-select input-text" name="follow" required>
-                                <option selected disabled>Select an option</option>
+                                <option value="" selected disabled>Select an option</option>
                                 <option value="Yes">Yes</option>
                                 <option value="No" >No</option>
 
@@ -155,7 +156,7 @@
                                 <label for="">Which of the following appeals to you the most? <span class="text-danger"> *Choose 1 only</span></label>
 
                             <select class="form-select input-text" name="appeal" aria-label="Default select example" required>
-                                <option selected disabled>Select an option</option>
+                                <option value="" selected disabled>Select an option</option>
                                  <option value="Promotional Discounts" > Promotional Discounts</option>
                                 <option value="Event design/theme"> Event design/theme</option>
                                 <option value="Free gifts and merchandise"> Free gifts and merchandise</option>
@@ -170,7 +171,7 @@
                         <label for="">Where did you find out about our concourse? <span class="text-danger"> *Choose 1 only</span></label>
 
                             <select class="form-select input-text" name="find" aria-label="Default select example" required>
-                                <option selected disabled>Select an option</option>
+                                <option value="" selected disabled>Select an option</option>
 
                                 <option value="Facebook">Facebook</option>
                                 <option value="TikTok">TikTok</option>

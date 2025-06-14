@@ -219,12 +219,18 @@ class StationController extends Controller
             return $appointment;
         });
 
-        $is2000 = User::where('otp_verified', 1)
-        ->orderBy('email_verified_at', 'asc')
-        ->take(1700)
-        ->pluck('id')
-        ->contains(auth()->id());
-        // dd($is2000);
+        // $is2000 = User::where('otp_verified', 1)
+        // ->orderBy('email_verified_at', 'asc')
+        // ->take(1700)
+        // ->pluck('id')
+        // ->contains(auth()->id());
+
+        $is2000 = StationUser::count();
+        dd($is2000);
+        
+
+
+        // dd($is2000);   adasdas
 
         $userAppointment = $user->userAppointments()->count();
         $selectedAppointment = $user->userAppointments()->with('appointment')->first() ?? '';

@@ -63,8 +63,6 @@
                             </label>
                         </div>
                         @endforeach
-
-
                     </div>
                 </div>
                 <div class="text-center mb-3">
@@ -75,7 +73,7 @@
                 <div id="qrContainer" class=" bg-white p-3 rounded d-none">
                     <div class="text-center mb-2 px-1">
                         <h2 class="heading-text text-center mb-2">Congratulations, {{auth()->user()->fname}}!</h2>
-                        <p class="pharagraph-text text-center">You’re among the first 1,000 sign-ups and eligible to redeem our
+                        <p class="pharagraph-text text-center">You’re among the first 500 sign-ups and eligible to redeem our
                             exclusive Upcycled Marine Phone Charm!</p>
                         <br>
                         <p>Kindly present this QR code at the redemption counter</p>
@@ -85,8 +83,7 @@
                     </div>
 
                     <p class="sub-heading-text text-center mb-0">Date selected: <span id="selected-date">{{
-                            $selectedAppointment->appointment->name ?? '' }}</span>, {{ $convertedDate }} <br /> Venue: IOI City Mall,
-                        Putrajaya – West Court on Ground Floor</p>
+                            $selectedAppointment->appointment->name ?? '' }}</span>, {{ $convertedDate }} <br /> Venue: 1 Utama Shopping Centre</p>
                     <div class="p-3">
                         <p class="pharagraph-text mb-0"><Strong>Terms & Conditions</Strong></p>
                         <br>

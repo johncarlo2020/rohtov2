@@ -85,11 +85,9 @@ class StationController extends Controller
             return $appointment;
         });
 
-        $is2000 = User::where('otp_verified', 1)
-        ->orderBy('email_verified_at', 'asc')
-        ->take(1700)
-        ->pluck('id')
-        ->contains(auth()->id());
+        $is2000 = StationUser::where('station_id', 7)
+            ->whereBetween('created_at', ['2025-06-24 00:00:00', '2025-06-30 23:59:59'])
+            ->count() != 500;
 
         $userAppointment = $user->userAppointments()->count();
         $selectedAppointment = $user->userAppointments()->with('appointment')->first() ?? '';
@@ -210,7 +208,7 @@ class StationController extends Controller
             return redirect()->route('otp');
         }
 
-        $appointments = Appointment::withCount('userAppointments')
+        $appointments = Appointment::withCount('userAppointments')->where('status',1)
         ->get()
         ->map(function ($appointment) {
             $available = max(0, $appointment->total - $appointment->user_appointments_count);
@@ -219,14 +217,17 @@ class StationController extends Controller
             return $appointment;
         });
 
-        $is2000 = User::where('otp_verified', 1)
-        ->orderBy('email_verified_at', 'asc')
-        ->take(1700)
-        ->pluck('id')
-        ->contains(auth()->id());
+        // $is2000 = User::where('otp_verified', 1)
+        // ->orderBy('email_verified_at', 'asc')
+        // ->take(1700)
+        // ->pluck('id')
+        // ->contains(auth()->id());
 
-        // $is2000 = StationUser::count();
-        // dd($is2000);
+        $is2000 = StationUser::where('station_id', 7)
+            ->whereBetween('created_at', ['2025-06-24 00:00:00', '2025-06-30 23:59:59'])
+            ->count() != 500;
+
+        //  dd($is2000);
 
 
 
@@ -243,6 +244,7 @@ class StationController extends Controller
                 $convertedDate = 'Invalid Date';
             }
         }
+        // dd($selectedAppointment);
 
         //check if user is on first 2000 verified users
 

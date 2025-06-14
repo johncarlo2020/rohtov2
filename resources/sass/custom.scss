@@ -460,53 +460,54 @@ ol {
         }
 
         &.station-1 {
-            bottom: 19vw;
-            left: 46vw;
-            z-index: 999;
+             bottom: 48vw;
+    left: 54vw;
+    z-index: 999;
         }
 
         &.station-2 {
-            bottom: 34vw;
-            left: 37vw;
-            z-index: 999;
+            bottom: 42vw;
+    left: 42vw;
+    z-index: 999;
         }
 
         &.station-3 {
-            bottom: 65vw;
-            left: 37vw;
-            z-index: 999;
+           bottom: 20vw;
+    left: 20vw;
+    z-index: 999;
         }
 
         &.station-4 {
-            bottom: 47vw;
-            left: 22vw;
-            z-index: 999;
+             bottom: 24vw;
+    left: 33vw;
+    z-index: 999;
         }
 
         &.station-5 {
-            bottom: 60vw;
-            left: 62vw;
-            z-index: 999;
+       bottom: 29vw;
+    left: 7vw;
+    z-index: 999;
         }
 
         &.station-6 {
-            bottom: 34vw;
-            left: 27vw;
-            z-index: 999;
+                    bottom: 38vw;
+    left: 14vw;
+    z-index: 999;
         }
     }
 
     .start-pin {
+
         font-size: 7px;
         color: #0889bd;
         line-height: 28px;
         background-color: #fff;
         box-shadow: 0 0 0 5px #0889bd;
-
-        bottom: 40vw;
-        left: 12vw;
+        bottom: 33vw;
+        right: 7vw;
         z-index: 999;
-        display: flex;
+        display: flex
+    ;
         justify-content: center;
         align-items: center;
 
@@ -547,7 +548,7 @@ ol {
 }
 
 .redeem {
-    width: 100%;
+    width: 80px;
     height: 80px;
 
     img {
@@ -643,7 +644,26 @@ ol {
     position: absolute;
     top: 42px;
     left: 20px;
+    text-decoration: none;
+    z-index: 999;
+    width: 40px;
+    height: 40px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    color: #d39e00;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
 
+.go-qr {
+    position: absolute;
+    top: 42px;
+    right: 20px;
+    text-decoration: none;
     z-index: 999;
     width: 40px;
     height: 40px;

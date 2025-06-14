@@ -1,54 +1,61 @@
 <x-app-layout>
     <div class="content-box main-background px-3 d-flex flex-column min-vh-100 pt-5">
-        <a href="{{route('preRegEvent')}}" class="go-home"><i class="fa-solid fa-house"></i></a>
+        <a href="{{ route('preRegEvent') }}" class="go-home"><i class="fa-solid fa-arrow-left"></i></a>
+        <a href="{{ route('appointment') }}" class="go-qr"><i class="fa-solid fa-qrcode"></i></a>
         <div class="container mb-4">
-            <div ><a href="{{ route('preRegEvent') }}">
-                @include('components.branding')
-            </a>
+            <div><a href="{{ route('preRegEvent') }}">
+                    @include('components.branding')
+                </a>
             </div>
         </div>
-        <div class="container mb-4">
+        <div class="container mb-5">
             <div class="station-logo" onclick="showStaffIdModal()">
                 <img id="station-branding" src="{{ asset('files/main/station_branding.webp') }}" alt="" />
             </div>
         </div>
-        <div class="pledge mb-4">
+        {{-- <div class="pledge mb-4">
             <img id="pledge-image" onclick="showModal()" src="{{ asset('files/main/ocean_or_platic.webp') }}"
                 alt="" />
-        </div>
+        </div> --}}
         <div class="map mb-5">
-            <img class="map-img" src="{{ asset('files/main/Loccitane Map.webp') }}" alt="" />
+            <img class="map-img" src="{{ asset('files/main/loccitane_july_25_map_1_3x.webp') }}" alt="" />
             {{-- loop trough the $stations --}}
-            <a class="map-pin start-pin"><span class="start-text">BEGIN HERE</span></a>
+            <a class="map-pin start-pin"><span class="start-text">Start</span></a>
             @foreach ($stations as $station)
-                @if($canStation6 == false && $station->id == 6)
-                <a href="javascript:void(0);" class="map-pin station-{{ $station->id }} @if ($station->status == true) completed @endif"
-                    data-bs-toggle="modal" data-bs-target="#redemption">
-                    @if ($station->status != true)
-                    {{ $station->id }}
-                    @else
-                    <i class="fa-solid fa-check"></i>
-                    @endif
-                </a>
+                @if ($canStation6 == false && $station->id == 6)
+                    <a href="javascript:void(0);"
+                        class="map-pin station-{{ $station->id }} @if ($station->status == true) completed @endif"
+                        data-bs-toggle="modal" data-bs-target="#redemption">
+                        @if ($station->status != true)
+                            {{ $station->id }}
+                        @else
+                            <i class="fa-solid fa-check"></i>
+                        @endif
+                    </a>
                 @else
-                <a href="{{ route('station', $station) }}"
-                    class="map-pin station-{{ $station->id }} @if ($station->status == true) completed @endif">
-                    @if ($station->status != true)
-                    {{ $station->id }}
-                    @else
-                    <i class="fa-solid fa-check"></i>
-                    @endif
-                </a>
+                    <a href="{{ route('station', $station) }}"
+                        class="map-pin station-{{ $station->id }} @if ($station->status == true) completed @endif">
+                        @if ($station->status != true)
+                            {{ $station->id }}
+                        @else
+                            <i class="fa-solid fa-check"></i>
+                        @endif
+                    </a>
                 @endif
-
-
             @endforeach
         </div>
-        @if($is2000 == true)
-        <div class="redeem mb-1">
-            <img onclick="showDateModal()" src="{{ asset('files/main/Loccitane Gift.webp') }}" alt="" />
+        <div class="clickable d-flex justify-content-center align-items-center mb-4 gap-3">
+            @if ($is2000 == true)
+                <div class="redeem mb-1">
+                    <img onclick="showDateModal()" src="{{ asset('files/main/Loccitane Gift.webp') }}" alt="" />
+                </div>
+            @endif
+
+            <div class="redeem mb-1">
+                <img onclick="showModal()" src="{{ asset('files/main/loccitane_bpoc_3x.webp') }}" alt="" />
+            </div>
         </div>
-        @endif
+
         <!-- Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -97,8 +104,6 @@
                 </div>
             </div>
         </div>
-
-
         <div class="modal fade" id="date" tabindex="-1" aria-labelledby="dateLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -112,7 +117,8 @@
                                 @include('components.branding')
                             </div>
                         </div>
-                        <p class="text-center">Flash your QR code at the Redemption Counter upon completing the Ocean or
+                        <p class="text-center">Flash your QR code at the Redemption Counter upon completing the Ocean
+                            or
                             Plastic Roadshow Journey (5 stations) for verification.</p>
                         <div class="qr d-flex justify-content-center"></div>
                         <p class="text-center mt-4"><span
@@ -127,14 +133,16 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <a type="button" class="modal-close" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></a>
+                        <a type="button" class="modal-close" data-bs-dismiss="modal" aria-label="Close"><i
+                                class="fa-solid fa-xmark"></i></a>
                         <div class="container mb-3">
                             <div>
                                 @include('components.branding')
                             </div>
                         </div>
                         <p class="text-center">Oops, Complete all your stations to redeem your free gifts</p>
-                        <button id="close" data-bs-dismiss="modal" type="button" class="button button-primary w-100 mb-2">
+                        <button id="close" data-bs-dismiss="modal" type="button"
+                            class="button button-primary w-100 mb-2">
                             Close
                         </button>
                     </div>
@@ -146,7 +154,8 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <a type="button" class="modal-close" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></a>
+                        <a type="button" class="modal-close" data-bs-dismiss="modal" aria-label="Close"><i
+                                class="fa-solid fa-xmark"></i></a>
                         <div class="container mb-3">
                             <div>
                                 @include('components.branding')

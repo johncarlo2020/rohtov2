@@ -27,9 +27,9 @@
             <a id="homeButton" href="{{ route('embarckJourney') }}" class="button button-primary w-100 mb-3">
                Be Part of the Change
             </a>
-            <a id="homeButton" href="{{ route('guestAndWin') }}" class="button button-primary w-100 mb-3">
+            {{-- <a id="homeButton" href="{{ route('guestAndWin') }}" class="button button-primary w-100 mb-3">
                Guess & Win
-            </a>
+            </a> --}}
              <a id="homeButton" href="{{ route('map') }}" class="button button-primary w-100 mb-3">
                 Ocean Or Plastic Roadshow
             </a>

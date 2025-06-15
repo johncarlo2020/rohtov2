@@ -22,9 +22,9 @@
             <a href="{{ route('register') }}" id="routeBtn" class="button-primary button mb-3">
                Sign Up
             </a>
-              <a href="{{ route('login') }}" id="routeBtn" class="button-secondary button">
+              {{-- <a href="{{ route('login') }}" id="routeBtn" class="button-secondary button">
                 Sign In
-            </a>
+            </a> --}}
         </div>
     </div>
 </body>

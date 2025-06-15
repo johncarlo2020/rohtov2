@@ -2,6 +2,15 @@
     <div class="content-box main-background px-3 d-flex flex-column min-vh-100 pt-5">
         <a href="{{ route('preRegEvent') }}" class="go-home"><i class="fa-solid fa-arrow-left"></i></a>
         <a href="{{ route('appointment') }}" class="go-qr"><i class="fa-solid fa-qrcode"></i></a>
+        <div class="map-next-step">
+            <div class="label-text d-flex align-items-center border-bottom mb-2 pb-2">
+                <img id="station-branding" src="{{ asset('files/main/bulb.webp') }}" alt="" />
+                <p class="pharagraph-text">Where's next?</p>
+            </div>
+            <div class="next">
+                     <p class="pharagraph-text text-center">Your next stop is Station {{$nextStation->id}}</p>
+            </div>
+        </div>
         <div class="container mb-4">
             <div><a href="{{ route('preRegEvent') }}">
                     @include('components.branding')
@@ -51,9 +60,9 @@
                 </div>
             @endif
 
-            <div class="redeem mb-1">
-                <img onclick="showModal()" src="{{ asset('files/main/loccitane_bpoc_3x.webp') }}" alt="" />
-            </div>
+            <a class="redeem mb-1" href="{{ route('embarckStation', ['station' => '1']) }}">
+                <img src="{{ asset('files/main/loccitane_bpoc_3x.webp') }}" alt="" />
+            </a>
         </div>
 
         <!-- Modal -->
@@ -181,6 +190,8 @@
         function showStaffIdModal() {
             $('#staffId').modal('show');
         }
+
+
 
         function showDateModal() {
             const modalElement = document.getElementById('date');

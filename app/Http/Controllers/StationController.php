@@ -107,7 +107,12 @@ class StationController extends Controller
             $selectedStaff = Staff::find(Auth::user()->staff_id)->name;
         }
 
-        return view('map', compact('canStation6','stations', 'stationDone', 'appointments', 'is2000', 'userAppointment', 'selectedAppointment', 'convertedDate', 'user', 'selectedStaff'));
+        // find the next station that the user has not completed
+        $nextStation = $stations->firstWhere(function ($station) use ($user) {
+            return !$user->stationUser()->where('station_id', $station->id)->exists();
+        });
+
+        return view('map', compact('canStation6','stations', 'stationDone', 'appointments', 'is2000', 'userAppointment', 'selectedAppointment', 'convertedDate', 'user', 'selectedStaff', 'nextStation'));
     }
 
     public function editUser(Request $request)

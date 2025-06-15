@@ -1,5 +1,6 @@
 <x-app-layout>
     <div class="content-box main-background d-flex flex-column min-vh-100 px-3">
+        <a href="{{ route('embarckJourney') }}" class="go-home"><i class="fa-solid fa-arrow-left"></i></a>
         <div class="container mb-5">
             <div>
                 @include('components.branding')

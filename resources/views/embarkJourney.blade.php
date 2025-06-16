@@ -50,13 +50,22 @@
                                     <h6 class="task-title fw-bold pr-4">
                                         @if($task['id'] == 1)
                                             Task {{ $task->id }} (Mandatory): {{ $task['name'] }}
+                                        @else
+                                            @if($task['id'] == 4)
+                                                Task {{ $task->id }} (Mandatory): Pledge for the Ocean
                                             @else
-                                        Task {{ $task->id }}: {{ $task['name'] }}
+                                            Task {{ $task->id }}: {{ $task['name'] }}
+                                            @endif
                                         @endif
                                          <i class="fa-solid fa-circle-check ml-1"></i>
                                     </h6>
                                     <p class="task-description text-muted small mb-0" style="line-height: 1.3;">
+                                        @if($task['id'] == 4)
+                                            Make a conscious choice to opt for reusable alternatives
+                                        @else
                                         {{ $task['description'] }}
+
+                                        @endif
                                     </p>
                                 </div>
                             </a>

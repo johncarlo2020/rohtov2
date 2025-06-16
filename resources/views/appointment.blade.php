@@ -238,6 +238,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             //if user is pre-reg or first 2000 users
             @if ($is2000 == 1 || $user->type=='pre-reg')
+
                 @if($is2000>=0)
                     document.getElementById('qrContainer').classList.remove('d-none');
                     setTimeout(() => {
@@ -261,7 +262,10 @@
                     @if ($selectedAppointment -> rescheduled == 1)
                         document.getElementById('reschedule').classList.add('d-none');
                     @endif
-                @else
+                @endif
+
+                @if($user->type == 'pre-reg')
+            console.log('User is eligible for QR code generation.');
 
                 // If the user has not selected an appointment, show the date form
                 document.getElementById('qrContainer').classList.add('d-none');
@@ -272,6 +276,7 @@
                 @endif
                 // If the user has selected an appointment, show the QR code
             @else
+                console.log('User is not eligible for QR code or date selection.');
                 document.getElementById('qrContainer').classList.remove('d-none');
                 setTimeout(() => {
                     document.getElementById('qrContainer').classList.add('fade-in');

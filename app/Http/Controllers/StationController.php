@@ -204,6 +204,22 @@ class StationController extends Controller
         return back()->with('success', 'Consent updated successfully.');
     }
 
+    public function submitPledge(Request $request)
+    {
+        UserTask::updateOrCreate(
+            [
+                'user_id' => auth()->id(),
+                'task_id' => 4,
+                'images' => $request->pledge
+            ],
+            [
+                'status' => 'completed'
+            ]
+        );
+
+        return back()->with('success', 'Thank you for your response!');
+    }
+
 
     public function appointment()
     {
@@ -378,7 +394,7 @@ class StationController extends Controller
         }
 
         $check = UserTask::where('user_id', auth()->id())->where('task_id', $station->id)->exists();
-
+        // dd($check);
 
         return view('embarkStation', compact('station','status','check'));
     }

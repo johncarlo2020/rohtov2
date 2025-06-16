@@ -8,7 +8,7 @@
         </div>
         @if ($station->id == 1)
             <div class="success h-100 fade-in">
-                {{-- <div class="congrats-container mt-5 px-4">
+                 <div class="congrats-container mt-5 px-4">
                     <div class="congrats-icon mb-3">
                         <img src="{{ asset('files/main/congratulations.webp') }}" alt="Congratulations" />
                     </div>
@@ -23,36 +23,13 @@
                     </h1>
                     <p class="sub-heading-text text-center px-5 ">Start recycling your beauty empties with us—every small action creates a big impact for the planet.</p>
 
-                </div> --}}
-                <div id="choose" class="card pt-4 pb-2 px-3">
-                    <div class="logo-small mb-2">
-                        <img class="px-3" src="{{ asset('files/main/station_branding.webp') }}" alt="" />
-                    </div>
-                    <p class="modal-main-text mb-3 mt-4 text-center text-gray fw-bold">Will you pledge to protect our
-                        oceans?</p>
-                    <div class="radio-button-choice p-3 mb-3">
-                        <div class="form-check form-check">
-                            <input class="form-check-input" type="radio" name="pledgeOptions" id="pledgeYes"
-                                value="yes">
-                            <label class="form-check-label" for="pledgeYes">Yes</label>
-                        </div>
-                        <div class="form-check form-check">
-                            <input class="form-check-input" type="radio" name="pledgeOptions" id="pledgeNo"
-                                value="no">
-                            <label class="form-check-label" for="pledgeNo">No</label>
-                        </div>
-                    </div>
-                    <div class="">
-                        <button id="setPledge" type="submit" class="button button-primary w-100 mb-2">
-                            Submit
-                        </button>
-                    </div>
                 </div>
-                {{-- <div class="button-container mt-auto px-2">
+
+                 <div class="button-container mt-auto px-2">
                     <a id="homeButton" href="{{ route('embarckJourney') }}" class="button button-primary w-100">
                         Home
                     </a>
-                </div> --}}
+                </div>
             </div>
         @elseif($station->id == 2 || $station->id == 3)
             <div class="photo-container fade-in">
@@ -122,7 +99,7 @@
                 </div>
             </div>
         @elseif($station->id == 4)
-            <div class="photo-container fade-in ">
+            <!-- <div class="photo-container fade-in ">
 
                 <div class=" h-100 d-flex flex-column justify-content-center">
                     <div class="congrats-container mt-3 px-4">
@@ -161,7 +138,55 @@
                         Home
                     </a>
                 </div>
-            </div>
+            </div> -->
+
+            <form action="{{ route('pledge.submit') }}" method="POST">
+                @csrf
+
+                <div id="choose" class="card pt-4 pb-2 px-3 photo-container">
+                    <div class="logo-small mb-2">
+                        <img class="px-3" src="{{ asset('files/main/station_branding.webp') }}" alt="" />
+                    </div>
+                    <p class="modal-main-text mb-3 mt-4 text-center text-gray fw-bold">
+                        Will you pledge to protect our oceans?
+                    </p>
+
+                    <div class="radio-button-choice p-3 mb-3">
+                        <div class="form-check form-check">
+                            <input class="form-check-input" type="radio" name="pledge" id="pledgeYes" value="yes">
+                            <label class="form-check-label" for="pledgeYes">Yes</label>
+                        </div>
+                        <div class="form-check form-check">
+                            <input class="form-check-input" type="radio" name="pledge" id="pledgeNo" value="no">
+                            <label class="form-check-label" for="pledgeNo">No</label>
+                        </div>
+                    </div>
+
+                    <div class="">
+                        <button id="setPledge" type="submit" class="button button-primary w-100 mb-2">
+                            Submit
+                        </button>
+                    </div>
+                </div>
+
+                <div class="success h-100 d-flex flex-column justify-content-center fade-in d-none">
+                    <div class="congrats-container mt-5 px-4">
+                        <div class="congrats-icon mb-3">
+                            <img src="{{ asset('files/main/congratulations.webp') }}" alt="Congratulations" />
+                        </div>
+                        <h1 class="heading-text text-center">Your response has been uploaded successfully.</h1>
+                        <p class="pharagrap-text text-center px-5">Thank you for contributing to a greener future—every
+                            action helps
+                            reduce waste and protect the planet.</p>
+                    </div>
+                    <div class="scanner-container mt-auto">
+                        <a id="homeButton" href="{{ route('embarckJourney') }}" class="button button-primary w-100">
+                            Home
+                        </a>
+                    </div>
+                    </div>
+            </form>
+
         @else
             <div class="success h-100 d-flex flex-column justify-content-center fade-in ">
                 <div class="congrats-container mt-5 px-4">
@@ -255,93 +280,46 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const setPledgeButton = document.getElementById('setPledge');
-        // disable submit until user selects a pledge option
-        setPledgeButton.disabled = true;
-        const noContainer = document.querySelector('.no');
-        const yesContainer = document.querySelector('.yes');
+        // const setPledgeButton = document.getElementById('setPledge');
+        // // disable submit until user selects a pledge option
+        // // setPledgeButton.disabled = true;
+        // const noContainer = document.querySelector('.no');
+        // const yesContainer = document.querySelector('.yes');
 
-        setPledgeButton.addEventListener('click', function(event) {
-            event.preventDefault();
-            showModal();
-        });
+        // setPledgeButton.addEventListener('click', function(event) {
+        //     event.preventDefault();
+        //     showModal();
+        // });
 
-        function showModal() {
-            const selected = document.querySelector('input[name="pledgeOptions"]:checked');
-            const selectedAnswerImg = document.getElementById('selected-answer-img');
+        // function showModal() {
+        //     const selected = document.querySelector('input[name="pledgeOptions"]:checked');
+        //     const selectedAnswerImg = document.getElementById('selected-answer-img');
 
-            if (selected) {
-                if (selected.value === 'yes') {
-                    noContainer.classList.add('d-none');
-                    yesContainer.classList.remove('d-none');
-                } else {
-                   noContainer.classList.remove('d-none');
-                    yesContainer.classList.add('d-none');
-                }
-            }
+        //     if (selected) {
+        //         if (selected.value === 'yes') {
+        //             noContainer.classList.add('d-none');
+        //             yesContainer.classList.remove('d-none');
+        //         } else {
+        //            noContainer.classList.remove('d-none');
+        //             yesContainer.classList.add('d-none');
+        //         }
+        //     }
 
-            const el = document.getElementById("pledge");
-            const bsModal = new bootstrap.Modal(el);
-            bsModal.show();
-        }
+        //     const el = document.getElementById("pledge");
+        //     const bsModal = new bootstrap.Modal(el);
+        //     bsModal.show();
+        // }
 
-        const pledgeRadios = document.querySelectorAll('input[name="pledgeOptions"]');
-        pledgeRadios.forEach(radio => radio.addEventListener('change', function() {
-            // enable submit once an option is picked
-            setPledgeButton.disabled = false;
-        }));
+        // const pledgeRadios = document.querySelectorAll('input[name="pledgeOptions"]');
+        // pledgeRadios.forEach(radio => radio.addEventListener('change', function() {
+        //     // enable submit once an option is picked
+        //     setPledgeButton.disabled = false;
+        // }));
 
         @if ($station->id == 4)
-            @if ($check == null)
-                event.preventDefault();
-                //get permission to use camera dont start qr scanner until permission is granted
+            @if ($check == true)
 
-                const html5QrCode = new Html5Qrcode("reader");
-
-                html5QrCode.start({
-                            facingMode: "environment"
-                        }, {
-                            fps: 10,
-                            qrbox: 200,
-                            aspectRatio: 2 / 2 // Set the aspect ratio to 16:9
-                        },
-                        qrCodeMessage => {
-                            sendMessage(`${qrCodeMessage}`);
-                            html5QrCode.stop();
-
-                        },
-                        errorMessage => {
-                            console.log(`QR Code no longer in front of camera.`);
-                        })
-                    .catch(err => {
-                        console.log(`Unable to start scanning, error: ${err}`);
-                    });
-
-                function sendMessage(message) {
-                    // Fetch the CSRF token from the meta tag
-                    var csrfToken = $('meta[name="csrf-token"]').attr('content');
-                    console.log(message);
-
-                    $.ajax({
-                        url: '{{ route('receipt') }}', // Using Laravel's route() helper function
-                        type: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': csrfToken, // Include the CSRF token in the headers
-                        },
-                        data: {
-                            qrCodeMessage: message,
-
-                        },
-                        success: function(response) {
-                            document.querySelector('.photo-container').classList.add('d-none');
-                            document.querySelector('.success').classList.remove('d-none');
-                        },
-                        error: function(xhr, status, error) {
-
-                        }
-                    });
-                }
-            @else
+            console.log('Pledge already submitted');
                 document.querySelector('.photo-container').classList.add('d-none');
                 document.querySelector('.success').classList.remove('d-none');
             @endif

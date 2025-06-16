@@ -96,6 +96,7 @@ Route::group(['middleware' => ['client']], function () {
     Route::get('/brands', 'App\Http\Controllers\StationController@brands')->name('station.brands');
     Route::post('/saveStaff', 'App\Http\Controllers\StationController@saveStaff')->name('saveStaff');
     Route::post('/save-product', 'App\Http\Controllers\StationController@saveProduct')->name('saveProduct');
+    Route::post('/submit-pledge', 'App\Http\Controllers\StationController@submitPledge')->name('pledge.submit');
 
 
     Route::post('/upload', 'App\Http\Controllers\StationController@uploadBaby')->name('upload.baby');

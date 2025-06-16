@@ -25,7 +25,7 @@
                             aria-valuenow="{{ $percentage }}" aria-valuemin="0" aria-valuemax="100">
                         </div>
                     </div>
-                    <p class="sub-heading-text-small fw-bold mb-0">Completed {{ $userDone }}/4</p>
+                    <p class="sub-heading-text-small fw-bold mb-0">Completed {{ $userDone }}/5</p>
                 </div>
                 <div class="mb-2 px-3">
                     <p class="warning-text sub-heading-text-small small text-left mb-0">Note: Once you complete at least 3 tasks, visit our roadshow to validate your participation and claim your voucher.</p>

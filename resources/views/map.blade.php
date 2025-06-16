@@ -60,7 +60,7 @@
                 </div>
             @endif
 
-            <a class="redeem mb-1" href="{{ route('embarckStation', ['station' => '1']) }}">
+            <a class="redeem mb-1" href="{{ route('embarckStation', ['station' => '4']) }}">
                 <img src="{{ asset('files/main/loccitane_bpoc_3x.webp') }}" alt="" />
             </a>
         </div>

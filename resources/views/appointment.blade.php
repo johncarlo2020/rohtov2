@@ -264,7 +264,7 @@
                     @endif
                 @endif
 
-                @if($user->type == 'pre-reg')
+                @if($user->type == 'pre-reg' && $userAppointment == 0)
             console.log('User is eligible for QR code generation.');
 
                 // If the user has not selected an appointment, show the date form

@@ -17,8 +17,7 @@
                             or pre-registered
                             please click on Login</p>
                            <div class="d-flex justify-content-center align-items-center  gap-2">
-                            <a type="button" class="button button-secondary w-100" href="{{ route('login') }}">Sign in</a>
-                            <button type="button" data-bs-dismiss="modal" class="button button-danger w-100">Cancel</button>
+                            <a type="button" class="button button-secondary w-100" href="{{ route('login') }}">Login</a>
                            </div>
                         </div>
                     </div>

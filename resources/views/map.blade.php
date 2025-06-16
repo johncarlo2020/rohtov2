@@ -1,7 +1,7 @@
 <x-app-layout>
-    <div class="content-box main-background px-3 d-flex flex-column min-vh-100 pt-5">
+    <div class="content-box main-background px-1 d-flex flex-column min-vh-100 pt-5">
         <a href="{{ route('preRegEvent') }}" class="go-home"><i class="fa-solid fa-arrow-left"></i></a>
-        <a href="{{ route('appointment') }}" class="go-qr"><i class="fa-solid fa-qrcode"></i></a>
+        {{-- <a href="{{ route('appointment') }}" class="go-qr"><i class="fa-solid fa-qrcode"></i></a> --}}
         <div class="map-next-step">
             <div class="label-text d-flex align-items-center border-bottom mb-2 pb-2">
                 <img id="station-branding" src="{{ asset('files/main/bulb.webp') }}" alt="" />
@@ -27,9 +27,9 @@
                 alt="" />
         </div> --}}
         <div class="map mb-5">
-            <img class="map-img" src="{{ asset('files/main/loccitane_july_25_map_1_3x.webp') }}" alt="" />
+            <img class="map-img" src="{{ asset('files/main/locci map_np shadow.webp') }}" alt="" />
             {{-- loop trough the $stations --}}
-            <a class="map-pin start-pin"><span class="start-text">Start</span></a>
+            {{-- <a class="map-pin start-pin"><span class="start-text">Start</span></a> --}}
             @foreach ($stations as $station)
                 @if ($canStation6 == false && $station->id == 6)
                     <a href="javascript:void(0);"
@@ -60,7 +60,7 @@
                 </div>
             @endif
 
-            <a class="redeem mb-1" href="{{ route('embarckStation', ['station' => '4']) }}">
+            <a class="redeem mb-1" href="{{ route('embarckJourney') }}">
                 <img src="{{ asset('files/main/loccitane_bpoc_3x.webp') }}" alt="" />
             </a>
         </div>

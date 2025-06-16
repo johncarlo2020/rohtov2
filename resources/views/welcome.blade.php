@@ -13,6 +13,17 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
         rel="stylesheet" />
+
+    <style>
+        .button-container {
+          margin-top: -172px;
+          position: relative;
+            z-index: 10;
+        }
+        .content-box {
+            position: relative;
+        }
+    </style>
 </head>
 
 <body class="antialiased welcome-page">
@@ -22,9 +33,6 @@
             <a href="{{ route('register') }}" id="routeBtn" class="button-primary button mb-3">
                Sign Up
             </a>
-              {{-- <a href="{{ route('login') }}" id="routeBtn" class="button-secondary button">
-                Sign In
-            </a> --}}
         </div>
     </div>
 </body>

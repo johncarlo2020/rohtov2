@@ -401,9 +401,11 @@ class StationController extends Controller
         }
 
         $check = UserTask::where('user_id', auth()->id())->where('task_id', $station->id)->exists();
+        $data = UserTask::where('user_id', auth()->id())->where('task_id', $station->id)->first();
+        // dd($data);
         // dd($check);
 
-        return view('embarkStation', compact('station','status','check'));
+        return view('embarkStation', compact('station','status','check','data'));
     }
 
     public function preRegEvent(Request $request)

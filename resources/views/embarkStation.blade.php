@@ -175,9 +175,14 @@
                             <img src="{{ asset('files/main/congratulations.webp') }}" alt="Congratulations" />
                         </div>
                         <h1 class="heading-text text-center">Your response has been uploaded successfully.</h1>
-                        <p class="pharagrap-text text-center px-5">Thank you for contributing to a greener future—every
-                            action helps
-                            reduce waste and protect the planet.</p>
+
+                        @if($data != null && $data->images == 'yes'  )
+                        <p class="pharagrap-text text-center px-5">Enjoy RM5 off any eco-refill
+                        or jumbo, redeemable at our  Ocean or Plastic Roadshow.</p>
+                        @else
+                        <p class="pharagrap-text text-center px-5">Thank you for your consideration — every step toward awareness  helps us all move forward.</p>
+                        @endif
+
                     </div>
                     <div class="scanner-container mt-auto">
                         <a id="homeButton" href="{{ route('embarckJourney') }}" class="button button-primary w-100">

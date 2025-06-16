@@ -14,13 +14,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
         rel="stylesheet" />
 
-    <style>
-        .button-container {
-          margin-top: -172px;
-          position: relative;
-            z-index: 10;
-        }
-        .content-box {
+    <style>        .content-box {
             position: relative;
         }
     </style>

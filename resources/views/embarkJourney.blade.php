@@ -49,10 +49,10 @@
                                 <div class="task-content-area flex-grow-1 py-1 px-2 me-2">
                                     <h6 class="task-title fw-bold pr-4">
                                         @if($task['id'] == 1)
-                                            Task {{ $task->id }} (Mandatory): {{ $task['name'] }}
+                                            Task {{ $task->id }} : {{ $task['name'] }}
                                         @else
                                             @if($task['id'] == 4)
-                                                Task {{ $task->id }} (Mandatory): Pledge for the Ocean
+                                                Task {{ $task->id }} : Pledge for the Ocean
                                             @else
                                             Task {{ $task->id }}: {{ $task['name'] }}
                                             @endif

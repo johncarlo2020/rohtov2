@@ -150,8 +150,6 @@
                             <label class="form-check-label" for="smsConsent">
                                 Text Message (SMS/Whatsapp)
                             </label>
-                            <p class="small-text pl-4">Note: Please tick to receive details on your GUESS & WIN
-                                submission; failure to do so will result in forfeiture.</p>
                         </div>
                     </div>
                 </div>

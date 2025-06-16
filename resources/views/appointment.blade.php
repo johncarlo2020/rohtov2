@@ -37,10 +37,20 @@
                 @csrf
                 <div class="text-center mb-4 px-1">
                     <h2 class="heading-text text-center mb-2">Hi, {{auth()->user()->fname}}!</h2>
+
+                    @if(auth()->user()->id <= 3136)
+                    <p class="sub-heading-text text-center">We noticed you missed our last roadshow — but not to worry, you’re invited to our upcoming 1 Utama Roadshow!
+<br>   <br>                     Please select your preferred date for the Ocean or Plastic
+                        Roadshow visit and redemption.</p>
+                    <p class="sub-heading-text text-center">Note: Redemption is only valid on the selected date and can be rescheduled once after submission.
+                    </p>
+                    @else
                     <p class="sub-heading-text text-center">Please select your preferred date for the Ocean or Plastic
                         Roadshow visit and redemption.</p>
                     <p class="sub-heading-text text-center">Note: Redemption is only valid on the selected date and can be rescheduled once after submission.
                     </p>
+                    @endif
+
                 </div>
                 <div class="date-picker">
                     <h2 class="heading-text text-center mb-2">Date selected: <span

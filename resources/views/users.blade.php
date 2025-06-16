@@ -27,6 +27,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Name</th>
+                            <th>Date of birth</th>
                             <th>Email</th>
                             <th>Number</th>
                             <th>Country</th>
@@ -46,6 +47,9 @@
                             <tr data-user-id="{{ $user->id }}">
                                 <td>{{ $user->id }}</td>
                                 <td>{{ $user->fname }} {{ $user->lname }}</td>
+                                <td>
+                                  {{ $user->dob}}
+                                </td>
                                 <td>{{ $user->email }}</td>
                                 <td>{{ $user->number }}</td>
                                 <td>{{ $user->country }}</td>
@@ -53,8 +57,7 @@
                                 <td>{{ $user->sms_consent ? 'Yes':'No' }}</td>
                                 <td>{{ $user->email_consent ? 'Yes':'No' }}</td>
 
-                                <td>{{ $user->created_at ? \Carbon\Carbon::parse($user->created_at)->format('d M h:i A') : 'N/A' }}
-                                </td>
+                                <td>{{ $user->created_at ? \Carbon\Carbon::parse($user->created_at)->format('d M h:i A') : 'N/A' }}</td>
                                 <td>
                                     @forelse ($user->userAppointments as $ua)
                                         <div> {{ \Carbon\Carbon::createFromFormat('m-d-Y', $ua->appointment->name)->format('d M') }}</div>

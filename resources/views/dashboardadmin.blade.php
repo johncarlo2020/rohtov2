@@ -199,7 +199,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-2">
+            {{-- <div class="col-lg-2">
                 <div class="card">
                     <div class="card-header pb-0 p-3">
                         <h6 class="mb-0">Where</h6>
@@ -208,7 +208,7 @@
 
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
 
         <div class="row mt-4">
@@ -428,7 +428,7 @@
 
             var high2 = Highcharts.chart('container2', {
                 chart: {
-                    type: 'column' // Set chart type to 'column'
+                    type: 'line' // Set chart type to 'column'
                 },
                 title: {
                     text: 'Customers Overview',
@@ -442,7 +442,7 @@
                 xAxis: {
                     categories: labels, // Use labels2 as xAxis categories
                     title: {
-                        text: 'Hour'
+                        text: 'Dates'
                     },
                     accessibility: {
                         rangeDescription: labels.join(', ') // Set range description using labels2

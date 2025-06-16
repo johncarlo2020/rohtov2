@@ -76,7 +76,7 @@ class StationController extends Controller
             $station->status = $userHasStation;
         }
 
-           $appointments = Appointment::withCount('userAppointments')
+           $appointments = Appointment::where('status', '1')->withCount('userAppointments')
         ->get()
         ->map(function ($appointment) {
             $available = max(0, $appointment->total - $appointment->user_appointments_count);
@@ -254,8 +254,15 @@ class StationController extends Controller
 
         // dd($is2000);   adasdas
 
-        $userAppointment = $user->userAppointments()->count();
-        $selectedAppointment = $user->userAppointments()->with('appointment')->first() ?? '';
+        $userAppointment = $user->userAppointments()
+            ->whereHas('appointment', function ($q) {
+                $q->where('status', 1);
+            })
+            ->count();
+        $selectedAppointment = $user->userAppointments()
+            ->whereHas('appointment', function ($q) {
+                $q->where('status', 1);
+            })->with('appointment')->first() ?? '';
         $convertedDate = '';
         if ($selectedAppointment && isset($selectedAppointment->appointment->name)) {
             try {
@@ -265,7 +272,7 @@ class StationController extends Controller
                 $convertedDate = 'Invalid Date';
             }
         }
-        // dd($selectedAppointment);
+        //  dd($selectedAppointment);
 
         //check if user is on first 2000 verified users
 

@@ -116,7 +116,7 @@
                         <span id="error-msg" class="d-none text-danger"></span>
                         @error('country')
                             <span class="invalid-feedback d-block" role="alert">
-                                <strong>{{ $message }}</strong>
+                              <span class="text-danger fw-bold">{!! $message !!}</span>
                             </span>
                         @enderror
                     </div>
@@ -301,9 +301,9 @@
 </script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-       const el = document.getElementById("exampleModal");
-        const bsModal = new bootstrap.Modal(el);
-        bsModal.show();
+    //    const el = document.getElementById("exampleModal");
+    //     const bsModal = new bootstrap.Modal(el);
+    //     bsModal.show();
 
         const input = document.querySelector("#number");
         const errorMsg = document.querySelector("#error-msg");

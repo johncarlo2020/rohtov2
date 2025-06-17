@@ -59,7 +59,7 @@ class RegisteredUserController extends Controller
                 'string',
                 function ($attribute, $value, $fail) {
                     if (User::where('number', $value)->exists()) {
-                        $fail('This phone number is already registered with another e-mail');
+                      $fail('This phone number is already registered. If you’ve signed up for a previous event or pre-registered, please. <a href="' . route('login') . '">Login</a> instead');
                     }
                 }
             ],

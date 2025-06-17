@@ -42,6 +42,7 @@
     <!-- CSS Files -->
     <link id="pagestyle" href="{{ asset('assets/css/argon-dashboard.css?v=2.0.4') }}" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    @vite(['resources/sass/dashboard.scss'])
 </head>
 
 <body class="g-sidenav-show bg-gray-100">

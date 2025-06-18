@@ -28,7 +28,7 @@
                Sign Up
             </a>
              <a href="{{ route('login') }}" id="routeBtn" class="button-secondary button mb-3">
-               Login
+               Log In
             </a>
         </div>
     </div>

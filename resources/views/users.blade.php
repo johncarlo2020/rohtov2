@@ -65,14 +65,109 @@
             }
         }
     </style>
+    <div class="row pt-2 mt-4">
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+            <div class="card">
+                <div class="card-body p-3">
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="numbers">
+                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Total Customers</p>
+                                <h5 class="font-weight-bolder">
+                                    {{ $data['usersCount'] }}
+                                </h5>
+                                {{-- <p class="mb-0">
+                                <span class="text-success text-sm font-weight-bolder">+55%</span>
+                                since yesterday
+                            </p> --}}
+                            </div>
+                        </div>
+                        <div class="col-4 text-end">
+                            <div class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
+                                <i class="fa-solid fa-user text-lg opacity-10" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+            <div class="card">
+                <div class="card-body p-3">
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="numbers">
+                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Today's Customer</p>
+                                <h5 class="font-weight-bolder">
+                                    {{ $data['userToday'] }}
+                                </h5>
+                                {{-- <p class="mb-0">
+                                <span class="text-success text-sm font-weight-bolder">+3%</span>
+                                since last week
+                            </p> --}}
+                            </div>
+                        </div>
+                        <div class="col-4 text-end">
+                            <div class="icon icon-shape bg-gradient-danger shadow-danger text-center rounded-circle">
+                                <i class="fa-solid fa-calendar-day text-lg opacity-10" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+            <div class="card">
+                <div class="card-body p-3">
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="numbers">
+                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Completion Rate</p>
+                                <h5 class="font-weight-bolder">
+                                    {{ $data['percentage'] }}%
+                                </h5>
+
+                            </div>
+                        </div>
+                        <div class="col-4 text-end">
+                            <div class="icon icon-shape bg-gradient-success shadow-success text-center rounded-circle">
+                                <i class="fa-solid fa-percent text-lg opacity-10" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6">
+            <div class="card">
+                <div class="card-body p-3">
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="numbers">
+                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Customers Finished</p>
+                                <h5 class="font-weight-bolder">
+                                    {{ $data['completedUsers'] }}
+                                </h5>
+                            </div>
+                        </div>
+                        <div class="col-4 text-end">
+                            <div class="icon icon-shape bg-gradient-warning shadow-warning text-center rounded-circle">
+                                <i class="fa-solid fa-circle-check text-lg opacity-10" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="mt-4 row">
         <div class="mb-4 col-lg-12 mb-lg-0">
             <div class="card table-card py-3">
-                <div class="p-3 pb-0 card-header">
+                {{-- <div class="p-3 pb-0 card-header">
                     <div class="d-flex justify-content-between">
                         <h6 class="mb-2">Customer</h6>
                     </div>
-                </div>
+                </div> --}}
                 <div class="p-3 px-4">
                     <div class="loader-container">
                         <div class="loader"></div>

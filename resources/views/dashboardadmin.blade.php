@@ -168,17 +168,24 @@
     </div>
 
     <div class="row mt-4">
-        <div class="col-lg-6">
+        <div class="col-lg-4">
             <div class="card card h-100 mb-3">
                 <div class="card-body p-3">
                     <div id="existingMemberChart"></div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-4">
             <div class="card card h-100">
                 <div class="card-body p-3">
                     <div id="appealBarChart"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card card h-100">
+                <div class="card-body p-3">
+                    <div id="ageChart"></div>
                 </div>
             </div>
         </div>
@@ -605,6 +612,20 @@
                 renderTo: 'existingMemberChart',
                 title: 'Existing Member?',
                 data: existingData,
+                height: 300
+            }));
+
+            var age = @json($data['age']);
+            var ageData = age.map(function (item) {
+                return {
+                    name: item.dob || item.name || item.label || '',
+                    y: item.count || 0
+                };
+            });
+            Highcharts.chart(getPieChartConfig({
+                renderTo: 'ageChart',
+                title: 'Age Group?',
+                data: ageData,
                 height: 300
             }));
         })();

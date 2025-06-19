@@ -406,13 +406,18 @@ class StationController extends Controller
         //  dd($data['where']);
 
         $data['existing'] = User::selectRaw('existing , COUNT(*) as count')->groupBy('existing')->where('existing' ,'!=','')->get();
-        $data['social_media'] =  User::whereNotNull('social_media')
-            ->where('social_media', '!=', '')
-            ->get()
-            ->pluck('social_media')
-            ->map(fn($json) => json_decode($json, true))
-            ->flatten() ->countBy();
-            // dd($data['social_media']);
+        $data['social_media'] = User::whereNotNull('social_media')
+    ->where('social_media', '!=', '')
+    ->get()
+    ->pluck('social_media')
+    ->map(fn($json) => json_decode($json, true))
+    ->flatten()
+    ->countBy()
+    ->mapWithKeys(function ($value, $key) {
+        return [$key === '' ? 'Not Following' : $key => $value];
+    });
+
+            //dd($data['social_media']);
         $data['appeal'] = User::selectRaw('appeal , COUNT(*) as count')->groupBy('appeal')->where('appeal' ,'!=','')->get();
         // $data['where'] = User::selectRaw('where , COUNT(*) as count')->groupBy('where')->where('where' ,'!=','admin')->get();
 

@@ -147,8 +147,8 @@
                                 <option value="XiaoHongShu">XiaoHongShu (小红书)</option>
                             </select>
                         </div>
+                        <span id="social-error" class="text-danger d-none">Please select at least one social media platform.</span>
                     </div>
-
 
                     <div class="mb-2 row">
                         <div class="col-12 input-group">
@@ -163,8 +163,6 @@
                             </select>
                         </div>
                     </div>
-
-
 
                     <div class="mb-2 row">
                         <div class="col-12 input-group">
@@ -288,15 +286,32 @@
         });
 
         const followSelect = document.getElementById('follow-select');
-        const socialSection = document.getElementById('social-dropdown-group');
+        const socialGroup = document.getElementById('social-dropdown-group');
+        const socialSelect = document.getElementById('social-select');
+        const socialError = document.getElementById('social-error');
 
         followSelect.addEventListener('change', function () {
             if (this.value === 'Yes') {
-                socialSection.classList.remove('d-none');
+                socialGroup.classList.remove('d-none');
             } else {
-                socialSection.classList.add('d-none');
-                // Reset checkboxes
-                socialSection.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+                socialGroup.classList.add('d-none');
+                socialError.classList.add('d-none');
+                // Deselect all options
+                Array.from(socialSelect.options).forEach(opt => opt.selected = false);
+            }
+        });
+
+        document.querySelector('form').addEventListener('submit', function (e) {
+            if (followSelect.value === 'Yes') {
+                const selected = Array.from(socialSelect.selectedOptions);
+                if (selected.length === 0) {
+                    e.preventDefault();
+                    socialError.classList.remove('d-none');
+                    socialSelect.classList.add('is-invalid'); // Optional Bootstrap styling
+                } else {
+                    socialError.classList.add('d-none');
+                    socialSelect.classList.remove('is-invalid');
+                }
             }
         });
     });

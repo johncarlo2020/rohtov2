@@ -11,7 +11,7 @@
         .sticky-action {
             position: sticky;
             right: 0;
-            background: #f0f0f0;
+            background: #f8f8f8;
             z-index: 21;
             box-shadow: -2px 0 5px -2px rgba(0, 0, 0, 0.12);
         }
@@ -217,4 +217,27 @@
             $('#deleteUserModal').modal('show');
         });
     </script>
+
+    @if(session('success'))
+        <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;">
+            <div id="successToast" class="toast align-items-center bg-success text-white border-0 fade show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+                <div class="d-flex">
+                    <div class="toast-body d-flex align-items-center">
+                        <i class="fa fa-check-circle me-2"></i>
+                        {{ session('success') }}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var toastEl = document.getElementById('successToast');
+                if (toastEl) {
+                    var toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+                    toast.show();
+                }
+            });
+        </script>
+    @endif
 @endsection

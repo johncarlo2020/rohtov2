@@ -267,6 +267,40 @@
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
+    <style>
+        .highcharts-data-table table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            background-color: transparent;
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .highcharts-data-table th,
+        .highcharts-data-table td {
+            border: 1px solid #dee2e6;
+            padding: .75rem;
+            vertical-align: top;
+        }
+
+        .highcharts-data-table thead th {
+            vertical-align: bottom;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .highcharts-data-table tbody+tbody {
+            border-top: 2px solid #dee2e6;
+        }
+
+        .highcharts-data-table .highcharts-table-caption {
+            caption-side: bottom;
+            padding-top: .75rem;
+            padding-bottom: .75rem;
+            color: #6c757d;
+            text-align: left;
+        }
+    </style>
 
     <script>
         var labels = [];

@@ -350,7 +350,8 @@
 
         var high = Highcharts.chart('container', {
             chart: {
-                type: 'column'
+                type: 'column',
+                height: 400
             },
             title: {
                 text: 'Hourly Customer Registrations by Date',
@@ -411,7 +412,8 @@
 
         var high2 = Highcharts.chart('container2', {
             chart: {
-                type: 'spline' // Changed from 'line' to 'spline' for curved lines
+                type: 'spline', // Changed from 'line' to 'spline' for curved lines
+                height: 400
             },
             title: {
                 text: 'Customers Overview',
@@ -488,14 +490,13 @@
         function getPieChartConfig({
             renderTo,
             title,
-            data,
-            height
+            data
         }) {
             return {
                 chart: {
                     renderTo: renderTo,
                     type: 'pie',
-                    height: height || 600
+                    height: 400
                 },
                 title: {
                     text: title,
@@ -617,12 +618,11 @@
             Highcharts.chart(getPieChartConfig({
                 renderTo: 'existingMemberChart',
                 title: 'Existing Member?',
-                data: existingData,
-                height: 300
+                data: existingData
             }));
 
             var age = @json($data['age']);
-            var ageData = age.map(function (item) {
+            var ageData = age.map(function(item) {
                 return {
                     name: item.dob || item.name || item.label || '',
                     y: item.count || 0
@@ -631,8 +631,7 @@
             Highcharts.chart(getPieChartConfig({
                 renderTo: 'ageChart',
                 title: 'Age Group?',
-                data: ageData,
-                height: 300
+                data: ageData
             }));
         })();
 
@@ -650,7 +649,7 @@
             Highcharts.chart('appealBarChart', {
                 chart: {
                     type: 'bar',
-                    height: 300
+                    height: 400
                 },
                 title: {
                     text: 'What Appeals the Most?',

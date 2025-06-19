@@ -15,6 +15,11 @@
             z-index: 21;
             box-shadow: -2px 0 5px -2px rgba(0, 0, 0, 0.12);
         }
+        .custom-table {
+            width: 100%;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
 
     </style>
     <div class="mt-4 row">
@@ -25,8 +30,8 @@
                         <h6 class="mb-2">Customer</h6>
                     </div>
                 </div>
-                <div class="p-3">
-                    <table id="customer-table" class="display nowrap" style="min-width:1800px;width:100%">
+                <div class="p-3 px-4">
+                    <table id="customer-table" class="display nowrap border">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -150,7 +155,7 @@
         var table = $('#customer-table').DataTable({
             responsive: true,
             dom: "<'row'<'col-sm-12 col-md-2'l><'col-sm-12 col-md-8 text-center'B><'col-sm-12 col-md-2'f>>" +
-                "<'row'<'col-sm-12 table-responsive px-3'tr>>" +
+                "<'row'<'col-sm-12 table-responsive custom-table'tr>>" +
                 "<'d-flex justify-content-between'ip>",
             buttons: [
                 {

@@ -429,10 +429,18 @@
                     fill: true, // enable area under the line
                     borderColor: '#3b82f6', // blue line
                     backgroundColor: 'rgba(59, 130, 246, 0.2)', // shaded area
-                    // tension: 0.4, // Removed as 'spline' type handles curves
                     pointBackgroundColor: '#3b82f6',
                     pointRadius: 4,
-                    pointHoverRadius: 6
+                    pointHoverRadius: 6,
+                    dataLabels: {
+                        enabled: true,
+                        formatter: function() {
+                            return this.y; // Show the count at each dot
+                        },
+                        verticalAlign: 'bottom',
+                        crop: false,
+                        overflow: 'none'
+                    }
                 }
             },
             responsive: {

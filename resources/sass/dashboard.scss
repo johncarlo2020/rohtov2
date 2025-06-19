@@ -47,5 +47,12 @@
         }
     }
 
+    .navbar-vertical.bg-white .navbar-nav>.nav-item .nav-link.active {
+        background-color: #eff7ff !important;
+        box-shadow: none !important;
+        border-right: 5px solid #8181dc !important;
+        border-radius: 0 !important;
+    }
+
 }
 

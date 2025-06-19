@@ -336,12 +336,12 @@ function navbarBlurOnScroll(id) {
     toggleNavLinksColor('blur');
   }
 
-  function transparentNavbar() {
-    navbar.classList.remove(...classes)
-    navbar.classList.add(...toggleClasses)
+//   function transparentNavbar() {
+//     navbar.classList.remove(...classes)
+//     navbar.classList.add(...toggleClasses)
 
-    toggleNavLinksColor('transparent');
-  }
+//     toggleNavLinksColor('transparent');
+//   }
 }
 
 

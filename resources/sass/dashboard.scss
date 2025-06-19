@@ -4,6 +4,26 @@
 @import "variables";
 
 .dashboard-style {
+    // override the default style from dashboard
+    .card {
+        border-radius: 8px !important;
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px !important;
+    }
+
+    background: #F3F3F6;
+
+    .highcharts-credits {
+        display: none !important;
+    }
+
+    .sidenav.fixed-start+.main-content {
+        margin-left: 15.125rem !important;
+    }
+
+    .sidenav-header {
+          height: 65px;
+    }
+
     .card-with-filter {
         position: relative;
         #date-format-select {
@@ -14,4 +34,18 @@
                 width: 200px;
         }
     }
+
+    .icon-stations {
+        width: 60px;
+        height: 60px;
+        margin-right: 10px;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+    }
+
 }
+

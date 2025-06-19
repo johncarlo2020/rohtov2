@@ -481,8 +481,10 @@ class StationController extends Controller
             return [
                 'name' => $name,
                 'average_timespent' => number_format(($averageTimespentByStation->get($id)['average_timespent'] ?? 0) / 60, 2),
+                'id' => $id,
             ];
         });
+
 
         $averagePlaytimeByUser = StationUser::select('user_id', DB::raw('SUM(time_spent) / 60 as total_playtime'))->groupBy('user_id')->get();
 

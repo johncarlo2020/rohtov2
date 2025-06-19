@@ -1,154 +1,141 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="row">
-    <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-        <div class="card">
-            <div class="card-body p-3">
-                <div class="row">
-                    <div class="col-8">
-                        <div class="numbers">
-                            <p class="text-sm mb-0 text-uppercase font-weight-bold">Total Customers</p>
-                            <h5 class="font-weight-bolder">
-                                {{ $data['usersCount'] }}
-                            </h5>
-                            {{-- <p class="mb-0">
+    <div class="row pt-2">
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+            <div class="card">
+                <div class="card-body p-3">
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="numbers">
+                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Total Customers</p>
+                                <h5 class="font-weight-bolder">
+                                    {{ $data['usersCount'] }}
+                                </h5>
+                                {{-- <p class="mb-0">
                                 <span class="text-success text-sm font-weight-bolder">+55%</span>
                                 since yesterday
                             </p> --}}
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-4 text-end">
-                        <div class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
-                            <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
+                        <div class="col-4 text-end">
+                            <div class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
+                                <i class="fa-solid fa-user text-lg opacity-10" aria-hidden="true"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-        <div class="card">
-            <div class="card-body p-3">
-                <div class="row">
-                    <div class="col-8">
-                        <div class="numbers">
-                            <p class="text-sm mb-0 text-uppercase font-weight-bold">Today's Customer</p>
-                            <h5 class="font-weight-bolder">
-                                {{ $data['userToday'] }}
-                            </h5>
-                            {{-- <p class="mb-0">
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+            <div class="card">
+                <div class="card-body p-3">
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="numbers">
+                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Today's Customer</p>
+                                <h5 class="font-weight-bolder">
+                                    {{ $data['userToday'] }}
+                                </h5>
+                                {{-- <p class="mb-0">
                                 <span class="text-success text-sm font-weight-bolder">+3%</span>
                                 since last week
                             </p> --}}
+                            </div>
+                        </div>
+                        <div class="col-4 text-end">
+                            <div class="icon icon-shape bg-gradient-danger shadow-danger text-center rounded-circle">
+                                <i class="fa-solid fa-calendar-day text-lg opacity-10" aria-hidden="true"></i>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-4 text-end">
-                        <div class="icon icon-shape bg-gradient-danger shadow-danger text-center rounded-circle">
-                            <i class="ni ni-world text-lg opacity-10" aria-hidden="true"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+            <div class="card">
+                <div class="card-body p-3">
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="numbers">
+                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Completion Rate</p>
+                                <h5 class="font-weight-bolder">
+                                    {{ $data['percentage'] }}%
+                                </h5>
+
+                            </div>
+                        </div>
+                        <div class="col-4 text-end">
+                            <div class="icon icon-shape bg-gradient-success shadow-success text-center rounded-circle">
+                                <i class="fa-solid fa-percent text-lg opacity-10" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6">
+            <div class="card">
+                <div class="card-body p-3">
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="numbers">
+                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Customers Finished</p>
+                                <h5 class="font-weight-bolder">
+                                    {{ $data['completedUsers'] }}
+                                </h5>
+                            </div>
+                        </div>
+                        <div class="col-4 text-end">
+                            <div class="icon icon-shape bg-gradient-warning shadow-warning text-center rounded-circle">
+                                <i class="fa-solid fa-circle-check text-lg opacity-10" aria-hidden="true"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-        <div class="card">
-            <div class="card-body p-3">
-                <div class="row">
-                    <div class="col-8">
-                        <div class="numbers">
-                            <p class="text-sm mb-0 text-uppercase font-weight-bold">Completion Rate</p>
-                            <h5 class="font-weight-bolder">
-                                {{ $data['percentage'] }}%
-                            </h5>
-
-                        </div>
-                    </div>
-                    <div class="col-4 text-end">
-                        <div class="icon icon-shape bg-gradient-success shadow-success text-center rounded-circle">
-                            <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-3 col-sm-6">
-        <div class="card">
-            <div class="card-body p-3">
-                <div class="row">
-                    <div class="col-8">
-                        <div class="numbers">
-                            <p class="text-sm mb-0 text-uppercase font-weight-bold">Customers Finished</p>
-                            <h5 class="font-weight-bolder">
-                                {{ $data['completedUsers'] }}
-                            </h5>
-                        </div>
-                    </div>
-                    <div class="col-4 text-end">
-                        <div class="icon icon-shape bg-gradient-warning shadow-warning text-center rounded-circle">
-                            <i class="ni ni-cart text-lg opacity-10" aria-hidden="true"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="row mt-4">
-    <div class="col-lg-6 mb-lg-0 mb-4">
-        <div class="card z-index-2 h-100">
-
-            <div class="card-body p-3">
-                <figure class="highcharts-figure">
-                    <div id="container2"></div>
-                </figure>
-            </div>
-
-
-        </div>
-    </div>
-
-
-    <div class="col-lg-6">
-        <div class="card h-100">
-            <div class="card-header pb-0 p-3">
-                <h6 class="mb-0">Stations</h6>
-            </div>
-            <div class="card-body p-3">
-                <ul class="list-group">
-                    @foreach ($data['stations'] as $station)
-                    <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
-                        <div class="d-flex align-items-center">
-                            <div class="icon icon-shape icon-sm me-3 bg-gradient-dark shadow text-center">
-                                <i class="ni ni-mobile-button text-white opacity-10"></i>
+    <div class="row mt-4">
+        @foreach ($data['stations'] as $station)
+            <div class="col">
+                <div class="card">
+                    <div class="card-body d-flex justify-content-between mb-2 rounded  p-3 ">
+                        <div class="d-flex align-items-center w-100">
+                            <div class="icon-stations">
+                                <img class="" src="{{ asset("images/hadalabobabies/station{$station['id']}.webp") }}" alt="Station Image">
                             </div>
                             <div class="d-flex flex-column">
                                 <h6 class="mb-1 text-dark text-sm">{{ $station['name'] }}</h6>
-                                <span class="text-xs">Average Time : <span class="font-weight-bold">{{
-                                        $station['average_timespent'] }}
+                                <span class="text-xs">Average Time : <span
+                                        class="font-weight-bold">{{ $station['average_timespent'] }}
                                         minutes</span></span>
                             </div>
                         </div>
-                    </li>
-                    @endforeach
-
-
-                </ul>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+    <div class="row mt-4">
+        <div class="col-lg-6 mb-lg-0 mb-4">
+            <div class="card z-index-2 h-100">
+                <div class="card-body p-3">
+                    <figure class="highcharts-figure">
+                        <div id="container2"></div>
+                    </figure>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="row mt-4">
-        <div class="col-lg-12 mb-lg-0 mb-4">
+        <div class="col-lg-6 mb-lg-0 mb-4">
             <div class="card z-index-2 h-100">
                 <div class="card-body card-with-filter p-3">
-                     <select class="form-control form-control-sm" id="date-format-select">
-                                    @foreach ($data['dates'] as $key => $date)
-                                    <option value="{{ $date['date'] }}">{{ $date['date'] }}</option>
-                                    @endforeach
-                                </select>
+                    <select class="form-control form-control-sm" id="date-format-select">
+                        @foreach ($data['dates'] as $key => $date)
+                            <option value="{{ $date['date'] }}">{{ $date['date'] }}</option>
+                        @endforeach
+                    </select>
                     <figure class="highcharts-figure">
                         <div id="container"></div>
                     </figure>
@@ -156,118 +143,46 @@
             </div>
         </div>
     </div>
+    <div class="row mt-4">
+        <div class="col-lg-4">
+            <div class="card card h-100 mb-3">
+                <div class="card-body p-3">
+                    <div id="countriesChart"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card card h-100 mb-3">
+                <div class="card-body p-3">
+                    <div id="findEventChart"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card card h-100 mb-3">
+                <div class="card-body p-3">
+                    <div id="socialMediaChart"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="row mt-4">
-        <div class="col-lg-2">
-            <div class="card card h-100">
-                <div class="card-header pb-0 p-3">
-                    <h6 class="mb-0">Countries</h6>
-                </div>
+        <div class="col-lg-6">
+            <div class="card card h-100 mb-3">
                 <div class="card-body p-3">
-                    <ul class="list-group">
-                        @foreach ($data['country'] as $location)
-                        <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
-                            <div class="d-flex align-items-center">
-                                <div class="d-flex flex-column">
-                                    <h6 class="mb-1 text-dark text-sm">{{ $location->country }}</h6>
-                                    <span class="text-xs">Count : <span class="font-weight-bold">{{ $location->count
-                                            }}</span></span>
-                                </div>
-                            </div>
-                        </li>
-                        @endforeach
-                    </ul>
+                    <div id="existingMemberChart"></div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-2">
+        <div class="col-lg-6">
             <div class="card card h-100">
-                <div class="card-header pb-0 p-3">
-                    <h6 class="mb-0">How did you find this event ?
-                    </h6>
-                </div>
                 <div class="card-body p-3">
-                <ul class="list-group">
-                    @foreach ($data['where'] as $location)
-                    <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
-                        <div class="d-flex align-items-center">
-                            <div class="d-flex flex-column">
-                                <h6 class="mb-1 text-dark text-sm">{{ $location['find']}}</h6>
-                                <span class="text-xs">Count : <span class="font-weight-bold">{{ $location['count']
-                                        }}</span></span>
-                            </div>
-                        </div>
-                    </li>
-                    @endforeach
-                </ul>
+                    <div id="appealBarChart"></div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-2">
-            <div class="card card h-100">
-                <div class="card-header pb-0 p-3">
-                    <h6 class="mb-0">Social Media Count
-                    </h6>
-                </div>
-                @foreach ($data['social_media'] as $platform => $count)
-                <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
-                    <div class="d-flex align-items-center">
-                        <div class="d-flex flex-column">
-                            <h6 class="mb-1 text-dark text-sm">{{ $platform }}</h6>
-                            <span class="text-xs">Count : <span class="font-weight-bold">{{ $count }}</span></span>
-                        </div>
-                    </div>
-                </li>
-                @endforeach
-
-            </div>
-        </div>
-        <div class="col-lg-2">
-            <div class="card card h-100">
-                <div class="card-header pb-0 p-3">
-                    <h6 class="mb-0">Existing Member ?
-                    </h6>
-                </div>
-                <div class="card-body p-3">
-                    <ul class="list-group">
-                        @foreach ($data['existing'] as $location)
-                        <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
-                            <div class="d-flex align-items-center">
-                                <div class="d-flex flex-column">
-                                    <h6 class="mb-1 text-dark text-sm">{{ $location['existing']}}</h6>
-                                    <span class="text-xs">Count : <span class="font-weight-bold">{{ $location['count']
-                                            }}</span></span>
-                                </div>
-                            </div>
-                        </li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-
-        </div>
-        <div class="col-lg-2">
-            <div class="card card h-100">
-                <div class="card-header pb-0 p-3">
-                    <h6 class="mb-0">What Appeals the Most ?</h6>
-                </div>
-                <div class="card-body p-3">
-                    <ul class="list-group">
-                        @foreach ($data['appeal'] as $location)
-                        <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
-                            <div class="d-flex align-items-center">
-                                <div class="d-flex flex-column">
-                                    <h6 class="mb-1 text-dark text-sm">{{ $location['appeal']}}</h6>
-                                    <span class="text-xs">Count : <span class="font-weight-bold">{{ $location['count']
-                                            }}</span></span>
-                                </div>
-                            </div>
-                        </li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-        </div>
+    </div>
 
     <div class="row mt-4">
         <div class="col-lg-12 mb-lg-0 mb-4">
@@ -281,39 +196,39 @@
                     <table class="table align-items-center ">
                         <tbody>
                             @foreach ($data['users'] as $user)
-                            <tr>
-                                <td class="w-5">
-                                    <div class="d-flex px-2 py-1 align-items-center">
-                                        <div class="ms-4">
-                                            <h6 class="text-sm mb-0">{{ $user->id }}</h6>
+                                <tr>
+                                    <td class="w-5">
+                                        <div class="d-flex px-2 py-1 align-items-center">
+                                            <div class="ms-4">
+                                                <h6 class="text-sm mb-0">{{ $user->id }}</h6>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td class="w-10">
-                                    <div class="d-flex px-2 py-1 align-items-center">
-                                        <div class="ms-4">
-                                            <p class="text-xs font-weight-bold mb-0">Name</p>
-                                            <h6 class="text-sm mb-0">{{ $user->fname }} {{ $user->lname }}
-                                            </h6>
+                                    </td>
+                                    <td class="w-10">
+                                        <div class="d-flex px-2 py-1 align-items-center">
+                                            <div class="ms-4">
+                                                <p class="text-xs font-weight-bold mb-0">Name</p>
+                                                <h6 class="text-sm mb-0">{{ $user->fname }} {{ $user->lname }}
+                                                </h6>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                                @foreach ($user['stations'] as $station)
-                                <td>
-                                    <div class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $station['name'] }}
-                                        </p>
-                                        <h6
-                                            class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-danger' }}">
-                                            {{ $station['value'] ? 'Yes' : 'No' }}
-                                        </h6>
+                                    </td>
+                                    @foreach ($user['stations'] as $station)
+                                        <td>
+                                            <div class="text-center">
+                                                <p class="text-xs font-weight-bold mb-0">{{ $station['name'] }}
+                                                </p>
+                                                <h6
+                                                    class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-danger' }}">
+                                                    {{ $station['value'] ? 'Yes' : 'No' }}
+                                                </h6>
 
-                                    </div>
-                                </td>
-                                @endforeach
+                                            </div>
+                                        </td>
+                                    @endforeach
 
 
-                            </tr>
+                                </tr>
                             @endforeach
 
 
@@ -361,7 +276,7 @@
         var selectedDate = $('#date-format-select').val();
 
         // Listen for change event on select element
-        $('#date-format-select').change(function () {
+        $('#date-format-select').change(function() {
             selectedDate = $(this).val(); // Get selected date
 
             // Assuming $data['registrationsPerHour'] is an associative array where keys are dates
@@ -402,7 +317,7 @@
         var day1 = "{{ $data['dates'][0]['date'] }}";
         var chart2 = @json($data['registrationsPerHour'][$data['dates'][0]['date']]);
 
-        Object.keys(chart).forEach(function (date, index) {
+        Object.keys(chart).forEach(function(date, index) {
             var dateObj = new Date(date);
             var formattedDate = dateObj.toLocaleDateString('en-US', {
                 month: 'long',
@@ -413,7 +328,7 @@
         });
 
 
-        chart2.forEach(function (obj) {
+        chart2.forEach(function(obj) {
             // Log index
 
             // Push date and hour as label
@@ -438,9 +353,6 @@
             },
             xAxis: {
                 categories: labels2, // Use labels2 as xAxis categories
-                title: {
-                    text: 'Hour'
-                },
                 accessibility: {
                     rangeDescription: labels2.join(', ') // Set range description using labels2
                 }
@@ -458,7 +370,7 @@
                 column: {
                     dataLabels: {
                         enabled: true,
-                        formatter: function () {
+                        formatter: function() {
                             return this.y; // Display the data value as the label
                         },
                         inside: false,
@@ -486,7 +398,7 @@
 
         var high2 = Highcharts.chart('container2', {
             chart: {
-                type: 'line'
+                type: 'spline' // Changed from 'line' to 'spline' for curved lines
             },
             title: {
                 text: 'Customers Overview',
@@ -499,9 +411,6 @@
             },
             xAxis: {
                 categories: labels, // Use labels2 as xAxis categories
-                title: {
-                    text: 'Hour'
-                },
                 accessibility: {
                     rangeDescription: labels.join(', ')
                 }
@@ -516,17 +425,14 @@
                 data: data
             }],
             plotOptions: {
-                column: {
-                    dataLabels: {
-                        enabled: true,
-                        formatter: function () {
-                            return this.y; // Display the data value as the label
-                        },
-                        inside: false,
-                        verticalAlign: 'top', // Position the label at the top of the column
-                        crop: false,
-                        overflow: 'none'
-                    }
+                series: {
+                    fill: true, // enable area under the line
+                    borderColor: '#3b82f6', // blue line
+                    backgroundColor: 'rgba(59, 130, 246, 0.2)', // shaded area
+                    // tension: 0.4, // Removed as 'spline' type handles curves
+                    pointBackgroundColor: '#3b82f6',
+                    pointRadius: 4,
+                    pointHoverRadius: 6
                 }
             },
             responsive: {
@@ -545,263 +451,234 @@
             }
         });
 
-
-        // function exportToPNG() {
-        //     html2canvas(document.getElementById('chart-line'), {
-        //         onrendered: function(canvas) {
-        //             var link = document.createElement('a');
-        //             link.href = canvas.toDataURL('image/png');
-        //             link.download = 'chart.png';
-        //             link.click();
-        //         }
-        //     });
-        // }
-
-        function exportToPDF() {
-            var element = document.getElementById('chart-line');
-            html2pdf()
-                .from(element)
-                .save('overview.pdf');
+        // Utility to generate a random color in hex format
+        function getRandomColor() {
+            return '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
         }
-
-        function exportToJPEG() {
-            var canvas = document.getElementById('chart-line');
-            var dataURL = canvas.toDataURL('image/jpeg');
-            var link = document.createElement('a');
-            link.href = dataURL;
-            link.download = 'chart.jpeg';
-            link.click();
+        // Assign random colors to each data point
+        function assignRandomColors(data) {
+            return data.map(function(point) {
+                return Object.assign({}, point, {
+                    color: getRandomColor()
+                });
+            });
         }
-
-        function exportToPDF2() {
-            var canvas = document.getElementById('chart-line2');
-            var pageWidth = 595; // A4 page width in pixels
-            var pageHeight = 842; // A4 page height in pixels
-
-            // Set the canvas dimensions to fit within the page
-            canvas.width = pageWidth;
-            canvas.height = pageHeight;
-
-            // Get the context of the canvas
-            var ctx = canvas.getContext('2d');
-            // Here you would draw your chart onto the canvas using the context 'ctx'
-            // Ensure that the chart is drawn within the canvas dimensions
-
-            // Convert the canvas to a data URL
-            var dataURL = canvas.toDataURL();
-
-            // Create a new image element
-            var img = new Image();
-            img.src = dataURL;
-
-            // Create a new PDF document
-            var pdf = new jsPDF('p', 'pt', [pageWidth, pageHeight]);
-
-            // Add the image to the PDF document
-            pdf.addImage(img, 'PNG', 0, 0, pageWidth, pageHeight);
-
-            // Save the PDF document
-            pdf.save('overview.pdf');
-        }
-
-        function exportToJPEG2() {
-            var canvas = document.getElementById('chart-line2');
-            var dataURL = canvas.toDataURL('image/jpeg');
-            var link = document.createElement('a');
-            link.href = dataURL;
-            link.download = 'chart.jpeg';
-            link.click();
-        }
-
-
-
-        // Iterate over the keys (dates) of the associative array
-
-        // Assuming chart2 is an object with hour keys and registration counts as values
-
-
-        // Iterate over each object in chart2 array
-
-
-        var ctx1 = document.getElementById("chart-line").getContext("2d");
-        var ctx2 = document.getElementById("chart-line2").getContext("2d");
-
-
-        var gradientStroke1 = ctx1.createLinearGradient(0, 230, 0, 50);
-        var gradientStroke2 = ctx2.createLinearGradient(0, 230, 0, 50);
-
-
-        gradientStroke1.addColorStop(1, 'rgba(94, 114, 228, 0.2)');
-        gradientStroke1.addColorStop(0.2,
-            'rgba(94, 114, 228, 0.0)');
-        gradientStroke1.addColorStop(0, 'rgba(94, 114, 228, 0)');
-
-        gradientStroke2.addColorStop(1, 'rgba(94, 114, 228, 0.2)');
-        gradientStroke2.addColorStop(0.2,
-            'rgba(94, 114, 228, 0.0)');
-        gradientStroke2.addColorStop(0, 'rgba(94, 114, 228, 0)');
-        new Chart(ctx1, {
-            type: "line", // changed from "bar" to "line"
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: "Customers",
-                    tension: 0.4,
-                    borderWidth: 0,
-                    pointRadius: 0,
-                    borderColor: "#5e72e4",
-                    backgroundColor: gradientStroke1,
-                    borderWidth: 3,
-                    fill: true,
-                    data: data,
-                    maxBarThickness: 50
-
-                }],
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false,
+        // Shared pie chart config
+        function getPieChartConfig({
+            renderTo,
+            title,
+            data,
+            height
+        }) {
+            return {
+                chart: {
+                    renderTo: renderTo,
+                    type: 'pie',
+                    height: height || 600
+                },
+                title: {
+                    text: title,
+                    align: 'left'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.y}</b> ({point.percentage:.1f}%)'
+                },
+                accessibility: {
+                    point: {
+                        valueSuffix: '%'
                     }
                 },
-                interaction: {
-                    intersect: false,
-                    mode: 'index',
+                legend: {
+                    enabled: true,
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'middle',
+                    maxHeight: 500,
+                    navigation: {
+                        enabled: true
+                    }
                 },
-                scales: {
-                    y: {
-                        grid: {
-                            drawBorder: false,
-                            display: true,
-                            drawOnChartArea: true,
-                            drawTicks: false,
-                            borderDash: [5, 5]
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.y} ({point.percentage:.1f}%)',
+                            distance: 20
                         },
-                        ticks: {
-                            display: true,
-                            padding: 10,
-                            color: '#fbfbfb',
-                            font: {
-                                size: 11,
-                                family: "Open Sans",
-                                style: 'normal',
-                                lineHeight: 2
-                            },
-                        }
-                    },
-                    x: {
-                        grid: {
-                            drawBorder: false,
-                            display: false,
-                            drawOnChartArea: false,
-                            drawTicks: false,
-                            borderDash: [5, 5]
-                        },
-                        ticks: {
-                            display: true,
-                            color: '#ccc',
-                            padding: 20,
-                            font: {
-                                size: 11,
-                                family: "Open Sans",
-                                style: 'normal',
-                                lineHeight: 2
-                            },
-                        }
-                    },
+                        showInLegend: true
+                    }
                 },
-            },
-        });
-
-        var chart2 = new Chart(ctx2, {
-            type: "line", // changed from "bar" to "line"
-            data: {
-                labels: labels2,
-                datasets: [{
-                    label: selectedDate,
-                    tension: 0.4,
-                    borderWidth: 0,
-                    pointRadius: 0,
-                    borderColor: "#5e72e4",
-                    backgroundColor: gradientStroke2,
-                    borderWidth: 3,
-                    fill: true,
-                    data: data2,
-                    maxBarThickness: 70
+                series: [{
+                    name: 'Count',
+                    colorByPoint: true,
+                    data: assignRandomColors(data)
                 }],
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false,
-                    },
-                    tooltip: {
-                        enabled: false
-                    },
-                    datalabels: {
-                        display: true,
-                        color: 'black', // Set the color of the labels
-                        font: {
-                            weight: 'bold' // Set the font weight of the labels
+                credits: {
+                    enabled: false
+                },
+                responsive: {
+                    rules: [{
+                        condition: {
+                            maxWidth: 700
                         },
-                        anchor: 'end', // Position of the labels relative to the anchor point
-                        align: 'top', // Alignment of the labels relative to the anchor point
-                        formatter: function (value) {
-                            return value; // Return the value to be displayed
+                        chartOptions: {
+                            chart: {
+                                height: 300
+                            },
+                            legend: {
+                                layout: 'horizontal',
+                                align: 'center',
+                                verticalAlign: 'bottom',
+                                maxHeight: 100
+                            },
+                            plotOptions: {
+                                pie: {
+                                    dataLabels: {
+                                        distance: 10
+                                    }
+                                }
+                            }
+                        }
+                    }]
+                }
+            };
+        }
+
+        (function() {
+            var countries = @json($data['country']);
+            var countryData = countries.map(function(item) {
+                return {
+                    name: item.country || item.name || item.label || '',
+                    y: item.count || 0
+                };
+            });
+            Highcharts.chart(getPieChartConfig({
+                renderTo: 'countriesChart',
+                title: 'Country Distribution',
+                data: countryData
+            }));
+
+            var findData = @json($data['where']);
+            var findEventData = findData.map(function(item) {
+                return {
+                    name: item.find || item.name || item.label || '',
+                    y: item.count || 0
+                };
+            });
+            Highcharts.chart(getPieChartConfig({
+                renderTo: 'findEventChart',
+                title: 'How did you find this event?',
+                data: findEventData
+            }));
+
+            var socialMedia = @json($data['social_media']);
+            var socialMediaData = Object.keys(socialMedia).map(function(platform) {
+                return {
+                    name: platform,
+                    y: socialMedia[platform] || 0
+                };
+            });
+            Highcharts.chart(getPieChartConfig({
+                renderTo: 'socialMediaChart',
+                title: 'Social Media Count',
+                data: socialMediaData
+            }));
+
+            var existing = @json($data['existing']);
+            var existingData = existing.map(function(item) {
+                return {
+                    name: item.existing || item.name || item.label || '',
+                    y: item.count || 0
+                };
+            });
+            Highcharts.chart(getPieChartConfig({
+                renderTo: 'existingMemberChart',
+                title: 'Existing Member?',
+                data: existingData,
+                height: 300
+            }));
+        })();
+
+        (function() {
+            var appeal = @json($data['appeal']);
+            var appealLabels = appeal.map(function(item) {
+                return item.appeal || item.name || item.label || '';
+            });
+            var appealCounts = appeal.map(function(item) {
+                return item.count || 0;
+            });
+            var appealColors = appealLabels.map(function() {
+                return getRandomColor();
+            });
+            Highcharts.chart('appealBarChart', {
+                chart: {
+                    type: 'bar',
+                    height: 300
+                },
+                title: {
+                    text: 'What Appeals the Most?',
+                    align: 'left'
+                },
+                xAxis: {
+                    categories: appealLabels,
+                    title: {
+                        text: 'Appeal'
+                    }
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Count',
+                        align: 'high'
+                    },
+                    labels: {
+                        overflow: 'justify'
+                    }
+                },
+                tooltip: {
+                    valueSuffix: ' people'
+                },
+                plotOptions: {
+                    bar: {
+                        dataLabels: {
+                            enabled: true
                         }
                     }
                 },
-                interaction: {
-                    intersect: false,
-                    mode: 'index',
+                legend: {
+                    enabled: false
                 },
-                scales: {
-                    y: {
-                        grid: {
-                            drawBorder: false,
-                            display: true,
-                            drawOnChartArea: true,
-                            drawTicks: false,
-                            borderDash: [5, 5]
-                        },
-                        ticks: {
-                            display: true,
-                            padding: 10,
-                            color: '#fbfbfb',
-                            font: {
-                                size: 11,
-                                family: "Open Sans",
-                                style: 'normal',
-                                lineHeight: 2
-                            },
-                        }
-                    },
-                    x: {
-                        grid: {
-                            drawBorder: false,
-                            display: false,
-                            drawOnChartArea: false,
-                            drawTicks: false,
-                            borderDash: [5, 5]
-                        },
-                        ticks: {
-                            display: true,
-                            color: '#ccc',
-                            padding: 20,
-                            font: {
-                                size: 11,
-                                family: "Open Sans",
-                                style: 'normal',
-                                lineHeight: 2
-                            },
-                        }
-                    },
+                credits: {
+                    enabled: false
                 },
-            },
-        });
+                series: [{
+                    name: 'Count',
+                    data: appealCounts,
+                    colorByPoint: true,
+                    colors: appealColors
+                }],
+                responsive: {
+                    rules: [{
+                        condition: {
+                            maxWidth: 700
+                        },
+                        chartOptions: {
+                            chart: {
+                                height: 300
+                            },
+                            xAxis: {
+                                labels: {
+                                    style: {
+                                        fontSize: '10px'
+                                    }
+                                }
+                            }
+                        }
+                    }]
+                }
+            });
+        })();
     </script>
-    @endsection
+@endsection

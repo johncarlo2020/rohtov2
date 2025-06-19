@@ -25,7 +25,7 @@
                         <h6 class="mb-2">Customer</h6>
                     </div>
                 </div>
-                <div class="table-responsive mx-3">
+                <div class="p-3">
                     <table id="customer-table" class="display nowrap" style="min-width:1800px;width:100%">
                         <thead>
                             <tr>
@@ -148,9 +148,10 @@
         // });
         var permissionName = "{{ $permission }}";
         var table = $('#customer-table').DataTable({
-            responsive: false,
-            dom: "<'row'<'col-sm-12 col-md-2'l><'col-sm-6 col-md-6 align-items-end'B><'col-sm-12 col-md-3'f>>" +
-                "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-12 col-md-2'i><'col-sm-12 col-md-7'p>>",
+            responsive: true,
+            dom: "<'row'<'col-sm-12 col-md-2'l><'col-sm-12 col-md-8 text-center'B><'col-sm-12 col-md-2'f>>" +
+                "<'row'<'col-sm-12 table-responsive px-3'tr>>" +
+                "<'d-flex justify-content-between'ip>",
             buttons: [
                 {
                     extend: 'copy',

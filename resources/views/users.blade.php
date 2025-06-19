@@ -48,7 +48,14 @@
                                     <td>{{ $user->number }}</td>
                                     <td>{{ $user->country }}</td>
                                     <td>{{ $user->existing }}</td>
-                                    <td>{{ $user->social_media }}</td>
+                                    <td>
+                                        @php
+                                        $platforms = json_decode($user->social_media, true);
+                                        @endphp
+                                    
+                                        {{ !empty($platforms) ? implode(', ', $platforms) : 'Not Following' }}
+                                    </td>
+                                    
                                     <td>{{ $user->appeal }}</td>
 
 

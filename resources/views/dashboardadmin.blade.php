@@ -321,7 +321,11 @@
         });
 
         var registrationsPerHour = @json($data['registrationsPerHour']);
-        var hours = Object.keys(registrationsPerHour).sort();
+        var hours = Object.keys(registrationsPerHour).sort(function(a, b) {
+            var timeA = new Date('1970/01/01 ' + a.replace(/([ap]m)/, ' $1'));
+            var timeB = new Date('1970/01/01 ' + b.replace(/([ap]m)/, ' $1'));
+            return timeA - timeB;
+        });
         var allDates = [];
 
         // Get all unique dates

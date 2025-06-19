@@ -12,7 +12,7 @@
             position: sticky;
             right: 0;
             background: #f8f8f8;
-            z-index: 21;
+            z-index: 999;
             box-shadow: -2px 0 5px -2px rgba(0, 0, 0, 0.12);
         }
         .custom-table {
@@ -31,6 +31,39 @@
             max-height: 90vh;
         }
 
+        th {
+            position: sticky !important;
+            top: 0;
+            background-color: #f8f9fa;
+            z-index: 998;
+        }
+
+        .loader-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 50vh;
+        }
+
+        .loader {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
     <div class="mt-4 row">
         <div class="mb-4 col-lg-12 mb-lg-0">
@@ -41,7 +74,11 @@
                     </div>
                 </div>
                 <div class="p-3 px-4">
-                    <table id="customer-table" class="display nowrap border">
+                    <div class="loader-container">
+                        <div class="loader"></div>
+                        <p class="mt-2">Loading...</p>
+                    </div>
+                    <table id="customer-table" class="display nowrap border" style="display: none;">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -153,84 +190,83 @@
     <!-- Include DataTables Buttons JS -->
 
     <script>
-        // $(document).ready(function() {
-        //     $('#customer-table').DataTable({
-        //         dom: 'Bfrtip',
-        //         buttons: [
-        //             'copy', 'excel', 'pdf', 'csv'
-        //         ]
-        //     });
-        // });
-        var permissionName = "{{ $permission }}";
-        var table = $('#customer-table').DataTable({
-            responsive: true,
-            dom: "<'row'<'col-sm-12 col-md-2'l><'col-sm-12 col-md-8 text-center'B><'col-sm-12 col-md-2'f>>" +
-                "<'row'<'col-sm-12 table-responsive custom-table'tr>>" +
-                "<'d-flex justify-content-between'ip>",
-            buttons: [
-                {
+        $(document).ready(function() {
+            // Show the loader
+            $('.loader-container').show();
+            $('#customer-table').hide();
+
+            var permissionName = "{{ $permission }}";
+            var table = $('#customer-table').DataTable({
+                responsive: true,
+                dom: "<'row'<'col-sm-12 col-md-2'l><'col-sm-12 col-md-8 text-center'B><'col-sm-12 col-md-2'f>>" +
+                    "<'row'<'col-sm-12 table-responsive custom-table'tr>>" +
+                    "<'d-flex justify-content-between'ip>",
+                buttons: [{
                     extend: 'copy',
                     text: '<i class="fa fa-copy"></i> Copy',
                     className: 'btn btn-secondary'
-                },
-                {
+                }, {
                     extend: 'csv',
                     text: '<i class="fa fa-file-csv"></i> CSV',
                     className: 'btn btn-info'
-                },
-                {
+                }, {
                     extend: 'excel',
                     text: '<i class="fa fa-file-excel"></i> Excel',
                     className: 'btn btn-success'
-                },
-                {
+                }, {
                     extend: 'pdf',
                     text: '<i class="fa fa-file-pdf"></i> PDF',
                     className: 'btn btn-danger'
-                },
-                {
+                }, {
                     extend: 'print',
                     text: '<i class="fa fa-print"></i> Print',
                     className: 'btn btn-primary'
+                }],
+                order: [
+                    [0, 'desc']
+                ],
+                columnDefs: [{
+                    orderable: false,
+                    targets: -1
+                } // Disable sorting on last column (Action)
+                ],
+                initComplete: function(settings, json) {
+                    $('.loader-container').hide();
+                    $('#customer-table').show();
                 }
-            ],
-            order: [
-                [0, 'desc']
-            ],
-            columnDefs: [
-                { orderable: false, targets: -1 } // Disable sorting on last column (Action)
-            ]
-        });
+            });
 
 
-        // Move the search input to the right side
-        $('.dataTables_filter').addClass('float-end');
-        $('.dataTables_filter label').addClass('w-100');
+            // Move the search input to the right side
+            $('.dataTables_filter').addClass('float-end');
+            $('.dataTables_filter label').addClass('w-100');
 
-        $('#customer-table tbody').on('click', 'tr', function(e) {
-            // Prevent redirect if the clicked target is inside a delete button
-            console.log('cliked');
-            if ($(e.target).closest('.delete-user-btn').length) {
-                return;
-            }
+            $('#customer-table tbody').on('click', 'tr', function(e) {
+                // Prevent redirect if the clicked target is inside a delete button
+                console.log('cliked');
+                if ($(e.target).closest('.delete-user-btn').length) {
+                    return;
+                }
 
-            var userId = $(this).data('user-id');
+                var userId = $(this).data('user-id');
 
-            window.location.href = "{{ route('userData', ['user' => ':userId']) }}".replace(':userId', userId);
-        });
+                window.location.href = "{{ route('userData', ['user' => ':userId']) }}".replace(
+                    ':userId', userId);
+            });
 
-        // Use event delegation for delete button
-        $('#customer-table tbody').on('click', '.delete-user-btn', function(e) {
-            e.stopPropagation(); // Prevent row click
-            const userId = $(this).data('user-id');
-            const userName = $(this).data('user-name');
+            // Use event delegation for delete button
+            $('#customer-table tbody').on('click', '.delete-user-btn', function(e) {
+                e.stopPropagation(); // Prevent row click
+                const userId = $(this).data('user-id');
+                const userName = $(this).data('user-name');
 
-            let deleteUrl = @json(route('users.destroy', ['id' => ':id']));
-            deleteUrl = deleteUrl.replace(':id', userId);
+                let deleteUrl = @json(route('users.destroy', ['id' => ':id']));
+                deleteUrl = deleteUrl.replace(':id', userId);
 
-            $('#deleteUserForm').attr('action', deleteUrl);
-            $('#deleteUserName').text(userName);
-            $('#deleteUserModal').modal('show');
+                $('#deleteUserForm').attr('action', deleteUrl);
+                $('#deleteUserName').text(userName);
+                $('#deleteUserModal').modal('show');
+            });
         });
     </script>
 

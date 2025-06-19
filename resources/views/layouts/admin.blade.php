@@ -88,13 +88,13 @@
                 <nav aria-label="breadcrumb">
                     <div class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5 d-flex justify-content-start gap-2 align-items-center">
                         <p class="font-weight-bolder mb-0  pr-3 mr-3 border px-3 py-1 rounded ">
-                            Dashboard
+                             {{ ucfirst(Route::currentRouteName()) }}
                         </p>
                         <p class="breadcrumb-item text-sm mb-0">
                             <a class="opacity-5 " href="javascript:;">Home</a>
                         </p>
                         <p class="breadcrumb-item text-sm first-line:active mb-0" aria-current="page">
-                            Dashboard
+                              {{ ucfirst(Route::currentRouteName()) }}
                         </p>
                     </div>
                 </nav>

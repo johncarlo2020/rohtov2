@@ -421,7 +421,7 @@ class StationController extends Controller
         // ->values()
         // ->toArray();
         $data['where'] = User::selectRaw('find , COUNT(*) as count')->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
-            ->groupBy('find')->where('find' ,'!=','')->get();
+            ->groupBy('find')->where('find' ,'!=','admin')->get();
         //  dd($data['where']);
         $data['age'] = User::selectRaw('dob , COUNT(*) as count')->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
             ->groupBy('dob')->where('dob', '!=', 'admin')->get();

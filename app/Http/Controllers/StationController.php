@@ -600,6 +600,20 @@ class StationController extends Controller
         return view('userData', compact('user', 'totalMinutes', 'permission'));
     }
 
+       public function editUser(Request $request)
+    {
+        $user = User::find($request->id);
+
+        if ($user) {
+            $user->email = $request->email;
+            $user->save();
+
+            return response()->json(['success' => true, 'message' => 'User email updated successfully']);
+        }
+
+        return response()->json(['success' => false, 'message' => 'User not found'], 404);
+    }
+
     public function check(Request $request)
     {
         $check = StationUser::where('user_id', $request->user_id)

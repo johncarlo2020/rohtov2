@@ -131,11 +131,6 @@
         <div class="col-lg-6 mb-lg-0 mb-4">
             <div class="card z-index-2 h-100">
                 <div class="card-body card-with-filter p-3">
-                    <select class="form-control form-control-sm" id="date-format-select">
-                        @foreach ($data['dates'] as $key => $date)
-                            <option value="{{ $date['date'] }}">{{ $date['date'] }}</option>
-                        @endforeach
-                    </select>
                     <figure class="highcharts-figure">
                         <div id="container"></div>
                     </figure>
@@ -275,54 +270,11 @@
 
     <script>
         var labels = [];
-        var labels2 = [];
-
         var data = [];
-        var data2 = [];
-        var chart2;
-        var selectedDate = $('#date-format-select').val();
-
-        // Listen for change event on select element
-        $('#date-format-select').change(function() {
-            selectedDate = $(this).val(); // Get selected date
-
-            // Assuming $data['registrationsPerHour'] is an associative array where keys are dates
-            // and values are arrays of registration data
-            var newChart = @json($data['registrationsPerHour']);
-
-
-            // Assuming newChart contains an array of registration data
-            console.log(selectedDate);
-            newData
-
-            var newLabel = [];
-            var newData = [];
-
-
-            // Assuming 'newChart' is in the format required by Chart.js
-            newChart[selectedDate].forEach((dataPoint) => {
-                newLabel.push(dataPoint
-                    .hour);
-                newData.push(dataPoint
-                    .registrations);
-
-            });
-
-            high.xAxis[0].setCategories(newLabel);
-
-            high.series[0].setData(newData);
-            high.setTitle({
-                text: 'Customers per Hour on ' + selectedDate
-            });
-        });
-
         var permissionName = "{{ $permission }}";
 
         var chart = @json($data['usersDaily']);
         console.log(chart);
-
-        var day1 = "{{ $data['dates'][0]['date'] }}";
-        var chart2 = @json($data['registrationsPerHour'][$data['dates'][0]['date']]);
 
         Object.keys(chart).forEach(function(date, index) {
             var dateObj = new Date(date);
@@ -334,59 +286,79 @@
             data.push(chart[date]); // Push the count for the corresponding date
         });
 
+        var registrationsPerHour = @json($data['registrationsPerHour']);
+        var hours = Object.keys(registrationsPerHour).sort();
+        var allDates = [];
 
-        chart2.forEach(function(obj) {
-            // Log index
+        // Get all unique dates
+        for (var hour in registrationsPerHour) {
+            if (registrationsPerHour.hasOwnProperty(hour)) {
+                registrationsPerHour[hour].forEach(function(item) {
+                    if (allDates.indexOf(item.date) === -1) {
+                        allDates.push(item.date);
+                    }
+                });
+            }
+        }
+        allDates.sort();
 
-            // Push date and hour as label
-            labels2.push(obj.hour);
-
-            // Push registrations count
-            data2.push(obj.registrations);
+        // Prepare series data
+        var seriesData = allDates.map(function(date) {
+            var dataPoints = hours.map(function(hour) {
+                var registration = registrationsPerHour[hour].find(r => r.date === date);
+                return registration ? registration.registrations : 0;
+            });
+            return {
+                name: date,
+                data: dataPoints
+            };
         });
 
         var high = Highcharts.chart('container', {
             chart: {
-                type: 'column' // Set chart type to 'column'
+                type: 'column'
             },
             title: {
-                text: 'Customers per Hour',
+                text: 'Hourly Customer Registrations by Date',
                 align: 'left'
             },
-            yAxis: {
-                title: {
-                    text: 'Registrations'
-                }
-            },
             xAxis: {
-                categories: labels2, // Use labels2 as xAxis categories
+                categories: hours,
+                crosshair: true,
                 accessibility: {
-                    rangeDescription: labels2.join(', ') // Set range description using labels2
+                    description: 'Hours'
                 }
             },
-            legend: {
-                layout: 'vertical',
-                align: 'right',
-                verticalAlign: 'middle'
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Number of Registrations'
+                }
             },
-            series: [{
-                name: 'Registration',
-                data: data2
-            }],
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                    '<td style="padding:0"><b>{point.y} registrations</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
             plotOptions: {
                 column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0,
                     dataLabels: {
                         enabled: true,
                         formatter: function() {
-                            return this.y; // Display the data value as the label
-                        },
-                        inside: false,
-                        verticalAlign: 'top', // Position the label at the top of the column
-                        crop: false,
-                        overflow: 'none'
+                            if (this.y > 0) {
+                                return this.y;
+                            }
+                            return null;
+                        }
                     }
                 }
             },
+            series: seriesData,
             responsive: {
                 rules: [{
                     condition: {

@@ -478,8 +478,11 @@ class StationController extends Controller
 
             ->groupBy('date', 'hour')
             ->get()
-            ->groupBy('date');
-        //  dd($data);
+            ->groupBy('hour');
+
+
+            // dd($data['registrationsPerHour']);
+
 
         foreach ($userCounts as $userCount) {
             if ($userCount['date'] >= $startDate->toDateString()) {

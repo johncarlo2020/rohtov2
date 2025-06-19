@@ -28,11 +28,11 @@
                                 <th>Existing</th>
                                 <th>Social Media</th>
                                 <th>Appeal</th>
-
-
                                 @foreach ($data['stations'] as $station)
                                     <th>{{ $station['name'] }}</th>
                                 @endforeach
+                                <th>Action</th>
+
                             </tr>
                         </thead>
                         <tbody>
@@ -52,10 +52,10 @@
                                         @php
                                         $platforms = json_decode($user->social_media, true);
                                         @endphp
-                                    
+
                                         {{ !empty($platforms) ? implode(', ', $platforms) : 'Not Following' }}
                                     </td>
-                                    
+
                                     <td>{{ $user->appeal }}</td>
 
 
@@ -63,6 +63,12 @@
                                         <td class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-danger' }}">
                                             {{ $station['value'] ? 'Yes' : 'No' }}</td>
                                     @endforeach
+
+                                    <td>
+                                        <button class="btn btn-danger btn-sm delete-user-btn" data-user-id="{{ $user->id }}"
+                                            data-user-name="{{ $user->fname }} {{ $user->lname }}">Delete</button>
+                                    </td>
+
                                 </tr>
                             @endforeach
                         </tbody>
@@ -71,6 +77,28 @@
             </div>
         </div>
     </div>
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="POST" id="deleteUserForm">
+            @csrf
+            @method('DELETE')
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="deleteUserModalLabel">Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete <strong id="deleteUserName"></strong>?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 
     <!-- Include DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.css">
@@ -122,16 +150,28 @@
         $('.dataTables_filter').addClass('float-start');
         $('.dataTables_filter label').addClass('w-100');
 
-        $('#customer-table tbody').on('click', 'tr', function() {
+        $('#customer-table tbody').on('click', 'tr', function (e) {
+                // Prevent redirect if the clicked target is inside a delete button
+                if ($(e.target).closest('.delete-user-btn').length) {
+                    return;
+                }
 
-            // Get data from the clicked row
-            var data = table.row(this).data();
+                var userId = $(this).data('user-id');
 
-            // Extract user ID from the clicked row's data
-            var userId = $(this).data('user-id');
+                window.location.href = "{{ route('userData', ['user' => ':userId']) }}".replace(':userId', userId);
+            });
 
-            // Redirect to the user data route with the user ID
-            window.location.href = "{{ route('userData', ['user' => ':userId']) }}".replace(':userId', userId);
-        });
+            $('.delete-user-btn').click(function () {
+                    const userId = $(this).data('user-id');
+                    const userName = $(this).data('user-name');
+
+                    let deleteUrl = @json(route('users.destroy', ['id' => ':id']));
+                deleteUrl = deleteUrl.replace(':id', userId);
+
+                $('#deleteUserForm').attr('action', deleteUrl);
+                $('#deleteUserName').text(userName);
+                $('#deleteUserModal').modal('show');
+});
+
     </script>
 @endsection

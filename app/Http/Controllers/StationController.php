@@ -379,6 +379,20 @@ class StationController extends Controller
         }
     }
 
+    public function userDelete($id)
+    {
+        $user = User::findOrFail($id);
+
+        // Delete related station user entries
+        $user->stationUser()->delete(); // ✅ Correct for hasMany
+
+        // Delete the user
+        $user->delete();
+
+        return redirect()->back()->with('success', 'User deleted successfully.');
+    }
+
+
 
 
     public function admin()

@@ -401,10 +401,14 @@ class StationController extends Controller
         $permission = $admin->getPermissionNames()->first();
         $today = Carbon::today();
         $startDate = Carbon::create(2025, 6, 17);
-        $data['users'] = User::with('stationUser')->take(4)->orderBy('id', 'desc')->get();
-        $data['usersCount'] = User::whereDate('created_at', '>=', $startDate->toDateString())->count();
-        $data['userToday'] = User::whereDate('created_at', $today)->count();
-        $data['country'] = User::selectRaw('country , COUNT(*) as count')->groupBy('country')->where('country' ,'!=','admin')->get();
+        $data['users'] = User::with('stationUser')->take(4)->orderBy('id', 'desc')->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
+            ->get();
+        $data['usersCount'] = User::whereDate('created_at', '>=', $startDate->toDateString())->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
+            ->count();
+        $data['userToday'] = User::whereDate('created_at', $today)->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
+            ->count();
+        $data['country'] = User::selectRaw('country , COUNT(*) as count')->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
+            ->groupBy('country')->where('country' ,'!=','admin')->get();
 
         // $data['where'] = User::groupBy('where')
         //     ->select('where', DB::raw('COUNT(*) as count'))
@@ -416,13 +420,17 @@ class StationController extends Controller
         //     })
         // ->values()
         // ->toArray();
-        $data['where'] = User::selectRaw('find , COUNT(*) as count')->groupBy('find')->where('find' ,'!=','')->get();
+        $data['where'] = User::selectRaw('find , COUNT(*) as count')->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
+            ->groupBy('find')->where('find' ,'!=','')->get();
         //  dd($data['where']);
 
-        $data['existing'] = User::selectRaw('existing , COUNT(*) as count')->groupBy('existing')->where('existing' ,'!=','')->get();
+        $data['existing'] = User::selectRaw('existing , COUNT(*) as count')->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
+            ->groupBy('existing')->where('existing' ,'!=','')->get();
         $data['social_media'] = User::whereNotNull('social_media')
     ->where('social_media', '!=', '')
-    ->get()
+            ->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
+
+            ->get()
     ->pluck('social_media')
     ->map(fn($json) => json_decode($json, true))
     ->flatten()

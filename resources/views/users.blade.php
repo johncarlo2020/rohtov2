@@ -19,12 +19,22 @@
             width: 100%;
             margin: 0 !important;
             padding: 0 !important;
+            overflow-y: auto !important;
+            max-height: 72vh !important;
+            margin-top: 20px !important;
+            margin-bottom: 20px !important;
+            padding-bottom: 20px !important;
+        }
+
+        .table-card {
+            min-height: 50vh;
+            max-height: 90vh;
         }
 
     </style>
     <div class="mt-4 row">
         <div class="mb-4 col-lg-12 mb-lg-0">
-            <div class="card py-3">
+            <div class="card table-card py-3">
                 <div class="p-3 pb-0 card-header">
                     <div class="d-flex justify-content-between">
                         <h6 class="mb-2">Customer</h6>

@@ -2,7 +2,7 @@
     <div class="content-box main-background px-1 d-flex flex-column min-vh-100 pt-5">
         <a href="{{ route('preRegEvent') }}" class="go-home"><i class="fa-solid fa-arrow-left"></i></a>
         {{-- <a href="{{ route('appointment') }}" class="go-qr"><i class="fa-solid fa-qrcode"></i></a> --}}
-        <div class="map-next-step">
+        {{-- <div class="map-next-step">
             <div class="label-text d-flex align-items-center border-bottom mb-2 pb-2">
                 <img id="station-branding" src="{{ asset('files/main/bulb.webp') }}" alt="" />
                 <p class="pharagraph-text">Where's next?</p>
@@ -10,7 +10,7 @@
             <div class="next">
                      <p class="pharagraph-text text-center">Your next stop is Station {{$nextStation->id}}</p>
             </div>
-        </div>
+        </div> --}}
         <div class="container mb-4">
             <div><a href="{{ route('preRegEvent') }}">
                     @include('components.branding')
@@ -31,6 +31,9 @@
             {{-- loop trough the $stations --}}
             {{-- <a class="map-pin start-pin"><span class="start-text">Start</span></a> --}}
             @foreach ($stations as $station)
+                <div class="station-helper next-station-helper-{{ $station->id }}">
+                    <img src="{{ asset('files/helper/' . $station->id . '.webp') }}" alt="" />
+                </div>
                 @if ($canStation6 == false && $station->id == 6)
                     <a href="javascript:void(0);"
                         class="map-pin station-{{ $station->id }} @if ($station->status == true) completed @endif"

@@ -434,6 +434,7 @@ ol {
     height: auto;
     position: relative;
     margin: 0 auto;
+    margin-top: 5vh;
 
     .map-img {
         width: 100%;
@@ -441,9 +442,8 @@ ol {
         object-fit: contain;
     }
 
-     .station-helper {
+    .station-helper {
         position: absolute;
-        width: 17vw;
         height: auto;
         z-index: 9999;
 
@@ -452,10 +452,39 @@ ol {
             height: 100%;
             object-fit: contain;
         }
+        &.next-station-helper-1 {
+            bottom: 60vw;
+            left: 66vw;
+            width: 25vw;
+        }
+        &.next-station-helper-2 {
+            bottom: 55vw;
+            left: 38vw;
+            width: 22vw;
+        }
 
         &.next-station-helper-3 {
             bottom: -4vw;
             left: 21vw;
+            width: 17vw;
+        }
+
+        &.next-station-helper-4 {
+            bottom: 21vw;
+            left: 47vw;
+            width: 25vw;
+        }
+
+        &.next-station-helper-5 {
+            bottom: 3vw;
+            left: 8vw;
+            width: 17vw;
+        }
+
+        &.next-station-helper-6 {
+            bottom: 54vw;
+            left: 3vw;
+            width: 23vw;
         }
     }
 
@@ -513,7 +542,7 @@ ol {
 
         &.station-5 {
             bottom: 34vw;
-            left: 13vw;
+            left: 10vw;
             z-index: 999;
         }
 
@@ -771,7 +800,7 @@ ol {
     }
 
     p {
-         font-size: 10px !important;
+        font-size: 10px !important;
         margin: 0;
         padding: 0;
         line-height: 10px;

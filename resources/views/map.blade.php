@@ -31,7 +31,7 @@
             {{-- loop trough the $stations --}}
             {{-- <a class="map-pin start-pin"><span class="start-text">Start</span></a> --}}
             @foreach ($stations as $station)
-                <div class="station-helper next-station-helper-{{ $station->id }}">
+                <div class="station-helper next-station-helper-{{ $station->id }} @if ($station->id !== $nextStation->id) d-none @endif">
                     <img src="{{ asset('files/helper/' . $station->id . '.webp') }}" alt="" />
                 </div>
                 @if ($canStation6 == false && $station->id == 6)

@@ -31,12 +31,12 @@
             {{-- loop trough the $stations --}}
             {{-- <a class="map-pin start-pin"><span class="start-text">Start</span></a> --}}
             @foreach ($stations as $station)
-                <div class="station-helper next-station-helper-{{ $station->id }} @if ($station->id !== $nextStation->id) d-none @endif">
+                <div class="station-helper next-station-helper-{{ $station->id }} @if ($station->id !== $nextStation->id) d-none @else breathing fade-in @endif">
                     <img src="{{ asset('files/helper/' . $station->id . '.webp') }}" alt="" />
                 </div>
                 @if ($canStation6 == false && $station->id == 6)
                     <a href="javascript:void(0);"
-                        class="map-pin station-{{ $station->id }} @if ($station->status == true) completed @endif"
+                        class="map-pin station-{{ $station->id }} @if ($station->status == true) completed @endif @if ($station->id === $nextStation->id) breathing @endif"
                         data-bs-toggle="modal" data-bs-target="#redemption">
                         @if ($station->status != true)
                             {{ $station->id }}
@@ -46,7 +46,7 @@
                     </a>
                 @else
                     <a href="{{ route('station', $station) }}"
-                        class="map-pin station-{{ $station->id }} @if ($station->status == true) completed @endif">
+                        class="map-pin station-{{ $station->id }} @if ($station->status == true) completed @endif @if ($station->id === $nextStation->id) breathing @endif">
                         @if ($station->status != true)
                             {{ $station->id }}
                         @else
@@ -243,7 +243,7 @@
             // if (pledgeNoRadioLocal) pledgeNoRadioLocal.checked = false;
             // if (selectedAnswerImgLocal) selectedAnswerImgLocal.src = ''; // Clear previous image
             // }
-            // pledgeModalInstance.show(); // Corrected: use the specific instance
+            // // pledgeModalInstance.show(); // Corrected: use the specific instance
 
             const storedPledge = localStorage.getItem('userPledgeChoice');
 
@@ -340,6 +340,24 @@
                 });
             }
 
+            // Remove the fade-in class after the animation ends
+            const fadeInElements = document.querySelectorAll('.fade-in');
+            fadeInElements.forEach(element => {
+                element.addEventListener('animationend', () => {
+                    element.classList.remove('fade-in');
+                });
+            });
+
+            // Ensure breathing animation continues after fade-in
+            const nextStationHelpers = document.querySelectorAll('.next-station-helper');
+            nextStationHelpers.forEach(helper => {
+                helper.addEventListener('animationend', (event) => {
+                    if (event.animationName === 'fadeIn') {
+                        helper.classList.remove('fade-in');
+                    }
+                });
+            });
+
             // The event listener for the 'close' button (id="close") has been removed earlier
             // as it relies on data-bs-dismiss="modal".
 
@@ -351,5 +369,59 @@
             // });
         });
     </script>
+
+    <style>
+        @keyframes blink {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .blink {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes breathing {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .breathing {
+            animation: breathing 2s infinite;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+    </style>
 
 </x-app-layout>

@@ -87,15 +87,15 @@
                             <div class="station-progress border-right px-4">
                                 <div class="circular-progress-container">
                                     <div class="circular-progress"
-                                        style="--progress-percent: {{ ($stationDone / 4) * 100 }}%;">
+                                        style="--progress-percent: {{ ($stationDone / 2) * 100 }}%;">
                                         <div class="progress-value-center">
                                             <span class="current-step-display">{{ $stationDone }}</span><span
-                                                class="separator">/</span><span class="total-steps-display">4</span>
+                                                class="separator">/</span><span class="total-steps-display">2</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="progress-label-below">
-                                    {{ $stationDone }}/4 Check-In Completed
+                                    {{ $stationDone }}/2 Check-In Completed
                                 </div>
                             </div>
                             <div class="info-text px-2 mt-3">
@@ -122,7 +122,7 @@
             var stationDone = {{ $stationDone }};
 
             function gotoStation(stationId) {
-                if (stationDone !== 3 && stationId === 4) {
+                if (stationDone !== 1 && stationId === 2) {
                     $('#exampleModal').modal('show');
                     return;
                 }

@@ -14,7 +14,7 @@
                         <div class="">
                             <button id="retry-scanner" class="mx-auto mt-2 button button-black px-4 py-1"
                                 data-bs-dismiss="modal">
-                                Retry
+                                Back
                             </button>
                         </div>
                     </div>
@@ -92,20 +92,20 @@
                     <div class="station-progress border-right px-4">
                         <div class="circular-progress-container">
                             <div class="circular-progress"
-                                style="--progress-percent: {{ ($completedStationCount / 4) * 100 }}%;">
+                                style="--progress-percent: {{ ($completedStationCount / 2) * 100 }}%;">
                                 <div class="progress-value-center">
                                     <span class="current-step-display">{{ $completedStationCount }}</span><span
-                                        class="separator">/</span><span class="total-steps-display">4</span>
+                                        class="separator">/</span><span class="total-steps-display">2</span>
                                 </div>
                             </div>
                         </div>
                         <div class="progress-label-below">
-                            {{ $completedStationCount }}/4 Check-In Completed
+                            {{ $completedStationCount }}/2 Check-In Completed
                         </div>
                     </div>
                     <div class="info-text px-2 mt-3">
                         <h2 class="mb-0">Well Done!</h2>
-                        @if ($station->id != 4)
+                        @if ($station->id != 2)
                             <h1 class="mb-0">You've just checked in!</h1>
                             <p class="mb-0">Complete all checkpoints to redeem an exclusive gift.</p>
                         @else
@@ -210,7 +210,7 @@
                         const circularProgress = document.querySelector('.circular-progress');
                         if (circularProgress) {
                             circularProgress.style.setProperty('--progress-percent', (
-                                completedStationCount / 4) * 100 + '%');
+                                completedStationCount / 2) * 100 + '%');
                         }
 
                         // Update current step display
@@ -223,7 +223,7 @@
                         const progressLabelBelow = document.querySelector('.progress-label-below');
                         if (progressLabelBelow) {
                             progressLabelBelow.textContent = completedStationCount +
-                                '/4 Check-In Completed';
+                                '/2 Check-In Completed';
                         }
 
                         showCongrats();
@@ -232,10 +232,10 @@
                     error: function(xhr, status, error) {
                         console.error('Error sending QR Code message:', error);
                         $('.station-text').html('Failed');
-                        $('.message').html('Invalid QR code. Please try again.');
-                        // $('#scanCompleteModal').modal('show');
+                        $('.message').html('Invalid QR code');
+                         $('#scanCompleteModal').modal('show');
                         // go to dashboard
-                        window.location.href = "{{ route('dashboard') }}";
+                        // window.location.href = "{{ route('dashboard') }}";
                     }
                 });
             }

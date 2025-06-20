@@ -71,7 +71,7 @@
                     <div class="station-progress border-right px-4">
                         <div class="circular-progress-container">
                             <div class="circular-progress"
-                                style="--progress-percent: {{ ($completedStationCount / 4) * 100 }}%;">
+                                style="--progress-percent: {{ ($completedStationCount / 2) * 100 }}%;">
                                 <div class="progress-value-center">
                                     <span class="current-step-display">{{ $completedStationCount }}</span><span
                                         class="separator">/</span><span class="total-steps-display">4</span>
@@ -79,7 +79,7 @@
                             </div>
                         </div>
                         <div class="progress-label-below">
-                            {{ $completedStationCount }}/4 Check-In Completed
+                            {{ $completedStationCount }}/2 Check-In Completed
                         </div>
                     </div>
                     <div class="info-text px-2 mt-3">
@@ -147,13 +147,13 @@
 
                    const progressLabel = document.querySelector('.progress-label-below');
                    if (progressLabel) {
-                       progressLabel.textContent = stationCompletedCount + '/4 Check-In Completed';
+                       progressLabel.textContent = stationCompletedCount + '/2 Check-In Completed';
                    }
 
                    // Update the progress bar
                    const circularProgress = document.querySelector('.circular-progress');
                    if (circularProgress) {
-                       const progressPercent = (stationCompletedCount / 4) * 100;
+                       const progressPercent = (stationCompletedCount / 2) * 100;
                        circularProgress.style.setProperty('--progress-percent', progressPercent + '%');
                    }
 

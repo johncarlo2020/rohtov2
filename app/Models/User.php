@@ -50,11 +50,5 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserAppointment::class);
     }
-    public function tasks()
-    {
-        return $this->belongsToMany(Task::class, 'user_tasks', 'user_id', 'task_id')
-                    ->withPivot('status');
-    }
-
 
 }

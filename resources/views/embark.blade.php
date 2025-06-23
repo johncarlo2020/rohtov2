@@ -115,9 +115,6 @@
                                             </button>
                                             @else
                                             <span class="badge bg-secondary">Not Eligible</span>
-                                              <button class="btn btn-success btn-sm redeem-btn" data-user-id="{{ $user->id }}">
-                                                Redeem
-                                            </button>
                                             @endif
                                         @else
                                         <span class="badge bg-success">Redeemed</span>

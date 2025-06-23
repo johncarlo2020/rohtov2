@@ -121,9 +121,17 @@ class StationController extends Controller
 
         if ($user) {
             $user->email = $request->email;
+            $user->alliance_bank = $request->alliance_bank; // Save the new alliance_bank data
             $user->save();
 
-            return response()->json(['success' => true, 'message' => 'User email updated successfully']);
+            return response()->json([
+                'success' => true,
+                'message' => 'User email and Alliance Bank status updated successfully',
+                'data' => [
+                    'email' => $user->email,
+                    'alliance_bank' => $user->alliance_bank
+                ]
+            ]);
         }
 
         return response()->json(['success' => false, 'message' => 'User not found'], 404);
@@ -993,8 +1001,10 @@ class StationController extends Controller
             return [
                 'name' => $name,
                 'average_timespent' => number_format(($averageTimespentByStation->get($id)['average_timespent'] ?? 0) / 60, 2),
+                'id' => $id,
             ];
         });
+
 
         $averagePlaytimeByUser = StationUser::select('user_id', DB::raw('SUM(time_spent) / 60 as total_playtime'))->groupBy('user_id')->get();
 

@@ -79,6 +79,19 @@
                                             <input class="form-control" type="text" disabled value="{{ $user->number }}">
                                         </div>
                                     </div>
+                                    <div class="form-group">
+                                    <label for="allianceBankRadio" class="form-control-label">Alliance Bank</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <input id="allianceBankYes" name="allianceBank" class="form-check-input" type="radio" disabled value="1" {{ $user->alliance_bank ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="allianceBankYes">Yes</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input id="allianceBankNo" name="allianceBank" class="form-check-input" type="radio" disabled value="0" {{ !$user->alliance_bank ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="allianceBankNo">No</label>
+                                        </div>
+                                    </div>
+                                </div>
                                 </div>
                                 <div class="d-flex justify-content-end">
                                     <button type="button" id="submitBtn"
@@ -157,17 +170,21 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     {{-- Include Bootstrap JS for modal functionality if not already included --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+         <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <script>
         var permissionName = "{{ $permission }}";
         if (permissionName === 'full') {
             $('#editBtn').click(function() {
                 $('#emailInput').prop('disabled', false);
                 $('#submitBtn').removeClass('d-none');
+                $('input[name="allianceBank"]').prop('disabled', false); // Enable radio buttons
             });
 
             $('#submitBtn').click(function() {
                 var userId = {{ $user->id }};
                 var email = $('#emailInput').val();
+                var allianceBank = $('input[name="allianceBank"]:checked').val(); // Get selected radio value
                 var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
                 $.ajax({
@@ -178,13 +195,15 @@
                     },
                     data: {
                         id: userId,
-                        email: email
+                        email: email,
+                        alliance_bank: allianceBank // Include allianceBank in the request
                     },
                     success: function(response) {
                         if (response.success) {
-                            $('#successModal').modal('show');
                             $('#emailInput').prop('disabled', true);
                             $('#submitBtn').addClass('d-none');
+                            $('input[name="allianceBank"]').prop('disabled', true); // Disable radio buttons again
+                            toastr.success('User details updated successfully!');
                         } else {
                             alert('Error: ' + response.message);
                         }
@@ -202,20 +221,20 @@
                 var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
                 $.ajax({
-                    url: '{{ route('check') }}', // Using Laravel's route() helper function
+                    url: '{{ route('check') }}',
                     type: 'POST',
                     headers: {
-                        'X-CSRF-TOKEN': csrfToken, // Include the CSRF token in the headers
+                        'X-CSRF-TOKEN': csrfToken,
                     },
                     data: {
                         user_id: user_id,
                         station_id: station_id
                     },
                     success: function(response) {
-                        // Handle the success response here
+                        toastr.success('Station checkbox updated successfully!');
                     },
                     error: function(xhr, status, error) {
-                        // Handle the error response here
+                        toastr.error('An error occurred while updating the checkbox.');
                     }
                 });
             });

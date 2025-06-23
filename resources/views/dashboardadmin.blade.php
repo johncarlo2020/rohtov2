@@ -405,7 +405,14 @@
                     }
                 }
             },
-            series: seriesData,
+            series: seriesData.map(function(series) {
+                return {
+                    name: series.name,
+                    data: series.data.map(function(value) {
+                        return value > 0 ? value : null;
+                    })
+                };
+            }),
             responsive: {
                 rules: [{
                     condition: {

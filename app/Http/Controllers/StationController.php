@@ -991,6 +991,9 @@ class StationController extends Controller
                     'id' => $id,
                 ];
             });
+
+            // Add completed_count to the user
+            $user->completed_count = $numStations;
         }
 
         $data['stations'] = $stations->map(function ($name, $id) use ($userStations, $averageTimespentByStation) {

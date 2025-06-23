@@ -10,6 +10,31 @@
             max-height: 50px;
             margin: 2px;
         }
+           .sticky-action {
+            position: sticky;
+            right: 0;
+            background: #f8f8f8;
+            z-index: 999;
+            box-shadow: -2px 0 5px -2px rgba(0, 0, 0, 0.12);
+        }
+
+           th {
+            position: sticky !important;
+            top: 0;
+            background-color: #f8f9fa;
+            z-index: 998;
+        }
+
+        .custom-table {
+            width: 100%;
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow-y: auto !important;
+            max-height: 72vh !important;
+            margin-top: 20px !important;
+            margin-bottom: 20px !important;
+            padding-bottom: 20px !important;
+        }
     </style>
 
     <div class="mt-4 row">
@@ -27,7 +52,7 @@
                     </div>
                 </div>
                 <!-- Container hidden until DataTable init completes -->
-                <div id="table-container" class="table-responsive" style="display:none;">
+                <div id="table-container" class="px-2" style="display:none;">
                     <table id="customer-table" class="display nowrap" style="width:100%">
                         <thead>
                             <tr>
@@ -46,7 +71,7 @@
                                         @endif
                                     @endforeach
                                 @endif
-                                <th>Action</th>
+                                <th class="sticky-action">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -82,7 +107,7 @@
                                         </td>
 
                                     @endforeach
-                                    <td>
+                                    <td class="sticky-action">
                                         @if($user->redeem_date == null)
                                             @if ($user->can_redeem)
                                             <button class="btn btn-success btn-sm redeem-btn" data-user-id="{{ $user->id }}">
@@ -90,6 +115,9 @@
                                             </button>
                                             @else
                                             <span class="badge bg-secondary">Not Eligible</span>
+                                              <button class="btn btn-success btn-sm redeem-btn" data-user-id="{{ $user->id }}">
+                                                Redeem
+                                            </button>
                                             @endif
                                         @else
                                         <span class="badge bg-success">Redeemed</span>
@@ -121,9 +149,29 @@
         </div>
     </div>
 
+    <!-- Redeem Confirmation Modal -->
+    <div class="modal fade" id="redeemConfirmationModal" tabindex="-1" aria-labelledby="redeemConfirmationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="redeemConfirmationModalLabel">Confirm Redemption</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to redeem for this user?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" id="confirmRedeemButton" class="btn btn-success">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- DataTables & Plugins -->
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.2/css/buttons.dataTables.css">
+
 
     <script src="{{ asset('assets/js/core/bootstrap.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/perfect-scrollbar.min.js') }}"></script>
@@ -137,13 +185,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.print.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
     <script>
+
         const table = $('#customer-table').DataTable({
             responsive: true,
-            dom: "<'row'<'col-sm-12 col-md-3'l><'col-sm-6 col-md-6 align-items-end'B><'col-sm-12 col-md-3'f>>" +
-                "<'row'<'col-sm-12'tr>>" +
-                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+              dom: "<'row'<'col-sm-12 col-md-2'l><'col-sm-12 col-md-8 text-center'B><'col-sm-12 col-md-2'f>>" +
+                    "<'row'<'col-sm-12 table-responsive my-2 custom-table'tr>>" +
+                    "<'d-flex justify-content-between'ip>",
             buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
             order: [[0, 'desc']],
             initComplete: function () {
@@ -195,35 +246,59 @@
                 });
             });
 
-            $('#customer-table tbody').on('click', '.redeem-btn', function () {
-                const userId = $(this).data('user-id');
-                const button = $(this);
-                button.prop('disabled', true).text('Processing...');
+            let selectedUserIdForRedeem = null;
 
-                fetch("{{ route('tasks.redeem') }}", {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                        'Accept': 'application/json'
-                    },
-                    body: new URLSearchParams({ user_id: userId })
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert(data.message);
-                            location.reload();
-                        } else {
-                            alert(data.message);
-                            button.prop('disabled', false).text('Redeem');
-                        }
+            $('#customer-table tbody').on('click', '.redeem-btn', function () {
+                selectedUserIdForRedeem = $(this).data('user-id');
+                const redeemModal = new bootstrap.Modal(document.getElementById('redeemConfirmationModal'));
+                redeemModal.show();
+            });
+
+            $('#confirmRedeemButton').on('click', function () {
+                if (selectedUserIdForRedeem) {
+                    const button = $(`.redeem-btn[data-user-id="${selectedUserIdForRedeem}"]`);
+                    button.prop('disabled', true).text('Processing...');
+
+                    fetch("{{ route('tasks.redeem') }}", {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'Accept': 'application/json'
+                        },
+                        body: new URLSearchParams({ user_id: selectedUserIdForRedeem })
                     })
-                    .catch(error => {
-                        console.error('Redeem error:', error);
-                        alert('Something went wrong while redeeming.');
-                        button.prop('disabled', false).text('Redeem');
-                    });
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // Update the UI dynamically
+                                button.prop('disabled', true).text('Redeemed');
+                                button.replaceWith('<span class="badge bg-success">Redeemed</span>');
+
+                                // Close the modal on success
+                                const redeemModal = bootstrap.Modal.getInstance(document.getElementById('redeemConfirmationModal'));
+
+                                if (redeemModal) {
+                                    redeemModal.hide();
+                                }
+
+                                toastr.success('Redemption successful!');
+                            } else {
+                                // Show an error toast notification
+                                toastr.error(data.message);
+                                button.prop('disabled', false).text('Redeem');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Redeem error:', error);
+                            toastr.error('Something went wrong while redeeming.');
+                            button.prop('disabled', false).text('Redeem');
+                        });
+                }
             });
         });
     </script>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+    </div>
 @endsection

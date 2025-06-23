@@ -954,22 +954,17 @@ class StationController extends Controller
         $data['dates'] = User::select(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as date'))->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())->groupBy('date')->get();
 
         //   dd($data['where']);
-
         $data['registrationsPerHour'] = User::select(
-            DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as date'),
-            DB::raw('CONCAT(
-                CASE WHEN (DATE_FORMAT(created_at, "%H") + 8) % 12 = 0 THEN 12 ELSE (DATE_FORMAT(created_at, "%H") + 8) % 12 END,
-                IF((DATE_FORMAT(created_at, "%H") + 8) >= 12, "pm", "am")
-            ) as hour'),
-
-            DB::raw('COUNT(*) as registrations'),
-        )
-            ->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
-
-            ->groupBy('date', 'hour')
-            ->get()
-            ->groupBy('date');
-        //  dd($data);
+                DB::raw('DATE(DATE_ADD(created_at, INTERVAL 8 HOUR)) as date'),
+                DB::raw('LOWER(DATE_FORMAT(DATE_ADD(created_at, INTERVAL 8 HOUR), "%l%p")) as hour'),
+                DB::raw('COUNT(*) as registrations')
+            )
+                ->whereNotNull('created_at')
+                ->where(DB::raw('DATE(DATE_ADD(created_at, INTERVAL 8 HOUR))'), '>=', $startDate->toDateString())
+                ->groupBy('date', 'hour')
+                ->havingRaw('hour IS NOT NULL AND hour <> \'\'')
+                ->get()
+                ->groupBy('hour');
 
         foreach ($userCounts as $userCount) {
             if ($userCount['date'] >= $startDate->toDateString()) {
@@ -993,6 +988,7 @@ class StationController extends Controller
                 return [
                     'name' => $name,
                     'value' => in_array($id, $userStations),
+                    'id' => $id,
                 ];
             });
         }
@@ -1140,6 +1136,19 @@ class StationController extends Controller
 
             return $user;
         });
+
+        // count of users who can redeem
+        $redeemableUsersCount = $users->filter(function ($user) {
+            return $user->can_redeem;
+        })->count();
+
+        // Retrieve IDs of users who can redeem
+        $redeemableUserIds = $users->filter(function ($user) {
+            return $user->can_redeem;
+        })->pluck('id');
+
+        // Log or display the IDs of redeemable users
+        // dd($redeemableUserIds);
 
         return view('embark', compact('users'));
     }

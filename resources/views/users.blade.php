@@ -5,6 +5,28 @@
         #customer-table tbody tr {
             cursor: pointer;
         }
+           th {
+            position: sticky !important;
+            top: 0;
+            background-color: #f8f9fa;
+            z-index: 998;
+        }
+         .custom-table {
+            width: 100%;
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow-y: auto !important;
+            max-height: 72vh !important;
+            margin-top: 20px !important;
+            margin-bottom: 20px !important;
+            padding-bottom: 20px !important;
+        }
+
+        .table-card {
+            min-height: 50vh;
+            max-height: 90vh;
+        }
+
     </style>
     <div class="mt-4 row">
         <div class="mb-4 col-lg-12 mb-lg-0">
@@ -21,7 +43,7 @@
                     </div>
                 </div>
                 <!-- Container hidden until DataTable init completes -->
-                <div id="table-container" class="table-responsive" style="display:none;">
+                <div id="table-container" class="px-1" style="display:none;">
                     <table id="customer-table" class="display nowrap" style="width:100%">
                      <thead>
                         <tr>
@@ -102,8 +124,9 @@
         $(document).ready(function() {
             var table = $('#customer-table').DataTable({
                 responsive: true,
-                dom: "<'row'<'col-sm-12 col-md-3'l><'col-sm-6 col-md-6 align-items-end'B><'col-sm-12 col-md-3'f>>" +
-                    "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+           dom: "<'row'<'col-sm-12 col-md-2'l><'col-sm-12 col-md-8 text-center'B><'col-sm-12 col-md-2'f>>" +
+                    "<'row'<'col-sm-12 table-responsive my-2 custom-table'tr>>" +
+                    "<'d-flex justify-content-between'ip>",
                 buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
                 order: [[0, 'desc']],
                 initComplete: function() {

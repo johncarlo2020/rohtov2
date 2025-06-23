@@ -37,10 +37,16 @@
                                 <th>Email</th>
                                 @if($users->isNotEmpty() && $users->first()->all_tasks->isNotEmpty())
                                     @foreach ($users->first()->all_tasks as $task)
+                                        @if($task->id == 4)
+                                        <th>Pledge (Status)</th>
+                                        <th>Pledge (Date)</th>
+                                        @else
                                         <th>{{ $task->name }} (Status/Image)</th>
                                         <th>{{ $task->name }} (Date)</th>
+                                        @endif
                                     @endforeach
                                 @endif
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -54,18 +60,42 @@
                                     @foreach ($user->all_tasks as $task)
                                         <td>
                                             @if (ucfirst($task->status) === 'In-progress' && !empty($task->image))
+                                                @if($task->id == 4)
+                                                    <span class="badge bg-warning">{{$task->image}}</span>
+                                                @else
                                                 <img src="{{ asset('storage/uploads/' . $task->image) }}" alt="Task Image" class="clickable-image"
                                                     data-task-id="{{ $task->id }}" data-user-id="{{ $user->id }}"
                                                     data-image="{{ asset('storage/uploads/' . $task->image) }}"
                                                     style="max-width: 60px; max-height: 60px; cursor: pointer;">
+                                                @endif
+
                                             @else
-                                                {{ ucfirst($task->status) }}
+                                                @if($task->id == 4)
+                                                    <span class="badge bg-success">{{ ucfirst($task->image) }}</span>
+                                                @else
+                                                    <span class="badge bg-secondary">{{ ucfirst($task->status) }}</span>
+                                                @endif
                                             @endif
                                         </td>
                                         <td>
                                             <small>{{ $task->submission_date ? \Carbon\Carbon::parse($task->submission_date)->format('d M h:i A') : 'N/A' }}</small> {{-- Formatted date and time with AM/PM --}}
                                         </td>
+
                                     @endforeach
+                                    <td>
+                                        @if($user->redeem_date == null)
+                                            @if ($user->can_redeem)
+                                            <button class="btn btn-success btn-sm redeem-btn" data-user-id="{{ $user->id }}">
+                                                Redeem
+                                            </button>
+                                            @else
+                                            <span class="badge bg-secondary">Not Eligible</span>
+                                            @endif
+                                        @else
+                                        <span class="badge bg-success">Redeemed</span>
+
+                                        @endif
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -163,6 +193,36 @@
                     console.log('Error:', error);
                     alert('Something went wrong while completing the task.');
                 });
+            });
+
+            $('#customer-table tbody').on('click', '.redeem-btn', function () {
+                const userId = $(this).data('user-id');
+                const button = $(this);
+                button.prop('disabled', true).text('Processing...');
+
+                fetch("{{ route('tasks.redeem') }}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Accept': 'application/json'
+                    },
+                    body: new URLSearchParams({ user_id: userId })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert(data.message);
+                            location.reload();
+                        } else {
+                            alert(data.message);
+                            button.prop('disabled', false).text('Redeem');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Redeem error:', error);
+                        alert('Something went wrong while redeeming.');
+                        button.prop('disabled', false).text('Redeem');
+                    });
             });
         });
     </script>

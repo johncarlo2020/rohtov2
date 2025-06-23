@@ -78,6 +78,7 @@ Route::group(['middleware' => ['admin']], function () {
     Route::get('/admin/{user}', 'App\Http\Controllers\StationController@userData')->name('userData');
     Route::post('/admin/check', 'App\Http\Controllers\StationController@check')->name('check');
     Route::post('/editUser', 'App\Http\Controllers\StationController@editUser')->name('editUser');
+    Route::post('/tasks/redeem', 'App\Http\Controllers\StationController@redeem')->name('tasks.redeem');
 
 
     Route::get('/dumpUser', 'App\Http\Controllers\StationController@logUser')->name('logUser');

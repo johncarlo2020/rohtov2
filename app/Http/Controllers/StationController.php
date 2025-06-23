@@ -1106,7 +1106,7 @@ class StationController extends Controller
 
         $users = User::with(['tasks' => function ($query) {
             $query->withPivot('status', 'images', 'created_at', 'updated_at'); // Eager load pivot fields
-        }])->get();
+        }])->orderBy('id','desc')->get();
 
         $users = $users->map(function ($user) use ($tasks) {
             // Key user's tasks by task id for fast lookup
@@ -1124,11 +1124,28 @@ class StationController extends Controller
                 return $clonedTask;
             });
 
+            $user->can_redeem = $user->all_tasks->where('status', 'completed')->count() >= 3;
+
+            // dd($user);
+
             return $user;
         });
 
         return view('embark', compact('users'));
     }
+
+    public function redeem(Request $request)
+    {
+        $user = User::findOrFail($request->user_id);
+
+
+            // Example: Update a flag or create a redemption record
+            $user->redeem_date = Carbon::now();
+            $user->save();
+
+            return response()->json(['success' => true, 'message' => 'Redemption successful']);
+      }
+
 
 
     public function userData(User $user)

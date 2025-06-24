@@ -463,6 +463,42 @@ class StationController extends Controller
         return back()->withErrors(['otp' => 'Invalid OTP']);
     }
 
+
+        public function verifyAdmin(Request $request)
+    {
+        $otp = $request->input('otp');
+        $userId = $request->input('user_id'); // Get user ID from the request
+
+        $user = User::find($userId); // Find the user by ID
+
+        if (!$user) {
+            return back()->withErrors(['user' => 'User not found']);
+        }
+
+        if ($otp == $user->otp) {
+            // Success: Clear session OTP
+            Session::forget(['otp', 'otp_sent_at']);
+            $user->otp_verified = 1;
+            $user->email_verified_at = Carbon::now();
+            $user->save();
+
+             $data = GlobalHelper::createSampleProfile();
+              return back()->with('success', 'OTP verified successfully!');
+        }
+
+        return back()->withErrors(['otp' => 'Invalid OTP']);
+    }
+
+    public function verifyUserInAdmin(Request $request){
+        $user = User::find($request->id);
+
+        if ($user->otp_verified == 0) {
+            return response()->json(['error' => 'User is not verified'], 403);
+        }
+
+        return response()->json(['message' => 'User is verified'], 200);
+    }
+
     public function resend(Request $request)
     {
         $user = auth()->user();
@@ -837,6 +873,7 @@ class StationController extends Controller
     }
 
 
+
     public function scan(Request $request)
     {
         // Parse the URL to get the query string
@@ -857,17 +894,17 @@ class StationController extends Controller
                 $qrMessage = $request->qrCodeMessage;
 
 
-                $expectedBase = env('APP_URL') . 'user?id=';
+                $expectedBase = 'https://oceanorplastic.experienceloccitane.com/' . 'user?id=';
                 if (Str::startsWith($qrMessage, $expectedBase)) {
                     $id = Str::after($qrMessage, $expectedBase);
                 }
 
-                if (!Str::startsWith($qrMessage, $expectedBase)) {
-                    return response()->json([
-                        'message' => 'Invalid QR code. Please try again.',
-                        'status' => 'invalid'
-                    ], 200);
-                }
+                // if (!Str::startsWith($qrMessage, $expectedBase)) {
+                //     return response()->json([
+                //         'message' => 'Invalid QR code. Please try again.',
+                //         'status' => 'invalid'
+                //     ], 200);
+                // }
 
                 $check = StationUser::where('user_id', $id)->where('station_id', 7)->exists();
                 if ($check) {
@@ -936,7 +973,6 @@ class StationController extends Controller
             return response()->json(['error' => $e], 500);
         }
     }
-
 
 
     public function admin()

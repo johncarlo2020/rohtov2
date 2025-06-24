@@ -85,9 +85,16 @@ class StationController extends Controller
             return $appointment;
         });
 
-        $is2000 = StationUser::where('station_id', 7)
+        $claimed = StationUser::where('user_id', auth()->id())
+            ->where('station_id', 7)
+            ->exists();
+        if ($claimed) {
+            $is2000 = false; // User has already claimed the station, so they are not in the first 2000
+        }else{
+            $is2000 = StationUser::where('station_id', 7)
             ->whereBetween('created_at', ['2025-06-24 00:00:00', '2025-06-30 23:59:59'])
             ->count() != 500;
+        }
 
         $userAppointment = $user->userAppointments()->count();
         $selectedAppointment = $user->userAppointments()->with('appointment')->first() ?? '';
@@ -252,9 +259,16 @@ class StationController extends Controller
         // ->pluck('id')
         // ->contains(auth()->id());
 
-        $is2000 = StationUser::where('station_id', 7)
+        $claimed = StationUser::where('user_id', auth()->id())
+            ->where('station_id', 7)
+            ->exists();
+        if ($claimed) {
+            $is2000 = false; // User has already claimed the station, so they are not in the first 2000
+        }else{
+            $is2000 = StationUser::where('station_id', 7)
             ->whereBetween('created_at', ['2025-06-24 00:00:00', '2025-06-30 23:59:59'])
             ->count() != 500;
+        }
 
         //  dd($is2000);
 

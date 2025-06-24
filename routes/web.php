@@ -79,6 +79,7 @@ Route::group(['middleware' => ['admin']], function () {
     Route::post('/admin/check', 'App\Http\Controllers\StationController@check')->name('check');
     Route::post('/editUser', 'App\Http\Controllers\StationController@editUser')->name('editUser');
     Route::post('/tasks/redeem', 'App\Http\Controllers\StationController@redeem')->name('tasks.redeem');
+    Route::post('/verify-otp-admin', 'App\Http\Controllers\StationController@verifyAdmin')->name('verifyAdmin');
 
 
     Route::get('/dumpUser', 'App\Http\Controllers\StationController@logUser')->name('logUser');
@@ -98,6 +99,7 @@ Route::group(['middleware' => ['client']], function () {
     Route::post('/saveStaff', 'App\Http\Controllers\StationController@saveStaff')->name('saveStaff');
     Route::post('/save-product', 'App\Http\Controllers\StationController@saveProduct')->name('saveProduct');
     Route::post('/submit-pledge', 'App\Http\Controllers\StationController@submitPledge')->name('pledge.submit');
+
 
 
     Route::post('/upload', 'App\Http\Controllers\StationController@uploadBaby')->name('upload.baby');

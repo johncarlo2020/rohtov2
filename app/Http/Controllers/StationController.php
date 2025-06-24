@@ -129,16 +129,14 @@ class StationController extends Controller
         if ($user) {
             $user->email = $request->email;
             $user->alliance_bank = $request->alliance_bank; // Save the new alliance_bank data
-            $user->otp_verified = $request->otp_verified; // Save the new otp_verified data
             $user->save();
 
             return response()->json([
                 'success' => true,
-                'message' => 'User email, Alliance Bank status, and OTP verification status updated successfully',
+                'message' => 'User email and Alliance Bank status updated successfully',
                 'data' => [
                     'email' => $user->email,
-                    'alliance_bank' => $user->alliance_bank,
-                    'otp_verified' => $user->otp_verified
+                    'alliance_bank' => $user->alliance_bank
                 ]
             ]);
         }
@@ -460,6 +458,32 @@ class StationController extends Controller
             //  dd($data);
 
             return redirect(RouteServiceProvider::HOME);
+        }
+
+        return back()->withErrors(['otp' => 'Invalid OTP']);
+    }
+
+
+        public function verifyAdmin(Request $request)
+    {
+        $otp = $request->input('otp');
+        $userId = $request->input('user_id'); // Get user ID from the request
+
+        $user = User::find($userId); // Find the user by ID
+
+        if (!$user) {
+            return back()->withErrors(['user' => 'User not found']);
+        }
+
+        if ($otp == $user->otp) {
+            // Success: Clear session OTP
+            Session::forget(['otp', 'otp_sent_at']);
+            $user->otp_verified = 1;
+            $user->email_verified_at = Carbon::now();
+            $user->save();
+
+             $data = GlobalHelper::createSampleProfile();
+              return back()->with('success', 'OTP verified successfully!');
         }
 
         return back()->withErrors(['otp' => 'Invalid OTP']);

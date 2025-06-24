@@ -68,6 +68,12 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
+                                            <label for="example-text-input" class="form-control-label">OTP</label>
+                                            <input class="form-control" type="text" disabled value="{{ $user->otp }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
                                             <label for="example-text-input" class="form-control-label">Email Address</label>
                                             <input id="emailInput" class="form-control" type="email" disabled
                                                 value="{{ $user->email }}">
@@ -79,8 +85,7 @@
                                             <input class="form-control" type="text" disabled value="{{ $user->number }}">
                                         </div>
                                     </div>
-
-                                    <div class="form-group">
+                                    <div class="form-group col-6">
                                         <label for="allianceBankRadio" class="form-control-label">Alliance Bank</label>
                                         <div>
                                             <div class="form-check form-check-inline">
@@ -96,26 +101,6 @@
                                                 <label class="form-check-label" for="allianceBankNo">No</label>
                                             </div>
                                         </div>
-
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="otpVerified" class="form-control-label">OTP Verified</label>
-                                            <div>
-                                                <div class="form-check form-check-inline">
-                                                    <input id="otpVerifiedYes" name="otpVerified" class="form-check-input"
-                                                        type="radio" disabled value="1"
-                                                        {{ $user->otp_verified ? 'checked' : '' }}>
-                                                    <label class="form-check-label" for="otpVerifiedYes">Yes</label>
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    <input id="otpVerifiedNo" name="otpVerified" class="form-check-input"
-                                                        type="radio" disabled value="0"
-                                                        {{ !$user->otp_verified ? 'checked' : '' }}>
-                                                    <label class="form-check-label" for="otpVerifiedNo">No</label>
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-end">
@@ -126,9 +111,29 @@
                         </div>
                     </div>
                 </div>
+                @if ($user->otp_verified == 0)
+                    <div class="col-12 mt-3">
+                        <div class="card">
+                            <div class="p-3 card-header">
+                                <h6 class="mb-0">Manual OTP verify</h6>
+                            </div>
+                            <div class="card-body d-flex align-items-center gap-2 pt-0">
+                                <form method="POST" action="{{ route('verifyAdmin') }}" class="row">
+                                    <div class="col-auto">
+                                        <input type="text" class="form-control" id="otp" placeholder="Enter OTP">
+                                    </div>
+                                    <div class="col-auto">
+                                        <button type="submit" class="btn btn-primary mb-3">Verify</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
                 <div class="col-md-12 mt-3">
                     <div class="card">
-                        <div class="p-3 pb-0 card-header">
+                        <div class="pb-0 card-header">
                             <h6 class="mb-0">Stations</h6>
                         </div>
                         <div class="p-3 card-body">
@@ -203,16 +208,13 @@
             $('#editBtn').click(function() {
                 $('#emailInput').prop('disabled', false);
                 $('#submitBtn').removeClass('d-none');
-                $('input[name="allianceBank"]').prop('disabled', false); // Enable Alliance Bank radio buttons
-                $('input[name="otpVerified"]').prop('disabled', false); // Enable OTP Verified radio buttons
+                $('input[name="allianceBank"]').prop('disabled', false); // Enable radio buttons
             });
 
             $('#submitBtn').click(function() {
                 var userId = {{ $user->id }};
                 var email = $('#emailInput').val();
                 var allianceBank = $('input[name="allianceBank"]:checked').val(); // Get selected radio value
-                var otpVerified = $('input[name="otpVerified"]:checked')
-            .val(); // Correctly get OTP Verified radio value
                 var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
                 $.ajax({
@@ -224,8 +226,7 @@
                     data: {
                         id: userId,
                         email: email,
-                        alliance_bank: allianceBank, // Include allianceBank in the request
-                        otp_verified: otpVerified // Include otp_verified in the request
+                        alliance_bank: allianceBank // Include allianceBank in the request
                     },
                     success: function(response) {
                         if (response.success) {
@@ -233,8 +234,6 @@
                             $('#submitBtn').addClass('d-none');
                             $('input[name="allianceBank"]').prop('disabled',
                             true); // Disable radio buttons again
-                            $('input[name="otpVerified"]').prop('disabled',
-                            true); // Disable OTP Verified radio buttons again
                             toastr.success('User details updated successfully!');
                         } else {
                             alert('Error: ' + response.message);
@@ -274,5 +273,45 @@
             // Disable all input elements if permission is not 'full'
             $('input').prop('disabled', true);
         }
+
+        $(document).ready(function() {
+            $('form[action="{{ route('verifyAdmin') }}"]').on('submit', function(event) {
+                event.preventDefault(); // Prevent default form submission
+
+                var otp = $('#otp').val();
+                var userId = {{ $user->id }}; // Include the user ID
+                console.log('OTP Value:', otp); // Log the OTP value for debugging
+
+                if (!otp) {
+                    toastr.error('OTP field cannot be empty.');
+                    return; // Stop execution if OTP is empty
+                }
+
+                var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+                $.ajax({
+                    url: '{{ route('verifyAdmin') }}',
+                    type: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    data: {
+                        otp: otp,
+                        user_id: userId // Pass the user ID in the request
+                    },
+                    success: function(response) {
+                        toastr.success('OTP verified successfully!');
+
+                        // reload the page to reflect changes
+                        setTimeout(function() {
+                            location.reload();
+                        }, 1000);
+                    },
+                    error: function(xhr, status, error) {
+                        toastr.error('Failed to verify OTP. Please try again.');
+                    }
+                });
+            });
+        });
     </script>
 @endsection

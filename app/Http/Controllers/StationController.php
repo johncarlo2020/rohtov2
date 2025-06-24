@@ -873,6 +873,7 @@ class StationController extends Controller
     }
 
 
+
     public function scan(Request $request)
     {
         // Parse the URL to get the query string
@@ -893,17 +894,17 @@ class StationController extends Controller
                 $qrMessage = $request->qrCodeMessage;
 
 
-                $expectedBase = env('APP_URL') . 'user?id=';
+                $expectedBase = 'https://oceanorplastic.experienceloccitane.com/' . 'user?id=';
                 if (Str::startsWith($qrMessage, $expectedBase)) {
                     $id = Str::after($qrMessage, $expectedBase);
                 }
 
-                if (!Str::startsWith($qrMessage, $expectedBase)) {
-                    return response()->json([
-                        'message' => 'Invalid QR code. Please try again.',
-                        'status' => 'invalid'
-                    ], 200);
-                }
+                // if (!Str::startsWith($qrMessage, $expectedBase)) {
+                //     return response()->json([
+                //         'message' => 'Invalid QR code. Please try again.',
+                //         'status' => 'invalid'
+                //     ], 200);
+                // }
 
                 $check = StationUser::where('user_id', $id)->where('station_id', 7)->exists();
                 if ($check) {
@@ -919,9 +920,9 @@ class StationController extends Controller
                 $stationUser->time_spent = 0;
                 $stationUser->save();
 
-                $userAppointment = UserAppointment::where('user_id', $id)->where('is_attended', 0)->first();
-                $userAppointment->is_attended = 1;
-                $userAppointment->save();
+                // $userAppointment = UserAppointment::where('user_id', $id)->where('is_attended', 0)->first();
+                // $userAppointment->is_attended = 1;
+                // $userAppointment->save();
                 DB::commit();
 
                 return response()->json([
@@ -972,7 +973,6 @@ class StationController extends Controller
             return response()->json(['error' => $e], 500);
         }
     }
-
 
 
     public function admin()

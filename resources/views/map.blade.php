@@ -31,12 +31,17 @@
             {{-- loop trough the $stations --}}
             {{-- <a class="map-pin start-pin"><span class="start-text">Start</span></a> --}}
             @foreach ($stations as $station)
-                <div class="station-helper next-station-helper-{{ $station->id }} @if ($station->id !== $nextStation->id) d-none @else breathing fade-in @endif">
-                    <img src="{{ asset('files/helper/' . $station->id . '.webp') }}" alt="" />
-                </div>
+                @if ($nextStation)
+                    <div class="station-helper next-station-helper-{{ $station->id }} @if ($station->id !== $nextStation->id) d-none @else breathing fade-in @endif">
+                        <img src="{{ asset('files/helper/' . $station->id . '.webp') }}" alt="" />
+                    </div>
+                @else
+                    {{-- <p class="text-center">No next station available.</p> --}}
+                @endif
+
                 @if ($canStation6 == false && $station->id == 6)
                     <a href="javascript:void(0);"
-                        class="map-pin station-{{ $station->id }} @if ($station->status == true) completed @endif @if ($station->id === $nextStation->id) breathing @endif"
+                        class="map-pin station-{{ $station->id }} @if ($station->status == true) completed @endif @if ($nextStation && $station->id === $nextStation->id) breathing @endif"
                         data-bs-toggle="modal" data-bs-target="#redemption">
                         @if ($station->status != true)
                             {{ $station->id }}
@@ -46,7 +51,7 @@
                     </a>
                 @else
                     <a href="{{ route('station', $station) }}"
-                        class="map-pin station-{{ $station->id }} @if ($station->status == true) completed @endif @if ($station->id === $nextStation->id) breathing @endif">
+                        class="map-pin station-{{ $station->id }} @if ($station->status == true) completed @endif @if ($nextStation && $station->id === $nextStation->id) breathing @endif">
                         @if ($station->status != true)
                             {{ $station->id }}
                         @else

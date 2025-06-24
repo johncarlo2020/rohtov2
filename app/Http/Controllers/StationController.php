@@ -129,14 +129,16 @@ class StationController extends Controller
         if ($user) {
             $user->email = $request->email;
             $user->alliance_bank = $request->alliance_bank; // Save the new alliance_bank data
+            $user->otp_verified = $request->otp_verified; // Save the new otp_verified data
             $user->save();
 
             return response()->json([
                 'success' => true,
-                'message' => 'User email and Alliance Bank status updated successfully',
+                'message' => 'User email, Alliance Bank status, and OTP verification status updated successfully',
                 'data' => [
                     'email' => $user->email,
-                    'alliance_bank' => $user->alliance_bank
+                    'alliance_bank' => $user->alliance_bank,
+                    'otp_verified' => $user->otp_verified
                 ]
             ]);
         }
@@ -461,6 +463,16 @@ class StationController extends Controller
         }
 
         return back()->withErrors(['otp' => 'Invalid OTP']);
+    }
+
+    public function verifyUserInAdmin(Request $request){
+        $user = User::find($request->id);
+
+        if ($user->otp_verified == 0) {
+            return response()->json(['error' => 'User is not verified'], 403);
+        }
+
+        return response()->json(['message' => 'User is verified'], 200);
     }
 
     public function resend(Request $request)

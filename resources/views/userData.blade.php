@@ -79,19 +79,44 @@
                                             <input class="form-control" type="text" disabled value="{{ $user->number }}">
                                         </div>
                                     </div>
+
                                     <div class="form-group">
-                                    <label for="allianceBankRadio" class="form-control-label">Alliance Bank</label>
-                                    <div>
-                                        <div class="form-check form-check-inline">
-                                            <input id="allianceBankYes" name="allianceBank" class="form-check-input" type="radio" disabled value="1" {{ $user->alliance_bank ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="allianceBankYes">Yes</label>
+                                        <label for="allianceBankRadio" class="form-control-label">Alliance Bank</label>
+                                        <div>
+                                            <div class="form-check form-check-inline">
+                                                <input id="allianceBankYes" name="allianceBank" class="form-check-input"
+                                                    type="radio" disabled value="1"
+                                                    {{ $user->alliance_bank ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="allianceBankYes">Yes</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input id="allianceBankNo" name="allianceBank" class="form-check-input"
+                                                    type="radio" disabled value="0"
+                                                    {{ !$user->alliance_bank ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="allianceBankNo">No</label>
+                                            </div>
                                         </div>
-                                        <div class="form-check form-check-inline">
-                                            <input id="allianceBankNo" name="allianceBank" class="form-check-input" type="radio" disabled value="0" {{ !$user->alliance_bank ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="allianceBankNo">No</label>
+
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="otpVerified" class="form-control-label">OTP Verified</label>
+                                            <div>
+                                                <div class="form-check form-check-inline">
+                                                    <input id="otpVerifiedYes" name="otpVerified" class="form-check-input"
+                                                        type="radio" disabled value="1"
+                                                        {{ $user->otp_verified ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="otpVerifiedYes">Yes</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input id="otpVerifiedNo" name="otpVerified" class="form-check-input"
+                                                        type="radio" disabled value="0"
+                                                        {{ !$user->otp_verified ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="otpVerifiedNo">No</label>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
                                 </div>
                                 <div class="d-flex justify-content-end">
                                     <button type="button" id="submitBtn"
@@ -170,7 +195,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     {{-- Include Bootstrap JS for modal functionality if not already included --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-         <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <script>
         var permissionName = "{{ $permission }}";
@@ -178,13 +203,16 @@
             $('#editBtn').click(function() {
                 $('#emailInput').prop('disabled', false);
                 $('#submitBtn').removeClass('d-none');
-                $('input[name="allianceBank"]').prop('disabled', false); // Enable radio buttons
+                $('input[name="allianceBank"]').prop('disabled', false); // Enable Alliance Bank radio buttons
+                $('input[name="otpVerified"]').prop('disabled', false); // Enable OTP Verified radio buttons
             });
 
             $('#submitBtn').click(function() {
                 var userId = {{ $user->id }};
                 var email = $('#emailInput').val();
                 var allianceBank = $('input[name="allianceBank"]:checked').val(); // Get selected radio value
+                var otpVerified = $('input[name="otpVerified"]:checked')
+            .val(); // Correctly get OTP Verified radio value
                 var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
                 $.ajax({
@@ -196,13 +224,17 @@
                     data: {
                         id: userId,
                         email: email,
-                        alliance_bank: allianceBank // Include allianceBank in the request
+                        alliance_bank: allianceBank, // Include allianceBank in the request
+                        otp_verified: otpVerified // Include otp_verified in the request
                     },
                     success: function(response) {
                         if (response.success) {
                             $('#emailInput').prop('disabled', true);
                             $('#submitBtn').addClass('d-none');
-                            $('input[name="allianceBank"]').prop('disabled', true); // Disable radio buttons again
+                            $('input[name="allianceBank"]').prop('disabled',
+                            true); // Disable radio buttons again
+                            $('input[name="otpVerified"]').prop('disabled',
+                            true); // Disable OTP Verified radio buttons again
                             toastr.success('User details updated successfully!');
                         } else {
                             alert('Error: ' + response.message);

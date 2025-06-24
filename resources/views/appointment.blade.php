@@ -79,7 +79,7 @@
                     <button type="button" id="submitDate" class="button button-primary w-100">Submit</button>
                 </div>
         </div>
-        @if($is2000 == 1 && $user->type == 'pre-reg' && $userAppointment > 0)
+        @if($is2000 == 1 && $user->type == 'pre-reg' && $userAppointment > 0 && $user->id <= 4500)
                 <div id="qrContainer" class=" bg-white p-3 rounded d-none">
                     <div class="text-center mb-2 px-1">
                         <h2 class="heading-text text-center mb-2">Congratulations, {{auth()->user()->fname}}!</h2>

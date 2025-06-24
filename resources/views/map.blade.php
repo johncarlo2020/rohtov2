@@ -62,7 +62,7 @@
             @endforeach
         </div>
         <div class="clickable d-flex justify-content-center align-items-center mb-4 gap-3">
-            @if ($is2000 == true)
+            @if ($is2000 == true && $user->id <= 4500)
                 <div class="redeem mb-1">
                     <img onclick="showDateModal()" src="{{ asset('files/main/Loccitane Gift.webp') }}" alt="" />
                 </div>

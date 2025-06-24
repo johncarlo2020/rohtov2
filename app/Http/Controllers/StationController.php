@@ -883,9 +883,9 @@ class StationController extends Controller
                 $stationUser->time_spent = 0;
                 $stationUser->save();
 
-                $userAppointment = UserAppointment::where('user_id', $id)->where('is_attended', 0)->first();
-                $userAppointment->is_attended = 1;
-                $userAppointment->save();
+                // $userAppointment = UserAppointment::where('user_id', $id)->where('is_attended', 0)->first();
+                // $userAppointment->is_attended = 1;
+                // $userAppointment->save();
                 DB::commit();
 
                 return response()->json([

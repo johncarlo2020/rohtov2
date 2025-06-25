@@ -85,6 +85,12 @@
                                             <input class="form-control" type="text" disabled value="{{ $user->number }}">
                                         </div>
                                     </div>
+                                     <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="example-text-input" class="form-control-label">Date of birth</label>
+                                            <input id="dob" class="form-control" type="date" disabled value="{{ $user->dob }}">
+                                        </div>
+                                    </div>
                                     <div class="form-group col-6">
                                         <label for="allianceBankRadio" class="form-control-label">Alliance Bank</label>
                                         <div>
@@ -207,6 +213,7 @@
         if (permissionName === 'full') {
             $('#editBtn').click(function() {
                 $('#emailInput').prop('disabled', false);
+                $('#dob').prop('disabled', false); // Enable DOB input
                 $('#submitBtn').removeClass('d-none');
                 $('input[name="allianceBank"]').prop('disabled', false); // Enable radio buttons
             });
@@ -214,6 +221,7 @@
             $('#submitBtn').click(function() {
                 var userId = {{ $user->id }};
                 var email = $('#emailInput').val();
+                var dob = $('#dob').val(); // Get DOB value
                 var allianceBank = $('input[name="allianceBank"]:checked').val(); // Get selected radio value
                 var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
@@ -226,14 +234,15 @@
                     data: {
                         id: userId,
                         email: email,
+                        dob: dob, // Include DOB in the request
                         alliance_bank: allianceBank // Include allianceBank in the request
                     },
                     success: function(response) {
                         if (response.success) {
                             $('#emailInput').prop('disabled', true);
+                            $('#dob').prop('disabled', true); // Disable DOB input
                             $('#submitBtn').addClass('d-none');
-                            $('input[name="allianceBank"]').prop('disabled',
-                            true); // Disable radio buttons again
+                            $('input[name="allianceBank"]').prop('disabled', true); // Disable radio buttons again
                             toastr.success('User details updated successfully!');
                         } else {
                             alert('Error: ' + response.message);

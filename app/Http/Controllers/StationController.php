@@ -128,14 +128,18 @@ class StationController extends Controller
 
         if ($user) {
             $user->email = $request->email;
-            $user->alliance_bank = $request->alliance_bank; // Save the new alliance_bank data
+            $user->alliance_bank = $request->alliance_bank;
+            if ($request->has('dob')) {
+                $user->dob = $request->dob;
+            }
             $user->save();
 
             return response()->json([
                 'success' => true,
-                'message' => 'User email and Alliance Bank status updated successfully',
+                'message' => 'User email, DOB, and Alliance Bank status updated successfully',
                 'data' => [
                     'email' => $user->email,
+                    'dob' => $user->dob,
                     'alliance_bank' => $user->alliance_bank
                 ]
             ]);

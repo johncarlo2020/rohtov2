@@ -234,7 +234,7 @@
             reset();
             if (!input.value.trim()) {
                 showError("Required");
-                // submitButton.disabled = true;
+                 submitButton.disabled = true;
             } else if (iti.isValidNumber()) {
                 validMsg.classList.remove("d-none");
                 // leave disabled until reCAPTCHA is completed
@@ -242,7 +242,7 @@
                 const errorCode = iti.getValidationError();
                 const msg = errorMap[errorCode] || "Invalid number";
                 showError(msg);
-                // submitButton.disabled = true;
+                 submitButton.disabled = true;
             }
         }); // End of keyup listener for #number (phone)
 

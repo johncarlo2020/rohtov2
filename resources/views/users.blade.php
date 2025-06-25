@@ -57,6 +57,7 @@
                                 <th>UTM Source</th>
                                 <th>SMS</th>
                                 <th>Email</th>
+                                <th>Alliance Bank</th>
 
                                 <th>Created At</th>
                                 <th>Appointments</th> {{-- Add this --}}
@@ -79,6 +80,8 @@
                                     <td>{{ $user->utm_source }}</td>
                                     <td>{{ $user->sms_consent ? 'Yes' : 'No' }}</td>
                                     <td>{{ $user->email_consent ? 'Yes' : 'No' }}</td>
+                                    <td>{{ $user->alliance_bank ? 'Yes' : 'No' }}</td>
+
 
                                     <td>{{ $user->created_at ? \Carbon\Carbon::parse($user->created_at)->format('d M h:i A') : 'N/A' }}
                                     </td>

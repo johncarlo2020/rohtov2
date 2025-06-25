@@ -111,7 +111,7 @@
                                     @endif
                                 </select>
                             </div>
-                            <button type="submit" class="button button-primary w-100" id="confirmProductButton"
+                            <button type="submit" class="button button-primary w-100 my-2" id="confirmProductButton"
                                 disabled>Confirm</button>
                                  <a href="{{ route('map') }}" class="button button-white border-danger border text-danger w-100 text-center">
                                 Back

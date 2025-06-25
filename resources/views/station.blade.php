@@ -80,7 +80,7 @@
                                     @endif
                                 </select>
                             </div>
-                            <button type="submit" class="button button-primary w-100 " data-dismiss="modal"
+                            <button type="submit" class="button button-primary w-100 my-2" data-dismiss="modal"
                                 id="confirmStaffButton" disabled>Confirm</button>
                             <a href="{{ route('map') }}" class="button button-white mt-2 border-danger border text-danger w-100 text-center">
                                 Back

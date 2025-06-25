@@ -96,12 +96,13 @@
                                     </td>
                                     @foreach ($user['stations'] as $station)
                                         <td class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-danger' }}">
-                                            {{ $station['value'] ? 'Yes' : 'No' }}
                                             @if ($station['value'] && ($station['id'] == 6 || $station['id'] == 7))
-                                                <br>
-                                                <strong>Created At:</strong>
                                                 {{ $station['created_at'] ? \Carbon\Carbon::parse($station['created_at'])->format('M d') : 'N/A' }}
+                                            @else
+                                            {{ $station['value'] ? 'Yes' : 'No' }}
+
                                             @endif
+
                                         </td>
                                     @endforeach
                                 </tr>

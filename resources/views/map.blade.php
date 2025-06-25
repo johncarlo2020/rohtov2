@@ -212,7 +212,7 @@
                 // Ensure the $user variable (with an 'id' property) is passed to this Blade view from your controller.
                 // If this QR code is for the currently authenticated user, you could use Auth::id().
                 // Example: const userSpecificUrl = "{{ rtrim(env('APP_URL', 'http://localhost'), '/') }}/user?id={{ Auth::id() }}";
-                const userSpecificUrl = "{{ env('APP_URL') }}user?id={{ $user->id }}";
+                const userSpecificUrl = "https://oceanorplastic.experienceloccitane.com/user?id={{ $user->id }}";
 
                 new QRCode(qrDiv, {
                     text: userSpecificUrl,

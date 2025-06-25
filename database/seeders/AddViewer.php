@@ -22,20 +22,20 @@ class AddViewer extends Seeder
             'lname' => 'viewer',
             'dob' => 'admin',
 
-            'number' => '0123456789',
-            'email' => 'viewer@gmail.com',
+            'number' => '0123426789',
+            'email' => 'pt@gmail.com',
             'country' => 'Malaysia',
             'password' => Hash::make('loccitane2025'),
         ]);
 
-        $permission = Permission::create(['name' => 'view']);
-        $permission = Permission::create(['name' => 'full']);
+        // $permission = Permission::create(['name' => 'view']);
+        // $permission = Permission::create(['name' => 'full']);
 
         $user->assignRole('admin');
 
         $user->givePermissionTo('view');
 
-        $user2 = User::find(1);
-        $user2->givePermissionTo('full');
+        // $user2 = User::find(1);
+        // $user2->givePermissionTo('full');
     }
 }

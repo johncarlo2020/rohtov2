@@ -264,8 +264,6 @@
 
     <!-- Include DataTables Buttons CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.2/css/buttons.dataTables.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-        integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="{{ asset('assets/js/core/bootstrap.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/perfect-scrollbar.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/smooth-scrollbar.min.js') }}"></script>
@@ -285,8 +283,7 @@
     <!-- Include DataTables Buttons JS -->
 
     <script>
-        $(document).ready(function() {
-            // Show the loader
+         // Show the loader
             $('.loader-container').show();
             $('#customer-table').hide();
 
@@ -362,7 +359,6 @@
                 $('#deleteUserName').text(userName);
                 $('#deleteUserModal').modal('show');
             });
-        });
     </script>
 
     @if(session('success'))

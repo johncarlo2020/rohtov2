@@ -1102,7 +1102,7 @@ class StationController extends Controller
         $today = Carbon::today();
         $permission = auth()->user()->getPermissionNames()->first();
 
-        $startDate = Carbon::create(2024, 5, 24);
+        $startDate = Carbon::create(2025, 6, 24);
         $data['users'] = User::whereDate('created_at', '>=', $startDate->toDateString())
         ->with([
             'stationUser',
@@ -1165,11 +1165,12 @@ class StationController extends Controller
 
     public function embark()
     {
+        // dd('embark');
         $tasks = Task::all(); // Get all tasks
 
         $users = User::with(['tasks' => function ($query) {
             $query->withPivot('status', 'images', 'created_at', 'updated_at'); // Eager load pivot fields
-        }])->orderBy('id','desc')->get();
+        }])->where('id','>',3000)->orderBy('id','desc')->get();
 
         $users = $users->map(function ($user) use ($tasks) {
             // Key user's tasks by task id for fast lookup
@@ -1203,6 +1204,7 @@ class StationController extends Controller
         $redeemableUserIds = $users->filter(function ($user) {
             return $user->can_redeem;
         })->pluck('id');
+        // dd(count($users));
 
         // Log or display the IDs of redeemable users
         // dd($redeemableUserIds);

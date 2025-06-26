@@ -177,8 +177,8 @@
                         <h1 class="heading-text text-center">Your response has been uploaded successfully.</h1>
 
                         @if($data != null && $data->images == 'yes'  )
-                        <p class="pharagrap-text text-center px-5">Enjoy RM5 off any eco-refill
-                        or jumbo, redeemable at our  Ocean or Plastic Roadshow.</p>
+                        <!-- <p class="pharagrap-text text-center px-5">Enjoy RM5 off any eco-refill
+                        or jumbo, redeemable at our  Ocean or Plastic Roadshow.</p> -->
                         @else
                         <p class="pharagrap-text text-center px-5">Thank you for your consideration — every step toward awareness  helps us all move forward.</p>
                         @endif
@@ -257,9 +257,9 @@
                             </div>
                             <p class="heading-text fw-bold mb-3 text-center text-gray">Thank you for making a conscious
                                 choice!</p>
-                            <p class="pharagraph-text mb-3 text-center">Enjoy RM5 off any eco-refill
+                            <!-- <p class="pharagraph-text mb-3 text-center">Enjoy RM5 off any eco-refill
                                 or jumbo, redeemable at our
-                                Ocean or Plastic Roadshow.</p>
+                                Ocean or Plastic Roadshow.</p> -->
                         </div>
                         <div class="no d-none">
                             <div class="pledge-answer mb-3">

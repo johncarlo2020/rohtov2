@@ -69,7 +69,7 @@ Route::post('/process_qr_code', 'App\Http\Controllers\StationController@scan')->
 
 Route::group(['middleware' => ['admin']], function () {
     Route::get('/admin', 'App\Http\Controllers\StationController@admin')->name('admin');
-    Route::get('/admin/users', 'App\Http\Controllers\StationController@users')->name('users');
+    // Route::get('/admin/users', 'App\Http\Controllers\StationController@users')->name('users');
     Route::get('/admin/ambient', 'App\Http\Controllers\StationController@ambient')->name('ambient');
     Route::get('/admin/embark', 'App\Http\Controllers\StationController@embark')->name('embark');
     Route::post('/tasks/complete', 'App\Http\Controllers\StationController@tasksComplete')->name('tasks.complete');
@@ -80,6 +80,8 @@ Route::group(['middleware' => ['admin']], function () {
     Route::post('/editUser', 'App\Http\Controllers\StationController@editUser')->name('editUser');
     Route::post('/tasks/redeem', 'App\Http\Controllers\StationController@redeem')->name('tasks.redeem');
     Route::post('/verify-otp-admin', 'App\Http\Controllers\StationController@verifyAdmin')->name('verifyAdmin');
+    Route::get('/admin/users/{date}/{keyword?}', 'App\Http\Controllers\StationController@usersFilter')->name('userFilter');
+
 
 
     Route::get('/dumpUser', 'App\Http\Controllers\StationController@logUser')->name('logUser');

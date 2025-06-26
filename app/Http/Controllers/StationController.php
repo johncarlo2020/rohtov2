@@ -1097,14 +1097,103 @@ class StationController extends Controller
         dd($users);
     }
 
-    public function users()
+    public function users(Request $request)
     {
         $today = Carbon::today();
         $permission = auth()->user()->getPermissionNames()->first();
+        // Retrieve filter inputs as date range
+        $start_date = $request->get('start_date');
+        $end_date = $request->get('end_date');
+        $keyword = $request->get('keyword');
 
         $startDate = Carbon::create(2025, 6, 24);
-        $data['users'] = User::whereDate('created_at', '>=', $startDate->toDateString())
-        ->with([
+        $query = User::query();
+        // Apply date range filters
+        $query->whereDate('created_at', '>=', $startDate->toDateString());
+        if ($start_date) {
+            $query->whereDate('created_at', '>=', $start_date);
+        }
+        if ($end_date) {
+            $query->whereDate('created_at', '<=', $end_date);
+        }
+        $data['users'] = $query
+         ->with([
+             'stationUser',
+             'userAppointments.appointment:id,name'
+         ])
+        ->orderBy('id', 'desc')
+        ->get();
+
+        $averageTimespentByStation = StationUser::select('station_id', \DB::raw('AVG(time_spent) as average_timespent'))->groupBy('station_id')->get()->keyBy('station_id');
+
+        $stations = Station::select('id', 'name', 'created_at')->get();
+
+        foreach ($data['users'] as $user) {
+            $userStations = $user->stationUser->pluck('station_id')->toArray();
+            $date = null;
+            foreach ($user->stationUser as $station) {
+                $date = $station->created_at;
+                // if($user->id == 2){
+                //     if($station->id == 19)
+                //     dd($station);
+                // }
+                // $stationId = $station->id;
+
+                // Now you can use $stationId and $createdAt as needed
+            }
+
+            // dd($date);
+
+            $user->stations = $stations->map(function ($station) use ($userStations,$date, $averageTimespentByStation) {
+                return [
+                    'name' => $station->name,
+                    'id' => $station->id,
+                    'created_at' => $date,
+                    'value' => in_array($station->id, $userStations),
+                ];
+            });
+        }
+
+        //  dd($data['users'][0]['stations']);
+
+        $data['stations'] = $stations->map(function ($station) use ($averageTimespentByStation) {
+            $avgData = $averageTimespentByStation->get($station->id);
+            return [
+                'name' => $station->name,
+                'average_timespent' => number_format(($avgData->average_timespent ?? 0) / 60, 2),
+            ];
+        });
+        // dd($data);
+        // Provide date options and default filter values
+        $data['dates'] = User::select(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as date'))
+            ->groupBy('date')
+            ->orderBy('date', 'desc')
+            ->get();
+        // Render view with selected filter values
+        return view('users', compact('data', 'permission', 'start_date', 'end_date', 'keyword'));
+    }
+
+      public function usersFilter(Request $request, $date, $keyword = null)
+    {
+        $permission = auth()->user()->getPermissionNames()->first();
+        $selectedDate = $date ? Carbon::parse($date) : null;
+
+        $query = User::query();
+
+        if ($keyword) {
+            // If keyword is present, search by keyword and ignore date filter
+            $query->where(function ($q) use ($keyword) {
+                $q->where('fname', 'like', "%{$keyword}%")
+                  ->orWhere('lname', 'like', "%{$keyword}%")
+                  ->orWhere('email', 'like', "%{$keyword}%")
+                  ->orWhere('number', 'like', "%{$keyword}%");
+            });
+        } elseif ($date) {
+            // Apply date filter only when no keyword
+            $query->whereDate('created_at', '=', $date);
+        }
+
+        $data['users'] = $query->with([
             'stationUser',
             'userAppointments.appointment:id,name'
         ])
@@ -1143,14 +1232,22 @@ class StationController extends Controller
 
         //  dd($data['users'][0]['stations']);
 
-        $data['stations'] = $stations->map(function ($name, $id) use ($userStations, $averageTimespentByStation) {
+        $data['stations'] = $stations->map(function ($station) use ($averageTimespentByStation) {
+            $avgData = $averageTimespentByStation->get($station->id);
             return [
-                'name' => $name,
-                'average_timespent' => number_format(($averageTimespentByStation->get($id)['average_timespent'] ?? 0) / 60, 2),
+                'name' => $station->name,
+                'average_timespent' => number_format(($avgData->average_timespent ?? 0) / 60, 2),
             ];
         });
         // dd($data);
-        return view('users', compact('data', 'permission'));
+
+        // get all dates that have data
+        $data['dates'] = User::select(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as date'))
+            ->groupBy('date')
+            ->orderBy('date', 'desc')
+            ->get();
+
+        return view('users', compact('data', 'permission', 'selectedDate', 'keyword'));
     }
 
     public function ambient()

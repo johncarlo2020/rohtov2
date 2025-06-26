@@ -54,9 +54,14 @@
                 <div id="table-container" class="px-1" style="display:none;">
                        <div class="date-picker d-flex align-items-center gap-2 filter">
 
-                            {{-- <span class="bg-primary px-2 py-1 rounded text-white d-block"><i class="fa-solid fa-calendar-days"></i> {{ $selectedDate ? \Carbon\Carbon::parse($selectedDate)->format('d M Y') : '' }}</span> --}}
-                            <input type="date" name="" id="user-date" class="form-control" value="{{ $selectedDate ? \Carbon\Carbon::parse($selectedDate)->format('Y-m-d') : '' }}" onchange="window.location.href='{{ route('userFilter', ['date' => ':date']) }}'.replace(':date', this.value)">
-                            <input class="form-control" type="text" placeholder="Search by keyword" aria-label="Search by keyword" id="keyword" value="{{ $keyword }}" onkeyup="window.location.href='{{ route('userFilter', ['date' => ':date', 'keyword' => ':keyword']) }}'.replace(':date', '{{ $selectedDate ? \Carbon\Carbon::parse($selectedDate)->format('Y-m-d') : '' }}').replace(':keyword', this.value)">
+                            {{-- Date picker with fixed width and no flex-grow --}}
+                            <input type="date" id="user-date" class="form-control flex-grow-0" style="width:200px;" value="{{ $selectedDate ? \Carbon\Carbon::parse($selectedDate)->format('Y-m-d') : '' }}" onchange="window.location.href='{{ route('userFilter', ['date' => ':date']) }}'.replace(':date', this.value)">
+
+                            {{-- Keyword search with fixed width and no flex-grow --}}
+                            <div class="input-group flex-grow-0" style="width:260px;">
+                                <span class="input-group-text"><i class="fa-solid fa-search"></i></span>
+                                <input class="form-control" type="text" placeholder="Search by keyword" aria-label="Search by keyword" id="keyword" value="{{ $keyword }}" onkeyup="window.location.href='{{ route('userFilter', ['date' => ':date', 'keyword' => ':keyword']) }}'.replace(':date', '{{ $selectedDate ? \Carbon\Carbon::parse($selectedDate)->format('Y-m-d') : '' }}').replace(':keyword', this.value)">
+                            </div>
                         </div>
                     <table id="customer-table" class="display nowrap" style="width:100%">
                         <thead>

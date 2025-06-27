@@ -812,3 +812,11 @@ ol {
         border-bottom: 1px solid #ccc;
     }
 }
+
+.sample-selection-container {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    margin-top: -116px;
+
+}

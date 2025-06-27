@@ -82,7 +82,8 @@
                             </div>
                             <button type="submit" class="button button-primary w-100 my-2" data-dismiss="modal"
                                 id="confirmStaffButton" disabled>Confirm</button>
-                            <a href="{{ route('map') }}" class="button button-white mt-2 border-danger border text-danger w-100 text-center">
+                            <a href="{{ route('map') }}"
+                                class="button button-white mt-2 border-danger border text-danger w-100 text-center">
                                 Back
                             </a>
                         </form>
@@ -105,9 +106,9 @@
                                     <option selected disabled value="">Select product</option>
                                     @if (isset($products))
                                         @foreach ($products as $product)
-                                            <option value="{{ $product->id }}">{{ $product->name }}</option>
+<option value="{{ $product->id }}">{{ $product->name }}</option>
                                             {{-- Assuming product has a 'name' attribute --}}
-                                        @endforeach
+@endforeach
                                     @endif
                                 </select>
                             </div>
@@ -147,8 +148,8 @@
             {{-- This can be shown for a specific station or globally if a product is selected --}}
             @if ($station->id == 5 && count($selectedProduct) === 0)
 
-                <div class="p-3 rounded bg-light w-75 mx-auto mt-3 border">
-                    <div class="selected-staff p-3 rounded bg-white w-75 mx-auto  mb-3">
+                <div class="p-3 sample-selection-container">
+                    <div class="bg-light p-3 rounded shadow-sm">
                         <form id="productForm">
                             <p class="fw-bold">Sample Selection</p>
                             <div class="form-group">
@@ -156,89 +157,90 @@
                                     aria-label="Floating label select example">
                                     <option selected disabled value="">Select product</option>
                                     @if (isset($products))
-                                    @foreach ($products as $product)
-                                    <option value="{{ $product->id }}">{{ $product->name }}</option>
-                                    {{-- Assuming product has a 'name' attribute --}}
-                                    @endforeach
+                                        @foreach ($products as $product)
+                                            <option value="{{ $product->id }}">{{ $product->name }}</option>
+                                            {{-- Assuming product has a 'name' attribute --}}
+                                        @endforeach
                                     @endif
                                 </select>
                             </div>
-                            <button type="button" class="button button-primary w-100 my-2" id="confirmProductButton"
-                                >Confirm</button>
-                            </form>
+                            <button type="button" class="button button-primary w-100 my-2"
+                                id="confirmProductButton">Confirm</button>
+                        </form>
+                    </div>
+                @elseif ($station->id == 5 && count($selectedProduct) > 0)
+                <div class="p-3 sample-selection-container">
+                      <div class="selected-product p-3 rounded bg-light shadow-sm">
+
+                        <p class="mb-1 fw-bold">Your Selected Product:</p>
+                        @foreach ($selectedProduct as $product)
+                            <p class="selected-id">{{ $product->name }}</p>
+                        @endforeach
+                    </div>
                 </div>
-            @elseif ($station->id == 5 && count($selectedProduct) > 0)
 
-
-                <div class="selected-product p-3 rounded bg-light w-75 mx-auto mt-3 border">
-
-                    <p class="mb-1 fw-bold">Your Selected Product:</p>
-                    @foreach ($selectedProduct as $product)
-                        <p class="selected-id">{{ $product->name }}</p>
-                    @endforeach
-                </div>
             @endif
 
             @if ($station->id == 6 && $selectedProduct !== null)
 
-                    <img class="small-logo mb-2" src="{{ asset('files/main/logo.webp') }}" alt="" />
-                    <p class="mb-1 fw-bold">Personalised Hair Sample</p>
-                    @foreach ($selectedProduct as $product)
-                        <p class="selected-id">{{ $product->name }}</p>
-                    @endforeach
-                </div>
-            @endif
+                <img class="small-logo mb-2" src="{{ asset('files/main/logo.webp') }}" alt="" />
+                <p class="mb-1 fw-bold">Personalised Hair Sample</p>
+                @foreach ($selectedProduct as $product)
+                    <p class="selected-id">{{ $product->name }}</p>
+                @endforeach
+        </div>
+        @endif
 
 
 
-            @if ($user != true && $station->id == 3)
-                {{-- For Station 3, trigger staff modal --}}
-                <button id="start-scanner" class="btn btn-info mx-auto mt-2 camera-btn">
-                    <i class="fa-solid fa-camera"></i>
-                </button>
-            @elseif ($user != true && $station->id == 5)
-            @if(count($selectedProduct) > 0)
+        @if ($user != true && $station->id == 3)
+            {{-- For Station 3, trigger staff modal --}}
+            <button id="start-scanner" class="btn btn-info mx-auto mt-2 camera-btn">
+                <i class="fa-solid fa-camera"></i>
+            </button>
+        @elseif ($user != true && $station->id == 5)
+            @if (count($selectedProduct) > 0)
                 {{-- For Station 5, trigger product modal --}}
                 <button id="start-scanner" type="button" class="btn btn-info mx-auto mt-2 camera-btn">
                     <i class="fa-solid fa-camera"></i>
                 </button>
-                @else
+            @else
                 <button id="start-scanner" type="button" class="btn btn-info mx-auto mt-2 camera-btn d-none">
                     <i class="fa-solid fa-camera"></i>
                 </button>
-                @endif
-            @elseif ($user != true)
-                {{-- For other stations when user is not logged in (and station is not 3 or 5) --}}
-                <button id="start-scanner" class="mx-auto mt-2 camera-btn">
-                    <i class="fa-solid fa-camera"></i>
-                </button>
             @endif
+        @elseif ($user != true)
+            {{-- For other stations when user is not logged in (and station is not 3 or 5) --}}
+            <button id="start-scanner" class="mx-auto mt-2 camera-btn">
+                <i class="fa-solid fa-camera"></i>
+            </button>
+        @endif
 
-        </div>
-        <div id="scannerContainer" class="scanner-container d-none">
-            <!-- <button id="close" class="mx-auto mt-4 camera-btn">x</button> -->
-            <div id="reader"></div>
-            {{-- <div>
+    </div>
+    <div id="scannerContainer" class="scanner-container d-none">
+        <!-- <button id="close" class="mx-auto mt-4 camera-btn">x</button> -->
+        <div id="reader"></div>
+        {{-- <div>
                 <a href="{{ route('dashboard') }}" class="button">
                     BACK
                 </a>
             </div> --}}
-        </div>
-        @if ($user != true)
-            <p class="px-4 mt-4 bottom-text main-color font-medium small-width">Scan the QR code at the station to
-                check in</p>
-        @else
-            <p class="mt-4 bottom-text main-color font-medium">Checked In</p>
+    </div>
+    @if ($user != true)
+        <p class="px-4 mt-4 bottom-text main-color font-medium small-width">Scan the QR code at the station to
+            check in</p>
+    @else
+        <p class="mt-4 bottom-text main-color font-medium">Checked In</p>
 
-            <div class="scanner-button d-flex justify-content-center mb-4">
-                <a href="{{ route('map') }}" class="button button-white w-50 text-center">
-                    BACK
-                </a>
-            </div>
-        @endif
-        <div class="footer-container p-0 mt-auto">
-            @include('components.footer')
+        <div class="scanner-button d-flex justify-content-center mb-4">
+            <a href="{{ route('map') }}" class="button button-white w-50 text-center">
+                BACK
+            </a>
         </div>
+    @endif
+    <div class="footer-container p-0 mt-auto">
+        @include('components.footer')
+    </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
@@ -375,7 +377,7 @@
                             } else {
                                 console.warn(
                                     '.selected-staff or .selected-id element not found for station 3 display.'
-                                    );
+                                );
                             }
                         } else {
                             // This case might occur if QR scan happens for station 3 without prior staff selection.
@@ -429,7 +431,7 @@
 
                 var staffIdValue = $('#floatingSelectStaff').val(); // Get selected staff ID
                 var staffNameValue = $('#floatingSelectStaff option:selected')
-            .text(); // Get selected staff name
+                    .text(); // Get selected staff name
                 var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
                 $.ajax({

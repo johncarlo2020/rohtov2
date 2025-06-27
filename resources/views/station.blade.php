@@ -92,7 +92,7 @@
         </div>
 
         <!-- Product Selection Modal (New) -->
-        <div class="modal fade" data-bs-backdrop="static" id="productSelectionModal" tabindex="-1" role="dialog"
+        <!-- <div class="modal fade" data-bs-backdrop="static" id="productSelectionModal" tabindex="-1" role="dialog"
             aria-labelledby="productSelectionModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -120,7 +120,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
 
         <div class="mb-3 branding-container">
@@ -145,19 +145,42 @@
 
             {{-- Display Selected Product (New) --}}
             {{-- This can be shown for a specific station or globally if a product is selected --}}
-            @if ($station->id == 5 && $selectedProduct !== null) {{-- Or add a specific station condition e.g., $station->id == X && ... --}}
+            @if ($station->id == 5 && count($selectedProduct) === 0)
+
+                <div class="p-3 rounded bg-light w-75 mx-auto mt-3 border">
+                    <div class="selected-staff p-3 rounded bg-white w-75 mx-auto  mb-3">
+                        <form id="productForm">
+                            <p class="fw-bold">Sample Selection</p>
+                            <div class="form-group">
+                                <select class="form-select" id="floatingSelectProduct" name="product_id"
+                                    aria-label="Floating label select example">
+                                    <option selected disabled value="">Select product</option>
+                                    @if (isset($products))
+                                    @foreach ($products as $product)
+                                    <option value="{{ $product->id }}">{{ $product->name }}</option>
+                                    {{-- Assuming product has a 'name' attribute --}}
+                                    @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                            <button type="button" class="button button-primary w-100 my-2" id="confirmProductButton"
+                                >Confirm</button>
+                            </form>
+                </div>
+            @elseif ($station->id == 5 && count($selectedProduct) > 0)
+
 
                 <div class="selected-product p-3 rounded bg-light w-75 mx-auto mt-3 border">
+
                     <p class="mb-1 fw-bold">Your Selected Product:</p>
                     @foreach ($selectedProduct as $product)
                         <p class="selected-id">{{ $product->name }}</p>
                     @endforeach
-
                 </div>
             @endif
 
             @if ($station->id == 6 && $selectedProduct !== null)
-                <div class="selected-staff p-3 rounded bg-white w-75 mx-auto  mb-3">
+
                     <img class="small-logo mb-2" src="{{ asset('files/main/logo.webp') }}" alt="" />
                     <p class="mb-1 fw-bold">Personalised Hair Sample</p>
                     @foreach ($selectedProduct as $product)
@@ -174,10 +197,16 @@
                     <i class="fa-solid fa-camera"></i>
                 </button>
             @elseif ($user != true && $station->id == 5)
+            @if(count($selectedProduct) > 0)
                 {{-- For Station 5, trigger product modal --}}
                 <button id="start-scanner" type="button" class="btn btn-info mx-auto mt-2 camera-btn">
                     <i class="fa-solid fa-camera"></i>
                 </button>
+                @else
+                <button id="start-scanner" type="button" class="btn btn-info mx-auto mt-2 camera-btn d-none">
+                    <i class="fa-solid fa-camera"></i>
+                </button>
+                @endif
             @elseif ($user != true)
                 {{-- For other stations when user is not logged in (and station is not 3 or 5) --}}
                 <button id="start-scanner" class="mx-auto mt-2 camera-btn">
@@ -225,11 +254,6 @@
             });
         @endif
 
-        @if ($user != true && $station->id == 5 && count($selectedProduct) < 1)
-            document.addEventListener('DOMContentLoaded', function() {
-                $('#productSelectionModal').modal('show');
-            });
-        @endif
 
         const mainContent = document.getElementById('mainContent');
         const scannerContainer = document.getElementById('scannerContainer');
@@ -437,13 +461,12 @@
             });
 
             // --- Product Selection Modal Logic (New) ---
-            $('#productForm').on('submit', function(event) {
+            $('#confirmProductButton').on('click', function() {
                 console.log('Product form submission triggered.'); // New debug line
-                event.preventDefault();
-
                 var productIdValue = $('#floatingSelectProduct').val();
                 var productNameValue = $('#floatingSelectProduct option:selected').text();
                 var csrfToken = $('meta[name="csrf-token"]').attr('content');
+                console.log('Selected Product ID:', productIdValue); // Debug line
 
                 $.ajax({
                     url: '{{ route('saveProduct') }}', // Ensure this route is defined in web.php
@@ -455,86 +478,10 @@
                         product_id: productIdValue
                     },
                     success: function(response) {
-                        location.reload(); // Reload the page to reflect changes
+                        // location.reload(); // Reload the page to reflect changes
                         console.log('Product ID saved successfully:', response);
+                        location.reload(); // Reload the page to reflect changes
 
-                        selectedProductId = productIdValue;
-                        selectedProductName = productNameValue;
-                        // Update static display for product if it exists
-                        if ($('.selected-product').length) {
-                            $('.selected-product .selected-id').text(selectedProductName);
-                            $('.selected-product').removeClass('d-none'); // Make it visible
-                        } else {
-                            // If the static display area doesn't exist, you might want to create it dynamically
-                            // or ensure it's pre-rendered but hidden.
-                            // For now, just log if it's not found.
-                        }
-
-                        var $productModal = $('#productSelectionModal');
-                        if ($productModal.length === 0) {
-                            console.error('#productSelectionModal not found in DOM.');
-                            return;
-                        }
-
-                        console.log('Attempting to hide #productSelectionModal.');
-
-                        var hiddenEventFired = false;
-                        $productModal.one('hidden.bs.modal', function() {
-                            hiddenEventFired = true;
-                            console.log(
-                                '#productSelectionModal hidden.bs.modal event fired.'
-                                );
-                            // Bootstrap should handle backdrop and body class, but double check
-                            if ($('.modal-backdrop').length) {
-                                console.warn(
-                                    'Backdrop still present after hidden.bs.modal, removing.'
-                                    );
-                                $('.modal-backdrop')
-                            .remove(); // Ensure backdrop is removed
-                            }
-                            if ($('body').hasClass('modal-open')) {
-                                console.warn(
-                                    'body still has modal-open class after hidden.bs.modal, removing.'
-                                    );
-                                $('body').removeClass(
-                                'modal-open'); // Ensure body class is removed
-                            }
-                        });
-
-                        $productModal.modal('hide');
-
-                        setTimeout(function() {
-                            if (!hiddenEventFired) {
-                                console.warn(
-                                    '#productSelectionModal hidden.bs.modal event did NOT fire. Forcing cleanup.'
-                                    );
-                                if ($productModal.hasClass('show') || $productModal.is(
-                                        ':visible')) {
-                                    console.log(
-                                        'Modal still visible, applying manual hide steps.'
-                                        );
-                                    $productModal.removeClass('show');
-                                    $productModal.css('display', 'none');
-                                    $productModal.attr('aria-hidden', 'true');
-                                }
-                                if ($('.modal-backdrop').length) {
-                                    console.log(
-                                        'Removing modal-backdrop manually due to timeout.'
-                                        );
-                                    $('.modal-backdrop').remove();
-                                }
-                                if ($('body').hasClass('modal-open')) {
-                                    console.log(
-                                        'Removing modal-open from body manually due to timeout.'
-                                        );
-                                    $('body').removeClass('modal-open');
-                                }
-                            } else {
-                                console.log(
-                                    'Modal hide process completed via hidden.bs.modal event.'
-                                    );
-                            }
-                        }, 750); // Wait for animations (Bootstrap default is 300ms) + buffer
                     },
                     error: function(xhr, status, error) {
                         console.error('Error saving product ID:', xhr.responseText);
@@ -543,16 +490,16 @@
                 });
             });
 
-            $('#floatingSelectProduct').on('change', function() {
-                console.log('Product selection changed. Value: "' + $(this).val() + '"'); // Debug line
-                if ($(this).val() && $(this).val() !== "") {
-                    $('#confirmProductButton').prop('disabled', false);
-                    console.log('Confirm product button ENabled.'); // Debug line
-                } else {
-                    $('#confirmProductButton').prop('disabled', true);
-                    console.log('Confirm product button DISabled.'); // Debug line
-                }
-            });
+            // $('#floatingSelectProduct').on('change', function() {
+            //     console.log('Product selection changed. Value: "' + $(this).val() + '"'); // Debug line
+            //     if ($(this).val() && $(this).val() !== "") {
+            //         $('#confirmProductButton').prop('disabled', false);
+            //         console.log('Confirm product button ENabled.'); // Debug line
+            //     } else {
+            //         $('#confirmProductButton').prop('disabled', true);
+            //         console.log('Confirm product button DISabled.'); // Debug line
+            //     }
+            // });
         });
 
 

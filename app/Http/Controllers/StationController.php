@@ -651,7 +651,7 @@ class StationController extends Controller
         $userProductEntries = UserProducts::where('user_id', Auth::id())->latest()->get();
 
         $selectedProduct = Products::whereIn('id', $userProductEntries->pluck('products_id'))->get();
-// dd($selectedProducts->count());
+      //  dd($selectedProduct);
 
         $products = Products::whereNotIn('id', $userProductEntries->pluck('products_id'))->get(); // Fetch all products
 

@@ -1129,29 +1129,45 @@ class StationController extends Controller
         $stations = Station::select('id', 'name', 'created_at')->get();
 
         foreach ($data['users'] as $user) {
-            $userStations = $user->stationUser->pluck('station_id')->toArray();
-            $date = null;
-            foreach ($user->stationUser as $station) {
-                $date = $station->created_at;
-                // if($user->id == 2){
-                //     if($station->id == 19)
-                //     dd($station);
-                // }
-                // $stationId = $station->id;
+            $userStationsWithData = $user->stationUser->keyBy('station_id');
 
-                // Now you can use $stationId and $createdAt as needed
-            }
+            $user->stations = $stations->map(function ($station) use ($userStationsWithData, $averageTimespentByStation) {
+                $userStationData = $userStationsWithData->get($station->id);
+                $value = !is_null($userStationData);
+                $displayValue = '';
 
-            // dd($date);
+                if ($value) {
+                    if ($station->id == 6 || $station->id == 7) {
+                        $displayValue = $userStationData->created_at ? \Carbon\Carbon::parse($userStationData->created_at)->format('M d') : 'N/A';
+                    } else {
+                        $displayValue = 'Yes';
+                    }
+                } else {
+                    $displayValue = 'No';
+                }
 
-            $user->stations = $stations->map(function ($station) use ($userStations,$date, $averageTimespentByStation) {
                 return [
                     'name' => $station->name,
                     'id' => $station->id,
-                    'created_at' => $date,
-                    'value' => in_array($station->id, $userStations),
+                    'display_value' => $displayValue,
+                    'value' => $value,
                 ];
             });
+
+            // Pre-process appointment dates into a simple string
+            $appointmentDates = collect($user->userAppointments)->map(function($ua) {
+                try {
+                    return \Carbon\Carbon::createFromFormat('m-d-Y', $ua->appointment->name)->format('d M');
+                } catch (\Exception $e) {
+                    return null;
+                }
+            })->filter()->implode(', ');
+
+            $user->appointment_dates_string = !empty($appointmentDates) ? $appointmentDates : 'No dates are selected here';
+
+            // Unset relationships to avoid passing complex objects
+            unset($user->userAppointments);
+            unset($user->stationUser);
         }
 
         //  dd($data['users'][0]['stations']);
@@ -1190,10 +1206,10 @@ class StationController extends Controller
             });
         } elseif ($date) {
             // Apply date filter only when no keyword
-            $query->whereDate('created_at', '=', $date);
+            // $query->whereDate('created_at', '=', $date);
         }
 
-        $data['users'] = $query->with([
+        $eloquent_users = $query->with([
             'stationUser',
             'userAppointments.appointment:id,name'
         ])
@@ -1204,31 +1220,71 @@ class StationController extends Controller
 
         $stations = Station::select('id', 'name', 'created_at')->get();
 
-        foreach ($data['users'] as $user) {
-            $userStations = $user->stationUser->pluck('station_id')->toArray();
-            $date = null;
-            foreach ($user->stationUser as $station) {
-                $date = $station->created_at;
-                // if($user->id == 2){
-                //     if($station->id == 19)
-                //     dd($station);
-                // }
-                // $stationId = $station->id;
+        $plain_users = [];
+        foreach ($eloquent_users as $user) {
+            $userStationsWithData = $user->stationUser->keyBy('station_id');
 
-                // Now you can use $stationId and $createdAt as needed
-            }
+            $user_stations = $stations->map(function ($station) use ($userStationsWithData) {
+                $userStationData = $userStationsWithData->get($station->id);
+                $value = !is_null($userStationData);
+                $displayValue = '';
 
-            // dd($date);
+                if ($value) {
+                    if ($station->id == 6 || $station->id == 7) {
+                        $displayValue = $userStationData->created_at ? \Carbon\Carbon::parse($userStationData->created_at)->format('M d') : 'N/A';
+                    } else {
+                        $displayValue = 'Yes';
+                    }
+                } else {
+                    $displayValue = 'No';
+                }
 
-            $user->stations = $stations->map(function ($station) use ($userStations,$date, $averageTimespentByStation) {
                 return [
                     'name' => $station->name,
                     'id' => $station->id,
-                    'created_at' => $date,
-                    'value' => in_array($station->id, $userStations),
+                    'display_value' => $displayValue,
+                    'value' => $value,
                 ];
-            });
+            })->toArray();
+
+            // Pre-process appointment dates into a simple string
+            $appointmentDates = collect($user->userAppointments)->map(function($ua) {
+                try {
+                    return \Carbon\Carbon::createFromFormat('m-d-Y', $ua->appointment->name)->format('d M');
+                } catch (\Exception $e) {
+                    return null;
+                }
+            })->filter()->implode(', ');
+
+            $appointment_dates_string = !empty($appointmentDates) ? $appointmentDates : 'No dates are selected here';
+
+            $station6Data = $userStationsWithData->get(6);
+            if ($station6Data) {
+                $redeem_date_string = \Carbon\Carbon::parse($station6Data->created_at)->format('d M h:i A');
+            } else {
+                $redeem_date_string = 'not redeemed';
+            }
+
+            $plain_users[] = [
+                'id' => $user->id,
+                'fname' => $user->fname,
+                'lname' => $user->lname,
+                'dob' => $user->dob,
+                'email' => $user->email,
+                'number' => $user->number,
+                'country' => $user->country,
+                'utm_source' => $user->utm_source,
+                'sms_consent' => $user->sms_consent,
+                'email_consent' => $user->email_consent,
+                'alliance_bank' => $user->alliance_bank,
+                'created_at' => $user->created_at ? \Carbon\Carbon::parse($user->created_at)->format('d M h:i A') : 'N/A',
+                'appointment_dates_string' => $appointment_dates_string,
+                'stations' => $user_stations,
+                'redeem_date' => $redeem_date_string,
+            ];
         }
+
+        $data['users'] = $plain_users;
 
         //  dd($data['users'][0]['stations']);
 

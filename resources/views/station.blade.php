@@ -14,7 +14,7 @@
             width: 100px;
         }
     </style>
-    <div id="stationPage" class="station-page home content-box main-background d-flex flex-column min-vh-100 pt-5">
+    <div id="stationPage" class="station-page home content-box main-background d-flex flex-column min-vh-100 pt-5 ">
         <div class="modal fade" data-bs-backdrop="static" id="scanCompleteModal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -92,38 +92,6 @@
             </div>
         </div>
 
-        <!-- Product Selection Modal (New) -->
-        <!-- <div class="modal fade" data-bs-backdrop="static" id="productSelectionModal" tabindex="-1" role="dialog"
-            aria-labelledby="productSelectionModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <form id="productForm">
-                            <p class="fw-bold">Sample Selection</p>
-                            <div class="form-group">
-                                <select class="form-select" id="floatingSelectProduct" name="product_id"
-                                    aria-label="Floating label select example">
-                                    <option selected disabled value="">Select product</option>
-                                    @if (isset($products))
-                                        @foreach ($products as $product)
-<option value="{{ $product->id }}">{{ $product->name }}</option>
-                                            {{-- Assuming product has a 'name' attribute --}}
-@endforeach
-                                    @endif
-                                </select>
-                            </div>
-                            <button type="submit" class="button button-primary w-100 my-2" id="confirmProductButton"
-                                disabled>Confirm</button>
-                                 <a href="{{ route('map') }}" class="button button-white border-danger border text-danger w-100 text-center">
-                                Back
-                            </a>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-
-
         <div class="mb-3 branding-container">
             @include('components.branding')
         </div>
@@ -147,7 +115,6 @@
             {{-- Display Selected Product (New) --}}
             {{-- This can be shown for a specific station or globally if a product is selected --}}
             @if ($station->id == 5 && count($selectedProduct) === 0)
-
                 <div class="p-3 sample-selection-container">
                     <div class="bg-light p-3 rounded shadow-sm">
                         <form id="productForm">
@@ -168,29 +135,29 @@
                                 id="confirmProductButton">Confirm</button>
                         </form>
                     </div>
-                @elseif ($station->id == 5 && count($selectedProduct) > 0)
+                </div>
+            @elseif ($station->id == 5 && count($selectedProduct) > 0)
                 <div class="p-3 sample-selection-container">
-                      <div class="selected-product p-3 rounded bg-light shadow-sm">
-
+                    <div class="selected-product p-3 rounded bg-light shadow-sm">
                         <p class="mb-1 fw-bold">Your Selected Product:</p>
                         @foreach ($selectedProduct as $product)
                             <p class="selected-id">{{ $product->name }}</p>
                         @endforeach
                     </div>
                 </div>
-
             @endif
 
             @if ($station->id == 6 && $selectedProduct !== null)
-
-                <img class="small-logo mb-2" src="{{ asset('files/main/logo.webp') }}" alt="" />
-                <p class="mb-1 fw-bold">Personalised Hair Sample</p>
-                @foreach ($selectedProduct as $product)
-                    <p class="selected-id">{{ $product->name }}</p>
-                @endforeach
-        </div>
-        @endif
-
+                <div class="p-3">
+                    <div class="bg-white p-3 rounded shadow-sm sample-selection-container">
+                        <img class="small-logo mb-2" src="{{ asset('files/main/logo.webp') }}" alt="" />
+                        <p class="mb-1 fw-bold">Personalised Hair Sample</p>
+                        @foreach ($selectedProduct as $product)
+                            <p class="selected-id">{{ $product->name }}</p>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
 
 
         @if ($user != true && $station->id == 3)
@@ -217,6 +184,9 @@
         @endif
 
     </div>
+
+
+
     <div id="scannerContainer" class="scanner-container d-none">
         <!-- <button id="close" class="mx-auto mt-4 camera-btn">x</button> -->
         <div id="reader"></div>
@@ -269,6 +239,9 @@
 
         document.getElementById('start-scanner').addEventListener('click', function(event) {
             event.preventDefault();
+
+
+            console.log('Scanner started');
 
             mainContent.classList.add('d-none');
             scannerContainer.classList.remove('d-none');

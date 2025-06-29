@@ -161,11 +161,15 @@
             // Get data from the clicked row
             var data = table.row(this).data();
 
-            // Extract user ID from the clicked row's data
-            var userId = $(this).data('user-id');
+            if (data) {
+                // Extract user ID from the clicked row's data
+                var userId = data.id;
 
-            // Redirect to the user data route with the user ID
-            window.location.href = "{{ route('userData', ['user' => ':userId']) }}".replace(':userId', userId);
+                // Redirect to the user data route with the user ID
+                if (userId) {
+                    window.location.href = "{{ route('userData', ['user' => ':userId']) }}".replace(':userId', userId);
+                }
+            }
         });
     </script>
 

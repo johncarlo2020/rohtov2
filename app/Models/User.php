@@ -32,6 +32,11 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public function stations()
+    {
+        return $this->belongsToMany(Station::class, 'station_users')->withPivot('time_spent', 'created_at');
+    }
+
     /**
      * The attributes that should be cast.
      *

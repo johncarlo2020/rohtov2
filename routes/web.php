@@ -69,7 +69,8 @@ Route::post('/process_qr_code', 'App\Http\Controllers\StationController@scan')->
 
 Route::group(['middleware' => ['admin']], function () {
     Route::get('/admin', 'App\Http\Controllers\StationController@admin')->name('admin');
-    // Route::get('/admin/users', 'App\Http\Controllers\StationController@users')->name('users');
+    Route::get('/admin/users', 'App\Http\Controllers\UserController@users')->name('users');
+    Route::get('/users/export', 'App\Http\Controllers\UserController@export')->name('users.export');
     Route::get('/admin/ambient', 'App\Http\Controllers\StationController@ambient')->name('ambient');
     Route::get('/admin/embark', 'App\Http\Controllers\StationController@embark')->name('embark');
     Route::post('/tasks/complete', 'App\Http\Controllers\StationController@tasksComplete')->name('tasks.complete');

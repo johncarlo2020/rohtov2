@@ -9,10 +9,10 @@
 <div class="modal fade" id="welcomeModal" tabindex="-1" aria-labelledby="welcomeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content text-center position-relative">
-      
+
       <!-- Close Button (top-right) -->
       <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
-      
+
       <!-- Image -->
       <img src="{{ asset('images/dutchlady/dutchLadyWelcomeModal.webp') }}" alt="Welcome" class="img-fluid">
 
@@ -73,10 +73,16 @@
                         onclick="gotoStation({{ $station->id }})"
                     @endif
                     >
-                    <img src="{{ asset('images/hadalabobabies/station' . $station->id . '.webp') }}" 
-                        class="station-img img-fluid " 
+                    @if ($station->status == 'completed')
+                    <img src="{{ asset('images/hadalabobabies/DL Station Map (' . $station->id . ') Check.webp') }}" class="station-img img-fluid "
+                    alt="Slide {{ $station->id }}">
+                </div>
+                    @else
+                    <img src="{{ asset('images/hadalabobabies/station' . $station->id . '.webp') }}" class="station-img img-fluid "
                         alt="Slide {{ $station->id }}">
                     </div>
+                    @endif
+
                 </div>
             @endif
         @endforeach
@@ -93,7 +99,7 @@
                         <div class="slider-next slider-navigation">
                             <button id="next" class="slider-btn"><i class="fa-solid fa-caret-right"></i></button>
                         </div>
-                        
+
                         <div class="slick-carousel mt-4" style="visibility: hidden;">
                             @foreach ($stations as $station)
                             <div class="slick-slide-item">
@@ -121,7 +127,7 @@
             </div>
         </div> -->
         <div class="bottom-text ">
-            <a class="footer-text text-dark" href="https://wowsome.com.my/">Powered by WOWSOME®2025</a>   
+            <a class="footer-text text-dark" href="https://wowsome.com.my/">Powered by WOWSOME®2025</a>
         </div>
     </div>
 

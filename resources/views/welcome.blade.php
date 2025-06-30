@@ -45,6 +45,12 @@
         object-fit: contain
     }
 
+    .welcome_img_store {
+        width: 100%;
+        height: auto;
+        object-fit: contain
+    }
+
     .welcome-sign-btn {
         width: 40vw !important;
         min-width: unset !important;
@@ -52,18 +58,31 @@
 </style>
 
 <body class="antialiased welcome-page main-background hadalabo">
-    <div class="py-5 container-fluid main-content">
-        <div class="row mt-5">
+    <div class="py-3 container-fluid main-content">
+        <div class="row">
             <div class="col-12 d-flex justify-content-center align-items-center">
-                <img class="welcome_img" src="{{ asset('images/hadalabobabies/welcome_image.webp') }}" alt="" />
+                <img class="welcome_img w-50 img-fluid" src="{{ asset('images/dutchlady/dutchLadyLogo.png') }}" alt="" />
+            </div>
+            <div class="col-12 d-flex justify-content-center align-items-center">
+                <img class="welcome_img" src="{{ asset('images/dutchlady/dutchLadyLoginText1.webp') }}" alt="" />
+            </div>
+            <div class="col-12 d-flex justify-content-center align-items-center p-0">
+                <img class="welcome_img_store" src="{{ asset('images/dutchlady/dutchLadyLoginImg.webp') }}" alt="" />
             </div>
             <div class="text-center bottom-text-welcome col-12 mt-5">
-                <a href="{{ route('register') }}" class="home-btn welcome-sign-btn btn rounded-pill"><span>Sign Up</span></a>
-                <p class="mt-5 p-0 m-0">Already Registered</p>
+                <div class="d-block">
+                    <div class="col mb-3">
+                        <a href="{{ route('register') }}" class="home-btn welcome-sign-btn btn rounded-pill"><span>Sign Up</span></a>
+                    </div>
+                    <div class="col">
+                        <a href="{{ route('register') }}" class="home-btn welcome-sign-btn btn rounded-pill"><span>Login</span></a>
+                    </div>
+                </div>
+                <!-- <p class="mt-5 p-0 m-0">Already Registered</p>
                 <p class="m-0 p-0">
                     Please Login
                     <a class="underline" href="{{ route('login') }}" class="">here</a>
-                </p>
+                </p> -->
             </div>
         </div>
     </div>

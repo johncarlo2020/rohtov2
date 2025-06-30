@@ -133,9 +133,12 @@ class StationController extends Controller
             return view('congrats');
         }
 
-        if($user == true) {
+        if($station->id == 2 && $user == true) {
             return view('station', compact('station', 'user'));
         }
+
+         return view('station', compact('station', 'user'));
+
     }
     public function extension(Station $station)
     {

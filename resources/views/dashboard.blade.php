@@ -3,10 +3,7 @@
         <div class="d-flex justify-content-center align-item-center">
             @include('components.branding')
         </div>
-        <div id="startpage" class="d-flex justify-content-center align-items-center h-100 flex-column mt-4 {{ $stations->firstWhere('status', true) ? 'd-none' : '' }}">
-            <img class="welcome_img" src="{{ asset('images/hadalabobabies/welcome_image.webp') }}" alt="" />
-            <button id="start" class="home-btn welcome-sign-btn btn rounded-pill mt-5"><span>Start</span></button>
-        </div>
+
 <!-- Modal -->
 <div class="modal fade" id="notAllowedModal" tabindex="-1" aria-labelledby="notAllowedModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -26,7 +23,7 @@
 </div>
 
 
-        <div class="sliders {{ $stations->firstWhere('status', true) ? '' : 'd-none' }} w-100">
+        <div class="sliders w-100">
             <div class="container-fluid p-0 m-0">
                 <div class="row p-0 m-0 justify-content-center">
                     <div class="col-md-10 slider-container">
@@ -84,8 +81,7 @@
             const completedStation = window.stationsData.find(station => station.status);
             const startButton = document.getElementById('start');
             const sliders = document.querySelector('.sliders');
-            const startPage = document.getElementById('startpage');
-
+            displayAndInitSliders();
             function initializeSlickSlider() {
                 const $carousel = $('.slick-carousel');
                 if (!$carousel.hasClass('slick-initialized')) {
@@ -126,32 +122,6 @@
                     // Defer initialization to allow browser to render visibility change
                     requestAnimationFrame(() => {
                         initializeSlickSlider(); // Initializes and calls setPosition
-                    });
-                }
-            }
-
-            if (completedStation) {
-                // Sliders are already visible due to Blade directives.
-                if (sliders && !sliders.classList.contains('d-none')) {
-                     requestAnimationFrame(() => { // Defer to next frame
-                        initializeSlickSlider(); // Initializes and calls setPosition
-                    });
-                }
-            } else {
-                // No station completed, startPage is visible.
-                // Set up the start button.
-                if (startButton && startPage) { // Ensure elements exist
-                    startButton.addEventListener('click', function() {
-                        if (startPage) {
-                            startPage.classList.add('fade-out');
-                            setTimeout(() => {
-                                startPage.classList.add('d-none');
-                                displayAndInitSliders(); // Show sliders and init
-                            }, 500); // Matches fade-out duration
-                        } else {
-                            // Fallback if startPage somehow isn't there but button was clicked
-                            displayAndInitSliders();
-                        }
                     });
                 }
             }

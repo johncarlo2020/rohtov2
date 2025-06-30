@@ -48,11 +48,10 @@
         <div id="mainContent" class="mt-1 mb-2 text-center col-12 text-content">
             <div id="{{ $user ? '' : 'forceQr' }}" class="icon-container">
             </div>
-
             <img src="{{ asset('images/dutchlady/dutchLadyStation' . $station->id . '.webp') }}"
                     class="station-img img-fluid w-25"
                     alt="Slide {{ $station->id }}">
-            </div>
+
             <img class="mt-2 station-image" src="{{ asset('images/hadalabobabies/DL Station Page ('.$station->id .').webp') }}"
                 alt="Station Image">
             @if ($user != true)

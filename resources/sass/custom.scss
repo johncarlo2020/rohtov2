@@ -361,6 +361,7 @@ div {
     font-weight: 600;
     display: block;
 }
+
 .iti {
     width: 100%;
 }
@@ -797,8 +798,8 @@ a:active {
         {
             border-radius: 24px;
             background-color: #E2F4FC;
-        }  
-        
+        }
+
         label
         {
             font-weight: 500;
@@ -1915,7 +1916,7 @@ $form-check-hover-shadow: rgba(0, 123, 255, 0.5);
         text-align: center;
         margin-top: -3vh;
 
-        
+
 
         .home-btn {
             min-width: 40vw !important;
@@ -1959,7 +1960,7 @@ $form-check-hover-shadow: rgba(0, 123, 255, 0.5);
             margin-bottom: 3vh;
         }
 
-        
+
     }
 }
 
@@ -1998,7 +1999,6 @@ body {
     .branding .logo {
         width: 31%;
         height: auto;
-        margin-bottom: 20px;
     }
 
     .underline {
@@ -2780,3 +2780,6 @@ body {
     }
 
 }
+
+
+

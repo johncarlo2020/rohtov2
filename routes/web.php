@@ -59,7 +59,7 @@ Route::group(['middleware' => ['admin']], function () {
     Route::get('/admin/users', 'App\Http\Controllers\StationController@users')->name('users');
     Route::get('/admin/{user}', 'App\Http\Controllers\StationController@userData')->name('userData');
     Route::post('/admin/check', 'App\Http\Controllers\StationController@check')->name('check');
-    Route::delete('/admin/users/{id}', 'App\Http\Controllers\StationController@userDelete')->name('users.destroy');
+    Route::delete('/admin/users/{id}', 'App\Http\Controller s\StationController@userDelete')->name('users.destroy');
     Route::post('/editUser', 'App\Http\Controllers\StationController@editUser')->name('editUser');
 
 });
@@ -75,6 +75,14 @@ Route::group(['middleware' => ['client']], function () {
     Route::get('/station/{station}/brand', 'App\Http\Controllers\StationController@brand')->name('station.brand');
     Route::get('/puzzle', 'App\Http\Controllers\StationController@puzzle')->name('station.puzzle');
     Route::get('/brands', 'App\Http\Controllers\StationController@brands')->name('station.brands');
+
+    Route::get('/workshop', function () {
+        return view('workshop');
+    })->name('workshop');
+
+    Route::get('/promotion', function () {
+        return view('promotion');
+    })->name('promotion');
 
 
     Route::post('/upload', 'App\Http\Controllers\StationController@uploadBaby')->name('upload.baby');

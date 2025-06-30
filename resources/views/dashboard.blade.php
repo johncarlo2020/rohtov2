@@ -86,6 +86,20 @@
                 </div>
             @endif
         @endforeach
+        
+        <div class="col">
+            <div class="station-container" onclick="window.location.href='{{ route('workshop'); }}'">
+                <img src="{{ asset('images/dutchlady/workshopImg.webp') }}"
+                    class="station-img img-fluid" alt="Route Workshop">
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="station-container" onclick="window.location.href=''">
+                <img src="{{ asset('images/dutchlady/promotionImg.webp') }}"
+                    class="station-img img-fluid" alt="Promotions">
+            </div>
+        </div>
     </div>
 </div>
 

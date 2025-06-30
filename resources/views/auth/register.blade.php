@@ -131,7 +131,7 @@
                         </div>
                         <div class="mb-0 row">
                             <div class="col-12 text-center">
-                                <button id="submitButton" type="submit" class="w-auto main-btn btn btn-primary ">
+                                <button id="submitButton" type="submit" class="w-auto main-btn button-dutch button-dutch-primary">
                                     {{ __('SUBMIT') }}
                                 </button>
                             </div>

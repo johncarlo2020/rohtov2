@@ -56,17 +56,17 @@
                         />
 
                         <div class="flex items-center justify-end">
-                            <x-primary-button class="main-btn btn btn-primary">
+                            <x-primary-button class="main-btn button-dutch button-dutch-primary">
                                 {{ __("LOGIN") }}
                             </x-primary-button>
                         </div>
-                    </form> 
+                    </form>
                 </div>
-                
+
                 <div class="bottom-text">
-                   
+
                         <a class="footer-text" href="https://wowsome.com.my/">Powered by WOWSOME®2025</a>
-                    
+
                 </div>
             </div>
         </div>

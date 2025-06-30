@@ -42,6 +42,21 @@
             font-style: normal;
             }
 
+                  @font-face {
+                font-family: 'Brevia-Regular';
+                src: url('{{ asset('assets/fonts/Brevia-Regular.ttf') }}') format('truetype');
+                font-weight: normal;
+                font-style: normal;
+            }
+
+            @font-face {
+                font-family: 'HvDTrial Brevia ExtraBlack';
+                src: url('{{ asset('assets/fonts/HvDTrial Brevia ExtraBlack.otf') }}') format('opentype');
+                font-weight: normal;
+                font-style: normal;
+            }
+
+
         </style>
         <div class="{{ Route::currentRouteName() }} hadalabo">
             <div class="hadalabo main-background">

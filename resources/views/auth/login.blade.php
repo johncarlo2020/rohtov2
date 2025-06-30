@@ -5,7 +5,7 @@
                 @include('components.branding')
             </div>
             <div class="col-12 mt-5 px-2">
-                <h1 class="login-heading">LOGIN</h1>
+                <h1 class="heading-dutch">LOG IN</h1>
                 <!-- Session Status -->
                 <x-auth-session-status
                     class="mb-4"

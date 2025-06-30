@@ -18,18 +18,26 @@
     display: inline-block;
 
     &-primary {
-        background-color: #0060AC;
+        background-color: #0060ac;
         color: #ffffff;
-        border:  3px solid #6eb0e0b0;
+        border: 3px solid #6eb0e0b0;
         outline: 4px solid #ffffff;
         box-shadow: 0 4px #003f7f;
-
     }
     &-outlined {
         background-color: #ffffff;
         color: #003f7f;
-        border:  3px solid #6eb0e0d3;
+        border: 3px solid #6eb0e0d3;
         outline: 4px solid #003f7f;
         box-shadow: 0 4px #003f7f;
     }
+}
+
+.heading-dutch {
+    font-size: 50px !important;
+    color: #ffffff;
+    padding: 0;
+    -webkit-text-stroke: 3px #0A608E;
+    text-shadow: 0px 4px 0 #0A608E;
+    font-family: "HvDTrial Brevia ExtraBlack" !important;
 }

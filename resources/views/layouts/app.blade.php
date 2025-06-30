@@ -49,7 +49,7 @@
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
         <!-- Scripts -->
-        @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+        @vite(['resources/css/fonts.css', 'resources/sass/app.scss', 'resources/js/app.js'])
     </head>
 
     <body class="main-background hadalabo">
@@ -65,6 +65,21 @@
             @font-face {
                 font-family: 'Stella Demo';
                 src: url('{{ asset('images/font/Stella Demo.otf') }}') format('opentype');
+                font-weight: normal;
+                font-style: normal;
+            }
+
+
+              @font-face {
+                font-family: 'Brevia-Regular';
+                src: url('{{ asset('assets/fonts/Brevia-Regular.ttf') }}') format('truetype');
+                font-weight: normal;
+                font-style: normal;
+            }
+
+            @font-face {
+                font-family: 'HvDTrial Brevia ExtraBlack';
+                src: url('{{ asset('assets/fonts/HvDTrial Brevia ExtraBlack.otf') }}') format('opentype');
                 font-weight: normal;
                 font-style: normal;
             }

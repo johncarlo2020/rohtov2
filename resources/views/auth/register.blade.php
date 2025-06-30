@@ -41,21 +41,13 @@
 
                     <div class="mb-2 row">
                         <div class="col-12">
-                            <label for="">Age Group</label>
+                            <label for="">Date of Birth </label>
 
-                            <select class="form-select input-text" name="dob" aria-label="Default select example" required>
-                                <option value="" selected disabled>Select an option</option>
+                            <input id="age" placeholder="Enter your age" type="date"
+                                class="input-text form-control @error('age') is-invalid @enderror" name="dob" value="{{ old('age') }}"
+                                required autocomplete="age" autofocus />
 
-                                <option value="Below 18 years old">Below 18 years old</option>
-                                <option value="18-24 years old">18-24 years old</option>
-                                <option value="25-30 years old">25-30 years old</option>
-                                <option value="31-40 years old">31-40 years old</option>
-                                <option value="41-45 years old">41-45 years old</option>
-                                <option value="45 years and above">45 years and above</option>
-
-                            </select>
-
-                            @error('lname')
+                            @error('age')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
@@ -94,79 +86,8 @@
                     </div>
 
                     <div class="mb-2 row">
-                        <label for="">Have you heard about Hada Labo?</label>
-
                         <div class="col-12 input-group">
-
-                            <select class="form-select input-text" name="heard" aria-label="Default select example" required>
-                                <option value="" selected disabled>Select an option</option>
-
-                                <option value="Yes">Yes</option>
-                                <option value="No">No</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="mb-2 row">
-                        <label for="">Are you currently a Hada Labo user?</label>
-
-                        <div class="col-12 input-group">
-                            <select class="form-select input-text" name="existing" aria-label="Default select example" required>
-                                <option value="" selected disabled>Select an option</option>
-                                <option value="Yes">Yes</option>
-                                <option value="No" >No</option>
-                            </select>
-                        </div>
-                    </div>
-
-
-
-                    <!-- First Dropdown: Do you follow us on social media? -->
-                    <div class="mb-2 row">
-                        <label for="">Do you follow us on social media?</label>
-
-                        <div class="col-12 input-group">
-                            <select id="follow-select" class="form-select input-text" name="follow" required>
-                                <option value="" selected disabled>Select an option</option>
-                                <option value="Yes">Yes</option>
-                                <option value="No" >No</option>
-
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- Second Dropdown: What social media do you follow? -->
-                    <div id="social-dropdown-group" class="mb-2 row d-none">
-                        <label for="">What social media do you follow? <span class="text-danger">*Multiple</span></label>
-
-                        <div class="col-12 input-group">
-                            <select id="social-select" class="form-select" name="social_media[]" multiple>
-                                <option value="Facebook">Facebook</option>
-                                <option value="TikTok">TikTok</option>
-                                <option value="Instagram">Instagram</option>
-                                <option value="XiaoHongShu">XiaoHongShu (小红书)</option>
-                            </select>
-                        </div>
-                        <span id="social-error" class="text-danger d-none">Please select at least one social media platform.</span>
-                    </div>
-
-                    <div class="mb-2 row">
-                        <div class="col-12 input-group">
-
-                                <label for="">Which of the following appeals to you the most? <span class="text-danger"> *Choose 1 only</span></label>
-
-                            <select class="form-select input-text" name="appeal" aria-label="Default select example" required>
-                                <option value="" selected disabled>Select an option</option>
-                                 <option value="Promotional Discounts" > Promotional Discounts</option>
-                                <option value="Event design/theme"> Event design/theme</option>
-                                <option value="Free gifts and merchandise"> Free gifts and merchandise</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="mb-2 row">
-                        <div class="col-12 input-group">
-                        <label for="">Where did you find out about our concourse? <span class="text-danger"> *Choose 1 only</span></label>
+                        <label for="">Where did you find this event?</label>
 
                             <select class="form-select input-text" name="find" aria-label="Default select example" required>
                                 <option value="" selected disabled>Select an option</option>
@@ -177,10 +98,9 @@
                                 <option value="XiaoHongShu (小红书)">
                                     XiaoHongShu (小红书)
                                 </option>
-                                <option value="Passby">
-                                    Passby
+                                <option value="Walk-in">
+                                    Walk-in
                                 </option>
-                                <option value="Word of mouth" >Word of mouth</option>
                             </select>
                         </div>
                     </div>
@@ -192,7 +112,7 @@
                                     id="privacyPolicy" required />
                                 <label class="form-check-label" for="privacyPolicy">
                                     I agree to the
-                                    <a href="http://mentholatum.com.my/sunplay/personal-data-protection-notice.pdf">Privacy
+                                    <a href="">Privacy
                                         Policy</a>.
                                 </label>
                             </div>
@@ -205,7 +125,7 @@
                                     id="marketing" required />
                                 <label class="form-check-label" for="marketing">
                                     I agree to receive marketing and promotional
-                                    communications from Hadalabo Experience Malaysia (RMM) via e-mail and
+                                    communications from Dutch Lady via e-mail and
                                     text messages (including SMS/WhatsApp).
                                 </label>
                             </div>
@@ -285,34 +205,5 @@
             }
         });
 
-        const followSelect = document.getElementById('follow-select');
-        const socialGroup = document.getElementById('social-dropdown-group');
-        const socialSelect = document.getElementById('social-select');
-        const socialError = document.getElementById('social-error');
-
-        followSelect.addEventListener('change', function () {
-            if (this.value === 'Yes') {
-                socialGroup.classList.remove('d-none');
-            } else {
-                socialGroup.classList.add('d-none');
-                socialError.classList.add('d-none');
-                // Deselect all options
-                Array.from(socialSelect.options).forEach(opt => opt.selected = false);
-            }
-        });
-
-        document.querySelector('form').addEventListener('submit', function (e) {
-            if (followSelect.value === 'Yes') {
-                const selected = Array.from(socialSelect.selectedOptions);
-                if (selected.length === 0) {
-                    e.preventDefault();
-                    socialError.classList.remove('d-none');
-                    socialSelect.classList.add('is-invalid'); // Optional Bootstrap styling
-                } else {
-                    socialError.classList.add('d-none');
-                    socialSelect.classList.remove('is-invalid');
-                }
-            }
-        });
     });
 </script>

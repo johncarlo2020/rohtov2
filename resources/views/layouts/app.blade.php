@@ -7,7 +7,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}" />
         <meta name="csrf-token" content="{{ csrf_token() }}" />
 
-        <title>{{ config("app.name", "Hadalabo Experience") }}</title>
+        <title>{{ config("app.name", "Dutch Lady") }}</title>
 
         <!-- Fonts -->
         <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">

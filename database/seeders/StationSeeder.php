@@ -4,10 +4,10 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Station;
-use App\Models\Regime;
+use App\Models\Workshop;
 use Spatie\Permission\Models\Role;
 use App\Models\User;
-use App\Models\Brand;
+use App\Models\AppointmentDate;
 
 use Illuminate\Support\Facades\Hash;
 
@@ -21,24 +21,48 @@ class StationSeeder extends Seeder
     public function run()
     {
         Station::create([
-            'name' => 'Skin Analysis',
+            'name' => 'Grass to Glass',
         ]);
 
         Station::create([
-            'name' => 'Hada Baby Aqua Lab',
+            'name' => 'Breakfast Club',
         ]);
 
         Station::create([
-            'name' => 'Product Experiences',
+            'name' => 'Breakfast Blitz',
         ]);
 
         Station::create([
-            'name' => 'Photo Op',
+            'name' => 'Splash & Snap',
         ]);
 
         Station::create([
             'name' => 'Gift Redemption',
         ]);
+
+        Workshop::create([
+            'title' => 'DIY Bento Workshop',
+            'time' => '2:00 PM - 3:00 PM',
+        ]);
+
+        Workshop::create([
+            'title' => 'Sip & Paint',
+            'time' => '4:00 PM - 5:00 PM',
+        ]);
+
+        Workshop::create([
+            'title' => 'DIY Bento Workshop',
+            'time' => '7:00 PM - 8:00 PM',
+        ]);
+
+        AppointmentDate::create([
+            'date' => '2025-07-05',
+        ]);
+
+        AppointmentDate::create([
+            'date' => '2025-07-06',
+        ]);
+
 
 
         $role = Role::create(['name' => 'client']);
@@ -53,7 +77,7 @@ class StationSeeder extends Seeder
             'number' => '0123456789',
             'email' => 'admin@gmail.com',
             'country' => 'Malaysia',
-            'password' => Hash::make('WowsomeHL'),
+            'password' => Hash::make('WowsomeDutch'),
         ]);
 
         $user->assignRole('admin');

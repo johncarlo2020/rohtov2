@@ -48,7 +48,7 @@
                 {{ $station->id }}
             </h1>
             <h2 class="station-subheading mt-2">{{ $station->name }}</h2>
-            <img class="mt-2 station-image" src="{{ asset('images/hadalabobabies/station'.$station->id .'.webp') }}"
+            <img class="mt-2 station-image" src="{{ asset('images/hadalabobabies/DL Station Page ('.$station->id .').webp') }}"
                 alt="Station Image">
             @if ($user != true)
 

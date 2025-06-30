@@ -34,7 +34,15 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
     </head>
     <body>
-        <style></style>
+        <style>
+            @font-face {
+            font-family: 'HVDTrial Brevia';
+            src: url('/images/font/HvDTrial_Brevia-ExtraBlack.otf') format('opentype');
+            font-weight: 900;
+            font-style: normal;
+            }
+
+        </style>
         <div class="{{ Route::currentRouteName() }} hadalabo">
             <div class="hadalabo main-background">
                 {{ $slot }}

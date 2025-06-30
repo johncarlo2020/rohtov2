@@ -4,6 +4,22 @@
             @include('components.branding')
         </div>
 
+<!-- login Modal -->
+ <!-- Welcome Modal -->
+<div class="modal fade" id="welcomeModal" tabindex="-1" aria-labelledby="welcomeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-center position-relative">
+      
+      <!-- Close Button (top-right) -->
+      <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+      
+      <!-- Image -->
+      <img src="{{ asset('images/dutchlady/dutchLadyWelcomeModal.webp') }}" alt="Welcome" class="img-fluid">
+
+    </div>
+  </div>
+</div>
+
 <!-- Modal -->
 <div class="modal fade" id="notAllowedModal" tabindex="-1" aria-labelledby="notAllowedModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -21,9 +37,53 @@
         </div>
     </div>
 </div>
+<div class="col-12 d-flex justify-content-center align-items-center mt-3">
+    <img class="welcome_img" src="{{ asset('images/dutchlady/dashboardTextImg1.png') }}" alt="" />
+</div>
+<div class="container">
+    @php
+    $station5 = $stations->firstWhere('id', 5);
+    @endphp
 
+    @if ($station5)
+        <div class="row justify-content-center">
+            <div class="col-12 d-flex justify-content-center">
+                <div class="station-container {{ $station5->status ? 'completed' : '' }}"
+                    @if (!$canAccessStation5)
+                        data-bs-toggle="modal" data-bs-target="#notAllowedModal"
+                    @else
+                        onclick="gotoStation({{ $station5->id }})"
+                    @endif
+                >
+                    <img src="{{ asset('images/hadalabobabies/station' . $station5->id . '.webp') }}"
+                        class="station-img img-fluid w-50 m-auto mb-4"
+                        alt="Slide {{ $station5->id }}">
+                </div>
+            </div>
+        </div>
+    @endif
+    <div class="row row-cols-2 row-cols-md-2 g-4 mb-5">
+        @foreach ($stations as $station)
+            @if ($station->id != 5)
+                <div class="col">
+                    <div class="station-container {{ $station->status ? 'completed' : '' }}"
+                    @if (!$canAccessStation5 && $station->id == 5)
+                        data-bs-toggle="modal" data-bs-target="#notAllowedModal"
+                    @else
+                        onclick="gotoStation({{ $station->id }})"
+                    @endif
+                    >
+                    <img src="{{ asset('images/hadalabobabies/station' . $station->id . '.webp') }}" 
+                        class="station-img img-fluid " 
+                        alt="Slide {{ $station->id }}">
+                    </div>
+                </div>
+            @endif
+        @endforeach
+    </div>
+</div>
 
-        <div class="sliders w-100">
+        <!-- <div class="sliders w-100">
             <div class="container-fluid p-0 m-0">
                 <div class="row p-0 m-0 justify-content-center">
                     <div class="col-md-10 slider-container">
@@ -33,7 +93,7 @@
                         <div class="slider-next slider-navigation">
                             <button id="next" class="slider-btn"><i class="fa-solid fa-caret-right"></i></button>
                         </div>
-                        <!-- Slick Slider Component -->
+                        
                         <div class="slick-carousel mt-4" style="visibility: hidden;">
                             @foreach ($stations as $station)
                             <div class="slick-slide-item">
@@ -55,16 +115,25 @@
                                 </div>
                             </div>
                             @endforeach
-
-
-
                         </div>
                     </div>
                 </div>
             </div>
+        </div> -->
+        <div class="bottom-text ">
+            <a class="footer-text text-dark" href="https://wowsome.com.my/">Powered by WOWSOME®2025</a>   
         </div>
     </div>
+
     <script>
+
+        @if(session('showWelcomeModal'))
+            document.addEventListener('DOMContentLoaded', function () {
+                var myModal = new bootstrap.Modal(document.getElementById('welcomeModal'));
+                myModal.show();
+            });
+        @endif
+
         // Pass stations data to JavaScript
         window.stationsData = @json($stations);
 

@@ -4,150 +4,152 @@
             <div class="mt-5 col-12 d-flex justify-content-center">
                 @include('components.branding')
             </div>
-            <div class="mt-3 w-100 px-4">
+            <div class="mt-3 w-100 px-2">
                 <h1 class="mb-4 text-center login-text">SIGN UP</h1>
-                <form id="form" method="POST" action="{{ route('register') }}">
-                    @csrf
-                    <div class="mb-2 row">
-                        <div class="col-12">
-                            <label for="">First Name</label>
-
-                            <input id="fname" placeholder="Enter your first name" type="text"
-                                class="input-text form-control @error('fname') is-invalid @enderror" name="fname"
-                                value="{{ old('fname') }}" required autocomplete="fname" autofocus />
-                            @error('fname')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="mb-2 row">
-                        <div class="col-12">
-                            <label for="">Last Name</label>
-
-                            <input id="lname" placeholder="Enter your last name" type="text"
-                                class="input-text form-control @error('lname') is-invalid @enderror" name="lname"
-                                value="{{ old('lname') }}" required autocomplete="lname" autofocus />
-
-                            @error('lname')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="mb-2 row">
-                        <div class="col-12">
-                            <label for="">Date of Birth </label>
-
-                            <input id="age" placeholder="Enter your age" type="date"
-                                class="input-text form-control @error('age') is-invalid @enderror" name="dob" value="{{ old('age') }}"
-                                required autocomplete="age" autofocus />
-
-                            @error('age')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="mb-2 row">
-                        <div class="col-12">
-                            <label for="">Email Address</label>
-
-                            <input id="email" placeholder="example@email.com" type="email"
-                                class="input-text form-control @error('email') is-invalid @enderror" name="email"
-                                value="{{ old('email') }}" required autocomplete="email" />
-
-                            @error('email')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="mb-2 row">
-                        <div class="col-12 input-group w-100">
-                            <label for="">Phone Number</label>
-
-                            <input id="number" type="number"
-                                class="input-text form-control w-100 @error('number') is-invalid @enderror"
-                                name="number" value="{{ old('number') }}" required autocomplete="number" autofocus />
-                        </div>
-                        <div class="mt-2 col-12">
-                            <span id="valid-msg" class="d-none text-danger"></span>
-                            <span id="error-msg" class="d-none text-danger"></span>
-                        </div>
-                    </div>
-
-                    <div class="mb-2 row">
-                        <div class="col-12 input-group">
-                        <label for="">Where did you find this event?</label>
-
-                            <select class="form-select input-text" name="find" aria-label="Default select example" required>
-                                <option value="" selected disabled>Select an option</option>
-
-                                <option value="Facebook">Facebook</option>
-                                <option value="TikTok">TikTok</option>
-                                <option value="Instagram">Instagram</option>
-                                <option value="XiaoHongShu (小红书)">
-                                    XiaoHongShu (小红书)
-                                </option>
-                                <option value="Walk-in">
-                                    Walk-in
-                                </option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="mt-4 mb-2 row">
-                        <div class="col-12">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="privacy_policy" value="1"
-                                    id="privacyPolicy" required />
-                                <label class="form-check-label" for="privacyPolicy">
-                                    I agree to the
-                                    <a href="">Privacy
-                                        Policy</a>.
-                                </label>
+                <div class="card py-5 px-4 register-form-parent">
+                    <form id="form" method="POST" action="{{ route('register') }}">
+                        @csrf
+                        <div class="mb-2 row">
+                            <div class="col-12">
+                                <label for="">First Name</label>
+                                <input id="fname" placeholder="Enter your first name" type="text"
+                                    class="input-text form-control @error('fname') is-invalid @enderror" name="fname"
+                                    value="{{ old('fname') }}" required autocomplete="fname" autofocus />
+                                @error('fname')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
                             </div>
                         </div>
-                    </div>
-                    <div class="mb-2 row">
-                        <div class="col-12">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="marketing" value="1"
-                                    id="marketing" required />
-                                <label class="form-check-label" for="marketing">
-                                    I agree to receive marketing and promotional
-                                    communications from Dutch Lady via e-mail and
-                                    text messages (including SMS/WhatsApp).
-                                </label>
+
+                        <div class="mb-2 row">
+                            <div class="col-12">
+                                <label for="">Last Name</label>
+
+                                <input id="lname" placeholder="Enter your last name" type="text"
+                                    class="input-text form-control @error('lname') is-invalid @enderror" name="lname"
+                                    value="{{ old('lname') }}" required autocomplete="lname" autofocus />
+
+                                @error('lname')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
                             </div>
                         </div>
-                    </div>
-                    <div class="mt-5 mb-0 row">
-                        <div class="col-12">
-                            <button id="submitButton" type="submit" class="main-btn btn btn-primary">
-                                {{ __('SUBMIT') }}
-                            </button>
-                            <div class="bottom-text">
-                                <p class="already-register">
-                                    Already Registered
-                                </p>
-                                <p class="already-register">
-                                    Please Login
-                                    <a href="{{ route('login') }}" class="">here</a>
-                                </p>
+
+                        <div class="mb-2 row">
+                            <div class="col-12">
+                                <label for="">Date of Birth </label>
+
+                                <input id="age" placeholder="Enter your age" type="date"
+                                    class="input-text form-control @error('age') is-invalid @enderror" name="dob" value="{{ old('age') }}"
+                                    required autocomplete="age" autofocus />
+
+                                @error('age')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
                             </div>
                         </div>
-                    </div>
-                </form>
+
+                        <div class="mb-2 row">
+                            <div class="col-12">
+                                <label for="">Email Address</label>
+
+                                <input id="email" placeholder="example@email.com" type="email"
+                                    class="input-text form-control @error('email') is-invalid @enderror" name="email"
+                                    value="{{ old('email') }}" required autocomplete="email" />
+
+                                @error('email')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="mb-2 row">
+                            <div class="col-12 input-group w-100">
+                                <label for="">Phone Number</label>
+
+                                <input id="number" type="number"
+                                    class="input-text form-control w-100 @error('number') is-invalid @enderror"
+                                    name="number" value="{{ old('number') }}" required autocomplete="number" autofocus />
+                            </div>
+                            <div class="mt-2 col-12">
+                                <span id="valid-msg" class="d-none text-danger"></span>
+                                <span id="error-msg" class="d-none text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-2 row">
+                            <div class="col-12 input-group">
+                            <!-- <label for="">Where did you find this event?</label> -->
+
+                                <select class="form-select input-text" name="find" aria-label="Default select example" required>
+                                    <option value="" selected disabled>Where did you find this event? </option>
+
+                                    <option value="Facebook">Facebook</option>
+                                    <option value="TikTok">TikTok</option>
+                                    <option value="Instagram">Instagram</option>
+                                    <option value="XiaoHongShu (小红书)">
+                                        XiaoHongShu (小红书)
+                                    </option>
+                                    <option value="Walk-in">
+                                        Walk-in
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="mt-4 mb-2 row">
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="privacy_policy" value="1"
+                                        id="privacyPolicy" required />
+                                    <label class="form-check-label text-dark" for="privacyPolicy">
+                                        I have read and agree to the  <a href="" class="text-primary">Terms and Conditions</a>. and <a href="" class="text-primary">Privacy Policy</a>.
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-2 row">
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="marketing" value="1"
+                                        id="marketing" required />
+                                    <label class="form-check-label text-dark" for="marketing">
+                                        I agree to receive marketing and promotional
+                                        communications from Dutch Lady via e-mail and
+                                        text messages (including SMS/WhatsApp).
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-0 row">
+                            <div class="col-12 text-center">
+                                <button id="submitButton" type="submit" class="w-auto main-btn btn btn-primary ">
+                                    {{ __('SUBMIT') }}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="bottom-text">
+                                    <p class="already-register">
+                                        Already Registered
+                                    </p>
+                                    <p class="already-register">
+                                        Please Login
+                                        <a href="{{ route('login') }}" class="">here</a>
+                                    </p>
+                                    <p class="mt-5">
+                                        <a class="footer-text" href="https://wowsome.com.my/">Powered by WOWSOME®2025</a>
+                                    </p>
+                                </div>
             </div>
         </div>
     </div>

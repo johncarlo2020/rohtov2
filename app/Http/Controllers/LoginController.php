@@ -20,6 +20,7 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+            $request->session()->flash('showWelcomeModal', true);
 
             return redirect()->intended('dashboard');
         }

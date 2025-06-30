@@ -527,6 +527,11 @@ a:active {
         height: 100vh;
         overflow: auto;
         padding-bottom: 30px;
+        .login-form-parent
+        {
+            border-radius: 24px;
+            background-color: #E2F4FC;
+        }
 
         h1 {
             text-align: center;
@@ -542,6 +547,10 @@ a:active {
         }
         label {
             text-align: left;
+            font-weight: 500;
+            display: block;
+            color: #0060AD;
+            line-height: 150%;
         }
 
         .button {
@@ -551,9 +560,9 @@ a:active {
         }
 
         .bottom-text {
-            width: 60%;
+            // width: 60%;
             text-align: center;
-            margin: 80% auto 0 auto;
+            margin: 90% auto 0 auto;
 
             @media (max-width: 375px) {
                 margin: 30% auto 0 auto;
@@ -783,6 +792,20 @@ a:active {
         padding-bottom: 30px;
         height: 100%;
         position: relative;
+
+        .register-form-parent
+        {
+            border-radius: 24px;
+            background-color: #E2F4FC;
+        }  
+        
+        label
+        {
+            font-weight: 500;
+            display: block;
+            color: #0060AD;
+            line-height: 150%;
+        }
 
         .login-text {
             font-size: 24px;
@@ -1892,6 +1915,8 @@ $form-check-hover-shadow: rgba(0, 123, 255, 0.5);
         text-align: center;
         margin-top: -3vh;
 
+        
+
         .home-btn {
             min-width: 40vw !important;
             max-width: 60vw;
@@ -1933,6 +1958,8 @@ $form-check-hover-shadow: rgba(0, 123, 255, 0.5);
             z-index: 2;
             margin-bottom: 3vh;
         }
+
+        
     }
 }
 
@@ -1984,6 +2011,12 @@ body {
             width: 80vw;
             height: auto;
             object-fit: contain;
+        }
+
+        .modal-content
+        {
+            background-color: transparent !important;
+            border: 0 !important;
         }
 
         .welcome_img_store {
@@ -2685,11 +2718,11 @@ body {
     }
 }
 
-.register {
-    #form {
-            padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 100px);
-    }
-}
+// .register {
+//     #form {
+//             padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 100px);
+//     }
+// }
 
 #stationPage {
    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 100px) !important;

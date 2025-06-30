@@ -41,20 +41,20 @@
             @include('components.branding')
         </div>
         <div id="mainContent" class="mt-1 mb-2 text-center col-12 text-content">
-            <div id="{{ $user ? '' : 'forceQr' }}" class="mt-4 icon-container">
+            <div id="{{ $user ? '' : 'forceQr' }}" class="icon-container">
             </div>
 
-            <h1 class=" station-heading mt-2 mb-3">
-                {{ $station->id }}
-            </h1>
-            <h2 class="station-subheading mt-2">{{ $station->name }}</h2>
+            <img src="{{ asset('images/dutchlady/dutchLadyStation' . $station->id . '.webp') }}" 
+                    class="station-img img-fluid w-25" 
+                    alt="Slide {{ $station->id }}">
+            </div>
             <img class="mt-2 station-image" src="{{ asset('images/hadalabobabies/DL Station Page ('.$station->id .').webp') }}"
                 alt="Station Image">
             @if ($user != true)
 
-                        <button id="start-scanner" class="mx-auto mt-2 camera-btn"><img
+                        <button id="start-scanner" class="mx-auto mt-5 mb-3 camera-btn"><img
                                 src="{{ asset('images/camera.webp') }}" alt=""></button>
-                        <p class="px-4 mt-4 bottom-text main-color font-medium small-width">Scan the QR code at the station to proceed</p>
+                        <p class="px-4 mt-4 bottom-text text-white font-medium small-width">Scan the QR code to check in</p>
 
             @else
                 <p class="mt-2 bottom-text main-color font-medium">Checked-in Succesful</p>

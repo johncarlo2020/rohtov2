@@ -41,3 +41,20 @@
     text-shadow: 0px 4px 0 #0A608E;
     font-family: "HvDTrial Brevia ExtraBlack" !important;
 }
+
+.back-btn {
+    position: absolute;
+    top: 75px;
+    left: 52px;
+    z-index: 1000;
+
+    img {
+        width: 40px;
+        height: 40px;
+        transition: transform 0.3s ease;
+
+        &:hover {
+            transform: scale(1.1);
+        }
+    }
+}

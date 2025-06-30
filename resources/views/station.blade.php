@@ -37,6 +37,11 @@
         </div>
     </div>
     <div id="stationPage" class="station-page home">
+        <div class="back-btn">
+            <a href="{{ route('dashboard') }}" class="">
+                <img src="{{ asset('images/dutchlady/back-btn.webp') }}" alt="Back" />
+            </a>
+        </div>
         <div class="mb-3 branding-container">
             @include('components.branding')
         </div>
@@ -44,8 +49,8 @@
             <div id="{{ $user ? '' : 'forceQr' }}" class="icon-container">
             </div>
 
-            <img src="{{ asset('images/dutchlady/dutchLadyStation' . $station->id . '.webp') }}" 
-                    class="station-img img-fluid w-25" 
+            <img src="{{ asset('images/dutchlady/dutchLadyStation' . $station->id . '.webp') }}"
+                    class="station-img img-fluid w-25"
                     alt="Slide {{ $station->id }}">
             </div>
             <img class="mt-2 station-image" src="{{ asset('images/hadalabobabies/DL Station Page ('.$station->id .').webp') }}"

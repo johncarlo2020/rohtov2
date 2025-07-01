@@ -83,8 +83,6 @@
                 font-weight: normal;
                 font-style: normal;
             }
-
-
         </style>
         <main>
             {{ $slot }}
@@ -95,5 +93,14 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
         <!-- Slick Slider JS -->
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/circletype@2.3.0/dist/circletype.min.js"></script>
+
+
+        <script>
+            // get all element with curve class
+            document.querySelectorAll('.curve').forEach(function(element) {
+                new CircleType(element).radius(380);
+            })
+        </script>
     </body>
 </html>

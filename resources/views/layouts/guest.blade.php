@@ -70,7 +70,6 @@
         ></script>
         <script src="https://cdn.jsdelivr.net/npm/circletype@2.3.0/dist/circletype.min.js"></script>
             <script>
-            // get all element with curve class
             document.querySelectorAll('.curve').forEach(function(element) {
                 new CircleType(element).radius(380);
             })

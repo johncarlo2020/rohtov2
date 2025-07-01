@@ -97,7 +97,6 @@
 
 
         <script>
-            // get all element with curve class
             document.querySelectorAll('.curve').forEach(function(element) {
                 new CircleType(element).radius(380);
             })

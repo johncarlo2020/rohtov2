@@ -2786,5 +2786,48 @@ body {
 
 }
 
+.redemption-btn {
+    width: 50vw;
+    height: auto;
+    position: relative;
+
+    &.not-allowed {
+        img {
+            filter: grayscale(100%);
+        }
+    }
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    p {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #0060AD;
+        font-size: 3.5vw;
+        font-weight: 600;
+        text-align: center;
+        font-family: 'HvDTrial Brevia ExtraBlack';
+        margin-bottom: 0;
+        animation: blink 1.5s linear infinite;
+    }
+
+}
+
+
+@keyframes blink {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.2;
+    }
+}
+
 
 

@@ -52,22 +52,13 @@
             @endphp
 
             @if ($station5)
-            <div class="row justify-content-center">
+            <div class="row justify-content-center mb-3">
                 <div class="col-12 d-flex justify-content-center">
-                    @if ($canAccessStation5)
-                    <div class="station-container d-flex justify-center {{ $station5->status ? 'completed' : '' }}"
-                        onclick="gotoStation({{ $station5->id }})" >
-                        <img src="{{ asset('images/hadalabobabies/DL Station Map (5) Registered.webp') }}"
-                            class="station-img img-fluid w-50 m-auto mb-4" alt="Slide {{ $station5->id }}">
+                    <div class="redemption-btn {{ $station5->status ? 'completed' : '' }} {{ $canAccessStation5 ? 'station-5-accessible' : 'not-allowed' }}"
+                        onclick="{{ $canAccessStation5 ? 'gotoStation(' . $station5->id . ')' : 'showNotAllowedModal()' }}" >
+                       <img src="{{ asset('images/hadalabobabies/station' . $station5->id . '.webp') }}" alt="Slide {{ $station5->id }}">
+                        <p class="{{ $canAccessStation5 ? '' : 'd-none' }}">Click here to  claim yours</p>
                     </div>
-                    @else
-                    <div class="station-container d-flex justify-center {{ $station5->status ? 'completed' : '' }}"
-                        onclick="showNotAllowedModal()">
-                        <img src="{{ asset('images/hadalabobabies/station' . $station5->id . '.webp') }}"
-                            class="station-img img-fluid w-50 m-auto mb-4" alt="Slide {{ $station5->id }}">
-                    </div>
-                    @endif
-
                 </div>
             </div>
             @endif

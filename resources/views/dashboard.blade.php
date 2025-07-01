@@ -57,7 +57,13 @@
                     <div class="redemption-btn {{ $station5->status ? 'completed' : '' }} {{ $canAccessStation5 ? 'station-5-accessible' : 'not-allowed' }}"
                         onclick="{{ $canAccessStation5 ? 'gotoStation(' . $station5->id . ')' : 'showNotAllowedModal()' }}" >
                        <img src="{{ asset('images/hadalabobabies/station' . $station5->id . '.webp') }}" alt="Slide {{ $station5->id }}">
-                        <p class="{{ $canAccessStation5 ? '' : 'd-none' }}">Click here to  claim yours</p>
+
+
+                        @if( $station5->status)
+                            <p class="redeemed">Redeemed!</p>
+                        @else
+                            <p class="{{ $canAccessStation5 ? '' : 'd-none' }} not-redeemed blink">Click here to  claim yours</p>
+                        @endif
                     </div>
                 </div>
             </div>

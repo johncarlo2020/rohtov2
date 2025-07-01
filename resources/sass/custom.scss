@@ -836,14 +836,14 @@ a:active {
     .workshop-hr-container {
         padding: 10px 0;
       }
-      
+
       .workshop-hr {
         border: none;
         border-top: 3px dashed #0061b0; /* Dash style with your color */
         margin: 0 auto;
         width: 90%;
       }
-    
+
     .fit-content
     {
         width: fit-content;
@@ -2912,7 +2912,7 @@ body {
         object-fit: contain;
     }
 
-    p {
+    .not-redeemed {
         position: absolute;
         bottom: 0;
         left: 50%;
@@ -2923,8 +2923,26 @@ body {
         text-align: center;
         font-family: "HvDTrial Brevia ExtraBlack";
         margin-bottom: 0;
-        animation: blink 1.5s linear infinite;
+
     }
+
+    .redeemed {
+        bottom: 15px;
+         font-size: 4vw;
+         position: absolute;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #0060ad;
+
+        font-weight: 600;
+        text-align: center;
+        font-family: "HvDTrial Brevia ExtraBlack";
+        margin-bottom: 0;
+    }
+}
+
+.blink {
+    animation: blink 1.5s linear infinite;
 }
 
 @keyframes blink {

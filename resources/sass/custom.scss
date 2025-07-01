@@ -42,23 +42,7 @@ body {
 
 //default style for modal
 
-.custom-modal {
-    p {
-        font-size: 16px;
-        color: #0060ad !important;
-        font-weight: 400;
-        margin-bottom: 20px;
-        font-family: "HvDTrial Brevia ExtraBlack";
-    }
 
-    .modal-content {
-        border-radius: 24px !important;
-        width: 85vw;
-        box-shadow: 0px 5px 0 #0a608e;
-        margin-left: auto;
-        margin-right: auto;
-    }
-}
 
 .transparent-modal {
     .modal-content {
@@ -323,40 +307,7 @@ div {
     }
 }
 
-#scanCompleteModal {
-    .modal-content {
-        border-radius: 4px !important;
-        padding: 30px 10px 20px 10px;
 
-        .btn-okay {
-            background-color: $primary;
-            font-family: "Inter", sans-serif;
-            font-size: 12px;
-            color: #fff;
-            border-radius: 4px;
-            min-width: 191px;
-        }
-
-        .text-content {
-            margin-top: 10px;
-            .station-text {
-                font-size: 20px;
-                font-weight: 600;
-                letter-spacing: 1px;
-                color: $primary;
-                margin-bottom: 0;
-                font-family: "Inter", sans-serif;
-            }
-            .message {
-                font-family: "Inter", sans-serif;
-                font-size: 16px;
-                font-weight: 400;
-                letter-spacing: 1px;
-                color: $primary;
-            }
-        }
-    }
-}
 
 .main-bg {
     overflow-y: hidden;
@@ -936,13 +887,6 @@ a:active {
     position: absolute;
     bottom: 4px;
     right: 7px;
-}
-
-#scanCompleteModal {
-    .button {
-        width: fit-content;
-        margin: 0 auto;
-    }
 }
 
 .admin-login {

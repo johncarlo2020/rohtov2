@@ -14,7 +14,10 @@
             width: 100px;
         }
     </style>
-    <div class="modal fade custom-modal" id="scanCompleteModal" tabindex="-1">
+
+    <div id="stationPage" class="station-page home">
+
+        <div class="modal fade custom-modal" id="scanCompleteModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-body">
@@ -27,7 +30,7 @@
                             </p>
                         </div>
                         <div class="">
-                            <a href="{{ route('dashboard') }}" id="routeBtn" class="button-dutch">
+                            <a href="{{ route('dashboard') }}" id="routeBtn" class="button-dutch button-dutch-primary">
                                 okay
                             </a>
                         </div>
@@ -36,7 +39,6 @@
             </div>
         </div>
     </div>
-    <div id="stationPage" class="station-page home">
         <div class="back-btn">
             <a href="{{ route('dashboard') }}" class="">
                 <img src="{{ asset('images/dutchlady/back-btn.webp') }}" alt="Back" />

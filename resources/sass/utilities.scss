@@ -85,3 +85,21 @@
     font-family: '09Brevia-Bold';
     font-weight: 500;
 }
+
+.custom-modal {
+    p {
+        font-size: 16px;
+        color: #0060ad !important;
+        font-weight: 400;
+        margin-bottom: 20px;
+        font-family: "HvDTrial Brevia ExtraBlack";
+    }
+
+    .modal-content {
+        border-radius: 24px !important;
+        width: 85vw;
+        box-shadow: 0px 5px 0 #0a608e !important;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}

@@ -11,7 +11,7 @@
                 <div class="modal-content text-center position-relative">
 
                     <!-- Close Button (top-right) -->
-                    <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal"
+                    <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-dismiss="modal"
                         aria-label="Close"></button>
 
                     <!-- Image -->
@@ -29,13 +29,13 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="notAllowedModalLabel">Access Denied</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body text-center">
                         You must complete Stations 1 to 4 before accessing Station 5.
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Okay</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Okay</button>
                     </div>
                 </div>
             </div>
@@ -118,13 +118,15 @@
             // Redirect to the generated URL
             window.location.href = url;
         }
-        document.addEventListener('DOMContentLoaded', function () {
 
-            function showNotAllowedModal() {
-                console.log("Not allowed to access Station 5");
-                var notAllowedModal = new bootstrap.Modal(document.getElementById('notAllowedModal'));
-                notAllowedModal.show();
-            }
+        function showNotAllowedModal() {
+            var notAllowedModal = new bootstrap.Modal(document.getElementById('notAllowedModal'));
+            notAllowedModal.show();
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+
+
 
             const completedStation = window.stationsData.find(station => station.status);
             const startButton = document.getElementById('start');
@@ -177,53 +179,5 @@
 
         });
     </script>
-    <style>
-        .slick-dots li button.completed-dot {
-            background-color: green;
-            /* Or any color/style you prefer */
-            color: white;
-            border-radius: 50%;
-            /* Example style */
-        }
 
-        .slick-dots li button.slick-dot-number {
-            /* Ensure default styles are distinct enough */
-            background-color: #ccc;
-            color: black;
-        }
-
-        .slick-dots li.slick-active button.slick-dot-number {
-            background-color: #555;
-            /* Active dot style */
-            color: white;
-        }
-
-        .slick-dots li.slick-active button.completed-dot {
-            background-color: darkgreen;
-            /* Active and completed dot style */
-            color: white;
-        }
-
-        .slick-slide-item {
-            min-height: 180px;
-            /* Adjust as needed, helps stabilize layout */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            /* Optional: background-color: #f0f0f0; to see item bounds during load */
-        }
-
-        .station-img {
-            max-width: 100%;
-            height: auto;
-            /* Maintain aspect ratio */
-            display: block;
-            /* Prevents extra space below image */
-        }
-
-        /* Ensure the carousel itself is rendered if its parent is not d-none */
-        .sliders:not(.d-none) .slick-carousel {
-            visibility: visible;
-        }
-    </style>
 </x-app-layout>

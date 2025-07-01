@@ -2,8 +2,8 @@
     <div class="container-fluid home start completed-screen pt-4">
 
         <div class="congrats-container">
-            <h1 class="heading-dutch text-center curve">Visit our</h1>
-            <h1 class="heading-dutch text-center curve">Official Website</h1>
+            <h1 class="heading-dutch curve small">Visit our</h1>
+            <h1 class="heading-dutch curve medium">Official Website</h1>
 
             <div class="product-image mb-3 px-5">
                 <a href="https://hadalabo.com.my">

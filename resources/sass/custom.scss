@@ -778,6 +778,50 @@ a:active {
     overflow-y: auto;
 }
 
+.register-modal
+{
+    border-radius: 24px;
+    background-color: #e2f4fc;
+}
+
+.workshop-modal-title
+{
+    font-family: "HvDTrial Brevia ExtraBlack" !important;
+    font-size:24px;
+    color:#0061b0;
+}
+
+#modalGuardian
+{
+    font-family: "HvDTrial Brevia ExtraBlack" !important;
+    font-size:24px;
+    color:#0061b0;
+}
+
+#modalDate
+{
+    font-size:20px;
+    color:#0061b0;
+}
+
+#modalWorkshop{
+    font-size:20px;
+    color:#0061b0;
+}
+
+#modalAttendee{
+    color:#0061b0;
+}
+
+.fit-content
+{
+    width: fit-content;
+}
+
+.text-blue {
+    color: #0061b0 !important;
+}
+
 .workshop-main
 {
     .workshop-time-text

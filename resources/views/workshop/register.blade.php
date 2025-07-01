@@ -2,21 +2,20 @@
 
     <!-- Confirmation Modal -->
     <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="confirmModalLabel">Confirm Your Registration</h5>
+        <div class="modal-dialog modal-dialog-centered ">
+            <div class="modal-content p-4 register-modal">
+                <div class="d-flex justify-content-end">
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <p><strong>Guardian Name:</strong> <span id="modalGuardian"></span></p>
-                    <p><strong>Date:</strong> <span id="modalDate"></span></p>
-                    <p><strong>Workshop:</strong> <span id="modalWorkshop"></span></p>
-                    <p><strong>No. of Attendees:</strong> <span id="modalAttendee"></span></p>
+                <div class="modal-body py-4">
+                    <h5 class="modal-title workshop-modal-title" id="slotLabel">DIY Bento Workshop</h5>
+                    <p><span id="modalGuardian"></span></p>
+                    <p><span id="modalDate"></span></p>
+                    <p><span id="modalWorkshop"></span></p>
+                    <p class="text-blue"><span id="modalAttendee"></span> Person</p>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="confirmBtn">Confirm</button>
+                <div class="text-center">
+                    <button type="button" class="main-btn button-dutch button-dutch-primary fit-content" id="confirmBtn">Confirm</button>
                 </div>
             </div>
         </div>
@@ -24,18 +23,15 @@
 
     <div class="modal fade" id="slot" tabindex="-1" aria-labelledby="slotLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="slotLabel">DIY Bento Workshop</h5>
+            <div class="modal-content p-4 register-modal">
+                <div class="d-flex justify-content-end">
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <p><strong></strong>  <span id="modalGuardian" class="text-danger">Insufficient Slot</span></p>
-
                 </div>
-                <div class="modal-footer">
-
-                    <button type="button" class="btn btn-primary" id="okayBtn">Okay</button>
+                <div class="text-center">
+                    <button type="button" class="main-btn button-dutch button-dutch-primary fit-content" id="okayBtn">Okay</button>
                 </div>
             </div>
         </div>

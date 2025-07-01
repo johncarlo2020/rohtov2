@@ -5,7 +5,7 @@
                 @include('components.branding')
             </div>
             <div class="col-12 mt-5 px-2">
-                <h1 class="heading-dutch">LOG IN</h1>
+                <h1 class="heading-dutch mb-4">LOG IN</h1>
                 <!-- Session Status -->
                 <x-auth-session-status class="mb-4" :status="session('status')" />
                 <div class="card p-4 login-form-parent">
@@ -33,7 +33,7 @@
 
                         <x-input-error :messages="$errors->get('password')" class="mt-2" />
 
-                        <div class="flex items-center justify-end">
+                        <div class="d-flex justify-center">
                             <x-primary-button class="main-btn button-dutch button-dutch-primary">
                                 {{ __("LOGIN") }}
                             </x-primary-button>

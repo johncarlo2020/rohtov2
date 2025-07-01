@@ -25,7 +25,7 @@
         <!-- Modal -->
 
 
-        <div class="modal fade" id="notAllowedModal" tabindex="-1">
+        <div class="modal fade custom-modal" id="notAllowedModal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content ">
                     <div class="modal-body">

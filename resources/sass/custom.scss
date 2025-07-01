@@ -822,12 +822,17 @@ a:active {
     color: #0061b0 !important;
 }
 
+.bg-yellow
+{
+    background-color:#ffff00 !important;
+}
+
 .workshop-main
 {
     .workshop-time-text
     {
         background: #0061b0;
-        font-size: 18px;
+        font-size: 16px;
         width: fit-content;
         border-radius: 8px;
         font-family: "HvDTrial Brevia ExtraBlack" !important;

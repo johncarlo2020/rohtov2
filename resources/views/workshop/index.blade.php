@@ -11,8 +11,8 @@
             </div>
             <div class="col-12 mt-5 px-4">
                 <h1 class="heading-dutch text-center">Workshop</h1>
-
-                <div class="col mt-5">
+                <p class="p-2 m-0 text-blue bg-yellow text-blue text-center"><strong>5th July (Sat) & 6th July (Sun)</strong></p>
+                <div class="col mt-3">
                     <div class="row align-items-center">
                         <div class="col">
                             <div class="img-contaner-1">

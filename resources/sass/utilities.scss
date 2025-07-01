@@ -33,33 +33,13 @@
     }
 }
 
-$heading-dutch-color: #ffffff;
-$heading-dutch-outline-color: #0D5888;
-$heading-dutch-font-size: 40px;
-$heading-dutch-font-family: "HvDTrial Brevia ExtraBlack";
-
-// Mixin for creating a text outline
-@mixin text-outline($width, $color) {
-    $shadows: ();
-    @for $i from 1 through $width {
-        $shadows: append($shadows, #{$i}px 0 0 $color, comma);
-        $shadows: append($shadows, #{-$i}px 0 0 $color, comma);
-        $shadows: append($shadows, 0 #{$i}px 0 $color, comma);
-        $shadows: append($shadows, 0 #{-$i}px 0 $color, comma);
-        $shadows: append($shadows, #{$i}px #{$i}px 0 $color, comma);
-        $shadows: append($shadows, #{-$i}px #{-$i}px 0 $color, comma);
-        $shadows: append($shadows, #{$i}px #{-$i}px 0 $color, comma);
-        $shadows: append($shadows, #{-$i}px #{$i}px 0 $color, comma);
-    }
-    text-shadow: $shadows;
-}
-
 .heading-dutch {
-    font-size: $heading-dutch-font-size !important;
-    color: $heading-dutch-color;
+    font-size: 40px !important;
+    color: #ffffff;
     padding: 0;
-    font-family: $heading-dutch-font-family, sans-serif !important;
-    @include text-outline(4, $heading-dutch-outline-color);
+    -webkit-text-stroke: 1px #0A608E;
+    text-shadow: 0px 4px 0 #0A608E;
+    font-family: "HvDTrial Brevia ExtraBlack" !important;
 }
 
 .back-btn {

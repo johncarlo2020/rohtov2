@@ -75,20 +75,21 @@ Route::group(['middleware' => ['client']], function () {
     Route::get('/station/{station}/brand', 'App\Http\Controllers\StationController@brand')->name('station.brand');
     Route::get('/puzzle', 'App\Http\Controllers\StationController@puzzle')->name('station.puzzle');
     Route::get('/brands', 'App\Http\Controllers\StationController@brands')->name('station.brands');
-    Route::get('/workshop-congrats', 'App\Http\Controllers\StationController@workshopCongrats')->name('workshopCongrats');
+    Route::get('/workshop/register', 'App\Http\Controllers\WorkshopController@register')->name('workshop.register');
+    Route::get('/workshop/check', 'App\Http\Controllers\WorkshopController@check')->name('workshop.check');
+    Route::get('/workshop/submit', 'App\Http\Controllers\WorkshopController@submit')->name('workshop.submit');
+    Route::get('/workshop/congrats', 'App\Http\Controllers\WorkshopController@congrats')->name('workshop.congrats');
+
+
 
 
     Route::get('/workshop', function () {
         return view('/workshop/index');
     })->name('workshop');
-    Route::get('/workshop/register', function () {
-        return view('/workshop/register');
-    })->name('workshop.register');
 
     Route::get('/promotion', function () {
         return view('promotion');
     })->name('promotion');
-
 
 
     Route::post('/upload', 'App\Http\Controllers\StationController@uploadBaby')->name('upload.baby');

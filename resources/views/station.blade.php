@@ -46,6 +46,10 @@
             @include('components.branding')
         </div>
         <div id="mainContent" class="mt-1 mb-2 text-center col-12 text-content">
+            @if ($user)
+                <p class="my-0 mt-3 curve heading-dutch small">Checked-in</p>
+                <p class="my-0 curve heading-dutch ">Succesful</p>
+            @endif
             <div id="{{ $user ? '' : 'forceQr' }}" class="icon-container">
             </div>
             <img src="{{ asset('images/dutchlady/dutchLadyStation' . $station->id . '.webp') }}"
@@ -59,9 +63,6 @@
                 </button>
                 <p class="px-4 mt-4 bottom-text text-white font-medium small-width">Scan the QR code to check in</p>
             @else
-                <p class="my-0 mt-3 curve heading-dutch small">Checked-in</p>
-                <p class="my-0 curve heading-dutch ">Succesful</p>
-
                 <div class="scanner-button">
                     <a href="{{ route('dashboard') }}" class="button-dutch button-dutch-primary">
                         BACK

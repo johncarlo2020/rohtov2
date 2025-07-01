@@ -23,27 +23,30 @@
         </div>
 
         <!-- Modal -->
-        <div class="modal fade" id="notAllowedModal" tabindex="-1" aria-labelledby="notAllowedModalLabel"
-            aria-hidden="true">
+
+
+        <div class="modal fade" id="notAllowedModal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="notAllowedModalLabel">Access Denied</h5>
-                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body text-center">
-                        You must complete Stations 1 to 4 before accessing Station 5.
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Okay</button>
+                <div class="modal-content ">
+                    <div class="modal-body">
+                        <div class="text-center content">
+                            <div class="text-content mt-0">
+                                <p class="message text-dark">
+                                    Hit all the stations to redeem your free gift!
+                                </p>
+                            </div>
+                            <button type="button" class="w-auto main-btn button-dutch button-dutch-primary"  data-dismiss="modal"
+                                aria-label="Close">Close</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-12 d-flex justify-content-center align-items-center mt-3">
-            <img class="welcome_img" src="{{ asset('images/dutchlady/dashboardTextImg1.png') }}" alt="" />
-        </div>
+            </div>
+
         <div class="container">
+            <div class="col-12 d-flex justify-content-center align-items-center mt-3">
+                <img class="welcome_img" src="{{ asset('images/dutchlady/dashboardTextImg1.png') }}" alt="" />
+                </div>
             @php
             $station5 = $stations->firstWhere('id', 5);
             @endphp
@@ -51,11 +54,20 @@
             @if ($station5)
             <div class="row justify-content-center">
                 <div class="col-12 d-flex justify-content-center">
-                    <div class="station-container d-flex justify-center {{ $station5->status ? 'completed' : '' }}" @if (!$canAccessStation5)
-                        onclick="showNotAllowedModal()" @else onclick="gotoStation({{ $station5->id }})" @endif>
+                    @if ($canAccessStation5)
+                    <div class="station-container d-flex justify-center {{ $station5->status ? 'completed' : '' }}"
+                        onclick="gotoStation({{ $station5->id }})" >
+                        <img src="{{ asset('images/hadalabobabies/DL Station Map (5) Registered.webp') }}"
+                            class="station-img img-fluid w-50 m-auto mb-4" alt="Slide {{ $station5->id }}">
+                    </div>
+                    @else
+                    <div class="station-container d-flex justify-center {{ $station5->status ? 'completed' : '' }}"
+                        onclick="showNotAllowedModal()">
                         <img src="{{ asset('images/hadalabobabies/station' . $station5->id . '.webp') }}"
                             class="station-img img-fluid w-50 m-auto mb-4" alt="Slide {{ $station5->id }}">
                     </div>
+                    @endif
+
                 </div>
             </div>
             @endif

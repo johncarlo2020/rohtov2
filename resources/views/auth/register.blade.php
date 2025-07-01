@@ -123,7 +123,7 @@
                             <div class="col-12">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="marketing" value="1"
-                                        id="marketing" required />
+                                        id="marketing" />
                                     <label class="form-check-label text-dark" for="marketing">
                                         I agree to receive marketing and promotional
                                         communications from Dutch Lady via e-mail and

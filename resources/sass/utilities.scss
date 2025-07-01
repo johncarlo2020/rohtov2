@@ -40,6 +40,11 @@
     -webkit-text-stroke: 1px #0A608E;
     text-shadow: 0px 4px 0 #0A608E;
     font-family: "HvDTrial Brevia ExtraBlack" !important;
+
+    &.small {
+        font-size: 27px !important;
+        text-shadow: 0px 2px 0 #0A608E;
+    }
 }
 
 .back-btn {

@@ -49,22 +49,21 @@
             <div id="{{ $user ? '' : 'forceQr' }}" class="icon-container">
             </div>
             <img src="{{ asset('images/dutchlady/dutchLadyStation' . $station->id . '.webp') }}"
-                    class="station-img img-fluid w-25"
-                    alt="Slide {{ $station->id }}">
+                class="station-img img-fluid w-25" alt="Slide {{ $station->id }}">
 
-            <img class="mt-2 station-image" src="{{ asset('images/hadalabobabies/DL Station Page ('.$station->id .').webp') }}"
-                alt="Station Image">
+            <img class="mt-2 station-image"
+                src="{{ asset('images/hadalabobabies/DL Station Page (' . $station->id . ').webp') }}" alt="Station Image">
             @if ($user != true)
-
-                        <button id="start-scanner" class="mx-auto mt-5 mb-3 camera-btn"><img
-                                src="{{ asset('images/camera.webp') }}" alt=""></button>
-                        <p class="px-4 mt-4 bottom-text text-white font-medium small-width">Scan the QR code to check in</p>
-
+                <button id="start-scanner" class="mx-auto mt-5 mb-3 camera-btn">
+                    <i class="fa-solid fa-camera"></i>
+                </button>
+                <p class="px-4 mt-4 bottom-text text-white font-medium small-width">Scan the QR code to check in</p>
             @else
-                <p class="mt-2 bottom-text main-color font-medium">Checked-in Succesful</p>
+                <p class="my-0 mt-3 curve heading-dutch small">Checked-in</p>
+                <p class="my-0 curve heading-dutch ">Succesful</p>
 
                 <div class="scanner-button">
-                    <a href="{{ route('dashboard') }}" class="button">
+                    <a href="{{ route('dashboard') }}" class="button-dutch button-dutch-primary">
                         BACK
                     </a>
                 </div>
@@ -168,7 +167,7 @@
                     });
                     $('#badge').attr('src', '{{ asset('images/check.png') }}');
 
-                       $('#scanCompleteModal').modal('show');
+                    $('#scanCompleteModal').modal('show');
 
                     // Optional: Remove the canvas after a short delay
                     setTimeout(() => {
@@ -190,7 +189,7 @@
                 },
                 error: function(xhr, status, error) {
                     console.error('Error sending QR Code message:', error);
-                         $('.modal-icon').addClass('d-none');
+                    $('.modal-icon').addClass('d-none');
                     $('.station-text').html('Failed');
                     $('.message').html('Invalid QR code. Please try again.');
                     $('.check').attr('src', '{{ asset('images/error.webp') }}');

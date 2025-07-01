@@ -1,20 +1,21 @@
 <x-app-layout>
     <div class="container-fluid home start completed-screen pt-4">
-        <div class="mb-3 branding-container">
-            @include('components.branding')
-        </div>
+
         <div class="congrats-container">
-            <h1 class="text-center main-color font-medium mb-2">Visit</h1>
+            <h1 class="heading-dutch text-center curve">Visit our</h1>
+            <h1 class="heading-dutch text-center curve">Official Website</h1>
+
             <div class="product-image mb-3 px-5">
                 <a href="https://hadalabo.com.my">
 
-                <img class="" src="{{ asset('images/congrats.webp') }}" alt="" />
+                    <img class="logo "
+                        src="{{ asset('images/dutchlady/dutchLadyLogo.png') }}" alt="Dutch Lady Logo" />
 
                 </a>
             </div>
-           <p class="text-center main-color font-medium mb-3 ">
-             for more information
-           </p>
+            <div class="next-button-container text-center mt-5">
+                <button class="button-dutch button-dutch-primary"><span>Done</span></button>
+            </div>
         </div>
     </div>
     </div>

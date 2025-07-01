@@ -83,6 +83,13 @@
                 font-weight: normal;
                 font-style: normal;
             }
+
+             @font-face {
+                font-family: '09Brevia-Bold';
+                src: url('{{ asset('assets/fonts/09Brevia-Bold.otf') }}') format('opentype');
+                font-weight: normal;
+                font-style: normal;
+            }
         </style>
         <main>
             {{ $slot }}

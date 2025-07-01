@@ -14,7 +14,7 @@
             width: 100px;
         }
     </style>
-    <div class="modal fade" id="scanCompleteModal" tabindex="-1">
+    <div class="modal fade custom-modal" id="scanCompleteModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-body">
@@ -27,7 +27,7 @@
                             </p>
                         </div>
                         <div class="">
-                            <a href="{{ route('dashboard') }}" id="routeBtn" class="button">
+                            <a href="{{ route('dashboard') }}" id="routeBtn" class="button-dutch">
                                 okay
                             </a>
                         </div>
@@ -49,23 +49,23 @@
             @if ($user)
                 <p class="my-0 mt-3 curve heading-dutch small">Checked-in</p>
                 <p class="my-0 curve heading-dutch ">Succesful</p>
+            @else
+                  <img src="{{ asset('images/dutchlady/dutchLadyStation' . $station->id . '.webp') }}"
+                class="station-img img-fluid w-25" alt="Slide {{ $station->id }}">
             @endif
             <div id="{{ $user ? '' : 'forceQr' }}" class="icon-container">
             </div>
-            <img src="{{ asset('images/dutchlady/dutchLadyStation' . $station->id . '.webp') }}"
-                class="station-img img-fluid w-25" alt="Slide {{ $station->id }}">
-
             <img class="mt-2 station-image"
                 src="{{ asset('images/hadalabobabies/DL Station Page (' . $station->id . ').webp') }}" alt="Station Image">
             @if ($user != true)
                 <button id="start-scanner" class="mx-auto mt-5 mb-3 camera-btn">
                     <i class="fa-solid fa-camera"></i>
                 </button>
-                <p class="px-4 mt-4 bottom-text text-white font-medium small-width">Scan the QR code to check in</p>
+                <p class="px-4 mt-4 bottom-text sacnner-text">Scan the QR code to check in</p>
             @else
                 <div class="scanner-button">
                     <a href="{{ route('dashboard') }}" class="button-dutch button-dutch-primary">
-                        BACK
+                        done
                     </a>
                 </div>
             @endif
@@ -74,6 +74,7 @@
         <div id="scannerContainer" class="scanner-container d-none">
             <!-- <button id="close" class="mx-auto mt-4 camera-btn">x</button> -->
             <div id="reader"></div>
+            <p class="mt-4 bottom-text text-white font-medium small-width">Scan the QR code to check in</p>
             {{-- <div>
                 <a href="{{ route('dashboard') }}" class="button">
                     BACK

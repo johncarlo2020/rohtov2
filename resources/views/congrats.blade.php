@@ -6,7 +6,7 @@
             <h1 class="heading-dutch text-center curve">Official Website</h1>
 
             <div class="product-image mb-3 px-5">
-                <a href="https://hadalabo.com.my">
+                <a href="">
 
                     <img class="logo "
                         src="{{ asset('images/dutchlady/dutchLadyLogo.png') }}" alt="Dutch Lady Logo" />
@@ -14,7 +14,7 @@
                 </a>
             </div>
             <div class="next-button-container text-center mt-5">
-                <button class="button-dutch button-dutch-primary"><span>Done</span></button>
+                <button onclick="window.location.href='{{ route('dashboard') }}'" class="button-dutch button-dutch-primary"><span>Done</span></button>
             </div>
         </div>
     </div>

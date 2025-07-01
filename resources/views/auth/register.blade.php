@@ -44,8 +44,8 @@
                                 <label for="">Date of Birth </label>
 
                                 <input id="age" placeholder="Enter your age" type="date"
-                                    class="input-text form-control @error('age') is-invalid @enderror" name="dob" value="{{ old('age') }}"
-                                    required autocomplete="age" autofocus />
+                                    class="input-text form-control @error('age') is-invalid @enderror" name="dob"
+                                    value="{{ old('age') }}" required autocomplete="age" autofocus />
 
                                 @error('age')
                                 <span class="invalid-feedback" role="alert">
@@ -77,7 +77,8 @@
 
                                 <input id="number" type="number"
                                     class="input-text form-control w-100 @error('number') is-invalid @enderror"
-                                    name="number" value="{{ old('number') }}" required autocomplete="number" autofocus />
+                                    name="number" value="{{ old('number') }}" required autocomplete="number"
+                                    autofocus />
                             </div>
                             <div class="mt-2 col-12">
                                 <span id="valid-msg" class="d-none text-danger"></span>
@@ -87,9 +88,10 @@
 
                         <div class="mb-2 row">
                             <div class="col-12 input-group">
-                            <!-- <label for="">Where did you find this event?</label> -->
+                                <!-- <label for="">Where did you find this event?</label> -->
 
-                                <select class="form-select input-text" name="find" aria-label="Default select example" required>
+                                <select class="form-select input-text" name="find" aria-label="Default select example"
+                                    required>
                                     <option value="" selected disabled>Where did you find this event? </option>
 
                                     <option value="Facebook">Facebook</option>
@@ -111,7 +113,8 @@
                                     <input class="form-check-input" type="checkbox" name="privacy_policy" value="1"
                                         id="privacyPolicy" required />
                                     <label class="form-check-label text-dark" for="privacyPolicy">
-                                        I have read and agree to the  <a href="" class="text-primary">Terms and Conditions</a>. and <a href="" class="text-primary">Privacy Policy</a>.
+                                        I have read and agree to the <a href="" class="text-primary">Terms and
+                                            Conditions</a>. and <a href="" class="text-primary">Privacy Policy</a>.
                                     </label>
                                 </div>
                             </div>
@@ -131,7 +134,8 @@
                         </div>
                         <div class="mb-0 row">
                             <div class="col-12 text-center">
-                                <button id="submitButton" type="submit" class="w-auto main-btn button-dutch button-dutch-primary">
+                                <button id="submitButton" type="submit"
+                                    class="w-auto main-btn button-dutch button-dutch-primary">
                                     {{ __('SUBMIT') }}
                                 </button>
                             </div>
@@ -139,17 +143,14 @@
                     </form>
                 </div>
                 <div class="bottom-text">
-                                    <p class="already-register">
-                                        Already Registered
-                                    </p>
-                                    <p class="already-register">
-                                        Please Login
-                                        <a href="{{ route('login') }}" class="">here</a>
-                                    </p>
-                                    <p class="mt-5">
-                                        <a class="footer-text" href="https://wowsome.com.my/">Powered by WOWSOME®2025</a>
-                                    </p>
-                                </div>
+                    <p class="already-register">
+                        Already Registered
+                    </p>
+                    <p class="already-register">
+                        Please Login
+                        <a href="{{ route('login') }}" class="">here</a>
+                    </p>
+                </div>
             </div>
         </div>
     </div>

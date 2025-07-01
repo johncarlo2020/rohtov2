@@ -107,9 +107,6 @@
         </div>
     </div>
 
-    <div class="bottom-text ">
-        <a class="footer-text text-dark" href="https://wowsome.com.my/">Powered by WOWSOME®2025</a>
-    </div>
     <script>
 
         @if (session('showWelcomeModal'))

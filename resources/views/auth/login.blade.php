@@ -7,29 +7,17 @@
             <div class="col-12 mt-5 px-2">
                 <h1 class="heading-dutch">LOG IN</h1>
                 <!-- Session Status -->
-                <x-auth-session-status
-                    class="mb-4"
-                    :status="session('status')"
-                />
+                <x-auth-session-status class="mb-4" :status="session('status')" />
                 <div class="card p-4 login-form-parent">
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
                         <div class="row mb-2">
                             <div class="col-12">
-                                <label class="text-left" for=""
-                                    >Email</label
-                                >
+                                <label class="text-left" for="">Email</label>
 
-                                <input
-                                    id="email"
-                                    placeholder="example@email.com"
-                                    type="email"
-                                    class="input-text form-control @error('email') is-invalid @enderror"
-                                    name="email"
-                                    value="{{ old('email') }}"
-                                    required
-                                    autocomplete="email"
-                                />
+                                <input id="email" placeholder="example@email.com" type="email"
+                                    class="input-text form-control @error('email') is-invalid @enderror" name="email"
+                                    value="{{ old('email') }}" required autocomplete="email" />
 
                                 @error('email')
                                 <span class="invalid-feedback" role="alert">
@@ -40,20 +28,10 @@
                         </div>
 
                         <!-- Password -->
-                        <x-text-input
-                            id="password"
-                            class="block w-full mt-1"
-                            type="hidden"
-                            name="password"
-                            value="password"
-                            required
-                            autocomplete="current-password"
-                        />
+                        <x-text-input id="password" class="block w-full mt-1" type="hidden" name="password"
+                            value="password" required autocomplete="current-password" />
 
-                        <x-input-error
-                            :messages="$errors->get('password')"
-                            class="mt-2"
-                        />
+                        <x-input-error :messages="$errors->get('password')" class="mt-2" />
 
                         <div class="flex items-center justify-end">
                             <x-primary-button class="main-btn button-dutch button-dutch-primary">
@@ -63,11 +41,6 @@
                     </form>
                 </div>
 
-                <div class="bottom-text">
-
-                        <a class="footer-text" href="https://wowsome.com.my/">Powered by WOWSOME®2025</a>
-
-                </div>
             </div>
         </div>
     </div>

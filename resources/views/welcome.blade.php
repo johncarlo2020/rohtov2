@@ -96,9 +96,6 @@
             </div>
         </div>
     </div>
-    <div class="register-main mb-3">
-        <a class="footer-text" href="https://wowsome.com.my/">Powered by WOWSOME®2025</a>
-    </div>
 </body>
 
 </html>

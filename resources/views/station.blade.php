@@ -82,10 +82,6 @@
         </div>
     </div>
 
-    <div class="end-text mt-4">
-        <p>Powered by WOWSOME®️ 2025</p>
-        <img src="{{ asset('images/logo-rounded.webp') }}" alt="Item 2" />
-    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 

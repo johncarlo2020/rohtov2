@@ -15,13 +15,16 @@
                                     class="station-img img-fluid" alt="Route Workshop">
                             </div>
                         </div>
-                        <div class="col ">
-                            <p>2:00 pm - 3:00pm</p><br>
-                            <p>2:00 pm - 3:00pm</p>
+                        <div class="col">
+                            <p class="p-2 m-0 text-white workshop-time-text"><strong>2:00 pm - 3:00pm</strong></p>
+                            <br>
+                            <p class="p-2 m-0 text-white workshop-time-text"><strong>2:00 pm - 3:00pm</strong></p>
                         </div>
                     </div>
                 </div>
-                <hr>
+                <div class="workshop-hr-container">
+                    <hr class="workshop-hr">
+                </div>
                  <div class="col mb-5">
                     <div class="row align-items-center">
                         <div class="col">
@@ -31,18 +34,16 @@
                             </div>
                         </div>
                         <div class="col ">
-                            <p>2:00 pm - 3:00pm</p><br>
-                            <p>2:00 pm - 3:00pm</p>
+                            <p class="p-2 m-0 text-white workshop-time-text"><strong>2:00 pm - 3:00pm</strong></p>
+                            <br>
+                            <p class="p-2 m-0 text-white workshop-time-text"><strong>2:00 pm - 3:00pm</strong></p>
                         </div>
                     </div>
                 </div>
-                <div class="flex items-center justify-end">
-                <x-primary-button onclick="window.location='{{ route('workshop.register') }}'" class="main-btn button-dutch button-dutch-primary">
+                <div class="flex items-center text-center">
+                <x-primary-button onclick="window.location='{{ route('workshop.register') }}'" class="main-btn button-dutch button-dutch-primary fit-content">
                         Continue
                     </x-primary-button>
-                </div>
-                <div class="bottom-text">
-                    <a class="footer-text" href="https://wowsome.com.my/">Powered by WOWSOME®2025</a>
                 </div>
             </div>
         </div>

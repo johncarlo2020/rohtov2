@@ -41,13 +41,13 @@
 
                         <div class="mb-2 row">
                             <div class="col-12">
-                                <label for="">Date of Birth </label>
+                                <label for="dob">Date of Birth </label>
 
-                                <input id="age" placeholder="Enter your age" type="date"
-                                    class="input-text form-control @error('age') is-invalid @enderror" name="dob"
-                                    value="{{ old('age') }}" required autocomplete="age" autofocus />
+                                <input id="dob" placeholder="Enter your date of birth" type="date"
+                                    class="input-text form-control @error('dob') is-invalid @enderror" name="dob"
+                                    value="{{ old('dob') }}" required autocomplete="bday" autofocus />
 
-                                @error('age')
+                                @error('dob')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>

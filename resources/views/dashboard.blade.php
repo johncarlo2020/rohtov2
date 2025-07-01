@@ -62,7 +62,7 @@
                         @if( $station5->status)
                             <p class="redeemed">Redeemed!</p>
                         @else
-                            <p class="{{ $canAccessStation5 ? '' : 'd-none' }} not-redeemed blink">Click here to  claim yours</p>
+                            <p class="{{ $canAccessStation5 ? '' : 'd-none' }} not-redeemed blink">Click here to claim yours</p>
                         @endif
                     </div>
                 </div>

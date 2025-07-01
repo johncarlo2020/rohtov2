@@ -18,7 +18,7 @@
                         <div class="col">
                             <p class="p-2 m-0 text-white workshop-time-text"><strong>2:00 pm - 3:00pm</strong></p>
                             <br>
-                            <p class="p-2 m-0 text-white workshop-time-text"><strong>2:00 pm - 3:00pm</strong></p>
+                            <p class="p-2 m-0 text-white workshop-time-text"><strong>7:00 pm - 8:00pm</strong></p>
                         </div>
                     </div>
                 </div>
@@ -34,9 +34,7 @@
                             </div>
                         </div>
                         <div class="col ">
-                            <p class="p-2 m-0 text-white workshop-time-text"><strong>2:00 pm - 3:00pm</strong></p>
-                            <br>
-                            <p class="p-2 m-0 text-white workshop-time-text"><strong>2:00 pm - 3:00pm</strong></p>
+                            <p class="p-2 m-0 text-white workshop-time-text"><strong>4:00 pm - 5:00pm</strong></p>
                         </div>
                     </div>
                 </div>

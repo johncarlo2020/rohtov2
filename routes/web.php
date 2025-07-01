@@ -79,13 +79,11 @@ Route::group(['middleware' => ['client']], function () {
     Route::get('/workshop/check', 'App\Http\Controllers\WorkshopController@check')->name('workshop.check');
     Route::get('/workshop/submit', 'App\Http\Controllers\WorkshopController@submit')->name('workshop.submit');
     Route::get('/workshop/congrats', 'App\Http\Controllers\WorkshopController@congrats')->name('workshop.congrats');
+    Route::get('/workshop', 'App\Http\Controllers\WorkshopController@index')->name('workshop');
 
 
 
 
-    Route::get('/workshop', function () {
-        return view('/workshop/index');
-    })->name('workshop');
 
     Route::get('/promotion', function () {
         return view('promotion');

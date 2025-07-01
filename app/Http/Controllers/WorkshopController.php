@@ -11,6 +11,18 @@ use App\Models\Workshop;
 
 class WorkshopController extends Controller
 {
+    public function index()
+    {
+        $user = auth()->user();
+
+        $check = Appointment::where('user_id', $user->id)
+            ->where('status', 'pending')
+            ->exists();
+            if($check) {
+                return redirect()->route('workshop.congrats');
+            }
+        return view('workshop.index', compact('workshops'));
+    }
 
     public function register()
     {
@@ -63,9 +75,11 @@ class WorkshopController extends Controller
 
     public function congrats()
     {
-        $appointment = Appointment::where('user_id', auth()->id())
+        $appointment = Appointment::with(['appointmentDate', 'workshop'])
+            ->where('user_id', auth()->id())
             ->where('status', 'pending')
             ->first();
+
         return view('workshop.congrats', compact('appointment'));
     }
 }

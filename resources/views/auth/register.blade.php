@@ -1,11 +1,11 @@
 <x-guest-layout>
-    <div class="register-main">
+    <div class="register-main with-scroll">
         <div class="justify-content-center w-100">
             <div class="mt-5 col-12 d-flex justify-content-center">
                 @include('components.branding')
             </div>
             <div class="mt-3 w-100 px-2">
-                <h1 class="mb-4 text-center login-text">SIGN UP</h1>
+                <h1 class="mb-4 text-center heading-dutch">SIGN UP</h1>
                 <div class="card py-5 px-4 register-form-parent">
                     <form id="form" method="POST" action="{{ route('register') }}">
                         @csrf

@@ -4,150 +4,103 @@
             @include('components.branding')
         </div>
 
-<!-- login Modal -->
- <!-- Welcome Modal -->
-<div class="modal fade" id="welcomeModal" tabindex="-1" aria-labelledby="welcomeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content text-center position-relative">
+        <!-- login Modal -->
+        <!-- Welcome Modal -->
+        <div class="modal fade" id="welcomeModal" tabindex="-1" aria-labelledby="welcomeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content text-center position-relative">
 
-      <!-- Close Button (top-right) -->
-      <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <!-- Close Button (top-right) -->
+                    <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
 
-      <!-- Image -->
-      <img src="{{ asset('images/dutchlady/dutchLadyWelcomeModal.webp') }}" alt="Welcome" class="img-fluid">
+                    <!-- Image -->
+                    <img src="{{ asset('images/dutchlady/dutchLadyWelcomeModal.webp') }}" alt="Welcome"
+                        class="img-fluid">
 
-    </div>
-  </div>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="notAllowedModal" tabindex="-1" aria-labelledby="notAllowedModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="notAllowedModalLabel">Access Denied</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body text-center">
-                You must complete Stations 1 to 4 before accessing Station 5.
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Okay</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="col-12 d-flex justify-content-center align-items-center mt-3">
-    <img class="welcome_img" src="{{ asset('images/dutchlady/dashboardTextImg1.png') }}" alt="" />
-</div>
-<div class="container">
-    @php
-    $station5 = $stations->firstWhere('id', 5);
-    @endphp
-
-    @if ($station5)
-        <div class="row justify-content-center">
-            <div class="col-12 d-flex justify-content-center">
-                <div class="station-container {{ $station5->status ? 'completed' : '' }}"
-                    @if (!$canAccessStation5)
-                        data-bs-toggle="modal" data-bs-target="#notAllowedModal"
-                    @else
-                        onclick="gotoStation({{ $station5->id }})"
-                    @endif
-                >
-                    <img src="{{ asset('images/hadalabobabies/station' . $station5->id . '.webp') }}"
-                        class="station-img img-fluid w-50 m-auto mb-4"
-                        alt="Slide {{ $station5->id }}">
                 </div>
             </div>
         </div>
-    @endif
-    <div class="row row-cols-2 row-cols-md-2 g-4 mb-5">
-        @foreach ($stations as $station)
-            @if ($station->id != 5)
+
+        <!-- Modal -->
+        <div class="modal fade" id="notAllowedModal" tabindex="-1" aria-labelledby="notAllowedModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="notAllowedModalLabel">Access Denied</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        You must complete Stations 1 to 4 before accessing Station 5.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Okay</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 d-flex justify-content-center align-items-center mt-3">
+            <img class="welcome_img" src="{{ asset('images/dutchlady/dashboardTextImg1.png') }}" alt="" />
+        </div>
+        <div class="container">
+            @php
+            $station5 = $stations->firstWhere('id', 5);
+            @endphp
+
+            @if ($station5)
+            <div class="row justify-content-center">
+                <div class="col-12 d-flex justify-content-center">
+                    <div class="station-container {{ $station5->status ? 'completed' : '' }}" @if (!$canAccessStation5)
+                        onclick="showNotAllowedModal()" @else onclick="gotoStation({{ $station5->id }})" @endif>
+                        <img src="{{ asset('images/hadalabobabies/station' . $station5->id . '.webp') }}"
+                            class="station-img img-fluid w-50 m-auto mb-4" alt="Slide {{ $station5->id }}">
+                    </div>
+                </div>
+            </div>
+            @endif
+            <div class="row row-cols-2 row-cols-md-2 g-4 mb-5">
+                @foreach ($stations as $station)
+                @if ($station->id != 5)
                 <div class="col">
                     <div class="station-container {{ $station->status ? 'completed' : '' }}"
-                    @if (!$canAccessStation5 && $station->id == 5)
-                        data-bs-toggle="modal" data-bs-target="#notAllowedModal"
-                    @else
-                        onclick="gotoStation({{ $station->id }})"
-                    @endif
-                    >
-                    @if ($station->status == 'completed')
-                    <img src="{{ asset('images/hadalabobabies/DL Station Map (' . $station->id . ') Check.webp') }}" class="station-img img-fluid "
-                    alt="Slide {{ $station->id }}">
-                </div>
-                    @else
-                    <img src="{{ asset('images/hadalabobabies/station' . $station->id . '.webp') }}" class="station-img img-fluid "
-                        alt="Slide {{ $station->id }}">
+                        onclick="gotoStation({{ $station->id }})">
+                        @if ($station->status == 'completed')
+                        <img src="{{ asset('images/hadalabobabies/DL Station Map (' . $station->id . ') Check.webp') }}"
+                            class="station-img img-fluid " alt="Slide {{ $station->id }}">
                     </div>
-                    @endif
-
+                    @else
+                    <img src="{{ asset('images/hadalabobabies/station' . $station->id . '.webp') }}"
+                        class="station-img img-fluid " alt="Slide {{ $station->id }}">
                 </div>
+                @endif
+
+            </div>
             @endif
-        @endforeach
-        
-        <div class="col">
-            <div class="station-container" onclick="window.location.href='{{ route('workshop'); }}'">
-                <img src="{{ asset('images/dutchlady/workshopImg.webp') }}"
-                    class="station-img img-fluid" alt="Route Workshop">
-            </div>
-        </div>
+            @endforeach
 
-        <div class="col">
-            <div class="station-container" onclick="window.location.href=''">
-                <img src="{{ asset('images/dutchlady/promotionImg.webp') }}"
-                    class="station-img img-fluid" alt="Promotions">
-            </div>
-        </div>
-    </div>
-</div>
-
-        <!-- <div class="sliders w-100">
-            <div class="container-fluid p-0 m-0">
-                <div class="row p-0 m-0 justify-content-center">
-                    <div class="col-md-10 slider-container">
-                        <div class="slider-prev slider-navigation">
-                            <button id="prev" class="slider-btn"><i class="fa-solid fa-caret-left"></i></button>
-                        </div>
-                        <div class="slider-next slider-navigation">
-                            <button id="next" class="slider-btn"><i class="fa-solid fa-caret-right"></i></button>
-                        </div>
-
-                        <div class="slick-carousel mt-4" style="visibility: hidden;">
-                            @foreach ($stations as $station)
-                            <div class="slick-slide-item">
-                                <div class="staion-container {{ $station->status ? 'completed' : '' }}" @if ($station->id == 5 &&
-                                    !$canAccessStation5)
-                                    data-bs-toggle="modal" data-bs-target="#notAllowedModal"
-                                    @else
-                                    onclick="gotoStation({{ $station->id }})"
-                                    @endif
-                                    >
-                                    <img src="{{ asset('images/hadalabobabies/station'.$station->id.'.webp') }}" class="station-img"
-                                        alt="Slide {{ $station->id }}">
-                                    <p class="staion-name text-center font-medium main-color text-md mt-4">
-                                        {{ $station->name }}
-                                    </p>
-                                    <div class="complete-indicator {{ $station->status ? 'active' : '' }}">
-                                        <p>CHECK-IN SUCCESSFUL</p>
-                                    </div>
-                                </div>
-                            </div>
-                            @endforeach
-                        </div>
-                    </div>
+            <div class="col">
+                <div class="station-container" onclick="window.location.href='{{ route('workshop'); }}'">
+                    <img src="{{ asset('images/dutchlady/workshopImg.webp') }}" class="station-img img-fluid"
+                        alt="Route Workshop">
                 </div>
             </div>
-        </div> -->
-        <div class="bottom-text ">
-            <a class="footer-text text-dark" href="https://wowsome.com.my/">Powered by WOWSOME®2025</a>
+
+            <div class="col">
+                <div class="station-container" onclick="window.location.href=''">
+                    <img src="{{ asset('images/dutchlady/promotionImg.webp') }}" class="station-img img-fluid"
+                        alt="Promotions">
+                </div>
+            </div>
         </div>
     </div>
 
+    <div class="bottom-text ">
+        <a class="footer-text text-dark" href="https://wowsome.com.my/">Powered by WOWSOME®2025</a>
+    </div>
     <script>
 
-        @if(session('showWelcomeModal'))
+        @if (session('showWelcomeModal'))
             document.addEventListener('DOMContentLoaded', function () {
                 var myModal = new bootstrap.Modal(document.getElementById('welcomeModal'));
                 myModal.show();
@@ -157,15 +110,21 @@
         // Pass stations data to JavaScript
         window.stationsData = @json($stations);
 
-           function gotoStation(id) {
-                var url = "{{ route('station', ['station' => ':id']) }}".replace(
-                    ":id",
-                    id
-                );
-                // Redirect to the generated URL
-                window.location.href = url;
+        function gotoStation(id) {
+            var url = "{{ route('station', ['station' => ':id']) }}".replace(
+                ":id",
+                id
+            );
+            // Redirect to the generated URL
+            window.location.href = url;
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+
+            function showNotAllowedModal() {
+                console.log("Not allowed to access Station 5");
+                var notAllowedModal = new bootstrap.Modal(document.getElementById('notAllowedModal'));
+                notAllowedModal.show();
             }
-        document.addEventListener('DOMContentLoaded', function() {
 
             const completedStation = window.stationsData.find(station => station.status);
             const startButton = document.getElementById('start');
@@ -184,14 +143,14 @@
                         autoplaySpeed: 4000,
                         slidesToShow: 1,
                         slidesToScroll: 1,
-                        customPaging: function(slider, i) {
+                        customPaging: function (slider, i) {
                             const station = window.stationsData[i];
                             let dotClass = 'slick-dot-number';
                             if (station && station.status) { // Check if station is completed
                                 return '<button type="button" class="' + dotClass + '"><i class="fa-solid fa-check"></i></button>';
                             } else {
-                                    return '<button type="button" class="' + dotClass + '">' + (
-                                i + 1) + '</button>';
+                                return '<button type="button" class="' + dotClass + '">' + (
+                                    i + 1) + '</button>';
                             }
                         },
                     });
@@ -215,48 +174,53 @@
                 }
             }
 
-            // Slider navigation buttons
-            const prevButton = document.getElementById('prev');
-            const nextButton = document.getElementById('next');
-            prevButton.addEventListener('click', function() {
-                $('.slick-carousel').slick('slickPrev');
-            });
-            nextButton.addEventListener('click', function() {
-                $('.slick-carousel').slick('slickNext');
-            });
+
         });
     </script>
     <style>
         .slick-dots li button.completed-dot {
-            background-color: green; /* Or any color/style you prefer */
+            background-color: green;
+            /* Or any color/style you prefer */
             color: white;
-            border-radius: 50%; /* Example style */
+            border-radius: 50%;
+            /* Example style */
         }
+
         .slick-dots li button.slick-dot-number {
             /* Ensure default styles are distinct enough */
             background-color: #ccc;
             color: black;
         }
+
         .slick-dots li.slick-active button.slick-dot-number {
-            background-color: #555; /* Active dot style */
+            background-color: #555;
+            /* Active dot style */
             color: white;
         }
+
         .slick-dots li.slick-active button.completed-dot {
-            background-color: darkgreen; /* Active and completed dot style */
+            background-color: darkgreen;
+            /* Active and completed dot style */
             color: white;
         }
+
         .slick-slide-item {
-            min-height: 180px; /* Adjust as needed, helps stabilize layout */
+            min-height: 180px;
+            /* Adjust as needed, helps stabilize layout */
             display: flex;
             align-items: center;
             justify-content: center;
             /* Optional: background-color: #f0f0f0; to see item bounds during load */
         }
+
         .station-img {
             max-width: 100%;
-            height: auto; /* Maintain aspect ratio */
-            display: block; /* Prevents extra space below image */
+            height: auto;
+            /* Maintain aspect ratio */
+            display: block;
+            /* Prevents extra space below image */
         }
+
         /* Ensure the carousel itself is rendered if its parent is not d-none */
         .sliders:not(.d-none) .slick-carousel {
             visibility: visible;

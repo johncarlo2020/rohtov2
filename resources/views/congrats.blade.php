@@ -2,9 +2,9 @@
     <div class="container-fluid home start completed-screen pt-4">
 
         <div class="congrats-container">
-            <h1 class="heading-dutch curve small">Visit our</h1>
-            <h1 class="heading-dutch curve medium">Official Website</h1>
-
+            <div class="col-12 d-flex justify-content-center align-items-center mt-3">
+                <img class="welcome_img w-75" src="{{ asset('images/dutchlady/thankYouMessage.webp') }}" alt="" />
+            </div>
             <div class="product-image mb-3 px-5">
                 <a href="">
 

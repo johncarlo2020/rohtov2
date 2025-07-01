@@ -45,7 +45,7 @@
 
         <div class="container">
             <div class="col-12 d-flex justify-content-center align-items-center mt-3">
-                <img class="welcome_img" src="{{ asset('images/dutchlady/dashboardTextImg1.png') }}" alt="" />
+                <img class="welcome_img" src="{{ asset('images/dutchlady/dashboardTextImg1.webp') }}" alt="" />
                 </div>
             @php
             $station5 = $stations->firstWhere('id', 5);

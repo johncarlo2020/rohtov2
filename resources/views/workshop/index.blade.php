@@ -37,8 +37,8 @@
                     </div>
                 </div>
                 <div class="flex items-center justify-end">
-                    <x-primary-button class="main-btn button-dutch button-dutch-primary">
-                        {{ __("Continue") }}
+                <x-primary-button onclick="window.location='{{ route('workshop.register') }}'" class="main-btn button-dutch button-dutch-primary">
+                        Continue
                     </x-primary-button>
                 </div>
                 <div class="bottom-text">

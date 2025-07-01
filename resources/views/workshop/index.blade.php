@@ -1,5 +1,10 @@
 <x-guest-layout>
-    <div class="workshop-main">
+    <div class="workshop-main with-scroll">
+           <div class="back-btn">
+            <a href="{{ route('dashboard') }}" class="">
+                <img src="{{ asset('images/dutchlady/back-btn.webp') }}" alt="Back" />
+            </a>
+        </div>
         <div class="justify-content-center">
             <div class="col-12 d-flex justify-content-center mt-5">
                 @include('components.branding')

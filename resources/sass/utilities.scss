@@ -103,3 +103,44 @@
         margin-right: auto;
     }
 }
+
+.congrats-workshop {
+    width: 100%;
+    border-radius: 30px;
+    padding: 30px 30px;
+    background-color: #E2F4FC;
+
+    p {
+        margin: 0;
+        padding: 0;
+    }
+
+    .heading {
+        font-family: 'Brevia Medium';
+        font-size: 24px;
+        color: #0060AD;
+    }
+    .name, .date{
+        font-family: '09Brevia-Bold';
+        font-size: 20px;
+        color: #0060AD;
+        margin-bottom: 5px;
+    }
+
+      .time ,.count {
+        font-family: 'Brevia Medium';
+        font-size: 20px;
+        color: #0060AD;
+             margin-bottom: 5px;
+    }
+
+    .qr {
+        width: 40vw;
+        height: 40vw;
+        background-color: red;
+        border: 20px;
+        margin: 10px;
+    }
+
+
+}

@@ -124,6 +124,10 @@ class StationController extends Controller
         ]);
     }
 
+    function workshopCongrats() {
+        return view('workshopCongrats');
+    }
+
     public function index(Station $station)
     {
         $user = StationUser::where('user_id', auth()->id())

@@ -16,6 +16,7 @@
     transition: 0.3s ease;
     min-width: 150px;
     display: inline-block;
+    font-family: 'HvDTrial Brevia ExtraBlack';
 
     &-primary {
         background-color: #0060ac;
@@ -26,7 +27,7 @@
     }
     &-outlined {
         background-color: #ffffff;
-        color: #003f7f;
+        color: #0060AC;
         border: 3px solid #6eb0e0d3;
         outline: 4px solid #003f7f;
         box-shadow: 0 4px #003f7f;

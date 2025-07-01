@@ -15,13 +15,12 @@
         rel="stylesheet" />
 </head>
 <style>
-
-     @font-face {
-            font-family: 'HvDTrial Brevia';
-            src: url('/images/font/HvDTrial_Brevia-ExtraBlack.otf') format('opentype');
-            font-weight: 900;
-            font-style: normal;
-        }
+    @font-face {
+        font-family: 'HvDTrial Brevia';
+        src: url('/images/font/HvDTrial_Brevia-ExtraBlack.otf') format('opentype');
+        font-weight: 900;
+        font-style: normal;
+    }
 
     body,
     html {
@@ -65,11 +64,20 @@
         min-width: unset !important;
     }
 
-    .sign-up-btn-txt {
-  font-family: 'HvDTrial Brevia', sans-serif;
-  font-weight: 900; /* optional, reinforces the ExtraBlack weight */
 
-}
+    @font-face {
+        font-family: 'Brevia-Regular';
+        src: url('{{ asset('assets/fonts/Brevia-Regular.ttf') }}') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    @font-face {
+        font-family: 'HvDTrial Brevia ExtraBlack';
+        src: url('{{ asset('assets/fonts/HvDTrial Brevia ExtraBlack.otf') }}') format('opentype');
+        font-weight: normal;
+        font-style: normal;
+    }
 </style>
 
 <body class="antialiased welcome-page main-background hadalabo">
@@ -79,18 +87,22 @@
                 @include('components.branding')
             </div>
             <div class="col-12 d-flex justify-content-center align-items-center">
-                <img class="welcome_img" src="{{ asset('images/dutchlady/dutchLadyLoginText1.webp') }}" alt="" />
+                <img class="welcome_img" src="{{ asset('images/dutchlady/dutchLadyLoginText1.webp') }}"
+                    alt="" />
             </div>
             <div class="col-12 d-flex justify-content-center align-items-center p-0">
-                <img class="welcome_img_store" src="{{ asset('images/dutchlady/dutchLadyLoginImg.webp') }}" alt="" />
+                <img class="welcome_img_store" src="{{ asset('images/dutchlady/dutchLadyLoginImg.webp') }}"
+                    alt="" />
             </div>
             <div class="text-center bottom-text-welcome col-12 mt-4">
                 <div class="d-block">
                     <div class="col mb-3">
-                        <a href="{{ route('register') }}" class="button-dutch button-dutch button-dutch-primary"><span class="sign-up-btn-txt">Sign Up</span></a>
+                        <a href="{{ route('register') }}" class="button-dutch button-dutch button-dutch-primary"><span
+                                class="sign-up-btn-txt">Sign Up</span></a>
                     </div>
                     <div class="col">
-                        <a href="{{ route('login') }}" class="button-dutch button-dutch button-dutch-outlined"><span class="text-primary">Login</span></a>
+                        <a href="{{ route('login') }}" class="button-dutch button-dutch button-dutch-outlined"><span
+                                class="text-primary">Login</span></a>
                     </div>
                 </div>
             </div>

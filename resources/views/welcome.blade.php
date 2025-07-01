@@ -21,7 +21,7 @@
             src: url('/images/font/HvDTrial_Brevia-ExtraBlack.otf') format('opentype');
             font-weight: 900;
             font-style: normal;
-            }
+        }
 
     body,
     html {

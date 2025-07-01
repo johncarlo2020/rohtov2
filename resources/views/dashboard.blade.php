@@ -90,7 +90,7 @@
             </div>
 
             <div class="col">
-                <div class="station-container" onclick="window.location.href=''">
+                <div class="station-container" onclick="window.location.href='{{ route('promotion') }}'">
                     <img src="{{ asset('images/dutchlady/promotionImg.webp') }}" class="station-img img-fluid"
                         alt="Promotions">
                 </div>
@@ -101,11 +101,16 @@
     <script>
 
         @if (session('showWelcomeModal'))
-            document.addEventListener('DOMContentLoaded', function () {
+          showPromotionMoadal();
+        @endif
+
+
+        function showPromotionMoadal() {
+              document.addEventListener('DOMContentLoaded', function () {
                 var myModal = new bootstrap.Modal(document.getElementById('welcomeModal'));
                 myModal.show();
             });
-        @endif
+        }
 
         // Pass stations data to JavaScript
         window.stationsData = @json($stations);

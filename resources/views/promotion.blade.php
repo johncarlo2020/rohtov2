@@ -9,9 +9,6 @@
                 <div class="col">
                     <img src="{{ asset('images/dutchlady/dutchLadyWelcomeModal.webp') }}" alt="Welcome" class="img-fluid">
                 </div>
-                <div class="bottom-text">
-                    <a class="footer-text" href="https://wowsome.com.my/">Powered by WOWSOME®2025</a>
-                </div>
             </div>
         </div>
     </div>

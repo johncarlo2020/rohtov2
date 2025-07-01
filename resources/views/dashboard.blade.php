@@ -51,7 +51,7 @@
             @if ($station5)
             <div class="row justify-content-center">
                 <div class="col-12 d-flex justify-content-center">
-                    <div class="station-container {{ $station5->status ? 'completed' : '' }}" @if (!$canAccessStation5)
+                    <div class="station-container d-flex justify-center {{ $station5->status ? 'completed' : '' }}" @if (!$canAccessStation5)
                         onclick="showNotAllowedModal()" @else onclick="gotoStation({{ $station5->id }})" @endif>
                         <img src="{{ asset('images/hadalabobabies/station' . $station5->id . '.webp') }}"
                             class="station-img img-fluid w-50 m-auto mb-4" alt="Slide {{ $station5->id }}">

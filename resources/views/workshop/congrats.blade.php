@@ -21,7 +21,7 @@
                 <p class="name">{{ $appointment->guardian }}</p>
                 <p class="date">{{ \Carbon\Carbon::parse($appointment->appointmentDate->date)->format('jS F Y (l)') }}
                 </p>
-                <p class="time">{{ $appointment->workshop->time }}</p>
+                <p class="time">{{ $appointment->workshop->title }} <br> {{ $appointment->workshop->time }}</p>
                 <p class="count">{{ $appointment->attendee }} person{{ $appointment->attendee > 1 ? 's' : '' }}</p>
             </div>
 

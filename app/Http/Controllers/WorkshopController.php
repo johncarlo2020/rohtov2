@@ -21,7 +21,7 @@ class WorkshopController extends Controller
             if($check) {
                 return redirect()->route('workshop.congrats');
             }
-        return view('workshop.index', compact('workshops'));
+        return view('workshop.index' );
     }
 
     public function register()

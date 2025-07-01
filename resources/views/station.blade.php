@@ -61,7 +61,7 @@
                 <button id="start-scanner" class="mx-auto mt-5 mb-3 camera-btn">
                     <i class="fa-solid fa-camera"></i>
                 </button>
-                <p class="px-4 mt-4 bottom-text sacnner-text">Scan the QR code to check in</p>
+                <p class="px-4 mt-4 bottom-text scanner-text">Scan the QR code to check in</p>
             @else
                 <div class="scanner-button">
                     <a href="{{ route('dashboard') }}" class="button-dutch button-dutch-primary">
@@ -74,7 +74,7 @@
         <div id="scannerContainer" class="scanner-container d-none">
             <!-- <button id="close" class="mx-auto mt-4 camera-btn">x</button> -->
             <div id="reader"></div>
-            <p class="mt-4 bottom-text text-white font-medium small-width">Scan the QR code to check in</p>
+            <p class="mt-4 scanner-text">Scan the QR code to check in</p>
             {{-- <div>
                 <a href="{{ route('dashboard') }}" class="button">
                     BACK

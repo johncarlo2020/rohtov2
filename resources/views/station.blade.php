@@ -183,7 +183,7 @@
                     $('.station_id').html(lastCharacter);
 
 
-                    if (lastCharacter == 9) {
+                    if (lastCharacter == 5) {
                         document.getElementById('routeBtn').setAttribute('href', '{{ route('congrats') }}');
                     }
 

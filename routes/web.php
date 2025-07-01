@@ -78,9 +78,11 @@ Route::group(['middleware' => ['client']], function () {
     
 
     Route::get('/workshop', function () {
-        return view('workshop');
+        return view('/workshop/index');
     })->name('workshop');
-
+    Route::get('/workshop/register', function () {
+        return view('/workshop/register');
+    })->name('workshop.register');
     Route::get('/promotion', function () {
         return view('promotion');
     })->name('promotion');

@@ -299,11 +299,9 @@ class StationController extends Controller
         //check if user complete atlist one station
 
 
-        if ($stationDone < 5) {
-            return view('dashboard', compact('stations', 'stationDone', 'canAccessStation5'));
-        } else {
-            return redirect()->route('congrats');
-        }
+
+        return view('dashboard', compact('stations', 'stationDone', 'canAccessStation5'));
+
     }
 
 

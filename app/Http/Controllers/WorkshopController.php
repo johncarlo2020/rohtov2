@@ -38,7 +38,11 @@ class WorkshopController extends Controller
             ->where('appointment_date_id', $request->date)
             ->sum('attendee'); //  sum instead of count
 
-        $availableSlots = 20 - $attendeeCount;
+        if($request->id == 2){
+            $availableSlots = 14 - $attendeeCount;
+        }else{
+            $availableSlots = 20 - $attendeeCount;
+        }
 
         return response()->json(['slots' => $availableSlots]);
     }
@@ -55,7 +59,11 @@ class WorkshopController extends Controller
             ->where('appointment_date_id', $request->date)
             ->sum('attendee'); //  sum instead of count
 
-        $availableSlots = 20 - $attendeeCount;
+        if($request->workshop == 2){
+            $availableSlots = 14 - $attendeeCount;
+        }else{
+            $availableSlots = 20 - $attendeeCount;
+        }
 
         if($availableSlots < $request->attendee) {
             return response()->json(['error' => 'Not enough slots available'], 400);

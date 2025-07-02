@@ -180,12 +180,8 @@
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>DOB</th>
-                                <th>Age</th>
                                 <th>Number</th>
                                 <th>Country</th>
-                                <th>Existing</th>
-                                <th>Social Media</th>
-                                <th>Appeal</th>
                                 @foreach ($data['stations'] as $station)
                                     <th>{{ $station['name'] }}</th>
                                 @endforeach
@@ -201,21 +197,8 @@
                                     <td>{{ $user->email }}</td>
                                     <td>{{ $user->dob }}</td>
 
-                                    <td>{{ $user->age }}</td>
-
                                     <td>{{ $user->number }}</td>
                                     <td>{{ $user->country }}</td>
-                                    <td>{{ $user->existing }}</td>
-                                    <td>
-                                        @php
-                                            $platforms = json_decode($user->social_media, true);
-                                        @endphp
-
-                                        {{ !empty($platforms) ? implode(', ', $platforms) : 'Not Following' }}
-                                    </td>
-
-                                    <td>{{ $user->appeal }}</td>
-
 
                                     @foreach ($user['stations'] as $station)
                                         <td class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-danger' }}">

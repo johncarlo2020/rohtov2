@@ -139,53 +139,21 @@
         </div>
     </div>
     <div class="row mt-4">
-        <div class="col-lg-4">
+        <div class="col-lg-6">
             <div class="card card h-100 mb-3">
                 <div class="card-body p-3">
                     <div id="countriesChart"></div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-4">
+        <div class="col-lg-6">
             <div class="card card h-100 mb-3">
                 <div class="card-body p-3">
                     <div id="findEventChart"></div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-4">
-            <div class="card card h-100 mb-3">
-                <div class="card-body p-3">
-                    <div id="socialMediaChart"></div>
-                </div>
-            </div>
-        </div>
     </div>
-
-    <div class="row mt-4">
-        <div class="col-lg-4">
-            <div class="card card h-100 mb-3">
-                <div class="card-body p-3">
-                    <div id="existingMemberChart"></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="card card h-100">
-                <div class="card-body p-3">
-                    <div id="appealBarChart"></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="card card h-100">
-                <div class="card-body p-3">
-                    <div id="ageChart"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="row mt-4">
         <div class="col-lg-12 mb-lg-0 mb-4">
             <div class="card card h-100">
@@ -599,124 +567,9 @@
                 data: findEventData
             }));
 
-            var socialMedia = @json($data['social_media']);
-            var socialMediaData = Object.keys(socialMedia).map(function(platform) {
-                return {
-                    name: platform,
-                    y: socialMedia[platform] || 0
-                };
-            });
-            Highcharts.chart(getPieChartConfig({
-                renderTo: 'socialMediaChart',
-                title: 'Social Media Count',
-                data: socialMediaData
-            }));
 
-            var existing = @json($data['existing']);
-            var existingData = existing.map(function(item) {
-                return {
-                    name: item.existing || item.name || item.label || '',
-                    y: item.count || 0
-                };
-            });
-            Highcharts.chart(getPieChartConfig({
-                renderTo: 'existingMemberChart',
-                title: 'Existing Member?',
-                data: existingData
-            }));
 
-            var age = @json($data['age']);
-            var ageData = age.map(function(item) {
-                return {
-                    name: item.dob || item.name || item.label || '',
-                    y: item.count || 0
-                };
-            });
-            Highcharts.chart(getPieChartConfig({
-                renderTo: 'ageChart',
-                title: 'Age Group?',
-                data: ageData
-            }));
         })();
 
-        (function() {
-            var appeal = @json($data['appeal']);
-            var appealLabels = appeal.map(function(item) {
-                return item.appeal || item.name || item.label || '';
-            });
-            var appealCounts = appeal.map(function(item) {
-                return item.count || 0;
-            });
-            var appealColors = appealLabels.map(function() {
-                return getRandomColor();
-            });
-            Highcharts.chart('appealBarChart', {
-                chart: {
-                    type: 'bar',
-                    height: 400
-                },
-                title: {
-                    text: 'What Appeals the Most?',
-                    align: 'left'
-                },
-                xAxis: {
-                    categories: appealLabels,
-                    title: {
-                        text: 'Appeal'
-                    }
-                },
-                yAxis: {
-                    min: 0,
-                    title: {
-                        text: 'Count',
-                        align: 'high'
-                    },
-                    labels: {
-                        overflow: 'justify'
-                    }
-                },
-                tooltip: {
-                    valueSuffix: ' people'
-                },
-                plotOptions: {
-                    bar: {
-                        dataLabels: {
-                            enabled: true
-                        }
-                    }
-                },
-                legend: {
-                    enabled: false
-                },
-                credits: {
-                    enabled: false
-                },
-                series: [{
-                    name: 'Count',
-                    data: appealCounts,
-                    colorByPoint: true,
-                    colors: appealColors
-                }],
-                responsive: {
-                    rules: [{
-                        condition: {
-                            maxWidth: 700
-                        },
-                        chartOptions: {
-                            chart: {
-                                height: 300
-                            },
-                            xAxis: {
-                                labels: {
-                                    style: {
-                                        fontSize: '10px'
-                                    }
-                                }
-                            }
-                        }
-                    }]
-                }
-            });
-        })();
     </script>
 @endsection

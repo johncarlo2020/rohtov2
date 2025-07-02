@@ -409,16 +409,7 @@ class StationController extends Controller
         $data['country'] = User::selectRaw('country , COUNT(*) as count')->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
             ->groupBy('country')->where('country' ,'!=','admin')->get();
 
-        // $data['where'] = User::groupBy('where')
-        //     ->select('where', DB::raw('COUNT(*) as count'))
-        //     ->having('count', '>', 1) // Exclude entries with count = 1
-        //     ->orderBy('count', 'desc') // Order by count in descending order
-        //     ->get()
-        //     ->map(function ($item) {
-        //         return ['name' => $item->where, 'count' => $item->count];
-        //     })
-        // ->values()
-        // ->toArray();
+
         $data['where'] = User::selectRaw('find , COUNT(*) as count')->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
             ->groupBy('find')->where('find' ,'!=','admin')->get();
         //  dd($data['where']);
@@ -426,24 +417,6 @@ class StationController extends Controller
             ->groupBy('dob')->where('dob', '!=', 'admin')->get();
           // dd($data['age']);
 
-        $data['existing'] = User::selectRaw('existing , COUNT(*) as count')->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
-            ->groupBy('existing')->where('existing' ,'!=','')->get();
-        $data['social_media'] = User::whereNotNull('social_media')
-    ->where('social_media', '!=', '')
-            ->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
-
-            ->get()
-    ->pluck('social_media')
-    ->map(fn($json) => json_decode($json, true))
-    ->flatten()
-    ->countBy()
-    ->mapWithKeys(function ($value, $key) {
-        return [$key === '' ? 'Not Following' : $key => $value];
-    });
-
-            //dd($data['social_media']);
-        $data['appeal'] = User::selectRaw('appeal , COUNT(*) as count')->groupBy('appeal')->where('appeal' ,'!=','')->get();
-        // $data['where'] = User::selectRaw('where , COUNT(*) as count')->groupBy('where')->where('where' ,'!=','admin')->get();
 
         //   dd($data['where']);
 

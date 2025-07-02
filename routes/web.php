@@ -59,7 +59,7 @@ Route::group(['middleware' => ['admin']], function () {
     Route::get('/admin/users', 'App\Http\Controllers\StationController@users')->name('users');
     Route::get('/admin/{user}', 'App\Http\Controllers\StationController@userData')->name('userData');
     Route::post('/admin/check', 'App\Http\Controllers\StationController@check')->name('check');
-    Route::delete('/admin/users/{id}', 'App\Http\Controller s\StationController@userDelete')->name('users.destroy');
+    Route::delete('/admin/users/{id}', 'App\Http\Controllers\StationController@userDelete')->name('users.destroy');
     Route::post('/editUser', 'App\Http\Controllers\StationController@editUser')->name('editUser');
 
 });

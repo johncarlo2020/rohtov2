@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\IpadController;
+use App\Http\Controllers\EmbarkController;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Route;
@@ -73,6 +74,8 @@ Route::group(['middleware' => ['admin']], function () {
     Route::get('/users/export', 'App\Http\Controllers\UserController@export')->name('users.export');
     Route::get('/admin/ambient', 'App\Http\Controllers\StationController@ambient')->name('ambient');
     Route::get('/admin/embark', 'App\Http\Controllers\StationController@embark')->name('embark');
+    Route::get('/admin/embark-new', [EmbarkController::class, 'index'])->name('admin.embark-new');
+    Route::get('/embark-data', [EmbarkController::class, 'getUsersData'])->name('embark.data');
     Route::post('/tasks/complete', 'App\Http\Controllers\StationController@tasksComplete')->name('tasks.complete');
     Route::get('/admin/scanner', 'App\Http\Controllers\StationController@scanner')->name('scanner');
 

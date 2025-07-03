@@ -44,14 +44,17 @@
                     <div class="d-flex justify-content-between">
                         <h6 class="mb-2">Customer Tasks</h6>
                     </div>
-                    <div class="row mt-3">
-                        <div class="col-md-6">
+                    {{-- <div class="row mt-3">
+                        <div class="col-md-4">
                             <p><strong>Total Users:</strong> {{ $totalUsers }}</p>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <p><strong>Users with Tasks:</strong> {{ $usersWithTasks }}</p>
                         </div>
-                    </div>
+                        <div class="col-md-4">
+                            <p><strong>Users with ID > 3000:</strong> {{ $usersAfter3000 }}</p>
+                        </div>
+                    </div> --}}
                 </div>
                 <!-- Loader shown while DataTable initializes -->
                 <div id="table-loader" class="text-center my-4">
@@ -127,8 +130,10 @@
     </div>
 
     <!-- DataTables & Plugins -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.2/css/buttons.dataTables.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 
     <script src="{{ asset('assets/js/core/bootstrap.min.js') }}"></script>
@@ -159,15 +164,23 @@
                 { data: 'number', name: 'number' },
                 { data: 'email', name: 'email' },
                 @foreach($tasks as $task)
-                    { data: 'task_status_{{ $task->id }}', name: 'task_status_{{ $task->id }}', orderable: false, searchable: false },
-                    { data: 'task_date_{{ $task->id }}', name: 'task_date_{{ $task->id }}', orderable: false, searchable: false },
+                    { data: 'task_status_{{ $task->id }}', name: 'task_status_{{ $task->id }}', searchable: false },
+                    { data: 'task_date_{{ $task->id }}', name: 'task_date_{{ $task->id }}', searchable: false },
                 @endforeach
                 { data: 'action', name: 'action', orderable: false, searchable: false, className: 'sticky-action' }
             ],
-            dom: "<'row'<'col-sm-12 col-md-2'l><'col-sm-12 col-md-8 text-center'B><'col-sm-12 col-md-2'f>>" +
+            dom: "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6 d-flex justify-content-end'fB>>" +
                    "<'row'<'col-sm-12 table-responsive my-2 custom-table'tr>>" +
                    "<'d-flex justify-content-between'ip>",
-            buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+            buttons: [
+                {
+                    text: '<i class="fa-solid fa-file-excel"></i> Export All Users with Tasks',
+                    className: 'btn btn-success ms-2',
+                    action: function ( e, dt, node, config ) {
+                        window.location.href = '{{ route("export.embark.all") }}';
+                    }
+                }
+            ],
             order: [[0, 'desc']],
             initComplete: function () {
                 // Hide loader and show table container when ready

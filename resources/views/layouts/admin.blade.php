@@ -109,7 +109,7 @@
 
                 @canany(['view', 'full'])
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('embark') ? 'active' : '' }}" href="{{ route('embark') }}">
+                    <a class="nav-link {{ request()->routeIs('admin.embark-new') ? 'active' : '' }}" href="{{ route('admin.embark-new') }}">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>

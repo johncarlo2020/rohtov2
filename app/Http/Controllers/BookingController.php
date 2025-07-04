@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Appointment;
+use Illuminate\Support\Facades\DB;
 
 use Illuminate\Http\Request;
 
@@ -12,10 +13,41 @@ class BookingController extends Controller
      */
     public function index()
     {
-        //
         $appointments = Appointment::with(['workshop', 'appointmentDate', 'user'])->get();
-        // dd($appointments);
-        return view('admin.booking.index',compact('appointments'));
+
+        $bookingSummary = Appointment::select(
+            'appointment_date_id',
+            'workshop_id',
+            DB::raw('sum(attendee) as booked_slots')
+        )
+            ->groupBy('appointment_date_id', 'workshop_id')
+            ->with(['appointmentDate', 'workshop'])
+            ->get();
+
+        $summary = [];
+        foreach ($bookingSummary as $booking) {
+            if ($booking->appointmentDate) {
+                $date = $booking->appointmentDate->date;
+                $day = date('l', strtotime($date));
+
+                if (!isset($summary[$day])) {
+                    $summary[$day] = [];
+                }
+
+                if ($booking->workshop) {
+                    $slotsPerWorkshop = ($booking->workshop->id == 2) ? 14 : 20;
+                    $summary[$day][] = [
+                        'workshop_name' => $booking->workshop->title,
+                        'time' => $booking->workshop->time,
+                        'total_slots' => $slotsPerWorkshop,
+                        'booked_slots' => $booking->booked_slots,
+                        'balance' => $slotsPerWorkshop - $booking->booked_slots,
+                    ];
+                }
+            }
+        }
+
+        return view('admin.booking.index', compact('appointments', 'summary'));
     }
 
     /**

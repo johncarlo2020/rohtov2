@@ -74,7 +74,7 @@
                             <div class="numbers">
                                 <p class="text-sm mb-0 text-uppercase font-weight-bold">Total Customers</p>
                                 <h5 class="font-weight-bolder">
-                                    
+
                                 </h5>
                                 {{-- <p class="mb-0">
                                 <span class="text-success text-sm font-weight-bolder">+55%</span>
@@ -99,7 +99,7 @@
                             <div class="numbers">
                                 <p class="text-sm mb-0 text-uppercase font-weight-bold">Today's Customer</p>
                                 <h5 class="font-weight-bolder">
-                                   
+
                                 </h5>
                                 {{-- <p class="mb-0">
                                 <span class="text-success text-sm font-weight-bolder">+3%</span>
@@ -124,7 +124,7 @@
                             <div class="numbers">
                                 <p class="text-sm mb-0 text-uppercase font-weight-bold">Completion Rate</p>
                                 <h5 class="font-weight-bolder">
-                                   
+
                                 </h5>
 
                             </div>
@@ -146,7 +146,7 @@
                             <div class="numbers">
                                 <p class="text-sm mb-0 text-uppercase font-weight-bold">Customers Finished</p>
                                 <h5 class="font-weight-bolder">
-                                    
+
                                 </h5>
                             </div>
                         </div>
@@ -181,14 +181,12 @@
                                 <th>Guardian</th>
                                 <th>Date of Birth</th>
                                 <th>Number</th>
-                                <th>Country</th>
                                 <th>Email</th>
                                 <th>Booked Date</th>
                                 <th>Sessions Chose</th>
-                                <th>Pax Qty</th>
+                                <th>Attendee</th>
                                 <th>Attended Status</th>
                                 <th>Attended Date & Time</th>
-                                <th class="sticky-action">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -199,18 +197,12 @@
                                 <td>{{ $appointment->guardian ?? '' }}</td>
                                 <td>{{ $appointment->user->dob ?? '' }}</td>
                                 <td>{{ $appointment->user->number ?? '' }}</td>
-                                <td>{{ $appointment->user->country ?? '' }}</td>
                                 <td>{{ $appointment->user->email ?? '' }}</td>
                                 <td>{{ $appointment->appointmentDate->date ?? '' }}</td>
                                 <td>{{ $appointment->workshop->title ?? '' }}</td>
-                                <td>{{ $appointment->workshop->slot ?? '' }}</td>
+                                <td>{{ $appointment->attendee ?? '' }}</td>
                                 <td>{{ $appointment->status ?? '' }}</td>
                                 <td>Attended Time Scanned At</td>
-                                <td class="button-delete sticky-action">
-                                    <button class="btn btn-danger btn-sm delete-user-btn"
-                                        data-user-id="{{ $appointment->id }}"
-                                        data-user-name="{{ $appointment->id }}">Delete</button>
-                                </td>
                             </tr>
                             @endforeach
                         </tbody>

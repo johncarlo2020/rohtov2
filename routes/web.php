@@ -59,6 +59,7 @@ Route::group(['middleware' => ['admin']], function () {
     Route::get('/admin', 'App\Http\Controllers\StationController@admin')->name('admin');
     Route::get('/admin/users', 'App\Http\Controllers\StationController@users')->name('users');
     Route::get('/admin/bookings', [BookingController::class, 'index'])->name('bookings.index');
+    Route::delete('/admin/bookings/{id}', [BookingController::class, 'destroy'])->name('booking.destroy');
     Route::get('/admin/{user}', 'App\Http\Controllers\StationController@userData')->name('userData');
     Route::post('/admin/check', 'App\Http\Controllers\StationController@check')->name('check');
     Route::delete('/admin/users/{id}', 'App\Http\Controllers\StationController@userDelete')->name('users.destroy');

@@ -63,6 +63,11 @@ class BookingController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $appointment = Appointment::findOrFail($id);
+        $appointment->delete();
+
+        return redirect()
+            ->route('bookings.index')
+            ->with('success', 'Appointment deleted successfully.');
     }
 }

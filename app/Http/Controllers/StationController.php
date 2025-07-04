@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 class StationController extends Controller
 {
+
     public function uploadBaby(Request $request)
     {
         $request->validate([
@@ -491,6 +492,7 @@ class StationController extends Controller
 
         return view('dashboardadmin', compact('data', 'permission'));
     }
+
     public function users()
     {
         $today = Carbon::today();
@@ -608,4 +610,6 @@ class StationController extends Controller
 
         return $check;
     }
+ 
+
 }

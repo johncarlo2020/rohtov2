@@ -3,7 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\IpadController;
-
+use App\Http\Controllers\StationController;
+use App\Http\Controllers\BookingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -57,12 +58,14 @@ Route::get('/congratsVote', 'App\Http\Controllers\StationController@congratsVote
 Route::group(['middleware' => ['admin']], function () {
     Route::get('/admin', 'App\Http\Controllers\StationController@admin')->name('admin');
     Route::get('/admin/users', 'App\Http\Controllers\StationController@users')->name('users');
+    Route::get('/admin/bookings', [BookingController::class, 'index'])->name('bookings.index');
     Route::get('/admin/{user}', 'App\Http\Controllers\StationController@userData')->name('userData');
     Route::post('/admin/check', 'App\Http\Controllers\StationController@check')->name('check');
     Route::delete('/admin/users/{id}', 'App\Http\Controllers\StationController@userDelete')->name('users.destroy');
     Route::post('/editUser', 'App\Http\Controllers\StationController@editUser')->name('editUser');
-
+    
 });
+
 
 Route::group(['middleware' => ['client']], function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -92,5 +95,7 @@ Route::group(['middleware' => ['client']], function () {
 
     Route::post('/upload', 'App\Http\Controllers\StationController@uploadBaby')->name('upload.baby');
 });
+
+
 
 require __DIR__ . '/auth.php';

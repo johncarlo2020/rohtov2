@@ -173,7 +173,7 @@
                         <div class="loader"></div>
                         <p class="mt-2">Loading...</p>
                     </div>
-                    <table id="customer-table" class="display nowrap border" style="display: none;">
+                    <table id="customer-table" class="display nowrap border" style="display: none; width: 100%;">
                         <thead>
                             <tr>
                                 <th>ID</th>

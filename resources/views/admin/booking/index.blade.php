@@ -208,8 +208,7 @@
                                 <td>Attended Time Scanned At</td>
                                 <td class="button-delete sticky-action">
                                     <button class="btn btn-danger btn-sm delete-user-btn"
-                                        data-user-id="{{ $appointment->id }}"
-                                        data-user-name="{{ $appointment->id }}">Delete</button>
+                                        data-appointment-id="{{ $appointment->id }}">Delete</button>
                                 </td>
                             </tr>
                             @endforeach
@@ -316,27 +315,27 @@
             $('.dataTables_filter').addClass('float-end');
             $('.dataTables_filter label').addClass('w-100');
 
-            $('#customer-table tbody').on('click', 'tr', function(e) {
-                // Prevent redirect if the clicked target is inside a delete button
-                console.log('cliked');
-                if ($(e.target).closest('.delete-user-btn').length) {
-                    return;
-                }
+            // $('#customer-table tbody').on('click', 'tr', function(e) {
+            //     // Prevent redirect if the clicked target is inside a delete button
+            //     console.log('cliked');
+            //     if ($(e.target).closest('.delete-user-btn').length) {
+            //         return;
+            //     }
 
-                var userId = $(this).data('user-id');
+            //     var userId = $(this).data('user-id');
 
-                window.location.href = "{{ route('userData', ['user' => ':userId']) }}".replace(
-                    ':userId', userId);
-            });
+            //     window.location.href = "{{ route('userData', ['user' => ':userId']) }}".replace(
+            //         ':userId', userId);
+            // });
 
             // Use event delegation for delete button
             $('#customer-table tbody').on('click', '.delete-user-btn', function(e) {
                 e.stopPropagation(); // Prevent row click
-                const userId = $(this).data('user-id');
+                const appointmentId = $(this).data('appointment-id');
                 const userName = $(this).data('user-name');
 
-                let deleteUrl = @json(route('users.destroy', ['id' => ':id']));
-                deleteUrl = deleteUrl.replace(':id', userId);
+                let deleteUrl = @json(route('booking.destroy', ['id' => ':id']));
+                deleteUrl = deleteUrl.replace(':id', appointmentId);
 
                 $('#deleteUserForm').attr('action', deleteUrl);
                 $('#deleteUserName').text(userName);

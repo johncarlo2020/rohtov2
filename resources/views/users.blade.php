@@ -15,7 +15,22 @@
             z-index: 999;
             box-shadow: -2px 0 5px -2px rgba(0, 0, 0, 0.12);
         }
-        .custom-table {
+
+        .table-card {
+            min-height: 50vh;
+            max-height: 90vh;
+        }
+
+
+
+        th {
+            position: sticky !important;
+            top: 0;
+            background-color: #f8f9fa;
+            z-index: 998;
+        }
+
+             .custom-table {
             width: 100%;
             margin: 0 !important;
             padding: 0 !important;
@@ -24,18 +39,6 @@
             margin-top: 20px !important;
             margin-bottom: 20px !important;
             padding-bottom: 20px !important;
-        }
-
-        .table-card {
-            min-height: 50vh;
-            max-height: 90vh;
-        }
-
-        th {
-            position: sticky !important;
-            top: 0;
-            background-color: #f8f9fa;
-            z-index: 998;
         }
 
         .loader-container {
@@ -62,6 +65,35 @@
 
             100% {
                 transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dt-buttons .btn {
+                display: block;
+                width: 100%;
+                margin-bottom: 5px;
+            }
+
+            .dataTables_filter,
+            .dataTables_length {
+                text-align: center;
+                width: 100%;
+            }
+
+            .dataTables_paginate {
+                justify-content: center;
+                width: 100%;
+            }
+
+            .dataTables_info {
+                text-align: center;
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+              .table-card {
+                max-height: 100%;
             }
         }
     </style>
@@ -273,14 +305,10 @@
             var permissionName = "{{ $permission }}";
             var table = $('#customer-table').DataTable({
                 responsive: true,
-                dom: "<'row'<'col-sm-12 col-md-2'l><'col-sm-12 col-md-8 text-center'B><'col-sm-12 col-md-2'f>>" +
-                    "<'row'<'col-sm-12 table-responsive custom-table'tr>>" +
-                    "<'d-flex justify-content-between'ip>",
+                dom: "<\'row\'<\'col-sm-12 col-md-2\'l><\'col-sm-12 col-md-3\'B><\'col-sm-12 col-md-4\'f>>" +
+                    "<\'row\'<\'col-sm-12 table-responsive custom-table\'tr>>" +
+                    "<\'row\'<\'col-sm-12 col-md-6\'i><\'col-sm-12 col-md-6\'p>>",
                 buttons: [{
-                    extend: 'copy',
-                    text: '<i class="fa fa-copy"></i> Copy',
-                    className: 'btn btn-secondary'
-                }, {
                     extend: 'csv',
                     text: '<i class="fa fa-file-csv"></i> CSV',
                     className: 'btn btn-info'
@@ -292,10 +320,6 @@
                     extend: 'pdf',
                     text: '<i class="fa fa-file-pdf"></i> PDF',
                     className: 'btn btn-danger'
-                }, {
-                    extend: 'print',
-                    text: '<i class="fa fa-print"></i> Print',
-                    className: 'btn btn-primary'
                 }],
                 order: [
                     [0, 'desc']

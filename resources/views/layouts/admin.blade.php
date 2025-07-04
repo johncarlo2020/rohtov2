@@ -51,8 +51,8 @@
         class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border rounded-0  fixed-start "
         id="sidenav-main">
         <div class="sidenav-header border-bottom rounded-0">
-            <i class="fas fa-times cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
-                aria-hidden="true" id="iconSidenav"></i>
+            {{-- <i class="fas fa-times cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
+                aria-hidden="true" id="iconSidenav"></i> --}}
             <a class="navbar-brand m-0 d-flex w-100 justify-content-center" href="" target="_blank">
                 <img src="{{ asset('images/dutchlady/Dutch Lady Logo Newww.png') }}" class="navbar-brand-img h-100" alt="main_logo" />
             </a>
@@ -118,19 +118,19 @@
                         </p>
                     </div>
                 </nav>
-                
+
                 <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
                     <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-                        <div class="input-group">
+                        {{-- <div class="input-group">
                             <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
                             <input type="text" class="form-control" placeholder="Type here..." onfocus="focused(this)" onfocusout="defocused(this)">
-                        </div>
+                        </div> --}}
                     </div>
                     <ul class="navbar-nav  justify-content-end">
                         <li class="nav-item d-flex align-items-center">
                             <form role="form" method="post" action="{{route('admin.logout')}}" id="logout-form">
                                @csrf
-                                <a href="{{route('admin.logout')}}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" 
+                                <a href="{{route('admin.logout')}}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                                 class="nav-link font-weight-bold px-0">
                                     <i class="fa fa-user me-sm-1"></i>
                                     <span class="d-sm-inline d-none">Log out</span>
@@ -228,7 +228,7 @@
                         </li>
                     </ul>
                 </div>
-                
+
             </div>
         </nav>
         <!-- End Navbar -->

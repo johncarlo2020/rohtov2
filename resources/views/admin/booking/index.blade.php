@@ -64,6 +64,13 @@
                 transform: rotate(360deg);
             }
         }
+
+        @media (max-width: 768px) {
+
+              .table-card {
+                max-height: 100%;
+            }
+        }
     </style>
 
     <div class="mt-4 row">

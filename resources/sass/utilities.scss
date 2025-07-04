@@ -16,7 +16,7 @@
     transition: 0.3s ease;
     min-width: 150px;
     display: inline-block;
-    font-family: 'HvDTrial Brevia ExtraBlack';
+    font-family: "HvDTrial Brevia ExtraBlack";
 
     &-primary {
         background-color: #0060ac;
@@ -27,7 +27,7 @@
     }
     &-outlined {
         background-color: #ffffff;
-        color: #0060AC;
+        color: #0060ac;
         border: 3px solid #6eb0e0d3;
         outline: 4px solid #003f7f;
         box-shadow: 0 4px #003f7f;
@@ -38,18 +38,18 @@
     font-size: 40px !important;
     color: #ffffff;
     padding: 0;
-    -webkit-text-stroke: 1px #0A608E;
-    text-shadow: 0px 4px 0 #0A608E;
+    -webkit-text-stroke: 1px #0a608e;
+    text-shadow: 0px 4px 0 #0a608e;
     font-family: "HvDTrial Brevia ExtraBlack" !important;
 
     &.small {
         font-size: 27px !important;
-        text-shadow: 0px 2px 0 #0A608E;
+        text-shadow: 0px 2px 0 #0a608e;
     }
 
     &.medium {
         font-size: 35px !important;
-        text-shadow: 0px 3px 0 #0A608E;
+        text-shadow: 0px 3px 0 #0a608e;
     }
 }
 
@@ -70,7 +70,6 @@
     }
 }
 
-
 .with-scroll {
     width: 100%;
     overflow-y: auto;
@@ -80,10 +79,10 @@
 }
 .scanner-text {
     font-size: 16px;
-    color: #1862AF;
+    color: #1862af;
     text-align: center;
     margin-top: 10px;
-    font-family: '09Brevia-Bold';
+    font-family: "09Brevia-Bold";
     font-weight: 500;
 }
 
@@ -109,7 +108,7 @@
     width: 100%;
     border-radius: 30px;
     padding: 30px 30px;
-    background-color: #E2F4FC;
+    background-color: #e2f4fc;
 
     p {
         margin: 0;
@@ -117,22 +116,24 @@
     }
 
     .heading {
-        font-family: 'Brevia Medium';
+        font-family: "Brevia Medium";
         font-size: 24px;
-        color: #0060AD;
+        color: #0060ad;
     }
-    .name, .date{
-        font-family: '09Brevia-Bold';
+    .name,
+    .date {
+        font-family: "09Brevia-Bold";
         font-size: 20px;
-        color: #0060AD;
+        color: #0060ad;
         margin-bottom: 5px;
     }
 
-      .time ,.count {
-        font-family: 'Brevia Medium';
+    .time,
+    .count {
+        font-family: "Brevia Medium";
         font-size: 20px;
-        color: #0060AD;
-             margin-bottom: 5px;
+        color: #0060ad;
+        margin-bottom: 5px;
     }
 
     .qr {
@@ -149,6 +150,7 @@
             object-fit: contain;
         }
     }
-
-
 }
+
+
+

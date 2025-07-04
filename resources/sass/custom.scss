@@ -2959,3 +2959,23 @@ body {
         opacity: 0.2;
     }
 }
+
+
+.table-card {
+   .col-sm-12.table-responsive.custom-table {
+    width: 100%;
+    margin: 0   !important;
+    padding: 0  !important;
+    overflow-y: auto    !important;
+    max-height: 72vh  !important;
+    margin-top: 20px    !important; ;
+    margin-bottom: 20px     !important;
+    padding-bottom: 20px    !important;
+
+    @media (max-width: 768px) {
+        max-height: 50vh    !important;
+    }
+}
+
+}
+

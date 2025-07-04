@@ -183,6 +183,7 @@
                                 <th>Number</th>
                                 <th>Email</th>
                                 <th>Booked Date</th>
+                                <th>Booked Time</th>
                                 <th>Sessions Chose</th>
                                 <th>Attendee</th>
                                 <th>Attended Status</th>
@@ -199,6 +200,7 @@
                                 <td>{{ $appointment->user->number ?? '' }}</td>
                                 <td>{{ $appointment->user->email ?? '' }}</td>
                                 <td>{{ $appointment->appointmentDate->date ?? '' }}</td>
+                                <td>{{ $appointment->workshop->time ?? '' }}</td>
                                 <td>{{ $appointment->workshop->title ?? '' }}</td>
                                 <td>{{ $appointment->attendee ?? '' }}</td>
                                 <td>{{ $appointment->status ?? '' }}</td>

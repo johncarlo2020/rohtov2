@@ -105,12 +105,13 @@
                 if (response.status === 'success') {
                     message = '✅ Scanned Successfully ';
                 } else if (response.status === 'already_redeemed') {
-                    message = '⚠️ Already Redeemed';
+                    message = '⚠️ Already Attended';
                 } else if (response.status === 'invalid') {
                     message = '❌ Invalid QR';
                 } else {
                     message = 'ℹ️ Unknown response';
                 }
+
 
                 $("#responseMessage").text(message);
                 $("#responseModal").modal('show');

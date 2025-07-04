@@ -16,11 +16,12 @@ class WorkshopController extends Controller
         $user = auth()->user();
 
         $check = Appointment::where('user_id', $user->id)
-            ->where('status', 'pending')
             ->exists();
             if($check) {
+
                 return redirect()->route('workshop.congrats');
             }
+
         return view('workshop.index' );
     }
 
@@ -84,33 +85,44 @@ class WorkshopController extends Controller
     public function scan(Request $request)
     {
         $qrCodeMessage = $request->input('qrCodeMessage');
-        return response()->json(['message' => $qrCodeMessage]);
-        $station = $request->input('station');
 
-        // Validate the QR code message
-        // if (!$qrCodeMessage || !$station) {
-        //     return response()->json(['error' => 'Invalid QR code message or station'], 400);
-        // }
+        if (!$qrCodeMessage) {
+            return response()->json(['status' => 'invalid', 'message' => 'Missing QR code message'], 400);
+        }
 
-        // // Find the appointment by QR code message
-        // $appointment = Appointment::where('qr_code', $qrCodeMessage)->first();
+        // Extract user ID from the QR code message URL
+        $parsedUrl = parse_url($qrCodeMessage);
+        parse_str($parsedUrl['query'] ?? '', $queryParams);
 
-        // if (!$appointment) {
-        //     return response()->json(['error' => 'Appointment not found'], 404);
-        // }
+        $userId = $queryParams['id'] ?? null;
 
-        // // Update the appointment status
-        // $appointment->status = 'confirmed';
-        // $appointment->save();
+        if (!$userId) {
+            return response()->json(['status' => 'invalid', 'message' => 'User ID not found in QR code'], 400);
+        }
 
-        return response()->json(['data' => $appointment]);
+        // Find the appointment
+        $appointment = Appointment::where('user_id', $userId)->first();
+
+        if (!$appointment) {
+            return response()->json(['status' => 'invalid', 'message' => 'Appointment not found'], 404);
+        }
+
+        if ($appointment->status === 'confirmed') {
+            return response()->json(['status' => 'already_redeemed', 'message' => 'Appointment already confirmed']);
+        }
+
+        // Confirm the appointment
+        $appointment->status = 'confirmed';
+        $appointment->save();
+
+        return response()->json(['status' => 'success', 'message' => 'Appointment confirmed']);
     }
+
 
     public function congrats()
     {
         $appointment = Appointment::with(['appointmentDate', 'workshop'])
             ->where('user_id', auth()->id())
-            ->where('status', 'pending')
             ->first();
 
         return view('workshop.congrats', compact('appointment'));

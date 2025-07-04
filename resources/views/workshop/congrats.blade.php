@@ -12,11 +12,10 @@
 
             <div class="content congrats-workshop text-center">
                 <h1 class="heading">{{ $appointment->workshop->title ?? 'Workshop' }}</h1>
+                <div id="qrCode" class="qr mb-3">
 
-                {{-- QR Code --}}
-                <img class="qr"
-                    src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ urlencode(config('app.url') . '/appointment/confirm?user_id=' . auth()->id()) }}"
-                    alt="QR Code">
+                </div>
+
 
                 <p class="name">{{ $appointment->guardian }}</p>
                 <p class="date">{{ \Carbon\Carbon::parse($appointment->appointmentDate->date)->format('jS F Y (l)') }}
@@ -32,4 +31,23 @@
             </div>
         </div>
     </div>
+<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+<script>
+    function generateQRCode(url) {
+            var qrCodeContainer = document.getElementById("qrCode");
+            qrCodeContainer.innerHTML = ""; // Clear previous QR code
+            var qrCode = new QRCode(qrCodeContainer, {
+                text: url,
+                width: 256,
+                height: 256,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H,
+            });
+        }
+        const url = "{{ env('APP_URL') }}user?id={{ auth()->id() }}";
+
+            generateQRCode(url);
+</script>
+
 </x-app-layout>

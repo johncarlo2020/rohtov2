@@ -81,6 +81,31 @@ class WorkshopController extends Controller
         return response()->json(['data' => $appointment]);
     }
 
+    public function scan(Request $request)
+    {
+        $qrCodeMessage = $request->input('qrCodeMessage');
+        return response()->json(['message' => $qrCodeMessage]);
+        $station = $request->input('station');
+
+        // Validate the QR code message
+        // if (!$qrCodeMessage || !$station) {
+        //     return response()->json(['error' => 'Invalid QR code message or station'], 400);
+        // }
+
+        // // Find the appointment by QR code message
+        // $appointment = Appointment::where('qr_code', $qrCodeMessage)->first();
+
+        // if (!$appointment) {
+        //     return response()->json(['error' => 'Appointment not found'], 404);
+        // }
+
+        // // Update the appointment status
+        // $appointment->status = 'confirmed';
+        // $appointment->save();
+
+        return response()->json(['data' => $appointment]);
+    }
+
     public function congrats()
     {
         $appointment = Appointment::with(['appointmentDate', 'workshop'])

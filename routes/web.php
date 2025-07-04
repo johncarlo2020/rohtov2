@@ -58,13 +58,14 @@ Route::get('/congratsVote', 'App\Http\Controllers\StationController@congratsVote
 Route::group(['middleware' => ['admin']], function () {
     Route::get('/admin', 'App\Http\Controllers\StationController@admin')->name('admin');
     Route::get('/admin/users', 'App\Http\Controllers\StationController@users')->name('users');
+    Route::get('/admin/scanner', 'App\Http\Controllers\StationController@scanner')->name('scanner');
+
     Route::get('/admin/bookings', [BookingController::class, 'index'])->name('bookings.index');
     Route::delete('/admin/bookings/{id}', [BookingController::class, 'destroy'])->name('booking.destroy');
     Route::get('/admin/{user}', 'App\Http\Controllers\StationController@userData')->name('userData');
     Route::post('/admin/check', 'App\Http\Controllers\StationController@check')->name('check');
     Route::delete('/admin/users/{id}', 'App\Http\Controllers\StationController@userDelete')->name('users.destroy');
     Route::post('/editUser', 'App\Http\Controllers\StationController@editUser')->name('editUser');
-    
 });
 
 
@@ -75,6 +76,8 @@ Route::group(['middleware' => ['client']], function () {
     Route::get('/station/{station}', 'App\Http\Controllers\StationController@index')->name('station');
     Route::get('/dashboard', 'App\Http\Controllers\StationController@welcome')->name('dashboard');
     Route::post('/process_qr_code', 'App\Http\Controllers\StationController@scan')->name('process_qr_code');
+    Route::post('/workshop/scan', 'App\Http\Controllers\WorkshopController@scan')->name('workshop.scan');
+
     Route::get('/station/{station}/extension', 'App\Http\Controllers\StationController@extension')->name('station.extension');
     Route::get('/station/{station}/brand', 'App\Http\Controllers\StationController@brand')->name('station.brand');
     Route::get('/puzzle', 'App\Http\Controllers\StationController@puzzle')->name('station.puzzle');

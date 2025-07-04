@@ -309,6 +309,12 @@ class StationController extends Controller
 
     }
 
+    public function scanner()
+    {
+        // dd('asdasd');
+        return view('scanner');
+    }
+
 
     public function scan(Request $request)
     {
@@ -610,6 +616,6 @@ class StationController extends Controller
 
         return $check;
     }
- 
+
 
 }

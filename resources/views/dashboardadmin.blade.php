@@ -99,8 +99,8 @@
     <div class="row mt-4">
         @foreach ($data['stations'] as $station)
             <div class="col">
-                <div class="card">
-                    <div class="card-body d-flex justify-content-between mb-2 rounded  p-3 ">
+                <div class="card mb-3">
+                    <div class="card-body d-flex justify-content-between rounded  p-3 ">
                         <div class="d-flex align-items-center w-100">
                             <div class="icon-stations">
                                 <img class="" src="{{ asset("images/hadalabobabies/station{$station['id']}.webp") }}" alt="Station Image">
@@ -117,8 +117,8 @@
             </div>
         @endforeach
     </div>
-    <div class="row mt-4">
-        <div class="col-lg-6 mb-lg-0 mb-4">
+    <div class="row mt-1">
+        <div class="col-lg-6 mb-lg-0 mb-3">
             <div class="card z-index-2 h-100">
                 <div class="card-body p-3">
                     <figure class="highcharts-figure">
@@ -128,7 +128,7 @@
             </div>
         </div>
 
-        <div class="col-lg-6 mb-lg-0 mb-4">
+        <div class="col-lg-6 mb-lg-0 mb-3">
             <div class="card z-index-2 h-100">
                 <div class="card-body card-with-filter p-3">
                     <figure class="highcharts-figure">
@@ -138,15 +138,15 @@
             </div>
         </div>
     </div>
-    <div class="row mt-4">
-        <div class="col-lg-6">
+    <div class="row mt-1">
+        <div class="col-lg-6 mb-3">
             <div class="card card h-100 mb-3">
                 <div class="card-body p-3">
                     <div id="countriesChart"></div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-6 mb-3">
             <div class="card card h-100 mb-3">
                 <div class="card-body p-3">
                     <div id="findEventChart"></div>
@@ -154,8 +154,8 @@
             </div>
         </div>
     </div>
-    <div class="row mt-4">
-        <div class="col-lg-12 mb-lg-0 mb-4">
+    <div class="row mt-1">
+        <div class="col-lg-12 mb-lg-0 mb-3">
             <div class="card card h-100">
                 <div class="card-header pb-0 p-3">
                     <div class="d-flex justify-content-between">

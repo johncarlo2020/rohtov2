@@ -110,7 +110,13 @@
                                 <td>{{ $appointment->workshop->title ?? '' }}</td>
                                 <td>{{ $appointment->attendee ?? '' }}</td>
                                 <td>{{ $appointment->status ?? '' }}</td>
-                                <td>Attended Time Scanned At</td>
+                                <td>
+                                    @if ($appointment->status !== 'pending')
+                                        {{ $appointment->updated_at }}
+                                    @else
+                                        --
+                                    @endif
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>

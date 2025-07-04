@@ -43,6 +43,7 @@ Route::get('/admin/login', function () {
     return view('auth.admin-login');
 });
 
+
 Route::get('/congrats', function () {
     return view('congrats');
 })->name('congrats');
@@ -61,7 +62,9 @@ Route::group(['middleware' => ['admin']], function () {
     Route::get('/admin/scanner', 'App\Http\Controllers\StationController@scanner')->name('scanner');
     Route::post('/workshop/scan', 'App\Http\Controllers\WorkshopController@scan')->name('workshop.scan');
 
-    Route::get('/admin/bookings', [BookingController::class, 'index'])->name('bookings.index');
+    Route::post('/admin/logout', 'App\Http\Controllers\LoginController@destroy')->name('admin.logout');
+
+    Route::get('/admin/bookings', [BookingController::class, 'index'])->name('bookings');
     Route::delete('/admin/bookings/{id}', [BookingController::class, 'destroy'])->name('booking.destroy');
     Route::get('/admin/{user}', 'App\Http\Controllers\StationController@userData')->name('userData');
     Route::post('/admin/check', 'App\Http\Controllers\StationController@check')->name('check');

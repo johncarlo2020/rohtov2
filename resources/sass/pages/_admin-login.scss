@@ -1,0 +1,147 @@
+@import "../variables";
+
+.admin-login {
+    height: 100vh;
+    width: 100%;
+    background-color: lighten($primary, 67%);
+
+    label {
+        font-size: 14px;
+    }
+
+    .main-content {
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+    }
+
+    .admin-card {
+        width: 50vw;
+        height: 70vh;
+        overflow: hidden;
+        border-radius: var(--bs-border-radius);
+    }
+
+    .branding-container  .branding img{
+        width: 15vw;
+    }
+
+    .input-group {
+        position: relative;
+
+        .form-control {
+            border-radius: var(--bs-border-radius) !important;
+        }
+    }
+
+    .form-control {
+        height: 50px;
+        padding-left: 2.5rem;
+        border-radius: var(--bs-border-radius);
+
+        &[name="password"] {
+            padding-right: 2.5rem; // Reserve space for the icon
+        }
+    }
+
+    .input-group-text {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 2.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border: none;
+        z-index: 4;
+        color: #adb5bd;
+    }
+
+    #password-toggle {
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+        cursor: pointer;
+        z-index: 5;
+        color: #adb5bd;
+    }
+
+    .input-group:focus-within {
+        .form-control {
+            z-index: 1;
+        }
+
+        #password-toggle {
+            z-index: 2;
+        }
+    }
+
+    .login-button {
+      background-color: $primary;
+      color: $text;
+      height: 50px;
+      border-radius: var(--bs-border-radius);
+    }
+}
+
+@media (max-width: 991.98px) {
+    .admin-login {
+        height: auto;
+        min-height: 100vh;
+
+        .main-content {
+            padding: 2rem 0;
+            align-items: flex-start;
+        }
+
+        .admin-card {
+            width: 90vw;
+            height: auto;
+        }
+
+        .branding-container .branding img {
+            width: 40vw;
+        }
+
+        .col-12.col-lg-5 {
+            padding: 2rem !important;
+        }
+    }
+}
+
+@media (max-width: 1300px) {
+    .admin-login {
+           height: 100vh;
+    width: 100%;
+    background-color: lighten($primary, 67%);
+
+    .main-content {
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+    }
+
+        .admin-card {
+            width: 80vw;
+               height: 70vh;
+        }
+
+        .branding-container .branding img {
+            width: 20vw;
+        }
+
+        .col-12.col-lg-5 {
+            padding: 2rem !important;
+        }
+    }
+}
+

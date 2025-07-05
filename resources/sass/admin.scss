@@ -1,0 +1,20 @@
+// Admin-specific styles
+// Import Bootstrap
+@import "bootstrap/scss/bootstrap";
+
+@import "pages/admin-login";
+@import "pages/users";
+@import "dashboard";
+@import "utilities";
+
+// Import shared components
+@import "buttons";
+@import "brand-styles";
+@import "animations";
+
+// Import admin-specific pages
+@import "pages/admin-login";
+@import "pages/users";
+@import "dashboard";
+@import "utilities";
+@import "buttons";

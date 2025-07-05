@@ -1,131 +1,48 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        <title>Dutch Lady</title>
+<x-admin-header title="Admin Login" />
 
-        @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+<body class="main admin-login">
+    <div class="main-content">
+        <div class="card p-0 shadow-lg rounded admin-card animate-entry">
+            <div class="row g-0 h-100">
+                <div class="col-lg-6 col-md-0 main-background d-none d-lg-flex h-100">
+                    <div class="branding-container w-100 h-100 d-flex justify-content-center align-items-center animate-entry delay-2">
+                        @include('components.branding')
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6 d-flex flex-column justify-content-center align-items-center p-5">
+                    <form method="POST" id="loginForm" action="{{ route('authenticateAdmin') }}" class="w-100 animate-entry delay-5">
+                        @csrf
+                        <div class="branding-container w-100 d-flex d-lg-none justify-content-center align-items-center mb-4 animate-entry delay-2">
+                            @include('components.branding')
+                        </div>
+                        <h4 class="mb-4 text-center">Welcome to {{ env('APP_NAME') }} Admin Panel</h4>
+                        <div class="mb-4 input-group">
+                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                            <input placeholder="Enter your email" type="email" name="email" class="form-control"
+                                id="exampleInputEmail1" aria-describedby="emailHelp" />
+                        </div>
+                        <div class="mb-3 input-group">
+                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                            <input placeholder="Enter your password" type="password" name="password"
+                                class="form-control" id="exampleInputPassword1" />
+                            <span id="password-toggle"><i class="fas fa-eye"></i></span>
+                        </div>
 
-        <link rel="preconnect" href="https://fonts.bunny.net" />
-        <link
-            href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap"
-            rel="stylesheet"
-        />
-        <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-            integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-            crossorigin="anonymous"
-        />
-    </head>
-
-    <body class="main admin-login">
-        <div class="contaniner wrapper d-flex justify-container-center">
-            <div class="branding-container">
-                @include('components.branding')
+                        <div class="checkbox-container mb-5">
+                            <input type="checkbox" id="remember" name="remember" />
+                            <label for="remember">Remember me</label>
+                        </div>
+                        <button type="submit" class="btn login-button w-100 shadow-sm">Login</button>
+                        <p class="small-text text-center mt-4">Powered by WOWSOME®️ 2025</p>
+                    </form>
+                </div>
             </div>
-            <div
-                class="p-4 mx-auto bg-white border rounded shadow-sm form-container"
-            >
-                <h1 class="mb-4">Welcome!</h1>
-                <h2>Sign in to</h2>
-                <p class="mb-4">{{env('APP_NAME')}} Admin Panel</p>
-                <form
-                    method="POST"
-                    id="loginForm"
-                    action="{{ route('authenticateAdmin') }}"
-                >
-                    @csrf
-                    <div class="mb-4">
-                        <label for="exampleInputEmail1" class="form-label"
-                            >Email</label
-                        >
-                        <input
-                            placeholder="Enter your email"
-                            type="email"
-                            name="email"
-                            class="form-control"
-                            id="exampleInputEmail1"
-                            aria-describedby="emailHelp"
-                        />
-                    </div>
-                    <div class="mb-4">
-                        <label for="exampleInputPassword1" class="form-label"
-                            >Password</label
-                        >
-                        <input
-                            placeholder="Enter your password"
-                            type="password"
-                            name="password"
-                            class="form-control"
-                            id="exampleInputPassword1"
-                        />
-                    </div>
-
-                    <div class="checkbox-container">
-                        <input type="checkbox" id="remember" name="remember" />
-                        <label for="remember"> </label>
-                        <p>Remember me</p>
-                    </div>
-                    <button type="submit" class="btn button">Login</button>
-                </form>
-            </div>
-            <p class="copy-text">Wowsome © Copyright 2024</p>
         </div>
-        <script
-            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-            crossorigin="anonymous"
-        ></script>
-        <script>
-            document.addEventListener("DOMContentLoaded", (event) => {
-                const emailField =
-                    document.getElementById("exampleInputEmail1");
-                const passwordField = document.getElementById(
-                    "exampleInputPassword1"
-                );
-                const rememberCheckbox = document.getElementById("remember");
+        <x-scriptPackages />
+    </div>
+</body>
 
-                if (getCookie("email") && getCookie("password")) {
-                    emailField.value = getCookie("email");
-                    passwordField.value = getCookie("password");
-                    rememberCheckbox.checked = true;
-                }
-
-                document
-                    .getElementById("loginForm")
-                    .addEventListener("submit", function (event) {
-                        if (rememberCheckbox.checked) {
-                            setCookie("email", emailField.value, 30);
-                            setCookie("password", passwordField.value, 30);
-                        } else {
-                            setCookie("email", "", 0);
-                            setCookie("password", "", 0);
-                        }
-                    });
-
-                function setCookie(name, value, days) {
-                    const date = new Date();
-                    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-                    const expires = "expires=" + date.toUTCString();
-                    document.cookie =
-                        name + "=" + value + ";" + expires + ";path=/";
-                }
-
-                function getCookie(name) {
-                    const nameEQ = name + "=";
-                    const ca = document.cookie.split(";");
-                    for (let i = 0; i < ca.length; i++) {
-                        let c = ca[i];
-                        while (c.charAt(0) == " ") c = c.substring(1, c.length);
-                        if (c.indexOf(nameEQ) == 0)
-                            return c.substring(nameEQ.length, c.length);
-                    }
-                    return null;
-                }
-            });
-        </script>
-    </body>
 </html>

@@ -85,161 +85,22 @@
         </div>
     </div>
 
-
+@push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script> <!-- Ensure Bootstrap JS is included -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
-
     <script>
-        const mainContent = document.getElementById('mainContent');
-        const scannerContainer = document.getElementById('scannerContainer');
-        var message = '';
-        var count = 0;
-        var lastClick = 0;
-        document.getElementById('start-scanner').addEventListener('click', function(event) {
-            event.preventDefault();
-
-            mainContent.classList.add('d-none');
-            scannerContainer.classList.remove('d-none');
-
-            //get permission to use camera dont start qr scanner until permission is granted
-
-            const html5QrCode = new Html5Qrcode("reader");
-
-            html5QrCode.start({
-                        facingMode: "environment"
-                    }, {
-                        fps: 10,
-                        qrbox: 200,
-                        aspectRatio: 2 / 2 // Set the aspect ratio to 16:9
-                    },
-                    qrCodeMessage => {
-                        sendMessage(`${qrCodeMessage}`);
-                        html5QrCode.stop();
-
-                    },
-                    errorMessage => {
-                        console.log(`QR Code no longer in front of camera.`);
-                    })
-                .catch(err => {
-                    console.log(`Unable to start scanning, error: ${err}`);
-                });
-
-        });
-
-        function sendMessage(message) {
-            // Fetch the CSRF token from the meta tag
-            var csrfToken = $('meta[name="csrf-token"]').attr('content');
-            console.log(message);
-
-            $.ajax({
-                url: '{{ route('process_qr_code') }}', // Using Laravel's route() helper function
-                type: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': csrfToken, // Include the CSRF token in the headers
-                },
-                data: {
-                    qrCodeMessage: message,
-                    station: {{ $station->id }}
-                },
-                success: function(response) {
-                    // Create a new canvas element for confetti
-                    const confettiCanvas = document.createElement('canvas');
-                    confettiCanvas.style.position = 'fixed';
-                    confettiCanvas.style.top = 0;
-                    confettiCanvas.style.left = 0;
-                    confettiCanvas.style.width = '100%';
-                    confettiCanvas.style.height = '100%';
-                    confettiCanvas.style.pointerEvents = 'none';
-                    confettiCanvas.style.zIndex = 9999;
-                    document.body.appendChild(confettiCanvas);
-
-                    // Trigger confetti using the new canvas
-                    const myConfetti = confetti.create(confettiCanvas, {
-                        resize: true,
-                        useWorker: true
-                    });
-
-                    myConfetti({
-                        particleCount: 100,
-                        spread: 70,
-                        origin: {
-                            y: 0.6
-                        }
-                    });
-                    $('#badge').attr('src', '{{ asset('images/check.png') }}');
-
-                    $('#scanCompleteModal').modal('show');
-
-                    // Optional: Remove the canvas after a short delay
-                    setTimeout(() => {
-                        document.body.removeChild(confettiCanvas);
-                    }, 5000);
-                    console.log('QR Code message sent successfully:', response);
-                    // Handle success response if needed
-                    const trimmedMessage = message.trim();
-                    // Get the last character of the QR code message
-                    const lastCharacter = trimmedMessage.charAt(trimmedMessage.length - 1);
-
-                    $('.station_id').html(lastCharacter);
-
-
-                    if (lastCharacter == 5) {
-                        document.getElementById('routeBtn').setAttribute('href', '{{ route('congrats') }}');
-                    }
-
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error sending QR Code message:', error);
-                    $('.modal-icon').addClass('d-none');
-                    $('.station-text').html('Failed');
-                    $('.message').html('Invalid QR code. Please try again.');
-                    $('.check').attr('src', '{{ asset('images/error.webp') }}');
-                    $('#scanCompleteModal').modal('show');
-                }
-            });
-        }
-
-        // document.getElementById('btn_manual').addEventListener('click', function() {
-        //     var password = $('#password').val();
-
-        //     if (password == 8888) {
-        //         sendMessage({{ $station->id }});
-        //         $('#manualQR').modal('hide');
-        //     } else {
-        //         $('#manualQR').modal('hide');
-        //         $('#password').val('');
-        //         alert('wrong password');
-        //     }
-        //     console.log(password);
-        // });
-
-        document.getElementById('forceQr').addEventListener('click', function() {
-            console.log('clicked');
-            var now = new Date().getTime();
-            if (now - lastClick < 500) {
-                count++;
-                if (count === 3) {
-                    console.log('asdad');
-                    $('#manualQR').modal('show');
-
-                    // Use Bootstrap's modal method to show the modal
-                    count = 0; // Reset the count after showing the modal
-                }
-            } else {
-                count = 0;
-            }
-            lastClick = now;
-        });
-
-
-        // document.getElementById('close').addEventListener('click', function(event) {
-        //     event.preventDefault();
-        //     mainContent.classList.remove('d-none');
-        //     scannerContainer.classList.add('d-none');
-        //     html5QrCode.stop();
-        // });
+        // Pass data from Blade to JavaScript
+        window.stationConfig = {
+            urls: {
+                process_qr_code: '{{ route("process_qr_code") }}',
+                congrats: '{{ route("congrats") }}'
+            },
+            assets: {
+                check_image: '{{ asset("images/check.png") }}',
+                error_image: '{{ asset("images/error.webp") }}'
+            },
+            station_id: {{ $station->id }}
+        };
     </script>
+    @vite(['resources/js/station.js'])
+@endpush
 </x-app-layout>

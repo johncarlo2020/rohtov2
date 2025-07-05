@@ -1,9 +1,18 @@
-$primary: #2480BE;
+//colors
+$primary: #152787;
 $white: #ffffff;
-$text: #0060AD;
 $gray: #cacacc;
 $black: #000022;
+$secondary: #ffffffc5;
 
-$normal-gradient: linear-gradient(#d5eeeb 0%, #8aced0 100%);
-$reverse-gradient: linear-gradient(#8aced0 0%, #d5eeeb 100%);
-$font-family:"Nunito", sans-serif;
+$card-text: #61646B;
+$text: $white;
+
+// main font
+$font-family: 'Palatino, sans-serif';
+
+//Text size
+
+$paragraph: 16px;
+$heading: 24px;
+$small-text: 12px;

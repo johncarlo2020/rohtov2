@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import laravel from "laravel-vite-plugin";
+import { visualizer } from "rollup-plugin-visualizer";
 
 export default defineConfig({
     plugins: [
@@ -8,4 +9,27 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+    build: {
+        chunkSizeWarningLimit: 1000, // Increase the warning limit to 1MB
+        rollupOptions: {
+            output: {
+                manualChunks(id) {
+                    // Creates a vendor chunk for all node_modules dependencies
+                    if (id.includes('node_modules')) {
+                        // Specifically split phaser into its own chunk
+                        if (id.includes('phaser')) {
+                            return 'vendor-phaser';
+                        }
+                        return 'vendor'; // all other node_modules
+                    }
+                }
+            },
+            plugins: [
+                visualizer({
+                    open: true, // Automatically open the report in your browser
+                    filename: 'dist/stats.html', // Output file
+                })
+            ]
+        }
+    }
 });

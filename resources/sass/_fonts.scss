@@ -1,20 +1,27 @@
 @font-face {
-    font-family: 'HvDTrial Brevia';
-    src: url('../../public/images/font/HvDTrial_Brevia-ExtraBlack.otf') format('opentype');
-    font-weight: 900;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Brevia-Regular';
-    src: url('../../public/assets/fonts/Brevia-Regular.ttf') format('truetype');
+    font-family: 'Palatino';
+    src: url('../fonts/PALA.TTF') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
-    font-family: 'HvDTrial Brevia ExtraBlack';
-    src: url('../../public/assets/fonts/HvDTrial Brevia ExtraBlack.otf') format('opentype');
-    font-weight: normal;
+    font-family: 'Palatino';
+    src: url('../fonts/PALAB.TTF') format('truetype');
+    font-weight: bold;
     font-style: normal;
+}
+
+@font-face {
+    font-family: 'Palatino';
+    src: url('../fonts/PALAI.TTF') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Palatino';
+    src: url('../fonts/PALABI.TTF') format('truetype');
+    font-weight: bold;
+    font-style: italic;
 }

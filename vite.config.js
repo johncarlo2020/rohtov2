@@ -26,7 +26,7 @@ export default defineConfig({
             },
             plugins: [
                 visualizer({
-                    open: true, // Automatically open the report in your browser
+                    open: false, // Set to false to prevent auto-opening
                     filename: 'dist/stats.html', // Output file
                 })
             ]

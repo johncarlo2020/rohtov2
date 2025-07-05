@@ -9,9 +9,24 @@
     }
 }
 
+@keyframes blink {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.2;
+    }
+}
+
 .animate-entry {
     animation: fadeInUp 0.8s ease-out forwards;
     opacity: 0; // Start hidden, animation will make it visible
+}
+
+
+.blink {
+    animation: blink 1.5s linear infinite;
 }
 
 /* Animation Delay Utilities */

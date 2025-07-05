@@ -8,7 +8,7 @@ window.Alpine = Alpine;
 Alpine.start();
 
 import '../sass/app.scss';
-import '/resources/js/slider.js'
+import './slider.js'
 
 // import GIF.js as a global
 import GIF from 'gif.js';

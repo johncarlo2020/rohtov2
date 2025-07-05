@@ -1,0 +1,40 @@
+/*
+    BASE STYLES
+    --- a ---
+    This file contains base styles and sensible defaults that build upon
+    Bootstrap's Reboot (its CSS reset) to ensure project-wide consistency.
+*/
+
+// Set a universal box-sizing model for more intuitive layouts.
+// While Bootstrap does this, it's good practice to enforce it.
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+@import "variables";
+
+// Establish base body styles for typography and background.
+body {
+    // Use the font family variable defined in _variables.scss
+    font-family: $font-family;
+    // Use the paragraph size for the default font size
+    font-size: $paragraph;
+    // A standard line-height for readability
+    line-height: $line-height;
+    color: $text;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+// Make images responsive by default.
+img, picture, video, canvas, svg {
+    display: block;
+    max-width: 100%;
+}
+
+// Remove default list styles
+ul, ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}

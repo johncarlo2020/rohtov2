@@ -8,38 +8,7 @@
 
         @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap"
-            rel="stylesheet"
-        />
     </head>
-
-    <style>
-        body,
-        html {
-            height: 100%;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            font-family: "Nunito", sans-serif; /* Set the font to Nunito */
-            font-size: 16px; /* Set the font size to 16px */
-        }
-        .container-fluid {
-            flex: 1;
-        }
-        footer {
-            font-size: 10px; /* Adjust the font size for the footer as needed */
-            text-align: center;
-            padding: 10px 0;
-            background-color: none;
-        }
-        footer a {
-            text-decoration: none; /* Remove underline */
-            color: inherit; /* Keep the link color same as the text color */
-        }
-    </style>
 
     <body class="antialiased home">
         <div class="container-fluid py-5">

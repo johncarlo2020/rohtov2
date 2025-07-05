@@ -8,8 +8,7 @@
     <title>{{ config('app.name', 'Loading ...') }}</title>
 
     <x-appCdnPackages />
-
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    @vite(['resources/sass/app.scss'])
 </head>
 
 <body class="antialiased welcome-page main-background hadalabo">

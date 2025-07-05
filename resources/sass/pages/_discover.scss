@@ -1,0 +1,29 @@
+/*
+    Discover page styles
+*/
+
+body.home,
+html.home {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    font-family: "Nunito", sans-serif; /* Set the font to Nunito */
+    font-size: 16px; /* Set the font size to 16px */
+}
+
+.container-fluid {
+    flex: 1;
+}
+
+footer {
+    font-size: 10px; /* Adjust the font size for the footer as needed */
+    text-align: center;
+    padding: 10px 0;
+    background-color: none;
+}
+
+footer a {
+    text-decoration: none; /* Remove underline */
+    color: inherit; /* Keep the link color same as the text color */
+}

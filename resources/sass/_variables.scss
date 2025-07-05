@@ -3,7 +3,7 @@ $primary: #152787;
 $white: #ffffff;
 $gray: #cacacc;
 $black: #000022;
-$secondary: #ffffffc5;
+$secondary: #ffff;
 
 $card-text: #61646B;
 $text: $white;
@@ -14,17 +14,25 @@ $font-family: 'Palatino, sans-serif';
 //Text size
 
 $paragraph: 16px;
-$heading: 24px;
+$heading: 20px;
 $small-text: 12px;
 
 $line-height: 1.2;
+$letter-spacing: 0.06em;
 
 // buttons
-$button-height: 50px;
+$button-height: 40px;
 $button-width: 200px;
 $button-radius: 40px;
 $button-padding: 10px 20px;
-$button-font-size: 16px;
-$button-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+$button-font-size: 14px;
+$button-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+
+
+//images
+$main-background: url('../images/bg.webp');
+
+//content
+$content-padding: 40px 20px;
 
 

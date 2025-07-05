@@ -1,9 +1,21 @@
 // initial et up for style helpers
 
+// import _variables.scss
+@import "variables";
 .main-background {
+    background-image: $main-background;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+}
+
+.main-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    padding: $content-padding;
 }
 
 .back-btn {
@@ -28,25 +40,9 @@
     overflow-y: auto;
     max-height: 100vh;
     padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 100px) !important;
-    padding-bottom: 100px !important; // Fallback for browsers that do not support env()
+    padding-bottom: 100px !important;
 }
 
-
-// import _variables.scss
-@import "variables";
-
-html,
-body {
-    width: 100%;
-    height: 100vh;
-    box-sizing: border-box;
-    font-family: "Flamante-Roma-Medium";
-    overflow: hidden;
-}
-
-.main-color {
-    color: #1b82c3 !important;
-}
 
 .congrats-container {
     display: flex;
@@ -96,18 +92,6 @@ body {
     font-weight: 800;
     color: $black;
 }
-
-html,
-body {
-    height: 100vh;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    box-sizing: border-box;
-    color: #61646b;
-}
-
 
 
 .slider-container {
@@ -248,22 +232,16 @@ body {
     }
 }
 
-
-
-
-
-.blink {
-    animation: blink 1.5s linear infinite;
+.heading {
+    font-size: $heading ;
+    font-weight: 500;
+    color: $text;
+    margin-bottom: 0;
+    text-align: center;
 }
 
-@keyframes blink {
-    0%,
-    100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.2;
-    }
+.small-text {
+    font-size: $small-text;
 }
 
 

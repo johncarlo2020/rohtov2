@@ -1,6 +1,6 @@
+@import "variables";
 @import "fonts";
 @import "bootstrap/scss/bootstrap";
-@import "variables";
 @import "buttons";
 @import "modal";
 @import "utilities";
@@ -8,5 +8,4 @@
 @import "main";
 @import "brand-styles";
 @import "animations";
-@import 'pages/users';
-@import 'pages/discover';
+@import 'pages/index';

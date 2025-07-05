@@ -16,6 +16,7 @@
     box-shadow: $button-shadow;
     height: $button-height;
     width: $button-width;
+    font-weight: 600;
 
     cursor: pointer;
     text-align: center;
@@ -23,6 +24,9 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    text-transform: uppercase;
+    line-height: 1;
+    letter-spacing: $letter-spacing;
 
     transition: all 0.2s ease-in-out;
 }

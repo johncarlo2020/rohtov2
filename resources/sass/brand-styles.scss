@@ -1,1 +1,14 @@
 //All specific styles for the brand should be placed here
+.branding {
+    width: 100%;
+    height: auto;
+
+    img {
+        //set the width and height of the logo
+       height: auto;
+        min-width: 208px;
+        max-width: 63vw;
+        object-fit: contain;
+    }
+}
+

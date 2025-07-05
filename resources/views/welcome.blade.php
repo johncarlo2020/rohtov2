@@ -15,18 +15,18 @@
 <body class="antialiased welcome-page main-background hadalabo">
     <div class="py-3 container-fluid main-content">
         <div class="row">
-            <div class="col-12 d-flex justify-content-center align-items-center">
+            <div class="col-12 d-flex justify-content-center align-items-center animate-entry">
                 @include('components.branding')
             </div>
-            <div class="col-12 d-flex justify-content-center align-items-center">
+            <div class="col-12 d-flex justify-content-center align-items-center animate-entry delay-1">
                 <img class="welcome_img" src="{{ asset('images/dutchlady/dutchLadyLoginText1.webp') }}"
                     alt="" />
             </div>
-            <div class="col-12 d-flex justify-content-center align-items-center p-0">
+            <div class="col-12 d-flex justify-content-center align-items-center p-0 animate-entry delay-2">
                 <img class="welcome_img_store" src="{{ asset('images/dutchlady/dutchLadyLoginImg.webp') }}"
                     alt="" />
             </div>
-            <div class="text-center bottom-text-welcome col-12 mt-4">
+            <div class="text-center bottom-text-welcome col-12 mt-4 animate-entry delay-3">
                 <div class="d-block">
                     <div class="col mb-3">
                         <a href="{{ route('register') }}" class="button-dutch button-dutch button-dutch-primary"><span

@@ -22,6 +22,7 @@ Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
+
 Route::get('/ipad', [IpadController::class, 'index'])->name('ipad.index');
 
 Route::get('/upload-baby', function () {
@@ -101,6 +102,18 @@ Route::group(['middleware' => ['client']], function () {
 
 
     Route::post('/upload', 'App\Http\Controllers\StationController@uploadBaby')->name('upload.baby');
+
+    Route::get('/otp', function () {
+        return view('auth.otp');
+    })->name('otp');
+
+    Route::get('/resend-otp', 'App\Http\Controllers\StationController@resend')->name('resend.otp');
+    Route::post('/verify-otp', 'App\Http\Controllers\StationController@verify')->name('verify.otp');
+
+     Route::get('/register-welcome', function () {
+        return view('registerSuccess');
+    })->name('register.welcome');
+    
 });
 
 

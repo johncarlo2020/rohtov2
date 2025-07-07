@@ -41,6 +41,15 @@ class RegisteredUserController extends Controller
             'fname' => ['required', 'string', 'max:255'],
             'lname' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
+            'country' => [
+                'required',
+                'string',
+                function ($attribute, $value, $fail) {
+                    if (User::where('number', $value)->exists()) {
+                      $fail('This phone number is already registered. If you’ve signed up for a previous event or pre-registered, please. <a href="' . route('login') . '">Login</a> instead');
+                    }
+                }
+            ],
 
         ]);
         $marketing = false;
@@ -57,13 +66,16 @@ class RegisteredUserController extends Controller
 
         // Query the country based on the phone prefix
         $country = Countries::where('phone_code', $phonePrefix)->first();
+        $otp = rand(100000, 999999);
 
         $user = User::create([
             'fname' => $request->fname,
             'lname' => $request->lname,
             'dob' => $request->dob,
+            'race' => $request->race,
             'number' => $phoneNumber,
             'email' => $request->email,
+            'otp' => $otp,
             'find' => $request->find,
             'country'=> $country->name,
             'marketing' => $marketing,
@@ -73,13 +85,14 @@ class RegisteredUserController extends Controller
 
         $user->assignRole('client');
 
-        $request->session()->flash('showWelcomeModal', true);
+        // $request->session()->flash('showWelcomeModal', true);
 
         // Use the insert method to insert multiple records in one query
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(RouteServiceProvider::HOME);
+        // return redirect(RouteServiceProvider::HOME);
+        return redirect()->route('otp')->with('message', 'OTP has been sent to your phone.');
     }
 }

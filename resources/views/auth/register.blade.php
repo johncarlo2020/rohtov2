@@ -6,7 +6,7 @@
             </div>
             <div class="mt-3 w-100 px-2">
                 <h1 class="mb-4 text-center heading-dutch">SIGN UP</h1>
-                <div class="card py-5 px-4 register-form-parent">
+                <div class="py-5 px-4 register-form-parent">
                     <form id="form" method="POST" action="{{ route('register') }}">
                         @csrf
                         <div class="mb-2 row">
@@ -52,6 +52,24 @@
                                     <strong>{{ $message }}</strong>
                                 </span>
                                 @enderror
+                            </div>
+                        </div>
+
+                        <div class="mb-2 row">
+                            <div class="col-12 input-group">
+                                <!-- <label for="">Where did you find this event?</label> -->
+
+                                <select class="form-select input-text" name="race" aria-label="Default select example"
+                                    required>
+                                    <option value="" selected disabled>What's your race? </option>
+
+                                    <option value="Malay">Malay</option>
+                                    <option value="Indian">Indian</option>
+                                    <option value="Chinese">Chinese</option>
+                                    <option value="Kadazan">
+                                        Kadazan
+                                    </option>
+                                </select>
                             </div>
                         </div>
 
@@ -112,19 +130,19 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="privacy_policy" value="1"
                                         id="privacyPolicy" required />
-                                    <label class="form-check-label text-dark" for="privacyPolicy">
-                                        I have read and agree to the <a href="" class="text-primary">Terms and
-                                            Conditions</a>. and <a href="" class="text-primary">Privacy Policy</a>.
+                                    <label class="form-check-label text-white" for="privacyPolicy">
+                                        I have read and agree to the <a href="" class="text-white">Terms and
+                                            Conditions</a>. and <a href="" class="text-white">Privacy Policy</a>.
                                     </label>
                                 </div>
                             </div>
                         </div>
-                        <div class="mb-2 row">
+                        <div class="mb-4 row">
                             <div class="col-12">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="marketing" value="1"
                                         id="marketing" />
-                                    <label class="form-check-label text-dark" for="marketing">
+                                    <label class="form-check-label text-white" for="marketing">
                                         I agree to receive marketing and promotional
                                         communications from Dutch Lady via e-mail and
                                         text messages (including SMS/WhatsApp).
@@ -135,14 +153,14 @@
                         <div class="mb-0 row">
                             <div class="col-12 text-center">
                                 <button id="submitButton" type="submit"
-                                    class="w-auto main-btn button-dutch button-dutch-primary">
+                                    class="w-100 custom-btn custom-btn-secondary animate-entry delay-3">
                                     {{ __('SUBMIT') }}
                                 </button>
                             </div>
                         </div>
                     </form>
                 </div>
-                <div class="bottom-text">
+                <div class="bottom-text text-center">
                     <p class="already-register">
                         Already Registered
                     </p>
@@ -152,10 +170,11 @@
                     </p>
                 </div>
             </div>
+            <x-footer />
         </div>
     </div>
 </x-guest-layout>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const form = document.querySelector("#form");

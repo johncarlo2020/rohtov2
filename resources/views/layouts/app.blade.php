@@ -28,6 +28,7 @@
     <x-scriptPackages />
 
     <!-- Stack for page-specific JavaScript -->
+     
     @stack('scripts')
 </body>
 

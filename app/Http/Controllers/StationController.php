@@ -13,6 +13,9 @@ use DB;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Session;
+use App\Providers\RouteServiceProvider;
+
 class StationController extends Controller
 {
 
@@ -615,6 +618,44 @@ class StationController extends Controller
         }
 
         return $check;
+    }
+
+    public function verify(Request $request)
+    {
+        $otp = implode('', $request->input('otp'));
+        // dd(auth()->user());
+        if ($otp == auth()->user()->otp) {
+
+            // Success: Clear session OTP
+            Session::forget(['otp', 'otp_sent_at']);
+            $user= auth()->user();
+            $user->otp_verified = 1;
+            $user->email_verified_at = Carbon::now();
+            $user->save();
+
+            // $data = GlobalHelper::createSampleProfile();
+            //  dd($data);
+
+            // return redirect(RouteServiceProvider::HOME);
+            return redirect()->route('register.welcome');
+        }
+
+        return back()->withErrors(['otp' => 'Invalid OTP']);
+    }
+
+    public function resend(Request $request)
+    {
+        $user = auth()->user();
+
+        $otp = rand(100000, 999999);
+
+        // GlobalHelper::sendOtpSms($user->number, $otp);
+
+        $user->otp = $otp;
+        $user->save();
+
+
+        return $user;
     }
 
 

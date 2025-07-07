@@ -88,6 +88,10 @@
                         notAllowedModal.show();
                         return;
                     }
+
+                    if (id=== 4) {
+                        return;
+                    }
                     // Redirect to the generated URL
                     window.location.href = url;
                 }

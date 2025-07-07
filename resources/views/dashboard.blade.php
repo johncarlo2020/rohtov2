@@ -1,12 +1,13 @@
 <x-app-layout>
-    <div class="container py-5 dash-board">
+    <div class="container py-5 map-page">
         <div class="d-flex justify-content-center align-item-center">
             @include('components.branding')
         </div>
 
         <!-- login Modal -->
         <!-- Welcome Modal -->
-        <div class="modal fade transparent-modal" id="welcomeModal" tabindex="-1" aria-labelledby="welcomeModalLabel" aria-hidden="true">
+        <div class="modal fade transparent-modal" id="welcomeModal" tabindex="-1" aria-labelledby="welcomeModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content text-center position-relative">
 
@@ -23,8 +24,6 @@
         </div>
 
         <!-- Modal -->
-
-
         <div class="modal fade custom-modal" id="notAllowedModal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content ">
@@ -35,160 +34,54 @@
                                     Hit all the stations to redeem your free gift!
                                 </p>
                             </div>
-                            <button type="button" class="w-auto main-btn button-dutch button-dutch-primary"  data-dismiss="modal"
-                                aria-label="Close">Close</button>
+                            <button type="button" class="w-auto main-btn button-dutch button-dutch-primary"
+                                data-dismiss="modal" aria-label="Close">Close</button>
                         </div>
                     </div>
                 </div>
             </div>
-            </div>
-
-        <div class="container">
-            <div class="col-12 d-flex justify-content-center align-items-center mt-3">
-                <img class="welcome_img" src="{{ asset('images/dutchlady/dashboardTextImg1.webp') }}" alt="" />
-                </div>
-            @php
-            $station5 = $stations->firstWhere('id', 5);
-            @endphp
-
-            @if ($station5)
-            <div class="row justify-content-center mb-3">
-                <div class="col-12 d-flex justify-content-center">
-                    <div class="redemption-btn {{ $station5->status ? 'completed' : '' }} {{ $canAccessStation5 ? 'station-5-accessible' : 'not-allowed' }}"
-                        onclick="{{ $canAccessStation5 ? 'gotoStation(' . $station5->id . ')' : 'showNotAllowedModal()' }}" >
-                       <img src="{{ asset('images/hadalabobabies/station' . $station5->id . '.webp') }}" alt="Slide {{ $station5->id }}">
-
-
-                        @if( $station5->status)
-                            <p class="redeemed">Redeemed!</p>
-                        @else
-                            <p class="{{ $canAccessStation5 ? '' : 'd-none' }} not-redeemed blink">Click here to claim yours</p>
-                        @endif
-                    </div>
-                </div>
-            </div>
-            @endif
-            <div class="row row-cols-2 row-cols-md-2 g-4 mb-5">
-                @foreach ($stations as $station)
-                @if ($station->id != 5)
-                <div class="col">
-                    <div class="station-container {{ $station->status ? 'completed' : '' }}"
-                        onclick="gotoStation({{ $station->id }})">
-                        @if ($station->status == 'completed')
-                        <img src="{{ asset('images/hadalabobabies/DL Station Map (' . $station->id . ') Check.webp') }}"
-                            class="station-img img-fluid " alt="Slide {{ $station->id }}">
-                    </div>
-                    @else
-                    <img src="{{ asset('images/hadalabobabies/station' . $station->id . '.webp') }}"
-                        class="station-img img-fluid " alt="Slide {{ $station->id }}">
-                </div>
-                @endif
-
-            </div>
-            @endif
-            @endforeach
-
-            <div class="col">
-                <div class="station-container" onclick="window.location.href='{{ route('workshop'); }}'">
-                    <img src="{{ asset('images/dutchlady/workshopImg.webp') }}" class="station-img img-fluid"
-                        alt="Route Workshop">
-                </div>
-            </div>
-
-            <div class="col">
-                <div class="station-container" onclick="window.location.href='{{ route('promotion') }}'">
-                    <img src="{{ asset('images/dutchlady/promotionImg.webp') }}" class="station-img img-fluid"
-                        alt="Promotions">
-                </div>
-            </div>
         </div>
+        <div class="map mb-5">
+            <img class="map-img" src="{{ asset('images/brand/KOSE STB Map.webp') }}" alt="" />
+            {{-- loop trough the $stations --}}
+            {{-- <a class="map-pin start-pin"><span class="start-text">Start</span></a> --}}
+            @foreach ($stations as $station)
+                @if ($station->id == 6)
+                    <a href="javascript:void(0);"
+                        class="map-pin station-{{ $station->id }} @if ($station->status == true) completed @endif @if ($nextStation && $station->id === $nextStation->id) breathing @endif"
+                        data-bs-toggle="modal" data-bs-target="#redemption">
+                          @if ($station->status != true && $canAccessStation6 == true)
+                             <img class="map-img" src="{{ asset('images/brand/pin' . $station->id . '.webp') }}" alt="" />
+                        @elseif ($canAccessStation6 != true )
+                            <img class="map-img" src="{{ asset('images/brand/locked pin') }}" alt="" />
+                        @else
+                            <img class="map-img" src="{{ asset('images/brand/checkpin.webp') }}" alt="" />
+                        @endif
+                    </a>
+                @else
+                    <a href="{{ route('station', $station) }}"
+                        class="map-pin station-{{ $station->id }} @if ($station->status == true) completed @endif @if ($nextStation && $station->id === $nextStation->id) breathing @endif">
+                        @if ($station->status != true)
+                             <img class="map-img" src="{{ asset('images/brand/pin' . $station->id . '.webp') }}" alt="" />
+                        @else
+                            <img class="map-img" src="{{ asset('images/brand/checkpin.webp') }}" alt="" />
+                        @endif
+                    </a>
+                @endif
+            @endforeach
+        </div>
+        <x-footer />
     </div>
-
-    <script>
-
-        @if (session('showWelcomeModal'))
-          showPromotionMoadal();
-        @endif
-
-
-        function showPromotionMoadal() {
-              document.addEventListener('DOMContentLoaded', function () {
-                var myModal = new bootstrap.Modal(document.getElementById('welcomeModal'));
-                myModal.show();
-            });
-        }
-
-        // Pass stations data to JavaScript
-        window.stationsData = @json($stations);
-
-        function gotoStation(id) {
-            var url = "{{ route('station', ['station' => ':id']) }}".replace(
-                ":id",
-                id
-            );
-            // Redirect to the generated URL
-            window.location.href = url;
-        }
-
-        function showNotAllowedModal() {
-            var notAllowedModal = new bootstrap.Modal(document.getElementById('notAllowedModal'));
-            notAllowedModal.show();
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-
-
-
-            const completedStation = window.stationsData.find(station => station.status);
-            const startButton = document.getElementById('start');
-            const sliders = document.querySelector('.sliders');
-            displayAndInitSliders();
-            function initializeSlickSlider() {
-                const $carousel = $('.slick-carousel');
-                if (!$carousel.hasClass('slick-initialized')) {
-                    $carousel.slick({
-                        dots: true,
-                        arrows: false,
-                        infinite: true,
-                        speed: 500,
-                        cssEase: 'linear',
-                        autoplay: false,
-                        autoplaySpeed: 4000,
-                        slidesToShow: 1,
-                        slidesToScroll: 1,
-                        customPaging: function (slider, i) {
-                            const station = window.stationsData[i];
-                            let dotClass = 'slick-dot-number';
-                            if (station && station.status) { // Check if station is completed
-                                return '<button type="button" class="' + dotClass + '"><i class="fa-solid fa-check"></i></button>';
-                            } else {
-                                return '<button type="button" class="' + dotClass + '">' + (
-                                    i + 1) + '</button>';
-                            }
-                        },
-                    });
-                }
-                // Always ensure position is updated if it's supposed to be visible and initialized
-                if ($carousel.is(':visible') && $carousel.hasClass('slick-initialized')) {
-                    $carousel.slick('setPosition');
-                }
-                // After initialization and setPosition, make it visible
-                $carousel.css('visibility', 'visible');
+    @push('scripts')
+        <script>
+            function gotoStation(id) {
+                var url = "{{ route('station', ['station' => ':id']) }}".replace(
+                    ":id",
+                    id
+                );
+                // Redirect to the generated URL
+                window.location.href = url;
             }
-
-            // This function is called when sliders should become visible and initialized
-            function displayAndInitSliders() {
-                if (sliders) {
-                    sliders.classList.remove('d-none'); // Ensure it's visible
-                    // Defer initialization to allow browser to render visibility change
-                    requestAnimationFrame(() => {
-                        initializeSlickSlider(); // Initializes and calls setPosition
-                    });
-                }
-            }
-
-
-        });
-    </script>
-
+        </script>
+    @endpush
 </x-app-layout>

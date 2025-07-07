@@ -5,10 +5,72 @@
 
     img {
         //set the width and height of the logo
-       height: auto;
+        height: auto;
         min-width: 208px;
         max-width: 63vw;
         object-fit: contain;
     }
 }
 
+.map-page {
+    .map {
+        width: 95vw;
+        height: auto;
+        position: relative;
+        margin: 0 auto;
+        margin-top: 5vh;
+
+        .map-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .map-pin {
+            display: block;
+            width: 13vw;
+            height: 13vw;
+            font-weight: 700;
+            font-size: 14px;
+            text-decoration: none;
+            text-align: center;
+            position: absolute;
+
+            &.station-1 {
+                bottom: 16vw;
+                left: 4vw;
+                z-index: 999;
+            }
+
+            &.station-2 {
+                bottom: 43vw;
+                left: 66vw;
+                z-index: 999;
+            }
+
+            &.station-3 {
+                bottom: 48vw;
+                left: 46vw;
+                z-index: 999;
+            }
+
+            &.station-4 {
+                bottom: 38vw;
+                left: 56vw;
+                z-index: 999;
+            }
+
+            &.station-5 {
+                bottom: 56vw;
+                left: 76vw;
+                z-index: 999;
+            }
+
+            &.station-6 {
+                bottom: 22vw;
+                left: 46vw;
+                z-index: 999;
+            }
+        }
+    }
+}

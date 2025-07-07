@@ -21,24 +21,35 @@ class StationSeeder extends Seeder
     public function run()
     {
         Station::create([
-            'name' => 'Grass to Glass',
+            'name' => 'Let Your Skin Dream Too',
+            'description' => 'Snap,Share,tag @kosemy',
         ]);
 
         Station::create([
-            'name' => 'Breakfast Club',
+            'name' => 'UV Detector Room',
+            'description' => 'Apply & Test',
         ]);
 
         Station::create([
-            'name' => 'Breakfast Blitz',
+            'name' => 'Save the Blue Gallery',
+            'description' => 'Shine for hidden message',
         ]);
 
         Station::create([
-            'name' => 'Splash & Snap',
+            'name' => 'Save the Blue Pledge',
+            'description' => 'Sign & Pledge',
         ]);
 
         Station::create([
-            'name' => 'Gift Redemption',
+            'name' => 'Holistic Clean Beauty',
+            'description' => 'Match & Correct yout tone',
         ]);
+
+        Station::create([
+            'name' => 'Redemption',
+            'description' => 'Redemption Sample',
+        ]);
+        
 
         Workshop::create([
             'title' => 'DIY Bento Workshop',

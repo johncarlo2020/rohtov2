@@ -15,8 +15,7 @@
         }
     </style>
 
-    <div id="stationPage" class="station-page home">
-
+    <div id="stationPage" class="station-page home with-scroll">
         <div class="modal fade custom-modal" id="scanCompleteModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -41,29 +40,35 @@
     </div>
         <div class="back-btn">
             <a href="{{ route('dashboard') }}" class="">
-                <img src="{{ asset('images/dutchlady/back-btn.webp') }}" alt="Back" />
+                <i class="fas fa-chevron-left"></i>
             </a>
         </div>
-        <div class="mb-3 branding-container">
+        <div class="my-5 col-12 d-flex justify-content-center">
             @include('components.branding')
         </div>
-        <div id="mainContent" class="mt-1 mb-2 text-center col-12 text-content">
+        <div id="mainContent" class="mt-1 mb-2 d-flex flex-column align-items-center justify-content-center">
             @if ($user)
                 <p class="my-0 mt-3 curve heading-dutch small">Checked-in</p>
                 <p class="my-0 curve heading-dutch ">Succesful</p>
             @else
-                  <img src="{{ asset('images/dutchlady/dutchLadyStation' . $station->id . '.webp') }}"
-                class="station-img img-fluid w-25" alt="Slide {{ $station->id }}">
+                <h3 class="mb-4">STATION {{$station->id}}</h3>
+                <h2>
+                    {{ isset($station->name) ? $station->name : '' }}
+                </h2>
+                <span class="mb-4">
+                    {{ isset($station->description) ? $station->description : '' }}
+                </span>
+
             @endif
             <div id="{{ $user ? '' : 'forceQr' }}" class="icon-container">
             </div>
-            <img class="mt-2 station-image"
-                src="{{ asset('images/hadalabobabies/DL Station Page (' . $station->id . ').webp') }}" alt="Station Image">
+            <img class="mt-2 station-image w-75"
+                src="{{ asset('images/station/station_' . $station->id . '.webp') }}" alt="Station Image">
             @if ($user != true)
-                <button id="start-scanner" class="mx-auto mt-5 mb-3 camera-btn">
+                <button id="start-scanner" class="mx-auto mt-5 mb-3 custom-btn custom-btn-secondary" style="font-size:20px;">
                     <i class="fa-solid fa-camera"></i>
                 </button>
-                <p class="px-4 mt-4 bottom-text scanner-text">Scan the QR code to check in</p>
+                <p class="px-4 mt-4 bottom-text scanner-text text-center">Scan the QR code to check in</p>
             @else
                 <div class="scanner-button">
                     <a href="{{ route('dashboard') }}" class="button-dutch button-dutch-primary">
@@ -71,18 +76,18 @@
                     </a>
                 </div>
             @endif
-
         </div>
         <div id="scannerContainer" class="scanner-container d-none">
             <!-- <button id="close" class="mx-auto mt-4 camera-btn">x</button> -->
             <div id="reader"></div>
-            <p class="mt-4 scanner-text">Scan the QR code to check in</p>
+            <p class="mt-4 scanner-text text-center">Scan the QR code to check in</p>
             {{-- <div>
                 <a href="{{ route('dashboard') }}" class="button">
                     BACK
                 </a>
             </div> --}}
         </div>
+        <x-footer />
     </div>
 
 @push('scripts')

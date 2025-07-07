@@ -12,7 +12,7 @@
                 <div class="modal-content text-center position-relative">
 
                     <!-- Close Button (top-right) -->
-                    <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-dismiss="modal"
+                    <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal"
                         aria-label="Close"></button>
 
                     <!-- Image -->
@@ -29,13 +29,13 @@
                 <div class="modal-content ">
                     <div class="modal-body">
                         <div class="text-center content">
-                            <div class="text-content mt-0">
+                            <div class="text-content mt-4 mb-4">
                                 <p class="message text-dark">
-                                    Hit all the stations to redeem your free gift!
+                                    Please Complete all <br> the station
                                 </p>
                             </div>
-                            <button type="button" class="w-auto main-btn button-dutch button-dutch-primary"
-                                data-dismiss="modal" aria-label="Close">Close</button>
+                            <button type="button" class="w-50 custom-btn custom-btn-primary"
+                                data-bs-dismiss="modal" aria-label="Close">Close</button>
                         </div>
                     </div>
                 </div>
@@ -47,19 +47,19 @@
             {{-- <a class="map-pin start-pin"><span class="start-text">Start</span></a> --}}
             @foreach ($stations as $station)
                 @if ($station->id == 6)
-                    <a href="javascript:void(0);"
+                    <a href="javascript:void(0);" onclick="gotoStation({{ $station->id }})"
                         class="map-pin station-{{ $station->id }} @if ($station->status == true) completed @endif @if ($nextStation && $station->id === $nextStation->id) breathing @endif"
                         data-bs-toggle="modal" data-bs-target="#redemption">
                           @if ($station->status != true && $canAccessStation6 == true)
                              <img class="map-img" src="{{ asset('images/brand/pin' . $station->id . '.webp') }}" alt="" />
-                        @elseif ($canAccessStation6 != true )
-                            <img class="map-img" src="{{ asset('images/brand/locked pin') }}" alt="" />
+                        @elseif ($canAccessStation6 != true && $station->status != true)
+                            <img class="map-img" src="{{ asset('images/brand/locked pin.webp') }}" alt="" />
                         @else
                             <img class="map-img" src="{{ asset('images/brand/checkpin.webp') }}" alt="" />
                         @endif
                     </a>
                 @else
-                    <a href="{{ route('station', $station) }}"
+                    <a href="javascript:void(0);" onclick="gotoStation({{ $station->id }})"
                         class="map-pin station-{{ $station->id }} @if ($station->status == true) completed @endif @if ($nextStation && $station->id === $nextStation->id) breathing @endif">
                         @if ($station->status != true)
                              <img class="map-img" src="{{ asset('images/brand/pin' . $station->id . '.webp') }}" alt="" />
@@ -74,14 +74,24 @@
     </div>
     @push('scripts')
         <script>
-            function gotoStation(id) {
-                var url = "{{ route('station', ['station' => ':id']) }}".replace(
-                    ":id",
-                    id
-                );
-                // Redirect to the generated URL
-                window.location.href = url;
-            }
+            document.addEventListener('DOMContentLoaded', function () {
+                let canAccessStation6 = @json($canAccessStation6);
+                window.gotoStation = function(id,) {
+                    var url = "{{ route('station', ['station' => ':id']) }}".replace(
+                        ":id",
+                        id
+                    );
+
+                    if (id === 6 && !canAccessStation6) {
+                        // Show the not allowed modal if trying to access station 6 without permission
+                        var notAllowedModal = new bootstrap.Modal(document.getElementById('notAllowedModal'));
+                        notAllowedModal.show();
+                        return;
+                    }
+                    // Redirect to the generated URL
+                    window.location.href = url;
+                }
+            });
         </script>
     @endpush
 </x-app-layout>

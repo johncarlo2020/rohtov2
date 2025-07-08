@@ -35,34 +35,6 @@
     }
 }
 
-.button-dutch {
-    padding: 7px 30px;
-    font-size: 14px;
-    font-weight: bold;
-    border-radius: 15px;
-    cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: 0.3s ease;
-    min-width: 150px;
-    display: inline-block;
-    font-family: "HvDTrial Brevia ExtraBlack";
-
-    &-primary {
-        background-color: #0060ac;
-        color: #ffffff;
-        border: 3px solid #6eb0e0b0;
-        outline: 4px solid #ffffff;
-        box-shadow: 0 4px #003f7f;
-    }
-    &-outlined {
-        background-color: #ffffff;
-        color: #0060ac;
-        border: 3px solid #6eb0e0d3;
-        outline: 4px solid #003f7f;
-        box-shadow: 0 4px #003f7f;
-    }
-}
 
 .with-scroll {
     width: 100%;

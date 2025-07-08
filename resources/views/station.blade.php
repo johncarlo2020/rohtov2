@@ -29,7 +29,7 @@
                             </p>
                         </div>
                         <div class="text-content mt-3">
-                            <a href="{{ route('dashboard') }}" id="routeBtn" class="button-dutch button-dutch-primary">
+                            <a href="{{ route('dashboard') }}" id="routeBtn" class="custom-btn custom-btn-primary">
                                 okay
                             </a>
                         </div>

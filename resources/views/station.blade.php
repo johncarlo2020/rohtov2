@@ -71,8 +71,9 @@
                 <p class="px-4 mt-4 bottom-text scanner-text text-center">Scan the QR code to check in</p>
             @else
                 <div class="scanner-button">
-                    <a href="{{ route('dashboard') }}" class="button-dutch button-dutch-primary">
-                        done
+                    <p class="my-0 mt-3 curve heading-dutch small text-center mb-3">Checked-in Successful</p>
+                    <a href="{{ route('dashboard') }}" class="custom-btn custom-btn-secondary">
+                        Back
                     </a>
                 </div>
             @endif

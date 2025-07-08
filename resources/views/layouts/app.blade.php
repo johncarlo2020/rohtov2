@@ -18,17 +18,15 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 
-<body class="main-background">
+<body>
     <!-- Main content area where page-specific content will be injected -->
-    <main>
-        {{ $slot }}
-    </main>
+     {{ $slot }}
 
     <!-- Common JavaScript packages -->
     <x-scriptPackages />
 
     <!-- Stack for page-specific JavaScript -->
-     
+
     @stack('scripts')
 </body>
 

@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="container py-5 map-page">
+    <div class="py-5 map-page main-content main-background">
         <div class="d-flex justify-content-center align-item-center">
             @include('components.branding')
         </div>

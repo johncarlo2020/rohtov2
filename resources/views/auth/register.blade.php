@@ -1,15 +1,15 @@
 <x-guest-layout>
-    <div class="register-main with-scroll">
+    <div class="register-main main-content with-scroll">
         <div class="justify-content-center w-100">
-            <div class="mt-5 col-12 d-flex justify-content-center">
+            <div class="col-12 d-flex justify-content-center animate-entry">
                 @include('components.branding')
             </div>
-            <div class="mt-3 w-100 px-2">
-                <h1 class="mb-4 text-center heading-dutch">SIGN UP</h1>
-                <div class="py-5 px-4 register-form-parent">
+            <div class="mt-4 w-100  animate-entry delay-3">
+                <h4 class="mb-4 text-center">SIGN UP</h4>
+                <div class="pt-2 pb-4 register-form-parent">
                     <form id="form" method="POST" action="{{ route('register') }}">
                         @csrf
-                        <div class="mb-2 row">
+                        <div class="mb-3 row">
                             <div class="col-12">
                                 <label for="">First Name</label>
                                 <input id="fname" placeholder="Enter your first name" type="text"
@@ -23,7 +23,7 @@
                             </div>
                         </div>
 
-                        <div class="mb-2 row">
+                        <div class="mb-3 row">
                             <div class="col-12">
                                 <label for="">Last Name</label>
 
@@ -39,7 +39,7 @@
                             </div>
                         </div>
 
-                        <div class="mb-2 row">
+                        <div class="mb-3 row">
                             <div class="col-12">
                                 <label for="dob">Date of Birth </label>
 
@@ -55,14 +55,12 @@
                             </div>
                         </div>
 
-                        <div class="mb-2 row">
-                            <div class="col-12 input-group">
-                                <!-- <label for="">Where did you find this event?</label> -->
-
-                                <select class="form-select input-text" name="race" aria-label="Default select example"
+                        <div class="mb-3 row">
+                            <div class="col-12">
+                                <label for="race">Race</label>
+                                <select id="race" class="form-select input-text @error('race') is-invalid @enderror" name="race" aria-label="Race select"
                                     required>
                                     <option value="" selected disabled>What's your race? </option>
-
                                     <option value="Malay">Malay</option>
                                     <option value="Indian">Indian</option>
                                     <option value="Chinese">Chinese</option>
@@ -70,10 +68,15 @@
                                         Kadazan
                                     </option>
                                 </select>
+                                @error('race')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
                             </div>
                         </div>
 
-                        <div class="mb-2 row">
+                        <div class="mb-3 row">
                             <div class="col-12">
                                 <label for="">Email Address</label>
 
@@ -89,7 +92,7 @@
                             </div>
                         </div>
 
-                        <div class="mb-2 row">
+                        <div class="mb-3 row">
                             <div class="col-12 input-group w-100">
                                 <label for="">Phone Number</label>
 
@@ -104,14 +107,12 @@
                             </div>
                         </div>
 
-                        <div class="mb-2 row">
-                            <div class="col-12 input-group">
-                                <!-- <label for="">Where did you find this event?</label> -->
-
-                                <select class="form-select input-text" name="find" aria-label="Default select example"
+                        <div class="mb-3 row">
+                            <div class="col-12">
+                                <label for="find">Where did you find this event?</label>
+                                <select id="find" class="form-select input-text @error('find') is-invalid @enderror" name="find" aria-label="Event source select"
                                     required>
                                     <option value="" selected disabled>Where did you find this event? </option>
-
                                     <option value="Facebook">Facebook</option>
                                     <option value="TikTok">TikTok</option>
                                     <option value="Instagram">Instagram</option>
@@ -122,9 +123,14 @@
                                         Walk-in
                                     </option>
                                 </select>
+                                @error('find')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
                             </div>
                         </div>
-                        <hr>
+                        <hr style="border-top: 2px dotted; opacity: 0.25;">
                         <div class="mt-4 mb-2 row">
                             <div class="col-12">
                                 <div class="form-check">

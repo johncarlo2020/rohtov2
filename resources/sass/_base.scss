@@ -7,14 +7,16 @@
 
 // Set a universal box-sizing model for more intuitive layouts.
 // While Bootstrap does this, it's good practice to enforce it.
-*, *::before, *::after {
+*,
+*::before,
+*::after {
     box-sizing: border-box;
 }
 
 @import "variables";
 
 // Establish base body styles for typography and background.
-body {
+body , html{
     // Use the font family variable defined in _variables.scss
     font-family: $font-family;
     // Use the paragraph size for the default font size
@@ -24,16 +26,24 @@ body {
     color: $text;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
 }
 
 // Make images responsive by default.
-img, picture, video, canvas, svg {
+img,
+picture,
+video,
+canvas,
+svg {
     display: block;
     max-width: 100%;
 }
 
 // Remove default list styles
-ul, ol {
+ul,
+ol {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -55,11 +65,94 @@ ul, ol {
 }
 
 // set all text font
-p, h1, h2, h3, h4, h5, h6 ,a , span ,label, input, textarea, select, input::placeholder {
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+a,
+span,
+label,
+input,
+textarea,
+select,
+input::placeholder {
     font-family: $font-family;
     color: $text;
     line-height: $line-height;
     margin: 0;
     letter-spacing: $letter-spacing;
     font-weight: 400;
+}
+
+label {
+    margin-bottom: 5px;
+    font-size: $small-text;
+}
+
+input,
+textarea,
+select {
+    font-size: $small-text;
+    color: $text;
+    border: 1px solid $gray-dark;
+    border-radius: 4px;
+    box-shadow: none;
+
+    &:focus {
+        border-color: $green;
+        outline: none;
+        box-shadow: 0 0 0 0.2rem rgba($primary, 0.25);
+    }
+}
+
+input::placeholder,
+textarea::placeholder,
+option,
+.form-select {
+    color: $gray-dark;
+    opacity: 1;
+    font-size: $small-text;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+    font-size: $paragraph;
+    cursor: pointer;
+}
+
+.form-check-input:checked {
+    background-color: $green;
+    border-color: $white;
+}
+
+// fix position on mobile for country select
+.iti-mobile {
+    .iti__country-list {
+        width: 90vw;
+        height: 80vh;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 10px !important;
+
+        .iti__country-name {
+            color: $card-text !important;
+        }
+    }
+}
+
+.iti--container {
+    top: 30px !important;
+    bottom: 0px !important;
+    left: 0px !important;
+    right: 0px !important;
+    position: fixed;
+}
+
+.card {
+    p,h1,h2,h3,h4,h5,h6,span,a {
+        color: $black;
+    }
 }

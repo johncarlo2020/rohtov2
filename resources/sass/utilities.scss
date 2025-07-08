@@ -253,7 +253,18 @@
 
 .small-text {
     font-size: $small-text;
+    line-height: 1.5;
 }
+
+.no-underline {
+    text-decoration: none !important;
+}
+
+.text-transform-normal {
+    text-transform: none !important;
+}
+
+
 
 
 

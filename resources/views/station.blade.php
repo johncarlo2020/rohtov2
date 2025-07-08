@@ -1,21 +1,5 @@
 <x-app-layout>
-    <style>
-        .icon-badge {
-            width: 150px;
-            height: auto;
-            margin-bottom: 25px;
-        }
-
-        .iconNew {
-            width: 60px;
-        }
-
-        .logo-img {
-            width: 100px;
-        }
-    </style>
-
-    <div id="stationPage" class="station-page home with-scroll">
+    <div id="stationPage" class="station-page main-content main-background with-scroll">
         <div class="modal fade custom-modal" id="scanCompleteModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered w-75 m-auto">
             <div class="modal-content">
@@ -43,7 +27,7 @@
                 <i class="fas fa-chevron-left"></i>
             </a>
         </div>
-        <div class="my-5 col-12 d-flex justify-content-center">
+        <div class="d-flex justify-content-center">
             @include('components.branding')
         </div>
         <div id="mainContent" class="mt-1 mb-2 d-flex flex-column align-items-center justify-content-center">
@@ -51,11 +35,11 @@
                 <p class="my-0 mt-3 curve heading-dutch small">Checked-in</p>
                 <p class="my-0 curve heading-dutch ">Succesful</p>
             @else
-                <h3 class="mb-4"><strong>STATION {{$station->id}}</strong></h3>
-                <h2>
+                <h1 class="heading mb-3 mt-3">STATION {{$station->id}}</h1>
+                <p class="sub-heading mb-1 fw-thin">
                     {{ isset($station->name) ? $station->name : '' }}
-                </h2>
-                <span class="mb-4">
+                </p>
+                <span class="mb-4 fw-thin">
                     {{ isset($station->description) ? $station->description : '' }}
                 </span>
 
@@ -65,23 +49,23 @@
             <img class="mt-2 station-image w-75"
                 src="{{ asset('images/station/station_' . $station->id . '.webp') }}" alt="Station Image">
             @if ($user != true)
-                <button id="start-scanner" class="mx-auto mt-5 mb-3 custom-btn custom-btn-secondary" style="font-size:20px;">
+                <button id="start-scanner" class="mx-auto mt-5 w-auto px-4 mb-3 custom-btn custom-btn-secondary" style="font-size:20px;">
                     <i class="fa-solid fa-camera"></i>
                 </button>
-                <p class="px-4 mt-4 bottom-text scanner-text text-center">Scan the QR code to check in</p>
+                <p class="px-4 mt-3 bottom-text scanner-text text-center">Scan the QR code to check in</p>
             @else
                 <div class="scanner-button">
-                    <p class="my-0 mt-3 curve heading-dutch small text-center mb-3">Checked-in Successful</p>
+                    <p class="my-0 mt-3 text-center mb-3">Checked-in Successful</p>
                     <a href="{{ route('dashboard') }}" class="custom-btn custom-btn-secondary">
                         Back
                     </a>
                 </div>
             @endif
         </div>
-        <div id="scannerContainer" class="scanner-container d-none">
+        <div id="scannerContainer" class="scanner-container d-none mt-4">
             <!-- <button id="close" class="mx-auto mt-4 camera-btn">x</button> -->
             <div id="reader"></div>
-            <p class="mt-4 scanner-text text-center">Scan the QR code to check in</p>
+            <p class="mt-4 scanner-text text-center">Find the QR code & Scan to check in</p>
             {{-- <div>
                 <a href="{{ route('dashboard') }}" class="button">
                     BACK

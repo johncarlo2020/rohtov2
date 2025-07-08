@@ -11,7 +11,7 @@ class GlobalHelper
     {
 
         // Compose message
-        $content = "L'OCCITANE: OTP code: $otp. NEVER share this code with others.";
+        $content = "Save the blue: OTP code: $otp. NEVER share this code with others.";
 
         // Build query parameters
         $query = [
@@ -19,7 +19,7 @@ class GlobalHelper
             'pass'   => 'Wowsome@820####!',
             'type'   => 0,
             'to'     => $phoneNumber,
-            'from'   => 'Loccitane',
+            'from'   => 'Sekkiseibykose',
             'text'   => $content,
             'servid' => 'MES01',
             'title'  => 'EnDemande_MY_OceanOrPlastic2025',

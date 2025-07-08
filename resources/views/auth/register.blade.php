@@ -130,9 +130,9 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="privacy_policy" value="1"
                                         id="privacyPolicy" required />
-                                    <label class="form-check-label text-white" for="privacyPolicy">
+                                    <label class="form-check-label text-white small-text" for="privacyPolicy">
                                         I have read and agree to the <a href="" class="text-white">Terms and
-                                            Conditions</a>. and <a href="" class="text-white">Privacy Policy</a>.
+                                            Conditions</a> and <a href="" class="text-white">Privacy Policy</a>.
                                     </label>
                                 </div>
                             </div>
@@ -142,7 +142,7 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="marketing" value="1"
                                         id="marketing" />
-                                    <label class="form-check-label text-white" for="marketing">
+                                    <label class="form-check-label text-white small-text" for="marketing">
                                         I agree to receive marketing and promotional
                                         communications from Dutch Lady via e-mail and
                                         text messages (including SMS/WhatsApp).

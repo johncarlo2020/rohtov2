@@ -17,7 +17,7 @@
 
     <div id="stationPage" class="station-page home with-scroll">
         <div class="modal fade custom-modal" id="scanCompleteModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered w-75 m-auto">
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="text-center content">
@@ -51,7 +51,7 @@
                 <p class="my-0 mt-3 curve heading-dutch small">Checked-in</p>
                 <p class="my-0 curve heading-dutch ">Succesful</p>
             @else
-                <h3 class="mb-4">STATION {{$station->id}}</h3>
+                <h3 class="mb-4"><strong>STATION {{$station->id}}</strong></h3>
                 <h2>
                     {{ isset($station->name) ? $station->name : '' }}
                 </h2>
@@ -88,7 +88,6 @@
                 </a>
             </div> --}}
         </div>
-        <x-footer />
     </div>
 
 @push('scripts')

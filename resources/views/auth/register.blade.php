@@ -144,7 +144,7 @@
                                         id="marketing" />
                                     <label class="form-check-label text-white small-text" for="marketing">
                                         I agree to receive marketing and promotional
-                                        communications from Dutch Lady via e-mail and
+                                        communications from Sekkisei via e-mail and
                                         text messages (including SMS/WhatsApp).
                                     </label>
                                 </div>

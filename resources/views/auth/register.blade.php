@@ -131,8 +131,7 @@
                                     <input class="form-check-input" type="checkbox" name="privacy_policy" value="1"
                                         id="privacyPolicy" required />
                                     <label class="form-check-label text-white small-text" for="privacyPolicy">
-                                        I have read and agree to the <a href="" class="text-white">Terms and
-                                            Conditions</a> and <a href="" class="text-white">Privacy Policy</a>.
+                                        I have read and agree to the Terms and Conditions and <a href="{{ asset('pdfs/privacy-policy.pdf') }}" target="_blank" class="text-white">Privacy Policy</a> .
                                     </label>
                                 </div>
                             </div>

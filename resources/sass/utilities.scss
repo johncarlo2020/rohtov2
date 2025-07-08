@@ -51,12 +51,18 @@
 
 .congrats-container {
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
     flex-direction: column;
-    height: 72%;
+    height: 100%;
     width: 100%;
 }
+
+.container-fluid.congrats.start.completed-screen.pt-4 {
+    height: 100vh;
+    display: flex;
+}
+
 .text-lg {
     font-size: 4rem !important;
 }

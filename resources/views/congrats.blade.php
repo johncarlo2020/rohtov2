@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="container-fluid home start completed-screen pt-4">
+    <div class="container-fluid congrats start completed-screen pt-4">
         <div class="congrats-container">
             <div class="col-12 d-flex justify-content-center align-items-center mt-3">
                 <img class="welcome_img w-75" src="{{ asset('images/dutchlady/thankYouMessage.webp') }}" alt="" />

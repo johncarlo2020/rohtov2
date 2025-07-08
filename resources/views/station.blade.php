@@ -2,19 +2,19 @@
     <div id="stationPage" class="station-page main-content main-background with-scroll">
         <div class="modal fade custom-modal" id="scanCompleteModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered w-75 m-auto">
-            <div class="modal-content">
+            <div class="modal-content card">
                 <div class="modal-body">
-                    <div class="text-center content">
+                    <div class="text-center">
                         <!-- <img class="check mx-auto mb-4" id="badge" src=""> -->
                         <div class="text-content mt-0">
-                            <p class="station-text mb-2 text-dark">Station <span class="station_id"></span></p>
-                            <p class="message text-dark">
+                            <p class="sub-heading fw-bold mb-2">Station #<span class="station_id"></span></p>
+                            <p class="mb-4">
                                 Check-in Successful
                             </p>
                         </div>
                         <div class="text-content mt-3">
-                            <a href="{{ route('dashboard') }}" id="routeBtn" class="custom-btn custom-btn-primary">
-                                okay
+                            <a href="{{ route('dashboard') }}" id="routeBtn" class="custom-btn w-auto px-5 fw-regular custom-btn-primary text-white">
+                                Close
                             </a>
                         </div>
                     </div>

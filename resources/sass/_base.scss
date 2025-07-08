@@ -156,3 +156,7 @@ input[type="radio"] {
         color: $black;
     }
 }
+
+.modal-content {
+    border-radius: $modal-border-radius;
+}

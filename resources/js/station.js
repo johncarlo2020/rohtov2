@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const startScannerBtn = document.getElementById('start-scanner');
     const forceQrElement = document.getElementById('forceQr');
 
+    $('#scanCompleteModal').modal('show');
+
     if (!startScannerBtn) return; // Guard against running on pages without the button
 
     let count = 0;

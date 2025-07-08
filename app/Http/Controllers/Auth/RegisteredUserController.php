@@ -9,6 +9,7 @@ use App\Models\Regime;
 use App\Models\RegimeUser;
 
 use Carbon\Carbon;
+use App\Helpers\GlobalHelper;
 
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
@@ -89,6 +90,7 @@ class RegisteredUserController extends Controller
 
         // Use the insert method to insert multiple records in one query
         event(new Registered($user));
+        GlobalHelper::sendOtpSms($phoneNumber, $otp);
 
         Auth::login($user);
 

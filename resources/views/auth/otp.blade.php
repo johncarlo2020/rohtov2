@@ -83,7 +83,7 @@
             resendOtpLink.addEventListener('click', function (e) {
                 e.preventDefault();
 
-                fetch('{{ route('otp') }}', {
+                fetch('{{ route('resend.otp') }}', {
                     method: 'GET',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',

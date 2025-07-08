@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Session;
 use App\Providers\RouteServiceProvider;
+use App\Helpers\GlobalHelper;
 
 class StationController extends Controller
 {
@@ -288,8 +289,11 @@ class StationController extends Controller
     public function welcome()
     {
         $userId = Auth::id();
-        $user = User::with('stationUser')->where('id', $userId)->first();
 
+        $user = User::with('stationUser')->where('id', $userId)->first();
+        if($user->otp_verified != 1){
+            return redirect()->route('otp');
+        }
         $stationDone = $user->stationUser->count();
         $stations = Station::get();
 
@@ -648,13 +652,16 @@ class StationController extends Controller
 
         $otp = rand(100000, 999999);
 
-        // GlobalHelper::sendOtpSms($user->number, $otp);
+         GlobalHelper::sendOtpSms($user->number, $otp);
 
         $user->otp = $otp;
         $user->save();
 
 
-        return $user;
+        return response()->json([
+            'success' => true,
+            'message' => 'OTP resent successfully.'
+        ]);
     }
 
 

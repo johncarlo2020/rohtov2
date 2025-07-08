@@ -26,8 +26,8 @@
                         @endfor
                 </div>
                 <div class="text-center mb-4 text-dark">
-                    <a id="resendOtpLink" href="#">Resend OTP</a>
-                    <p id="resendTimer" class="d-none">Resend OTP in <span id="timerValue">180</span>s</p>
+                    <a id="resendOtpLink" href="#" class="text-dark">Resend OTP</a>
+                    <p id="resendTimer" class="d-none text-dark">Resend OTP in <span id="timerValue" class="text-dark">180</span>s</p>
                 </div>
                 <button type="submit" class="btn btn-primary w-100">Verify OTP</button>     </form>
         </div>

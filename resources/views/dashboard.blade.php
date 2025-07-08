@@ -70,7 +70,6 @@
                 @endif
             @endforeach
         </div>
-        <x-footer />
     </div>
     @push('scripts')
         <script>

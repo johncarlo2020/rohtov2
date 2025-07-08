@@ -44,6 +44,5 @@
                         <p>Sign up <a href="{{ route('register') }}">here</a></p>
             </div>
         </div>
-        <x-footer />
     </div>
 </x-guest-layout>

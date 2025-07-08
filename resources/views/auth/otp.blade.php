@@ -31,7 +31,6 @@
                 </div>
                 <button type="submit" class="btn btn-primary w-100">Verify OTP</button>     </form>
         </div>
-        <x-footer />
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function () {

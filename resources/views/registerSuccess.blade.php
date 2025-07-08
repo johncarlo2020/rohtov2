@@ -16,6 +16,5 @@
 </button>
 
         </div>
-        <x-footer />
     </div>
 </x-guest-layout>

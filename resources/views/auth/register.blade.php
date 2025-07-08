@@ -170,7 +170,6 @@
                     </p>
                 </div>
             </div>
-            <x-footer />
         </div>
     </div>
 </x-guest-layout>

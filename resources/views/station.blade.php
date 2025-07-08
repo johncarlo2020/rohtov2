@@ -21,14 +21,14 @@
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="text-center content">
-                        <img class="check mx-auto mb-4" id="badge" src="">
+                        <!-- <img class="check mx-auto mb-4" id="badge" src=""> -->
                         <div class="text-content mt-0">
                             <p class="station-text mb-2 text-dark">Station <span class="station_id"></span></p>
                             <p class="message text-dark">
                                 Check-in Successful
                             </p>
                         </div>
-                        <div class="">
+                        <div class="text-content mt-3">
                             <a href="{{ route('dashboard') }}" id="routeBtn" class="button-dutch button-dutch-primary">
                                 okay
                             </a>

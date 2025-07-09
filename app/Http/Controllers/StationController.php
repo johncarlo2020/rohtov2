@@ -671,5 +671,10 @@ class StationController extends Controller
         ]);
     }
 
+    public function getValue()
+    {
+        return response()->json(['count' => 1567]); // dynamic count logic here
+    }
+
 
 }

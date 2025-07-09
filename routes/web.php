@@ -112,6 +112,9 @@ Route::group(['middleware' => ['client']], function () {
         return view('registerSuccess');
     })->name('register.welcome');
 
+    Route::get('/counter-value', 'App\Http\Controllers\StationController@getValue')->name('pledge.counter');
+
+
 });
 
 

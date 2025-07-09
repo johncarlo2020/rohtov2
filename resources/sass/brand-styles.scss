@@ -76,3 +76,45 @@
         }
     }
 }
+
+.pledge-selection {
+    gap: 15px;
+
+    .radio-image {
+        padding: 0;
+
+        label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            padding: 20px 10px;
+            text-align: center;
+
+            cursor: pointer;
+            background-color: #ffffff1a;
+            border-radius: 18px;
+            transition: transform 0.2s ease-in-out, outline 0.2s ease-in-out;
+
+            img {
+                max-width: 100%;
+                height: auto;
+                object-fit: contain;
+            }
+
+            p {
+                font-size: 14px;
+                padding: 10px;
+                padding-bottom: 10px;
+            }
+        }
+    }
+
+    .radio-image input:checked + label {
+        outline: 2px solid #ffffff8c;
+        border-radius: 18px;
+        transform: scale(1.02);
+    }
+}

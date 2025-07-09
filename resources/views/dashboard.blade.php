@@ -9,7 +9,7 @@
         <div class="modal fade transparent-modal" id="welcomeModal" tabindex="-1" aria-labelledby="welcomeModalLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content text-center position-relative">
+                <div class="modal-content text-center position-relative card">
 
                     <!-- Close Button (top-right) -->
                     <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal"
@@ -26,11 +26,11 @@
         <!-- Modal -->
         <div class="modal fade custom-modal" id="notAllowedModal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered w-75 m-auto">
-                <div class="modal-content ">
+                <div class="modal-content card">
                     <div class="modal-body">
                         <div class="text-center content">
                             <div class="text-content mt-4 mb-4">
-                                <p class="message text-dark">
+                                <p class="message">
                                     Please Complete all <br> the station
                                 </p>
                             </div>
@@ -88,9 +88,6 @@
                         return;
                     }
 
-                    if (id=== 4) {
-                        return;
-                    }
                     // Redirect to the generated URL
                     window.location.href = url;
                 }

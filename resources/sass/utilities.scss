@@ -33,6 +33,19 @@
             transform: scale(1.1);
         }
     }
+
+    button {
+        background: none;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        color: $text;
+        font-size: 24px;
+
+        &:hover {
+            color: darken($text, 10%);
+        }
+    }
 }
 .text-dark{
     color: #152787 !important;

@@ -315,6 +315,13 @@ class StationController extends Controller
 
     }
 
+    public function pledgeDj()
+    {
+        // get details of station 4
+        $station = Station::find(4);
+        return view('pledgeDj', compact('station'));
+    }
+
     public function scanner()
     {
         // dd('asdasd');

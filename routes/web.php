@@ -91,9 +91,7 @@ Route::group(['middleware' => ['client']], function () {
     Route::get('/workshop/submit', 'App\Http\Controllers\WorkshopController@submit')->name('workshop.submit');
     Route::get('/workshop/congrats', 'App\Http\Controllers\WorkshopController@congrats')->name('workshop.congrats');
     Route::get('/workshop', 'App\Http\Controllers\WorkshopController@index')->name('workshop');
-
-
-
+    Route::get('/pledge-dj', 'App\Http\Controllers\StationController@pledgeDj')->name('pledgeDj');
 
 
     Route::get('/promotion', function () {
@@ -113,7 +111,7 @@ Route::group(['middleware' => ['client']], function () {
      Route::get('/register-welcome', function () {
         return view('registerSuccess');
     })->name('register.welcome');
-    
+
 });
 
 

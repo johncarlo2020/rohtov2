@@ -66,9 +66,9 @@
     }
 
     &:disabled {
-        background-color: lighten($secondary, 10%);
-        border-color: lighten($secondary, 10%);
-        color: lighten($primary, 20%);
+        background-color: darken($secondary, 30%);
+        border-color: darken($secondary, 30%);
+        color: lighten($primary, 30%);
         cursor: not-allowed;
     }
 }

@@ -96,3 +96,23 @@
         }
     }
 }
+
+// Icon button - used for actions that require an icon only
+// This is a simple button with an icon, no text
+// Use this class for buttons that only contain an icon, like a close or delete button
+.icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background-color: transparent;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    padding: 0;
+    border: none;
+    outline: none;
+    padding: 0;
+}
+

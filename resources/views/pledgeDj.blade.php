@@ -39,20 +39,41 @@
                 disabled>Continue</button>
         </div>
         <div id="text" class="d-none steps">
-            <h1 class="heading animate-entry my-5">
+            <h1 class="heading animate-entry delay-1 my-5">
                 Write your <span id="selectionTypeLabel"></span>
             </h1>
-             <div class="mb-3">
+            <div class="mb-3 animate-entry delay-3">
                 <input type="text" class="form-control" id="bubbleText">
                 <p id="textHelp" class="small-text mt-1">*Maximum <span id="numberOfCharacters"></span> character</p>
             </div>
-            <button id="selectText" class="custom-btn custom-btn-secondary animate-entry delay-5 w-100" disabled>Continue</button>
+            <button id="selectText" class="custom-btn custom-btn-secondary animate-entry delay-5 w-100"
+                disabled>Submit</button>
         </div>
-        <div id="coral" class="d-none steps"></div>
+        <div id="coral" class="d-none steps">
+            <h1 class="heading animate-entry delay-1 my-5">
+                Choose your coral
+            </h1>
+            <div class="mb-5 animate-entry delay-3">
+                <div class="coral-selection-container w-100">
+                        <button id="slickPrevBtn" class="icon-btn prev"><i class="fa-solid fa-caret-left"></i></button>
+                        <button id="slickNextBtn" class="icon-btn next"><i class="fa-solid fa-caret-right"></i></button>
+                    <div class="coral-container w-100">
+                        @for ($i = 1; $i <= 5; $i++)
+                            <div class="coral item-container">
+                                <img class="coral slick-img mx-auto mb-3"
+                                    src="{{ asset('images/character/bubbles/' . $i . '.webp') }}"
+                                    alt="coral {{ $i }}" />
+                                <p class="text-center">Coral {{ $i }} </p>
+                            </div>
+                        @endfor
+                    </div>
+                </div>
+            </div>
+            <button id="selectCoralBtn"
+                class="custom-btn custom-btn-secondary animate-entry delay-5 w-100">Select</button>
+        </div>
         <div id="finish" class="d-none steps"></div>
-
     </div>
-
     @push('scripts')
         <script>
             const steps = ['type', 'text', 'coral', 'finish'];
@@ -71,6 +92,9 @@
             const selectionTypeLabel = document.getElementById('selectionTypeLabel');
             const numberOfCharacters = document.getElementById('numberOfCharacters');
             const bubbleText = document.getElementById('bubbleText');
+            const selectText = document.getElementById('selectText');
+            const selectCoralBtn = document.getElementById('selectCoralBtn');
+            // no longer using individual buttons; we'll get the current slick slide image
 
             // get the value of the selected radio button
             document.querySelectorAll('input[name="design"]').forEach((input) => {
@@ -85,6 +109,31 @@
                     processTypeSelection();
                 }
             });
+
+            bubbleText.addEventListener('input', function() {
+                const maxLength = pledgeData.type === 'text' ? 25 : 6;
+                if (this.value.length > maxLength) {
+                    this.value = this.value.slice(0, maxLength);
+                }
+                selectText.disabled = this.value.length === 0;
+            });
+
+            selectText.addEventListener('click', function() {
+                processTextSelection();
+            });
+
+            // On clicking select, grab the image from the current slick slide
+            selectCoralBtn.addEventListener('click', function() {
+                const currentImg = document.querySelector('.coral-container .slick-current img');
+                pledgeData.coral = currentImg ? currentImg.src : '';
+                console.log('Selected coral:', pledgeData.coral);
+
+            });
+
+            function processTextSelection() {
+                pledgeData.text = bubbleText.value;
+                nextStep();
+            }
 
             function processTypeSelection() {
                 const nextStepIndex = steps.indexOf(pledgeData.type);
@@ -127,6 +176,30 @@
                 const currentDiv = document.getElementById(steps[currentStep]);
                 if (currentDiv) {
                     currentDiv.classList.remove('d-none');
+                }
+
+                // initialize slider when coral step appears
+                if (steps[currentStep] === 'coral' && !$('.coral-container').hasClass('slick-initialized')) {
+                    initializeSlick();
+                }
+            }
+
+            // add deferred initialization function
+            function initializeSlick() {
+                const $carousel = $('.coral-container');
+                if ($carousel.length) {
+                    $carousel.slick({
+                        dots: false,
+                        arrows: false,
+                        infinite: false,
+                        speed: 300,
+                        slidesToShow: 1,
+                        slidesToScroll: 1,
+                        focusOnSelect: true,
+                    });
+                    // bind custom nav buttons
+                    document.getElementById('slickPrevBtn').addEventListener('click', () => $carousel.slick('slickPrev'));
+                    document.getElementById('slickNextBtn').addEventListener('click', () => $carousel.slick('slickNext'));
                 }
             }
         </script>

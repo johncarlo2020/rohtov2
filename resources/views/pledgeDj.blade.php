@@ -55,11 +55,11 @@
             </h1>
             <div class="mb-5 animate-entry delay-3">
                 <div class="coral-selection-container w-100">
-                        <button id="slickPrevBtn" class="icon-btn prev"><i class="fa-solid fa-caret-left"></i></button>
-                        <button id="slickNextBtn" class="icon-btn next"><i class="fa-solid fa-caret-right"></i></button>
+                    <button id="slickPrevBtn" class="icon-btn prev"><i class="fa-solid fa-caret-left"></i></button>
+                    <button id="slickNextBtn" class="icon-btn next"><i class="fa-solid fa-caret-right"></i></button>
                     <div class="coral-container w-100">
                         @for ($i = 1; $i <= 5; $i++)
-                            <div class="coral item-container">
+                            <div class="coral item-container" data-id="{{ $i }}">
                                 <img class="coral slick-img mx-auto mb-3"
                                     src="{{ asset('images/character/bubbles/' . $i . '.webp') }}"
                                     alt="coral {{ $i }}" />
@@ -72,7 +72,26 @@
             <button id="selectCoralBtn"
                 class="custom-btn custom-btn-secondary animate-entry delay-5 w-100">Select</button>
         </div>
-        <div id="finish" class="d-none steps"></div>
+        <div id="finish" class="d-none steps">
+            <h1 class="heading animate-entry delay-1 mt-5 mb-2">
+                Total pledge
+            </h1>
+            <div class="counter-container mb-2 animate-entry delay-3">
+                @include('components.counter')
+            </div>
+            <div id="bubbleContainer" class="bubble-container mb-4 animate-entry delay-4">
+                <img class="bubble" src="{{ asset('images/brand/bubble_Overlay.webp') }}" alt="Design 2">
+                <div id="selectedOption"></div>
+            </div>
+
+            <div class="buttons">
+                  <button id="pledgeBtn"
+                class="custom-btn custom-btn-secondary animate-entry delay-5 w-100 mb-3">Pledge now</button>
+                  <button id="downloadBtn"
+                class="custom-btn custom-btn-secondary animate-entry delay-5 w-100">Download</button>
+            </div>
+
+        </div>
     </div>
     @push('scripts')
         <script>
@@ -94,6 +113,8 @@
             const bubbleText = document.getElementById('bubbleText');
             const selectText = document.getElementById('selectText');
             const selectCoralBtn = document.getElementById('selectCoralBtn');
+            const bubbleContainer = document.getElementById('bubbleContainer');
+            const selectedOption = document.getElementById('selectedOption');
             // no longer using individual buttons; we'll get the current slick slide image
 
             // get the value of the selected radio button
@@ -122,12 +143,10 @@
                 processTextSelection();
             });
 
-            // On clicking select, grab the image from the current slick slide
-            selectCoralBtn.addEventListener('click', function() {
-                const currentImg = document.querySelector('.coral-container .slick-current img');
-                pledgeData.coral = currentImg ? currentImg.src : '';
-                console.log('Selected coral:', pledgeData.coral);
-
+             selectCoralBtn.addEventListener('click', function() {
+                if (currentStep === 2) {
+                    processCoralSelection();
+                }
             });
 
             function processTextSelection() {
@@ -154,9 +173,31 @@
                 }
             }
 
+            function createBubble() {
+                if (pledgeData.type === 'text') {
+                    const bubbleTextElement = document.createElement('p');
+                    bubbleTextElement.textContent = pledgeData.text;
+                    bubbleTextElement.className = 'bubble-text';
+                    selectedOption.appendChild(bubbleTextElement);
+                } else if (pledgeData.type === 'coral') {
+
+                }
+            }
+
+            function processCoralSelection() {
+               const slickInstance = $('.coral-container').slick('getSlick');
+                const firstVisible = $(slickInstance.$slides.get(slickInstance.currentSlide)).data('id');
+                pledgeData.coral = firstVisible;
+                createBubble();
+                nextStep();
+            }
+
             function nextStep() {
-                if (currentStep < steps.length - 1) {
+                if (currentStep < steps.length - 1 && pledgeData.type) {
                     currentStep++;
+                    updateUI();
+                } else if(pledgeData.type === 'text') {
+                    currentStep = steps.indexOf('finish');
                     updateUI();
                 }
             }

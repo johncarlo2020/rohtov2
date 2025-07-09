@@ -129,6 +129,11 @@ input[type="radio"] {
 }
 
 // fix position on mobile for country select
+.iti.iti--allow-dropdown {
+    display: block;
+    width: 100%;
+}
+
 .iti-mobile {
     .iti__country-list {
         width: 90vw;

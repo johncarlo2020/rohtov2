@@ -80,7 +80,7 @@
                 @include('components.counter')
             </div>
             <div id="bubbleContainer" class="bubble-container mb-4 animate-entry delay-4">
-                <img class="bubble" src="{{ asset('images/brand/bubble_Overlay.webp') }}" alt="Design 2">
+                <img class="bubble" src="{{ asset('images/brand/bubble_Overlay.webp') }}" crossOrigin="anonymous" alt="Design 2">
                 <div id="selectedOption"></div>
             </div>
 
@@ -115,6 +115,7 @@
             const selectCoralBtn = document.getElementById('selectCoralBtn');
             const bubbleContainer = document.getElementById('bubbleContainer');
             const selectedOption = document.getElementById('selectedOption');
+            const downloadBtn = document.getElementById('downloadBtn');
             // no longer using individual buttons; we'll get the current slick slide image
 
             // get the value of the selected radio button
@@ -151,6 +152,11 @@
 
             function processTextSelection() {
                 pledgeData.text = bubbleText.value;
+                console.log('processTextSelection called:', {
+                    text: pledgeData.text,
+                    type: pledgeData.type
+                });
+                createBubble();
                 nextStep();
             }
 
@@ -174,13 +180,59 @@
             }
 
             function createBubble() {
+                console.log('createBubble called with:', {
+                    type: pledgeData.type,
+                    text: pledgeData.text,
+                    selectedOption: selectedOption
+                });
+
+                // Clear any existing content
+                selectedOption.innerHTML = '';
+
                 if (pledgeData.type === 'text') {
                     const bubbleTextElement = document.createElement('p');
                     bubbleTextElement.textContent = pledgeData.text;
                     bubbleTextElement.className = 'bubble-text';
-                    selectedOption.appendChild(bubbleTextElement);
-                } else if (pledgeData.type === 'coral') {
 
+                    // Add explicit inline styles to ensure visibility in html2canvas
+                    bubbleTextElement.style.position = 'absolute';
+                    bubbleTextElement.style.top = '0';
+                    bubbleTextElement.style.left = '0';
+                    bubbleTextElement.style.width = '100%';
+                    bubbleTextElement.style.height = '100%';
+                    bubbleTextElement.style.display = 'flex';
+                    bubbleTextElement.style.alignItems = 'center';
+                    bubbleTextElement.style.justifyContent = 'center';
+                    bubbleTextElement.style.color = 'white';
+                    bubbleTextElement.style.fontSize = '25px';
+                    bubbleTextElement.style.fontWeight = 'bold';
+                    bubbleTextElement.style.textAlign = 'center';
+                    bubbleTextElement.style.zIndex = '999';
+                    bubbleTextElement.style.pointerEvents = 'none';
+
+                    selectedOption.appendChild(bubbleTextElement);
+
+                    console.log('Text element created and added:', {
+                        text: bubbleTextElement.textContent,
+                        innerHTML: selectedOption.innerHTML
+                    });
+                } else if (pledgeData.type === 'coral') {
+                    // For coral type, show the selected coral image and name
+                    const coralContainer = document.createElement('div');
+                    coralContainer.className = 'coral-display';
+
+                    const coralImg = document.createElement('img');
+                    coralImg.src = `{{ asset('images/character/bubbles/') }}/${pledgeData.coral}.webp`;
+                    coralImg.alt = `Coral ${pledgeData.coral}`;
+                    coralImg.className = 'selected-coral-img';
+
+                    const nameElement = document.createElement('p');
+                    nameElement.textContent = pledgeData.text;
+                    nameElement.className = 'coral-name';
+
+                    coralContainer.appendChild(coralImg);
+                    coralContainer.appendChild(nameElement);
+                    selectedOption.appendChild(coralContainer);
                 }
             }
 
@@ -193,19 +245,37 @@
             }
 
             function nextStep() {
-                if (currentStep < steps.length - 1 && pledgeData.type) {
-                    currentStep++;
-                    updateUI();
-                } else if(pledgeData.type === 'text') {
+                if (currentStep === steps.indexOf('text') && pledgeData.type === 'text') {
+                    // On text step with text type, skip coral and jump to finish
                     currentStep = steps.indexOf('finish');
+                    updateUI();
+                } else if (currentStep < steps.length - 1 && pledgeData.type) {
+                    // Normal progression for other steps
+                    currentStep++;
                     updateUI();
                 }
             }
 
             function previousStep() {
-                if (currentStep > 0) {
+                // Handle step back
+                if (currentStep === steps.indexOf('finish') && pledgeData.type === 'text') {
+                    // from finish to text for text type
+                    currentStep = steps.indexOf('text');
+                } else if (currentStep > 0) {
                     currentStep--;
-                    updateUI();
+                }
+                updateUI();
+                // Clear data for the current step container
+                const sel = document.getElementById('selectedOption');
+                if (currentStep === steps.indexOf('text')) {
+                    // clear text data and bubble preview
+                    pledgeData.text = '';
+                    if (bubbleText) bubbleText.value = '';
+                    if (sel) sel.innerHTML = '';
+                } else if (currentStep === steps.indexOf('coral')) {
+                    // clear coral selection and bubble preview
+                    pledgeData.coral = '';
+                    if (sel) sel.innerHTML = '';
                 }
             }
 
@@ -224,6 +294,179 @@
                     initializeSlick();
                 }
             }
+
+            downloadBtn.addEventListener('click', function() {
+                processDownload();
+            });
+
+            function processDownload() {
+                if (pledgeData.type === 'text') {
+                    downloadPledgeTypeText();
+                } else if (pledgeData.type === 'coral') {
+                    downloadPledgeTypeText(); // Use the same function for both types
+                } else {
+                    alert('Please complete your pledge selection first.');
+                }
+            }
+
+            function downloadPledgeTypeText(){
+                console.log('=== DOWNLOAD DEBUG ===');
+                console.log('Pledge data:', pledgeData);
+                console.log('Bubble container:', bubbleContainer);
+                console.log('Selected option element:', selectedOption);
+                console.log('Selected option innerHTML:', selectedOption ? selectedOption.innerHTML : 'null');
+                console.log('Bubble container innerHTML:', bubbleContainer ? bubbleContainer.innerHTML : 'null');
+
+                // Ensure the bubble container is visible and has content
+                if (!bubbleContainer || bubbleContainer.classList.contains('d-none')) {
+                    alert('Please complete your pledge before downloading.');
+                    return;
+                }
+
+                // Check if we have content in selectedOption
+                if (!selectedOption.innerHTML.trim()) {
+                    console.log('No content in selectedOption, recreating bubble...');
+                    createBubble();
+                    console.log('After recreating - selectedOption innerHTML:', selectedOption.innerHTML);
+                }
+
+                // Wait for images to load before capturing
+                const img = bubbleContainer.querySelector('img.bubble');
+                if (img && !img.complete) {
+                    img.onload = () => {
+                        // Add a small delay to ensure everything is rendered
+                        setTimeout(captureAndDownload, 200);
+                    };
+                } else {
+                    // Add a small delay to ensure everything is rendered
+                    setTimeout(captureAndDownload, 200);
+                }
+
+                function captureAndDownload() {
+                    console.log('=== CAPTURE DEBUG ===');
+                    console.log('Bubble container dimensions:', {
+                        width: bubbleContainer.offsetWidth,
+                        height: bubbleContainer.offsetHeight,
+                        visible: !bubbleContainer.classList.contains('d-none'),
+                        computedStyle: window.getComputedStyle(bubbleContainer).display
+                    });
+
+                    // Debug the bubble text positioning
+                    const bubbleTextEl = selectedOption.querySelector('.bubble-text');
+                    if (bubbleTextEl) {
+                        const textRect = bubbleTextEl.getBoundingClientRect();
+                        const containerRect = bubbleContainer.getBoundingClientRect();
+                        console.log('Bubble text positioning:', {
+                            text: bubbleTextEl.textContent,
+                            textRect: textRect,
+                            containerRect: containerRect,
+                            textComputedStyle: {
+                                position: window.getComputedStyle(bubbleTextEl).position,
+                                top: window.getComputedStyle(bubbleTextEl).top,
+                                left: window.getComputedStyle(bubbleTextEl).left,
+                                transform: window.getComputedStyle(bubbleTextEl).transform,
+                                zIndex: window.getComputedStyle(bubbleTextEl).zIndex,
+                                color: window.getComputedStyle(bubbleTextEl).color,
+                                fontSize: window.getComputedStyle(bubbleTextEl).fontSize,
+                                fontFamily: window.getComputedStyle(bubbleTextEl).fontFamily
+                            }
+                        });
+                    }
+
+                    // Check if html2canvas is available
+                    if (typeof html2canvas === 'undefined') {
+                        console.error('html2canvas library not loaded');
+                        alert('Download feature is not available. Please refresh the page and try again.');
+                        return;
+                    }
+
+                    console.log('Starting html2canvas capture...');
+
+                    // First try to capture just the selectedOption div to test text rendering
+                    console.log('Testing text capture first...');
+                    html2canvas(selectedOption, {
+                        backgroundColor: 'rgba(0,0,0,0.5)', // Semi-transparent background to see text
+                        useCORS: true,
+                        allowTaint: true,
+                        scale: 1
+                    }).then(textCanvas => {
+                        console.log('Text canvas created:', {
+                            width: textCanvas.width,
+                            height: textCanvas.height
+                        });
+
+                        const textCtx = textCanvas.getContext('2d');
+                        const textImageData = textCtx.getImageData(0, 0, textCanvas.width, textCanvas.height);
+                        const textHasContent = textImageData.data.some(pixel => pixel !== 0);
+                        console.log('Text canvas has content:', textHasContent);
+
+                        if (textHasContent) {
+                            console.log('Text renders fine, now trying full bubble...');
+                            // Text renders fine, now try the full bubble
+                            captureFullBubble();
+                        } else {
+                            console.log('Text not rendering, downloading text canvas for debugging');
+                            downloadCanvas(textCanvas, 'text-only-debug.png');
+                        }
+                    }).catch(error => {
+                        console.error('Text capture failed:', error);
+                        // Fallback to full bubble capture
+                        captureFullBubble();
+                    });
+
+                    function captureFullBubble() {
+                        html2canvas(bubbleContainer, {
+                            backgroundColor: null,
+                            useCORS: true,
+                            allowTaint: true,
+                            scale: 1,
+                            logging: false,
+                            removeContainer: false,
+                            foreignObjectRendering: false,
+                            proxy: null, // Disable proxy
+                            imageTimeout: 0, // No timeout
+                            ignoreElements: function(element) {
+                                return false;
+                            }
+                        }).then(canvas => {
+                            console.log('Full canvas created successfully:', {
+                                width: canvas.width,
+                                height: canvas.height
+                            });
+
+                            // Check if canvas has content
+                            if (canvas.width === 0 || canvas.height === 0) {
+                                console.error('Canvas is empty');
+                                alert('Unable to generate image. Please try again.');
+                                return;
+                            }
+
+                            // Also check if canvas actually has drawn content by checking image data
+                            const ctx = canvas.getContext('2d');
+                            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                            const hasContent = imageData.data.some(pixel => pixel !== 0);
+                            console.log('Canvas has actual content:', hasContent);
+
+                            downloadCanvas(canvas, 'pledge_bubble.png');
+                        }).catch(error => {
+                            console.error('Error generating image:', error);
+                            alert('Error generating image. Please try again.');
+                        });
+                    }
+
+                    function downloadCanvas(canvas, filename) {
+                        const link = document.createElement('a');
+                        link.href = canvas.toDataURL('image/png');
+                        link.download = filename;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+
+                        alert('Your image has been downloaded: ' + filename);
+                    }
+                }
+            }
+
 
             // add deferred initialization function
             function initializeSlick() {

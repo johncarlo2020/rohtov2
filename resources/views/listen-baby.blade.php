@@ -17,6 +17,14 @@
                 font-weight: normal;
                 font-style: normal;
             }
+
+            #aquarium-container {
+                background-image: url('{{ asset('images/brand/live-feed/bg.webp') }}');
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+            }
     </style>
 </head>
 

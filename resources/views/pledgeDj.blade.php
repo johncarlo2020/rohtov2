@@ -1166,6 +1166,9 @@
 
                             console.log('Drew sign at:', { x: signX, y: signY, width: signWidth, height: signHeight });
                             console.log('Drew text lines:', lines);
+
+                            // Restore the canvas state to remove rotation
+                            ctx.restore();
                         }
 
                         // Return the canvas data URL

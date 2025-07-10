@@ -8,12 +8,12 @@ const config = {
   type: Phaser.AUTO,
   width: window.innerWidth,
   height: window.innerHeight,
-  backgroundColor: 'transparent',
+  backgroundColor: '#000000', // Use solid color, not transparent
   render: {
     preserveDrawingBuffer: true,
-    transparent: true,
+    // transparent: true, // REMOVE this line to avoid black background with shader
     contextAttributes: {
-      alpha: true,
+      alpha: false, // Set to false for opaque canvas
       premultipliedAlpha: false,
     },
   },
@@ -39,9 +39,6 @@ const CORAL_POSITIONS = [
   { x: 0.75, y: 0.85 }, // Right side bottom
   { x: 0.85, y: 0.75 }, // Right middle rock
   { x: 0.88, y: 0.65 }, // Right upper rock
-  { x: 0.45, y: 0.90 }, // Center bottom
-  { x: 0.35, y: 0.80 }, // Center left
-  { x: 0.65, y: 0.80 }  // Center right
 ];
 
 let currentCoralPositionIndex = 0;
@@ -95,6 +92,9 @@ function preload() {
     this.load.image(`coral${i}`, `images/brand/coral/${i}.webp`);
   }
 
+  // Load background image for Phaser canvas
+  this.load.image("aquarium_bg", "images/brand/live-feed/bg.webp");
+
   // Fetch pledge data from server
   fetchPledgeData();
 }
@@ -126,6 +126,8 @@ function create() {
   // Note: Plasma effect disabled to preserve CSS background visibility
   // The underwater background image is handled by CSS
   // this.cameras.main.setPostPipeline(PlasmaPost2FX);
+  // --- ENABLE UNDERWATER DISTORTION EFFECT ---
+  this.cameras.main.setPostPipeline(PlasmaPost2FX);
 
   // Bind validateGroupSizes early so initial corals and name bubbles can call it
   this.validateGroupSizes = validateGroupSizes.bind(this);
@@ -310,6 +312,14 @@ function removeOldestItem(group, array) {
 
 
 function setupCanvas() {
+  // Add static background image in Phaser, behind all objects and video
+  if (!this.bgImage) {
+    this.bgImage = this.add.image(0, 0, "aquarium_bg").setOrigin(0, 0);
+    this.bgImage.displayWidth = this.sys.game.config.width;
+    this.bgImage.displayHeight = this.sys.game.config.height;
+    this.bgImage.setDepth(-200); // Ensure it's behind the video and everything else
+  }
+
   // Add video background in Phaser, behind all objects
   if (!this.video) {
     this.video = this.add.video(0, 0, "pledge_bg").setOrigin(0, 0);
@@ -318,11 +328,18 @@ function setupCanvas() {
     // Resize video to fill the canvas
     this.video.displayWidth = this.sys.game.config.width;
     this.video.displayHeight = this.sys.game.config.height;
-    this.video.setDepth(-100); // Ensure it's at the back
+    this.video.setDepth(-100); // Ensure it's at the back, but above bgImage
     this.video.play(true);
   }
-  // Update video size on resize
-  resizeGame.call(this);
+  // Update background image and video size on resize
+  if (this.bgImage) {
+    this.bgImage.displayWidth = this.sys.game.config.width;
+    this.bgImage.displayHeight = this.sys.game.config.height;
+  }
+  if (this.video) {
+    this.video.displayWidth = this.sys.game.config.width;
+    this.video.displayHeight = this.sys.game.config.height;
+  }
 }
 
 // Function to fetch pledge data from server

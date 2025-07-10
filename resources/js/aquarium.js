@@ -33,12 +33,12 @@ let pledgeData = [];
 
 // Predefined coral positions based on the aquarium layout
 const CORAL_POSITIONS = [
-  { x: 0.24, y: 0.91, tiltOffsetX: 18, tiltOffsetY: 6, size: 0.50, z: 3 }, // Left side bottom
-  { x: 0.25, y: 0.75, tiltOffsetX: 40, tiltOffsetY: 10, size: 0.35, z: 2 }, // Left middle rock
-  { x: 0.15, y: 0.63, tiltOffsetX: 20, tiltOffsetY: 8, size: 0.30, z: 1 }, // Left upper rock
-  { x: 0.90, y: 0.90, tiltOffsetX: -18, tiltOffsetY: 6, size: 0.50, z: 1 }, // Right side bottom
-  { x: 0.70, y: 0.70, tiltOffsetX: -12, tiltOffsetY: 4, size: 0.27, z: 1 }, // Right middle rock
-  { x: 0.75, y: 0.54, tiltOffsetX: -20, tiltOffsetY: 8, size: 0.30, z: 1 }, // Right upper rock
+  { x: 0.24, y: 0.91, tiltOffsetX: 18, tiltOffsetY: 20, size: 0.50, z: 3, tilt: 0 }, // Left side bottom
+  { x: 0.25, y: 0.75, tiltOffsetX: 40, tiltOffsetY: 10, size: 0.35, z: 2, tilt: 10 }, // Left middle rock
+  { x: 0.15, y: 0.63, tiltOffsetX: 20, tiltOffsetY: 8, size: 0.30, z: 1, tilt: -10 }, // Left upper rock
+  { x: 0.85, y: 0.88, tiltOffsetX: -18, tiltOffsetY: 6, size: 0.50, z: 1, tilt: -15 }, // Right side bottom
+  { x: 0.70, y: 0.70, tiltOffsetX: -12, tiltOffsetY: 4, size: 0.27, z: 1, tilt: -20 }, // Right middle rock
+  { x: 0.75, y: 0.54, tiltOffsetX: -20, tiltOffsetY: 8, size: 0.30, z: 1, tilt: -30 }, // Right upper rock
 ];
 
 let currentCoralPositionIndex = 0;
@@ -415,8 +415,9 @@ function createInitialCoral(index) {
   if (coralPledges.length === 0) return;
   const pledge = Phaser.Utils.Array.GetRandom(coralPledges);
   const coralPosition = CORAL_POSITIONS[index % CORAL_POSITIONS.length];
-  const finalX = coralPosition.x * window.innerWidth;
-  const finalY = coralPosition.y * window.innerHeight;
+  // Apply tilt offsets to position
+  const finalX = coralPosition.x * window.innerWidth + (coralPosition.tiltOffsetX || 0);
+  const finalY = coralPosition.y * window.innerHeight + (coralPosition.tiltOffsetY || 0);
   console.log(`Creating initial coral ${index + 1} at position ${finalX}, ${finalY}`);
   let coral;
   const textureKey = pledge.textureKey || `coral${pledge.coralId}`;
@@ -471,6 +472,11 @@ function createInitialCoral(index) {
   coral.tiltOffsetX = coralPosition.tiltOffsetX || 0;
   coral.tiltOffsetY = coralPosition.tiltOffsetY || 0;
 
+  // Set rotation from CORAL_POSITIONS tilt property (degrees to radians)
+  if (typeof coralPosition.tilt === 'number' && coral.setRotation) {
+    coral.setRotation(Phaser.Math.DegToRad(coralPosition.tilt));
+  }
+
   if (this.coralGroup.getLength() >= MAX_CORALS) {
     if (coral) {
       removeOldestItem.call(this, this.coralGroup, this.corals);
@@ -494,8 +500,9 @@ function spawnSingleCoral(customTextureKey) {
   const textureKey = customTextureKey || pledge.textureKey || `coral${pledge.coralId}`;
   // Get the final coral position
   const coralPosition = CORAL_POSITIONS[currentCoralPositionIndex % CORAL_POSITIONS.length];
-  const finalX = coralPosition.x * window.innerWidth;
-  const finalY = coralPosition.y * window.innerHeight;
+  // Calculate final position with tilt offsets
+  const finalX = coralPosition.x * window.innerWidth + (coralPosition.tiltOffsetX || 0);
+  const finalY = coralPosition.y * window.innerHeight + (coralPosition.tiltOffsetY || 0);
   currentCoralPositionIndex++;
   const spawnX = -80;
   const spawnY = window.innerHeight * 0.5;
@@ -609,6 +616,15 @@ function spawnSingleCoral(customTextureKey) {
         coral.setDisplaySize(600, 600);
       } else {
         coral.setScale(baseScale);
+      }
+      // Move coral to final position with tilt offsets
+      coral.x = finalX;
+      coral.y = finalY;
+      coral.originalX = finalX;
+      coral.originalY = finalY;
+      // Set rotation from CORAL_POSITIONS tilt property (degrees to radians)
+      if (typeof coralPosition.tilt === 'number' && coral.setRotation) {
+        coral.setRotation(Phaser.Math.DegToRad(coralPosition.tilt));
       }
       coral.isPlanted = true;
       coral.phase = 'planted';
@@ -1064,9 +1080,7 @@ function update(time, delta) {
       // --- REMOVE planted coral animation: keep coral at original position and rotation only ---
       coral.x = coral.originalX;
       coral.y = coral.originalY;
-      if (coral.setRotation) {
-        coral.setRotation(0);
-      }
+      // Do NOT reset rotation here; keep the rotation set at planting
       if (coral.setScale) {
         const baseScale = coral.baseScale || 0.5;
         if (!coral.baseScale) coral.baseScale = baseScale;

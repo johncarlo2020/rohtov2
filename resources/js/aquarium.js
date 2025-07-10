@@ -401,7 +401,7 @@ function createInitialCoral(index) {
   const textureKey = pledge.textureKey || `coral${pledge.coralId}`;
   try {
     coral = this.add.sprite(finalX, finalY, textureKey).setScale(0.25);
-    coral.baseScale = 0.25;
+    coral.baseScale = 0.3;
     coral.baseAlpha = 1.0;
   } catch (error) {
     console.warn(`Coral image ${textureKey} failed to load, using fallback`);
@@ -420,6 +420,32 @@ function createInitialCoral(index) {
   coral.originalX = coral.x;
   coral.originalY = coral.y;
   coral.setDepth(5);
+  // Assign fixed random movement parameters for smooth animation
+  coral.swaySpeed = Phaser.Math.FloatBetween(0.7, 1.1);
+  coral.bobSpeed = Phaser.Math.FloatBetween(0.9, 1.2);
+  coral.primarySwayAmp = Phaser.Math.FloatBetween(3.5, 5.5);
+  coral.secondarySwayFreq = Phaser.Math.FloatBetween(1.5, 2.1);
+  coral.secondarySwayAmp = Phaser.Math.FloatBetween(1.0, 2.2);
+  coral.tertiarySwayFreq = Phaser.Math.FloatBetween(0.7, 1.1);
+  coral.tertiarySwayAmp = Phaser.Math.FloatBetween(1.2, 2.5);
+  coral.primaryBobFreq = Phaser.Math.FloatBetween(1.0, 1.2);
+  coral.primaryBobAmp = Phaser.Math.FloatBetween(1.0, 2.0);
+  coral.secondaryBobFreq = Phaser.Math.FloatBetween(1.5, 2.2);
+  coral.secondaryBobAmp = Phaser.Math.FloatBetween(0.5, 1.2);
+  coral.tiltFreq = Phaser.Math.FloatBetween(0.7, 1.1);
+  coral.tiltAmp = Phaser.Math.FloatBetween(0.07, 0.12);
+  coral.scaleFreq = Phaser.Math.FloatBetween(1.1, 1.5);
+  coral.scaleAmp = Phaser.Math.FloatBetween(0.015, 0.035);
+  coral.alphaFreq = Phaser.Math.FloatBetween(0.6, 0.9);
+  coral.alphaAmp = Phaser.Math.FloatBetween(0.08, 0.13);
+  coral.tintFreq = Phaser.Math.FloatBetween(0.4, 0.7);
+  coral.tintStrength = Phaser.Math.FloatBetween(0.12, 0.18);
+  // Limits
+  coral.MIN_X = 80;
+  coral.MAX_X = window.innerWidth - 80;
+  coral.MIN_Y = 50;
+  coral.MAX_Y = window.innerHeight * 0.5;
+
   if (this.coralGroup.getLength() >= MAX_CORALS) {
     if (coral) {
       removeOldestItem.call(this, this.coralGroup, this.corals);
@@ -448,21 +474,18 @@ function spawnSingleCoral(customTextureKey) {
   currentCoralPositionIndex++;
   const spawnX = -80;
   const spawnY = window.innerHeight * 0.5;
-  const bubble = this.add.sprite(spawnX, spawnY, 'bubble_anim', 0).setScale(1.0);
+  // --- ENTRY ANIMATION ---
+  // Make the entry bubble much larger
+  const entryBubbleScale = 0.8; // was 1.0, now much larger
+  const bubble = this.add.sprite(spawnX, spawnY, 'bubble_anim', 0).setScale(entryBubbleScale);
   bubble.alpha = 0;
   bubble.setDepth(20);
   this.tweens.add({ targets: bubble, alpha: 1, duration: 500, ease: "Linear" });
   let coral;
   try {
     coral = this.add.sprite(spawnX, spawnY, textureKey);
-    // If this is a custom image, set display size to 600x600
-    if (textureKey.startsWith('coral_custom_')) {
-      coral.setDisplaySize(600, 600);
-      coral.baseScale = 1.0;
-    } else {
-      coral.setScale(0.25);
-      coral.baseScale = 0.25;
-    }
+    // Do NOT set scale or display size here; wait until planted
+    coral.baseScale = textureKey.startsWith('coral_custom_') ? 1.0 : 0.25;
     coral.baseAlpha = 1.0;
   } catch (error) {
     console.warn(`Coral image ${textureKey} failed to load, using fallback`);
@@ -476,6 +499,32 @@ function spawnSingleCoral(customTextureKey) {
   coral.pledgeData = pledge;
   coral.objectType = 'coral';
   coral.setDepth(5);
+  // Assign fixed random movement parameters for smooth animation
+  coral.swaySpeed = Phaser.Math.FloatBetween(0.7, 1.1);
+  coral.bobSpeed = Phaser.Math.FloatBetween(0.9, 1.2);
+  coral.primarySwayAmp = Phaser.Math.FloatBetween(3.5, 5.5);
+  coral.secondarySwayFreq = Phaser.Math.FloatBetween(1.5, 2.1);
+  coral.secondarySwayAmp = Phaser.Math.FloatBetween(1.0, 2.2);
+  coral.tertiarySwayFreq = Phaser.Math.FloatBetween(0.7, 1.1);
+  coral.tertiarySwayAmp = Phaser.Math.FloatBetween(1.2, 2.5);
+  coral.primaryBobFreq = Phaser.Math.FloatBetween(1.0, 1.2);
+  coral.primaryBobAmp = Phaser.Math.FloatBetween(1.0, 2.0);
+  coral.secondaryBobFreq = Phaser.Math.FloatBetween(1.5, 2.2);
+  coral.secondaryBobAmp = Phaser.Math.FloatBetween(0.5, 1.2);
+  coral.tiltFreq = Phaser.Math.FloatBetween(0.7, 1.1);
+  coral.tiltAmp = Phaser.Math.FloatBetween(0.07, 0.12);
+  coral.scaleFreq = Phaser.Math.FloatBetween(1.1, 1.5);
+  coral.scaleAmp = Phaser.Math.FloatBetween(0.015, 0.035);
+  coral.alphaFreq = Phaser.Math.FloatBetween(0.6, 0.9);
+  coral.alphaAmp = Phaser.Math.FloatBetween(0.08, 0.13);
+  coral.tintFreq = Phaser.Math.FloatBetween(0.4, 0.7);
+  coral.tintStrength = Phaser.Math.FloatBetween(0.12, 0.18);
+  // Limits
+  coral.MIN_X = 80;
+  coral.MAX_X = window.innerWidth - 80;
+  coral.MIN_Y = 50;
+  coral.MAX_Y = window.innerHeight * 0.5;
+
   if (this.coralGroup.getLength() >= MAX_CORALS) {
     if (coral) {
       console.log(`At coral limit (${this.coralGroup.getLength()}/${MAX_CORALS}), removing oldest`);
@@ -491,6 +540,7 @@ function spawnSingleCoral(customTextureKey) {
       this.tweens.add({ targets: coral, alpha: 0.9, duration: 1200, ease: "Linear" });
     }
   }, 200);
+  // Entry path
   const controlX = (spawnX + finalX) / 2;
   const controlY = Math.max(spawnY, finalY) + Math.abs(finalY - spawnY) * 0.6 + 100;
   const path = {
@@ -513,13 +563,9 @@ function spawnSingleCoral(customTextureKey) {
       bubble.y = pos.y;
       coral.x = pos.x;
       coral.y = pos.y;
-      // Only animate scale for non-custom corals
-      if (coral.setScale && !(textureKey.startsWith('coral_custom_'))) {
-        const scaleWobble = 0.25 + Math.sin(tweenObj.t * Math.PI * 4) * 0.01;
-        coral.setScale(scaleWobble);
-      }
+      // No scale animation for coral during entry
       if (bubble.setScale) {
-        const bubbleWobble = 1.0 + Math.sin(tweenObj.t * Math.PI * 3) * 0.04;
+        const bubbleWobble = entryBubbleScale + Math.sin(tweenObj.t * Math.PI * 3) * 0.08;
         bubble.setScale(bubbleWobble);
       }
     },
@@ -530,6 +576,12 @@ function spawnSingleCoral(customTextureKey) {
         bubble.destroy();
         console.log('Entry bubble destroyed');
       });
+      // Set the correct scale or display size ONLY after planting
+      if (textureKey.startsWith('coral_custom_')) {
+        coral.setDisplaySize(600, 600);
+      } else {
+        coral.setScale(0.25);
+      }
       coral.isPlanted = true;
       coral.phase = 'planted';
       coral.swayTime = Math.random() * Math.PI * 2;
@@ -1034,92 +1086,76 @@ function update(time, delta) {
   // Update corals (floating behavior while falling, stationary when planted)
   this.coralGroup.getChildren().forEach((coral) => {
     if (coral.isPlanted && !coral.shouldDestroy) {
-      // Enhanced underwater coral swaying animation - made more visible
-      coral.swayTime += dt * 0.8; // Increased speed for more noticeable movement
+      // --- Enhanced, more realistic coral movement ---
+      coral.swayTime += dt * coral.swaySpeed;
       coral.bobTime = coral.bobTime || 0;
-      coral.bobTime += dt * 1.0; // Increased bobbing speed
-
-      // Multi-layered swaying motion - increased amplitudes for visibility
-      const primarySway = Math.sin(coral.swayTime) * 4.0; // Increased from 1.2 to 4.0
-      const secondarySway = Math.sin(coral.swayTime * 1.7) * 1.5; // Increased from 0.4 to 1.5
-      const tertiarySway = Math.cos(coral.swayTime * 0.8) * 2.0; // Increased from 0.6 to 2.0
-
-      // Vertical bobbing motion (like underwater current) - increased for visibility
-      const primaryBob = Math.cos(coral.bobTime * 1.1) * 1.5; // Increased from 0.3 to 1.5
-      const secondaryBob = Math.sin(coral.bobTime * 1.8) * 0.8; // Increased from 0.15 to 0.8
-
-      // More noticeable rotation/tilt
-      const tilt = Math.sin(coral.swayTime * 0.9) * 0.08; // Increased from 0.02 to 0.08 radians (~4.5 degrees)
-
-      // Apply all movements relative to original position
-      coral.x = coral.originalX + primarySway + secondarySway + tertiarySway;
-      coral.y = coral.originalY + primaryBob + secondaryBob;
-
-      // Apply rotation if coral is a sprite (not circle fallback)
+      coral.bobTime += dt * coral.bobSpeed;
+      // Layered swaying (primary, secondary, tertiary, quaternary)
+      const primarySway = Math.sin(coral.swayTime + (coral.phaseOffset1 || 0)) * coral.primarySwayAmp;
+      const secondarySway = Math.sin(coral.swayTime * coral.secondarySwayFreq + (coral.phaseOffset2 || 0)) * coral.secondarySwayAmp;
+      const tertiarySway = Math.cos(coral.swayTime * coral.tertiarySwayFreq + (coral.phaseOffset3 || 0)) * coral.tertiarySwayAmp;
+      const quaternarySway = Math.sin(coral.swayTime * 0.37 + (coral.phaseOffset4 || 0)) * 1.1;
+      // Layered bobbing
+      const primaryBob = Math.cos(coral.bobTime * coral.primaryBobFreq + (coral.phaseOffset5 || 0)) * coral.primaryBobAmp;
+      const secondaryBob = Math.sin(coral.bobTime * coral.secondaryBobFreq + (coral.phaseOffset6 || 0)) * coral.secondaryBobAmp;
+      const tertiaryBob = Math.cos(coral.bobTime * 0.53 + (coral.phaseOffset7 || 0)) * 0.7;
+      // Slight tilt and scale variation
+      const tilt = Math.sin(coral.swayTime * coral.tiltFreq + (coral.phaseOffset8 || 0)) * coral.tiltAmp + Math.sin(coral.swayTime * 0.23) * 0.04;
+      const scaleVariation = 1 + Math.sin(coral.swayTime * coral.scaleFreq + (coral.phaseOffset9 || 0)) * coral.scaleAmp + Math.sin(coral.swayTime * 0.19) * 0.012;
+      // Assign phase offsets if not already set
+      if (!coral.phaseOffset1) {
+        coral.phaseOffset1 = Math.random() * Math.PI * 2;
+        coral.phaseOffset2 = Math.random() * Math.PI * 2;
+        coral.phaseOffset3 = Math.random() * Math.PI * 2;
+        coral.phaseOffset4 = Math.random() * Math.PI * 2;
+        coral.phaseOffset5 = Math.random() * Math.PI * 2;
+        coral.phaseOffset6 = Math.random() * Math.PI * 2;
+        coral.phaseOffset7 = Math.random() * Math.PI * 2;
+        coral.phaseOffset8 = Math.random() * Math.PI * 2;
+        coral.phaseOffset9 = Math.random() * Math.PI * 2;
+      }
+      coral.x = coral.originalX + primarySway + secondarySway + tertiarySway + quaternarySway;
+      coral.y = coral.originalY + primaryBob + secondaryBob + tertiaryBob;
       if (coral.setRotation) {
         coral.setRotation(tilt);
       }
-
-      // Add subtle scale variation to enhance visibility of movement
       if (coral.setScale) {
-        const baseScale = coral.baseScale || 0.5; // Store original scale if not stored
+        const baseScale = coral.baseScale || 0.5;
         if (!coral.baseScale) coral.baseScale = baseScale;
-        const scaleVariation = 1 + Math.sin(coral.swayTime * 1.3) * 0.02; // ±2% scale variation for more subtle effect
         coral.setScale(baseScale * scaleVariation);
       }
-
-      // Add subtle alpha variation to enhance visibility
       if (coral.setAlpha) {
-        const baseAlpha = coral.baseAlpha || 1.0; // Store original alpha if not stored
+        const baseAlpha = coral.baseAlpha || 1.0;
         if (!coral.baseAlpha) coral.baseAlpha = baseAlpha;
-        const alphaVariation = 1 + Math.sin(coral.bobTime * 0.7) * 0.1; // ±10% alpha variation
-        coral.setAlpha(Math.max(0.7, baseAlpha * alphaVariation)); // Ensure minimum visibility
+        const alphaVariation = 1 + Math.sin(coral.bobTime * coral.alphaFreq) * coral.alphaAmp;
+        coral.setAlpha(Math.max(0.7, baseAlpha * alphaVariation));
       }
-
-      // Add subtle tint variation to enhance movement visibility
       if (coral.setTint) {
-        const tintPhase = coral.swayTime * 0.5;
-        const tintStrength = 0.15; // Subtle tint variation
+        const tintPhase = coral.swayTime * coral.tintFreq;
+        const tintStrength = coral.tintStrength;
         const r = 1 + Math.sin(tintPhase) * tintStrength;
         const g = 1 + Math.sin(tintPhase + Math.PI / 3) * tintStrength;
         const b = 1 + Math.sin(tintPhase + (2 * Math.PI) / 3) * tintStrength;
-
-        // Convert to 0-255 range and create tint
         const tintR = Math.floor(Math.max(0, Math.min(255, r * 255)));
         const tintG = Math.floor(Math.max(0, Math.min(255, g * 255)));
         const tintB = Math.floor(Math.max(0, Math.min(255, b * 255)));
         const tintColor = (tintR << 16) | (tintG << 8) | tintB;
-
         coral.setTint(tintColor);
       }
-
-      // Debug logging to confirm movement is being applied
-      if (Math.floor(time / 1000) % 3 === 0 && coral.swayTime % (Math.PI * 2) < 0.1) {
-        console.log(`Coral at original (${coral.originalX}, ${coral.originalY}) now at (${coral.x.toFixed(1)}, ${coral.y.toFixed(1)}) - sway: ${primarySway.toFixed(1)}, bob: ${primaryBob.toFixed(1)}, tilt: ${(tilt * 180 / Math.PI).toFixed(1)}°`);
-      }
     }
-    // Note: All animation phases are now handled by tweens, no additional movement needed
   });
 
-  // Update coral bubbles
+  // --- ENHANCED coral bubble floating ---
   if (this.coralBubblesGroup) {
     this.coralBubblesGroup.getChildren().forEach((bubble) => {
-      // Add gentle floating movement to rising bubbles
-      bubble.floatTime += dt;
-      bubble.x += bubble.vx * dt * 15 + Math.sin(bubble.floatTime * 2) * 0.3;
-
-      // Slight horizontal drift
-      bubble.vx += Math.cos(bubble.floatTime * 1.5) * 0.002;
-
-      // Keep bubbles from drifting too far
-      if (Math.abs(bubble.vx) > 0.02) {
+      bubble.floatTime += dt * Phaser.Math.FloatBetween(0.95, 1.1);
+      bubble.x += bubble.vx * dt * Phaser.Math.FloatBetween(12, 18) + Math.sin(bubble.floatTime * Phaser.Math.FloatBetween(1.7, 2.3)) * Phaser.Math.FloatBetween(0.2, 0.5);
+      bubble.vx += Math.cos(bubble.floatTime * Phaser.Math.FloatBetween(1.2, 1.8)) * Phaser.Math.FloatBetween(0.001, 0.003);
+      if (Math.abs(bubble.vx) > Phaser.Math.FloatBetween(0.018, 0.025)) {
         bubble.vx *= 0.9;
       }
     });
   }
-
-  // Ocean floor and random area bubbles have their movement handled in tween onUpdate
-  // No additional update logic needed here as movement is in the tween animations
 
   // Update floating name bubbles with calmer movement
   if (this.nameBubbleGroup) {

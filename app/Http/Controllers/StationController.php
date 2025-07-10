@@ -23,15 +23,15 @@ class StationController extends Controller
     public function uploadBaby(Request $request)
     {
         $request->validate([
-            'baby_img' => 'required|image|max:2048', // max 2MB
-            'baby_name' => 'string|max:255',
+            'pledge_image' => 'required|image|max:2048', // max 2MB
+            'pledge_text' => 'string|max:255',
             'charname' => 'string|max:255',
         ]);
 
         $user = Auth::user();
 
         // Store the uploaded image in `public/babies`
-        $path = $request->file('baby_img')->store('public/babies');
+        $path = $request->file('pledge_image')->store('public/babies');
 
         // Convert path to URL or relative path for saving
         $publicPath = Storage::url($path); // returns `/storage/babies/filename.gif`
@@ -67,15 +67,15 @@ class StationController extends Controller
             $stationUser->time_spent = $secondsSpent;
             $stationUser->save();
 
-            $user->baby_img = $publicPath;
-            $user->baby_name = $request->baby_name;
+            $user->pledge_image = $publicPath;
+            $user->pledge_text = $request->pledge_text;
             if ($request->has('charname')) {
                 $user->charname = $request->input('charname');
             }
 
             $user->save();
         // Fire the event
-        broadcast(new babyEvent($publicPath, $user->baby_name,'dj',$user->charname))->toOthers();
+        broadcast(new babyEvent($publicPath, $user->pledge_text,'dj',$user->charname))->toOthers();
 
 
             DB::commit();

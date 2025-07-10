@@ -100,6 +100,8 @@
     </div>
     @push('scripts')
         <script>
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
             const steps = ['type', 'text', 'coral', 'finish'];
             let currentStep = 0;
             let pledgeData = {
@@ -174,6 +176,7 @@
             const selectedOption = document.getElementById('selectedOption');
             const downloadBtn = document.getElementById('downloadBtn');
             const uploadBtn = document.getElementById('uploadBtn');
+            const pledgeBtn = document.getElementById('pledgeBtn');
             // no longer using individual buttons; we'll get the current slick slide image
 
             // get the value of the selected radio button
@@ -1197,28 +1200,32 @@
                             .then(blob => {
                                 // Create FormData for server upload
                                 const formData = new FormData();
-                                formData.append('image', blob, `pledge_${result.type}_${Date.now()}.png`);
-                                formData.append('type', result.type);
-                                formData.append('content', result.content);
-                                if (result.coralId) {
-                                    formData.append('coralId', result.coralId);
-                                }
+                                formData.append('pledge_image', blob, `pledge_${result.type}_${Date.now()}.png`); // must match controller
+                                formData.append('pledge_text', result.content); // must match controller
+                                // If you want to use the pledge as charname, uncomment below:
+                                // formData.append('charname', result.content);
 
-                                // Example: Upload to server
-                                // fetch('/api/upload-pledge', {
-                                //     method: 'POST',
-                                //     body: formData
-                                // })
-                                // .then(response => response.json())
-                                // .then(data => {
-                                //     console.log('Upload successful:', data);
-                                // })
-                                // .catch(error => {
-                                //     console.error('Upload failed:', error);
-                                // });
-
-                                console.log('FormData prepared for upload:', formData);
-                                alert('Content-only image generated! Check console for data.');
+                                // Upload to server using the provided endpoint and headers
+                                fetch('{{ route('upload.baby') }}', {
+                                    method: 'POST',
+                                    body: formData, // FormData will set Content-Type to multipart/form-data with boundary
+                                    headers: {
+                                        'X-CSRF-TOKEN': csrfToken, // Standard CSRF header for Laravel
+                                        'Accept': 'application/json', // Expect a JSON response
+                                    }
+                                })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        console.error('Network response was not ok:', response);
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    // location.reload();
+                                })
+                                .catch(error => {
+                                    console.error('Upload failed:', error);
+                                });
                             });
                     })
                     .catch(error => {
@@ -1226,6 +1233,10 @@
                         alert('Error: ' + error);
                     });
             }
+
+            pledgeBtn.addEventListener('click', function() {
+               uploadPledgeToServer();
+            });
 
 
             // add deferred initialization function

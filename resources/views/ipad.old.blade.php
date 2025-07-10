@@ -332,35 +332,29 @@
                 formData.append('baby_name', selectedCharacter.name); // The name from selectedCharacter context
                 formData.append('_token', csrfToken); // CSRF token for Laravel
 
-                // Debug FormData contents
-                console.log('Sending data:');
-                console.log('baby_name:', selectedCharacter.name);
-                console.log('File type:', file.type);
-                console.log('File size:', file.size, 'bytes');
-
                 // Perform AJAX request
                 fetch('{{ route('upload.babyIpad') }}', {
-                        method: 'POST',
-                        body: formData, // FormData will set Content-Type to multipart/form-data with boundary
-                        headers: {
-                            'X-CSRF-TOKEN': csrfToken, // Standard CSRF header for Laravel
-                            'Accept': 'application/json', // Expect a JSON response
-                        }
-                    })
-                    .then(response => {
-                        // Always read the JSON response, even for error status codes
-                        if (!response.ok) {
-                          console.error('Network response was not ok:', response);
-                        }
-                    })
-                    .then(data => {
-                       //reload the page
-                        location.reload();
-                    })
-                    .catch(error => {
-                        console.error('Upload failed:', error);
-                    });
-            }, "image/png"); // Use PNG format instead of WebP for better compatibility
+                    method: 'POST',
+                    body: formData, // FormData will set Content-Type to multipart/form-data with boundary
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken, // Standard CSRF header for Laravel
+                        'Accept': 'application/json', // Expect a JSON response
+                    }
+                })
+                .then(response => {
+                    // Always read the JSON response, even for error status codes
+                    if (!response.ok) {
+                      console.error('Network response was not ok:', response);
+                    }
+                })
+                .then(data => {
+                   //reload the page
+                    location.reload();
+                })
+                .catch(error => {
+                    console.error('Upload failed:', error);
+                });
+            }, "image/png");
         }
 
         async function captureFrame(frameIndex) {

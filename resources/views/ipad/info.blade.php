@@ -17,7 +17,7 @@
                             <img src="{{asset('images/brand/diverImg.png') }}" class="rounded-circle" width="150" height="150" alt="diver">
                         </div>
                         <div class="col-7 text-start mb-3">
-                            <h2>Mission</h2>
+                            <h2 class="mb-2">Mission</h2>
                             <small style="font-size:12px;">
                                 SEKKISEI has partnered with the Coral Reef Alliance since 2018 with the mission to 
                                 preserve coral reefs and protect marine habitats in the United States and the Caribbean. 
@@ -26,7 +26,7 @@
                             </small>
                         </div>
                         <div class="col-7 text-start mb-3">
-                            <h2>Donation</h2>
+                            <h2 class="mb-2">Donation</h2>
                             <small style="font-size:12px;">
                                 In the United States, your purchase of any CLEAR WELLNESS product in the month of June includes a donation* 
                                 to The Coral Reef Alliance. In support of the SAVE The BLUE project, SEKKISEI will donate a portion of the proceeds of each product sold.
@@ -40,7 +40,6 @@
                                 border-radius: 15px; 
                                 height: 150px; 
                                 width: 150px;">
-
                             </div>
                             <!-- <img src="{{asset('images/brand/globeImg.jpg') }}" class="rounded-circle" width="150" height="150" alt="diver"> -->
                         </div>
@@ -48,7 +47,7 @@
                             <img src="{{asset('images/brand/handImg.png') }}" class="rounded-circle" width="150" height="150" alt="hand">
                         </div>
                         <div class="col-7 text-start mb-3">
-                            <h2>Mission</h2>
+                            <h2 class="mb-2">Results</h2>
                             <small style="font-size:12px;">
                                 Our donations to The Coral Reef Alliance support coral health and resilience against climate change. Since 
                                 2009, SEKKISEI has worked to save endangered coral reefs in Okinawa and support ocean conservation. Since 2011, 
@@ -95,7 +94,7 @@
     <x-scriptPackages />
     <script>
     document.getElementById('modalYesBtn').addEventListener('click', function () {
-        window.location.href = "{{ route('pledgeDj') }}"; // Adjust route if needed
+        window.location.href = "{{ route('ipad.message.type') }}"; // Adjust route if needed
     });
     </script>
 </x-app-layout>

@@ -61,10 +61,11 @@
                         @for ($i = 1; $i <= 5; $i++)
                             <div class="coral item-container" data-id="{{ $i }}">
                                 <div class="coral-image-container">
-                                     <img class="bubble" src="{{ asset('images/brand/bubble_Overlay.webp') }}" crossOrigin="anonymous" alt="Design 2">
-                                      <img class="coral slick-img mx-auto"
-                                    src="{{ asset('images/brand/coral/' . $i . '.webp') }}"
-                                    alt="coral {{ $i }}" />
+                                    <img class="bubble" src="{{ asset('images/brand/bubble_Overlay.webp') }}"
+                                        crossOrigin="anonymous" alt="Design 2">
+                                    <img class="coral slick-img mx-auto"
+                                        src="{{ asset('images/brand/coral/' . $i . '.webp') }}"
+                                        alt="coral {{ $i }}" />
                                 </div>
                                 <p class="text-center">Coral {{ $i }} </p>
                             </div>
@@ -83,17 +84,18 @@
                 @include('components.counter')
             </div>
             <div id="bubbleContainer" class="bubble-container mb-4 animate-entry delay-4">
-                <img class="bubble" src="{{ asset('images/brand/bubble_Overlay.webp') }}" crossOrigin="anonymous" alt="Design 2">
+                <img class="bubble d-none" src="{{ asset('images/brand/bubble_Overlay.webp') }}" crossOrigin="anonymous"
+                    alt="Design 2">
                 <div id="selectedOption"></div>
             </div>
 
             <div class="buttons">
-                  <button id="pledgeBtn"
-                class="custom-btn custom-btn-secondary animate-entry delay-5 w-100 mb-3">Pledge now</button>
-                  <button id="downloadBtn"
-                class="custom-btn custom-btn-secondary animate-entry delay-5 w-100 mb-2">Download</button>
-                  <button id="uploadBtn"
-                class="custom-btn custom-btn-primary animate-entry delay-5 w-100">Get Content for Upload</button>
+                <button id="pledgeBtn" class="custom-btn custom-btn-secondary animate-entry delay-5 w-100 mb-3">Pledge
+                    now</button>
+                <button id="downloadBtn"
+                    class="custom-btn custom-btn-secondary animate-entry delay-5 w-100 mb-2">Download</button>
+                <button id="uploadBtn" class="custom-btn custom-btn-primary animate-entry delay-5 w-100">Get Content for
+                    Upload</button>
             </div>
 
         </div>
@@ -117,48 +119,84 @@
                     backgroundColor: '#3852A5',
                     borderColor: '#ffffff',
                     textColor: '#ffffff',
-                    position: { top: '20%', left: '50%' },
-                    stickPosition: { top: '35%', left: '50%' },
+                    position: {
+                        top: '20%',
+                        left: '50%'
+                    },
+                    stickPosition: {
+                        top: '35%',
+                        left: '50%'
+                    },
                     tilt: -8 // degrees
                 },
                 2: {
                     backgroundColor: '#ffffff',
                     borderColor: '#000000',
                     textColor: '#000000',
-                    position: { top: '25%', left: '45%' },
-                    stickPosition: { top: '40%', left: '45%' },
+                    position: {
+                        top: '25%',
+                        left: '45%'
+                    },
+                    stickPosition: {
+                        top: '40%',
+                        left: '45%'
+                    },
                     tilt: 5 // degrees
                 },
                 3: {
                     backgroundColor: '#3852A5',
                     borderColor: '#ffffff',
                     textColor: '#ffffff',
-                    position: { top: '30%', left: '55%' },
-                    stickPosition: { top: '45%', left: '55%' },
+                    position: {
+                        top: '30%',
+                        left: '55%'
+                    },
+                    stickPosition: {
+                        top: '45%',
+                        left: '55%'
+                    },
                     tilt: -12 // degrees
                 },
                 4: {
                     backgroundColor: '#ffffff',
                     borderColor: '#000000',
                     textColor: '#000000',
-                    position: { top: '22%', left: '40%' },
-                    stickPosition: { top: '37%', left: '40%' },
+                    position: {
+                        top: '22%',
+                        left: '40%'
+                    },
+                    stickPosition: {
+                        top: '37%',
+                        left: '40%'
+                    },
                     tilt: 7 // degrees
                 },
                 5: {
                     backgroundColor: '#3852A5',
                     borderColor: '#ffffff',
                     textColor: '#ffffff',
-                    position: { top: '28%', left: '60%' },
-                    stickPosition: { top: '43%', left: '60%' },
+                    position: {
+                        top: '28%',
+                        left: '60%'
+                    },
+                    stickPosition: {
+                        top: '43%',
+                        left: '60%'
+                    },
                     tilt: -6 // degrees
                 },
                 6: {
                     backgroundColor: '#ffffff',
                     borderColor: '#000000',
                     textColor: '#000000',
-                    position: { top: '25%', left: '50%' },
-                    stickPosition: { top: '40%', left: '50%' },
+                    position: {
+                        top: '25%',
+                        left: '50%'
+                    },
+                    stickPosition: {
+                        top: '40%',
+                        left: '50%'
+                    },
                     tilt: 10 // degrees
                 }
             };
@@ -205,7 +243,7 @@
                 processTextSelection();
             });
 
-             selectCoralBtn.addEventListener('click', function() {
+            selectCoralBtn.addEventListener('click', function() {
                 if (currentStep === 2) {
                     processCoralSelection();
                 }
@@ -221,7 +259,7 @@
                     text: pledgeData.text,
                     type: pledgeData.type
                 });
-                createBubble();
+                createBubbleCanvas(pledgeData, bubbleContainer);
                 nextStep();
             }
 
@@ -244,132 +282,146 @@
                 }
             }
 
-            function createBubble() {
-                console.log('createBubble called with:', {
-                    type: pledgeData.type,
-                    text: pledgeData.text,
-                    selectedOption: selectedOption
-                });
+            function createBubbleCanvas(pledgeData, bubbleContainer) {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
 
-                // Clear any existing content
-                selectedOption.innerHTML = '';
+                const width = 300;
+                const height = 300;
 
-                if (pledgeData.type === 'text') {
-                    const bubbleTextElement = document.createElement('p');
-                    bubbleTextElement.textContent = pledgeData.text;
-                    bubbleTextElement.className = 'bubble-text';
+                canvas.width = width;
+                canvas.height = height;
+                bubbleContainer.innerHTML = '';
+                bubbleContainer.appendChild(canvas);
 
-                    // Add explicit inline styles to ensure visibility in html2canvas
-                    bubbleTextElement.style.position = 'absolute';
-                    bubbleTextElement.style.top = '0';
-                    bubbleTextElement.style.left = '0';
-                    bubbleTextElement.style.width = '100%';
-                    bubbleTextElement.style.height = '100%';
-                    bubbleTextElement.style.display = 'flex';
-                    bubbleTextElement.style.alignItems = 'center';
-                    bubbleTextElement.style.justifyContent = 'center';
-                    bubbleTextElement.style.color = 'white';
-                    // Use same logic as download for font size - keep consistent 25px
-                    const fontSize = '25px';
-                    bubbleTextElement.style.fontSize = fontSize;
-                    bubbleTextElement.style.fontWeight = 'bold';
-                    bubbleTextElement.style.textAlign = 'center';
-                    bubbleTextElement.style.zIndex = '999';
-                    bubbleTextElement.style.pointerEvents = 'none';
-                    bubbleTextElement.style.fontFamily = '"Palatino", "Palatino Linotype", "Book Antiqua", Georgia, serif';
-                    // Add text wrapping properties
-                    bubbleTextElement.style.wordWrap = 'break-word';
-                    bubbleTextElement.style.whiteSpace = 'normal';
-                    bubbleTextElement.style.lineHeight = '1.2';
-                    bubbleTextElement.style.padding = '0 60px'; // Add some padding to match canvas text area
-                    // Add text shadow to match download
-                    bubbleTextElement.style.textShadow = '2px 2px 6px rgba(0, 0, 0, 0.8)';
-
-                    selectedOption.appendChild(bubbleTextElement);
-
-                    console.log('Text element created and added:', {
-                        text: bubbleTextElement.textContent,
-                        innerHTML: selectedOption.innerHTML
+                // Load image helper
+                const loadImage = (src) =>
+                    new Promise((resolve) => {
+                        const img = new Image();
+                        img.onload = () => resolve(img);
+                        img.src = src;
                     });
-                } else if (pledgeData.type === 'coral') {
-                    // For coral type, show the coral with stick sign
-                    const coralContainer = document.createElement('div');
-                    coralContainer.className = 'coral-display';
 
-                    // Add inline styles for proper positioning
-                    coralContainer.style.position = 'absolute';
-                    coralContainer.style.top = '0';
-                    coralContainer.style.left = '0';
-                    coralContainer.style.width = '100%';
-                    coralContainer.style.height = '100%';
+                async function drawBubble() {
+                       const bg = await loadImage(`{{ asset('images/brand/bubble_Overlay.webp') }}`);
+                        ctx.drawImage(bg, 0, 0, width, height);
+                    if (pledgeData.type === 'text') {
+                        ctx.fillStyle = 'white';
+                        ctx.font = 'bold 25px "Palatino", serif';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
+                        ctx.shadowBlur = 6;
 
-                    // Create coral image (bottom layer)
-                    const coralImg = document.createElement('img');
-                    coralImg.src = `{{ asset('images/brand/coral-seperate') }}/${pledgeData.coral}.webp`;
-                    coralImg.alt = `Coral ${pledgeData.coral}`;
-                    coralImg.className = 'selected-coral-img';
-                    coralImg.style.position = 'absolute';
-                    coralImg.style.bottom = '20%';
-                    coralImg.style.left = '50%';
-                    coralImg.style.transform = 'translateX(-50%)';
-                    coralImg.style.maxWidth = '60%';
-                    coralImg.style.maxHeight = '40%';
-                    coralImg.style.objectFit = 'contain';
-                    coralImg.style.zIndex = '1';
+                        // Text wrapping logic
+                        const maxWidth = width * 0.6; // 60% of bubble width
+                        const words = pledgeData.text.split(' ');
+                        const lines = [];
+                        let currentLine = '';
+                        for (let i = 0; i < words.length; i++) {
+                            const testLine = currentLine + (currentLine ? ' ' : '') + words[i];
+                            const metrics = ctx.measureText(testLine);
+                            if (metrics.width > maxWidth && currentLine) {
+                                lines.push(currentLine);
+                                currentLine = words[i];
+                            } else {
+                                currentLine = testLine;
+                            }
+                        }
+                        if (currentLine) {
+                            lines.push(currentLine);
+                        }
+                        // Center lines vertically
+                        const lineHeight = 30;
+                        const totalTextHeight = lines.length * lineHeight;
+                        let startY = height / 2 - totalTextHeight / 2 + lineHeight / 2;
+                        lines.forEach((line, i) => {
+                            ctx.fillText(line, width / 2, startY + i * lineHeight);
+                        });
+                    } else if (pledgeData.type === 'coral') {
+                        const coralId = pledgeData.coral;
+                        const signConfig = coralSignConfig[coralId] || coralSignConfig[1];
 
-                    // Create stick image (middle layer)
-                    const stickImg = document.createElement('img');
-                    stickImg.src = `{{ asset('images/brand/coral-seperate/stick.webp') }}`;
-                    stickImg.alt = 'Sign stick';
-                    stickImg.className = 'coral-stick';
+                        const [coralImg, stickImg] = await Promise.all([
+                            loadImage(`{{ asset('images/brand/coral-seperate') }}/${coralId}.webp`),
+                            loadImage(`{{ asset('images/brand/coral-seperate/stick.webp') }}`)
+                        ]);
 
-                    // Get configuration for this coral ID
-                    const signConfig = coralSignConfig[pledgeData.coral] || coralSignConfig[1]; // fallback to coral 1 config
+                        // Draw stick FIRST (behind coral)
+                        const stickWidth = width * 0.020; // even more thinner stick
+                        const stickHeight = height * 0.30; // even shorter stick
+                        const stickX = width / 2; // center stick horizontally
+                        const stickY = height * 0.62; // lower starting point for stick
+                        ctx.drawImage(stickImg, stickX - stickWidth / 2, stickY - stickHeight, stickWidth, stickHeight);
 
-                    stickImg.style.position = 'absolute';
-                    stickImg.style.top = signConfig.stickPosition.top;
-                    stickImg.style.left = signConfig.stickPosition.left;
-                    stickImg.style.transform = 'translate(-50%, -50%)';
-                    stickImg.style.maxWidth = '15%';
-                    stickImg.style.maxHeight = '45%';
-                    stickImg.style.objectFit = 'contain';
-                    stickImg.style.zIndex = '0'; // Behind everything - lowest layer
+                        // Draw coral image (on top of stick)
+                        const coralWidth = width * 0.6;
+                        const coralHeight = height * 0.4;
+                        const coralX = width / 2 - coralWidth / 2; // center coral horizontally
+                        const coralY = height * 0.8 - coralHeight; // position coral at bottom
+                        ctx.drawImage(coralImg, coralX, coralY, coralWidth, coralHeight);
 
-                    // Create text element (top layer - on the stick like a sign)
-                    const nameElement = document.createElement('p');
-                    nameElement.textContent = pledgeData.text;
-                    nameElement.className = 'coral-name';
+                        // Draw name label (sign) at top of stick
+                        const textX = stickX;
+                        const textY = stickY - stickHeight; // top of stick
+                        const angle = signConfig.tilt * Math.PI / 180;
+                        ctx.save();
+                        ctx.translate(textX, textY);
+                        ctx.rotate(angle);
 
-                    nameElement.style.position = 'absolute';
-                    nameElement.style.top = signConfig.position.top;
-                    nameElement.style.left = signConfig.position.left;
-                    nameElement.style.transform = `translate(-50%, -50%) rotate(${signConfig.tilt}deg)`;
-                    nameElement.style.color = signConfig.textColor;
-                    nameElement.style.fontSize = '16px';
-                    nameElement.style.fontWeight = 'bold';
-                    nameElement.style.fontFamily = '"Palatino", "Palatino Linotype", "Book Antiqua", Georgia, serif';
-                    nameElement.style.textAlign = 'center';
-                    nameElement.style.textShadow = signConfig.textColor === '#ffffff' ? '2px 2px 4px rgba(0, 0, 0, 0.8)' : '1px 1px 2px rgba(0, 0, 0, 0.3)';
-                    nameElement.style.backgroundColor = signConfig.backgroundColor;
-                    nameElement.style.padding = '6px 10px';
-                    nameElement.style.borderRadius = '6px';
-                    nameElement.style.border = `2px solid ${signConfig.borderColor}`;
-                    nameElement.style.minWidth = '70px';
-                    nameElement.style.maxWidth = '120px';
-                    nameElement.style.zIndex = '100'; // Above everything else
+                        // Draw background rectangle for text
+                        const padding = 18; // more padding for bigger sign
+                        const text = pledgeData.text;
+                        ctx.font = 'bold 18px "Palatino", serif'; // slightly larger font
+                        const textWidth = ctx.measureText(text).width + padding * 2;
+                        const textHeight = 38; // taller sign
+                        ctx.fillStyle = signConfig.backgroundColor;
+                        ctx.strokeStyle = signConfig.borderColor;
+                        ctx.lineWidth = 2;
+                        ctx.beginPath();
+                        ctx.roundRect(-textWidth / 2, -textHeight / 2, textWidth, textHeight, 8); // more border radius
+                        ctx.fill();
+                        ctx.stroke();
 
-                    coralContainer.appendChild(coralImg);
-                    coralContainer.appendChild(stickImg);
-                    coralContainer.appendChild(nameElement);
-                    selectedOption.appendChild(coralContainer);
+                        // Draw text
+                        ctx.fillStyle = signConfig.textColor;
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.shadowColor = signConfig.textColor === '#ffffff' ?
+                            'rgba(0,0,0,0.8)' : 'rgba(0,0,0,0.3)';
+                        ctx.shadowBlur = 2;
+                        ctx.fillText(text, 0, 0);
+
+                        ctx.restore();
+                    }
                 }
+
+                drawBubble();
             }
 
+            // Helper to add roundRect support if not already there (optional in modern browsers)
+            if (!CanvasRenderingContext2D.prototype.roundRect) {
+                CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
+                    this.beginPath();
+                    this.moveTo(x + r, y);
+                    this.lineTo(x + w - r, y);
+                    this.quadraticCurveTo(x + w, y, x + w, y + r);
+                    this.lineTo(x + w, y + h - r);
+                    this.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+                    this.lineTo(x + r, y + h);
+                    this.quadraticCurveTo(x, y + h, x, y + h - r);
+                    this.lineTo(x, y + r);
+                    this.quadraticCurveTo(x, y, x + r, y);
+                    this.closePath();
+                };
+            }
+
+
             function processCoralSelection() {
-               const slickInstance = $('.coral-container').slick('getSlick');
+                const slickInstance = $('.coral-container').slick('getSlick');
                 const firstVisible = $(slickInstance.$slides.get(slickInstance.currentSlide)).data('id');
                 pledgeData.coral = firstVisible;
-                createBubble();
+                createBubbleCanvas(pledgeData, bubbleContainer);
                 nextStep();
             }
 
@@ -428,882 +480,49 @@
                 processDownload();
             });
 
-            uploadBtn.addEventListener('click', function() {
+            function processDownload() {
+                // Find the canvas inside bubbleContainer
+                const canvas = bubbleContainer.querySelector('canvas');
+                if (!canvas) {
+                    alert('No canvas found to download.');
+                    return;
+                }
+                // Create a link and trigger download
+                const link = document.createElement('a');
+                link.href = canvas.toDataURL('image/png');
+                link.download = 'pledge_canvas.png';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+
+
+             uploadBtn.addEventListener('click', function() {
                 uploadPledgeToServer();
             });
-
-            function processDownload() {
-                if (pledgeData.type === 'text') {
-                    downloadPledgeTypeText();
-                } else if (pledgeData.type === 'coral') {
-                    downloadPledgeTypeCoral();
-                } else {
-                    alert('Please complete your pledge selection first.');
-                }
-            }
-
-            function downloadPledgeTypeText(){
-                console.log('=== DOWNLOAD DEBUG ===');
-                console.log('Pledge data:', pledgeData);
-                console.log('Bubble container:', bubbleContainer);
-                console.log('Selected option element:', selectedOption);
-                console.log('Selected option innerHTML:', selectedOption ? selectedOption.innerHTML : 'null');
-                console.log('Bubble container innerHTML:', bubbleContainer ? bubbleContainer.innerHTML : 'null');
-
-                // Ensure the bubble container is visible and has content
-                if (!bubbleContainer || bubbleContainer.classList.contains('d-none')) {
-                    alert('Please complete your pledge before downloading.');
-                    return;
-                }
-
-                // Check if we have content in selectedOption
-                if (!selectedOption.innerHTML.trim()) {
-                    console.log('No content in selectedOption, recreating bubble...');
-                    createBubble();
-                    console.log('After recreating - selectedOption innerHTML:', selectedOption.innerHTML);
-                }
-
-                // Wait for images to load before capturing
-                const img = bubbleContainer.querySelector('img.bubble');
-                if (img && !img.complete) {
-                    img.onload = () => {
-                        // Add a small delay to ensure everything is rendered
-                        setTimeout(captureAndDownload, 200);
-                    };
-                } else {
-                    // Add a small delay to ensure everything is rendered
-                    setTimeout(captureAndDownload, 200);
-                }
-
-                function captureAndDownload() {
-                    console.log('=== CAPTURE DEBUG ===');
-                    console.log('Bubble container dimensions:', {
-                        width: bubbleContainer.offsetWidth,
-                        height: bubbleContainer.offsetHeight,
-                        visible: !bubbleContainer.classList.contains('d-none'),
-                        computedStyle: window.getComputedStyle(bubbleContainer).display
-                    });
-
-                    // Debug the bubble text positioning
-                    const bubbleTextEl = selectedOption.querySelector('.bubble-text');
-                    if (bubbleTextEl) {
-                        const textRect = bubbleTextEl.getBoundingClientRect();
-                        const containerRect = bubbleContainer.getBoundingClientRect();
-                        console.log('Bubble text positioning:', {
-                            text: bubbleTextEl.textContent,
-                            textRect: textRect,
-                            containerRect: containerRect,
-                            textComputedStyle: {
-                                position: window.getComputedStyle(bubbleTextEl).position,
-                                top: window.getComputedStyle(bubbleTextEl).top,
-                                left: window.getComputedStyle(bubbleTextEl).left,
-                                transform: window.getComputedStyle(bubbleTextEl).transform,
-                                zIndex: window.getComputedStyle(bubbleTextEl).zIndex,
-                                color: window.getComputedStyle(bubbleTextEl).color,
-                                fontSize: window.getComputedStyle(bubbleTextEl).fontSize,
-                                fontFamily: window.getComputedStyle(bubbleTextEl).fontFamily
-                            }
-                        });
-                    }
-
-                    // Check if html2canvas is available
-                    if (typeof html2canvas === 'undefined') {
-                        console.error('html2canvas library not loaded');
-                        alert('Download feature is not available. Please refresh the page and try again.');
-                        return;
-                    }
-
-                    console.log('Starting manual canvas creation...');
-
-                    // Create canvas manually
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-
-                    // Get bubble container dimensions
-                    const containerWidth = bubbleContainer.offsetWidth;
-                    const containerHeight = bubbleContainer.offsetHeight;
-
-                    // Set canvas size
-                    canvas.width = containerWidth;
-                    canvas.height = containerHeight;
-
-                    console.log('Canvas dimensions set to:', {
-                        width: canvas.width,
-                        height: canvas.height
-                    });
-
-                    // Load the bubble image
-                    const bubbleImg = bubbleContainer.querySelector('img.bubble');
-                    if (bubbleImg && bubbleImg.complete) {
-                        console.log('Drawing bubble image...');
-
-                        // Draw the bubble image
-                        ctx.drawImage(bubbleImg, 0, 0, canvas.width, canvas.height);
-
-                        // Draw the text
-                        if (pledgeData.text) {
-
-                            // Set text properties
-                            ctx.fillStyle = 'white';
-                            ctx.font = 'bold 25px "Palatino", "Palatino Linotype", "Book Antiqua", Georgia, serif';
-                            ctx.textAlign = 'center';
-                            ctx.textBaseline = 'middle';
-
-                            // Add text shadow for better visibility
-                            ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
-                            ctx.shadowBlur = 6;
-                            ctx.shadowOffsetX = 2;
-                            ctx.shadowOffsetY = 2;
-
-                            // Calculate text area (bubble center area, smaller than full canvas)
-                            const textAreaWidth = canvas.width * 0.6; // 60% of canvas width
-                            const textAreaHeight = canvas.height * 0.4; // 40% of canvas height
-                            const centerX = canvas.width / 2;
-                            const centerY = canvas.height / 2;
-
-                            // Split text into words and wrap lines
-                            const words = pledgeData.text.split(' ');
-                            const lines = [];
-                            let currentLine = '';
-
-                            // Calculate optimal font size - keep consistent with preview (25px)
-                            let fontSize = 25;
-                            let lineHeight = fontSize * 1.2;
-
-                            // Keep font size consistent, don't reduce it
-                            // Text wrapping will handle longer text
-
-                            // Create lines that fit within the text area
-                            for (let i = 0; i < words.length; i++) {
-                                const testLine = currentLine + (currentLine ? ' ' : '') + words[i];
-                                const metrics = ctx.measureText(testLine);
-
-                                if (metrics.width > textAreaWidth && currentLine) {
-                                    lines.push(currentLine);
-                                    currentLine = words[i];
-                                } else {
-                                    currentLine = testLine;
-                                }
-                            }
-                            if (currentLine) {
-                                lines.push(currentLine);
-                            }
-
-                            // Calculate starting Y position to center all lines
-                            const totalTextHeight = lines.length * lineHeight;
-                            let startY = centerY - (totalTextHeight / 2) + (lineHeight / 2);
-
-                            // Draw each line
-                            lines.forEach((line, index) => {
-                                const y = startY + (index * lineHeight);
-                                ctx.fillText(line, centerX, y);
-                            });
-                        }
-
-                        downloadCanvas(canvas, 'pledge_bubble_manual.png');
-
-                    } else {
-                        console.log('Bubble image not loaded, creating fallback...');
-
-                        // Create a simple background
-                        ctx.fillStyle = '#4a90e2';
-                        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                        // Draw border
-                        ctx.strokeStyle = '#ffffff';
-                        ctx.lineWidth = 4;
-                        ctx.strokeRect(0, 0, canvas.width, canvas.height);
-
-                        // Draw text
-                        if (pledgeData.text) {
-                            ctx.fillStyle = 'white';
-                            ctx.font = 'bold 25px "Palatino", "Palatino Linotype", "Book Antiqua", Georgia, serif';
-                            ctx.textAlign = 'center';
-                            ctx.textBaseline = 'middle';
-
-                            // Add shadow
-                            ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
-                            ctx.shadowBlur = 4;
-                            ctx.shadowOffsetX = 2;
-                            ctx.shadowOffsetY = 2;
-
-                            ctx.fillText(pledgeData.text, canvas.width / 2, canvas.height / 2);
-                        }
-
-                        downloadCanvas(canvas, 'pledge_bubble_fallback.png');
-                    }
-
-                    function downloadCanvas(canvas, filename) {
-                        const link = document.createElement('a');
-                        link.href = canvas.toDataURL('image/png');
-                        link.download = filename;
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
-                    }
-                }
-            }
-
-            function downloadPledgeTypeCoral() {
-                console.log('=== CORAL DOWNLOAD DEBUG ===');
-                console.log('Pledge data:', pledgeData);
-                console.log('Bubble container:', bubbleContainer);
-
-                // Ensure we have coral data
-                if (!pledgeData.coral || !pledgeData.text) {
-                    alert('Please complete your coral pledge before downloading.');
-                    return;
-                }
-
-                // Get coral configuration
-                const config = coralSignConfig[pledgeData.coral];
-                if (!config) {
-                    alert('Coral configuration not found. Please try again.');
-                    return;
-                }
-
-                console.log('Using coral config:', config);
-
-                // Create canvas for download
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-
-                // Set canvas size to match the bubble container
-                const containerWidth = bubbleContainer.offsetWidth;
-                const containerHeight = bubbleContainer.offsetHeight;
-                canvas.width = containerWidth;
-                canvas.height = containerHeight;
-
-                console.log('Canvas dimensions set to:', {
-                    width: canvas.width,
-                    height: canvas.height
-                });
-
-                // Track loaded images
-                let imagesLoaded = 0;
-                const totalImages = 2; // coral and stick images
-                const images = {};
-
-                function checkAllImagesLoaded() {
-                    if (imagesLoaded === totalImages) {
-                        renderCoralCanvas();
-                    }
-                }
-
-                // Load coral image
-                const coralImg = new Image();
-                coralImg.crossOrigin = 'anonymous';
-                coralImg.onload = function() {
-                    images.coral = coralImg;
-                    imagesLoaded++;
-                    console.log('Coral image loaded');
-                    checkAllImagesLoaded();
-                };
-                coralImg.onerror = function() {
-                    console.error('Failed to load coral image');
-                    alert('Failed to load coral image. Please try again.');
-                };
-                coralImg.src = `{{ asset('images/brand/coral-seperate') }}/${pledgeData.coral}.webp`;
-
-                // Load stick image
-                const stickImg = new Image();
-                stickImg.crossOrigin = 'anonymous';
-                stickImg.onload = function() {
-                    images.stick = stickImg;
-                    imagesLoaded++;
-                    console.log('Stick image loaded');
-                    checkAllImagesLoaded();
-                };
-                stickImg.onerror = function() {
-                    console.error('Failed to load stick image');
-                    alert('Failed to load stick image. Please try again.');
-                };
-                stickImg.src = `{{ asset('images/brand/coral-seperate/stick.webp') }}`;
-
-                function renderCoralCanvas() {
-                    console.log('Rendering coral canvas...');
-
-                    // First, draw the bubble background (like in text download)
-                    const bubbleImg = bubbleContainer.querySelector('img.bubble');
-                    if (bubbleImg && bubbleImg.complete) {
-                        // Draw the bubble background
-                        ctx.drawImage(bubbleImg, 0, 0, canvas.width, canvas.height);
-                    }
-
-                    // Convert percentage positions to pixel positions for canvas
-                    const stickPosX = (parseFloat(config.stickPosition.left) / 100) * canvas.width;
-                    const stickPosY = (parseFloat(config.stickPosition.top) / 100) * canvas.height;
-                    const signPosX = (parseFloat(config.position.left) / 100) * canvas.width;
-                    const signPosY = (parseFloat(config.position.top) / 100) * canvas.height;
-
-                    // Layer 1: Draw stick (behind coral)
-                    if (images.stick) {
-                        const stickWidth = canvas.width * 0.05; // 5% of canvas width
-                        const stickHeight = canvas.height * 0.45; // 45% of canvas height
-                        const stickX = stickPosX - stickWidth / 2;
-                        const stickY = stickPosY - stickHeight / 2;
-
-                        ctx.drawImage(images.stick, stickX, stickY, stickWidth, stickHeight);
-                        console.log('Drew stick at:', { x: stickX, y: stickY, width: stickWidth, height: stickHeight });
-                    }
-
-                    // Layer 2: Draw coral (middle layer)
-                    if (images.coral) {
-                        const coralWidth = canvas.width * 0.6; // 60% of canvas width
-                        const coralHeight = canvas.height * 0.4; // 40% of canvas height
-                        const coralX = canvas.width * 0.5 - coralWidth / 2; // Center horizontally
-                        const coralY = canvas.height * 0.8 - coralHeight; // Position at bottom 20%
-
-                        ctx.drawImage(images.coral, coralX, coralY, coralWidth, coralHeight);
-                        console.log('Drew coral at:', { x: coralX, y: coralY, width: coralWidth, height: coralHeight });
-                    }                    // Layer 3: Draw sign with text (front layer)
-                    if (pledgeData.text) {
-                        const signWidth = canvas.width * 0.3; // 30% of canvas width
-                        const signHeight = canvas.height * 0.15; // 15% of canvas height
-                        const signX = signPosX - signWidth / 2;
-                        const signY = signPosY - signHeight / 2;
-
-                        // Save the current canvas state before applying rotation
-                        ctx.save();
-
-                        // Apply rotation around the sign center
-                        ctx.translate(signPosX, signPosY);
-                        ctx.rotate((config.tilt * Math.PI) / 180); // Convert degrees to radians
-                        ctx.translate(-signPosX, -signPosY);
-
-                        // Draw sign background with rounded corners
-                        const borderRadius = 6; // Match the CSS border-radius
-
-                        // Clear any previous shadow settings
-                        ctx.shadowColor = 'transparent';
-                        ctx.shadowBlur = 0;
-                        ctx.shadowOffsetX = 0;
-                        ctx.shadowOffsetY = 0;
-
-                        ctx.fillStyle = config.backgroundColor;
-
-                        // Create rounded rectangle path
-                        ctx.beginPath();
-                        ctx.moveTo(signX + borderRadius, signY);
-                        ctx.lineTo(signX + signWidth - borderRadius, signY);
-                        ctx.quadraticCurveTo(signX + signWidth, signY, signX + signWidth, signY + borderRadius);
-                        ctx.lineTo(signX + signWidth, signY + signHeight - borderRadius);
-                        ctx.quadraticCurveTo(signX + signWidth, signY + signHeight, signX + signWidth - borderRadius, signY + signHeight);
-                        ctx.lineTo(signX + borderRadius, signY + signHeight);
-                        ctx.quadraticCurveTo(signX, signY + signHeight, signX, signY + signHeight - borderRadius);
-                        ctx.lineTo(signX, signY + borderRadius);
-                        ctx.quadraticCurveTo(signX, signY, signX + borderRadius, signY);
-                        ctx.closePath();
-                        ctx.fill();
-
-                        // Draw sign border with rounded corners
-                        ctx.strokeStyle = config.borderColor;
-                        ctx.lineWidth = 2;
-                        ctx.stroke();
-
-                        // Draw text on sign
-                        ctx.fillStyle = config.textColor;
-                        const fontSize = Math.max(12, canvas.width * 0.04); // Dynamic font size based on canvas
-                        ctx.font = `bold ${fontSize}px "Palatino", "Palatino Linotype", "Book Antiqua", Georgia, serif`;
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'middle';
-
-                        // Add text shadow for better visibility
-                        ctx.shadowColor = config.textColor === '#ffffff' ? 'rgba(0, 0, 0, 0.8)' : 'rgba(0, 0, 0, 0.3)';
-                        ctx.shadowBlur = 2;
-                        ctx.shadowOffsetX = 1;
-                        ctx.shadowOffsetY = 1;
-
-                        // Calculate text area for the sign
-                        const textAreaWidth = signWidth * 0.8; // 80% of sign width for padding
-                        const textCenterX = signX + signWidth / 2;
-                        const textCenterY = signY + signHeight / 2;
-
-                        // Split text into words and wrap lines for the sign
-                        const words = pledgeData.text.split(' ');
-                        const lines = [];
-                        let currentLine = '';
-
-                        for (let i = 0; i < words.length; i++) {
-                            const testLine = currentLine + (currentLine ? ' ' : '') + words[i];
-                            const metrics = ctx.measureText(testLine);
-
-                            if (metrics.width > textAreaWidth && currentLine) {
-                                lines.push(currentLine);
-                                currentLine = words[i];
-                            } else {
-                                currentLine = testLine;
-                            }
-                        }
-                        if (currentLine) {
-                            lines.push(currentLine);
-                        }
-
-                        // Draw each line centered on the sign
-                        const lineHeight = fontSize * 1.2;
-                        const totalTextHeight = lines.length * lineHeight;
-                        let startY = textCenterY - (totalTextHeight / 2) + (lineHeight / 2);
-
-                        lines.forEach((line, index) => {
-                            const y = startY + (index * lineHeight);
-                            ctx.fillText(line, textCenterX, y);
-                        });
-
-                        // Restore the canvas state to remove rotation
-                        ctx.restore();
-
-                        console.log('Drew sign at:', { x: signX, y: signY, width: signWidth, height: signHeight });
-                        console.log('Drew text lines:', lines);
-                    }
-
-                    // Download the canvas
-                    downloadCanvas(canvas, `coral_pledge_${pledgeData.coral}.png`);
-                }
-
-                function downloadCanvas(canvas, filename) {
-                    const link = document.createElement('a');
-                    link.href = canvas.toDataURL('image/png');
-                    link.download = filename;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    console.log('Downloaded coral pledge as:', filename);
-                }
-            }
-
-
-            // Functions to get content-only images for server upload (without bubble background)
-            function getBubbleContentOnly() {
-                return new Promise((resolve, reject) => {
-                    if (pledgeData.type === 'text') {
-                        getBubbleTextContentOnly().then(resolve).catch(reject);
-                    } else if (pledgeData.type === 'coral') {
-                        getCoralContentOnly().then(resolve).catch(reject);
-                    } else {
-                        reject('Please complete your pledge selection first.');
-                    }
-                });
-            }
-
-            function getBubbleTextContentOnly() {
-                return new Promise((resolve, reject) => {
-                    console.log('=== GETTING TEXT CONTENT ONLY ===');
-                    console.log('Pledge data:', pledgeData);
-
-                    if (!pledgeData.text) {
-                        reject('No text content to generate image');
-                        return;
-                    }
-
-                    // Create canvas for content only
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-
-                    // Set canvas size to a standard size for content
-                    canvas.width = 400;
-                    canvas.height = 300;
-
-                    console.log('Content canvas dimensions:', {
-                        width: canvas.width,
-                        height: canvas.height
-                    });
-
-                    // Set transparent background
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                    // Set text properties
-                    ctx.fillStyle = 'white';
-                    ctx.font = 'bold 25px "Palatino", "Palatino Linotype", "Book Antiqua", Georgia, serif';
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-
-                    // Add text shadow for better visibility
-                    ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
-                    ctx.shadowBlur = 6;
-                    ctx.shadowOffsetX = 2;
-                    ctx.shadowOffsetY = 2;
-
-                    // Calculate text area
-                    const textAreaWidth = canvas.width * 0.8; // 80% of canvas width
-                    const centerX = canvas.width / 2;
-                    const centerY = canvas.height / 2;
-
-                    // Split text into words and wrap lines
-                    const words = pledgeData.text.split(' ');
-                    const lines = [];
-                    let currentLine = '';
-
-                    let fontSize = 25;
-                    let lineHeight = fontSize * 1.2;
-
-                    // Create lines that fit within the text area
-                    for (let i = 0; i < words.length; i++) {
-                        const testLine = currentLine + (currentLine ? ' ' : '') + words[i];
-                        const metrics = ctx.measureText(testLine);
-
-                        if (metrics.width > textAreaWidth && currentLine) {
-                            lines.push(currentLine);
-                            currentLine = words[i];
-                        } else {
-                            currentLine = testLine;
-                        }
-                    }
-                    if (currentLine) {
-                        lines.push(currentLine);
-                    }
-
-                    // Calculate starting Y position to center all lines
-                    const totalTextHeight = lines.length * lineHeight;
-                    let startY = centerY - (totalTextHeight / 2) + (lineHeight / 2);
-
-                    // Draw each line
-                    lines.forEach((line, index) => {
-                        const y = startY + (index * lineHeight);
-                        ctx.fillText(line, centerX, y);
-                    });
-
-                    // Return the canvas data URL
-                    const dataURL = canvas.toDataURL('image/png');
-                    console.log('Generated text content-only image');
-                    resolve({
-                        dataURL: dataURL,
-                        canvas: canvas,
-                        type: 'text',
-                        content: pledgeData.text
-                    });
-                });
-            }
-
-            function getCoralContentOnly() {
-                return new Promise((resolve, reject) => {
-                    console.log('=== GETTING CORAL CONTENT ONLY ===');
-                    console.log('Pledge data:', pledgeData);
-
-                    if (!pledgeData.coral || !pledgeData.text) {
-                        reject('Incomplete coral pledge data');
-                        return;
-                    }
-
-                    // Get coral configuration
-                    const config = coralSignConfig[pledgeData.coral];
-                    if (!config) {
-                        reject('Coral configuration not found');
-                        return;
-                    }
-
-                    console.log('Using coral config:', config);
-
-                    // Create canvas for content only
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-
-                    // Set canvas size to standard size
-                    canvas.width = 400;
-                    canvas.height = 400;
-
-                    console.log('Coral content canvas dimensions:', {
-                        width: canvas.width,
-                        height: canvas.height
-                    });
-
-                    // Track loaded images
-                    let imagesLoaded = 0;
-                    const totalImages = 2; // coral and stick images
-                    const images = {};
-
-                    function checkAllImagesLoaded() {
-                        if (imagesLoaded === totalImages) {
-                            renderCoralContentCanvas();
-                        }
-                    }
-
-                    // Load coral image
-                    const coralImg = new Image();
-                    coralImg.crossOrigin = 'anonymous';
-                    coralImg.onload = function() {
-                        images.coral = coralImg;
-                        imagesLoaded++;
-                        console.log('Coral image loaded for content');
-                        checkAllImagesLoaded();
-                    };
-                    coralImg.onerror = function() {
-                        console.error('Failed to load coral image');
-                        reject('Failed to load coral image');
-                    };
-                    coralImg.src = `{{ asset('images/brand/coral-seperate') }}/${pledgeData.coral}.webp`;
-
-                    // Load stick image
-                    const stickImg = new Image();
-                    stickImg.crossOrigin = 'anonymous';
-                    stickImg.onload = function() {
-                        images.stick = stickImg;
-                        imagesLoaded++;
-                        console.log('Stick image loaded for content');
-                        checkAllImagesLoaded();
-                    };
-                    stickImg.onerror = function() {
-                        console.error('Failed to load stick image');
-                        reject('Failed to load stick image');
-                    };
-                    stickImg.src = `{{ asset('images/brand/coral-seperate/stick.webp') }}`;
-
-                    function renderCoralContentCanvas() {
-                        console.log('Rendering coral content canvas...');
-
-                        // Clear canvas (transparent background)
-                        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                        // Convert percentage positions to pixel positions for standard canvas
-                        const stickPosX = (parseFloat(config.stickPosition.left) / 100) * canvas.width;
-                        const stickPosY = (parseFloat(config.stickPosition.top) / 100) * canvas.height;
-                        const signPosX = (parseFloat(config.position.left) / 100) * canvas.width;
-                        const signPosY = (parseFloat(config.position.top) / 100) * canvas.height;
-
-                        // Layer 1: Draw stick (behind coral)
-                        if (images.stick) {
-                            const stickWidth = 20; // Smaller for content-only
-                            const stickHeight = canvas.height * 0.6; // 60% of canvas height
-                            const stickX = stickPosX - stickWidth / 2;
-                            const stickY = stickPosY - stickHeight / 2;
-
-                            ctx.drawImage(images.stick, stickX, stickY, stickWidth, stickHeight);
-                            console.log('Drew stick at:', { x: stickX, y: stickY, width: stickWidth, height: stickHeight });
-                        }
-
-                        // Layer 2: Draw coral (middle layer)
-                        if (images.coral) {
-                            const coralWidth = canvas.width * 0.6; // 60% of canvas width
-                            const coralHeight = canvas.height * 0.6; // 60% of canvas height
-                            const coralX = (canvas.width - coralWidth) / 2; // Center horizontally
-                            const coralY = (canvas.height - coralHeight) / 2; // Center vertically
-
-                            ctx.drawImage(images.coral, coralX, coralY, coralWidth, coralHeight);
-                            console.log('Drew coral at:', { x: coralX, y: coralY, width: coralWidth, height: coralHeight });
-                        }                        // Layer 3: Draw sign with text (front layer)
-                        if (pledgeData.text) {
-                            const signWidth = 120; // Smaller for content-only
-                            const signHeight = 60;
-                            const signX = signPosX - signWidth / 2;
-                            const signY = signPosY - signHeight / 2;
-
-                            // Save the current canvas state before applying rotation
-                            ctx.save();
-
-                            // Apply rotation around the sign center
-                            ctx.translate(signPosX, signPosY);
-                            ctx.rotate((config.tilt * Math.PI) / 180); // Convert degrees to radians
-                            ctx.translate(-signPosX, -signPosY);
-
-                            // Draw sign background with rounded corners
-                            const borderRadius = 6; // Match the CSS border-radius
-
-                            // Clear any previous shadow settings
-                            ctx.shadowColor = 'transparent';
-                            ctx.shadowBlur = 0;
-                            ctx.shadowOffsetX = 0;
-                            ctx.shadowOffsetY = 0;
-
-                            ctx.fillStyle = config.backgroundColor;
-
-                            // Create rounded rectangle path
-                            ctx.beginPath();
-                            ctx.moveTo(signX + borderRadius, signY);
-                            ctx.lineTo(signX + signWidth - borderRadius, signY);
-                            ctx.quadraticCurveTo(signX + signWidth, signY, signX + signWidth, signY + borderRadius);
-                            ctx.lineTo(signX + signWidth, signY + signHeight - borderRadius);
-                            ctx.quadraticCurveTo(signX + signWidth, signY + signHeight, signX + signWidth - borderRadius, signY + signHeight);
-                            ctx.lineTo(signX + borderRadius, signY + signHeight);
-                            ctx.quadraticCurveTo(signX, signY + signHeight, signX, signY + signHeight - borderRadius);
-                            ctx.lineTo(signX, signY + borderRadius);
-                            ctx.quadraticCurveTo(signX, signY, signX + borderRadius, signY);
-                            ctx.closePath();
-                            ctx.fill();
-
-                            // Draw sign border with rounded corners
-                            ctx.strokeStyle = config.borderColor;
-                            ctx.lineWidth = 2;
-                            ctx.stroke();
-
-                            // Draw text on sign
-                            ctx.fillStyle = config.textColor;
-                            ctx.font = 'bold 12px "Palatino", "Palatino Linotype", "Book Antiqua", Georgia, serif';
-                            ctx.textAlign = 'center';
-                            ctx.textBaseline = 'middle';
-
-                            // Add text shadow for better visibility
-                            ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
-                            ctx.shadowBlur = 1;
-                            ctx.shadowOffsetX = 1;
-                            ctx.shadowOffsetY = 1;
-
-                            // Calculate text area for the sign
-                            const textAreaWidth = signWidth * 0.8; // 80% of sign width for padding
-                            const textCenterX = signX + signWidth / 2;
-                            const textCenterY = signY + signHeight / 2;
-
-                            // Split text into words and wrap lines for the sign
-                            const words = pledgeData.text.split(' ');
-                            const lines = [];
-                            let currentLine = '';
-
-                            for (let i = 0; i < words.length; i++) {
-                                const testLine = currentLine + (currentLine ? ' ' : '') + words[i];
-                                const metrics = ctx.measureText(testLine);
-
-                                if (metrics.width > textAreaWidth && currentLine) {
-                                    lines.push(currentLine);
-                                    currentLine = words[i];
-                                } else {
-                                    currentLine = testLine;
-                                }
-                            }
-                            if (currentLine) {
-                                lines.push(currentLine);
-                            }
-
-                            // Draw each line centered on the sign
-                            const lineHeight = 14;
-                            const totalTextHeight = lines.length * lineHeight;
-                            let startY = textCenterY - (totalTextHeight / 2) + (lineHeight / 2);
-
-                            lines.forEach((line, index) => {
-                                const y = startY + (index * lineHeight);
-                                ctx.fillText(line, textCenterX, y);
-                            });
-
-                            console.log('Drew sign at:', { x: signX, y: signY, width: signWidth, height: signHeight });
-                            console.log('Drew text lines:', lines);
-
-                            // Restore the canvas state to remove rotation
-                            ctx.restore();
-                        }
-
-                        // Return the canvas data URL
-                        const dataURL = canvas.toDataURL('image/png');
-                        console.log('Generated coral content-only image');
-                        resolve({
-                            dataURL: dataURL,
-                            canvas: canvas,
-                            type: 'coral',
-                            coralId: pledgeData.coral,
-                            content: pledgeData.text
-                        });
-                    }
-                });
-            }
 
             // Example usage function for server upload
             function uploadPledgeToServer() {
                 if (pledgeData.type === 'text') {
-                    // For text, use the same logic as downloadPledgeTypeText: draw bubble with text and upload
-                    const containerWidth = bubbleContainer.offsetWidth;
-                    const containerHeight = bubbleContainer.offsetHeight;
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    canvas.width = containerWidth;
-                    canvas.height = containerHeight;
-
-                    // Draw bubble image if present
-                    const bubbleImg = bubbleContainer.querySelector('img.bubble');
-                    if (bubbleImg && bubbleImg.complete) {
-                        ctx.drawImage(bubbleImg, 0, 0, canvas.width, canvas.height);
-                    } else {
-                        ctx.fillStyle = '#4a90e2';
-                        ctx.fillRect(0, 0, canvas.width, canvas.height);
-                        ctx.strokeStyle = '#ffffff';
-                        ctx.lineWidth = 4;
-                        ctx.strokeRect(0, 0, canvas.width, canvas.height);
+                    // Use html2canvas as before for text type
+                    if (typeof html2canvas === 'undefined') {
+                        alert('Upload feature is not available. Please refresh the page and try again.');
+                        uploadBtn.disabled = false;
+                        return;
                     }
-
-                    // Draw the text
-                    if (pledgeData.text) {
-                        ctx.fillStyle = 'white';
-                        ctx.font = 'bold 25px "Palatino", "Palatino Linotype", "Book Antiqua", Georgia, serif';
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'middle';
-                        ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
-                        ctx.shadowBlur = 6;
-                        ctx.shadowOffsetX = 2;
-                        ctx.shadowOffsetY = 2;
-                        const textAreaWidth = canvas.width * 0.6;
-                        const centerX = canvas.width / 2;
-                        const centerY = canvas.height / 2;
-                        const words = pledgeData.text.split(' ');
-                        const lines = [];
-                        let currentLine = '';
-                        let fontSize = 25;
-                        let lineHeight = fontSize * 1.2;
-                        for (let i = 0; i < words.length; i++) {
-                            const testLine = currentLine + (currentLine ? ' ' : '') + words[i];
-                            const metrics = ctx.measureText(testLine);
-                            if (metrics.width > textAreaWidth && currentLine) {
-                                lines.push(currentLine);
-                                currentLine = words[i];
-                            } else {
-                                currentLine = testLine;
-                            }
-                        }
-                        if (currentLine) {
-                            lines.push(currentLine);
-                        }
-                        const totalTextHeight = lines.length * lineHeight;
-                        let startY = centerY - (totalTextHeight / 2) + (lineHeight / 2);
-                        lines.forEach((line, index) => {
-                            const y = startY + (index * lineHeight);
-                            ctx.fillText(line, centerX, y);
-                        });
-                    }
-
-                    canvas.toBlob(blob => {
-                        if (!blob) {
-                            alert('Failed to generate image for upload.');
-                            return;
-                        }
-                        const formData = new FormData();
-                        formData.append('pledge_image', blob, `pledge_text_${Date.now()}.png`);
-                        formData.append('pledge_text', pledgeData.text);
-                        formData.append('pledge_type', 'text'); // Add pledge type
-                        fetch('{{ route('upload.baby') }}', {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': csrfToken
-                            },
-                            body: formData
-                        })
-                        .then(async response => {
-                            if (!response.ok) {
-                                const text = await response.text();
-                                console.error('Upload failed, server response:', text);
-                                throw new Error('Upload failed: ' + text);
-                            }
-                            // Try to parse as JSON, but catch if it's not JSON
-                            try {
-                                return await response.json();
-                            } catch (e) {
-                                console.error('Response is not JSON:', text);
-                            }
-                        })
-                        .then(data => {
-                            alert('Pledge uploaded successfully!');
-                            // location.reload();
-                        })
-                        .catch(error => {
-                            console.error('Upload failed:', error);
-                        });
-                    }, 'image/png');
-                } else if (pledgeData.type === 'coral') {
-                    // For coral, use getCoralContentOnly (matches downloadPledgeTypeCoral logic)
-                    getCoralContentOnly().then(result => {
-                        // Use toBlob directly from the canvas for consistency
-                        result.canvas.toBlob(blob => {
+                    html2canvas(bubbleContainer, {
+                        backgroundColor: null
+                    }).then(canvas => {
+                        canvas.toBlob(blob => {
                             if (!blob) {
-                                alert('Failed to generate coral image for upload.');
+                                alert('Failed to generate image for upload.');
+                                uploadBtn.disabled = false;
                                 return;
                             }
                             const formData = new FormData();
-                            formData.append('pledge_image', blob, `pledge_coral_${pledgeData.coral}_${Date.now()}.png`);
+                            formData.append('pledge_image', blob, `pledge_text_${Date.now()}.png`);
                             formData.append('pledge_text', pledgeData.text);
-                            formData.append('pledge_type', 'coral'); // Add pledge type
+                            formData.append('pledge_type', pledgeData.type);
                             fetch('{{ route('upload.baby') }}', {
                                 method: 'POST',
                                 headers: {
@@ -1314,30 +533,122 @@
                             .then(async response => {
                                 if (!response.ok) {
                                     const text = await response.text();
-                                    console.error('Upload failed, server response:', text);
                                     throw new Error('Upload failed: ' + text);
                                 }
-                                try {
-                                    return await response.json();
-                                } catch (e) {
-                                    console.error('Response is not JSON:', text);
-                                }
+                                return response.json();
                             })
                             .then(data => {
-                                // location.reload();
+                                alert('Pledge uploaded successfully!');
                             })
                             .catch(error => {
                                 alert('Upload failed. Please try again.');
                                 console.error('Upload failed:', error);
+                            })
+                            .finally(() => {
+                                uploadBtn.disabled = false;
                             });
                         }, 'image/png');
-                    }).catch(error => {
-                        alert('Failed to generate coral image for upload.');
-                        console.error(error);
                     });
-                } else {
-                    alert('Please complete your pledge selection first.');
+                } else if (pledgeData.type === 'coral') {
+                    uploadCoralCanvas();
                 }
+            }
+
+            function uploadCoralCanvas() {
+                const width = 300;
+                const height = 300;
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = width;
+                canvas.height = height;
+                // Helper to load images
+                const loadImage = (src) => new Promise((resolve) => {
+                    const img = new Image();
+                    img.onload = () => resolve(img);
+                    img.src = src;
+                });
+                (async function() {
+                    const coralId = pledgeData.coral;
+                    const signConfig = coralSignConfig[coralId] || coralSignConfig[1];
+                    const [coralImg, stickImg] = await Promise.all([
+                        loadImage(`{{ asset('images/brand/coral-seperate') }}/${coralId}.webp`),
+                        loadImage(`{{ asset('images/brand/coral-seperate/stick.webp') }}`)
+                    ]);
+                    // Draw stick
+                    const stickWidth = width * 0.020;
+                    const stickHeight = height * 0.30;
+                    const stickX = width / 2;
+                    const stickY = height * 0.62;
+                    ctx.drawImage(stickImg, stickX - stickWidth / 2, stickY - stickHeight, stickWidth, stickHeight);
+                    // Draw coral
+                    const coralWidth = width * 0.6;
+                    const coralHeight = height * 0.4;
+                    const coralX = width / 2 - coralWidth / 2;
+                    const coralY = height * 0.8 - coralHeight;
+                    ctx.drawImage(coralImg, coralX, coralY, coralWidth, coralHeight);
+                    // Draw sign
+                    const textX = stickX;
+                    const textY = stickY - stickHeight;
+                    const angle = signConfig.tilt * Math.PI / 180;
+                    ctx.save();
+                    ctx.translate(textX, textY);
+                    ctx.rotate(angle);
+                    const padding = 18;
+                    const text = pledgeData.text;
+                    ctx.font = 'bold 18px "Palatino", serif';
+                    const textWidth = ctx.measureText(text).width + padding * 2;
+                    const textHeight = 38;
+                    ctx.fillStyle = signConfig.backgroundColor;
+                    ctx.strokeStyle = signConfig.borderColor;
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.roundRect(-textWidth / 2, -textHeight / 2, textWidth, textHeight, 8);
+                    ctx.fill();
+                    ctx.stroke();
+                    ctx.fillStyle = signConfig.textColor;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.shadowColor = signConfig.textColor === '#ffffff' ? 'rgba(0,0,0,0.8)' : 'rgba(0,0,0,0.3)';
+                    ctx.shadowBlur = 2;
+                    ctx.fillText(text, 0, 0);
+                    ctx.restore();
+                    // Upload the generated canvas
+                    canvas.toBlob(blob => {
+                        if (!blob) {
+                            alert('Failed to generate image for upload.');
+                            uploadBtn.disabled = false;
+                            return;
+                        }
+                        const formData = new FormData();
+                        formData.append('pledge_image', blob, `pledge_coral_${Date.now()}.png`);
+                        formData.append('pledge_text', pledgeData.text);
+                        formData.append('pledge_type', pledgeData.type);
+                        fetch('{{ route('upload.baby') }}', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': csrfToken
+                            },
+                            body: formData
+                        })
+                        .then(async response => {
+                            if (!response.ok) {
+                                const text = await response.text();
+                                throw new Error('Upload failed: ' + text);
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            alert('Pledge uploaded successfully!');
+                        })
+                        .catch(error => {
+                            alert('Upload failed. Please try again.');
+                            console.error('Upload failed:', error);
+                        })
+                        .finally(() => {
+                            uploadBtn.disabled = false;
+                        });
+                    }, 'image/png');
+                })();
             }
 
 

@@ -19,17 +19,38 @@
             }
 
             #aquarium-container {
-                background-image: url('{{ asset('images/brand/live-feed/bg.webp') }}');
-                background-size: cover;
-                background-position: center;
-                background-repeat: no-repeat;
-                background-attachment: fixed;
+                background: linear-gradient(135deg, #1e3a8a, #3b82f6) !important; /* Fallback background */
+                background-image: url('{{ asset('images/brand/live-feed/bg.webp') }}') !important;
+                background-size: cover !important;
+                background-position: center !important;
+                background-repeat: no-repeat !important;
+                background-attachment: fixed !important;
+                min-height: 100vh !important;
+                width: 100% !important;
+                height: 100% !important;
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                z-index: -1 !important;
+            }
+
+            #aquarium-container canvas {
+                background: transparent !important;
+                background-color: transparent !important;
+                z-index: 1 !important;
+                pointer-events: none;
+            }
+
+            body {
+                margin: 0 !important;
+                padding: 0 !important;
+                background: transparent !important;
             }
     </style>
 </head>
 
-<body class="container py-5">
-    <div id="aquarium-container" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;"></div>
+<body>
+    <div id="aquarium-container"></div>
     {{-- <script>
         Pusher.logToConsole = true;
 

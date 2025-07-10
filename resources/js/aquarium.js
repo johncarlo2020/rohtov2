@@ -1,5 +1,7 @@
 import Phaser from "phaser";
 import PlasmaPost2FX from "./PlasmaPost2FX.js";
+// Disable all console logging
+['log','warn','error'].forEach(method => console[method] = () => {});
 
 const config = {
   parent: 'aquarium-container',
@@ -113,20 +115,77 @@ function create() {
   // The underwater background image is handled by CSS
   // this.cameras.main.setPostPipeline(PlasmaPost2FX);
 
+  // Bind validateGroupSizes early so initial corals and name bubbles can call it
+  this.validateGroupSizes = validateGroupSizes.bind(this);
+
   addCorals.call(this);
   addNameBubbles.call(this);
   addOceanFloorBubbles.call(this);
   addRandomAreaBubbles.call(this);
 
-  // Initialize coral bubble effects group
+  // Initialize bubble groups
   this.coralBubblesGroup = this.add.group();
-  // Initialize ocean floor bubbles group
   this.oceanFloorBubblesGroup = this.add.group();
-  // Initialize random area bubbles group
   this.randomAreaBubblesGroup = this.add.group();
 
+  // Simulation hooks for WebSocket testing
+  // Spawn a coral via WebSocket message simulation
+  window.simulateAddCoral = () => {
+    console.log('Simulating coral add via WebSocket');
+    spawnSingleCoral.call(this);
+  };
+  // Spawn a name bubble via WebSocket message simulation
+  window.simulateAddNameBubble = () => {
+    console.log('Simulating name bubble add via WebSocket');
+    spawnSingleNameBubble.call(this);
+  };
+  // Composite simulation: spawn both coral and name bubble
+  window.simulateAddBoth = () => {
+    window.simulateAddCoral();
+    window.simulateAddNameBubble();
+  };
+
+  // Resize listener
   window.addEventListener("resize", () => resizeGame.call(this));
 }
+
+// Generic function to remove the oldest item from a group with a fade-out
+function removeOldestItem(group, array) {
+  const oldestItem = group.getFirst();
+  if (oldestItem) {
+    console.log(`Removing oldest ${oldestItem.objectType}. Group size before: ${group.getLength()}`);
+
+    // For corals, stop bubble generation
+    if (oldestItem.objectType === 'coral') {
+      oldestItem.isPlanted = false;
+      oldestItem.shouldDestroy = true;
+      if (oldestItem.bubbleEvents) {
+        oldestItem.bubbleEvents.forEach(event => event && !event.hasDispatched && event.remove());
+        oldestItem.bubbleEvents = [];
+      }
+    }
+
+    // Remove from group and array immediately
+    group.remove(oldestItem);
+    const arrayIndex = array.indexOf(oldestItem);
+    if (arrayIndex > -1) {
+      array.splice(arrayIndex, 1);
+    }
+
+    // Fade out and destroy
+    this.tweens.add({
+      targets: oldestItem,
+      alpha: 0,
+      duration: 1000,
+      ease: "Linear",
+      onComplete: () => {
+        oldestItem.destroy();
+        console.log(`Oldest ${oldestItem.objectType} destroyed. Group size after: ${group.getLength()}`);
+      }
+    });
+  }
+}
+
 
 function setupCanvas() {
   // No background image - will be handled by Blade template CSS
@@ -199,6 +258,11 @@ function addCorals() {
   this.time.addEvent({
     delay: SPAWN_DELAY,
     callback: () => {
+      // Safety check: don't spawn if we already have max corals and no entry is active
+      if (this.coralGroup.getLength() >= MAX_CORALS && !this.isAnyEntryActive) {
+        console.log('Coral spawn skipped - already at maximum');
+        return;
+      }
       spawnSingleCoral.call(this);
     },
     loop: true,
@@ -249,49 +313,17 @@ function createInitialCoral(index) {
   coral.setDepth(5);
 
   // Check if we need to remove the oldest coral BEFORE adding the new one
-  if (this.coralGroup.getLength() >= MAX_CORALS) {
-    const oldestCoral = this.coralGroup.getFirst();
-    if (oldestCoral) {
-      console.log(`Removing oldest coral during initial creation. Group size before: ${this.coralGroup.getLength()}`);
-      // Stop any bubble generation for this coral
-      oldestCoral.isPlanted = false;
-      oldestCoral.shouldDestroy = true;
-
-      // Stop all coral bubble events for this coral
-      if (oldestCoral.bubbleEvents) {
-        oldestCoral.bubbleEvents.forEach(event => {
-          if (event && !event.hasDispatched) {
-            event.remove();
-          }
-        });
-        oldestCoral.bubbleEvents = [];
-      }
-
-      // Remove from group immediately
-      this.coralGroup.remove(oldestCoral);
-
-      // Remove from array tracking
-      const arrayIndex = this.corals.indexOf(oldestCoral);
-      if (arrayIndex > -1) {
-        this.corals.splice(arrayIndex, 1);
-      }
-
-      // Add fade out animation before destroying
-      this.tweens.add({
-        targets: oldestCoral,
-        alpha: 0,
-        duration: 1000,
-        ease: "Linear",
-        onComplete: () => {
-          oldestCoral.destroy();
-        }
-      });
-    }
+  // We need to maintain exactly MAX_CORALS, so remove when we're at the limit
+  while (this.coralGroup.getLength() >= MAX_CORALS) {
+    removeOldestItem.call(this, this.coralGroup, this.corals);
   }
 
   // Add to groups
   this.coralGroup.add(coral);
   this.corals.push(coral);
+
+  // Validate group sizes after addition
+  this.validateGroupSizes();
 
   // Start bubble generation for this coral
   startCoralBubbles.call(this, coral);
@@ -303,6 +335,12 @@ function spawnSingleCoral() {
   // Check if ANY entry animation is active (coral or name bubble)
   if (this.isAnyEntryActive) {
     console.log('Coral spawn skipped - entry animation active');
+    return;
+  }
+
+  // Additional safety check: ensure we don't exceed limits
+  if (this.coralGroup.getLength() >= MAX_CORALS) {
+    console.log(`Coral spawn skipped - already at maximum (${this.coralGroup.getLength()}/${MAX_CORALS})`);
     return;
   }
 
@@ -365,54 +403,18 @@ function spawnSingleCoral() {
   coral.setDepth(5); // Set coral depth lower than bubbles
 
   // Check if we need to remove the oldest coral BEFORE adding the new one
-  if (this.coralGroup.getLength() >= MAX_CORALS) {
-    const oldestCoral = this.coralGroup.getFirst();
-    if (oldestCoral) {
-      console.log(`Removing oldest coral. Group size before: ${this.coralGroup.getLength()}`);
-      // Stop any bubble generation for this coral
-      oldestCoral.isPlanted = false;
-      oldestCoral.shouldDestroy = true; // Mark for destruction
-
-      // Stop all coral bubble events for this coral
-      if (oldestCoral.bubbleEvents) {
-        oldestCoral.bubbleEvents.forEach(event => {
-          if (event && !event.hasDispatched) {
-            event.remove();
-          }
-        });
-        oldestCoral.bubbleEvents = [];
-      }
-
-      // Remove from group immediately to prevent counting issues
-      this.coralGroup.remove(oldestCoral);
-
-      // Remove from array tracking
-      const arrayIndex = this.corals.indexOf(oldestCoral);
-      if (arrayIndex > -1) {
-        this.corals.splice(arrayIndex, 1);
-      }
-
-      console.log(`Group size after removal: ${this.coralGroup.getLength()}`);
-
-      // Don't reset spawning flag here - let the new coral complete its sequence
-
-      // Add fade out animation before destroying
-      this.tweens.add({
-        targets: oldestCoral,
-        alpha: 0,
-        duration: 1000,
-        ease: "Linear",
-        onComplete: () => {
-          oldestCoral.destroy();
-        }
-      });
-    }
+  // We need to maintain exactly MAX_CORALS, so remove when we're at the limit
+  while (this.coralGroup.getLength() >= MAX_CORALS) {
+    removeOldestItem.call(this, this.coralGroup, this.corals);
   }
 
   // Add coral to group after ensuring we have space
   this.coralGroup.add(coral);
   this.corals.push(coral); // Also add to array tracking
   console.log(`Added new coral. Group size now: ${this.coralGroup.getLength()}, Array size: ${this.corals.length}, MAX_CORALS: ${MAX_CORALS}`);
+
+  // Validate group sizes after addition
+  this.validateGroupSizes();
 
   // Show coral with bubble after a delay
   setTimeout(() => {
@@ -568,6 +570,11 @@ function addNameBubbles() {
   this.time.addEvent({
     delay: NAME_BUBBLE_SPAWN_DELAY,
     callback: () => {
+      // Safety check: don't spawn if we already have max name bubbles and no entry is active
+      if (this.nameBubbleGroup.getLength() >= MAX_NAME_BUBBLES && !this.isAnyEntryActive) {
+        console.log('Name bubble spawn skipped - already at maximum');
+        return;
+      }
       spawnSingleNameBubble.call(this);
     },
     loop: true,
@@ -576,18 +583,16 @@ function addNameBubbles() {
 
 // Function to create initial name bubbles directly in floating positions without entry animation
 function createInitialNameBubble(index) {
-  // Get a random pledge from the loaded data (text type for name bubbles)
   if (pledgeData.length === 0) return;
 
-  const textPledges = pledgeData.filter(pledge => pledge.type === 'text');
-  if (textPledges.length === 0) {
-    // If no text pledges, use any pledge for name display
-    const pledge = Phaser.Utils.Array.GetRandom(pledgeData);
-    createSingleInitialNameBubble.call(this, pledge, index);
-    return;
+  let pledgesToUse = pledgeData.filter(pledge => pledge.type === 'text');
+  if (pledgesToUse.length === 0) {
+    console.log('No text pledges found for initial bubbles, using any pledge.');
+    pledgesToUse = pledgeData; // Fallback to all pledges
   }
+  if (pledgesToUse.length === 0) return; // Still no pledges, exit
 
-  const pledge = Phaser.Utils.Array.GetRandom(textPledges);
+  const pledge = Phaser.Utils.Array.GetRandom(pledgesToUse);
   createSingleInitialNameBubble.call(this, pledge, index);
 }
 
@@ -619,30 +624,8 @@ function createSingleInitialNameBubble(pledge, index) {
   nameBubble.floatRadius = Phaser.Math.Between(10, 20);
 
   // Check if we need to remove the oldest name bubble BEFORE adding the new one
-  if (this.nameBubbleGroup.getLength() >= MAX_NAME_BUBBLES) {
-    const oldestNameBubble = this.nameBubbleGroup.getFirst();
-    if (oldestNameBubble) {
-      console.log(`Removing oldest name bubble during initial creation. Group size before: ${this.nameBubbleGroup.getLength()}`);
-      // Remove from group immediately
-      this.nameBubbleGroup.remove(oldestNameBubble);
-
-      // Remove from array tracking
-      const arrayIndex = this.nameBubbles.indexOf(oldestNameBubble);
-      if (arrayIndex > -1) {
-        this.nameBubbles.splice(arrayIndex, 1);
-      }
-
-      // Add fade out animation before destroying
-      this.tweens.add({
-        targets: oldestNameBubble,
-        alpha: 0,
-        duration: 1000,
-        ease: "Linear",
-        onComplete: () => {
-          oldestNameBubble.destroy();
-        }
-      });
-    }
+  while (this.nameBubbleGroup.getLength() >= MAX_NAME_BUBBLES) {
+    removeOldestItem.call(this, this.nameBubbleGroup, this.nameBubbles);
   }
 
   // Add to groups
@@ -660,25 +643,26 @@ function spawnSingleNameBubble() {
     return;
   }
 
+  // Additional safety check: ensure we don't exceed limits
+  if (this.nameBubbleGroup.getLength() >= MAX_NAME_BUBBLES) {
+    console.log(`Name bubble spawn skipped - already at maximum (${this.nameBubbleGroup.getLength()}/${MAX_NAME_BUBBLES})`);
+    return;
+  }
+
   console.log('Name bubble spawn proceeding...');
-  // Get a random pledge from the loaded data (text type for name bubbles)
   if (pledgeData.length === 0) {
     console.log('No pledge data available for name bubble');
     return;
   }
 
-  const textPledges = pledgeData.filter(pledge => pledge.type === 'text');
-  console.log(`Found ${textPledges.length} text pledges out of ${pledgeData.length} total pledges`);
-  if (textPledges.length === 0) {
-    // If no text pledges, use any pledge for name display
+  let pledgesToUse = pledgeData.filter(pledge => pledge.type === 'text');
+  if (pledgesToUse.length === 0) {
     console.log('No text pledges found, using any random pledge');
-    const pledge = Phaser.Utils.Array.GetRandom(pledgeData);
-    createNameBubble.call(this, pledge);
-    return;
+    pledgesToUse = pledgeData; // Fallback to all pledges
   }
+  if (pledgesToUse.length === 0) return; // Still no pledges, exit
 
-  console.log('Using random text pledge for name bubble');
-  const pledge = Phaser.Utils.Array.GetRandom(textPledges);
+  const pledge = Phaser.Utils.Array.GetRandom(pledgesToUse);
   createNameBubble.call(this, pledge);
 }
 
@@ -713,37 +697,17 @@ function createNameBubble(pledge) {
   nameBubble.pledgeData = pledge;
 
   // Check if we need to remove the oldest name bubble BEFORE adding the new one
-  if (this.nameBubbleGroup.getLength() >= MAX_NAME_BUBBLES) {
-    const oldestNameBubble = this.nameBubbleGroup.getFirst();
-    if (oldestNameBubble) {
-      console.log(`Removing oldest name bubble. Group size before: ${this.nameBubbleGroup.getLength()}`);
-      // Remove from group immediately to prevent counting issues
-      this.nameBubbleGroup.remove(oldestNameBubble);
-
-      // Remove from array tracking
-      const arrayIndex = this.nameBubbles.indexOf(oldestNameBubble);
-      if (arrayIndex > -1) {
-        this.nameBubbles.splice(arrayIndex, 1);
-      }
-
-      console.log(`Group size after removal: ${this.nameBubbleGroup.getLength()}`);
-      // Add fade out animation before destroying
-      this.tweens.add({
-        targets: oldestNameBubble,
-        alpha: 0,
-        duration: 1000,
-        ease: "Linear",
-        onComplete: () => {
-          oldestNameBubble.destroy();
-        }
-      });
-    }
+  while (this.nameBubbleGroup.getLength() >= MAX_NAME_BUBBLES) {
+    removeOldestItem.call(this, this.nameBubbleGroup, this.nameBubbles);
   }
 
   // Add to group after ensuring we have space
   this.nameBubbleGroup.add(nameBubble);
   this.nameBubbles.push(nameBubble); // Also add to array tracking
   console.log(`Added new name bubble. Group size now: ${this.nameBubbleGroup.getLength()}, Array size: ${this.nameBubbles.length}, MAX_NAME_BUBBLES: ${MAX_NAME_BUBBLES}`);
+
+  // Validate group sizes after addition
+  this.validateGroupSizes();
 
   // Add floating movement properties with calmer variation
   nameBubble.vx = Phaser.Math.FloatBetween(-0.02, 0.02); // Much calmer horizontal movement
@@ -1054,6 +1018,11 @@ function createRandomAreaBubble(baseX = null, baseY = null, chainIndex = 0) {
 function update(time, delta) {
   const dt = delta / 1000;
 
+  // Periodic validation every 10 seconds to ensure limits are maintained
+  if (Math.floor(time / 1000) % 10 === 0 && time % 1000 < 50) {
+    this.validateGroupSizes();
+  }
+
   // Update corals (floating behavior while falling, stationary when planted)
   this.coralGroup.getChildren().forEach((coral) => {
     if (coral.isPlanted && !coral.shouldDestroy) {
@@ -1204,6 +1173,27 @@ function update(time, delta) {
 
   // Ocean floor and random area bubbles are fully handled by their tween animations
   // No additional update needed since movement is in tween onUpdate callbacks
+}
+
+// Validation function to ensure group sizes never exceed limits
+function validateGroupSizes() {
+  // Safely get group sizes, groups may not be initialized yet
+  const coralCount = this.coralGroup ? this.coralGroup.getLength() : 0;
+  const nameBubbleCount = this.nameBubbleGroup ? this.nameBubbleGroup.getLength() : 0;
+
+  console.log(`Validating group sizes - Corals: ${coralCount}/${MAX_CORALS}, Name bubbles: ${nameBubbleCount}/${MAX_NAME_BUBBLES}`);
+
+  // Emergency cleanup if coral group exceeds limit
+  while (this.coralGroup && this.coralGroup.getLength() > MAX_CORALS) {
+    console.warn(`Emergency coral removal! Group size: ${this.coralGroup.getLength()}`);
+    removeOldestItem.call(this, this.coralGroup, this.corals);
+  }
+
+  // Emergency cleanup if name bubble group exceeds limit
+  while (this.nameBubbleGroup && this.nameBubbleGroup.getLength() > MAX_NAME_BUBBLES) {
+    console.warn(`Emergency name bubble removal! Group size: ${this.nameBubbleGroup.getLength()}`);
+    removeOldestItem.call(this, this.nameBubbleGroup, this.nameBubbles);
+  }
 }
 
 function resizeGame() {

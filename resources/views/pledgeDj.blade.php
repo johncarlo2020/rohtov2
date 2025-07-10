@@ -1255,9 +1255,14 @@
                     }
 
                     canvas.toBlob(blob => {
+                        if (!blob) {
+                            alert('Failed to generate image for upload.');
+                            return;
+                        }
                         const formData = new FormData();
                         formData.append('pledge_image', blob, `pledge_text_${Date.now()}.png`);
                         formData.append('pledge_text', pledgeData.text);
+                        formData.append('pledge_type', 'text'); // Add pledge type
                         fetch('{{ route('upload.baby') }}', {
                             method: 'POST',
                             headers: {
@@ -1265,48 +1270,67 @@
                             },
                             body: formData
                         })
-                        .then(response => {
-                            if (!response.ok) throw new Error('Upload failed');
-                            return response.json();
+                        .then(async response => {
+                            if (!response.ok) {
+                                const text = await response.text();
+                                console.error('Upload failed, server response:', text);
+                                throw new Error('Upload failed: ' + text);
+                            }
+                            // Try to parse as JSON, but catch if it's not JSON
+                            try {
+                                return await response.json();
+                            } catch (e) {
+                                console.error('Response is not JSON:', text);
+                            }
                         })
                         .then(data => {
-                            // alert('Pledge uploaded successfully!');
+                            alert('Pledge uploaded successfully!');
                             // location.reload();
                         })
                         .catch(error => {
-                            alert('Upload failed. Please try again.');
                             console.error('Upload failed:', error);
                         });
                     }, 'image/png');
                 } else if (pledgeData.type === 'coral') {
                     // For coral, use getCoralContentOnly (matches downloadPledgeTypeCoral logic)
                     getCoralContentOnly().then(result => {
-                        fetch(result.dataURL)
-                            .then(res => res.blob())
-                            .then(blob => {
-                                const formData = new FormData();
-                                formData.append('pledge_image', blob, `pledge_coral_${pledgeData.coral}_${Date.now()}.png`);
-                                formData.append('pledge_text', pledgeData.text);
-                                fetch('{{ route('upload.baby') }}', {
-                                    method: 'POST',
-                                    headers: {
-                                        'X-CSRF-TOKEN': csrfToken
-                                    },
-                                    body: formData
-                                })
-                                .then(response => {
-                                    if (!response.ok) throw new Error('Upload failed');
-                                    return response.json();
-                                })
-                                .then(data => {
-                                    // alert('Pledge uploaded successfully!');
-                                    // location.reload();
-                                })
-                                .catch(error => {
-                                    alert('Upload failed. Please try again.');
-                                    console.error('Upload failed:', error);
-                                });
+                        // Use toBlob directly from the canvas for consistency
+                        result.canvas.toBlob(blob => {
+                            if (!blob) {
+                                alert('Failed to generate coral image for upload.');
+                                return;
+                            }
+                            const formData = new FormData();
+                            formData.append('pledge_image', blob, `pledge_coral_${pledgeData.coral}_${Date.now()}.png`);
+                            formData.append('pledge_text', pledgeData.text);
+                            formData.append('pledge_type', 'coral'); // Add pledge type
+                            fetch('{{ route('upload.baby') }}', {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': csrfToken
+                                },
+                                body: formData
+                            })
+                            .then(async response => {
+                                if (!response.ok) {
+                                    const text = await response.text();
+                                    console.error('Upload failed, server response:', text);
+                                    throw new Error('Upload failed: ' + text);
+                                }
+                                try {
+                                    return await response.json();
+                                } catch (e) {
+                                    console.error('Response is not JSON:', text);
+                                }
+                            })
+                            .then(data => {
+                                // location.reload();
+                            })
+                            .catch(error => {
+                                alert('Upload failed. Please try again.');
+                                console.error('Upload failed:', error);
                             });
+                        }, 'image/png');
                     }).catch(error => {
                         alert('Failed to generate coral image for upload.');
                         console.error(error);

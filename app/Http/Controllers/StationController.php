@@ -26,6 +26,7 @@ class StationController extends Controller
             'pledge_image' => 'required|image|max:2048', // max 2MB
             'pledge_text' => 'string|max:255',
             'charname' => 'string|max:255',
+            'pledge_type' => 'required|string|in:text,coral',
         ]);
 
         $user = Auth::user();
@@ -63,7 +64,7 @@ class StationController extends Controller
 
             $stationUser = new StationUser();
             $stationUser->user_id = auth()->id();
-            $stationUser->station_id = 2;
+            $stationUser->station_id = 4;
             $stationUser->time_spent = $secondsSpent;
             $stationUser->save();
 
@@ -75,7 +76,7 @@ class StationController extends Controller
 
             $user->save();
         // Fire the event
-        broadcast(new babyEvent($publicPath, $user->pledge_text,'dj',$user->charname))->toOthers();
+        broadcast(new babyEvent($publicPath, $user->pledge_text,$request->pledge_type,$user->charname))->toOthers();
 
 
             DB::commit();

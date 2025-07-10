@@ -118,10 +118,12 @@ function create() {
   // Bind validateGroupSizes early so initial corals and name bubbles can call it
   this.validateGroupSizes = validateGroupSizes.bind(this);
 
-  addCorals.call(this);
-  addNameBubbles.call(this);
-  addOceanFloorBubbles.call(this);
-  addRandomAreaBubbles.call(this);
+  preloadCustomPledgeImages(this, () => {
+    addCorals.call(this);
+    addNameBubbles.call(this);
+    addOceanFloorBubbles.call(this);
+    addRandomAreaBubbles.call(this);
+  });
 
   // Initialize bubble groups
   this.coralBubblesGroup = this.add.group();
@@ -136,34 +138,89 @@ function create() {
 
     const channel = pusher.subscribe('baby-channel');
     channel.bind('baby-event', (data) => {
-       console.log('Pusher event received:', data);
+        console.log('Pusher event received:', data);
+        // Accept both data.image and data.img for compatibility
+        const BASE_PATH = '/rohtov2/public';
+        function fixImageUrl(img) {
+            if (!img) return null;
+            if (img.startsWith('http') || img.startsWith('data:')) return img;
+            // If already starts with BASE_PATH, don't double it
+            if (img.startsWith(BASE_PATH)) return img;
+            // Ensure leading slash
+            if (!img.startsWith('/')) img = '/' + img;
+            return BASE_PATH + img;
+        }
+        if (data.type === 'coral') {
+            const coralId = data.id || Date.now();
+            let textureKey = `coral${data.coralId || 1}`;
+            let image = data.image || data.img || null;
+            image = fixImageUrl(image);
+            if (image) {
+                if (image.startsWith('data:')) {
+                    textureKey = `coral_custom_${coralId}`;
+                } else {
+                    textureKey = `coral_custom_${coralId}`;
+                }
+            }
+            // Push pledgeData BEFORE spawning
+            pledgeData.push({
+                id: coralId,
+                name: data.name || '',
+                coralId: data.coralId || 1,
+                type: 'coral',
+                image,
+                textureKey
+            });
+            if (image) {
+                if (image.startsWith('data:')) {
+                    this.textures.addBase64(textureKey, image);
+                    spawnSingleCoral.call(this, textureKey, 0.45); // Increased scale
+                } else {
+                    this.load.image(textureKey, image);
+                    this.load.once('complete', () => {
+                        spawnSingleCoral.call(this, textureKey, 0.45); // Increased scale
+                    });
+                    this.load.start();
+                }
+            } else {
+                spawnSingleCoral.call(this, textureKey, 0.45); // Increased scale
+            }
+        } else if (data.type === 'text') {
+            const textId = data.id || Date.now();
+            let textureKey = 'name_bubble';
+            let image = data.image || data.img || null;
+            image = fixImageUrl(image);
+            if (image) {
+                if (image.startsWith('data:')) {
+                    textureKey = `name_bubble_custom_${textId}`;
+                } else {
+                    textureKey = `name_bubble_custom_${textId}`;
+                }
+            }
+            // Push pledgeData BEFORE spawning
+            pledgeData.push({
+                id: textId,
+                text: data.text || '',
+                type: 'text',
+                image,
+                textureKey
+            });
+            if (image) {
+                if (image.startsWith('data:')) {
+                    this.textures.addBase64(textureKey, image);
+                    spawnSingleNameBubble.call(this, textureKey, 0.55); // Increased scale
+                } else {
+                    this.load.image(textureKey, image);
+                    this.load.once('complete', () => {
+                        spawnSingleNameBubble.call(this, textureKey, 0.55); // Increased scale
+                    });
+                    this.load.start();
+                }
+            } else {
+                spawnSingleNameBubble.call(this, textureKey, 0.55); // Increased scale
+            }
+        }
     });
-
-  // Simulation hooks for WebSocket testing
-  // Spawn a coral via WebSocket message simulation
-  window.simulateAddCoral = () => {
-    console.log('Simulating coral add via WebSocket');
-    spawnSingleCoral.call(this);
-  };
-  // Spawn a name bubble via WebSocket message simulation
-  window.simulateAddNameBubble = () => {
-    console.log('Simulating name bubble add via WebSocket');
-    spawnSingleNameBubble.call(this);
-  };
-  // Composite simulation: spawn both coral and name bubble
-  window.simulateAddBoth = () => {
-    window.simulateAddCoral();
-    window.simulateAddNameBubble();
-  };
-  // Debug function to check and reset entry flag
-  window.checkEntryFlag = () => {
-    console.log(`Entry flag status: ${this.isAnyEntryActive}`);
-    return this.isAnyEntryActive;
-  };
-  window.resetEntryFlag = () => {
-    console.log('Manually resetting entry flag');
-    this.isAnyEntryActive = false;
-  };
 
   // Resize listener
   window.addEventListener("resize", () => resizeGame.call(this));
@@ -306,50 +363,32 @@ function addCorals() {
   for (let i = 0; i < MAX_CORALS; i++) {
     createInitialCoral.call(this, i);
   }
-
-  // Then continue with regular spawning
-  this.time.addEvent({
-    delay: SPAWN_DELAY,
-    callback: () => {
-      spawnSingleCoral.call(this);
-    },
-    loop: true,
-  });
 }
 
 // Function to create initial corals directly in planted positions without entry animation
 function createInitialCoral(index) {
-  // Get a random pledge from the loaded data (only coral type)
   if (pledgeData.length === 0) return;
-
   const coralPledges = pledgeData.filter(pledge => pledge.type === 'coral');
   if (coralPledges.length === 0) return;
-
   const pledge = Phaser.Utils.Array.GetRandom(coralPledges);
-
-  // Get the predefined coral position
   const coralPosition = CORAL_POSITIONS[index % CORAL_POSITIONS.length];
   const finalX = coralPosition.x * window.innerWidth;
   const finalY = coralPosition.y * window.innerHeight;
-
   console.log(`Creating initial coral ${index + 1} at position ${finalX}, ${finalY}`);
-
-  // Create coral directly at final position
   let coral;
+  const textureKey = pledge.textureKey || `coral${pledge.coralId}`;
   try {
-    coral = this.add.sprite(finalX, finalY, `coral${pledge.coralId}`).setScale(0.25);
+    coral = this.add.sprite(finalX, finalY, textureKey).setScale(0.25);
     coral.baseScale = 0.25;
     coral.baseAlpha = 1.0;
   } catch (error) {
-    console.warn(`Coral image coral${pledge.coralId} failed to load, using fallback`);
+    console.warn(`Coral image ${textureKey} failed to load, using fallback`);
     const colors = [0xff6b6b, 0x4ecdc4, 0x45b7d1, 0xf9ca24, 0xf0932b, 0xeb4d4b];
     coral = this.add.circle(finalX, finalY, 25, colors[pledge.coralId - 1] || 0xff6b6b);
     coral.setDepth(5);
     coral.baseScale = 1.0;
     coral.baseAlpha = 1.0;
   }
-
-  // Set coral properties
   coral.pledgeData = pledge;
   coral.objectType = 'coral';
   coral.isPlanted = true;
@@ -359,56 +398,52 @@ function createInitialCoral(index) {
   coral.originalX = coral.x;
   coral.originalY = coral.y;
   coral.setDepth(5);
-
-  // Only remove if we are definitely adding a new coral
   if (this.coralGroup.getLength() >= MAX_CORALS) {
-    // Remove only if we have a valid coral to add
     if (coral) {
       removeOldestItem.call(this, this.coralGroup, this.corals);
     }
   }
-
-  // Add to groups
   this.coralGroup.add(coral);
   this.corals.push(coral);
-
-  // Validate group sizes after addition
   this.validateGroupSizes();
-
-  // Start bubble generation for this coral
   startCoralBubbles.call(this, coral);
-
   console.log(`Initial coral created. Total corals: ${this.corals.length}`);
 }
 
-function spawnSingleCoral() {
-  // Always enter from left-center, inside a bubble, following a smooth path
+function spawnSingleCoral(customTextureKey) {
   if (pledgeData.length === 0) return;
   const coralPledges = pledgeData.filter(pledge => pledge.type === 'coral');
   if (coralPledges.length === 0) return;
   console.log('Starting coral spawn sequence...');
-  const pledge = Phaser.Utils.Array.GetRandom(coralPledges);
+  // Use the most recent pledge (the one just pushed)
+  const pledge = coralPledges[coralPledges.length - 1];
+  // Use custom texture if provided
+  const textureKey = customTextureKey || pledge.textureKey || `coral${pledge.coralId}`;
   // Get the final coral position
   const coralPosition = CORAL_POSITIONS[currentCoralPositionIndex % CORAL_POSITIONS.length];
   const finalX = coralPosition.x * window.innerWidth;
   const finalY = coralPosition.y * window.innerHeight;
   currentCoralPositionIndex++;
-  // Entry always from left-center
   const spawnX = -80;
   const spawnY = window.innerHeight * 0.5;
-  // Create bubble sprite for entry animation
   const bubble = this.add.sprite(spawnX, spawnY, 'bubble_anim', 0).setScale(1.0);
   bubble.alpha = 0;
   bubble.setDepth(20);
   this.tweens.add({ targets: bubble, alpha: 1, duration: 500, ease: "Linear" });
-  // Create coral sprite inside the bubble
   let coral;
   try {
-    coral = this.add.sprite(spawnX, spawnY, `coral${pledge.coralId}`).setScale(0.25);
-    coral.baseScale = 0.25;
+    coral = this.add.sprite(spawnX, spawnY, textureKey);
+    // If this is a custom image, set display size to 600x600
+    if (textureKey.startsWith('coral_custom_')) {
+      coral.setDisplaySize(600, 600);
+      coral.baseScale = 1.0;
+    } else {
+      coral.setScale(0.25);
+      coral.baseScale = 0.25;
+    }
     coral.baseAlpha = 1.0;
   } catch (error) {
-    console.warn(`Coral image coral${pledge.coralId} failed to load, using fallback`);
+    console.warn(`Coral image ${textureKey} failed to load, using fallback`);
     const colors = [0xff6b6b, 0x4ecdc4, 0x45b7d1, 0xf9ca24, 0xf0932b, 0xeb4d4b];
     coral = this.add.circle(spawnX, spawnY, 25, colors[pledge.coralId - 1] || 0xff6b6b);
     coral.setDepth(5);
@@ -419,7 +454,6 @@ function spawnSingleCoral() {
   coral.pledgeData = pledge;
   coral.objectType = 'coral';
   coral.setDepth(5);
-  // Remove only one oldest coral if at the limit
   if (this.coralGroup.getLength() >= MAX_CORALS) {
     if (coral) {
       console.log(`At coral limit (${this.coralGroup.getLength()}/${MAX_CORALS}), removing oldest`);
@@ -430,13 +464,11 @@ function spawnSingleCoral() {
   this.corals.push(coral);
   console.log(`Added new coral. Group size now: ${this.coralGroup.getLength()}, Array size: ${this.corals.length}, MAX_CORALS: ${MAX_CORALS}`);
   this.validateGroupSizes();
-  // Show coral with bubble with a slower fade-in
   setTimeout(() => {
     if (coral && !coral.shouldDestroy) {
       this.tweens.add({ targets: coral, alpha: 0.9, duration: 1200, ease: "Linear" });
     }
   }, 200);
-  // Quadratic Bezier path from left-center to final position
   const controlX = (spawnX + finalX) / 2;
   const controlY = Math.max(spawnY, finalY) + Math.abs(finalY - spawnY) * 0.6 + 100;
   const path = {
@@ -459,7 +491,8 @@ function spawnSingleCoral() {
       bubble.y = pos.y;
       coral.x = pos.x;
       coral.y = pos.y;
-      if (coral.setScale) {
+      // Only animate scale for non-custom corals
+      if (coral.setScale && !(textureKey.startsWith('coral_custom_'))) {
         const scaleWobble = 0.25 + Math.sin(tweenObj.t * Math.PI * 4) * 0.01;
         coral.setScale(scaleWobble);
       }
@@ -496,16 +529,6 @@ function addNameBubbles() {
   for (let i = 0; i < MAX_NAME_BUBBLES; i++) {
     createInitialNameBubble.call(this, i);
   }
-
-  // Start regular spawning timer immediately
-  console.log('Name bubble spawning timer started');
-  this.time.addEvent({
-    delay: NAME_BUBBLE_SPAWN_DELAY,
-    callback: () => {
-      spawnSingleNameBubble.call(this);
-    },
-    loop: true,
-  });
 }
 
 // Function to create initial name bubbles directly in floating positions without entry animation
@@ -532,8 +555,13 @@ function createSingleInitialNameBubble(pledge, index) {
 
   // Create the name bubble sprite
   let nameBubble;
+  const textureKey = pledge.textureKey || 'name_bubble';
   try {
-    nameBubble = this.add.sprite(x, y, "name_bubble").setScale(0.45);
+    nameBubble = this.add.sprite(x, y, textureKey).setScale(0.45);
+    // Set display size to 600x600 for custom uploaded images
+    if (textureKey.startsWith('name_bubble_custom_')) {
+      nameBubble.setDisplaySize(600, 600);
+    }
   } catch (error) {
     console.warn('Name bubble image failed to load, using fallback');
     // Create a fallback bubble
@@ -577,7 +605,7 @@ function createSingleInitialNameBubble(pledge, index) {
   console.log(`Initial name bubble created. Total name bubbles: ${this.nameBubbles.length}`);
 }
 
-function spawnSingleNameBubble() {
+function spawnSingleNameBubble(customTextureKey) {
   console.log(`Name bubble spawn attempt`);
 
   console.log('Name bubble spawn proceeding...');
@@ -593,11 +621,13 @@ function spawnSingleNameBubble() {
   }
   if (pledgesToUse.length === 0) return; // Still no pledges, exit
 
-  const pledge = Phaser.Utils.Array.GetRandom(pledgesToUse);
-  createNameBubble.call(this, pledge);
+  // Use the most recent pledge (the one just pushed)
+  const pledge = pledgesToUse[pledgesToUse.length - 1];
+  const textureKey = customTextureKey || pledge.textureKey || 'name_bubble';
+  createNameBubble.call(this, pledge, textureKey);
 }
 
-function createNameBubble(pledge) {
+function createNameBubble(pledge, textureKey) {
   console.log('Starting name bubble entry...');
   // Entry: randomly from left or right, following a more natural, slower, and lighter path
   const finalX = Phaser.Math.Between(100, window.innerWidth - 100);
@@ -608,7 +638,11 @@ function createNameBubble(pledge) {
   // Create name bubble sprite
   let nameBubble;
   try {
-    nameBubble = this.add.sprite(spawnX, spawnY, "name_bubble").setScale(0.38);
+    nameBubble = this.add.sprite(spawnX, spawnY, textureKey).setScale(0.38);
+    // Set display size to 600x600 for custom uploaded images
+    if (textureKey.startsWith('name_bubble_custom_')) {
+      nameBubble.setDisplaySize(600, 600);
+    }
   } catch (error) {
     console.warn('Name bubble image failed to load, using fallback');
     nameBubble = this.add.circle(spawnX, spawnY, 32, 0x87ceeb, 0.7);
@@ -651,7 +685,6 @@ function createNameBubble(pledge) {
       return { x, y };
     }
   };
-  // Make entry duration longer for a slower, more relaxed entry
   const duration = Phaser.Math.Between(3800, 4800); // much slower and more variable
   let tweenObj = { t: 0 };
   this.tweens.add({
@@ -1135,4 +1168,35 @@ function resizeGame() {
   const winHeight = window.innerHeight;
   this.scale.resize(winWidth, winHeight);
   // No background image to resize - handled by CSS
+}
+
+// Preload custom images for pledges
+async function preloadCustomPledgeImages(scene, callback) {
+  // Find all unique custom image URLs in pledgeData
+  const urls = [];
+  const keys = [];
+  pledgeData.forEach(pledge => {
+    if (pledge.image && !pledge.image.startsWith('data:')) {
+      const key = pledge.type === 'coral'
+        ? `coral_custom_${pledge.id}`
+        : `name_bubble_custom_${pledge.id}`;
+      if (!scene.textures.exists(key)) {
+        urls.push(pledge.image);
+        keys.push(key);
+        pledge.textureKey = key;
+      }
+    }
+  });
+  if (urls.length === 0) {
+    callback();
+    return;
+  }
+  let loaded = 0;
+  for (let i = 0; i < urls.length; i++) {
+    scene.load.image(keys[i], urls[i]);
+  }
+  scene.load.once('complete', () => {
+    callback();
+  });
+  scene.load.start();
 }

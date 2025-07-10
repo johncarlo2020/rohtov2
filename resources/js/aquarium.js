@@ -52,8 +52,8 @@ const MAX_CORALS = 6;
 const MAX_NAME_BUBBLES = 6;
 
 // Adjustable Variables
-const SPAWN_DELAY = 4000; // Slower coral spawning (was 1500)
-const NAME_BUBBLE_SPAWN_DELAY = 5000; // Slower name bubble spawning (was 2000)
+const SPAWN_DELAY = 9000; // Much slower coral spawning (was 4000)
+const NAME_BUBBLE_SPAWN_DELAY = 11000; // Much slower name bubble spawning (was 5000)
 const CORAL_SPEED = 8;
 const FLOAT_SPEED = 0.05;
 const NAME_BUBBLE_FLOAT_SPEED = 0.02; // Slower floating for name bubbles
@@ -371,53 +371,25 @@ function createInitialCoral(index) {
 }
 
 function spawnSingleCoral() {
-  // Get a random pledge from the loaded data (only coral type)
+  // Always enter from left-center, inside a bubble, following a smooth path
   if (pledgeData.length === 0) return;
-
   const coralPledges = pledgeData.filter(pledge => pledge.type === 'coral');
   if (coralPledges.length === 0) return;
-
   console.log('Starting coral spawn sequence...');
-
   const pledge = Phaser.Utils.Array.GetRandom(coralPledges);
-
-  // Get the final coral position immediately
+  // Get the final coral position
   const coralPosition = CORAL_POSITIONS[currentCoralPositionIndex % CORAL_POSITIONS.length];
   const finalX = coralPosition.x * window.innerWidth;
   const finalY = coralPosition.y * window.innerHeight;
   currentCoralPositionIndex++;
-
-  // Decide entry direction: left, right, or center
-  const entryTypeRand = Math.random();
-  let entryType;
-  if (entryTypeRand < 0.33) {
-    entryType = 'left';
-  } else if (entryTypeRand < 0.66) {
-    entryType = 'right';
-  } else {
-    entryType = 'center';
-  }
-
-  let spawnX, spawnY, midY;
-  midY = window.innerHeight * 0.5;
-  if (entryType === 'left') {
-    spawnX = -80;
-    spawnY = midY;
-  } else if (entryType === 'right') {
-    spawnX = window.innerWidth + 80;
-    spawnY = midY;
-  } else {
-    // Center entry: from bottom center, like a bubble rising
-    spawnX = finalX + Phaser.Math.Between(-40, 40);
-    spawnY = window.innerHeight + 100;
-  }
-
+  // Entry always from left-center
+  const spawnX = -80;
+  const spawnY = window.innerHeight * 0.5;
   // Create bubble sprite for entry animation
   const bubble = this.add.sprite(spawnX, spawnY, 'bubble_anim', 0).setScale(1.0);
   bubble.alpha = 0;
   bubble.setDepth(20);
   this.tweens.add({ targets: bubble, alpha: 1, duration: 500, ease: "Linear" });
-
   // Create coral sprite inside the bubble
   let coral;
   try {
@@ -436,60 +408,33 @@ function spawnSingleCoral() {
   coral.pledgeData = pledge;
   coral.objectType = 'coral';
   coral.setDepth(5);
-
-  // Remove only one oldest coral if at the limit (never in a loop)
+  // Remove only one oldest coral if at the limit
   if (this.coralGroup.getLength() >= MAX_CORALS) {
-    // Remove only if we have a valid coral to add
     if (coral) {
       console.log(`At coral limit (${this.coralGroup.getLength()}/${MAX_CORALS}), removing oldest`);
       removeOldestItem.call(this, this.coralGroup, this.corals);
     }
   }
-
-  // Add coral to group after ensuring we have space
   this.coralGroup.add(coral);
   this.corals.push(coral);
   console.log(`Added new coral. Group size now: ${this.coralGroup.getLength()}, Array size: ${this.corals.length}, MAX_CORALS: ${MAX_CORALS}`);
-
-  // Validate group sizes after addition
   this.validateGroupSizes();
-
   // Show coral with bubble with a slower fade-in
   setTimeout(() => {
     if (coral && !coral.shouldDestroy) {
-      console.log('Making coral visible in bubble');
       this.tweens.add({ targets: coral, alpha: 0.9, duration: 1200, ease: "Linear" });
     }
   }, 200);
-
-  // Bubble-like entry path
-  // For left/right: from left/right middle, curve down to final position
-  // For center: from bottom center, wobbly upward
-  let path = { getPoint: null };
-  if (entryType === 'left' || entryType === 'right') {
-    // Quadratic Bezier: from side middle, curve down to final position
-    // Control point is horizontally between start and end, vertically below the midpoint
-    const controlX = (spawnX + finalX) / 2;
-    const controlY = Math.max(spawnY, finalY) + Math.abs(finalY - spawnY) * 0.6 + 100;
-    path.getPoint = (t) => {
-      // Quadratic Bezier interpolation
+  // Quadratic Bezier path from left-center to final position
+  const controlX = (spawnX + finalX) / 2;
+  const controlY = Math.max(spawnY, finalY) + Math.abs(finalY - spawnY) * 0.6 + 100;
+  const path = {
+    getPoint: (t) => {
       const x = (1 - t) * (1 - t) * spawnX + 2 * (1 - t) * t * controlX + t * t * finalX;
       const y = (1 - t) * (1 - t) * spawnY + 2 * (1 - t) * t * controlY + t * t * finalY;
       return { x, y };
-    };
-  } else {
-    // Center: wobbly upward path (sinusoidal)
-    const wobbleAmplitude = Phaser.Math.Between(30, 60);
-    const wobbleFrequency = Phaser.Math.FloatBetween(1.5, 2.5);
-    path.getPoint = (t) => {
-      // t: 0 (start) to 1 (end)
-      const x = spawnX + Math.sin(t * Math.PI * wobbleFrequency) * wobbleAmplitude * (1 - t);
-      const y = spawnY - (spawnY - finalY) * t;
-      return { x, y };
-    };
-  }
-
-  // Animate along the path
+    }
+  };
   const duration = 3500;
   let tweenObj = { t: 0 };
   this.tweens.add({
@@ -503,7 +448,6 @@ function spawnSingleCoral() {
       bubble.y = pos.y;
       coral.x = pos.x;
       coral.y = pos.y;
-      // Add a little wobble/scale for realism
       if (coral.setScale) {
         const scaleWobble = 0.25 + Math.sin(tweenObj.t * Math.PI * 4) * 0.01;
         coral.setScale(scaleWobble);
@@ -514,27 +458,19 @@ function spawnSingleCoral() {
       }
     },
     onComplete: () => {
-      // Pop the bubble immediately
       bubble.play('bubble_pop');
       console.log(`Coral reached final position (${coral.x}, ${coral.y}) - bubble popping`);
-
-      // Remove bubble after animation
       bubble.on('animationcomplete', () => {
         bubble.destroy();
         console.log('Entry bubble destroyed');
       });
-
-      // Plant the coral immediately
       coral.isPlanted = true;
       coral.phase = 'planted';
       coral.swayTime = Math.random() * Math.PI * 2;
       coral.bobTime = Math.random() * Math.PI * 2;
       coral.originalX = coral.x;
       coral.originalY = coral.y;
-
       console.log('Coral planted successfully');
-
-      // Start bubble generation for this coral
       startCoralBubbles.call(this, coral);
     }
   });
@@ -652,67 +588,86 @@ function spawnSingleNameBubble() {
 
 function createNameBubble(pledge) {
   console.log('Starting name bubble entry...');
-
-  const spawnX = Phaser.Math.Between(100, window.innerWidth - 100);
-  const spawnY = Phaser.Math.Between(80, window.innerHeight * 0.4); // Restrict to upper portion only
-
+  // Entry: randomly from left or right, following a more natural, slower, and lighter path
+  const finalX = Phaser.Math.Between(100, window.innerWidth - 100);
+  const finalY = Phaser.Math.Between(80, window.innerHeight * 0.4);
+  const fromLeft = Math.random() < 0.5;
+  const spawnX = fromLeft ? -60 : window.innerWidth + 60;
+  const spawnY = window.innerHeight * 0.45 + Phaser.Math.Between(-40, 40); // a bit lower and with some vertical randomness
   // Create name bubble sprite
   let nameBubble;
   try {
-    nameBubble = this.add.sprite(spawnX, spawnY, "name_bubble").setScale(0.45);
+    nameBubble = this.add.sprite(spawnX, spawnY, "name_bubble").setScale(0.38);
   } catch (error) {
     console.warn('Name bubble image failed to load, using fallback');
-    // Create a fallback bubble
-    nameBubble = this.add.circle(spawnX, spawnY, 35, 0x87ceeb, 0.7);
+    nameBubble = this.add.circle(spawnX, spawnY, 32, 0x87ceeb, 0.7);
   }
-
   nameBubble.alpha = 0;
   nameBubble.objectType = 'nameBubble';
   nameBubble.pledgeData = pledge;
-
-  // Remove oldest name bubble if at limit - this now works correctly
+  // Remove oldest name bubble if at limit
   let attempts = 0;
-  const maxAttempts = 10; // Safety check to prevent infinite loops
-
+  const maxAttempts = 10;
   while (this.nameBubbleGroup.getLength() >= MAX_NAME_BUBBLES && attempts < maxAttempts) {
-    console.log(`At name bubble limit (${this.nameBubbleGroup.getLength()}/${MAX_NAME_BUBBLES}), removing oldest (attempt ${attempts + 1})`);
     const removed = removeOldestItem.call(this, this.nameBubbleGroup, this.nameBubbles);
-
-    if (!removed) {
-      console.log(`Failed to remove name bubble, breaking loop`);
-      break;
-    }
-
+    if (!removed) break;
     attempts++;
   }
-
   if (attempts >= maxAttempts) {
     console.error(`Maximum name bubble removal attempts reached, something is wrong with group management`);
   }
-
-  // Add to group after ensuring we have space
   this.nameBubbleGroup.add(nameBubble);
   this.nameBubbles.push(nameBubble);
-  console.log(`Added new name bubble. Group size now: ${this.nameBubbleGroup.getLength()}, Array size: ${this.nameBubbles.length}, MAX_NAME_BUBBLES: ${MAX_NAME_BUBBLES}`);
-
-  // Validate group sizes after addition
   this.validateGroupSizes();
-
-  // Add floating movement properties with calmer variation
-  nameBubble.vx = Phaser.Math.FloatBetween(-0.02, 0.02);
-  nameBubble.vy = Phaser.Math.FloatBetween(-0.015, 0.015);
+  // Floating movement properties
+  nameBubble.vx = Phaser.Math.FloatBetween(-0.012, 0.012);
+  nameBubble.vy = Phaser.Math.FloatBetween(-0.009, 0.009);
   nameBubble.floatTime = 0;
   nameBubble.floatDirection = Math.random() < 0.5 ? 1 : -1;
-  nameBubble.floatRadius = Phaser.Math.Between(10, 20);
-
-  // Slower fade in for name bubble
+  nameBubble.floatRadius = Phaser.Math.Between(8, 16);
+  // Natural, lighter, and slower quadratic Bezier path (arched upward, direction-aware)
+  const controlX = fromLeft
+    ? spawnX + (finalX - spawnX) * 0.45 + Phaser.Math.Between(-30, 30)
+    : spawnX - (spawnX - finalX) * 0.45 + Phaser.Math.Between(-30, 30);
+  const controlY = spawnY - Phaser.Math.Between(40, 90); // arched upward
+  const path = {
+    getPoint: (t) => {
+      // Add a little horizontal and vertical wobble for more natural feel
+      const wobbleX = Math.sin(t * Math.PI * 2.5) * 8 * (1 - t);
+      const wobbleY = Math.cos(t * Math.PI * 2.5) * 6 * (1 - t);
+      const x = (1 - t) * (1 - t) * spawnX + 2 * (1 - t) * t * controlX + t * t * finalX + wobbleX;
+      const y = (1 - t) * (1 - t) * spawnY + 2 * (1 - t) * t * controlY + t * t * finalY + wobbleY;
+      return { x, y };
+    }
+  };
+  // Make entry duration longer for a slower, more relaxed entry
+  const duration = Phaser.Math.Between(3800, 4800); // much slower and more variable
+  let tweenObj = { t: 0 };
   this.tweens.add({
-    targets: nameBubble,
-    alpha: 1,
-    duration: 1200,
-    ease: "Linear",
+    targets: tweenObj,
+    t: 1,
+    duration: duration,
+    ease: "Sine.easeInOut",
+    onUpdate: () => {
+      const pos = path.getPoint(tweenObj.t);
+      nameBubble.x = pos.x;
+      nameBubble.y = pos.y;
+      if (nameBubble.setScale) {
+        const scaleWobble = 0.38 + Math.sin(tweenObj.t * Math.PI * 2.2) * 0.012;
+        nameBubble.setScale(scaleWobble);
+      }
+    },
+    onStart: () => {
+      // Fade in as it starts moving
+      this.tweens.add({
+        targets: nameBubble,
+        alpha: 1,
+        duration: 1100,
+        ease: "Linear"
+      });
+    },
     onComplete: () => {
-      console.log('Name bubble entry complete');
+      // No bubble pop, just finish at destination
     }
   });
 }

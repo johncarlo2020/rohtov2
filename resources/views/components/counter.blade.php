@@ -2,39 +2,63 @@
 
 @push('styles')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flipclock@0.7.8/compiled/flipclock.css" />
+<style>
+/* Make FlipClock smaller */
+.flip-clock-wrapper {
+    font-size: 18px !important; /* adjust as needed */
+    transform: scale(0.6);      /* adjust scale for overall size */
+    margin: 0 auto;
+}
+</style>
 @endpush
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/flipclock@0.7.8/compiled/flipclock.min.js"></script>
-
+<script src="https://js.pusher.com/7.2/pusher.min.js"></script>
 <script>
+    var clock;
     $(document).ready(function () {
-      var clock = $('.clock').FlipClock(0, {
+      clock = $('.clock').FlipClock(0, {
         clockFace: 'Counter',
-        autoStart: true,
+        autoStart: false, // Do not start automatically
         minimumDigits: 4
       });
-
-      // Get live count from Laravel backend
+      fetchAndAnimateCounter();
+    });
+    // Expose a function to set the counter value manually
+    function setCounterValue(value) {
+      if (clock) {
+        clock.setValue(value);
+      }
+    }
+    // Fetch and animate the counter value from backend
+    function fetchAndAnimateCounter() {
       $.ajax({
-        url: '{{ route('pledge.counter') }}', // adjust to your actual route name
+        url: '{{ route('pledge.counter') }}',
         type: 'GET',
         success: function (res) {
-          var target = parseInt(res.count || 0); // fallback to 0 if missing
-          var current = 0;
-
-          var interval = setInterval(function () {
-            current++;
-            clock.setValue(current);
-            if (current >= target) {
-              clearInterval(interval);
+            if (res && res.count) {
+                setCounterValue(res.count);
+                clock.start(); // Start the clock after setting the value
+            } else {
+                console.error("Invalid response from server:", res);
             }
-          }, 20);
         },
         error: function () {
           console.error("Failed to fetch counter value.");
         }
       });
+    }
+
+    // Pusher real-time update
+    Pusher.logToConsole = false;
+    const pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
+        cluster: '{{ env('PUSHER_APP_CLUSTER') }}',
+        encrypted: true
     });
-  </script>
+    const channel = pusher.subscribe('baby-channel');
+    channel.bind('baby-event', function(data) {
+        fetchAndAnimateCounter();
+    });
+</script>
 @endpush

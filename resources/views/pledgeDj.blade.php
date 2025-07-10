@@ -77,15 +77,15 @@
                 class="custom-btn custom-btn-secondary animate-entry delay-5 w-100">Select</button>
         </div>
         <div id="finish" class="d-none steps">
-            <h1 class="heading animate-entry delay-1 mt-5 mb-2">
+            <h1 class="heading animate-entry delay-1 mt-2 mb-2">
                 Total pledge
             </h1>
             <div class="counter-container mb-2 animate-entry delay-3">
                 @include('components.counter')
             </div>
             <div id="bubbleContainer" class="bubble-container mb-4 animate-entry delay-4">
-                <img class="bubble d-none" src="{{ asset('images/brand/bubble_Overlay.webp') }}" crossOrigin="anonymous"
-                    alt="Design 2">
+                <img class="bubble d-none" src="{{ asset('images/brand/bubble_Overlay.webp') }}"
+                    crossOrigin="anonymous" alt="Design 2">
                 <div id="selectedOption"></div>
             </div>
 
@@ -94,8 +94,6 @@
                     now</button>
                 <button id="downloadBtn"
                     class="custom-btn custom-btn-secondary animate-entry delay-5 w-100 mb-2">Download</button>
-                <button id="uploadBtn" class="custom-btn custom-btn-primary animate-entry delay-5 w-100">Get Content for
-                    Upload</button>
             </div>
 
         </div>
@@ -213,7 +211,6 @@
             const bubbleContainer = document.getElementById('bubbleContainer');
             const selectedOption = document.getElementById('selectedOption');
             const downloadBtn = document.getElementById('downloadBtn');
-            const uploadBtn = document.getElementById('uploadBtn');
             const pledgeBtn = document.getElementById('pledgeBtn');
             // no longer using individual buttons; we'll get the current slick slide image
 
@@ -303,8 +300,8 @@
                     });
 
                 async function drawBubble() {
-                       const bg = await loadImage(`{{ asset('images/brand/bubble_Overlay.webp') }}`);
-                        ctx.drawImage(bg, 0, 0, width, height);
+                    const bg = await loadImage(`{{ asset('images/brand/bubble_Overlay.webp') }}`);
+                    ctx.drawImage(bg, 0, 0, width, height);
                     if (pledgeData.type === 'text') {
                         ctx.fillStyle = 'white';
                         ctx.font = 'bold 25px "Palatino", serif';
@@ -484,7 +481,7 @@
                 // Find the canvas inside bubbleContainer
                 const canvas = bubbleContainer.querySelector('canvas');
                 if (!canvas) {
-                    alert('No canvas found to download.');
+
                     return;
                 }
                 // Create a link and trigger download
@@ -497,26 +494,16 @@
             }
 
 
-             uploadBtn.addEventListener('click', function() {
-                uploadPledgeToServer();
-            });
 
             // Example usage function for server upload
             function uploadPledgeToServer() {
                 if (pledgeData.type === 'text') {
-                    // Use html2canvas as before for text type
-                    if (typeof html2canvas === 'undefined') {
-                        alert('Upload feature is not available. Please refresh the page and try again.');
-                        uploadBtn.disabled = false;
-                        return;
-                    }
-                    html2canvas(bubbleContainer, {
-                        backgroundColor: null
-                    }).then(canvas => {
+                    // Prefer uploading the actual canvas if present
+                    const canvas = bubbleContainer.querySelector('canvas');
+                    if (canvas) {
                         canvas.toBlob(blob => {
                             if (!blob) {
-                                alert('Failed to generate image for upload.');
-                                uploadBtn.disabled = false;
+                                pledgeBtn.disabled = false;
                                 return;
                             }
                             const formData = new FormData();
@@ -524,31 +511,75 @@
                             formData.append('pledge_text', pledgeData.text);
                             formData.append('pledge_type', pledgeData.type);
                             fetch('{{ route('upload.baby') }}', {
-                                method: 'POST',
-                                headers: {
-                                    'X-CSRF-TOKEN': csrfToken
-                                },
-                                body: formData
-                            })
-                            .then(async response => {
-                                if (!response.ok) {
-                                    const text = await response.text();
-                                    throw new Error('Upload failed: ' + text);
-                                }
-                                return response.json();
-                            })
-                            .then(data => {
-                                alert('Pledge uploaded successfully!');
-                            })
-                            .catch(error => {
-                                alert('Upload failed. Please try again.');
-                                console.error('Upload failed:', error);
-                            })
-                            .finally(() => {
-                                uploadBtn.disabled = false;
-                            });
+                                    method: 'POST',
+                                    headers: {
+                                        'X-CSRF-TOKEN': csrfToken
+                                    },
+                                    body: formData
+                                })
+                                .then(async response => {
+                                    if (!response.ok) {
+                                        const text = await response.text();
+                                        throw new Error('Upload failed: ' + text);
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+
+                                })
+                                .catch(error => {
+
+                                    console.error('Upload failed:', error);
+                                })
+                                .finally(() => {
+                                    pledgeBtn.disabled = false;
+                                });
                         }, 'image/png');
-                    });
+                    } else {
+                        // Fallback: use html2canvas if no canvas found
+                        if (typeof html2canvas === 'undefined') {
+                            pledgeBtn.disabled = false;
+                            return;
+                        }
+                        html2canvas(bubbleContainer, {
+                            backgroundColor: null
+                        }).then(canvas => {
+                            canvas.toBlob(blob => {
+                                if (!blob) {
+                                    pledgeBtn.disabled = false;
+                                    return;
+                                }
+                                const formData = new FormData();
+                                formData.append('pledge_image', blob, `pledge_text_${Date.now()}.png`);
+                                formData.append('pledge_text', pledgeData.text);
+                                formData.append('pledge_type', pledgeData.type);
+                                fetch('{{ route('upload.baby') }}', {
+                                        method: 'POST',
+                                        headers: {
+                                            'X-CSRF-TOKEN': csrfToken
+                                        },
+                                        body: formData
+                                    })
+                                    .then(async response => {
+                                        if (!response.ok) {
+                                            const text = await response.text();
+                                            throw new Error('Upload failed: ' + text);
+                                        }
+                                        return response.json();
+                                    })
+                                    .then(data => {
+                                        window.location.href = '{{ route('station', 4) }}';
+                                    })
+                                    .catch(error => {
+
+                                        console.error('Upload failed:', error);
+                                    })
+                                    .finally(() => {
+                                        pledgeBtn.disabled = false;
+                                    });
+                            }, 'image/png');
+                        });
+                    }
                 } else if (pledgeData.type === 'coral') {
                     uploadCoralCanvas();
                 }
@@ -615,8 +646,8 @@
                     // Upload the generated canvas
                     canvas.toBlob(blob => {
                         if (!blob) {
-                            alert('Failed to generate image for upload.');
-                            uploadBtn.disabled = false;
+
+                            pledgeBtn.disabled = false;
                             return;
                         }
                         const formData = new FormData();
@@ -624,29 +655,30 @@
                         formData.append('pledge_text', pledgeData.text);
                         formData.append('pledge_type', pledgeData.type);
                         fetch('{{ route('upload.baby') }}', {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': csrfToken
-                            },
-                            body: formData
-                        })
-                        .then(async response => {
-                            if (!response.ok) {
-                                const text = await response.text();
-                                throw new Error('Upload failed: ' + text);
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            alert('Pledge uploaded successfully!');
-                        })
-                        .catch(error => {
-                            alert('Upload failed. Please try again.');
-                            console.error('Upload failed:', error);
-                        })
-                        .finally(() => {
-                            uploadBtn.disabled = false;
-                        });
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': csrfToken
+                                },
+                                body: formData
+                            })
+                            .then(async response => {
+                                if (!response.ok) {
+                                    const text = await response.text();
+                                    throw new Error('Upload failed: ' + text);
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                // go to station 4 again
+                                window.location.href = '{{ route('station', 4) }}';
+                            })
+                            .catch(error => {
+
+                                console.error('Upload failed:', error);
+                            })
+                            .finally(() => {
+                                pledgeBtn.disabled = false;
+                            });
                     }, 'image/png');
                 })();
             }

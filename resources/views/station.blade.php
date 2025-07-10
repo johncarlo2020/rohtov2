@@ -33,18 +33,13 @@
         </div>
         <div id="mainContent"
             class="mt-1 mb-2 d-flex flex-column align-items-center justify-content-center animate-entry delay-3">
-            @if ($user)
-                <p class="my-0 mt-3 curve heading-dutch small">Checked-in</p>
-                <p class="my-0 curve heading-dutch ">Succesful</p>
-            @else
-                <h1 class="heading mb-3 mt-3">STATION {{ $station->id }}</h1>
+            <h1 class="heading mb-3 mt-3">STATION {{ $station->id }}</h1>
                 <p class="sub-heading mb-1 fw-thin">
                     {{ isset($station->name) ? $station->name : '' }}
                 </p>
                 <span class="mb-4 fw-thin">
                     {{ isset($station->description) ? $station->description : '' }}
                 </span>
-            @endif
             <div id="{{ $user ? '' : 'forceQr' }}" class="icon-container">
             </div>
             <img class="mt-2 station-image w-75" src="{{ asset('images/station/station_' . $station->id . '.webp') }}"
@@ -55,13 +50,13 @@
                     <i class="fa-solid fa-camera"></i>
                 </button>
                 <p class="px-4 mt-3 bottom-text scanner-text text-center">Scan the QR code to check in</p>
-            @elseif ($station->id == 4)
+            @elseif ($station->id == 4 && $user != true)
                 <a href="{{ route('pledgeDj') }}" class="custom-btn custom-btn-secondary mt-5">
                     Start
                 </a>
             @else
                 <div class="scanner-button">
-                    <p class="my-0 mt-3 text-center mb-3">Checked-in Successful</p>
+                    <p class="my-0 mt-5 text-center mb-3">Checked-in Successful</p>
                     <a href="{{ route('dashboard') }}" class="custom-btn custom-btn-secondary">
                         Back
                     </a>

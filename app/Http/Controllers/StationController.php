@@ -150,6 +150,8 @@ class StationController extends Controller
          return view('station', compact('station', 'user'));
 
     }
+
+
     public function extension(Station $station)
     {
         return view('extension');
@@ -674,8 +676,14 @@ class StationController extends Controller
 
     public function getValue()
     {
-        return response()->json(['count' => 1567]); // dynamic count logic here
+        // Count all image files in storage/app/public/babies
+        $imageCount = collect(\Storage::files('public/babies'))
+            ->filter(function($file) {
+                return preg_match('/\\.(jpg|jpeg|png|gif|webp)$/i', $file);
+            })
+            ->count();
+
+            $imageCount = $imageCount + 3000;
+        return response()->json(['count' => $imageCount]);
     }
-
-
 }

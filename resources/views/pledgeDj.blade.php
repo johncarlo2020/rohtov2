@@ -211,6 +211,10 @@
                 }
             });
 
+            pledgeBtn.addEventListener('click', function() {
+                uploadPledgeToServer();
+            });
+
             function processTextSelection() {
                 pledgeData.text = bubbleText.value;
                 console.log('processTextSelection called:', {
@@ -1190,53 +1194,127 @@
 
             // Example usage function for server upload
             function uploadPledgeToServer() {
-                getBubbleContentOnly()
-                    .then(result => {
-                        console.log('Content-only image generated:', result);
+                if (pledgeData.type === 'text') {
+                    // For text, use the same logic as downloadPledgeTypeText: draw bubble with text and upload
+                    const containerWidth = bubbleContainer.offsetWidth;
+                    const containerHeight = bubbleContainer.offsetHeight;
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = containerWidth;
+                    canvas.height = containerHeight;
 
-                        // Convert data URL to blob for upload
+                    // Draw bubble image if present
+                    const bubbleImg = bubbleContainer.querySelector('img.bubble');
+                    if (bubbleImg && bubbleImg.complete) {
+                        ctx.drawImage(bubbleImg, 0, 0, canvas.width, canvas.height);
+                    } else {
+                        ctx.fillStyle = '#4a90e2';
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        ctx.strokeStyle = '#ffffff';
+                        ctx.lineWidth = 4;
+                        ctx.strokeRect(0, 0, canvas.width, canvas.height);
+                    }
+
+                    // Draw the text
+                    if (pledgeData.text) {
+                        ctx.fillStyle = 'white';
+                        ctx.font = 'bold 25px "Palatino", "Palatino Linotype", "Book Antiqua", Georgia, serif';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
+                        ctx.shadowBlur = 6;
+                        ctx.shadowOffsetX = 2;
+                        ctx.shadowOffsetY = 2;
+                        const textAreaWidth = canvas.width * 0.6;
+                        const centerX = canvas.width / 2;
+                        const centerY = canvas.height / 2;
+                        const words = pledgeData.text.split(' ');
+                        const lines = [];
+                        let currentLine = '';
+                        let fontSize = 25;
+                        let lineHeight = fontSize * 1.2;
+                        for (let i = 0; i < words.length; i++) {
+                            const testLine = currentLine + (currentLine ? ' ' : '') + words[i];
+                            const metrics = ctx.measureText(testLine);
+                            if (metrics.width > textAreaWidth && currentLine) {
+                                lines.push(currentLine);
+                                currentLine = words[i];
+                            } else {
+                                currentLine = testLine;
+                            }
+                        }
+                        if (currentLine) {
+                            lines.push(currentLine);
+                        }
+                        const totalTextHeight = lines.length * lineHeight;
+                        let startY = centerY - (totalTextHeight / 2) + (lineHeight / 2);
+                        lines.forEach((line, index) => {
+                            const y = startY + (index * lineHeight);
+                            ctx.fillText(line, centerX, y);
+                        });
+                    }
+
+                    canvas.toBlob(blob => {
+                        const formData = new FormData();
+                        formData.append('pledge_image', blob, `pledge_text_${Date.now()}.png`);
+                        formData.append('pledge_text', pledgeData.text);
+                        fetch('{{ route('upload.baby') }}', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': csrfToken
+                            },
+                            body: formData
+                        })
+                        .then(response => {
+                            if (!response.ok) throw new Error('Upload failed');
+                            return response.json();
+                        })
+                        .then(data => {
+                            // alert('Pledge uploaded successfully!');
+                            // location.reload();
+                        })
+                        .catch(error => {
+                            alert('Upload failed. Please try again.');
+                            console.error('Upload failed:', error);
+                        });
+                    }, 'image/png');
+                } else if (pledgeData.type === 'coral') {
+                    // For coral, use getCoralContentOnly (matches downloadPledgeTypeCoral logic)
+                    getCoralContentOnly().then(result => {
                         fetch(result.dataURL)
                             .then(res => res.blob())
                             .then(blob => {
-                                // Create FormData for server upload
                                 const formData = new FormData();
-                                formData.append('pledge_image', blob, `pledge_${result.type}_${Date.now()}.png`); // must match controller
-                                formData.append('pledge_text', result.content); // must match controller
-                                // If you want to use the pledge as charname, uncomment below:
-                                // formData.append('charname', result.content);
-
-                                // Upload to server using the provided endpoint and headers
+                                formData.append('pledge_image', blob, `pledge_coral_${pledgeData.coral}_${Date.now()}.png`);
+                                formData.append('pledge_text', pledgeData.text);
                                 fetch('{{ route('upload.baby') }}', {
                                     method: 'POST',
-                                    body: formData, // FormData will set Content-Type to multipart/form-data with boundary
                                     headers: {
-                                        'X-CSRF-TOKEN': csrfToken, // Standard CSRF header for Laravel
-                                        'Accept': 'application/json', // Expect a JSON response
-                                    }
+                                        'X-CSRF-TOKEN': csrfToken
+                                    },
+                                    body: formData
                                 })
                                 .then(response => {
-                                    if (!response.ok) {
-                                        console.error('Network response was not ok:', response);
-                                    }
+                                    if (!response.ok) throw new Error('Upload failed');
                                     return response.json();
                                 })
                                 .then(data => {
+                                    // alert('Pledge uploaded successfully!');
                                     // location.reload();
                                 })
                                 .catch(error => {
+                                    alert('Upload failed. Please try again.');
                                     console.error('Upload failed:', error);
                                 });
                             });
-                    })
-                    .catch(error => {
-                        console.error('Error generating content:', error);
-                        alert('Error: ' + error);
+                    }).catch(error => {
+                        alert('Failed to generate coral image for upload.');
+                        console.error(error);
                     });
+                } else {
+                    alert('Please complete your pledge selection first.');
+                }
             }
-
-            pledgeBtn.addEventListener('click', function() {
-               uploadPledgeToServer();
-            });
 
 
             // add deferred initialization function

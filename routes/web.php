@@ -23,7 +23,6 @@ Route::get('/', function () {
 })->name('welcome');
 
 
-Route::get('/ipad', [IpadController::class, 'index'])->name('ipad.index');
 
 Route::get('/upload-baby', function () {
     return view('upload-baby');
@@ -44,6 +43,13 @@ Route::get('/admin/login', function () {
     return view('auth.admin-login');
 });
 
+Route::get('/ipad', [IpadController::class, 'index'])->name('ipad.index');
+Route::get('/ipad-pledge-info',function(){
+        return view('ipad.info');
+    })->name('ipad.info');
+Route::get('/ipad-select-message-type',function(){
+        return view('ipad.message-type');
+    })->name('ipad.message.type');
 
 Route::get('/congrats', function () {
     return view('congrats');
@@ -113,9 +119,7 @@ Route::group(['middleware' => ['client']], function () {
     })->name('register.welcome');
 
     Route::get('/counter-value', 'App\Http\Controllers\StationController@getValue')->name('pledge.counter');
-    Route::get('/ipad-pledge-info',function(){
-        return view('ipad.info');
-    });
+    
 
 });
 

@@ -15,7 +15,6 @@
                     onclick="window.location='{{ route('dashboard') }}'">
                     Start Your Journey Now
                 </button>
-
             </div>
         </div>
        </div>

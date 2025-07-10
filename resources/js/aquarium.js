@@ -33,12 +33,12 @@ let pledgeData = [];
 
 // Predefined coral positions based on the aquarium layout
 const CORAL_POSITIONS = [
-  { x: 0.15, y: 0.85 }, // Left side bottom
-  { x: 0.25, y: 0.75 }, // Left middle rock
-  { x: 0.12, y: 0.65 }, // Left upper rock
-  { x: 0.75, y: 0.85 }, // Right side bottom
-  { x: 0.85, y: 0.75 }, // Right middle rock
-  { x: 0.88, y: 0.65 }, // Right upper rock
+  { x: 0.24, y: 0.91, tiltOffsetX: 18, tiltOffsetY: 6, size: 0.50, z: 3 }, // Left side bottom
+  { x: 0.25, y: 0.75, tiltOffsetX: 40, tiltOffsetY: 10, size: 0.35, z: 2 }, // Left middle rock
+  { x: 0.15, y: 0.63, tiltOffsetX: 20, tiltOffsetY: 8, size: 0.30, z: 1 }, // Left upper rock
+  { x: 0.90, y: 0.90, tiltOffsetX: -18, tiltOffsetY: 6, size: 0.50, z: 1 }, // Right side bottom
+  { x: 0.70, y: 0.70, tiltOffsetX: -12, tiltOffsetY: 4, size: 0.27, z: 1 }, // Right middle rock
+  { x: 0.75, y: 0.54, tiltOffsetX: -20, tiltOffsetY: 8, size: 0.30, z: 1 }, // Right upper rock
 ];
 
 let currentCoralPositionIndex = 0;
@@ -63,6 +63,10 @@ const BUBBLE_RADIUS = 30;
 const MIN_COLLISION_DISTANCE = 80;
 const STRETCH_FACTOR = 0.01;
 const STRETCH_DURATION = 100;
+
+// Tilt position offset configuration
+const CORAL_TILT_OFFSET_X = 18; // How much tilt affects X position (pixels)
+const CORAL_TILT_OFFSET_Y = 6;  // How much tilt affects Y position (pixels)
 
 function preload() {
   // Add error handling for image loading
@@ -416,15 +420,15 @@ function createInitialCoral(index) {
   console.log(`Creating initial coral ${index + 1} at position ${finalX}, ${finalY}`);
   let coral;
   const textureKey = pledge.textureKey || `coral${pledge.coralId}`;
+  const baseScale = coralPosition.size || 0.25;
   try {
-    coral = this.add.sprite(finalX, finalY, textureKey).setScale(0.25);
-    coral.baseScale = 0.3;
+    coral = this.add.sprite(finalX, finalY, textureKey).setScale(baseScale);
+    coral.baseScale = baseScale;
     coral.baseAlpha = 1.0;
   } catch (error) {
     console.warn(`Coral image ${textureKey} failed to load, using fallback`);
     const colors = [0xff6b6b, 0x4ecdc4, 0x45b7d1, 0xf9ca24, 0xf0932b, 0xeb4d4b];
     coral = this.add.circle(finalX, finalY, 25, colors[pledge.coralId - 1] || 0xff6b6b);
-    coral.setDepth(5);
     coral.baseScale = 1.0;
     coral.baseAlpha = 1.0;
   }
@@ -436,7 +440,8 @@ function createInitialCoral(index) {
   coral.bobTime = Math.random() * Math.PI * 2;
   coral.originalX = coral.x;
   coral.originalY = coral.y;
-  coral.setDepth(5);
+  // Set depth from CORAL_POSITIONS z property
+  coral.setDepth(coralPosition.z || 5);
   // Assign fixed random movement parameters for smooth animation
   coral.swaySpeed = Phaser.Math.FloatBetween(0.7, 1.1);
   coral.bobSpeed = Phaser.Math.FloatBetween(0.9, 1.2);
@@ -462,6 +467,9 @@ function createInitialCoral(index) {
   coral.MAX_X = window.innerWidth - 80;
   coral.MIN_Y = 50;
   coral.MAX_Y = window.innerHeight * 0.5;
+
+  coral.tiltOffsetX = coralPosition.tiltOffsetX || 0;
+  coral.tiltOffsetY = coralPosition.tiltOffsetY || 0;
 
   if (this.coralGroup.getLength() >= MAX_CORALS) {
     if (coral) {
@@ -499,23 +507,23 @@ function spawnSingleCoral(customTextureKey) {
   bubble.setDepth(20);
   this.tweens.add({ targets: bubble, alpha: 1, duration: 500, ease: "Linear" });
   let coral;
+  const baseScale = coralPosition.size || 0.25;
   try {
     coral = this.add.sprite(spawnX, spawnY, textureKey);
-    // Do NOT set scale or display size here; wait until planted
-    coral.baseScale = textureKey.startsWith('coral_custom_') ? 1.0 : 0.25;
+    coral.baseScale = baseScale;
     coral.baseAlpha = 1.0;
   } catch (error) {
     console.warn(`Coral image ${textureKey} failed to load, using fallback`);
     const colors = [0xff6b6b, 0x4ecdc4, 0x45b7d1, 0xf9ca24, 0xf0932b, 0xeb4d4b];
     coral = this.add.circle(spawnX, spawnY, 25, colors[pledge.coralId - 1] || 0xff6b6b);
-    coral.setDepth(5);
     coral.baseScale = 1.0;
     coral.baseAlpha = 1.0;
   }
   coral.alpha = 0;
   coral.pledgeData = pledge;
   coral.objectType = 'coral';
-  coral.setDepth(5);
+  // Set depth from CORAL_POSITIONS z property
+  coral.setDepth(coralPosition.z || 5);
   // Assign fixed random movement parameters for smooth animation
   coral.swaySpeed = Phaser.Math.FloatBetween(0.7, 1.1);
   coral.bobSpeed = Phaser.Math.FloatBetween(0.9, 1.2);
@@ -541,6 +549,9 @@ function spawnSingleCoral(customTextureKey) {
   coral.MAX_X = window.innerWidth - 80;
   coral.MIN_Y = 50;
   coral.MAX_Y = window.innerHeight * 0.5;
+
+  coral.tiltOffsetX = coralPosition.tiltOffsetX || 0;
+  coral.tiltOffsetY = coralPosition.tiltOffsetY || 0;
 
   if (this.coralGroup.getLength() >= MAX_CORALS) {
     if (coral) {
@@ -597,14 +608,10 @@ function spawnSingleCoral(customTextureKey) {
       if (textureKey.startsWith('coral_custom_')) {
         coral.setDisplaySize(600, 600);
       } else {
-        coral.setScale(0.25);
+        coral.setScale(baseScale);
       }
       coral.isPlanted = true;
       coral.phase = 'planted';
-      coral.swayTime = Math.random() * Math.PI * 2;
-      coral.bobTime = Math.random() * Math.PI * 2;
-      coral.originalX = coral.x;
-      coral.originalY = coral.y;
       console.log('Coral planted successfully');
       startCoralBubbles.call(this, coral);
     }
@@ -816,7 +823,7 @@ function startCoralBubbles(coral) {
 
   // Create a single bubble chain generator that creates bubbles in sequence
   const bubbleEvent = this.time.addEvent({
-    delay: Phaser.Math.Between(1000, 3000), // Initial delay before first bubble
+    delay: Phaser.Math.Between(500, 1000), // Initial delay before first bubble
     callback: () => {
       if (coral && coral.isPlanted && !coral.shouldDestroy) {
         createBubbleChain.call(this, coral);
@@ -831,8 +838,9 @@ function startCoralBubbles(coral) {
 
 // Function to create a chain of bubbles rising from corals
 function createBubbleChain(coral) {
-  const numBubblesInChain = Phaser.Math.Between(4, 8); // 4-8 bubbles per chain
-  const chainDelay = Phaser.Math.Between(100, 300); // Faster succession for visible chain effect
+  // Increase the number of bubbles per chain: 8-14
+  const numBubblesInChain = Phaser.Math.Between(20, 30); // 8-14 bubbles per chain
+  const chainDelay = Phaser.Math.Between(50, 100); // Faster succession for visible chain effect
 
   console.log(`Creating coral bubble chain: ${numBubblesInChain} bubbles from coral at x=${coral.x}`);
 
@@ -851,31 +859,23 @@ function createCoralBubble(coral, chainIndex = 0) {
   const bubbleY = coral.y - Phaser.Math.Between(20, 40); // Start higher above the coral
 
   let bubble;
-  const randomSize = Phaser.Math.FloatBetween(0.01, 0.03); // Reduced bubble size for more subtle effect
+  // Make max size smaller: 0.01 to 0.018
+  const randomSize = Phaser.Math.FloatBetween(0.01, 0.018); // Smaller, more subtle bubbles
 
   try {
     bubble = this.add.sprite(bubbleX, bubbleY, "bubble_overlay").setScale(randomSize);
   } catch (error) {
     // Fallback: smaller circle with random size
-    const radius = Phaser.Math.Between(2, 6); // Reduced fallback size for more subtle bubbles
+    const radius = Phaser.Math.Between(2, 4); // Reduced fallback size
     bubble = this.add.circle(bubbleX, bubbleY, radius, 0x87ceeb, 0.6);
   }
 
   bubble.alpha = Phaser.Math.FloatBetween(0.4, 0.8); // Increased alpha range for better visibility
   bubble.setDepth(15); // Higher depth to ensure bubbles appear above corals and other elements
 
-  // Add unique floating properties for each bubble (more variation)
-  bubble.vx = Phaser.Math.FloatBetween(-0.015, 0.015);
-  bubble.vy = Phaser.Math.FloatBetween(-0.004, 0.004);
-  bubble.floatTime = Math.random() * Math.PI * 4; // Larger random start phase range
-  bubble.floatSpeed = Phaser.Math.FloatBetween(0.5, 2.0); // Wider individual float speed range
-  bubble.driftStrength = Phaser.Math.FloatBetween(0.1, 1.2); // Wider individual drift strength range
-  bubble.phaseOffsetX = Math.random() * Math.PI * 2; // Individual phase offset for X movement
-  bubble.phaseOffsetY = Math.random() * Math.PI * 2; // Individual phase offset for Y movement
-
-  // Animate bubble rising up with random properties
-  const riseHeight = Phaser.Math.Between(100, 200); // Random rise height
-  const duration = Phaser.Math.Between(2000, 4500); // Random duration
+  // STRAIGHT UP: No side-to-side, just animate straight up
+  const riseHeight = Phaser.Math.Between(180, 320); // Longer rise height
+  const duration = Phaser.Math.Between(7000, 13000); // Much longer duration (7-13 seconds)
 
   this.tweens.add({
     targets: bubble,
@@ -883,24 +883,7 @@ function createCoralBubble(coral, chainIndex = 0) {
     alpha: 0,
     duration: duration,
     ease: "Sine.easeOut",
-    onUpdate: () => {
-      // Add individual natural floating movement with unique phase offsets
-      bubble.floatTime += 0.008 * bubble.floatSpeed;
-      const driftX = Math.sin((bubble.floatTime + bubble.phaseOffsetX) * 1.1) * bubble.driftStrength;
-      const driftY = Math.cos((bubble.floatTime + bubble.phaseOffsetY) * 0.7) * (bubble.driftStrength * 0.4);
-
-      bubble.x += bubble.vx + driftX;
-      bubble.y += bubble.vy + driftY * 0.08;
-
-      // Individual direction changes with different probabilities per bubble
-      const changeChance = 0.004 + (Math.sin(bubble.floatTime * 0.3) * 0.002);
-      if (Math.random() < changeChance) {
-        bubble.vx += Phaser.Math.FloatBetween(-0.005, 0.005);
-        bubble.vy += Phaser.Math.FloatBetween(-0.002, 0.002);
-        bubble.vx = Phaser.Math.Clamp(bubble.vx, -0.020, 0.020);
-        bubble.vy = Phaser.Math.Clamp(bubble.vy, -0.008, 0.008);
-      }
-    },
+    // No onUpdate: bubbles go straight up
     onComplete: () => {
       bubble.destroy();
     }
@@ -1030,35 +1013,27 @@ function createRandomAreaBubbleChain() {
 // Function to create bubbles from random areas across the screen
 function createRandomAreaBubble(baseX = null, baseY = null, chainIndex = 0) {
   // Use provided base position for chain, or random position for individual bubbles
-  const bubbleX = baseX ? baseX + Phaser.Math.Between(-20, 20) : Phaser.Math.Between(50, window.innerWidth - 50);
-  const bubbleY = baseY ? baseY + Phaser.Math.Between(-15, 15) : Phaser.Math.Between(window.innerHeight * 0.4, window.innerHeight - 50);
+  const bubbleX = baseX ? baseX + Phaser.Math.Between(-10, 10) : Phaser.Math.Between(50, window.innerWidth - 50);
+  const bubbleY = baseY ? baseY + Phaser.Math.Between(-8, 8) : Phaser.Math.Between(window.innerHeight * 0.4, window.innerHeight - 50);
 
   let bubble;
-  const randomSize = Phaser.Math.FloatBetween(0.015, 0.05); // Smaller bubbles
+  // Make bubbles smaller and less transparent
+  const randomSize = Phaser.Math.FloatBetween(0.012, 0.025); // Smaller, more subtle bubbles
 
   try {
     bubble = this.add.sprite(bubbleX, bubbleY, "bubble_overlay").setScale(randomSize);
   } catch (error) {
     // Fallback: small circle with random size
-    const radius = Phaser.Math.Between(1, 3);
-    bubble = this.add.circle(bubbleX, bubbleY, radius, 0x87ceeb, 0.6);
+    const radius = Phaser.Math.Between(1, 2);
+    bubble = this.add.circle(bubbleX, bubbleY, radius, 0x87ceeb, 0.8);
   }
 
-  bubble.alpha = Phaser.Math.FloatBetween(0.3, 0.7); // Random transparency
+  bubble.alpha = Phaser.Math.FloatBetween(0.7, 0.95); // Less transparent
   bubble.setDepth(8); // Between ocean floor bubbles and coral bubbles
 
-  // Add unique floating properties (more variation)
-  bubble.vx = Phaser.Math.FloatBetween(-0.015, 0.015);
-  bubble.vy = Phaser.Math.FloatBetween(-0.004, 0.004);
-  bubble.floatTime = Math.random() * Math.PI * 4; // Larger random start phase range
-  bubble.floatSpeed = Phaser.Math.FloatBetween(0.5, 1.8); // Wider individual float speed range
-  bubble.driftStrength = Phaser.Math.FloatBetween(0.2, 1.3); // Wider individual drift strength range
-  bubble.phaseOffsetX = Math.random() * Math.PI * 2; // Individual phase offset for X movement
-  bubble.phaseOffsetY = Math.random() * Math.PI * 2; // Individual phase offset for Y movement
-
-  // Animate bubble rising up with longer duration
-  const riseHeight = Phaser.Math.Between(120, 250); // Variable rise height
-  const duration = Phaser.Math.Between(6000, 12000); // Much longer duration (6-12 seconds)
+  // STRAIGHT UP: No side-to-side, just animate straight up
+  const riseHeight = Phaser.Math.Between(120, 220); // Variable rise height
+  const duration = Phaser.Math.Between(6000, 10000); // 6-10 seconds
 
   this.tweens.add({
     targets: bubble,
@@ -1066,24 +1041,7 @@ function createRandomAreaBubble(baseX = null, baseY = null, chainIndex = 0) {
     alpha: 0,
     duration: duration,
     ease: "Sine.easeOut",
-    onUpdate: () => {
-      // Add individual natural floating movement with unique phase offsets
-      bubble.floatTime += 0.007 * bubble.floatSpeed;
-      const driftX = Math.sin((bubble.floatTime + bubble.phaseOffsetX) * 1.4) * bubble.driftStrength;
-      const driftY = Math.cos((bubble.floatTime + bubble.phaseOffsetY) * 0.8) * (bubble.driftStrength * 0.3);
-
-      bubble.x += bubble.vx + driftX;
-      bubble.y += bubble.vy + driftY * 0.05;
-
-      // Individual direction changes with varying probabilities
-      const changeChance = 0.004 + (Math.sin(bubble.floatTime * 0.15) * 0.003);
-      if (Math.random() < changeChance) {
-        bubble.vx += Phaser.Math.FloatBetween(-0.004, 0.004);
-        bubble.vy += Phaser.Math.FloatBetween(-0.002, 0.002);
-        bubble.vx = Phaser.Math.Clamp(bubble.vx, -0.018, 0.018);
-        bubble.vy = Phaser.Math.Clamp(bubble.vy, -0.006, 0.006);
-      }
-    },
+    // No onUpdate: bubbles go straight up
     onComplete: () => {
       bubble.destroy();
     }
@@ -1103,61 +1061,24 @@ function update(time, delta) {
   // Update corals (floating behavior while falling, stationary when planted)
   this.coralGroup.getChildren().forEach((coral) => {
     if (coral.isPlanted && !coral.shouldDestroy) {
-      // --- Enhanced, more realistic coral movement ---
-      coral.swayTime += dt * coral.swaySpeed;
-      coral.bobTime = coral.bobTime || 0;
-      coral.bobTime += dt * coral.bobSpeed;
-      // Layered swaying (primary, secondary, tertiary, quaternary)
-      const primarySway = Math.sin(coral.swayTime + (coral.phaseOffset1 || 0)) * coral.primarySwayAmp;
-      const secondarySway = Math.sin(coral.swayTime * coral.secondarySwayFreq + (coral.phaseOffset2 || 0)) * coral.secondarySwayAmp;
-      const tertiarySway = Math.cos(coral.swayTime * coral.tertiarySwayFreq + (coral.phaseOffset3 || 0)) * coral.tertiarySwayAmp;
-      const quaternarySway = Math.sin(coral.swayTime * 0.37 + (coral.phaseOffset4 || 0)) * 1.1;
-      // Layered bobbing
-      const primaryBob = Math.cos(coral.bobTime * coral.primaryBobFreq + (coral.phaseOffset5 || 0)) * coral.primaryBobAmp;
-      const secondaryBob = Math.sin(coral.bobTime * coral.secondaryBobFreq + (coral.phaseOffset6 || 0)) * coral.secondaryBobAmp;
-      const tertiaryBob = Math.cos(coral.bobTime * 0.53 + (coral.phaseOffset7 || 0)) * 0.7;
-      // Slight tilt and scale variation
-      const tilt = Math.sin(coral.swayTime * coral.tiltFreq + (coral.phaseOffset8 || 0)) * coral.tiltAmp + Math.sin(coral.swayTime * 0.23) * 0.04;
-      const scaleVariation = 1 + Math.sin(coral.swayTime * coral.scaleFreq + (coral.phaseOffset9 || 0)) * coral.scaleAmp + Math.sin(coral.swayTime * 0.19) * 0.012;
-      // Assign phase offsets if not already set
-      if (!coral.phaseOffset1) {
-        coral.phaseOffset1 = Math.random() * Math.PI * 2;
-        coral.phaseOffset2 = Math.random() * Math.PI * 2;
-        coral.phaseOffset3 = Math.random() * Math.PI * 2;
-        coral.phaseOffset4 = Math.random() * Math.PI * 2;
-        coral.phaseOffset5 = Math.random() * Math.PI * 2;
-        coral.phaseOffset6 = Math.random() * Math.PI * 2;
-        coral.phaseOffset7 = Math.random() * Math.PI * 2;
-        coral.phaseOffset8 = Math.random() * Math.PI * 2;
-        coral.phaseOffset9 = Math.random() * Math.PI * 2;
-      }
-      coral.x = coral.originalX + primarySway + secondarySway + tertiarySway + quaternarySway;
-      coral.y = coral.originalY + primaryBob + secondaryBob + tertiaryBob;
+      // --- REMOVE planted coral animation: keep coral at original position and rotation only ---
+      coral.x = coral.originalX;
+      coral.y = coral.originalY;
       if (coral.setRotation) {
-        coral.setRotation(tilt);
+        coral.setRotation(0);
       }
       if (coral.setScale) {
         const baseScale = coral.baseScale || 0.5;
         if (!coral.baseScale) coral.baseScale = baseScale;
-        coral.setScale(baseScale * scaleVariation);
+        coral.setScale(baseScale);
       }
       if (coral.setAlpha) {
         const baseAlpha = coral.baseAlpha || 1.0;
         if (!coral.baseAlpha) coral.baseAlpha = baseAlpha;
-        const alphaVariation = 1 + Math.sin(coral.bobTime * coral.alphaFreq) * coral.alphaAmp;
-        coral.setAlpha(Math.max(0.7, baseAlpha * alphaVariation));
+        coral.setAlpha(baseAlpha);
       }
       if (coral.setTint) {
-        const tintPhase = coral.swayTime * coral.tintFreq;
-        const tintStrength = coral.tintStrength;
-        const r = 1 + Math.sin(tintPhase) * tintStrength;
-        const g = 1 + Math.sin(tintPhase + Math.PI / 3) * tintStrength;
-        const b = 1 + Math.sin(tintPhase + (2 * Math.PI) / 3) * tintStrength;
-        const tintR = Math.floor(Math.max(0, Math.min(255, r * 255)));
-        const tintG = Math.floor(Math.max(0, Math.min(255, g * 255)));
-        const tintB = Math.floor(Math.max(0, Math.min(255, b * 255)));
-        const tintColor = (tintR << 16) | (tintG << 8) | tintB;
-        coral.setTint(tintColor);
+        coral.setTint(0xffffff);
       }
     }
   });

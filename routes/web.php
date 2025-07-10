@@ -113,7 +113,9 @@ Route::group(['middleware' => ['client']], function () {
     })->name('register.welcome');
 
     Route::get('/counter-value', 'App\Http\Controllers\StationController@getValue')->name('pledge.counter');
-
+    Route::get('/ipad-pledge-info',function(){
+        return view('ipad.info');
+    });
 
 });
 

@@ -5,7 +5,7 @@
             <div class="col-12 d-flex justify-content-center align-items-center animate-entry">
                 @include('components.branding')
             </div>
-            <div class="text-center bottom-text-welcome col-12 ">
+            <div class="text-center col-12 mt-5">
                 <div class="d-block">
                     <h2 class="text-center animate-entry"><strong>Total Pledge</strong></h2>
                     <!-- <div class="col mb-3 animate-entry delay-2">

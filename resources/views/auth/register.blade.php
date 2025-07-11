@@ -64,8 +64,8 @@
                                     <option value="Malay">Malay</option>
                                     <option value="Indian">Indian</option>
                                     <option value="Chinese">Chinese</option>
-                                    <option value="Kadazan">
-                                        Kadazan
+                                    <option value="Others">
+                                        Others
                                     </option>
                                 </select>
                                 @error('race')
@@ -107,29 +107,6 @@
                             </div>
                         </div>
 
-                        <div class="mb-3 row">
-                            <div class="col-12">
-                                <label for="find">Where did you find this event?</label>
-                                <select id="find" class="form-select input-text @error('find') is-invalid @enderror" name="find" aria-label="Event source select"
-                                    required>
-                                    <option value="" selected disabled>Where did you find this event? </option>
-                                    <option value="Facebook">Facebook</option>
-                                    <option value="TikTok">TikTok</option>
-                                    <option value="Instagram">Instagram</option>
-                                    <option value="XiaoHongShu (小红书)">
-                                        XiaoHongShu (小红书)
-                                    </option>
-                                    <option value="Walk-in">
-                                        Walk-in
-                                    </option>
-                                </select>
-                                @error('find')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
                         <hr style="border-top: 2px dotted; opacity: 0.25;">
                         <div class="mt-4 mb-2 row">
                             <div class="col-12">

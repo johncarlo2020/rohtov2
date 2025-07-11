@@ -77,7 +77,7 @@ class RegisteredUserController extends Controller
             'number' => $phoneNumber,
             'email' => $request->email,
             'otp' => $otp,
-            'find' => $request->find,
+            'find' => '',
             'country'=> $country->name,
             'marketing' => $marketing,
             'last_login_at' => Carbon::now(),
@@ -85,9 +85,7 @@ class RegisteredUserController extends Controller
         ]);
 
         $user->assignRole('client');
-
         // $request->session()->flash('showWelcomeModal', true);
-
         // Use the insert method to insert multiple records in one query
         event(new Registered($user));
         GlobalHelper::sendOtpSms($phoneNumber, $otp);

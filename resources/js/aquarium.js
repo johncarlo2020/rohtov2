@@ -90,6 +90,11 @@ function preload() {
   // Load floating name bubble asset
   this.load.image("name_bubble", "images/brand/withMessage.webp");
 
+  // Load tempBubbles images for name bubbles
+  for (let i = 1; i <= 6; i++) {
+    this.load.image(`tempBubble${i}`, `images/tempBubbles/${i}.png`);
+  }
+
   // Load small bubble overlay for coral effects
   this.load.image("bubble_overlay", "images/brand/bubble_Overlay.webp");
 
@@ -669,24 +674,29 @@ function createInitialNameBubble(index) {
 }
 
 function createSingleInitialNameBubble(pledge, index) {
-  // Create name bubble directly in floating area
+  // Use preloaded tempBubble keys for each bubble
+  const tempBubbleKeys = [
+    'tempBubble1',
+    'tempBubble2',
+    'tempBubble3',
+    'tempBubble4',
+    'tempBubble5',
+    'tempBubble6'
+  ];
+  // Pick key based on index (loop if more than 6)
+  const tempBubbleKey = tempBubbleKeys[index % tempBubbleKeys.length];
+
   const x = Phaser.Math.Between(window.innerWidth * 0.1, window.innerWidth * 0.9);
   const y = Phaser.Math.Between(window.innerHeight * 0.1, window.innerHeight * 0.6);
 
   console.log(`Creating initial name bubble ${index + 1} at position ${x}, ${y}`);
 
-  // Create the name bubble sprite
+  // Create the name bubble sprite using tempBubbleKey
   let nameBubble;
-  const textureKey = pledge.textureKey || 'name_bubble';
   try {
-    nameBubble = this.add.sprite(x, y, textureKey).setScale(0.45);
-    // Set display size to 600x600 for custom uploaded images
-    if (textureKey.startsWith('name_bubble_custom_')) {
-      nameBubble.setDisplaySize(600, 600);
-    }
+    nameBubble = this.add.sprite(x, y, tempBubbleKey).setScale(0.45);
   } catch (error) {
     console.warn('Name bubble image failed to load, using fallback');
-    // Create a fallback bubble
     nameBubble = this.add.circle(x, y, 35, 0x87ceeb, 0.7);
   }
 

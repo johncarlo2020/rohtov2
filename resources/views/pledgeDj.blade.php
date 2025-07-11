@@ -118,14 +118,14 @@
                     borderColor: '#ffffff',
                     textColor: '#ffffff',
                     position: {
-                        top: '20%',
+                        top: '30%',
                         left: '50%'
                     },
                     stickPosition: {
                         top: '35%',
-                        left: '50%'
+                        left: '90%'
                     },
-                    tilt: -8 // degrees
+                    tilt: 10 // degrees
                 },
                 2: {
                     backgroundColor: '#ffffff',
@@ -359,8 +359,20 @@
                         ctx.drawImage(coralImg, coralX, coralY, coralWidth, coralHeight);
 
                         // Draw name label (sign) at top of stick
-                        const textX = stickX;
-                        const textY = stickY - stickHeight; // top of stick
+                        // Use custom position if provided in coralSignConfig
+                        let textX = stickX;
+                        let textY = stickY - stickHeight;
+                        if (signConfig.position) {
+                            // Convert percent to px
+                            const percentToPx = (percent, total) => {
+                                if (typeof percent === 'string' && percent.endsWith('%')) {
+                                    return parseFloat(percent) / 100 * total;
+                                }
+                                return percent;
+                            };
+                            textX = percentToPx(signConfig.position.left, width);
+                            textY = percentToPx(signConfig.position.top, height);
+                        }
                         const angle = signConfig.tilt * Math.PI / 180;
                         ctx.save();
                         ctx.translate(textX, textY);

@@ -699,7 +699,7 @@ function createSingleInitialNameBubble(pledge, index) {
   // Create the name bubble sprite using tempBubbleKey
   let nameBubble;
   try {
-    nameBubble = this.add.sprite(x, y, tempBubbleKey).setScale(0.45);
+    nameBubble = this.add.sprite(x, y, tempBubbleKey).setScale(1);
   } catch (error) {
     console.warn('Name bubble image failed to load, using fallback');
     nameBubble = this.add.circle(x, y, 35, 0x87ceeb, 0.7);

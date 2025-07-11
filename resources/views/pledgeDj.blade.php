@@ -58,7 +58,7 @@
                     <button id="slickPrevBtn" class="icon-btn prev"><i class="fa-solid fa-caret-left"></i></button>
                     <button id="slickNextBtn" class="icon-btn next"><i class="fa-solid fa-caret-right"></i></button>
                     <div class="coral-container w-100">
-                        @for ($i = 1; $i <= 5; $i++)
+                        @for ($i = 1; $i <= 6; $i++)
                             <div class="coral item-container" data-id="{{ $i }}">
                                 <div class="coral-image-container">
                                     <img class="bubble" src="{{ asset('images/brand/bubble_Overlay.webp') }}"
@@ -114,88 +114,94 @@
             // Configuration for each coral ID - sign colors and positions
             const coralSignConfig = {
                 1: {
-                    backgroundColor: '#3852A5',
-                    borderColor: '#ffffff',
-                    textColor: '#ffffff',
-                    position: {
-                        top: '30%',
-                        left: '50%'
-                    },
-                    stickPosition: {
-                        top: '35%',
-                        left: '90%'
-                    },
-                    tilt: 10 // degrees
-                },
-                2: {
                     backgroundColor: '#ffffff',
                     borderColor: '#3852A5',
                     textColor: '#3852A5',
                     position: {
-                        top: '25%',
-                        left: '45%'
+                        top: '38%',
+                        left: '73%'
                     },
                     stickPosition: {
-                        top: '40%',
-                        left: '45%'
+                        top: '70%',
+                        left: '65%'
                     },
-                    tilt: 5 // degrees
+                    tilt: 15, // degrees
+                    stickTilt: 15 // degrees, new property
+                },
+                2: {
+                    backgroundColor: '#3852A5',
+                    borderColor: '#ffff',
+                    textColor: '#ffff',
+                       position: {
+                        top: '38%',
+                        left: '73%'
+                    },
+                    stickPosition: {
+                        top: '70%',
+                        left: '65%'
+                    },
+                    tilt: 15, // degrees
+                    stickTilt: 15 // degrees, new property
                 },
                 3: {
                     backgroundColor: '#3852A5',
-                    borderColor: '#ffffff',
-                    textColor: '#ffffff',
+                    borderColor: '#ffff',
+                    textColor: '#ffff',
                     position: {
-                        top: '30%',
-                        left: '55%'
+                        top: '35%',
+                        left: '35%'
                     },
                     stickPosition: {
-                        top: '45%',
-                        left: '55%'
+                        top: '60%',
+                        left: '40%'
                     },
-                    tilt: -12 // degrees
+                    tilt: -12,
+                    stickTilt: -12
                 },
                 4: {
                     backgroundColor: '#ffffff',
                     borderColor: '#3852A5',
                     textColor: '#3852A5',
                     position: {
-                        top: '22%',
+                        top: '35%',
                         left: '40%'
                     },
                     stickPosition: {
-                        top: '37%',
+                       top: '64%',
                         left: '40%'
                     },
-                    tilt: 7 // degrees
+                    tilt: 0,
+                    stickTilt: 0
                 },
                 5: {
                     backgroundColor: '#3852A5',
                     borderColor: '#ffffff',
                     textColor: '#ffffff',
                     position: {
-                        top: '28%',
-                        left: '60%'
+                        top: '32%',
+                        left: '40%'
                     },
                     stickPosition: {
-                        top: '43%',
-                        left: '60%'
+                    top: '60%',
+                    left: '40%'
                     },
-                    tilt: -6 // degrees
+                    tilt: 6,
+                    stickTilt: 0
                 },
                 6: {
                     backgroundColor: '#ffffff',
                     borderColor: '#3852A5',
                     textColor: '#3852A5',
                     position: {
-                        top: '25%',
-                        left: '50%'
+                        top: '40%',
+                        left: '33%'
                     },
                     stickPosition: {
-                        top: '40%',
-                        left: '50%'
+                   top: '70%',
+                        left: '40%'
                     },
-                    tilt: 10 // degrees
+                    tilt: -10,
+                    stickTilt: -10
                 }
             };
 
@@ -344,12 +350,28 @@
                             loadImage(`{{ asset('images/brand/coral-seperate/stick.webp') }}`)
                         ]);
 
-                        // Draw stick FIRST (behind coral)
-                        const stickWidth = width * 0.020; // even more thinner stick
-                        const stickHeight = height * 0.30; // even shorter stick
-                        const stickX = width / 2; // center stick horizontally
-                        const stickY = height * 0.62; // lower starting point for stick
-                        ctx.drawImage(stickImg, stickX - stickWidth / 2, stickY - stickHeight, stickWidth, stickHeight);
+                        // Draw stick using stickPosition and stickTilt
+                        const stickWidth = width * 0.020;
+                        const stickHeight = height * 0.30;
+                        // Default stick position
+                        let stickX = width / 2;
+                        let stickY = height * 0.62;
+                        if (signConfig.stickPosition) {
+                            const percentToPx = (percent, total) => {
+                                if (typeof percent === 'string' && percent.endsWith('%')) {
+                                    return parseFloat(percent) / 100 * total;
+                                }
+                                return percent;
+                            };
+                            stickX = percentToPx(signConfig.stickPosition.left, width);
+                            stickY = percentToPx(signConfig.stickPosition.top, height);
+                        }
+                        const stickAngle = (signConfig.stickTilt || 0) * Math.PI / 180;
+                        ctx.save();
+                        ctx.translate(stickX, stickY);
+                        ctx.rotate(stickAngle);
+                        ctx.drawImage(stickImg, -stickWidth / 2, -stickHeight, stickWidth, stickHeight);
+                        ctx.restore();
 
                         // Draw coral image (on top of stick)
                         const coralWidth = width * 0.6;
@@ -363,7 +385,6 @@
                         let textX = stickX;
                         let textY = stickY - stickHeight;
                         if (signConfig.position) {
-                            // Convert percent to px
                             const percentToPx = (percent, total) => {
                                 if (typeof percent === 'string' && percent.endsWith('%')) {
                                     return parseFloat(percent) / 100 * total;
@@ -617,12 +638,27 @@
                         loadImage(`{{ asset('images/brand/coral-seperate') }}/${coralId}.webp`),
                         loadImage(`{{ asset('images/brand/coral-seperate/stick.webp') }}`)
                     ]);
-                    // Draw stick
+                    // Draw stick using stickPosition and stickTilt
                     const stickWidth = width * 0.020;
                     const stickHeight = height * 0.30;
-                    const stickX = width / 2;
-                    const stickY = height * 0.62;
-                    ctx.drawImage(stickImg, stickX - stickWidth / 2, stickY - stickHeight, stickWidth, stickHeight);
+                    let stickX = width / 2;
+                    let stickY = height * 0.62;
+                    if (signConfig.stickPosition) {
+                        const percentToPx = (percent, total) => {
+                            if (typeof percent === 'string' && percent.endsWith('%')) {
+                                return parseFloat(percent) / 100 * total;
+                            }
+                            return percent;
+                        };
+                        stickX = percentToPx(signConfig.stickPosition.left, width);
+                        stickY = percentToPx(signConfig.stickPosition.top, height);
+                    }
+                    const stickAngle = (signConfig.stickTilt || 0) * Math.PI / 180;
+                    ctx.save();
+                    ctx.translate(stickX, stickY);
+                    ctx.rotate(stickAngle);
+                    ctx.drawImage(stickImg, -stickWidth / 2, -stickHeight, stickWidth, stickHeight);
+                    ctx.restore();
                     // Draw coral
                     const coralWidth = width * 0.6;
                     const coralHeight = height * 0.4;
@@ -632,10 +668,9 @@
                     // Draw sign
                     const textX = stickX;
                     const textY = stickY - stickHeight;
-                    const angle = signConfig.tilt * Math.PI / 180;
                     ctx.save();
                     ctx.translate(textX, textY);
-                    ctx.rotate(angle);
+                    ctx.rotate(stickAngle);
                     const padding = 18;
                     const text = pledgeData.text;
                     ctx.font = 'bold 18px "Palatino", serif';

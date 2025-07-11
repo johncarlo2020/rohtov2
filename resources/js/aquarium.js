@@ -106,6 +106,11 @@ function preload() {
   // Load background image for Phaser canvas
   this.load.image("aquarium_bg", "images/brand/live-feed/bg.webp");
 
+  // Load tempCoral images for initial corals
+  for (let i = 1; i <= 6; i++) {
+    this.load.image(`tempCoral${i}`, `images/tempCoral/${i}.png`);
+  }
+
   // Fetch pledge data from server
   fetchPledgeData();
 }
@@ -420,31 +425,44 @@ function addCorals() {
 // Function to create initial corals directly in planted positions without entry animation
 function createInitialCoral(index) {
   if (pledgeData.length === 0) return;
-  const coralPledges = pledgeData.filter(pledge => pledge.type === 'coral');
-  if (coralPledges.length === 0) return;
-  const pledge = Phaser.Utils.Array.GetRandom(coralPledges);
+  // Use tempCoral images for initial corals
+  const tempCoralKeys = [
+    'tempCoral1',
+    'tempCoral2',
+    'tempCoral3',
+    'tempCoral4',
+    'tempCoral5',
+    'tempCoral6'
+  ];
   const coralPosition = CORAL_POSITIONS[index % CORAL_POSITIONS.length];
-  // Apply tilt offsets to position
   const finalX = coralPosition.x * window.innerWidth + (coralPosition.tiltOffsetX || 0);
   const finalY = coralPosition.y * window.innerHeight + (coralPosition.tiltOffsetY || 0);
   console.log(`Creating initial coral ${index + 1} at position ${finalX}, ${finalY}`);
   let coral;
-  const textureKey = pledge.textureKey || `coral${pledge.coralId}`;
-  const baseScale = coralPosition.size || 0.25;
+  const textureKey = tempCoralKeys[index % tempCoralKeys.length];
+  // Use a much larger fixed scale for tempCoral images
+  const baseScale = 1.4; // Increased for maximum visibility
   try {
-    coral = this.add.sprite(finalX, finalY, textureKey).setScale(baseScale);
+    coral = this.add.sprite(finalX, finalY, textureKey).setScale(0.1); // Start small for grow animation
     coral.baseScale = baseScale;
     coral.baseAlpha = 1.0;
-    // --- APPLY WIGGLE PIPELINE TO CORAL ---
     coral.setPostPipeline('WigglePostFX');
+    // Animate scale up to baseScale
+    this.tweens.add({
+      targets: coral,
+      scale: baseScale,
+      duration: 1800,
+      ease: 'Sine.easeOut'
+    });
   } catch (error) {
     console.warn(`Coral image ${textureKey} failed to load, using fallback`);
     const colors = [0xff6b6b, 0x4ecdc4, 0x45b7d1, 0xf9ca24, 0xf0932b, 0xeb4d4b];
-    coral = this.add.circle(finalX, finalY, 25, colors[pledge.coralId - 1] || 0xff6b6b);
+    coral = this.add.circle(finalX, finalY, 25, colors[index % colors.length]);
     coral.baseScale = 1.0;
     coral.baseAlpha = 1.0;
   }
-  coral.pledgeData = pledge;
+  // REMOVE pledgeData assignment for tempCoral initial corals
+  // coral.pledgeData = pledge; // No pledge for tempCoral visuals
   coral.objectType = 'coral';
   coral.isPlanted = true;
   coral.phase = 'planted';
@@ -525,7 +543,9 @@ function spawnSingleCoral(customTextureKey) {
   bubble.setDepth(20);
   this.tweens.add({ targets: bubble, alpha: 1, duration: 500, ease: "Linear" });
   let coral;
-  const baseScale = coralPosition.size || 0.25;
+  // Use the same scale multiplier as initial corals for consistency
+  const scaleMultiplier = 2.8; // Match the visual size of initial corals
+  const baseScale = (coralPosition.size || 0.25) * scaleMultiplier;
   try {
     coral = this.add.sprite(spawnX, spawnY, textureKey);
     coral.baseScale = baseScale;
@@ -628,7 +648,14 @@ function spawnSingleCoral(customTextureKey) {
       if (textureKey.startsWith('coral_custom_')) {
         coral.setDisplaySize(600, 600);
       } else {
-        coral.setScale(baseScale);
+        coral.setScale(0.1); // Start small for grow animation
+        // Animate scale up to baseScale
+        this.tweens.add({
+          targets: coral,
+          scale: baseScale,
+          duration: 1800,
+          ease: 'Sine.easeOut'
+        });
       }
       // Move coral to final position with tilt offsets
       coral.x = finalX;

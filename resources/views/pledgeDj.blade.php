@@ -1,10 +1,5 @@
 <x-app-layout>
     <div class="pledge-page main-content main-background with-scroll">
-        <div class="back-btn animate-entry">
-            <button onclick="previousStep()" href="{{ route('dashboard') }}" class="">
-                <i class="fas fa-chevron-left"></i>
-            </button>
-        </div>
         <div class="d-flex justify-content-center animate-entry">
             @include('components.branding')
         </div>
@@ -97,6 +92,31 @@
             </div>
 
         </div>
+
+
+
+        <!-- Modal -->
+        <div class="modal fade custom-modal animate-entry delay-2" id="thankYouModal" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered w-75 m-auto">
+                                <div class="modal-content card">
+                                <div class="modal-body">
+                                    <div class="text-center content">
+                                    <div class="text-content mt-4 mb-4">
+                                        <p class="message">
+                                        #4<br>
+                                        Thank you!
+                                        </p>
+                                    </div>
+                                    <div class="d-block gap-3">
+                                        <button id="modalCloseBtn" type="button" class="custom-btn custom-btn-primary w-50 mb-3">
+                                        CLOSE
+                                        </button>
+                                    </div>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
     </div>
     @push('scripts')
         <script>
@@ -218,6 +238,7 @@
             const selectedOption = document.getElementById('selectedOption');
             const downloadBtn = document.getElementById('downloadBtn');
             const pledgeBtn = document.getElementById('pledgeBtn');
+        
             // no longer using individual buttons; we'll get the current slick slide image
 
             // get the value of the selected radio button
@@ -556,6 +577,7 @@
                                         throw new Error('Upload failed: ' + text);
                                     }
                                     return response.json();
+
                                 })
                                 .then(data => {
 
@@ -566,6 +588,7 @@
                                 })
                                 .finally(() => {
                                     pledgeBtn.disabled = false;
+                                    returnToDashboard()
                                 });
                         }, 'image/png');
                     } else {
@@ -601,7 +624,7 @@
                                         return response.json();
                                     })
                                     .then(data => {
-                                        window.location.href = '{{ route('station', 4) }}';
+                                        
                                     })
                                     .catch(error => {
 
@@ -609,6 +632,7 @@
                                     })
                                     .finally(() => {
                                         pledgeBtn.disabled = false;
+                                        returnToDashboard()
                                     });
                             }, 'image/png');
                         });
@@ -717,7 +741,7 @@
                             })
                             .then(data => {
                                 // go to station 4 again
-                                window.location.href = '{{ route('station', 4) }}';
+                                // window.location.href = '{{ route('station', 4) }}';
                             })
                             .catch(error => {
 
@@ -725,9 +749,20 @@
                             })
                             .finally(() => {
                                 pledgeBtn.disabled = false;
+                                returnToDashboard()
                             });
                     }, 'image/png');
                 })();
+            }
+
+            function returnToDashboard()
+            {
+                const thankYouModal = new bootstrap.Modal(document.getElementById('thankYouModal'));
+                thankYouModal.show();
+
+                document.getElementById('modalCloseBtn').addEventListener('click', function () {
+                    window.location.href = "{{ route('dashboard') }}"; // Adjust route if needed
+                });
             }
 
 

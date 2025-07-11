@@ -158,7 +158,7 @@ function create() {
     channel.bind('baby-event', (data) => {
         console.log('Pusher event received:', data);
         // Accept both data.image and data.img for compatibility
-        const BASE_PATH = '/rohtov2/public';
+        const BASE_PATH = '';
         function fixImageUrl(img) {
             if (!img) return null;
             if (img.startsWith('http') || img.startsWith('data:')) return img;

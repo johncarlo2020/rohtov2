@@ -777,7 +777,7 @@ function createNameBubble(pledge, textureKey) {
     if (textureKey.startsWith('name_bubble_custom_')) {
       // Use the same logic as temp bubbles: base size * TEMP_BUBBLE_SCALE
       // Assume base image is 400x400 (like tempBubble), so 400 * TEMP_BUBBLE_SCALE
-      const baseSize = 400 * TEMP_BUBBLE_SCALE;
+      const baseSize = 900 * TEMP_BUBBLE_SCALE;
       nameBubble.setDisplaySize(baseSize, baseSize);
     }
   } catch (error) {

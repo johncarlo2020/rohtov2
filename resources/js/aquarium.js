@@ -76,9 +76,6 @@ function preload() {
     console.error('Failed to load:', file.src);
   });
 
-  // Preload the video background
-  this.load.video("pledge_bg", "/video/SEKKISEI Pledge Video BG V2.mp4");
-
   this.load.image("stick", "images/brand/coral-seperate/stick.webp");
 
   // Load bubble sprite sheet for entry animation
@@ -117,15 +114,6 @@ function preload() {
 
 function create() {
   setupCanvas.call(this);
-
-  // Ensure video plays on user interaction (for autoplay restrictions)
-  if (this.video) {
-    this.input.once('pointerdown', () => {
-      if (this.video && !this.video.isPlaying()) {
-        this.video.play(true);
-      }
-    });
-  }
 
   // Initialize arrays for tracking objects
   this.corals = [];
@@ -333,30 +321,20 @@ function setupCanvas() {
     this.bgImage = this.add.image(0, 0, "aquarium_bg").setOrigin(0, 0);
     this.bgImage.displayWidth = this.sys.game.config.width;
     this.bgImage.displayHeight = this.sys.game.config.height;
-    this.bgImage.setDepth(-200); // Ensure it's behind the video and everything else
+    this.bgImage.setDepth(-200); // Ensure it's behind everything else
     // --- REMOVE WIGGLE PIPELINE FROM BACKGROUND IMAGE ---
     if (this.bgImage.resetPostPipeline) this.bgImage.resetPostPipeline();
   }
 
-  // Add video background in Phaser, behind all objects
-  if (!this.video) {
-    this.video = this.add.video(0, 0, "pledge_bg").setOrigin(0, 0);
-    this.video.setMute(true);
-    this.video.setLoop(true);
-    // Resize video to fill the canvas
-    this.video.displayWidth = this.sys.game.config.width;
-    this.video.displayHeight = this.sys.game.config.height;
-    this.video.setDepth(-100); // Ensure it's at the back, but above bgImage
-    this.video.play(true);
+  // REMOVE video background in Phaser
+  if (this.video) {
+    this.video.destroy();
+    this.video = null;
   }
-  // Update background image and video size on resize
+  // Update background image size on resize
   if (this.bgImage) {
     this.bgImage.displayWidth = this.sys.game.config.width;
     this.bgImage.displayHeight = this.sys.game.config.height;
-  }
-  if (this.video) {
-    this.video.displayWidth = this.sys.game.config.width;
-    this.video.displayHeight = this.sys.game.config.height;
   }
 }
 

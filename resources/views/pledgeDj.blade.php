@@ -129,8 +129,8 @@
                 },
                 2: {
                     backgroundColor: '#ffffff',
-                    borderColor: '#000000',
-                    textColor: '#000000',
+                    borderColor: '#3852A5',
+                    textColor: '#3852A5',
                     position: {
                         top: '25%',
                         left: '45%'
@@ -157,8 +157,8 @@
                 },
                 4: {
                     backgroundColor: '#ffffff',
-                    borderColor: '#000000',
-                    textColor: '#000000',
+                    borderColor: '#3852A5',
+                    textColor: '#3852A5',
                     position: {
                         top: '22%',
                         left: '40%'
@@ -185,8 +185,8 @@
                 },
                 6: {
                     backgroundColor: '#ffffff',
-                    borderColor: '#000000',
-                    textColor: '#000000',
+                    borderColor: '#3852A5',
+                    textColor: '#3852A5',
                     position: {
                         top: '25%',
                         left: '50%'

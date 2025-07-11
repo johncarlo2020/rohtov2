@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import PlasmaPost2FX from "./PlasmaPost2FX.js";
+import WigglePostFX from "./WigglePostFX.js";
 // Disable all console logging
 // ['log','warn','error'].forEach(method => console[method] = () => {});  // Temporarily enabled for debugging
 
@@ -22,7 +23,8 @@ const config = {
   },
   scene: { preload, create, update },
   pipeline: {
-    PlasmaPost2FX
+    PlasmaPost2FX,
+    WigglePostFX
   }
 };
 
@@ -34,7 +36,7 @@ let pledgeData = [];
 // Predefined coral positions based on the aquarium layout
 const CORAL_POSITIONS = [
   { x: 0.24, y: 0.91, tiltOffsetX: 18, tiltOffsetY: 20, size: 0.50, z: 3, tilt: 0 }, // Left side bottom
-  { x: 0.25, y: 0.75, tiltOffsetX: 40, tiltOffsetY: 10, size: 0.35, z: 2, tilt: 10 }, // Left middle rock
+  { x: 0.25, y: 0.75, tiltOffsetX: 40, tiltOffsetY: 10, size: 0.30, z: 2, tilt: 10 }, // Left middle rock
   { x: 0.15, y: 0.63, tiltOffsetX: 20, tiltOffsetY: 8, size: 0.30, z: 1, tilt: -10 }, // Left upper rock
   { x: 0.85, y: 0.88, tiltOffsetX: -18, tiltOffsetY: 6, size: 0.50, z: 1, tilt: -15 }, // Right side bottom
   { x: 0.70, y: 0.70, tiltOffsetX: -12, tiltOffsetY: 4, size: 0.27, z: 1, tilt: -20 }, // Right middle rock
@@ -322,6 +324,8 @@ function setupCanvas() {
     this.bgImage.displayWidth = this.sys.game.config.width;
     this.bgImage.displayHeight = this.sys.game.config.height;
     this.bgImage.setDepth(-200); // Ensure it's behind the video and everything else
+    // --- REMOVE WIGGLE PIPELINE FROM BACKGROUND IMAGE ---
+    if (this.bgImage.resetPostPipeline) this.bgImage.resetPostPipeline();
   }
 
   // Add video background in Phaser, behind all objects
@@ -426,6 +430,8 @@ function createInitialCoral(index) {
     coral = this.add.sprite(finalX, finalY, textureKey).setScale(baseScale);
     coral.baseScale = baseScale;
     coral.baseAlpha = 1.0;
+    // --- APPLY WIGGLE PIPELINE TO CORAL ---
+    coral.setPostPipeline('WigglePostFX');
   } catch (error) {
     console.warn(`Coral image ${textureKey} failed to load, using fallback`);
     const colors = [0xff6b6b, 0x4ecdc4, 0x45b7d1, 0xf9ca24, 0xf0932b, 0xeb4d4b];
@@ -519,6 +525,8 @@ function spawnSingleCoral(customTextureKey) {
     coral = this.add.sprite(spawnX, spawnY, textureKey);
     coral.baseScale = baseScale;
     coral.baseAlpha = 1.0;
+    // --- APPLY WIGGLE PIPELINE TO CORAL ---
+    coral.setPostPipeline('WigglePostFX');
   } catch (error) {
     console.warn(`Coral image ${textureKey} failed to load, using fallback`);
     const colors = [0xff6b6b, 0x4ecdc4, 0x45b7d1, 0xf9ca24, 0xf0932b, 0xeb4d4b];

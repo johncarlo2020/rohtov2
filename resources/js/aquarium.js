@@ -39,7 +39,7 @@ const CORAL_POSITIONS = [
   { x: 0.20, y: 0.70, tiltOffsetX: 40, tiltOffsetY: 10, size: 0.40, z: 2, tilt: 10 }, // Left middle rock
   { x: 0.15, y: 0.60, tiltOffsetX: 20, tiltOffsetY: 8, size: 0.30, z: 1, tilt: -10 }, // Left upper rock
   { x: 0.80, y: 0.84, tiltOffsetX: -18, tiltOffsetY: 6, size: 0.80, z: 1, tilt: -30 }, // Right side bottom
-  { x: 0.70, y: 0.70, tiltOffsetX: -12, tiltOffsetY: 4, size: 0.30, z: 1, tilt: -20 }, // Right middle rock
+  { x: 0.70, y: 0.65, tiltOffsetX: -12, tiltOffsetY: 4, size: 0.30, z: 1, tilt: -20 }, // Right middle rock
   { x: 0.75, y: 0.50, tiltOffsetX: -20, tiltOffsetY: 8, size: 0.30, z: 1, tilt: -30 }, // Right upper rock
 ];
 

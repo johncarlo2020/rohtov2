@@ -260,7 +260,17 @@
                 if (this.value.length > maxLength) {
                     this.value = this.value.slice(0, maxLength);
                 }
-                selectText.disabled = this.value.length === 0;
+                // Bad word checker
+                const badWords = ['Fuck', 'Nigga', 'cibai','lancau','puki' , 'bitch' ]; // Add your list here
+                const inputValue = this.value.toLowerCase();
+                const foundBadWord = badWords.find(word => inputValue.includes(word));
+                if (foundBadWord) {
+                    textHelp.textContent = 'Inappropriate language is not allowed.';
+                    selectText.disabled = true;
+                } else {
+                    textHelp.textContent = `*Maximum ${maxLength} character`;
+                    selectText.disabled = this.value.length === 0;
+                }
             });
 
             selectText.addEventListener('click', function() {

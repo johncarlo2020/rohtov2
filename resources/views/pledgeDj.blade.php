@@ -667,18 +667,11 @@
                 (async function() {
                     const coralId = pledgeData.coral;
                     const signConfig = coralSignConfig[coralId] || coralSignConfig[1];
-                    const [coralImg, stickImg, bg] = await Promise.all([
+                    const [coralImg, stickImg] = await Promise.all([
                         loadImage(`{{ asset('images/brand/coral-seperate') }}/${coralId}.webp`),
-                        loadImage(`{{ asset('images/brand/coral-seperate/stick.webp') }}`),
-                        loadImage(`{{ asset('images/brand/bubble_Overlay.webp') }}`)
+                        loadImage(`{{ asset('images/brand/coral-seperate/stick.webp') }}`)
                     ]);
-                    // Draw the bubble background at the same scale as preview
-                    const bubbleScale = 1; // Match preview
-                    const bubbleW = width * bubbleScale;
-                    const bubbleH = height * bubbleScale;
-                    const bubbleX = (width - bubbleW) / 2;
-                    const bubbleY = (height - bubbleH) / 2;
-                    ctx.drawImage(bg, bubbleX, bubbleY, bubbleW, bubbleH);
+                    // Do NOT draw the bubble background for coral uploads
                     // Draw stick using stickPosition and stickTilt
                     const stickWidth = width * 0.020;
                     const stickHeight = height * 0.30;

@@ -36,11 +36,14 @@ void main( void )
     c = 1.5 - sqrt(c);
 
     vec4 texColor = vec4(0.0, 0.01, 0.015, 1.0);
-
     texColor.rgb *= (1.0 / (1.0 - (c + 0.05)));
+    // Make the plasma effect transparent where the original pixel is transparent
+    texColor.a = 0.0;
+
     vec4 pixel = texture2D(uMainSampler, outTexCoord);
 
-    gl_FragColor = pixel + texColor;
+    // Add plasma color to the original pixel, but preserve original alpha
+    gl_FragColor = vec4(pixel.rgb + texColor.rgb, pixel.a);
 }
 `;
 

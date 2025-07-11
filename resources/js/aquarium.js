@@ -9,12 +9,12 @@ const config = {
   type: Phaser.AUTO,
   width: window.innerWidth,
   height: window.innerHeight,
-  backgroundColor: '#000000', // Use solid color, not transparent
+    backgroundColor: 'rgba(0,0,0,0)',
   render: {
     preserveDrawingBuffer: true,
-    // transparent: true, // REMOVE this line to avoid black background with shader
+    transparent: true, // Enable transparency
     contextAttributes: {
-      alpha: false, // Set to false for opaque canvas
+      alpha: true, // Allow alpha channel for transparency
       premultipliedAlpha: false,
     },
   },
@@ -88,28 +88,20 @@ function preload() {
   this.load.image("name_bubble", "images/brand/withMessage.webp");
 
   // Load tempBubbles images for name bubbles
-  for (let i = 1; i <= 6; i++) {
+  for (let i = 1; i <= 1; i++) {
     this.load.image(`tempBubble${i}`, `images/tempBubbles/${i}.png`);
   }
 
   // Load small bubble overlay for coral effects
   this.load.image("bubble_overlay", "images/brand/bubble_Overlay.webp");
 
-  // Load all coral images
-  for (let i = 1; i <= 6; i++) {
-    this.load.image(`coral${i}`, `images/brand/coral/${i}.webp`);
-  }
-
   // Load background image for Phaser canvas
   this.load.image("aquarium_bg", "images/brand/live-feed/bg.webp");
 
   // Load tempCoral images for initial corals
-  for (let i = 1; i <= 6; i++) {
+  for (let i = 1; i <= 1; i++) {
     this.load.image(`tempCoral${i}`, `images/tempCoral/${i}.png`);
   }
-
-  // Fetch pledge data from server
-  fetchPledgeData();
 }
 
 function create() {
@@ -162,12 +154,15 @@ function create() {
         function fixImageUrl(img) {
             if (!img) return null;
             if (img.startsWith('http') || img.startsWith('data:')) return img;
-            // If already starts with BASE_PATH, don't double it
-            if (img.startsWith(BASE_PATH)) return img;
-            // Ensure leading slash
-            if (!img.startsWith('/')) img = '/' + img;
-            return BASE_PATH + img;
+            // Use window.ASSET_BASE for relative asset paths
+            let base = (typeof window !== 'undefined' && window.ASSET_BASE) ? window.ASSET_BASE : '';
+            // Remove any leading slash from img to avoid double slashes
+            img = img.replace(/^\//, '');
+            // If already starts with base, don't double it
+            if (base && img.startsWith(base)) return img;
+            return base ? base + '/' + img : img;
         }
+
         if (data.type === 'coral') {
             const coralId = data.id || Date.now();
             let textureKey = `coral${data.coralId || 1}`;
@@ -316,79 +311,14 @@ function removeOldestItem(group, array) {
 
 
 function setupCanvas() {
-  // Add static background image in Phaser, behind all objects and video
-  if (!this.bgImage) {
-    this.bgImage = this.add.image(0, 0, "aquarium_bg").setOrigin(0, 0);
-    this.bgImage.displayWidth = this.sys.game.config.width;
-    this.bgImage.displayHeight = this.sys.game.config.height;
-    this.bgImage.setDepth(-200); // Ensure it's behind everything else
-    // --- REMOVE WIGGLE PIPELINE FROM BACKGROUND IMAGE ---
-    if (this.bgImage.resetPostPipeline) this.bgImage.resetPostPipeline();
-  }
-
-  // REMOVE video background in Phaser
+  // No Phaser background image, keep canvas transparent
   if (this.video) {
     this.video.destroy();
     this.video = null;
   }
-  // Update background image size on resize
-  if (this.bgImage) {
-    this.bgImage.displayWidth = this.sys.game.config.width;
-    this.bgImage.displayHeight = this.sys.game.config.height;
-  }
 }
 
 // Function to fetch pledge data from server
-async function fetchPledgeData() {
-  // Temporarily use sample data until API endpoint is created
-  console.log('Using sample pledge data for testing');
-  pledgeData = [
-    { id: 1, name: "Alice", coralId: 1, type: "coral" },
-    { id: 2, name: "Bob", coralId: 2, type: "coral" },
-    { id: 3, name: "Charlie", coralId: 3, type: "coral" },
-    { id: 4, text: "Save the Ocean", type: "text" },
-    { id: 5, text: "Protect Marine Life", type: "text" },
-    { id: 6, name: "Diana", coralId: 4, type: "coral" },
-    { id: 7, text: "Ocean Conservation", type: "text" },
-    { id: 8, name: "Eve", coralId: 5, type: "coral" },
-    { id: 9, name: "Frank", coralId: 6, type: "coral" }
-  ];
-  console.log('Pledge data loaded:', pledgeData.length, 'items');
-  console.log('Text pledges available:', pledgeData.filter(p => p.type === 'text').length);
-
-  // Uncomment this when API endpoint is ready:
-  /*
-  try {
-    const response = await fetch('/api/pledges');
-    if (response.ok) {
-      pledgeData = await response.json();
-      console.log('Loaded pledge data:', pledgeData);
-    } else {
-      // Fallback to sample data if API is not available
-      pledgeData = [
-        { id: 1, name: "Alice", coralId: 1, type: "coral" },
-        { id: 2, name: "Bob", coralId: 2, type: "coral" },
-        { id: 3, name: "Charlie", coralId: 3, type: "coral" },
-        { id: 4, name: "Diana", coralId: 4, type: "coral" },
-        { id: 5, name: "Eve", coralId: 5, type: "coral" },
-        { id: 6, name: "Frank", coralId: 6, type: "coral" }
-      ];
-    }
-  } catch (error) {
-    console.log('Failed to fetch pledge data, using sample data:', error);
-    // Sample pledge data for testing
-    pledgeData = [
-      { id: 1, name: "Alice", coralId: 1, type: "coral" },
-      { id: 2, name: "Bob", coralId: 2, type: "coral" },
-      { id: 3, name: "Charlie", coralId: 3, type: "coral" },
-      { id: 4, name: "Diana", coralId: 4, type: "coral" },
-      { id: 5, name: "Eve", coralId: 5, type: "coral" },
-      { id: 6, name: "Frank", coralId: 6, type: "coral" }
-    ];
-  }
-  */
-}
-
 function addCorals() {
   this.coralGroup = this.add.group();
   this.isAnyEntryActive = false; // Master flag to prevent ANY entries while something is animating
@@ -402,24 +332,27 @@ function addCorals() {
 
 // Function to create initial corals directly in planted positions without entry animation
 function createInitialCoral(index) {
-  if (pledgeData.length === 0) return;
-  // Use tempCoral images for initial corals
-  const tempCoralKeys = [
-    'tempCoral1',
-    'tempCoral2',
-    'tempCoral3',
-    'tempCoral4',
-    'tempCoral5',
-    'tempCoral6'
-  ];
+  // Always render tempCoral, even if pledgeData is empty
+  // Use tempCoral images for initial corals (support single or multiple)
+  const tempCoralKeys = [];
+  // Check how many tempCoral images are loaded (assume at least tempCoral1)
+  let i = 1;
+  while (this.textures.exists(`tempCoral${i}`)) {
+    tempCoralKeys.push(`tempCoral${i}`);
+    i++;
+  }
+  if (tempCoralKeys.length === 0) {
+    tempCoralKeys.push('tempCoral1'); // fallback if only one
+  }
+  // ...rest of function unchanged...
   const coralPosition = CORAL_POSITIONS[index % CORAL_POSITIONS.length];
   const finalX = coralPosition.x * window.innerWidth + (coralPosition.tiltOffsetX || 0);
   const finalY = coralPosition.y * window.innerHeight + (coralPosition.tiltOffsetY || 0);
   console.log(`Creating initial coral ${index + 1} at position ${finalX}, ${finalY}`);
   let coral;
   const textureKey = tempCoralKeys[index % tempCoralKeys.length];
-  // Use a much larger fixed scale for tempCoral images
-  const baseScale = 1.4; // Increased for maximum visibility
+  // Use CORAL_POSITIONS size property for tempCoral images
+  const baseScale = coralPosition.size || 1.4;
   try {
     coral = this.add.sprite(finalX, finalY, textureKey).setScale(0.1); // Start small for grow animation
     coral.baseScale = baseScale;
@@ -680,15 +613,17 @@ function createInitialNameBubble(index) {
 
 function createSingleInitialNameBubble(pledge, index) {
   // Use preloaded tempBubble keys for each bubble
-  const tempBubbleKeys = [
-    'tempBubble1',
-    'tempBubble2',
-    'tempBubble3',
-    'tempBubble4',
-    'tempBubble5',
-    'tempBubble6'
-  ];
-  // Pick key based on index (loop if more than 6)
+  // Support single or multiple tempBubble images
+  const tempBubbleKeys = [];
+  let j = 1;
+  while (this.textures.exists(`tempBubble${j}`)) {
+    tempBubbleKeys.push(`tempBubble${j}`);
+    j++;
+  }
+  if (tempBubbleKeys.length === 0) {
+    tempBubbleKeys.push('tempBubble1'); // fallback if only one
+  }
+  // Pick key based on index (loop if more than available)
   const tempBubbleKey = tempBubbleKeys[index % tempBubbleKeys.length];
 
   const x = Phaser.Math.Between(window.innerWidth * 0.1, window.innerWidth * 0.9);
@@ -1134,41 +1069,60 @@ function update(time, delta) {
 
   // Update floating name bubbles with calmer movement
   if (this.nameBubbleGroup) {
-    this.nameBubbleGroup.getChildren().forEach((nameBubble) => {
-      // Much calmer floating movement
-      nameBubble.x += nameBubble.vx * dt * 8; // Reduced from 25 to 8
-      nameBubble.y += nameBubble.vy * dt * 6; // Reduced from 20 to 6
+    const bubbles = this.nameBubbleGroup.getChildren();
+    // Subtle collision avoidance for name bubbles
+    for (let i = 0; i < bubbles.length; i++) {
+      const a = bubbles[i];
+      // Bubble-like floating movement
+      a.floatTime += dt;
+      // Gentle vertical bobbing (main bubble effect, reduced amplitude)
+      a.y += Math.sin(a.floatTime * 1.2 + i) * 3.5 * dt;
+      // Gentle horizontal drift (reduced amplitude)
+      a.x += Math.cos(a.floatTime * 0.7 + i) * 1.5 * dt;
+      // Add a little random walk to vx/vy for organic feel
+      a.vx += Phaser.Math.FloatBetween(-0.003, 0.003) * dt;
+      a.vy += Phaser.Math.FloatBetween(-0.002, 0.002) * dt;
+      // Damping to keep velocity under control
+      a.vx *= 0.98;
+      a.vy *= 0.98;
+      // Apply velocity (reduced multipliers)
+      a.x += a.vx * dt * 7;
+      a.y += a.vy * dt * 5;
 
-      // Add gentle floating oscillation with smaller radius
-      nameBubble.floatTime += dt * 0.5; // Slower time progression
-      const floatSpeed = 0.6; // Much slower float speed
-      nameBubble.vy += Math.sin(nameBubble.floatTime * floatSpeed) * NAME_BUBBLE_FLOAT_SPEED * 0.3 * nameBubble.floatDirection; // Reduced intensity
-      nameBubble.vx += Math.cos(nameBubble.floatTime * floatSpeed * 0.8) * NAME_BUBBLE_FLOAT_SPEED * 0.3 * nameBubble.floatDirection; // Reduced intensity
-
-      // Add gentle circular motion
-      const circleX = Math.sin(nameBubble.floatTime * 0.3) * nameBubble.floatRadius * dt * 0.5; // Much gentler
-      const circleY = Math.cos(nameBubble.floatTime * 0.4) * nameBubble.floatRadius * dt * 0.5; // Much gentler
-      nameBubble.x += circleX;
-      nameBubble.y += circleY;
+      // Subtle repulsion from other bubbles
+      for (let j = 0; j < bubbles.length; j++) {
+        if (i === j) continue;
+        const b = bubbles[j];
+        const dx = a.x - b.x;
+        const dy = a.y - b.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const minDist = 70; // Slightly reduced minimum allowed distance between bubbles
+        if (dist < minDist && dist > 0.1) {
+          // Softer push away for less aggressive bounce
+          const push = (minDist - dist) / minDist * 0.09; // 0.09 is a gentler factor
+          a.vx += (dx / dist) * push * dt;
+          a.vy += (dy / dist) * push * dt;
+        }
+      }
 
       // Keep name bubbles distributed across upper half of the screen only
-      if (nameBubble.x < 80) {
-        nameBubble.x = 80;
-        nameBubble.vx = Math.abs(nameBubble.vx);
+      if (a.x < 80) {
+        a.x = 80;
+        a.vx = Math.abs(a.vx);
       }
-      if (nameBubble.x > window.innerWidth - 80) {
-        nameBubble.x = window.innerWidth - 80;
-        nameBubble.vx = -Math.abs(nameBubble.vx);
+      if (a.x > window.innerWidth - 80) {
+        a.x = window.innerWidth - 80;
+        a.vx = -Math.abs(a.vx);
       }
-      if (nameBubble.y < 50) {
-        nameBubble.y = 50;
-        nameBubble.vy = Math.abs(nameBubble.vy);
+      if (a.y < 50) {
+        a.y = 50;
+        a.vy = Math.abs(a.vy);
       }
-      if (nameBubble.y > window.innerHeight * 0.5) { // Restrict to upper half only
-        nameBubble.y = window.innerHeight * 0.5;
-        nameBubble.vy = -Math.abs(nameBubble.vy);
+      if (a.y > window.innerHeight * 0.5) {
+        a.y = window.innerHeight * 0.5;
+        a.vy = -Math.abs(a.vy);
       }
-    });
+    }
   }
 
   // Ocean floor and random area bubbles are fully handled by their tween animations

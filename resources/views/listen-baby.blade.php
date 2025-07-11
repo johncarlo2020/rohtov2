@@ -11,75 +11,63 @@
     <!-- Pusher -->
     <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
     <style>
-            @font-face {
-                font-family: 'Stella Demo';
-                src: url('{{ asset('images/font/Stella Demo.otf') }}') format('opentype');
-                font-weight: normal;
-                font-style: normal;
-            }
+        @font-face {
+            font-family: 'Stella Demo';
+            src: url('{{ asset('images/font/Stella Demo.otf') }}') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
 
-            #aquarium-container {
-                background: linear-gradient(135deg, #1e3a8a, #3b82f6) !important; /* Fallback background */
-                background-image: url('{{ asset('images/brand/live-feed/bg.webp') }}') !important;
-                background-size: cover !important;
-                background-position: center !important;
-                background-repeat: no-repeat !important;
-                background-attachment: fixed !important;
-                min-height: 100vh !important;
-                width: 100% !important;
-                height: 100% !important;
-                position: fixed !important;
-                top: 0 !important;
-                left: 0 !important;
-                z-index: -1 !important;
-            }
 
-            #aquarium-container canvas {
-                background: transparent !important;
-                background-color: transparent !important;
-                z-index: 1 !important;
-                pointer-events: none;
-            }
+    html, body {
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+    }
 
-            body {
-                margin: 0 !important;
-                padding: 0 !important;
-                background: transparent !important;
-            }
+    #aquarium-container {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        max-width: 100vw;
+        max-height: 100vh;
+        margin: 0;
+        background: none !important;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #aquarium-container canvas,
+    #aquarium-container video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        background: transparent !important;
+        pointer-events: none; /* optional: lets clicks pass through */
+    }
+
+    #aquarium-container video {
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    #aquarium-container canvas {
+        z-index: 2;
+    }
     </style>
 </head>
 
 <body>
-    <div id="aquarium-container"></div>
-    {{-- <script>
-        Pusher.logToConsole = true;
-
-        const pusher = new Pusher('{{ env("PUSHER_APP_KEY") }}', {
-            cluster: '{{ env("PUSHER_APP_CLUSTER") }}',
-            encrypted: true
-        });
-
-        const channel = pusher.subscribe('baby-channel');
-        channel.bind('baby-event', function (data) {
-            const container = document.getElementById('baby-feed');
-
-            const card = document.createElement('div');
-            card.classList.add('card');
-            card.style.width = '200px';
-
-            // If data.img is like "/storage/babies/filename.gif"
-            const imageUrl = data.img;
-
-            card.innerHTML = `
-                <img src="${imageUrl}" class="card-img-top" alt="Baby GIF">
-                <div class="card-body">
-                    <h5 class="card-title text-center">${data.name}</h5>
-                </div>
-            `;
-
-            container.prepend(card);
-        });
-    </script> --}}
+    <div id="aquarium-container">
+        <video id="aquarium-bg-video" src="{{ asset('video/840 x 1008.mp4') }}" width="840" height="1008" autoplay loop muted playsinline></video>
+    </div>
     <script>
         window.ASSET_BASE = "{{ asset('') }}".replace(/\/$/,'');
       </script>

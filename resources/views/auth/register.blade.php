@@ -160,11 +160,8 @@
     document.addEventListener("DOMContentLoaded", function () {
         const form = document.querySelector("#form");
         const input = document.querySelector("#number");
-
         const errorMsg = document.querySelector("#error-msg");
         const validMsg = document.querySelector("#valid-msg");
-
-        // here, the index maps to the error code returned from getValidationError - see readme
         const errorMap = [
             "Invalid number",
             "Invalid country code",
@@ -175,6 +172,7 @@
         const submitButton = document.querySelector("#submitButton");
         const iti = window.intlTelInput(input, {
             initialCountry: "my",
+            onlyCountries: ["my"],
             hiddenInput: "country",
             utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js", // just for formatting/placeholders etc
         });
@@ -198,8 +196,14 @@
                 showError("Required");
                 submitButton.disabled = true;
             } else if (iti.isValidNumber()) {
-                validMsg.classList.remove("d-none");
-                submitButton.disabled = false;
+                // Ensure the selected country is Malaysia
+                if (iti.getSelectedCountryData().iso2 !== "my") {
+                    showError("Only Malaysian numbers are allowed");
+                    submitButton.disabled = true;
+                } else {
+                    validMsg.classList.remove("d-none");
+                    submitButton.disabled = false;
+                }
             } else {
                 const errorCode = iti.getValidationError();
                 const msg = errorMap[errorCode] || "Invalid number";
@@ -208,5 +212,13 @@
             }
         });
 
+        // Prevent form submission if not Malaysian number
+        form.addEventListener("submit", function (e) {
+            if (!iti.isValidNumber() || iti.getSelectedCountryData().iso2 !== "my") {
+                showError("Only Malaysian numbers are allowed");
+                e.preventDefault();
+                submitButton.disabled = true;
+            }
+        });
     });
 </script>

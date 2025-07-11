@@ -238,7 +238,7 @@
             const selectedOption = document.getElementById('selectedOption');
             const downloadBtn = document.getElementById('downloadBtn');
             const pledgeBtn = document.getElementById('pledgeBtn');
-        
+
             // no longer using individual buttons; we'll get the current slick slide image
 
             // get the value of the selected radio button
@@ -310,11 +310,16 @@
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
 
-                const width = 300;
-                const height = 300;
+                // Use higher resolution for better quality
+                const width = 900;
+                const height = 900;
 
                 canvas.width = width;
                 canvas.height = height;
+                // Remove fixed style width/height to allow CSS or parent to control size
+                canvas.removeAttribute('style');
+                // Optionally, add a class for custom CSS control
+                canvas.classList.add('pledge-bubble-canvas');
                 bubbleContainer.innerHTML = '';
                 bubbleContainer.appendChild(canvas);
 
@@ -328,17 +333,23 @@
 
                 async function drawBubble() {
                     const bg = await loadImage(`{{ asset('images/brand/bubble_Overlay.webp') }}`);
-                    ctx.drawImage(bg, 0, 0, width, height);
+                    // Draw the bubble slightly larger than the canvas, but not cut off
+                    const bubbleScale = 1; // Reduced from 1.3
+                    const bubbleW = width * bubbleScale;
+                    const bubbleH = height * bubbleScale;
+                    const bubbleX = (width - bubbleW) / 2;
+                    const bubbleY = (height - bubbleH) / 2;
+                    ctx.drawImage(bg, bubbleX, bubbleY, bubbleW, bubbleH);
                     if (pledgeData.type === 'text') {
                         ctx.fillStyle = 'white';
-                        ctx.font = 'bold 25px "Palatino", serif';
+                        ctx.font = 'bold 75px "Palatino", serif';
                         ctx.textAlign = 'center';
                         ctx.textBaseline = 'middle';
                         ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
-                        ctx.shadowBlur = 6;
+                        ctx.shadowBlur = 18;
 
                         // Text wrapping logic
-                        const maxWidth = width * 0.6; // 60% of bubble width
+                        const maxWidth = width * 0.6;
                         const words = pledgeData.text.split(' ');
                         const lines = [];
                         let currentLine = '';
@@ -356,7 +367,7 @@
                             lines.push(currentLine);
                         }
                         // Center lines vertically
-                        const lineHeight = 30;
+                        const lineHeight = 90;
                         const totalTextHeight = lines.length * lineHeight;
                         let startY = height / 2 - totalTextHeight / 2 + lineHeight / 2;
                         lines.forEach((line, i) => {
@@ -374,7 +385,6 @@
                         // Draw stick using stickPosition and stickTilt
                         const stickWidth = width * 0.020;
                         const stickHeight = height * 0.30;
-                        // Default stick position
                         let stickX = width / 2;
                         let stickY = height * 0.62;
                         if (signConfig.stickPosition) {
@@ -397,12 +407,11 @@
                         // Draw coral image (on top of stick)
                         const coralWidth = width * 0.6;
                         const coralHeight = height * 0.4;
-                        const coralX = width / 2 - coralWidth / 2; // center coral horizontally
-                        const coralY = height * 0.8 - coralHeight; // position coral at bottom
+                        const coralX = width / 2 - coralWidth / 2;
+                        const coralY = height * 0.8 - coralHeight;
                         ctx.drawImage(coralImg, coralX, coralY, coralWidth, coralHeight);
 
                         // Draw name label (sign) at top of stick
-                        // Use custom position if provided in coralSignConfig
                         let textX = stickX;
                         let textY = stickY - stickHeight;
                         if (signConfig.position) {
@@ -421,16 +430,16 @@
                         ctx.rotate(angle);
 
                         // Draw background rectangle for text
-                        const padding = 18; // more padding for bigger sign
+                        const padding = 54; // 3x original
                         const text = pledgeData.text;
-                        ctx.font = 'bold 18px "Palatino", serif'; // slightly larger font
+                        ctx.font = 'bold 54px "Palatino", serif'; // 3x original
                         const textWidth = ctx.measureText(text).width + padding * 2;
-                        const textHeight = 38; // taller sign
+                        const textHeight = 114; // 3x original
                         ctx.fillStyle = signConfig.backgroundColor;
                         ctx.strokeStyle = signConfig.borderColor;
-                        ctx.lineWidth = 2;
+                        ctx.lineWidth = 6;
                         ctx.beginPath();
-                        ctx.roundRect(-textWidth / 2, -textHeight / 2, textWidth, textHeight, 8); // more border radius
+                        ctx.roundRect(-textWidth / 2, -textHeight / 2, textWidth, textHeight, 24);
                         ctx.fill();
                         ctx.stroke();
 
@@ -440,7 +449,7 @@
                         ctx.textBaseline = 'middle';
                         ctx.shadowColor = signConfig.textColor === '#ffffff' ?
                             'rgba(0,0,0,0.8)' : 'rgba(0,0,0,0.3)';
-                        ctx.shadowBlur = 2;
+                        ctx.shadowBlur = 6;
                         ctx.fillText(text, 0, 0);
 
                         ctx.restore();
@@ -624,7 +633,7 @@
                                         return response.json();
                                     })
                                     .then(data => {
-                                        
+
                                     })
                                     .catch(error => {
 
@@ -643,8 +652,8 @@
             }
 
             function uploadCoralCanvas() {
-                const width = 300;
-                const height = 300;
+                const width = 900;
+                const height = 900;
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
                 canvas.width = width;
@@ -658,10 +667,18 @@
                 (async function() {
                     const coralId = pledgeData.coral;
                     const signConfig = coralSignConfig[coralId] || coralSignConfig[1];
-                    const [coralImg, stickImg] = await Promise.all([
+                    const [coralImg, stickImg, bg] = await Promise.all([
                         loadImage(`{{ asset('images/brand/coral-seperate') }}/${coralId}.webp`),
-                        loadImage(`{{ asset('images/brand/coral-seperate/stick.webp') }}`)
+                        loadImage(`{{ asset('images/brand/coral-seperate/stick.webp') }}`),
+                        loadImage(`{{ asset('images/brand/bubble_Overlay.webp') }}`)
                     ]);
+                    // Draw the bubble background at the same scale as preview
+                    const bubbleScale = 1; // Match preview
+                    const bubbleW = width * bubbleScale;
+                    const bubbleH = height * bubbleScale;
+                    const bubbleX = (width - bubbleW) / 2;
+                    const bubbleY = (height - bubbleH) / 2;
+                    ctx.drawImage(bg, bubbleX, bubbleY, bubbleW, bubbleH);
                     // Draw stick using stickPosition and stickTilt
                     const stickWidth = width * 0.020;
                     const stickHeight = height * 0.30;
@@ -690,34 +707,43 @@
                     const coralY = height * 0.8 - coralHeight;
                     ctx.drawImage(coralImg, coralX, coralY, coralWidth, coralHeight);
                     // Draw sign
-                    const textX = stickX;
-                    const textY = stickY - stickHeight;
+                    let textX = stickX;
+                    let textY = stickY - stickHeight;
+                    if (signConfig.position) {
+                        const percentToPx = (percent, total) => {
+                            if (typeof percent === 'string' && percent.endsWith('%')) {
+                                return parseFloat(percent) / 100 * total;
+                            }
+                            return percent;
+                        };
+                        textX = percentToPx(signConfig.position.left, width);
+                        textY = percentToPx(signConfig.position.top, height);
+                    }
                     ctx.save();
                     ctx.translate(textX, textY);
-                    ctx.rotate(stickAngle);
-                    const padding = 18;
+                    ctx.rotate((signConfig.tilt || 0) * Math.PI / 180);
+                    const padding = 54;
                     const text = pledgeData.text;
-                    ctx.font = 'bold 18px "Palatino", serif';
+                    ctx.font = 'bold 54px "Palatino", serif';
                     const textWidth = ctx.measureText(text).width + padding * 2;
-                    const textHeight = 38;
+                    const textHeight = 114;
                     ctx.fillStyle = signConfig.backgroundColor;
                     ctx.strokeStyle = signConfig.borderColor;
-                    ctx.lineWidth = 2;
+                    ctx.lineWidth = 6;
                     ctx.beginPath();
-                    ctx.roundRect(-textWidth / 2, -textHeight / 2, textWidth, textHeight, 8);
+                    ctx.roundRect(-textWidth / 2, -textHeight / 2, textWidth, textHeight, 24);
                     ctx.fill();
                     ctx.stroke();
                     ctx.fillStyle = signConfig.textColor;
                     ctx.textAlign = 'center';
                     ctx.textBaseline = 'middle';
                     ctx.shadowColor = signConfig.textColor === '#ffffff' ? 'rgba(0,0,0,0.8)' : 'rgba(0,0,0,0.3)';
-                    ctx.shadowBlur = 2;
+                    ctx.shadowBlur = 6;
                     ctx.fillText(text, 0, 0);
                     ctx.restore();
                     // Upload the generated canvas
                     canvas.toBlob(blob => {
                         if (!blob) {
-
                             pledgeBtn.disabled = false;
                             return;
                         }
@@ -744,7 +770,6 @@
                                 // window.location.href = '{{ route('station', 4) }}';
                             })
                             .catch(error => {
-
                                 console.error('Upload failed:', error);
                             })
                             .finally(() => {
@@ -757,12 +782,12 @@
 
             function returnToDashboard()
             {
-                const thankYouModal = new bootstrap.Modal(document.getElementById('thankYouModal'));
-                thankYouModal.show();
+                // const thankYouModal = new bootstrap.Modal(document.getElementById('thankYouModal'));
+                // thankYouModal.show();
 
-                document.getElementById('modalCloseBtn').addEventListener('click', function () {
-                    window.location.href = "{{ route('dashboard') }}"; // Adjust route if needed
-                });
+                // document.getElementById('modalCloseBtn').addEventListener('click', function () {
+                //     window.location.href = "{{ route('dashboard') }}"; // Adjust route if needed
+                // });
             }
 
 

@@ -361,7 +361,7 @@ class StationController extends Controller
             DB::beginTransaction();
 
             if ($station_id != $request->station) {
-                return response()->json(['message' => 'Invalid Qr', 'status' => 'error'], 401);
+                return response()->json(['message' => 'Invalid Qr', 'status' => 'error'], 400);
             }
 
             $lastStation = StationUser::where('user_id', auth()->id())->orderBy('id', 'desc')->first();

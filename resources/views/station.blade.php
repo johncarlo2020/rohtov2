@@ -7,8 +7,8 @@
                         <div class="text-center">
                             <!-- <img class="check mx-auto mb-4" id="badge" src=""> -->
                             <div class="text-content mt-0">
-                                <p class="sub-heading fw-bold mb-2">Station #<span class="station_id"></span></p>
-                                <p class="mb-4">
+                                <p class="sub-heading fw-bold mb-2 station-text">Station #<span class="station_id"></span></p>
+                                <p class="mb-4 message">
                                     Check-in Successful
                                 </p>
                             </div>

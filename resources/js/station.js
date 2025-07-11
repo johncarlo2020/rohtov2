@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 $('.station_id').html(lastCharacter);
 
-                if (lastCharacter == 5) {
+                if (lastCharacter == 6) {
                     document.getElementById('routeBtn').setAttribute('href', congratsUrl);
                 }
             },

@@ -35,12 +35,12 @@ let pledgeData = [];
 
 // Predefined coral positions based on the aquarium layout
 const CORAL_POSITIONS = [
-  { x: 0.24, y: 0.91, tiltOffsetX: 18, tiltOffsetY: 20, size: 0.50, z: 3, tilt: 0 }, // Left side bottom
-  { x: 0.25, y: 0.75, tiltOffsetX: 40, tiltOffsetY: 10, size: 0.30, z: 2, tilt: 10 }, // Left middle rock
-  { x: 0.15, y: 0.63, tiltOffsetX: 20, tiltOffsetY: 8, size: 0.30, z: 1, tilt: -10 }, // Left upper rock
-  { x: 0.85, y: 0.88, tiltOffsetX: -18, tiltOffsetY: 6, size: 0.50, z: 1, tilt: -15 }, // Right side bottom
-  { x: 0.70, y: 0.70, tiltOffsetX: -12, tiltOffsetY: 4, size: 0.27, z: 1, tilt: -20 }, // Right middle rock
-  { x: 0.75, y: 0.54, tiltOffsetX: -20, tiltOffsetY: 8, size: 0.30, z: 1, tilt: -30 }, // Right upper rock
+  { x: 0.15, y: 0.85, tiltOffsetX: 18, tiltOffsetY: 20, size: 0.70, z: 3, tilt: 0 }, // Left side bottom
+  { x: 0.20, y: 0.70, tiltOffsetX: 40, tiltOffsetY: 10, size: 0.40, z: 2, tilt: 10 }, // Left middle rock
+  { x: 0.15, y: 0.60, tiltOffsetX: 20, tiltOffsetY: 8, size: 0.30, z: 1, tilt: -10 }, // Left upper rock
+  { x: 0.80, y: 0.84, tiltOffsetX: -18, tiltOffsetY: 6, size: 0.80, z: 1, tilt: -30 }, // Right side bottom
+  { x: 0.70, y: 0.70, tiltOffsetX: -12, tiltOffsetY: 4, size: 0.30, z: 1, tilt: -20 }, // Right middle rock
+  { x: 0.75, y: 0.50, tiltOffsetX: -20, tiltOffsetY: 8, size: 0.30, z: 1, tilt: -30 }, // Right upper rock
 ];
 
 let currentCoralPositionIndex = 0;
@@ -66,11 +66,23 @@ const MIN_COLLISION_DISTANCE = 80;
 const STRETCH_FACTOR = 0.01;
 const STRETCH_DURATION = 100;
 
+// Adjustable scale for initial temp bubbles
+const TEMP_BUBBLE_SCALE = 0.15; // Change this value to adjust temp bubble size
+
 // Tilt position offset configuration
 const CORAL_TILT_OFFSET_X = 18; // How much tilt affects X position (pixels)
 const CORAL_TILT_OFFSET_Y = 6;  // How much tilt affects Y position (pixels)
 
 function preload() {
+  // Helper to fix asset paths (copied from create)
+  function fixImageUrl(img) {
+    if (!img) return null;
+    if (img.startsWith('http') || img.startsWith('data:')) return img;
+    let base = (typeof window !== 'undefined' && window.ASSET_BASE) ? window.ASSET_BASE : '';
+    img = img.replace(/^\//, '');
+    if (base && img.startsWith(base)) return img;
+    return base ? base + '/' + img : img;
+  }
   // Add error handling for image loading
   this.load.on('loaderror', function(file) {
     console.error('Failed to load:', file.src);
@@ -89,7 +101,8 @@ function preload() {
 
   // Load tempBubbles images for name bubbles
   for (let i = 1; i <= 1; i++) {
-    this.load.image(`tempBubble${i}`, `images/tempBubbles/${i}.png`);
+    const tempBubblePath = fixImageUrl('images/tempBubbles/' + i + '.png');
+    this.load.image(`tempBubble${i}`, tempBubblePath);
   }
 
   // Load small bubble overlay for coral effects
@@ -437,31 +450,29 @@ function spawnSingleCoral(customTextureKey) {
   // Use the most recent pledge (the one just pushed)
   const pledge = coralPledges[coralPledges.length - 1];
   // Use custom texture if provided
-  const textureKey = customTextureKey || pledge.textureKey || `coral${pledge.coralId}`;
-  // Get the final coral position
-  const coralPosition = CORAL_POSITIONS[currentCoralPositionIndex % CORAL_POSITIONS.length];
+  const slotIndex = currentCoralPositionIndex % CORAL_POSITIONS.length;
+  const coralPosition = CORAL_POSITIONS[slotIndex];
   // Calculate final position with tilt offsets
   const finalX = coralPosition.x * window.innerWidth + (coralPosition.tiltOffsetX || 0);
   const finalY = coralPosition.y * window.innerHeight + (coralPosition.tiltOffsetY || 0);
-  currentCoralPositionIndex++;
   const spawnX = -80;
   const spawnY = window.innerHeight * 0.5;
+  const textureKey = customTextureKey || pledge.textureKey || `coral${pledge.coralId}`;
   // --- ENTRY ANIMATION ---
-  // Make the entry bubble much larger
-  const entryBubbleScale = 0.8; // was 1.0, now much larger
-  const bubble = this.add.sprite(spawnX, spawnY, 'bubble_anim', 0).setScale(entryBubbleScale);
+  // Use CORAL_POSITIONS.size directly for baseScale (no multiplier)
+  const baseScale = coralPosition.size || 0.25;
+  // Entry bubble is larger and animates with a gentle pulse
+  const entryBubbleStartScale = baseScale * 0.32;
+  const entryBubbleEndScale = baseScale * 0.44;
+  const bubble = this.add.sprite(spawnX, spawnY, 'bubble_anim', 0).setScale(entryBubbleStartScale);
   bubble.alpha = 0;
   bubble.setDepth(20);
   this.tweens.add({ targets: bubble, alpha: 1, duration: 500, ease: "Linear" });
   let coral;
-  // Use the same scale multiplier as initial corals for consistency
-  const scaleMultiplier = 2.8; // Match the visual size of initial corals
-  const baseScale = (coralPosition.size || 0.25) * scaleMultiplier;
   try {
-    coral = this.add.sprite(spawnX, spawnY, textureKey);
+    coral = this.add.sprite(spawnX, spawnY, textureKey).setScale(0.1); // Start small, stay small during entry
     coral.baseScale = baseScale;
     coral.baseAlpha = 1.0;
-    // --- APPLY WIGGLE PIPELINE TO CORAL ---
     coral.setPostPipeline('WigglePostFX');
   } catch (error) {
     console.warn(`Coral image ${textureKey} failed to load, using fallback`);
@@ -473,7 +484,6 @@ function spawnSingleCoral(customTextureKey) {
   coral.alpha = 0;
   coral.pledgeData = pledge;
   coral.objectType = 'coral';
-  // Set depth from CORAL_POSITIONS z property
   coral.setDepth(coralPosition.z || 5);
   // Assign fixed random movement parameters for smooth animation
   coral.swaySpeed = Phaser.Math.FloatBetween(0.7, 1.1);
@@ -500,7 +510,6 @@ function spawnSingleCoral(customTextureKey) {
   coral.MAX_X = window.innerWidth - 80;
   coral.MIN_Y = 50;
   coral.MAX_Y = window.innerHeight * 0.5;
-
   coral.tiltOffsetX = coralPosition.tiltOffsetX || 0;
   coral.tiltOffsetY = coralPosition.tiltOffsetY || 0;
 
@@ -542,11 +551,14 @@ function spawnSingleCoral(customTextureKey) {
       bubble.y = pos.y;
       coral.x = pos.x;
       coral.y = pos.y;
-      // No scale animation for coral during entry
+      // Entry bubble animates with a gentle pulse (not a grow-to-big effect)
       if (bubble.setScale) {
-        const bubbleWobble = entryBubbleScale + Math.sin(tweenObj.t * Math.PI * 3) * 0.08;
-        bubble.setScale(bubbleWobble);
+        // Pulse between start and end scale with a sine wave
+        const pulse = Math.sin(tweenObj.t * Math.PI) * 0.5 + 0.5; // 0 to 1
+        const bubbleScale = entryBubbleStartScale + (entryBubbleEndScale - entryBubbleStartScale) * pulse;
+        bubble.setScale(bubbleScale);
       }
+      // coral stays at 0.1 scale during entry
     },
     onComplete: () => {
       bubble.play('bubble_pop');
@@ -554,33 +566,59 @@ function spawnSingleCoral(customTextureKey) {
       bubble.on('animationcomplete', () => {
         bubble.destroy();
         console.log('Entry bubble destroyed');
+        // Move coral to final position with tilt offsets
+        coral.x = finalX;
+        coral.y = finalY;
+        coral.originalX = finalX;
+        coral.originalY = finalY;
+        // Set rotation from CORAL_POSITIONS tilt property (degrees to radians)
+        if (typeof coralPosition.tilt === 'number' && coral.setRotation) {
+          coral.setRotation(Phaser.Math.DegToRad(coralPosition.tilt));
+        }
+        coral.isPlanted = true;
+        coral.phase = 'planted';
+        // Now grow coral to baseScale at planted position, with a short delay for smoothness
+        // Grow coral smoothly from current scale to baseScale
+        if (textureKey.startsWith('coral_custom_')) {
+          // Animate display size for custom corals using CORAL_POSITIONS size config
+          const targetWidth = window.innerWidth * (coralPosition.size || 0.3);
+          const targetHeight = targetWidth; // keep square
+          const startSize = Math.max(targetWidth * 0.04, 8); // start at 4% of target size, min 8px
+          coral.setDisplaySize(startSize, startSize);
+          coral.alpha = 0.9;
+          this.tweens.add({
+            targets: coral,
+            displayWidth: targetWidth,
+            displayHeight: targetHeight,
+            duration: 2200,
+            ease: 'Elastic.easeOut',
+            onUpdate: () => {
+              coral.alpha = 0.9;
+            },
+            onComplete: () => {
+              coral.setDisplaySize(targetWidth, targetHeight); // snap to final size
+              console.log('Coral planted successfully');
+              startCoralBubbles.call(this, coral);
+              currentCoralPositionIndex++;
+            }
+          });
+        } else {
+          this.tweens.add({
+            targets: coral,
+            scale: baseScale,
+            duration: 1500,
+            ease: 'Sine.easeOut',
+            onStart: () => {
+              coral.alpha = 0.9;
+            },
+            onComplete: () => {
+              console.log('Coral planted successfully');
+              startCoralBubbles.call(this, coral);
+              currentCoralPositionIndex++;
+            }
+          });
+        }
       });
-      // Set the correct scale or display size ONLY after planting
-      if (textureKey.startsWith('coral_custom_')) {
-        coral.setDisplaySize(600, 600);
-      } else {
-        coral.setScale(0.1); // Start small for grow animation
-        // Animate scale up to baseScale
-        this.tweens.add({
-          targets: coral,
-          scale: baseScale,
-          duration: 1800,
-          ease: 'Sine.easeOut'
-        });
-      }
-      // Move coral to final position with tilt offsets
-      coral.x = finalX;
-      coral.y = finalY;
-      coral.originalX = finalX;
-      coral.originalY = finalY;
-      // Set rotation from CORAL_POSITIONS tilt property (degrees to radians)
-      if (typeof coralPosition.tilt === 'number' && coral.setRotation) {
-        coral.setRotation(Phaser.Math.DegToRad(coralPosition.tilt));
-      }
-      coral.isPlanted = true;
-      coral.phase = 'planted';
-      console.log('Coral planted successfully');
-      startCoralBubbles.call(this, coral);
     }
   });
 }
@@ -598,16 +636,35 @@ function addNameBubbles() {
 
 // Function to create initial name bubbles directly in floating positions without entry animation
 function createInitialNameBubble(index) {
-  if (pledgeData.length === 0) return;
-
-  let pledgesToUse = pledgeData.filter(pledge => pledge.type === 'text');
-  if (pledgesToUse.length === 0) {
-    console.log('No text pledges found for initial bubbles, using any pledge.');
-    pledgesToUse = pledgeData; // Fallback to all pledges
+  let pledge;
+  if (pledgeData.length === 0) {
+    // No pledge data, create a placeholder pledge for temp bubble
+    pledge = {
+      id: `temp_${index}`,
+      text: '',
+      type: 'text',
+      image: null,
+      textureKey: null
+    };
+  } else {
+    let pledgesToUse = pledgeData.filter(pledge => pledge.type === 'text');
+    if (pledgesToUse.length === 0) {
+      console.log('No text pledges found for initial bubbles, using any pledge.');
+      pledgesToUse = pledgeData; // Fallback to all pledges
+    }
+    if (pledgesToUse.length === 0) {
+      // Still no pledges, fallback to placeholder
+      pledge = {
+        id: `temp_${index}`,
+        text: '',
+        type: 'text',
+        image: null,
+        textureKey: null
+      };
+    } else {
+      pledge = Phaser.Utils.Array.GetRandom(pledgesToUse);
+    }
   }
-  if (pledgesToUse.length === 0) return; // Still no pledges, exit
-
-  const pledge = Phaser.Utils.Array.GetRandom(pledgesToUse);
   createSingleInitialNameBubble.call(this, pledge, index);
 }
 
@@ -623,32 +680,37 @@ function createSingleInitialNameBubble(pledge, index) {
   if (tempBubbleKeys.length === 0) {
     tempBubbleKeys.push('tempBubble1'); // fallback if only one
   }
-  // Pick key based on index (loop if more than available)
-  const tempBubbleKey = tempBubbleKeys[index % tempBubbleKeys.length];
+  // Pick a tempBubbleKey (for now, always use the first)
+  const tempBubbleKey = tempBubbleKeys[0];
 
-  const x = Phaser.Math.Between(window.innerWidth * 0.1, window.innerWidth * 0.9);
-  const y = Phaser.Math.Between(window.innerHeight * 0.1, window.innerHeight * 0.6);
+  // Spread bubbles evenly across the width, in the upper 20-35% of the canvas
+  const total = MAX_NAME_BUBBLES;
+  const margin = 80;
+  const spread = (window.innerWidth - 2 * margin) / (total - 1);
+  const x = margin + index * spread;
+  const y = Phaser.Math.Between(window.innerHeight * 0.20, window.innerHeight * 0.35);
 
   console.log(`Creating initial name bubble ${index + 1} at position ${x}, ${y}`);
 
   // Create the name bubble sprite using tempBubbleKey
   let nameBubble;
   try {
-    nameBubble = this.add.sprite(x, y, tempBubbleKey).setScale(0.60);
+    nameBubble = this.add.sprite(x, y, tempBubbleKey).setScale(TEMP_BUBBLE_SCALE);
   } catch (error) {
     console.warn('Name bubble image failed to load, using fallback');
-    nameBubble = this.add.circle(x, y, 35, 0x87ceeb, 0.7);
+    nameBubble = this.add.circle(x, y, 35 * TEMP_BUBBLE_SCALE / 0.60, 0x87ceeb, 0.7);
   }
 
   nameBubble.objectType = 'nameBubble';
   nameBubble.pledgeData = pledge;
 
-  // Add floating movement properties with calmer variation
-  nameBubble.vx = Phaser.Math.FloatBetween(-0.02, 0.02);
-  nameBubble.vy = Phaser.Math.FloatBetween(-0.015, 0.015);
-  nameBubble.floatTime = 0;
-  nameBubble.floatDirection = Math.random() < 0.5 ? 1 : -1;
-  nameBubble.floatRadius = Phaser.Math.Between(10, 20);
+  // Bubble-like wavy floating movement
+  nameBubble.floatTime = Math.random() * Math.PI * 2;
+  nameBubble.floatSpeed = Phaser.Math.FloatBetween(1.2, 2.2); // faster, more frequent
+  nameBubble.floatRadius = Phaser.Math.Between(18, 36);
+  nameBubble.baseX = x;
+  nameBubble.baseY = y;
+  nameBubble.floatPhase = Math.random() * Math.PI * 2;
 
   // Check if we need to remove the oldest name bubble BEFORE adding the new one
   let attempts = 0;
@@ -710,14 +772,17 @@ function createNameBubble(pledge, textureKey) {
   // Create name bubble sprite
   let nameBubble;
   try {
-    nameBubble = this.add.sprite(spawnX, spawnY, textureKey).setScale(0.38);
-    // Set display size to 600x600 for custom uploaded images
+    nameBubble = this.add.sprite(spawnX, spawnY, textureKey).setScale(TEMP_BUBBLE_SCALE);
+    // Set display size to match temp bubble scale for custom uploaded images
     if (textureKey.startsWith('name_bubble_custom_')) {
-      nameBubble.setDisplaySize(600, 600);
+      // Use the same logic as temp bubbles: base size * TEMP_BUBBLE_SCALE
+      // Assume base image is 400x400 (like tempBubble), so 400 * TEMP_BUBBLE_SCALE
+      const baseSize = 400 * TEMP_BUBBLE_SCALE;
+      nameBubble.setDisplaySize(baseSize, baseSize);
     }
   } catch (error) {
     console.warn('Name bubble image failed to load, using fallback');
-    nameBubble = this.add.circle(spawnX, spawnY, 32, 0x87ceeb, 0.7);
+    nameBubble = this.add.circle(spawnX, spawnY, 35 * TEMP_BUBBLE_SCALE / 0.60, 0x87ceeb, 0.7);
   }
   nameBubble.alpha = 0;
   nameBubble.objectType = 'nameBubble';
@@ -736,12 +801,14 @@ function createNameBubble(pledge, textureKey) {
   this.nameBubbleGroup.add(nameBubble);
   this.nameBubbles.push(nameBubble);
   this.validateGroupSizes();
-  // Floating movement properties
-  nameBubble.vx = Phaser.Math.FloatBetween(-0.012, 0.012);
-  nameBubble.vy = Phaser.Math.FloatBetween(-0.009, 0.009);
-  nameBubble.floatTime = 0;
-  nameBubble.floatDirection = Math.random() < 0.5 ? 1 : -1;
-  nameBubble.floatRadius = Phaser.Math.Between(8, 16);
+  // Floating movement properties (match initial name bubbles)
+  // Pick a random float position in the upper 20-35% of the canvas
+  nameBubble.baseX = finalX;
+  nameBubble.baseY = finalY;
+  nameBubble.floatTime = Math.random() * Math.PI * 2;
+  nameBubble.floatSpeed = Phaser.Math.FloatBetween(1.2, 2.2);
+  nameBubble.floatRadius = Phaser.Math.Between(18, 36);
+  nameBubble.floatPhase = Math.random() * Math.PI * 2;
   // Natural, lighter, and slower quadratic Bezier path (arched upward, direction-aware)
   const controlX = fromLeft
     ? spawnX + (finalX - spawnX) * 0.45 + Phaser.Math.Between(-30, 30)
@@ -768,8 +835,9 @@ function createNameBubble(pledge, textureKey) {
       const pos = path.getPoint(tweenObj.t);
       nameBubble.x = pos.x;
       nameBubble.y = pos.y;
-      if (nameBubble.setScale) {
-        const scaleWobble = 0.38 + Math.sin(tweenObj.t * Math.PI * 2.2) * 0.012;
+      if (nameBubble.setScale && !textureKey.startsWith('name_bubble_custom_')) {
+        // Only wobble scale for normal bubbles, not custom images
+        const scaleWobble = TEMP_BUBBLE_SCALE + Math.sin(tweenObj.t * Math.PI * 2.2) * 0.012;
         nameBubble.setScale(scaleWobble);
       }
     },
@@ -833,14 +901,15 @@ function createCoralBubble(coral, chainIndex = 0) {
   const bubbleY = coral.y - Phaser.Math.Between(20, 40); // Start higher above the coral
 
   let bubble;
-  // Make max size smaller: 0.01 to 0.018
-  const randomSize = Phaser.Math.FloatBetween(0.01, 0.018); // Smaller, more subtle bubbles
+  // Scale bubble size based on parent coral's baseScale (from CORAL_POSITIONS size)
+  const coralScale = coral.baseScale || 1.0;
+  const randomSize = Phaser.Math.FloatBetween(0.01, 0.018) * coralScale;
 
   try {
     bubble = this.add.sprite(bubbleX, bubbleY, "bubble_overlay").setScale(randomSize);
   } catch (error) {
     // Fallback: smaller circle with random size
-    const radius = Phaser.Math.Between(2, 4); // Reduced fallback size
+    const radius = Phaser.Math.Between(2, 4) * coralScale;
     bubble = this.add.circle(bubbleX, bubbleY, radius, 0x87ceeb, 0.6);
   }
 
@@ -1067,61 +1136,20 @@ function update(time, delta) {
     });
   }
 
-  // Update floating name bubbles with calmer movement
+  // Update floating name bubbles with lively, bubble-like movement
   if (this.nameBubbleGroup) {
     const bubbles = this.nameBubbleGroup.getChildren();
-    // Subtle collision avoidance for name bubbles
     for (let i = 0; i < bubbles.length; i++) {
       const a = bubbles[i];
-      // Bubble-like floating movement
-      a.floatTime += dt;
-      // Gentle vertical bobbing (main bubble effect, reduced amplitude)
-      a.y += Math.sin(a.floatTime * 1.2 + i) * 3.5 * dt;
-      // Gentle horizontal drift (reduced amplitude)
-      a.x += Math.cos(a.floatTime * 0.7 + i) * 1.5 * dt;
-      // Add a little random walk to vx/vy for organic feel
-      a.vx += Phaser.Math.FloatBetween(-0.003, 0.003) * dt;
-      a.vy += Phaser.Math.FloatBetween(-0.002, 0.002) * dt;
-      // Damping to keep velocity under control
-      a.vx *= 0.98;
-      a.vy *= 0.98;
-      // Apply velocity (reduced multipliers)
-      a.x += a.vx * dt * 7;
-      a.y += a.vy * dt * 5;
-
-      // Subtle repulsion from other bubbles
-      for (let j = 0; j < bubbles.length; j++) {
-        if (i === j) continue;
-        const b = bubbles[j];
-        const dx = a.x - b.x;
-        const dy = a.y - b.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        const minDist = 70; // Slightly reduced minimum allowed distance between bubbles
-        if (dist < minDist && dist > 0.1) {
-          // Softer push away for less aggressive bounce
-          const push = (minDist - dist) / minDist * 0.09; // 0.09 is a gentler factor
-          a.vx += (dx / dist) * push * dt;
-          a.vy += (dy / dist) * push * dt;
-        }
-      }
-
-      // Keep name bubbles distributed across upper half of the screen only
-      if (a.x < 80) {
-        a.x = 80;
-        a.vx = Math.abs(a.vx);
-      }
-      if (a.x > window.innerWidth - 80) {
-        a.x = window.innerWidth - 80;
-        a.vx = -Math.abs(a.vx);
-      }
-      if (a.y < 50) {
-        a.y = 50;
-        a.vy = Math.abs(a.vy);
-      }
-      if (a.y > window.innerHeight * 0.5) {
-        a.y = window.innerHeight * 0.5;
-        a.vy = -Math.abs(a.vy);
-      }
+      // Bubble-like wavy floating (horizontal and vertical)
+      a.floatTime += dt * a.floatSpeed;
+      a.x = a.baseX + Math.sin(a.floatTime + a.floatPhase) * a.floatRadius;
+      a.y = a.baseY + Math.cos(a.floatTime * 0.8 + a.floatPhase) * (a.floatRadius * 0.7);
+      // Keep bubbles in upper part only
+      if (a.x < 60) a.x = 60;
+      if (a.x > window.innerWidth - 60) a.x = window.innerWidth - 60;
+      if (a.y < 30) a.y = 30;
+      if (a.y > window.innerHeight * 0.38) a.y = window.innerHeight * 0.38;
     }
   }
 

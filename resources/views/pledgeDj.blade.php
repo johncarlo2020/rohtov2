@@ -348,17 +348,35 @@
                         ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
                         ctx.shadowBlur = 18;
 
-                        // Text wrapping logic
+                        // Improved text wrapping logic: split long words if needed
                         const maxWidth = width * 0.6;
                         const words = pledgeData.text.split(' ');
                         const lines = [];
                         let currentLine = '';
                         for (let i = 0; i < words.length; i++) {
-                            const testLine = currentLine + (currentLine ? ' ' : '') + words[i];
+                            let word = words[i];
+                            // If the word itself is too long, split it
+                            while (ctx.measureText(word).width > maxWidth) {
+                                // Find the largest substring of word that fits
+                                let fitLength = word.length;
+                                while (fitLength > 0 && ctx.measureText(word.substring(0, fitLength)).width > maxWidth) {
+                                    fitLength--;
+                                }
+                                if (fitLength === 0) break; // Should not happen
+                                const fitting = word.substring(0, fitLength);
+                                // Add currentLine if not empty
+                                if (currentLine) {
+                                    lines.push(currentLine);
+                                    currentLine = '';
+                                }
+                                lines.push(fitting);
+                                word = word.substring(fitLength);
+                            }
+                            const testLine = currentLine + (currentLine ? ' ' : '') + word;
                             const metrics = ctx.measureText(testLine);
                             if (metrics.width > maxWidth && currentLine) {
                                 lines.push(currentLine);
-                                currentLine = words[i];
+                                currentLine = word;
                             } else {
                                 currentLine = testLine;
                             }
@@ -775,12 +793,12 @@
 
             function returnToDashboard()
             {
-                // const thankYouModal = new bootstrap.Modal(document.getElementById('thankYouModal'));
-                // thankYouModal.show();
+                const thankYouModal = new bootstrap.Modal(document.getElementById('thankYouModal'));
+                thankYouModal.show();
 
-                // document.getElementById('modalCloseBtn').addEventListener('click', function () {
-                //     window.location.href = "{{ route('dashboard') }}"; // Adjust route if needed
-                // });
+                document.getElementById('modalCloseBtn').addEventListener('click', function () {
+                    window.location.href = "{{ route('dashboard') }}"; // Adjust route if needed
+                });
             }
 
 

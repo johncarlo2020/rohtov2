@@ -5,27 +5,27 @@ import WigglePostFX from "./WigglePostFX.js";
 // ['log','warn','error'].forEach(method => console[method] = () => {});  // Temporarily enabled for debugging
 
 const config = {
-  parent: 'aquarium-container',
-  type: Phaser.AUTO,
-  width: window.innerWidth,
-  height: window.innerHeight,
-    backgroundColor: 'rgba(0,0,0,0)',
-  render: {
-    preserveDrawingBuffer: true,
-    transparent: true, // Enable transparency
-    contextAttributes: {
-      alpha: true, // Allow alpha channel for transparency
-      premultipliedAlpha: false,
+    parent: "aquarium-container",
+    type: Phaser.AUTO,
+    width: window.innerWidth,
+    height: window.innerHeight,
+    backgroundColor: "rgba(0,0,0,0)",
+    render: {
+        preserveDrawingBuffer: true,
+        transparent: true, // Enable transparency
+        contextAttributes: {
+            alpha: true, // Allow alpha channel for transparency
+            premultipliedAlpha: false,
+        },
     },
-  },
-  scale: {
-    mode: Phaser.Scale.RESIZE,
-  },
-  scene: { preload, create, update },
-  pipeline: {
-    PlasmaPost2FX,
-    WigglePostFX
-  }
+    scale: {
+        mode: Phaser.Scale.RESIZE,
+    },
+    scene: { preload, create, update },
+    pipeline: {
+        PlasmaPost2FX,
+        WigglePostFX,
+    },
 };
 
 const game = new Phaser.Game(config);
@@ -35,12 +35,60 @@ let pledgeData = [];
 
 // Predefined coral positions based on the aquarium layout
 const CORAL_POSITIONS = [
-  { x: 0.20, y: 0.85, tiltOffsetX: 18, tiltOffsetY: 20, size: 0.70, z: 3, tilt: 0 }, // Left side bottom
-  { x: 0.20, y: 0.70, tiltOffsetX: 40, tiltOffsetY: 10, size: 0.40, z: 2, tilt: 10 }, // Left middle rock
-  { x: 0.15, y: 0.60, tiltOffsetX: 20, tiltOffsetY: 8, size: 0.30, z: 1, tilt: -10 }, // Left upper rock
-  { x: 0.80, y: 0.84, tiltOffsetX: -18, tiltOffsetY: 6, size: 0.80, z: 1, tilt: -30 }, // Right side bottom
-  { x: 0.70, y: 0.65, tiltOffsetX: -12, tiltOffsetY: 4, size: 0.30, z: 1, tilt: -20 }, // Right middle rock
-  { x: 0.75, y: 0.47, tiltOffsetX: -20, tiltOffsetY: 8, size: 0.30, z: 1, tilt: -30 }, // Right upper rock
+    {
+        x: 0.2,
+        y: 0.85,
+        tiltOffsetX: 18,
+        tiltOffsetY: 20,
+        size: 0.7,
+        z: 3,
+        tilt: 0,
+    }, // Left side bottom
+    {
+        x: 0.2,
+        y: 0.7,
+        tiltOffsetX: 40,
+        tiltOffsetY: 10,
+        size: 0.4,
+        z: 2,
+        tilt: 10,
+    }, // Left middle rock
+    {
+        x: 0.15,
+        y: 0.6,
+        tiltOffsetX: 20,
+        tiltOffsetY: 8,
+        size: 0.3,
+        z: 1,
+        tilt: -10,
+    }, // Left upper rock
+    {
+        x: 0.8,
+        y: 0.84,
+        tiltOffsetX: -18,
+        tiltOffsetY: 6,
+        size: 0.8,
+        z: 1,
+        tilt: -30,
+    }, // Right side bottom
+    {
+        x: 0.7,
+        y: 0.65,
+        tiltOffsetX: -12,
+        tiltOffsetY: 4,
+        size: 0.3,
+        z: 1,
+        tilt: -20,
+    }, // Right middle rock
+    {
+        x: 0.75,
+        y: 0.47,
+        tiltOffsetX: -20,
+        tiltOffsetY: 8,
+        size: 0.3,
+        z: 1,
+        tilt: -30,
+    }, // Right upper rock
 ];
 
 let currentCoralPositionIndex = 0;
@@ -71,118 +119,127 @@ const TEMP_BUBBLE_SCALE = 0.15; // Change this value to adjust temp bubble size
 
 // Tilt position offset configuration
 const CORAL_TILT_OFFSET_X = 18; // How much tilt affects X position (pixels)
-const CORAL_TILT_OFFSET_Y = 6;  // How much tilt affects Y position (pixels)
+const CORAL_TILT_OFFSET_Y = 6; // How much tilt affects Y position (pixels)
 
 function preload() {
-  // Helper to fix asset paths (copied from create)
-  function fixImageUrl(img) {
-    if (!img) return null;
-    if (img.startsWith('http') || img.startsWith('data:')) return img;
-    let base = (typeof window !== 'undefined' && window.ASSET_BASE) ? window.ASSET_BASE : '';
-    img = img.replace(/^\//, '');
-    if (base && img.startsWith(base)) return img;
-    return base ? base + '/' + img : img;
-  }
-  // Add error handling for image loading
-  this.load.on('loaderror', function(file) {
-    console.error('Failed to load:', file.src);
-  });
+    // Helper to fix asset paths (copied from create)
+    function fixImageUrl(img) {
+        if (!img) return null;
+        if (img.startsWith("http") || img.startsWith("data:")) return img;
+        let base =
+            typeof window !== "undefined" && window.ASSET_BASE
+                ? window.ASSET_BASE
+                : "";
+        img = img.replace(/^\//, "");
+        if (base && img.startsWith(base)) return img;
+        return base ? base + "/" + img : img;
+    }
+    // Add error handling for image loading
+    this.load.on("loaderror", function (file) {
+        console.error("Failed to load:", file.src);
+    });
 
-  this.load.image("stick", "images/brand/coral-seperate/stick.webp");
+    this.load.image("stick", "images/brand/coral-seperate/stick.webp");
 
-  // Load bubble sprite sheet for entry animation
-  this.load.spritesheet("bubble_anim", "images/brand/bubble_animation.webp", {
-    frameWidth: 400,
-    frameHeight: 400
-  });
+    // Load bubble sprite sheet for entry animation
+    this.load.spritesheet("bubble_anim", "images/brand/bubble_animation.webp", {
+        frameWidth: 400,
+        frameHeight: 400,
+    });
 
-  // Load floating name bubble asset
-  this.load.image("name_bubble", "images/brand/withMessage.webp");
+    // Load floating name bubble asset
+    this.load.image("name_bubble", "images/brand/withMessage.webp");
 
-  // Load tempBubbles images for name bubbles
-  for (let i = 1; i <= 1; i++) {
-    const tempBubblePath = fixImageUrl('images/tempBubbles/' + i + '.png');
-    this.load.image(`tempBubble${i}`, tempBubblePath);
-  }
+    // Load tempBubbles images for name bubbles
+    for (let i = 1; i <= 1; i++) {
+        const tempBubblePath = fixImageUrl("images/tempBubbles/" + i + ".png");
+        this.load.image(`tempBubble${i}`, tempBubblePath);
+    }
 
-  // Load small bubble overlay for coral effects
-  this.load.image("bubble_overlay", "images/brand/bubble_Overlay.webp");
+    // Load small bubble overlay for coral effects
+    this.load.image("bubble_overlay", "images/brand/bubble_Overlay.webp");
 
-  // Load background image for Phaser canvas
-  this.load.image("aquarium_bg", "images/brand/live-feed/bg.webp");
+    // Load background image for Phaser canvas
+    this.load.image("aquarium_bg", "images/brand/live-feed/bg.webp");
 
-  // Load tempCoral images for initial corals
-  for (let i = 1; i <= 1; i++) {
-    this.load.image(`tempCoral${i}`, `images/tempCoral/${i}.png`);
-  }
+    // Load tempCoral images for initial corals
+    for (let i = 1; i <= 1; i++) {
+        this.load.image(`tempCoral${i}`, `images/tempCoral/${i}.png`);
+    }
 }
 
 function create() {
-  setupCanvas.call(this);
+    setupCanvas.call(this);
 
-  // Initialize arrays for tracking objects
-  this.corals = [];
-  this.nameBubbles = [];
+    // Initialize arrays for tracking objects
+    this.corals = [];
+    this.nameBubbles = [];
 
-  // Create bubble animation
-  this.anims.create({
-    key: 'bubble_pop',
-    frames: this.anims.generateFrameNumbers('bubble_anim', { start: 0, end: 8 }),
-    frameRate: 5,
-    repeat: 0
-  });
+    // Create bubble animation
+    this.anims.create({
+        key: "bubble_pop",
+        frames: this.anims.generateFrameNumbers("bubble_anim", {
+            start: 0,
+            end: 8,
+        }),
+        frameRate: 5,
+        repeat: 0,
+    });
 
-  // Note: Plasma effect disabled to preserve CSS background visibility
-  // The underwater background image is handled by CSS
-  // this.cameras.main.setPostPipeline(PlasmaPost2FX);
-  // --- ENABLE UNDERWATER DISTORTION EFFECT ---
-  this.cameras.main.setPostPipeline(PlasmaPost2FX);
+    // Note: Plasma effect disabled to preserve CSS background visibility
+    // The underwater background image is handled by CSS
+    // this.cameras.main.setPostPipeline(PlasmaPost2FX);
+    // --- ENABLE UNDERWATER DISTORTION EFFECT ---
+    this.cameras.main.setPostPipeline(PlasmaPost2FX);
 
-  // Bind validateGroupSizes early so initial corals and name bubbles can call it
-  this.validateGroupSizes = validateGroupSizes.bind(this);
+    // Bind validateGroupSizes early so initial corals and name bubbles can call it
+    this.validateGroupSizes = validateGroupSizes.bind(this);
 
-  preloadCustomPledgeImages(this, () => {
-    addCorals.call(this);
-    addNameBubbles.call(this);
-    addOceanFloorBubbles.call(this);
-    addRandomAreaBubbles.call(this);
-  });
+    preloadCustomPledgeImages(this, () => {
+        addCorals.call(this);
+        addNameBubbles.call(this);
+        addOceanFloorBubbles.call(this);
+        addRandomAreaBubbles.call(this);
+    });
 
-  // Initialize bubble groups
-  this.coralBubblesGroup = this.add.group();
-  this.oceanFloorBubblesGroup = this.add.group();
-  this.randomAreaBubblesGroup = this.add.group();
+    // Initialize bubble groups
+    this.coralBubblesGroup = this.add.group();
+    this.oceanFloorBubblesGroup = this.add.group();
+    this.randomAreaBubblesGroup = this.add.group();
 
     Pusher.logToConsole = true;
     const pusher = new Pusher(import.meta.env.VITE_PUSHER_APP_KEY, {
         cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
-        encrypted: true
+        encrypted: true,
     });
 
-    const channel = pusher.subscribe('baby-channel');
-    channel.bind('baby-event', (data) => {
-        console.log('Pusher event received:', data);
+    const channel = pusher.subscribe("baby-channel");
+    channel.bind("baby-event", (data) => {
+        console.log("Pusher event received:", data);
         // Accept both data.image and data.img for compatibility
-        const BASE_PATH = '';
+        const BASE_PATH = "";
         function fixImageUrl(img) {
             if (!img) return null;
-            if (img.startsWith('http') || img.startsWith('data:')) return img;
+            if (img.startsWith("http") || img.startsWith("data:")) return img;
             // Use window.ASSET_BASE for relative asset paths
-            let base = (typeof window !== 'undefined' && window.ASSET_BASE) ? window.ASSET_BASE : '';
+            let base =
+                typeof window !== "undefined" && window.ASSET_BASE
+                    ? window.ASSET_BASE
+                    : "";
             // Remove any leading slash from img to avoid double slashes
-            img = img.replace(/^\//, '');
+            img = img.replace(/^\//, "");
             // If already starts with base, don't double it
             if (base && img.startsWith(base)) return img;
-            return base ? base + '/' + img : img;
+            return base ? base + "/" + img : img;
         }
 
-        if (data.type === 'coral') {
+        if (data.type === "coral") {
             const coralId = data.id || Date.now();
             let textureKey = `coral${data.coralId || 1}`;
             let image = data.image || data.img || null;
             image = fixImageUrl(image);
             if (image) {
-                if (image.startsWith('data:')) {
+                if (image.startsWith("data:")) {
                     textureKey = `coral_custom_${coralId}`;
                 } else {
                     textureKey = `coral_custom_${coralId}`;
@@ -191,19 +248,19 @@ function create() {
             // Push pledgeData BEFORE spawning
             pledgeData.push({
                 id: coralId,
-                name: data.name || '',
+                name: data.name || "",
                 coralId: data.coralId || 1,
-                type: 'coral',
+                type: "coral",
                 image,
-                textureKey
+                textureKey,
             });
             if (image) {
-                if (image.startsWith('data:')) {
+                if (image.startsWith("data:")) {
                     this.textures.addBase64(textureKey, image);
                     spawnSingleCoral.call(this, textureKey, 0.45); // Increased scale
                 } else {
                     this.load.image(textureKey, image);
-                    this.load.once('complete', () => {
+                    this.load.once("complete", () => {
                         spawnSingleCoral.call(this, textureKey, 0.45); // Increased scale
                     });
                     this.load.start();
@@ -211,13 +268,13 @@ function create() {
             } else {
                 spawnSingleCoral.call(this, textureKey, 0.45); // Increased scale
             }
-        } else if (data.type === 'text') {
+        } else if (data.type === "text") {
             const textId = data.id || Date.now();
-            let textureKey = 'name_bubble';
+            let textureKey = "name_bubble";
             let image = data.image || data.img || null;
             image = fixImageUrl(image);
             if (image) {
-                if (image.startsWith('data:')) {
+                if (image.startsWith("data:")) {
                     textureKey = `name_bubble_custom_${textId}`;
                 } else {
                     textureKey = `name_bubble_custom_${textId}`;
@@ -226,18 +283,18 @@ function create() {
             // Push pledgeData BEFORE spawning
             pledgeData.push({
                 id: textId,
-                text: data.text || '',
-                type: 'text',
+                text: data.text || "",
+                type: "text",
                 image,
-                textureKey
+                textureKey,
             });
             if (image) {
-                if (image.startsWith('data:')) {
+                if (image.startsWith("data:")) {
                     this.textures.addBase64(textureKey, image);
                     spawnSingleNameBubble.call(this, textureKey, 0.55); // Increased scale
                 } else {
                     this.load.image(textureKey, image);
-                    this.load.once('complete', () => {
+                    this.load.once("complete", () => {
                         spawnSingleNameBubble.call(this, textureKey, 0.55); // Increased scale
                     });
                     this.load.start();
@@ -248,377 +305,433 @@ function create() {
         }
     });
 
-  // Resize listener
-  window.addEventListener("resize", () => resizeGame.call(this));
+    // Resize listener
+    window.addEventListener("resize", () => resizeGame.call(this));
 }
 
 // Generic function to remove the oldest item from a group with a fade-out
 function removeOldestItem(group, array) {
-  console.log(`removeOldestItem called. Group size: ${group.getLength()}, array length: ${array.length}`);
+    console.log(
+        `removeOldestItem called. Group size: ${group.getLength()}, array length: ${
+            array.length
+        }`
+    );
 
-
-  const children = group.getChildren();
-  const oldestItem = children.length > 0 ? children[0] : null;
-  if (!oldestItem) {
-    console.log(`No items in group to remove (getChildren empty)`);
-    return false;
-  }
-
-  console.log(`Removing oldest ${oldestItem.objectType}. Group size before: ${group.getLength()}`);
-
-  // For corals, stop bubble generation
-  if (oldestItem.objectType === 'coral') {
-    oldestItem.isPlanted = false;
-    oldestItem.shouldDestroy = true;
-    if (oldestItem.bubbleEvents) {
-      oldestItem.bubbleEvents.forEach(event => event && !event.hasDispatched && event.remove());
-      oldestItem.bubbleEvents = [];
+    const children = group.getChildren();
+    const oldestItem = children.length > 0 ? children[0] : null;
+    if (!oldestItem) {
+        console.log(`No items in group to remove (getChildren empty)`);
+        return false;
     }
-  }
 
+    console.log(
+        `Removing oldest ${
+            oldestItem.objectType
+        }. Group size before: ${group.getLength()}`
+    );
 
-  // Fade out, then remove from group/array and destroy
-  if (oldestItem && oldestItem.alpha !== undefined) {
-    this.tweens.add({
-      targets: oldestItem,
-      alpha: 0,
-      duration: 500,
-      ease: "Linear",
-      onComplete: () => {
-        // Remove from group and array after fade
+    // For corals, stop bubble generation
+    if (oldestItem.objectType === "coral") {
+        oldestItem.isPlanted = false;
+        oldestItem.shouldDestroy = true;
+        if (oldestItem.bubbleEvents) {
+            oldestItem.bubbleEvents.forEach(
+                (event) => event && !event.hasDispatched && event.remove()
+            );
+            oldestItem.bubbleEvents = [];
+        }
+    }
+
+    // Fade out, then remove from group/array and destroy
+    if (oldestItem && oldestItem.alpha !== undefined) {
+        this.tweens.add({
+            targets: oldestItem,
+            alpha: 0,
+            duration: 500,
+            ease: "Linear",
+            onComplete: () => {
+                // Remove from group and array after fade
+                const removeSuccess = group.remove(oldestItem, true, true);
+                console.log(`Group.remove() success: ${removeSuccess}`);
+                const arrayIndex = array.indexOf(oldestItem);
+                if (arrayIndex > -1) {
+                    array.splice(arrayIndex, 1);
+                    console.log(`Removed from array at index ${arrayIndex}`);
+                } else {
+                    console.log(`Item not found in array`);
+                }
+                if (oldestItem && oldestItem.destroy) {
+                    oldestItem.destroy();
+                    console.log(
+                        `Oldest ${oldestItem.objectType} destroyed (visual cleanup complete)`
+                    );
+                }
+                console.log(
+                    `Oldest ${
+                        oldestItem.objectType
+                    } removed from group after fade. Group size after: ${group.getLength()}`
+                );
+            },
+        });
+    } else {
+        // No alpha property, remove immediately
         const removeSuccess = group.remove(oldestItem, true, true);
         console.log(`Group.remove() success: ${removeSuccess}`);
         const arrayIndex = array.indexOf(oldestItem);
         if (arrayIndex > -1) {
-          array.splice(arrayIndex, 1);
-          console.log(`Removed from array at index ${arrayIndex}`);
+            array.splice(arrayIndex, 1);
+            console.log(`Removed from array at index ${arrayIndex}`);
         } else {
-          console.log(`Item not found in array`);
+            console.log(`Item not found in array`);
         }
         if (oldestItem && oldestItem.destroy) {
-          oldestItem.destroy();
-          console.log(`Oldest ${oldestItem.objectType} destroyed (visual cleanup complete)`);
+            oldestItem.destroy();
+            console.log(
+                `Oldest ${oldestItem.objectType} destroyed (visual cleanup complete)`
+            );
         }
-        console.log(`Oldest ${oldestItem.objectType} removed from group after fade. Group size after: ${group.getLength()}`);
-      }
-    });
-  } else {
-    // No alpha property, remove immediately
-    const removeSuccess = group.remove(oldestItem, true, true);
-    console.log(`Group.remove() success: ${removeSuccess}`);
-    const arrayIndex = array.indexOf(oldestItem);
-    if (arrayIndex > -1) {
-      array.splice(arrayIndex, 1);
-      console.log(`Removed from array at index ${arrayIndex}`);
-    } else {
-      console.log(`Item not found in array`);
+        console.log(
+            `Oldest ${
+                oldestItem.objectType
+            } removed from group immediately. Group size after: ${group.getLength()}`
+        );
     }
-    if (oldestItem && oldestItem.destroy) {
-      oldestItem.destroy();
-      console.log(`Oldest ${oldestItem.objectType} destroyed (visual cleanup complete)`);
-    }
-    console.log(`Oldest ${oldestItem.objectType} removed from group immediately. Group size after: ${group.getLength()}`);
-  }
-  return true;
+    return true;
 }
 
-
 function setupCanvas() {
-  // No Phaser background image, keep canvas transparent
-  if (this.video) {
-    this.video.destroy();
-    this.video = null;
-  }
+    // No Phaser background image, keep canvas transparent
+    if (this.video) {
+        this.video.destroy();
+        this.video = null;
+    }
 }
 
 // Function to fetch pledge data from server
 function addCorals() {
-  this.coralGroup = this.add.group();
-  this.isAnyEntryActive = false; // Master flag to prevent ANY entries while something is animating
+    this.coralGroup = this.add.group();
+    this.isAnyEntryActive = false; // Master flag to prevent ANY entries while something is animating
 
-      // Create initial 6 corals immediately (planted, no entry animation)
-  console.log('Creating initial corals directly planted...');
-  for (let i = 0; i < MAX_CORALS; i++) {
-    createInitialCoral.call(this, i);
-  }
+    // Create initial 6 corals immediately (planted, no entry animation)
+    console.log("Creating initial corals directly planted...");
+    for (let i = 0; i < MAX_CORALS; i++) {
+        createInitialCoral.call(this, i);
+    }
 }
 
 // Function to create initial corals directly in planted positions without entry animation
 function createInitialCoral(index) {
-  // Always render tempCoral, even if pledgeData is empty
-  // Use tempCoral images for initial corals (support single or multiple)
-  const tempCoralKeys = [];
-  // Check how many tempCoral images are loaded (assume at least tempCoral1)
-  let i = 1;
-  while (this.textures.exists(`tempCoral${i}`)) {
-    tempCoralKeys.push(`tempCoral${i}`);
-    i++;
-  }
-  if (tempCoralKeys.length === 0) {
-    tempCoralKeys.push('tempCoral1'); // fallback if only one
-  }
-  // ...rest of function unchanged...
-  const coralPosition = CORAL_POSITIONS[index % CORAL_POSITIONS.length];
-  const aquariumContainer = document.getElementById('aquarium-container');
-  const aquariumWidth = aquariumContainer ? aquariumContainer.clientWidth : window.innerWidth;
-  const aquariumHeight = aquariumContainer ? aquariumContainer.clientHeight : window.innerHeight;
-  const finalX = coralPosition.x * aquariumWidth + (coralPosition.tiltOffsetX || 0);
-  const finalY = coralPosition.y * aquariumHeight + (coralPosition.tiltOffsetY || 0);
-  console.log(`Creating initial coral ${index + 1} at position ${finalX}, ${finalY}`);
-  let coral;
-  const textureKey = tempCoralKeys[index % tempCoralKeys.length];
-  // Use CORAL_POSITIONS size property for tempCoral images
-  const baseScale = coralPosition.size || 1.4;
-  try {
-    coral = this.add.sprite(finalX, finalY, textureKey).setScale(0.1); // Start small for grow animation
-    coral.baseScale = baseScale;
-    coral.baseAlpha = 1.0;
-    coral.setPostPipeline('WigglePostFX');
-    // Animate scale up to baseScale
-    this.tweens.add({
-      targets: coral,
-      scale: baseScale,
-      duration: 1800,
-      ease: 'Sine.easeOut'
-    });
-  } catch (error) {
-    console.warn(`Coral image ${textureKey} failed to load, using fallback`);
-    const colors = [0xff6b6b, 0x4ecdc4, 0x45b7d1, 0xf9ca24, 0xf0932b, 0xeb4d4b];
-    coral = this.add.circle(finalX, finalY, 25, colors[index % colors.length]);
-    coral.baseScale = 1.0;
-    coral.baseAlpha = 1.0;
-  }
-  // REMOVE pledgeData assignment for tempCoral initial corals
-  // coral.pledgeData = pledge; // No pledge for tempCoral visuals
-  coral.objectType = 'coral';
-  coral.isPlanted = true;
-  coral.phase = 'planted';
-  coral.swayTime = Math.random() * Math.PI * 2;
-  coral.bobTime = Math.random() * Math.PI * 2;
-  coral.originalX = coral.x;
-  coral.originalY = coral.y;
-  // Set depth from CORAL_POSITIONS z property
-  coral.setDepth(coralPosition.z || 5);
-  // Assign fixed random movement parameters for smooth animation
-  coral.swaySpeed = Phaser.Math.FloatBetween(0.7, 1.1);
-  coral.bobSpeed = Phaser.Math.FloatBetween(0.9, 1.2);
-  coral.primarySwayAmp = Phaser.Math.FloatBetween(3.5, 5.5);
-  coral.secondarySwayFreq = Phaser.Math.FloatBetween(1.5, 2.1);
-  coral.secondarySwayAmp = Phaser.Math.FloatBetween(1.0, 2.2);
-  coral.tertiarySwayFreq = Phaser.Math.FloatBetween(0.7, 1.1);
-  coral.tertiarySwayAmp = Phaser.Math.FloatBetween(1.2, 2.5);
-  coral.primaryBobFreq = Phaser.Math.FloatBetween(1.0, 1.2);
-  coral.primaryBobAmp = Phaser.Math.FloatBetween(1.0, 2.0);
-  coral.secondaryBobFreq = Phaser.Math.FloatBetween(1.5, 2.2);
-  coral.secondaryBobAmp = Phaser.Math.FloatBetween(0.5, 1.2);
-  coral.tiltFreq = Phaser.Math.FloatBetween(0.7, 1.1);
-  coral.tiltAmp = Phaser.Math.FloatBetween(0.07, 0.12);
-  coral.scaleFreq = Phaser.Math.FloatBetween(1.1, 1.5);
-  coral.scaleAmp = Phaser.Math.FloatBetween(0.015, 0.035);
-  coral.alphaFreq = Phaser.Math.FloatBetween(0.6, 0.9);
-  coral.alphaAmp = Phaser.Math.FloatBetween(0.08, 0.13);
-  coral.tintFreq = Phaser.Math.FloatBetween(0.4, 0.7);
-  coral.tintStrength = Phaser.Math.FloatBetween(0.12, 0.18);
-  // Limits
-  coral.MIN_X = 80;
-  coral.MAX_X = window.innerWidth - 80;
-  coral.MIN_Y = 50;
-  coral.MAX_Y = window.innerHeight * 0.5;
-
-  coral.tiltOffsetX = coralPosition.tiltOffsetX || 0;
-  coral.tiltOffsetY = coralPosition.tiltOffsetY || 0;
-
-  // Set rotation from CORAL_POSITIONS tilt property (degrees to radians)
-  if (typeof coralPosition.tilt === 'number' && coral.setRotation) {
-    coral.setRotation(Phaser.Math.DegToRad(coralPosition.tilt));
-  }
-
-  if (this.coralGroup.getLength() >= MAX_CORALS) {
-    if (coral) {
-      removeOldestItem.call(this, this.coralGroup, this.corals);
+    // Always render tempCoral, even if pledgeData is empty
+    // Use tempCoral images for initial corals (support single or multiple)
+    const tempCoralKeys = [];
+    // Check how many tempCoral images are loaded (assume at least tempCoral1)
+    let i = 1;
+    while (this.textures.exists(`tempCoral${i}`)) {
+        tempCoralKeys.push(`tempCoral${i}`);
+        i++;
     }
-  }
-  this.coralGroup.add(coral);
-  this.corals.push(coral);
-  this.validateGroupSizes();
-  startCoralBubbles.call(this, coral);
-  console.log(`Initial coral created. Total corals: ${this.corals.length}`);
+    if (tempCoralKeys.length === 0) {
+        tempCoralKeys.push("tempCoral1"); // fallback if only one
+    }
+    // ...rest of function unchanged...
+    const coralPosition = CORAL_POSITIONS[index % CORAL_POSITIONS.length];
+    const aquariumContainer = document.getElementById("aquarium-container");
+    const aquariumWidth = aquariumContainer
+        ? aquariumContainer.clientWidth
+        : window.innerWidth;
+    const aquariumHeight = aquariumContainer
+        ? aquariumContainer.clientHeight
+        : window.innerHeight;
+    const finalX =
+        coralPosition.x * aquariumWidth + (coralPosition.tiltOffsetX || 0);
+    const finalY =
+        coralPosition.y * aquariumHeight + (coralPosition.tiltOffsetY || 0);
+    console.log(
+        `Creating initial coral ${index + 1} at position ${finalX}, ${finalY}`
+    );
+    let coral;
+    const textureKey = tempCoralKeys[index % tempCoralKeys.length];
+    // Use CORAL_POSITIONS size property for tempCoral images
+    const baseScale = coralPosition.size || 1.4;
+    try {
+        coral = this.add.sprite(finalX, finalY, textureKey).setScale(0.1); // Start small for grow animation
+        coral.baseScale = baseScale;
+        coral.baseAlpha = 1.0;
+        coral.setPostPipeline("WigglePostFX");
+        // Animate scale up to baseScale
+        this.tweens.add({
+            targets: coral,
+            scale: baseScale,
+            duration: 1800,
+            ease: "Sine.easeOut",
+        });
+    } catch (error) {
+        console.warn(
+            `Coral image ${textureKey} failed to load, using fallback`
+        );
+        const colors = [
+            0xff6b6b, 0x4ecdc4, 0x45b7d1, 0xf9ca24, 0xf0932b, 0xeb4d4b,
+        ];
+        coral = this.add.circle(
+            finalX,
+            finalY,
+            25,
+            colors[index % colors.length]
+        );
+        coral.baseScale = 1.0;
+        coral.baseAlpha = 1.0;
+    }
+    // REMOVE pledgeData assignment for tempCoral initial corals
+    // coral.pledgeData = pledge; // No pledge for tempCoral visuals
+    coral.objectType = "coral";
+    coral.isPlanted = true;
+    coral.phase = "planted";
+    coral.swayTime = Math.random() * Math.PI * 2;
+    coral.bobTime = Math.random() * Math.PI * 2;
+    coral.originalX = coral.x;
+    coral.originalY = coral.y;
+    // Set depth from CORAL_POSITIONS z property
+    coral.setDepth(coralPosition.z || 5);
+    // Assign fixed random movement parameters for smooth animation
+    coral.swaySpeed = Phaser.Math.FloatBetween(0.7, 1.1);
+    coral.bobSpeed = Phaser.Math.FloatBetween(0.9, 1.2);
+    coral.primarySwayAmp = Phaser.Math.FloatBetween(3.5, 5.5);
+    coral.secondarySwayFreq = Phaser.Math.FloatBetween(1.5, 2.1);
+    coral.secondarySwayAmp = Phaser.Math.FloatBetween(1.0, 2.2);
+    coral.tertiarySwayFreq = Phaser.Math.FloatBetween(0.7, 1.1);
+    coral.tertiarySwayAmp = Phaser.Math.FloatBetween(1.2, 2.5);
+    coral.primaryBobFreq = Phaser.Math.FloatBetween(1.0, 1.2);
+    coral.primaryBobAmp = Phaser.Math.FloatBetween(1.0, 2.0);
+    coral.secondaryBobFreq = Phaser.Math.FloatBetween(1.5, 2.2);
+    coral.secondaryBobAmp = Phaser.Math.FloatBetween(0.5, 1.2);
+    coral.tiltFreq = Phaser.Math.FloatBetween(0.7, 1.1);
+    coral.tiltAmp = Phaser.Math.FloatBetween(0.07, 0.12);
+    coral.scaleFreq = Phaser.Math.FloatBetween(1.1, 1.5);
+    coral.scaleAmp = Phaser.Math.FloatBetween(0.015, 0.035);
+    coral.alphaFreq = Phaser.Math.FloatBetween(0.6, 0.9);
+    coral.alphaAmp = Phaser.Math.FloatBetween(0.08, 0.13);
+    coral.tintFreq = Phaser.Math.FloatBetween(0.4, 0.7);
+    coral.tintStrength = Phaser.Math.FloatBetween(0.12, 0.18);
+    // Limits
+    coral.MIN_X = 80;
+    coral.MAX_X = window.innerWidth - 80;
+    coral.MIN_Y = 50;
+    coral.MAX_Y = window.innerHeight * 0.5;
+
+    coral.tiltOffsetX = coralPosition.tiltOffsetX || 0;
+    coral.tiltOffsetY = coralPosition.tiltOffsetY || 0;
+
+    // Set rotation from CORAL_POSITIONS tilt property (degrees to radians)
+    if (typeof coralPosition.tilt === "number" && coral.setRotation) {
+        coral.setRotation(Phaser.Math.DegToRad(coralPosition.tilt));
+    }
+
+    if (this.coralGroup.getLength() >= MAX_CORALS) {
+        if (coral) {
+            removeOldestItem.call(this, this.coralGroup, this.corals);
+        }
+    }
+    this.coralGroup.add(coral);
+    this.corals.push(coral);
+    this.validateGroupSizes();
+    startCoralBubbles.call(this, coral);
+    console.log(`Initial coral created. Total corals: ${this.corals.length}`);
 }
 
+// corals entry animation
 function spawnSingleCoral(customTextureKey) {
-  if (pledgeData.length === 0) return;
-  const coralPledges = pledgeData.filter(pledge => pledge.type === 'coral');
-  if (coralPledges.length === 0) return;
-  console.log('Starting coral spawn sequence...');
-  // Use the most recent pledge (the one just pushed)
+  if (!pledgeData.length) return;
+
+  const coralPledges = pledgeData.filter(p => p.type === 'coral');
+  if (!coralPledges.length) return;
+
   const pledge = coralPledges[coralPledges.length - 1];
-  // Use custom texture if provided
   const slotIndex = currentCoralPositionIndex % CORAL_POSITIONS.length;
   const coralPosition = CORAL_POSITIONS[slotIndex];
-  // Calculate final position with tilt offsets using aquarium container size
-  const aquariumContainer = document.getElementById('aquarium-container');
-  const aquariumWidth = aquariumContainer ? aquariumContainer.clientWidth : window.innerWidth;
-  const aquariumHeight = aquariumContainer ? aquariumContainer.clientHeight : window.innerHeight;
-  const finalX = coralPosition.x * aquariumWidth + (coralPosition.tiltOffsetX || 0);
-  const finalY = coralPosition.y * aquariumHeight + (coralPosition.tiltOffsetY || 0);
-  const spawnX = -80;
-  const spawnY = aquariumHeight * 0.5;
+  const { finalX, finalY, spawnX, spawnY } = getFinalPosition(coralPosition);
+
   const textureKey = customTextureKey || pledge.textureKey || `coral${pledge.coralId}`;
-  // --- ENTRY ANIMATION ---
-  // Use CORAL_POSITIONS.size directly for baseScale (no multiplier)
   const baseScale = coralPosition.size || 0.25;
-  // Entry bubble is larger and animates with a gentle pulse
-  const entryBubbleStartScale = baseScale * 0.32;
-  const entryBubbleEndScale = baseScale * 0.44;
-  const bubble = this.add.sprite(spawnX, spawnY, 'bubble_anim', 0).setScale(entryBubbleStartScale);
-  bubble.alpha = 0;
-  bubble.setDepth(20);
-  this.tweens.add({ targets: bubble, alpha: 1, duration: 500, ease: "Linear" });
-  let coral;
-  try {
-    coral = this.add.sprite(spawnX, spawnY, textureKey).setScale(0.1); // Start small, stay small during entry
-    coral.baseScale = baseScale;
-    coral.baseAlpha = 1.0;
-    coral.setPostPipeline('WigglePostFX');
-  } catch (error) {
-    console.warn(`Coral image ${textureKey} failed to load, using fallback`);
-    const colors = [0xff6b6b, 0x4ecdc4, 0x45b7d1, 0xf9ca24, 0xf0932b, 0xeb4d4b];
-    coral = this.add.circle(spawnX, spawnY, 25, colors[pledge.coralId - 1] || 0xff6b6b);
-    coral.baseScale = 1.0;
-    coral.baseAlpha = 1.0;
-  }
-  coral.alpha = 0;
-  coral.pledgeData = pledge;
-  coral.objectType = 'coral';
-  coral.setDepth(coralPosition.z || 5);
-  // Assign fixed random movement parameters for smooth animation
-  coral.swaySpeed = Phaser.Math.FloatBetween(0.7, 1.1);
-  coral.bobSpeed = Phaser.Math.FloatBetween(0.9, 1.2);
-  coral.primarySwayAmp = Phaser.Math.FloatBetween(3.5, 5.5);
-  coral.secondarySwayFreq = Phaser.Math.FloatBetween(1.5, 2.1);
-  coral.secondarySwayAmp = Phaser.Math.FloatBetween(1.0, 2.2);
-  coral.tertiarySwayFreq = Phaser.Math.FloatBetween(0.7, 1.1);
-  coral.tertiarySwayAmp = Phaser.Math.FloatBetween(1.2, 2.5);
-  coral.primaryBobFreq = Phaser.Math.FloatBetween(1.0, 1.2);
-  coral.primaryBobAmp = Phaser.Math.FloatBetween(1.0, 2.0);
-  coral.secondaryBobFreq = Phaser.Math.FloatBetween(1.5, 2.2);
-  coral.secondaryBobAmp = Phaser.Math.FloatBetween(0.5, 1.2);
-  coral.tiltFreq = Phaser.Math.FloatBetween(0.7, 1.1);
-  coral.tiltAmp = Phaser.Math.FloatBetween(0.07, 0.12);
-  coral.scaleFreq = Phaser.Math.FloatBetween(1.1, 1.5);
-  coral.scaleAmp = Phaser.Math.FloatBetween(0.015, 0.035);
-  coral.alphaFreq = Phaser.Math.FloatBetween(0.6, 0.9);
-  coral.alphaAmp = Phaser.Math.FloatBetween(0.08, 0.13);
-  coral.tintFreq = Phaser.Math.FloatBetween(0.4, 0.7);
-  coral.tintStrength = Phaser.Math.FloatBetween(0.12, 0.18);
-  // Limits
-  coral.MIN_X = 80;
-  coral.MAX_X = window.innerWidth - 80;
-  coral.MIN_Y = 50;
-  coral.MAX_Y = window.innerHeight * 0.5;
-  coral.tiltOffsetX = coralPosition.tiltOffsetX || 0;
-  coral.tiltOffsetY = coralPosition.tiltOffsetY || 0;
+
+  const bubble = createBubble.call(this, spawnX, spawnY, coralPosition.z || 5);
+  const coral = createCoral.call(this, textureKey, spawnX, spawnY, pledge, baseScale);
+
+  applyCoralAnimationConfig(coral);
 
   if (this.coralGroup.getLength() >= MAX_CORALS) {
-    if (coral) {
-      console.log(`At coral limit (${this.coralGroup.getLength()}/${MAX_CORALS}), removing oldest`);
-      removeOldestItem.call(this, this.coralGroup, this.corals);
-    }
+    removeOldestItem.call(this, this.coralGroup, this.corals);
   }
+
   this.coralGroup.add(coral);
   this.corals.push(coral);
-  console.log(`Added new coral. Group size now: ${this.coralGroup.getLength()}, Array size: ${this.corals.length}, MAX_CORALS: ${MAX_CORALS}`);
   this.validateGroupSizes();
+
   setTimeout(() => {
-    if (coral && !coral.shouldDestroy) {
+    if (!coral.shouldDestroy) {
       this.tweens.add({ targets: coral, alpha: 0.9, duration: 1200, ease: "Linear" });
     }
   }, 200);
-  // Entry path
-  const controlX = (spawnX + finalX) / 2;
-  const controlY = Math.max(spawnY, finalY) + Math.abs(finalY - spawnY) * 0.6 + 100;
-  const path = {
-    getPoint: (t) => {
-      const x = (1 - t) * (1 - t) * spawnX + 2 * (1 - t) * t * controlX + t * t * finalX;
-      const y = (1 - t) * (1 - t) * spawnY + 2 * (1 - t) * t * controlY + t * t * finalY;
-      return { x, y };
-    }
+
+  const path = createBezierPath(spawnX, spawnY, finalX, finalY);
+  startCoralTween.call(this, { coral, bubble, path, finalX, finalY, baseScale, coralPosition, textureKey });
+}
+
+function getFinalPosition(coralPosition) {
+  const container = document.getElementById('aquarium-container');
+  const width = container?.clientWidth || window.innerWidth;
+  const height = container?.clientHeight || window.innerHeight;
+
+  return {
+    finalX: coralPosition.x * width + (coralPosition.tiltOffsetX || 0),
+    finalY: coralPosition.y * height + (coralPosition.tiltOffsetY || 0),
+    spawnX: -80,
+    spawnY: height * 0.5
   };
-  const duration = 3500;
+}
+
+function createBubble(x, y, coralDepth) {
+  const bubbleStartScale = 0.18; // fixed bubble size
+  const bubble = this.add.sprite(x, y, 'bubble_anim', 0)
+    .setScale(bubbleStartScale)
+    .setAlpha(0)
+    .setDepth(999); // keep bubble behind coral
+
+  this.tweens.add({ targets: bubble, alpha: 1, duration: 500, ease: "Linear" });
+  return bubble;
+}
+
+function createCoral(textureKey, x, y, pledge, scale) {
+  let coral;
+  try {
+    coral = this.add.sprite(x, y, textureKey).setScale(0.1); // small start scale
+    coral.setPostPipeline('WigglePostFX');
+  } catch {
+    const colors = [0xff6b6b, 0x4ecdc4, 0x45b7d1, 0xf9ca24, 0xf0932b, 0xeb4d4b];
+    coral = this.add.circle(x, y, 25, colors[pledge.coralId - 1] || 0xff6b6b);
+  }
+
+  Object.assign(coral, {
+    baseScale: scale,
+    baseAlpha: 1.0,
+    pledgeData: pledge,
+    objectType: 'coral',
+    depth: 5,
+    alpha: 0,
+    isPlanted: false,
+    phase: 'entry'
+  });
+
+  return coral;
+}
+
+function applyCoralAnimationConfig(coral) {
+  Object.assign(coral, {
+    swaySpeed: 0.9,
+    bobSpeed: 1.0,
+    primarySwayAmp: 4.5,
+    secondarySwayFreq: 1.8,
+    secondarySwayAmp: 1.6,
+    tertiarySwayFreq: 0.9,
+    tertiarySwayAmp: 1.8,
+    primaryBobFreq: 1.1,
+    primaryBobAmp: 1.5,
+    secondaryBobFreq: 1.8,
+    secondaryBobAmp: 0.8,
+    tiltFreq: 0.9,
+    tiltAmp: 0.1,
+    scaleFreq: 1.3,
+    scaleAmp: 0.025,
+    alphaFreq: 0.8,
+    alphaAmp: 0.1,
+    tintFreq: 0.6,
+    tintStrength: 0.15,
+    MIN_X: 80,
+    MAX_X: window.innerWidth - 80,
+    MIN_Y: 50,
+    MAX_Y: window.innerHeight * 0.5
+  });
+}
+
+function createBezierPath(startX, startY, endX, endY) {
+  const controlX = (startX + endX) / 2;
+  const controlY = Math.max(startY, endY) + Math.abs(endY - startY) * 0.6 + 100;
+
+  return {
+    getPoint: (t) => ({
+      x: (1 - t) * (1 - t) * startX + 2 * (1 - t) * t * controlX + t * t * endX,
+      y: (1 - t) * (1 - t) * startY + 2 * (1 - t) * t * controlY + t * t * endY
+    })
+  };
+}
+
+function startCoralTween({ coral, bubble, path, finalX, finalY, baseScale, coralPosition, textureKey }) {
   let tweenObj = { t: 0 };
+  const bubbleStartScale = 0.18;
+  const bubbleEndScale = 0.28;
+
   this.tweens.add({
     targets: tweenObj,
     t: 1,
-    duration: duration,
+    duration: 3500,
     ease: "Sine.easeInOut",
     onUpdate: () => {
       const pos = path.getPoint(tweenObj.t);
-      bubble.x = pos.x;
-      bubble.y = pos.y;
       coral.x = pos.x;
       coral.y = pos.y;
-      // Entry bubble animates with a gentle pulse (not a grow-to-big effect)
-      if (bubble.setScale) {
-        // Pulse between start and end scale with a sine wave
-        const pulse = Math.sin(tweenObj.t * Math.PI) * 0.5 + 0.5; // 0 to 1
-        const bubbleScale = entryBubbleStartScale + (entryBubbleEndScale - entryBubbleStartScale) * pulse;
-        bubble.setScale(bubbleScale);
-      }
-      // coral stays at 0.1 scale during entry
+      bubble.x = pos.x;
+      bubble.y = pos.y;
+
+      const pulse = Math.sin(tweenObj.t * Math.PI) * 0.5 + 0.5;
+      const bubbleScale = bubbleStartScale + (bubbleEndScale - bubbleStartScale) * pulse;
+      bubble.setScale(bubbleScale);
     },
     onComplete: () => {
       bubble.play('bubble_pop');
-      console.log(`Coral reached final position (${coral.x}, ${coral.y}) - bubble popping`);
       bubble.on('animationcomplete', () => {
         bubble.destroy();
-        console.log('Entry bubble destroyed');
-        // Move coral to final position with tilt offsets
         coral.x = finalX;
         coral.y = finalY;
         coral.originalX = finalX;
         coral.originalY = finalY;
-        // Set rotation from CORAL_POSITIONS tilt property (degrees to radians)
-        if (typeof coralPosition.tilt === 'number' && coral.setRotation) {
+
+        if (typeof coralPosition.tilt === 'number') {
           coral.setRotation(Phaser.Math.DegToRad(coralPosition.tilt));
         }
+
+        coral.setDepth(coralPosition.z || 5);
         coral.isPlanted = true;
         coral.phase = 'planted';
-        // Now grow coral to baseScale at planted position, with a short delay for smoothness
-        // Grow coral smoothly from current scale to baseScale
+
         if (textureKey.startsWith('coral_custom_')) {
-          // Animate display size for custom corals using CORAL_POSITIONS size config
-          const targetWidth = window.innerWidth * (coralPosition.size || 0.3);
-          const targetHeight = targetWidth; // keep square
-          const startSize = Math.max(targetWidth * 0.04, 8); // start at 4% of target size, min 8px
+          const screenWidth = window.innerWidth;
+          const finalSize = screenWidth * (coralPosition.size || 0.25);
+          const startSize = finalSize * 0.1;
+
           coral.setDisplaySize(startSize, startSize);
           coral.alpha = 0.9;
+
           this.tweens.add({
             targets: coral,
-            displayWidth: targetWidth,
-            displayHeight: targetHeight,
+            displayWidth: finalSize,
+            displayHeight: finalSize,
             duration: 2200,
             ease: 'Elastic.easeOut',
-            onUpdate: () => {
-              coral.alpha = 0.9;
-            },
             onComplete: () => {
-              coral.setDisplaySize(targetWidth, targetHeight); // snap to final size
-              console.log('Coral planted successfully');
+              coral.setDisplaySize(finalSize, finalSize);
               startCoralBubbles.call(this, coral);
               currentCoralPositionIndex++;
             }
           });
         } else {
+          const startScale = baseScale * 0.1;
+          coral.setScale(startScale);
+
           this.tweens.add({
             targets: coral,
             scale: baseScale,
             duration: 1500,
-            ease: 'Sine.easeOut',
-            onStart: () => {
-              coral.alpha = 0.9;
-            },
+            ease: 'Elastic.easeOut',
             onComplete: () => {
-              console.log('Coral planted successfully');
               startCoralBubbles.call(this, coral);
               currentCoralPositionIndex++;
             }
@@ -629,595 +742,717 @@ function spawnSingleCoral(customTextureKey) {
   });
 }
 
-function addNameBubbles() {
-  console.log('addNameBubbles function called');
-  this.nameBubbleGroup = this.add.group();
+// edn
 
-  // Create initial 6 name bubbles immediately (floating, no entry animation)
-  console.log('Creating initial name bubbles directly floating...');
-  for (let i = 0; i < MAX_NAME_BUBBLES; i++) {
-    createInitialNameBubble.call(this, i);
-  }
+function addNameBubbles() {
+    console.log("addNameBubbles function called");
+    this.nameBubbleGroup = this.add.group();
+
+    // Create initial 6 name bubbles immediately (floating, no entry animation)
+    console.log("Creating initial name bubbles directly floating...");
+    for (let i = 0; i < MAX_NAME_BUBBLES; i++) {
+        createInitialNameBubble.call(this, i);
+    }
 }
 
 // Function to create initial name bubbles directly in floating positions without entry animation
 function createInitialNameBubble(index) {
-  let pledge;
-  if (pledgeData.length === 0) {
-    // No pledge data, create a placeholder pledge for temp bubble
-    pledge = {
-      id: `temp_${index}`,
-      text: '',
-      type: 'text',
-      image: null,
-      textureKey: null
-    };
-  } else {
-    let pledgesToUse = pledgeData.filter(pledge => pledge.type === 'text');
-    if (pledgesToUse.length === 0) {
-      console.log('No text pledges found for initial bubbles, using any pledge.');
-      pledgesToUse = pledgeData; // Fallback to all pledges
-    }
-    if (pledgesToUse.length === 0) {
-      // Still no pledges, fallback to placeholder
-      pledge = {
-        id: `temp_${index}`,
-        text: '',
-        type: 'text',
-        image: null,
-        textureKey: null
-      };
+    let pledge;
+    if (pledgeData.length === 0) {
+        // No pledge data, create a placeholder pledge for temp bubble
+        pledge = {
+            id: `temp_${index}`,
+            text: "",
+            type: "text",
+            image: null,
+            textureKey: null,
+        };
     } else {
-      pledge = Phaser.Utils.Array.GetRandom(pledgesToUse);
+        let pledgesToUse = pledgeData.filter(
+            (pledge) => pledge.type === "text"
+        );
+        if (pledgesToUse.length === 0) {
+            console.log(
+                "No text pledges found for initial bubbles, using any pledge."
+            );
+            pledgesToUse = pledgeData; // Fallback to all pledges
+        }
+        if (pledgesToUse.length === 0) {
+            // Still no pledges, fallback to placeholder
+            pledge = {
+                id: `temp_${index}`,
+                text: "",
+                type: "text",
+                image: null,
+                textureKey: null,
+            };
+        } else {
+            pledge = Phaser.Utils.Array.GetRandom(pledgesToUse);
+        }
     }
-  }
-  createSingleInitialNameBubble.call(this, pledge, index);
+    createSingleInitialNameBubble.call(this, pledge, index);
 }
 
 function createSingleInitialNameBubble(pledge, index) {
-  // Use preloaded tempBubble keys for each bubble
-  // Support single or multiple tempBubble images
-  const tempBubbleKeys = [];
-  let j = 1;
-  while (this.textures.exists(`tempBubble${j}`)) {
-    tempBubbleKeys.push(`tempBubble${j}`);
-    j++;
-  }
-  if (tempBubbleKeys.length === 0) {
-    tempBubbleKeys.push('tempBubble1'); // fallback if only one
-  }
-  // Pick a tempBubbleKey (for now, always use the first)
-  const tempBubbleKey = tempBubbleKeys[0];
+    // Use preloaded tempBubble keys for each bubble
+    // Support single or multiple tempBubble images
+    const tempBubbleKeys = [];
+    let j = 1;
+    while (this.textures.exists(`tempBubble${j}`)) {
+        tempBubbleKeys.push(`tempBubble${j}`);
+        j++;
+    }
+    if (tempBubbleKeys.length === 0) {
+        tempBubbleKeys.push("tempBubble1"); // fallback if only one
+    }
+    // Pick a tempBubbleKey (for now, always use the first)
+    const tempBubbleKey = tempBubbleKeys[0];
 
-  // Spread bubbles evenly across the width, in the upper 20-35% of the canvas
-  const total = MAX_NAME_BUBBLES;
-  const margin = 80;
-  const spread = (window.innerWidth - 2 * margin) / (total - 1);
-  const x = margin + index * spread;
-  const y = Phaser.Math.Between(window.innerHeight * 0.20, window.innerHeight * 0.35);
+    // Spread bubbles evenly across the width, in the upper 20-35% of the canvas
+    const total = MAX_NAME_BUBBLES;
+    const margin = 80;
+    const spread = (window.innerWidth - 2 * margin) / (total - 1);
+    const x = margin + index * spread;
+    const y = Phaser.Math.Between(
+        window.innerHeight * 0.2,
+        window.innerHeight * 0.35
+    );
 
-  console.log(`Creating initial name bubble ${index + 1} at position ${x}, ${y}`);
+    console.log(
+        `Creating initial name bubble ${index + 1} at position ${x}, ${y}`
+    );
 
-  // Create the name bubble sprite using tempBubbleKey
-  let nameBubble;
-  try {
-    nameBubble = this.add.sprite(x, y, tempBubbleKey).setScale(TEMP_BUBBLE_SCALE);
-  } catch (error) {
-    console.warn('Name bubble image failed to load, using fallback');
-    nameBubble = this.add.circle(x, y, 35 * TEMP_BUBBLE_SCALE / 0.60, 0x87ceeb, 0.7);
-  }
-
-  nameBubble.objectType = 'nameBubble';
-  nameBubble.pledgeData = pledge;
-
-  // Bubble-like wavy floating movement
-  nameBubble.floatTime = Math.random() * Math.PI * 2;
-  nameBubble.floatSpeed = Phaser.Math.FloatBetween(1.2, 2.2); // faster, more frequent
-  nameBubble.floatRadius = Phaser.Math.Between(18, 36);
-  nameBubble.baseX = x;
-  nameBubble.baseY = y;
-  nameBubble.floatPhase = Math.random() * Math.PI * 2;
-
-  // Check if we need to remove the oldest name bubble BEFORE adding the new one
-  let attempts = 0;
-  const maxAttempts = 10; // Safety check to prevent infinite loops
-
-  while (this.nameBubbleGroup.getLength() >= MAX_NAME_BUBBLES && attempts < maxAttempts) {
-    console.log(`At name bubble limit (${this.nameBubbleGroup.getLength()}/${MAX_NAME_BUBBLES}), removing oldest (attempt ${attempts + 1})`);
-    const removed = removeOldestItem.call(this, this.nameBubbleGroup, this.nameBubbles);
-
-    if (!removed) {
-      console.log(`Failed to remove name bubble, breaking loop`);
-      break;
+    // Create the name bubble sprite using tempBubbleKey
+    let nameBubble;
+    try {
+        nameBubble = this.add
+            .sprite(x, y, tempBubbleKey)
+            .setScale(TEMP_BUBBLE_SCALE);
+    } catch (error) {
+        console.warn("Name bubble image failed to load, using fallback");
+        nameBubble = this.add.circle(
+            x,
+            y,
+            (35 * TEMP_BUBBLE_SCALE) / 0.6,
+            0x87ceeb,
+            0.7
+        );
     }
 
-    attempts++;
-  }
+    nameBubble.objectType = "nameBubble";
+    nameBubble.pledgeData = pledge;
 
-  if (attempts >= maxAttempts) {
-    console.error(`Maximum name bubble removal attempts reached, something is wrong with group management`);
-  }
+    // Bubble-like wavy floating movement
+    nameBubble.floatTime = Math.random() * Math.PI * 2;
+    nameBubble.floatSpeed = Phaser.Math.FloatBetween(1.2, 2.2); // faster, more frequent
+    nameBubble.floatRadius = Phaser.Math.Between(18, 36);
+    nameBubble.baseX = x;
+    nameBubble.baseY = y;
+    nameBubble.floatPhase = Math.random() * Math.PI * 2;
 
-  // Add to groups
-  this.nameBubbleGroup.add(nameBubble);
-  this.nameBubbles.push(nameBubble);
+    // Check if we need to remove the oldest name bubble BEFORE adding the new one
+    let attempts = 0;
+    const maxAttempts = 10; // Safety check to prevent infinite loops
 
-  console.log(`Initial name bubble created. Total name bubbles: ${this.nameBubbles.length}`);
+    while (
+        this.nameBubbleGroup.getLength() >= MAX_NAME_BUBBLES &&
+        attempts < maxAttempts
+    ) {
+        console.log(
+            `At name bubble limit (${this.nameBubbleGroup.getLength()}/${MAX_NAME_BUBBLES}), removing oldest (attempt ${
+                attempts + 1
+            })`
+        );
+        const removed = removeOldestItem.call(
+            this,
+            this.nameBubbleGroup,
+            this.nameBubbles
+        );
+
+        if (!removed) {
+            console.log(`Failed to remove name bubble, breaking loop`);
+            break;
+        }
+
+        attempts++;
+    }
+
+    if (attempts >= maxAttempts) {
+        console.error(
+            `Maximum name bubble removal attempts reached, something is wrong with group management`
+        );
+    }
+
+    // Add to groups
+    this.nameBubbleGroup.add(nameBubble);
+    this.nameBubbles.push(nameBubble);
+
+    console.log(
+        `Initial name bubble created. Total name bubbles: ${this.nameBubbles.length}`
+    );
 }
 
 function spawnSingleNameBubble(customTextureKey) {
-  console.log(`Name bubble spawn attempt`);
+    console.log(`Name bubble spawn attempt`);
 
-  console.log('Name bubble spawn proceeding...');
-  if (pledgeData.length === 0) {
-    console.log('No pledge data available for name bubble');
-    return;
-  }
+    console.log("Name bubble spawn proceeding...");
+    if (pledgeData.length === 0) {
+        console.log("No pledge data available for name bubble");
+        return;
+    }
 
-  let pledgesToUse = pledgeData.filter(pledge => pledge.type === 'text');
-  if (pledgesToUse.length === 0) {
-    console.log('No text pledges found, using any random pledge');
-    pledgesToUse = pledgeData; // Fallback to all pledges
-  }
-  if (pledgesToUse.length === 0) return; // Still no pledges, exit
+    let pledgesToUse = pledgeData.filter((pledge) => pledge.type === "text");
+    if (pledgesToUse.length === 0) {
+        console.log("No text pledges found, using any random pledge");
+        pledgesToUse = pledgeData; // Fallback to all pledges
+    }
+    if (pledgesToUse.length === 0) return; // Still no pledges, exit
 
-  // Use the most recent pledge (the one just pushed)
-  const pledge = pledgesToUse[pledgesToUse.length - 1];
-  const textureKey = customTextureKey || pledge.textureKey || 'name_bubble';
-  createNameBubble.call(this, pledge, textureKey);
+    // Use the most recent pledge (the one just pushed)
+    const pledge = pledgesToUse[pledgesToUse.length - 1];
+    const textureKey = customTextureKey || pledge.textureKey || "name_bubble";
+    createNameBubble.call(this, pledge, textureKey);
 }
 
 function createNameBubble(pledge, textureKey) {
-  console.log('Starting name bubble entry...');
-  // Entry: randomly from left or right, following a more natural, slower, and lighter path
-  const finalX = Phaser.Math.Between(100, window.innerWidth - 100);
-  const finalY = Phaser.Math.Between(80, window.innerHeight * 0.4);
-  const fromLeft = Math.random() < 0.5;
-  const spawnX = fromLeft ? -60 : window.innerWidth + 60;
-  const spawnY = window.innerHeight * 0.45 + Phaser.Math.Between(-40, 40); // a bit lower and with some vertical randomness
-  // Create name bubble sprite
-  let nameBubble;
-  try {
-    nameBubble = this.add.sprite(spawnX, spawnY, textureKey).setScale(TEMP_BUBBLE_SCALE);
-    // Set display size to match temp bubble scale for custom uploaded images
-    if (textureKey.startsWith('name_bubble_custom_')) {
-      // Use the same logic as temp bubbles: base size * TEMP_BUBBLE_SCALE
-      // Assume base image is 400x400 (like tempBubble), so 400 * TEMP_BUBBLE_SCALE
-      const baseSize = 900 * TEMP_BUBBLE_SCALE;
-      nameBubble.setDisplaySize(baseSize, baseSize);
+    console.log("Starting name bubble entry...");
+    // Entry: randomly from left or right, following a more natural, slower, and lighter path
+    const finalX = Phaser.Math.Between(100, window.innerWidth - 100);
+    const finalY = Phaser.Math.Between(80, window.innerHeight * 0.4);
+    const fromLeft = Math.random() < 0.5;
+    const spawnX = fromLeft ? -60 : window.innerWidth + 60;
+    const spawnY = window.innerHeight * 0.45 + Phaser.Math.Between(-40, 40); // a bit lower and with some vertical randomness
+    // Create name bubble sprite
+    let nameBubble;
+    try {
+        nameBubble = this.add
+            .sprite(spawnX, spawnY, textureKey)
+            .setScale(TEMP_BUBBLE_SCALE);
+        // Set display size to match temp bubble scale for custom uploaded images
+        if (textureKey.startsWith("name_bubble_custom_")) {
+            // Use the same logic as temp bubbles: base size * TEMP_BUBBLE_SCALE
+            // Assume base image is 400x400 (like tempBubble), so 400 * TEMP_BUBBLE_SCALE
+            const baseSize = 900 * TEMP_BUBBLE_SCALE;
+            nameBubble.setDisplaySize(baseSize, baseSize);
+        }
+    } catch (error) {
+        console.warn("Name bubble image failed to load, using fallback");
+        nameBubble = this.add.circle(
+            spawnX,
+            spawnY,
+            (35 * TEMP_BUBBLE_SCALE) / 0.6,
+            0x87ceeb,
+            0.7
+        );
     }
-  } catch (error) {
-    console.warn('Name bubble image failed to load, using fallback');
-    nameBubble = this.add.circle(spawnX, spawnY, 35 * TEMP_BUBBLE_SCALE / 0.60, 0x87ceeb, 0.7);
-  }
-  nameBubble.alpha = 0;
-  nameBubble.objectType = 'nameBubble';
-  nameBubble.pledgeData = pledge;
-  // Remove oldest name bubble if at limit
-  let attempts = 0;
-  const maxAttempts = 10;
-  while (this.nameBubbleGroup.getLength() >= MAX_NAME_BUBBLES && attempts < maxAttempts) {
-    const removed = removeOldestItem.call(this, this.nameBubbleGroup, this.nameBubbles);
-    if (!removed) break;
-    attempts++;
-  }
-  if (attempts >= maxAttempts) {
-    console.error(`Maximum name bubble removal attempts reached, something is wrong with group management`);
-  }
-  this.nameBubbleGroup.add(nameBubble);
-  this.nameBubbles.push(nameBubble);
-  this.validateGroupSizes();
-  // Floating movement properties (match initial name bubbles)
-  // Pick a random float position in the upper 20-35% of the canvas
-  nameBubble.baseX = finalX;
-  nameBubble.baseY = finalY;
-  nameBubble.floatTime = Math.random() * Math.PI * 2;
-  nameBubble.floatSpeed = Phaser.Math.FloatBetween(1.2, 2.2);
-  nameBubble.floatRadius = Phaser.Math.Between(18, 36);
-  nameBubble.floatPhase = Math.random() * Math.PI * 2;
-  // Natural, lighter, and slower quadratic Bezier path (arched upward, direction-aware)
-  const controlX = fromLeft
-    ? spawnX + (finalX - spawnX) * 0.45 + Phaser.Math.Between(-30, 30)
-    : spawnX - (spawnX - finalX) * 0.45 + Phaser.Math.Between(-30, 30);
-  const controlY = spawnY - Phaser.Math.Between(40, 90); // arched upward
-  const path = {
-    getPoint: (t) => {
-      // Add a little horizontal and vertical wobble for more natural feel
-      const wobbleX = Math.sin(t * Math.PI * 2.5) * 8 * (1 - t);
-      const wobbleY = Math.cos(t * Math.PI * 2.5) * 6 * (1 - t);
-      const x = (1 - t) * (1 - t) * spawnX + 2 * (1 - t) * t * controlX + t * t * finalX + wobbleX;
-      const y = (1 - t) * (1 - t) * spawnY + 2 * (1 - t) * t * controlY + t * t * finalY + wobbleY;
-      return { x, y };
+    nameBubble.alpha = 0;
+    nameBubble.objectType = "nameBubble";
+    nameBubble.pledgeData = pledge;
+    // Remove oldest name bubble if at limit
+    let attempts = 0;
+    const maxAttempts = 10;
+    while (
+        this.nameBubbleGroup.getLength() >= MAX_NAME_BUBBLES &&
+        attempts < maxAttempts
+    ) {
+        const removed = removeOldestItem.call(
+            this,
+            this.nameBubbleGroup,
+            this.nameBubbles
+        );
+        if (!removed) break;
+        attempts++;
     }
-  };
-  const duration = Phaser.Math.Between(3800, 4800); // much slower and more variable
-  let tweenObj = { t: 0 };
-  this.tweens.add({
-    targets: tweenObj,
-    t: 1,
-    duration: duration,
-    ease: "Sine.easeInOut",
-    onUpdate: () => {
-      const pos = path.getPoint(tweenObj.t);
-      nameBubble.x = pos.x;
-      nameBubble.y = pos.y;
-      if (nameBubble.setScale && !textureKey.startsWith('name_bubble_custom_')) {
-        // Only wobble scale for normal bubbles, not custom images
-        const scaleWobble = TEMP_BUBBLE_SCALE + Math.sin(tweenObj.t * Math.PI * 2.2) * 0.012;
-        nameBubble.setScale(scaleWobble);
-      }
-    },
-    onStart: () => {
-      // Fade in as it starts moving
-      this.tweens.add({
-        targets: nameBubble,
-        alpha: 1,
-        duration: 1100,
-        ease: "Linear"
-      });
-    },
-    onComplete: () => {
-      // No bubble pop, just finish at destination
+    if (attempts >= maxAttempts) {
+        console.error(
+            `Maximum name bubble removal attempts reached, something is wrong with group management`
+        );
     }
-  });
+    this.nameBubbleGroup.add(nameBubble);
+    this.nameBubbles.push(nameBubble);
+    this.validateGroupSizes();
+    // Floating movement properties (match initial name bubbles)
+    // Pick a random float position in the upper 20-35% of the canvas
+    nameBubble.baseX = finalX;
+    nameBubble.baseY = finalY;
+    nameBubble.floatTime = Math.random() * Math.PI * 2;
+    nameBubble.floatSpeed = Phaser.Math.FloatBetween(1.2, 2.2);
+    nameBubble.floatRadius = Phaser.Math.Between(18, 36);
+    nameBubble.floatPhase = Math.random() * Math.PI * 2;
+    // Natural, lighter, and slower quadratic Bezier path (arched upward, direction-aware)
+    const controlX = fromLeft
+        ? spawnX + (finalX - spawnX) * 0.45 + Phaser.Math.Between(-30, 30)
+        : spawnX - (spawnX - finalX) * 0.45 + Phaser.Math.Between(-30, 30);
+    const controlY = spawnY - Phaser.Math.Between(40, 90); // arched upward
+    const path = {
+        getPoint: (t) => {
+            // Add a little horizontal and vertical wobble for more natural feel
+            const wobbleX = Math.sin(t * Math.PI * 2.5) * 8 * (1 - t);
+            const wobbleY = Math.cos(t * Math.PI * 2.5) * 6 * (1 - t);
+            const x =
+                (1 - t) * (1 - t) * spawnX +
+                2 * (1 - t) * t * controlX +
+                t * t * finalX +
+                wobbleX;
+            const y =
+                (1 - t) * (1 - t) * spawnY +
+                2 * (1 - t) * t * controlY +
+                t * t * finalY +
+                wobbleY;
+            return { x, y };
+        },
+    };
+    const duration = Phaser.Math.Between(3800, 4800); // much slower and more variable
+    let tweenObj = { t: 0 };
+    this.tweens.add({
+        targets: tweenObj,
+        t: 1,
+        duration: duration,
+        ease: "Sine.easeInOut",
+        onUpdate: () => {
+            const pos = path.getPoint(tweenObj.t);
+            nameBubble.x = pos.x;
+            nameBubble.y = pos.y;
+            if (
+                nameBubble.setScale &&
+                !textureKey.startsWith("name_bubble_custom_")
+            ) {
+                // Only wobble scale for normal bubbles, not custom images
+                const scaleWobble =
+                    TEMP_BUBBLE_SCALE +
+                    Math.sin(tweenObj.t * Math.PI * 2.2) * 0.012;
+                nameBubble.setScale(scaleWobble);
+            }
+        },
+        onStart: () => {
+            // Fade in as it starts moving
+            this.tweens.add({
+                targets: nameBubble,
+                alpha: 1,
+                duration: 1100,
+                ease: "Linear",
+            });
+        },
+        onComplete: () => {
+            // No bubble pop, just finish at destination
+        },
+    });
 }
 
 // Function to start bubble generation for planted corals
 function startCoralBubbles(coral) {
-  // Initialize bubble events array if not exists
-  if (!coral.bubbleEvents) {
-    coral.bubbleEvents = [];
-  }
+    // Initialize bubble events array if not exists
+    if (!coral.bubbleEvents) {
+        coral.bubbleEvents = [];
+    }
 
-  // Create a single bubble chain generator that creates bubbles in sequence
-  const bubbleEvent = this.time.addEvent({
-    delay: Phaser.Math.Between(500, 1000), // Initial delay before first bubble
-    callback: () => {
-      if (coral && coral.isPlanted && !coral.shouldDestroy) {
-        createBubbleChain.call(this, coral);
-      }
-    },
-    loop: true
-  });
+    // Create a single bubble chain generator that creates bubbles in sequence
+    const bubbleEvent = this.time.addEvent({
+        delay: Phaser.Math.Between(500, 1000), // Initial delay before first bubble
+        callback: () => {
+            if (coral && coral.isPlanted && !coral.shouldDestroy) {
+                createBubbleChain.call(this, coral);
+            }
+        },
+        loop: true,
+    });
 
-  // Store the event reference for cleanup
-  coral.bubbleEvents.push(bubbleEvent);
+    // Store the event reference for cleanup
+    coral.bubbleEvents.push(bubbleEvent);
 }
 
 // Function to create a chain of bubbles rising from corals
 function createBubbleChain(coral) {
-  // Increase the number of bubbles per chain: 8-14
-  const numBubblesInChain = Phaser.Math.Between(20, 30); // 8-14 bubbles per chain
-  const chainDelay = Phaser.Math.Between(50, 100); // Faster succession for visible chain effect
+    // Increase the number of bubbles per chain: 8-14
+    const numBubblesInChain = Phaser.Math.Between(20, 30); // 8-14 bubbles per chain
+    const chainDelay = Phaser.Math.Between(50, 100); // Faster succession for visible chain effect
 
-  console.log(`Creating coral bubble chain: ${numBubblesInChain} bubbles from coral at x=${coral.x}`);
+    console.log(
+        `Creating coral bubble chain: ${numBubblesInChain} bubbles from coral at x=${coral.x}`
+    );
 
-  for (let i = 0; i < numBubblesInChain; i++) {
-    this.time.delayedCall(i * chainDelay, () => {
-      if (coral && coral.isPlanted && !coral.shouldDestroy) {
-        createCoralBubble.call(this, coral, i);
-      }
-    });
-  }
+    for (let i = 0; i < numBubblesInChain; i++) {
+        this.time.delayedCall(i * chainDelay, () => {
+            if (coral && coral.isPlanted && !coral.shouldDestroy) {
+                createCoralBubble.call(this, coral, i);
+            }
+        });
+    }
 }
 
 // Function to create small bubbles rising from corals
 function createCoralBubble(coral, chainIndex = 0) {
-  const bubbleX = coral.x + Phaser.Math.Between(-10, 10); // Smaller random offset to keep bubbles closer to coral
-  const bubbleY = coral.y - Phaser.Math.Between(20, 40); // Start higher above the coral
+    // Use fixed position offset for all bubbles (no randomness)
+    const bubbleX = coral.x;
+    const bubbleY = coral.y - 30;
 
-  let bubble;
-  // Scale bubble size based on parent coral's baseScale (from CORAL_POSITIONS size)
-  const coralScale = coral.baseScale || 1.0;
-  const randomSize = Phaser.Math.FloatBetween(0.01, 0.018) * coralScale;
+    let bubble;
+    // Use a fixed bubble size based on parent coral's baseScale (from CORAL_POSITIONS size)
+    const coralScale = coral.baseScale || 1.0;
+    const fixedSize = 0.014 * coralScale; // Fixed size for all coral bubbles
 
-  try {
-    bubble = this.add.sprite(bubbleX, bubbleY, "bubble_overlay").setScale(randomSize);
-  } catch (error) {
-    // Fallback: smaller circle with random size
-    const radius = Phaser.Math.Between(2, 4) * coralScale;
-    bubble = this.add.circle(bubbleX, bubbleY, radius, 0x87ceeb, 0.6);
-  }
-
-  bubble.alpha = Phaser.Math.FloatBetween(0.4, 0.8); // Increased alpha range for better visibility
-  bubble.setDepth(15); // Higher depth to ensure bubbles appear above corals and other elements
-
-  // STRAIGHT UP: No side-to-side, just animate straight up
-  const riseHeight = Phaser.Math.Between(180, 320); // Longer rise height
-  const duration = Phaser.Math.Between(7000, 13000); // Much longer duration (7-13 seconds)
-
-  this.tweens.add({
-    targets: bubble,
-    y: bubble.y - riseHeight,
-    alpha: 0,
-    duration: duration,
-    ease: "Sine.easeOut",
-    // No onUpdate: bubbles go straight up
-    onComplete: () => {
-      bubble.destroy();
+    try {
+        bubble = this.add
+            .sprite(bubbleX, bubbleY, "bubble_overlay")
+            .setScale(fixedSize);
+    } catch (error) {
+        // Fallback: fixed size circle
+        const radius = 3 * coralScale;
+        bubble = this.add.circle(bubbleX, bubbleY, radius, 0x87ceeb, 0.6);
     }
-  });
 
-  this.coralBubblesGroup.add(bubble);
+    bubble.alpha = 0.7; // Fixed alpha for all coral bubbles
+    bubble.setDepth(15); // Higher depth to ensure bubbles appear above corals and other elements
+
+    // STRAIGHT UP: No side-to-side, just animate straight up
+    const riseHeight = Phaser.Math.Between(180, 320); // Longer rise height
+    const duration = Phaser.Math.Between(7000, 13000); // Much longer duration (7-13 seconds)
+
+    this.tweens.add({
+        targets: bubble,
+        y: bubble.y - riseHeight,
+        alpha: 0,
+        duration: duration,
+        ease: "Sine.easeOut",
+        // No onUpdate: bubbles go straight up
+        onComplete: () => {
+            bubble.destroy();
+        },
+    });
+
+    this.coralBubblesGroup.add(bubble);
 }
 
 // Function to add random ocean floor air bubbles
 function addOceanFloorBubbles() {
-  this.time.addEvent({
-    delay: Phaser.Math.Between(3000, 6000), // Less frequent bubble chains
-    callback: () => {
-      createOceanFloorBubbleChain.call(this);
-    },
-    loop: true
-  });
+    this.time.addEvent({
+        delay: Phaser.Math.Between(3000, 6000), // Less frequent bubble chains
+        callback: () => {
+            createOceanFloorBubbleChain.call(this);
+        },
+        loop: true,
+    });
 }
 
 // Function to create a chain of bubbles from ocean floor
 function createOceanFloorBubbleChain() {
-  const numBubblesInChain = Phaser.Math.Between(3, 6); // 3-6 bubbles per chain
-  const chainDelay = Phaser.Math.Between(150, 400); // Faster succession for more visible chain effect
-  const baseX = Phaser.Math.Between(50, window.innerWidth - 50); // Base position for chain
+    const numBubblesInChain = Phaser.Math.Between(3, 6); // 3-6 bubbles per chain
+    const chainDelay = Phaser.Math.Between(150, 400); // Faster succession for more visible chain effect
+    const baseX = Phaser.Math.Between(50, window.innerWidth - 50); // Base position for chain
 
-  console.log(`Creating ocean floor bubble chain: ${numBubblesInChain} bubbles at x=${baseX}`);
+    console.log(
+        `Creating ocean floor bubble chain: ${numBubblesInChain} bubbles at x=${baseX}`
+    );
 
-  for (let i = 0; i < numBubblesInChain; i++) {
-    this.time.delayedCall(i * chainDelay, () => {
-      createOceanFloorBubble.call(this, baseX, i);
-    });
-  }
+    for (let i = 0; i < numBubblesInChain; i++) {
+        this.time.delayedCall(i * chainDelay, () => {
+            createOceanFloorBubble.call(this, baseX, i);
+        });
+    }
 }
 
 // Function to create random air bubbles from ocean floor
 function createOceanFloorBubble(baseX = null, chainIndex = 0) {
-  // Use provided baseX for chain, or random position for individual bubbles
-  const bubbleX = baseX ? baseX + Phaser.Math.Between(-25, 25) : Phaser.Math.Between(50, window.innerWidth - 50);
-  const bubbleY = window.innerHeight - Phaser.Math.Between(20, 60); // Near bottom
+    // Use provided baseX for chain, or random position for individual bubbles
+    const bubbleX = baseX
+        ? baseX + Phaser.Math.Between(-25, 25)
+        : Phaser.Math.Between(50, window.innerWidth - 50);
+    const bubbleY = window.innerHeight - Phaser.Math.Between(20, 60); // Near bottom
 
-  let bubble;
-  const randomSize = Phaser.Math.FloatBetween(0.02, 0.06); // Smaller bubbles
+    let bubble;
+    const randomSize = Phaser.Math.FloatBetween(0.02, 0.06); // Smaller bubbles
 
-  try {
-    bubble = this.add.sprite(bubbleX, bubbleY, "bubble_overlay").setScale(randomSize);
-  } catch (error) {
-    // Fallback: small circle with random size
-    const radius = Phaser.Math.Between(1, 4);
-    bubble = this.add.circle(bubbleX, bubbleY, radius, 0x87ceeb, 0.7);
-  }
-
-  bubble.alpha = Phaser.Math.FloatBetween(0.3, 0.7); // Random transparency
-  bubble.setDepth(5); // Behind corals but above background
-
-  // Add unique floating properties for natural movement (more variation)
-  bubble.vx = Phaser.Math.FloatBetween(-0.018, 0.018);
-  bubble.vy = Phaser.Math.FloatBetween(-0.005, 0.005);
-  bubble.floatTime = Math.random() * Math.PI * 4; // Larger random start phase range
-  bubble.floatSpeed = Phaser.Math.FloatBetween(0.4, 1.8); // Wider individual float speed range
-  bubble.driftStrength = Phaser.Math.FloatBetween(0.2, 1.5); // Wider individual drift strength range
-  bubble.phaseOffsetX = Math.random() * Math.PI * 2; // Individual phase offset for X movement
-  bubble.phaseOffsetY = Math.random() * Math.PI * 2; // Individual phase offset for Y movement
-
-  // Animate bubble rising up with natural movement
-  const riseHeight = Phaser.Math.Between(window.innerHeight * 0.7, window.innerHeight * 1.1);
-  const duration = Phaser.Math.Between(8000, 15000); // Much longer duration (8-15 seconds)
-
-  this.tweens.add({
-    targets: bubble,
-    y: bubbleY - riseHeight,
-    alpha: 0,
-    duration: duration,
-    ease: "Sine.easeOut",
-    onUpdate: () => {
-      // Add individual natural floating movement with unique phase offsets
-      bubble.floatTime += 0.006 * bubble.floatSpeed;
-      const driftX = Math.sin((bubble.floatTime + bubble.phaseOffsetX) * 1.1) * bubble.driftStrength;
-      const driftY = Math.cos((bubble.floatTime + bubble.phaseOffsetY) * 0.7) * (bubble.driftStrength * 0.4);
-
-      bubble.x += bubble.vx + driftX;
-      bubble.y += bubble.vy + driftY * 0.08;
-
-      // Individual direction changes with varying probabilities
-      const changeChance = 0.003 + (Math.sin(bubble.floatTime * 0.2) * 0.002);
-      if (Math.random() < changeChance) {
-        bubble.vx += Phaser.Math.FloatBetween(-0.006, 0.006);
-        bubble.vy += Phaser.Math.FloatBetween(-0.003, 0.003);
-        bubble.vx = Phaser.Math.Clamp(bubble.vx, -0.020, 0.020);
-        bubble.vy = Phaser.Math.Clamp(bubble.vy, -0.008, 0.008);
-      }
-    },
-    onComplete: () => {
-      bubble.destroy();
+    try {
+        bubble = this.add
+            .sprite(bubbleX, bubbleY, "bubble_overlay")
+            .setScale(randomSize);
+    } catch (error) {
+        // Fallback: small circle with random size
+        const radius = Phaser.Math.Between(1, 4);
+        bubble = this.add.circle(bubbleX, bubbleY, radius, 0x87ceeb, 0.7);
     }
-  });
 
-  this.oceanFloorBubblesGroup.add(bubble);
+    bubble.alpha = Phaser.Math.FloatBetween(0.3, 0.7); // Random transparency
+    bubble.setDepth(5); // Behind corals but above background
+
+    // Add unique floating properties for natural movement (more variation)
+    bubble.vx = Phaser.Math.FloatBetween(-0.018, 0.018);
+    bubble.vy = Phaser.Math.FloatBetween(-0.005, 0.005);
+    bubble.floatTime = Math.random() * Math.PI * 4; // Larger random start phase range
+    bubble.floatSpeed = Phaser.Math.FloatBetween(0.4, 1.8); // Wider individual float speed range
+    bubble.driftStrength = Phaser.Math.FloatBetween(0.2, 1.5); // Wider individual drift strength range
+    bubble.phaseOffsetX = Math.random() * Math.PI * 2; // Individual phase offset for X movement
+    bubble.phaseOffsetY = Math.random() * Math.PI * 2; // Individual phase offset for Y movement
+
+    // Animate bubble rising up with natural movement
+    const riseHeight = Phaser.Math.Between(
+        window.innerHeight * 0.7,
+        window.innerHeight * 1.1
+    );
+    const duration = Phaser.Math.Between(8000, 15000); // Much longer duration (8-15 seconds)
+
+    this.tweens.add({
+        targets: bubble,
+        y: bubbleY - riseHeight,
+        alpha: 0,
+        duration: duration,
+        ease: "Sine.easeOut",
+        onUpdate: () => {
+            // Add individual natural floating movement with unique phase offsets
+            bubble.floatTime += 0.006 * bubble.floatSpeed;
+            const driftX =
+                Math.sin((bubble.floatTime + bubble.phaseOffsetX) * 1.1) *
+                bubble.driftStrength;
+            const driftY =
+                Math.cos((bubble.floatTime + bubble.phaseOffsetY) * 0.7) *
+                (bubble.driftStrength * 0.4);
+
+            bubble.x += bubble.vx + driftX;
+            bubble.y += bubble.vy + driftY * 0.08;
+
+            // Individual direction changes with varying probabilities
+            const changeChance =
+                0.003 + Math.sin(bubble.floatTime * 0.2) * 0.002;
+            if (Math.random() < changeChance) {
+                bubble.vx += Phaser.Math.FloatBetween(-0.006, 0.006);
+                bubble.vy += Phaser.Math.FloatBetween(-0.003, 0.003);
+                bubble.vx = Phaser.Math.Clamp(bubble.vx, -0.02, 0.02);
+                bubble.vy = Phaser.Math.Clamp(bubble.vy, -0.008, 0.008);
+            }
+        },
+        onComplete: () => {
+            bubble.destroy();
+        },
+    });
+
+    this.oceanFloorBubblesGroup.add(bubble);
 }
 
 // Function to add bubbles from random areas like coral bubbles
 function addRandomAreaBubbles() {
-  this.time.addEvent({
-    delay: Phaser.Math.Between(4000, 8000), // Less frequent chains
-    callback: () => {
-      createRandomAreaBubbleChain.call(this);
-    },
-    loop: true
-  });
+    this.time.addEvent({
+        delay: Phaser.Math.Between(4000, 8000), // Less frequent chains
+        callback: () => {
+            createRandomAreaBubbleChain.call(this);
+        },
+        loop: true,
+    });
 }
 
 // Function to create a chain of bubbles from random areas
 function createRandomAreaBubbleChain() {
-  const numBubblesInChain = Phaser.Math.Between(2, 5); // 2-5 bubbles per chain
-  const chainDelay = Phaser.Math.Between(200, 500); // Faster succession for visible chain effect
-  const baseX = Phaser.Math.Between(50, window.innerWidth - 50); // Base position for chain
-  const baseY = Phaser.Math.Between(window.innerHeight * 0.4, window.innerHeight - 50);
+    const numBubblesInChain = Phaser.Math.Between(2, 5); // 2-5 bubbles per chain
+    const chainDelay = Phaser.Math.Between(200, 500); // Faster succession for visible chain effect
+    const baseX = Phaser.Math.Between(50, window.innerWidth - 50); // Base position for chain
+    const baseY = Phaser.Math.Between(
+        window.innerHeight * 0.4,
+        window.innerHeight - 50
+    );
 
-  console.log(`Creating random area bubble chain: ${numBubblesInChain} bubbles at x=${baseX}, y=${baseY}`);
+    console.log(
+        `Creating random area bubble chain: ${numBubblesInChain} bubbles at x=${baseX}, y=${baseY}`
+    );
 
-  for (let i = 0; i < numBubblesInChain; i++) {
-    this.time.delayedCall(i * chainDelay, () => {
-      createRandomAreaBubble.call(this, baseX, baseY, i);
-    });
-  }
+    for (let i = 0; i < numBubblesInChain; i++) {
+        this.time.delayedCall(i * chainDelay, () => {
+            createRandomAreaBubble.call(this, baseX, baseY, i);
+        });
+    }
 }
 
 // Function to create bubbles from random areas across the screen
 function createRandomAreaBubble(baseX = null, baseY = null, chainIndex = 0) {
-  // Use provided base position for chain, or random position for individual bubbles
-  const bubbleX = baseX ? baseX + Phaser.Math.Between(-10, 10) : Phaser.Math.Between(50, window.innerWidth - 50);
-  const bubbleY = baseY ? baseY + Phaser.Math.Between(-8, 8) : Phaser.Math.Between(window.innerHeight * 0.4, window.innerHeight - 50);
+    // Use provided base position for chain, or random position for individual bubbles
+    const bubbleX = baseX
+        ? baseX + Phaser.Math.Between(-10, 10)
+        : Phaser.Math.Between(50, window.innerWidth - 50);
+    const bubbleY = baseY
+        ? baseY + Phaser.Math.Between(-8, 8)
+        : Phaser.Math.Between(
+              window.innerHeight * 0.4,
+              window.innerHeight - 50
+          );
 
-  let bubble;
-  // Make bubbles smaller and less transparent
-  const randomSize = Phaser.Math.FloatBetween(0.012, 0.025); // Smaller, more subtle bubbles
+    let bubble;
+    // Make bubbles smaller and less transparent
+    const randomSize = Phaser.Math.FloatBetween(0.012, 0.025); // Smaller, more subtle bubbles
 
-  try {
-    bubble = this.add.sprite(bubbleX, bubbleY, "bubble_overlay").setScale(randomSize);
-  } catch (error) {
-    // Fallback: small circle with random size
-    const radius = Phaser.Math.Between(1, 2);
-    bubble = this.add.circle(bubbleX, bubbleY, radius, 0x87ceeb, 0.8);
-  }
-
-  bubble.alpha = Phaser.Math.FloatBetween(0.7, 0.95); // Less transparent
-  bubble.setDepth(8); // Between ocean floor bubbles and coral bubbles
-
-  // STRAIGHT UP: No side-to-side, just animate straight up
-  const riseHeight = Phaser.Math.Between(120, 220); // Variable rise height
-  const duration = Phaser.Math.Between(6000, 10000); // 6-10 seconds
-
-  this.tweens.add({
-    targets: bubble,
-    y: bubble.y - riseHeight,
-    alpha: 0,
-    duration: duration,
-    ease: "Sine.easeOut",
-    // No onUpdate: bubbles go straight up
-    onComplete: () => {
-      bubble.destroy();
+    try {
+        bubble = this.add
+            .sprite(bubbleX, bubbleY, "bubble_overlay")
+            .setScale(randomSize);
+    } catch (error) {
+        // Fallback: small circle with random size
+        const radius = Phaser.Math.Between(1, 2);
+        bubble = this.add.circle(bubbleX, bubbleY, radius, 0x87ceeb, 0.8);
     }
-  });
 
-  this.randomAreaBubblesGroup.add(bubble);
+    bubble.alpha = Phaser.Math.FloatBetween(0.7, 0.95); // Less transparent
+    bubble.setDepth(8); // Between ocean floor bubbles and coral bubbles
+
+    // STRAIGHT UP: No side-to-side, just animate straight up
+    const riseHeight = Phaser.Math.Between(120, 220); // Variable rise height
+    const duration = Phaser.Math.Between(6000, 10000); // 6-10 seconds
+
+    this.tweens.add({
+        targets: bubble,
+        y: bubble.y - riseHeight,
+        alpha: 0,
+        duration: duration,
+        ease: "Sine.easeOut",
+        // No onUpdate: bubbles go straight up
+        onComplete: () => {
+            bubble.destroy();
+        },
+    });
+
+    this.randomAreaBubblesGroup.add(bubble);
 }
 
 function update(time, delta) {
-  const dt = delta / 1000;
+    const dt = delta / 1000;
 
-  // Periodic validation every 10 seconds to ensure limits are maintained
-  if (Math.floor(time / 1000) % 10 === 0 && time % 1000 < 50) {
-    this.validateGroupSizes();
-  }
-
-  // Update corals (floating behavior while falling, stationary when planted)
-  this.coralGroup.getChildren().forEach((coral) => {
-    if (coral.isPlanted && !coral.shouldDestroy) {
-      // --- REMOVE planted coral animation: keep coral at original position and rotation only ---
-      coral.x = coral.originalX;
-      coral.y = coral.originalY;
-      // Do NOT reset rotation here; keep the rotation set at planting
-      if (coral.setScale) {
-        const baseScale = coral.baseScale || 0.5;
-        if (!coral.baseScale) coral.baseScale = baseScale;
-        coral.setScale(baseScale);
-      }
-      if (coral.setAlpha) {
-        const baseAlpha = coral.baseAlpha || 1.0;
-        if (!coral.baseAlpha) coral.baseAlpha = baseAlpha;
-        coral.setAlpha(baseAlpha);
-      }
-      if (coral.setTint) {
-        coral.setTint(0xffffff);
-      }
+    // Periodic validation every 10 seconds to ensure limits are maintained
+    if (Math.floor(time / 1000) % 10 === 0 && time % 1000 < 50) {
+        this.validateGroupSizes();
     }
-  });
 
-  // --- ENHANCED coral bubble floating ---
-  if (this.coralBubblesGroup) {
-    this.coralBubblesGroup.getChildren().forEach((bubble) => {
-      bubble.floatTime += dt * Phaser.Math.FloatBetween(0.95, 1.1);
-      bubble.x += bubble.vx * dt * Phaser.Math.FloatBetween(12, 18) + Math.sin(bubble.floatTime * Phaser.Math.FloatBetween(1.7, 2.3)) * Phaser.Math.FloatBetween(0.2, 0.5);
-      bubble.vx += Math.cos(bubble.floatTime * Phaser.Math.FloatBetween(1.2, 1.8)) * Phaser.Math.FloatBetween(0.001, 0.003);
-      if (Math.abs(bubble.vx) > Phaser.Math.FloatBetween(0.018, 0.025)) {
-        bubble.vx *= 0.9;
-      }
+    // Update corals (floating behavior while falling, stationary when planted)
+    this.coralGroup.getChildren().forEach((coral) => {
+        if (coral.isPlanted && !coral.shouldDestroy) {
+            // --- REMOVE planted coral animation: keep coral at original position and rotation only ---
+            coral.x = coral.originalX;
+            coral.y = coral.originalY;
+            // Do NOT reset rotation here; keep the rotation set at planting
+            if (coral.setScale) {
+                const baseScale = coral.baseScale || 0.5;
+                if (!coral.baseScale) coral.baseScale = baseScale;
+                coral.setScale(baseScale);
+            }
+            if (coral.setAlpha) {
+                const baseAlpha = coral.baseAlpha || 1.0;
+                if (!coral.baseAlpha) coral.baseAlpha = baseAlpha;
+                coral.setAlpha(baseAlpha);
+            }
+            if (coral.setTint) {
+                coral.setTint(0xffffff);
+            }
+        }
     });
-  }
 
-  // Update floating name bubbles with lively, bubble-like movement
-  if (this.nameBubbleGroup) {
-    const bubbles = this.nameBubbleGroup.getChildren();
-    for (let i = 0; i < bubbles.length; i++) {
-      const a = bubbles[i];
-      // Bubble-like wavy floating (horizontal and vertical)
-      a.floatTime += dt * a.floatSpeed;
-      a.x = a.baseX + Math.sin(a.floatTime + a.floatPhase) * a.floatRadius;
-      a.y = a.baseY + Math.cos(a.floatTime * 0.8 + a.floatPhase) * (a.floatRadius * 0.7);
-      // Keep bubbles in upper part only
-      if (a.x < 60) a.x = 60;
-      if (a.x > window.innerWidth - 60) a.x = window.innerWidth - 60;
-      if (a.y < 30) a.y = 30;
-      if (a.y > window.innerHeight * 0.38) a.y = window.innerHeight * 0.38;
+    // --- ENHANCED coral bubble floating ---
+    if (this.coralBubblesGroup) {
+        this.coralBubblesGroup.getChildren().forEach((bubble) => {
+            bubble.floatTime += dt * Phaser.Math.FloatBetween(0.95, 1.1);
+            bubble.x +=
+                bubble.vx * dt * Phaser.Math.FloatBetween(12, 18) +
+                Math.sin(
+                    bubble.floatTime * Phaser.Math.FloatBetween(1.7, 2.3)
+                ) *
+                    Phaser.Math.FloatBetween(0.2, 0.5);
+            bubble.vx +=
+                Math.cos(
+                    bubble.floatTime * Phaser.Math.FloatBetween(1.2, 1.8)
+                ) * Phaser.Math.FloatBetween(0.001, 0.003);
+            if (Math.abs(bubble.vx) > Phaser.Math.FloatBetween(0.018, 0.025)) {
+                bubble.vx *= 0.9;
+            }
+        });
     }
-  }
 
-  // Ocean floor and random area bubbles are fully handled by their tween animations
-  // No additional update needed since movement is in tween onUpdate callbacks
+    // Update floating name bubbles with lively, bubble-like movement
+    if (this.nameBubbleGroup) {
+        const bubbles = this.nameBubbleGroup.getChildren();
+        for (let i = 0; i < bubbles.length; i++) {
+            const a = bubbles[i];
+            // Bubble-like wavy floating (horizontal and vertical)
+            a.floatTime += dt * a.floatSpeed;
+            a.x =
+                a.baseX + Math.sin(a.floatTime + a.floatPhase) * a.floatRadius;
+            a.y =
+                a.baseY +
+                Math.cos(a.floatTime * 0.8 + a.floatPhase) *
+                    (a.floatRadius * 0.7);
+            // Keep bubbles in upper part only
+            if (a.x < 60) a.x = 60;
+            if (a.x > window.innerWidth - 60) a.x = window.innerWidth - 60;
+            if (a.y < 30) a.y = 30;
+            if (a.y > window.innerHeight * 0.38)
+                a.y = window.innerHeight * 0.38;
+        }
+    }
+
+    // Ocean floor and random area bubbles are fully handled by their tween animations
+    // No additional update needed since movement is in tween onUpdate callbacks
 }
 
 // Validation function to ensure group sizes never exceed limits
 function validateGroupSizes() {
-  // Safely get group sizes, groups may not be initialized yet
-  const coralCount = this.coralGroup ? this.coralGroup.getLength() : 0;
-  const nameBubbleCount = this.nameBubbleGroup ? this.nameBubbleGroup.getLength() : 0;
+    // Safely get group sizes, groups may not be initialized yet
+    const coralCount = this.coralGroup ? this.coralGroup.getLength() : 0;
+    const nameBubbleCount = this.nameBubbleGroup
+        ? this.nameBubbleGroup.getLength()
+        : 0;
 
-  console.log(`Validating group sizes - Corals: ${coralCount}/${MAX_CORALS}, Name bubbles: ${nameBubbleCount}/${MAX_NAME_BUBBLES}`);
+    console.log(
+        `Validating group sizes - Corals: ${coralCount}/${MAX_CORALS}, Name bubbles: ${nameBubbleCount}/${MAX_NAME_BUBBLES}`
+    );
 
-  // Remove only one coral if over the limit (avoid infinite loop due to async removal)
-  if (this.coralGroup && this.coralGroup.getLength() > MAX_CORALS) {
-    console.warn(`Emergency coral removal! Group size: ${this.coralGroup.getLength()}`);
-    removeOldestItem.call(this, this.coralGroup, this.corals);
-  }
+    // Remove only one coral if over the limit (avoid infinite loop due to async removal)
+    if (this.coralGroup && this.coralGroup.getLength() > MAX_CORALS) {
+        console.warn(
+            `Emergency coral removal! Group size: ${this.coralGroup.getLength()}`
+        );
+        removeOldestItem.call(this, this.coralGroup, this.corals);
+    }
 
-  // Remove only one name bubble if over the limit (avoid infinite loop due to async removal)
-  if (this.nameBubbleGroup && this.nameBubbleGroup.getLength() > MAX_NAME_BUBBLES) {
-    console.warn(`Emergency name bubble removal! Group size: ${this.nameBubbleGroup.getLength()}`);
-    removeOldestItem.call(this, this.nameBubbleGroup, this.nameBubbles);
-  }
+    // Remove only one name bubble if over the limit (avoid infinite loop due to async removal)
+    if (
+        this.nameBubbleGroup &&
+        this.nameBubbleGroup.getLength() > MAX_NAME_BUBBLES
+    ) {
+        console.warn(
+            `Emergency name bubble removal! Group size: ${this.nameBubbleGroup.getLength()}`
+        );
+        removeOldestItem.call(this, this.nameBubbleGroup, this.nameBubbles);
+    }
 }
 
 function resizeGame() {
-  const winWidth = window.innerWidth;
-  const winHeight = window.innerHeight;
-  this.scale.resize(winWidth, winHeight);
-  // No background image to resize - handled by CSS
+    const winWidth = window.innerWidth;
+    const winHeight = window.innerHeight;
+    this.scale.resize(winWidth, winHeight);
+    // No background image to resize - handled by CSS
 }
 
 // Preload custom images for pledges
 async function preloadCustomPledgeImages(scene, callback) {
-  // Find all unique custom image URLs in pledgeData
-  const urls = [];
-  const keys = [];
-  pledgeData.forEach(pledge => {
-    if (pledge.image && !pledge.image.startsWith('data:')) {
-      const key = pledge.type === 'coral'
-        ? `coral_custom_${pledge.id}`
-        : `name_bubble_custom_${pledge.id}`;
-      if (!scene.textures.exists(key)) {
-        urls.push(pledge.image);
-        keys.push(key);
-        pledge.textureKey = key;
-      }
+    // Find all unique custom image URLs in pledgeData
+    const urls = [];
+    const keys = [];
+    pledgeData.forEach((pledge) => {
+        if (pledge.image && !pledge.image.startsWith("data:")) {
+            const key =
+                pledge.type === "coral"
+                    ? `coral_custom_${pledge.id}`
+                    : `name_bubble_custom_${pledge.id}`;
+            if (!scene.textures.exists(key)) {
+                urls.push(pledge.image);
+                keys.push(key);
+                pledge.textureKey = key;
+            }
+        }
+    });
+    if (urls.length === 0) {
+        callback();
+        return;
     }
-  });
-  if (urls.length === 0) {
-    callback();
-    return;
-  }
-  let loaded = 0;
-  for (let i = 0; i < urls.length; i++) {
-    scene.load.image(keys[i], urls[i]);
-  }
-  scene.load.once('complete', () => {
-    callback();
-  });
-  scene.load.start();
+    let loaded = 0;
+    for (let i = 0; i < urls.length; i++) {
+        scene.load.image(keys[i], urls[i]);
+    }
+    scene.load.once("complete", () => {
+        callback();
+    });
+    scene.load.start();
 }

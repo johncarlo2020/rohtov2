@@ -359,8 +359,11 @@ function createInitialCoral(index) {
   }
   // ...rest of function unchanged...
   const coralPosition = CORAL_POSITIONS[index % CORAL_POSITIONS.length];
-  const finalX = coralPosition.x * window.innerWidth + (coralPosition.tiltOffsetX || 0);
-  const finalY = coralPosition.y * window.innerHeight + (coralPosition.tiltOffsetY || 0);
+  const aquariumContainer = document.getElementById('aquarium-container');
+  const aquariumWidth = aquariumContainer ? aquariumContainer.clientWidth : window.innerWidth;
+  const aquariumHeight = aquariumContainer ? aquariumContainer.clientHeight : window.innerHeight;
+  const finalX = coralPosition.x * aquariumWidth + (coralPosition.tiltOffsetX || 0);
+  const finalY = coralPosition.y * aquariumHeight + (coralPosition.tiltOffsetY || 0);
   console.log(`Creating initial coral ${index + 1} at position ${finalX}, ${finalY}`);
   let coral;
   const textureKey = tempCoralKeys[index % tempCoralKeys.length];
@@ -452,11 +455,14 @@ function spawnSingleCoral(customTextureKey) {
   // Use custom texture if provided
   const slotIndex = currentCoralPositionIndex % CORAL_POSITIONS.length;
   const coralPosition = CORAL_POSITIONS[slotIndex];
-  // Calculate final position with tilt offsets
-  const finalX = coralPosition.x * window.innerWidth + (coralPosition.tiltOffsetX || 0);
-  const finalY = coralPosition.y * window.innerHeight + (coralPosition.tiltOffsetY || 0);
+  // Calculate final position with tilt offsets using aquarium container size
+  const aquariumContainer = document.getElementById('aquarium-container');
+  const aquariumWidth = aquariumContainer ? aquariumContainer.clientWidth : window.innerWidth;
+  const aquariumHeight = aquariumContainer ? aquariumContainer.clientHeight : window.innerHeight;
+  const finalX = coralPosition.x * aquariumWidth + (coralPosition.tiltOffsetX || 0);
+  const finalY = coralPosition.y * aquariumHeight + (coralPosition.tiltOffsetY || 0);
   const spawnX = -80;
-  const spawnY = window.innerHeight * 0.5;
+  const spawnY = aquariumHeight * 0.5;
   const textureKey = customTextureKey || pledge.textureKey || `coral${pledge.coralId}`;
   // --- ENTRY ANIMATION ---
   // Use CORAL_POSITIONS.size directly for baseScale (no multiplier)

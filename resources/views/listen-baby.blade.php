@@ -25,14 +25,13 @@
         overflow: hidden;
         margin: 0;
         padding: 0;
+        box-sizing: border-box;
     }
 
     #aquarium-container {
         position: relative;
-        width: 100vw;
-        height: 100vh;
-        max-width: 100vw;
-        max-height: 100vh;
+        width: 100%;
+        height: 100%;
         margin: 0;
         background: none !important;
         overflow: hidden;

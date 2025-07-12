@@ -119,7 +119,6 @@
     }
 }
 
-
 .bubble-container {
     width: 90vw;
     height: 90vw;
@@ -157,7 +156,6 @@
         width: 100%;
         height: 100%;
         padding: 0 50px;
-
     }
 }
 
@@ -221,4 +219,224 @@
         line-height: 1.2;
         word-wrap: break-word;
     }
+}
+
+.pledge-page {
+    .flip-clock-wrapper {
+        font-size: 18px !important; /* adjust as needed */
+        transform: scale(0.6); /* adjust scale for overall size */
+        margin: 0 auto;
+    }
+}
+
+.ipad-page {
+    .flip-clock-wrapper {
+        font-size: 40px !important; /* adjust as needed */
+        transform: scale(1.4); /* adjust scale for overall size */
+        margin: 56px auto;
+        margin-bottom: 10vh;
+
+    }
+
+    .branding img {
+        height: auto;
+        min-width: 155px;
+        max-width: 40vw;
+        -o-object-fit: contain;
+        object-fit: contain;
+        margin: 0 auto;
+        margin-top: 20px;
+    }
+
+    .heading {
+        font-size: 48px;
+    }
+
+    p {
+        font-size: 20px;
+        margin-top: 30px;
+    }
+
+    .custom-btn {
+        margin-top: 5vh;
+        font-size: 32px;
+        height: 70px;
+        padding: 20px 150px;
+    }
+
+    .modal-body {
+        .custom-btn {
+            margin-top: 0;
+        }
+
+        p {
+            font-size: 33px;
+            margin-bottom: 20px;
+        }
+
+        .custom-btn-secondary {
+            border: 1px solid $primary !important;
+        }
+
+
+    }
+}
+
+.ipad-pledge {
+       .branding img {
+        height: auto;
+        min-width: 155px;
+        max-width: 40vw;
+        -o-object-fit: contain;
+        object-fit: contain;
+        margin: 0 auto;
+        margin-top: 20px;
+        pointer-events: none;
+    }
+
+    .heading {
+        font-size: 48px;
+        margin-top: 40px;
+    }
+
+    p:not(.heading) {
+        font-size: 24px !important;
+    }
+
+    .pledge-selection {
+          p {
+        font-size: 20px;
+    }
+    }
+
+     .custom-btn {
+        margin-top: 5vh;
+        font-size: 32px;
+        height: 70px;
+        padding: 20px 150px;
+    }
+
+    #text , #coral{
+        padding: 0 10vw;
+
+        .form-control {
+            font-size: 24px;
+            text-align: center;
+            height: 70px;
+
+            &::placeholder {
+                font-size: 24px;
+            }
+        }
+    }
+
+    .coral-ipad-container {
+        //grid of 3 columns
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+         grid-auto-rows: 183px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 0 20px;
+
+
+        .item-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            cursor: pointer;
+            transition: box-shadow 0.2s, background 0.2s;
+
+            &:hover {
+                transform: scale(1.05);
+                transition: transform 0.2s ease-in-out;
+            }
+
+            img {
+                width: 100%;
+                height: auto;
+                object-fit: contain;
+            }
+
+            // Style when selected (radio checked)
+            input[type="radio"]:checked + .coral-image-container {
+                filter: brightness(0.7);
+                position: relative;
+            }
+
+            // Show 'Selected' label using pseudo-element
+            input[type="radio"]:checked + .coral-image-container::after {
+                content: 'Selected';
+                position: absolute;
+                top: 50%;
+                right: 50%;
+                transform: translate(50%, -50%);
+                color: #fff;
+                font-size: 1.1em;
+                font-weight: bold;
+                padding: 4px 14px;
+                border-radius: 12px;
+                z-index: 10;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+                letter-spacing: 1px;
+            }
+        }
+
+        .coral-image-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+
+
+            .bubble {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+
+            .coral {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 58%;
+                height: 58%;
+                object-fit: contain;
+            }
+        }
+    }
+
+    #selectCoralBtn {
+        padding: 20px 100px;
+        margin-top: 0;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+      .flip-clock-wrapper {
+        font-size: 40px !important; /* adjust as needed */
+        transform: scale(1); /* adjust scale for overall size */
+        margin: 56px auto;
+        margin-bottom: 0;
+
+    }
+
+    .buttons {
+        button {
+            margin-top: 0;
+        }
+    }
+
+    .bubble-container  {
+        width: 60vw;
+        height: 60vw;
+    }
+
+    #pledgeBtn {
+        padding: 20px 50px;
+    }
+
 }

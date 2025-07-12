@@ -2,14 +2,6 @@
 
 @push('styles')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flipclock@0.7.8/compiled/flipclock.css" />
-<style>
-/* Make FlipClock smaller */
-.flip-clock-wrapper {
-    font-size: 18px !important; /* adjust as needed */
-    transform: scale(0.6);      /* adjust scale for overall size */
-    margin: 0 auto;
-}
-</style>
 @endpush
 
 @push('scripts')

@@ -97,14 +97,14 @@ class StationController extends Controller
     public function uploadBabyIpad(Request $request)
     {
         $request->validate([
-            'baby_img' => 'required|image|max:2048',
-            'baby_name' => 'required|string|max:255',
+            'pledge_image' => 'required|image|max:2048', // max 2MB
+            'pledge_text' => 'string|max:255',
+            'charname' => 'string|max:255',
+            'pledge_type' => 'required|string|in:text,coral',
         ]);
 
-
-
         // Store the uploaded image in `public/babies`
-        $path = $request->file('baby_img')->store('public/babies');
+        $path = $request->file('pledge_image')->store('public/babies');
 
         // Convert path to URL or relative path for saving
         $publicPath = Storage::url($path); // returns `/storage/babies/filename.gif`
@@ -114,19 +114,18 @@ class StationController extends Controller
             return response()->json(['error' => 'Image upload failed.'], 500);
         }
 
+        // Get charname from request or use default
+        $charName = $request->charname ?? 'Baby';
 
-        // Get baby name from request or use default
-        $babyName = $request->baby_name ?? 'Baby';
-
-        // Fire the event
-        broadcast(new babyEvent($publicPath, $babyName, 'dj', 'ipad'))->toOthers();
+        // Fire the event (use correct fields)
+        broadcast(new babyEvent($publicPath, $request->pledge_text, $request->pledge_type, $charName))->toOthers();
 
         // Return success response
         return response()->json([
             'success' => true,
             'message' => 'Baby uploaded successfully',
             'imgPath' => $publicPath,
-            'name' => $babyName
+            'name' => $charName
         ]);
     }
 

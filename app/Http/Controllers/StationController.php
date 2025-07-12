@@ -103,6 +103,7 @@ class StationController extends Controller
             'pledge_type' => 'required|string|in:text,coral',
         ]);
 
+
         // Store the uploaded image in `public/babies`
         $path = $request->file('pledge_image')->store('public/babies');
 

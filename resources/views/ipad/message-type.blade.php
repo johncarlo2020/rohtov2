@@ -599,7 +599,7 @@
                             formData.append('pledge_image', blob, `pledge_text_${Date.now()}.png`);
                             formData.append('pledge_text', pledgeData.text);
                             formData.append('pledge_type', pledgeData.type);
-                            fetch('{{ route('upload.baby') }}', {
+                            fetch('{{ route('upload.babyIpad') }}', {
                                     method: 'POST',
                                     headers: {
                                         'X-CSRF-TOKEN': csrfToken
@@ -644,7 +644,7 @@
                                 formData.append('pledge_image', blob, `pledge_text_${Date.now()}.png`);
                                 formData.append('pledge_text', pledgeData.text);
                                 formData.append('pledge_type', pledgeData.type);
-                                fetch('{{ route('upload.baby') }}', {
+                                fetch('{{ route('upload.babyIpad') }}', {
                                         method: 'POST',
                                         headers: {
                                             'X-CSRF-TOKEN': csrfToken
@@ -770,7 +770,7 @@
                         formData.append('pledge_image', blob, `pledge_coral_${Date.now()}.png`);
                         formData.append('pledge_text', pledgeData.text);
                         formData.append('pledge_type', pledgeData.type);
-                        fetch('{{ route('upload.baby') }}', {
+                        fetch('{{ route('upload.babyIpad') }}', {
                                 method: 'POST',
                                 headers: {
                                     'X-CSRF-TOKEN': csrfToken

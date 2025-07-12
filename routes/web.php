@@ -44,6 +44,7 @@ Route::get('/admin/login', function () {
 });
 
 Route::get('/ipad', [IpadController::class, 'index'])->name('ipad.index');
+Route::get('/counter-value', 'App\Http\Controllers\StationController@getValue')->name('pledge.counter');
 Route::get('/ipad-pledge-info',function(){
         return view('ipad.info');
     })->name('ipad.info');
@@ -117,9 +118,6 @@ Route::group(['middleware' => ['client']], function () {
      Route::get('/register-welcome', function () {
         return view('registerSuccess');
     })->name('register.welcome');
-
-    Route::get('/counter-value', 'App\Http\Controllers\StationController@getValue')->name('pledge.counter');
-    
 
 });
 

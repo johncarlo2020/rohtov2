@@ -815,7 +815,7 @@
             }
 
             function returnToDashboard() {
-                // window.location.href = "{{ route('ipad.index') }}"; // Adjust route if needed
+                window.location.href = "{{ route('ipad.index') }}"; // Adjust route if needed
             }
 
 

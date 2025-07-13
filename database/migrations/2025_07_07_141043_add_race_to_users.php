@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             //
-            $table->string('race')->nullable()->after('dob');
+            $table->string('race')->nullable()->after('marketing');
         });
     }
 

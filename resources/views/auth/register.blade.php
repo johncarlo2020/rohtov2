@@ -11,8 +11,8 @@
                         @csrf
                         <div class="mb-3 row">
                             <div class="col-12">
-                                <label for="">First Name</label>
-                                <input id="fname" placeholder="Enter your first name" type="text"
+                                <label for="">Full Name</label>
+                                <input id="fname" placeholder="Enter your full name" type="text"
                                     class="input-text form-control @error('fname') is-invalid @enderror" name="fname"
                                     value="{{ old('fname') }}" required autocomplete="fname" autofocus />
                                 @error('fname')
@@ -24,36 +24,19 @@
                         </div>
 
                         <div class="mb-3 row">
-                            <div class="col-12">
-                                <label for="">Last Name</label>
+                            <div class="col-12 input-group w-100">
+                                <label for="">Phone Number</label>
 
-                                <input id="lname" placeholder="Enter your last name" type="text"
-                                    class="input-text form-control @error('lname') is-invalid @enderror" name="lname"
-                                    value="{{ old('lname') }}" required autocomplete="lname" autofocus />
-
-                                @error('lname')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
+                                <input id="number" type="number"
+                                    class="input-text form-control w-100 @error('number') is-invalid @enderror"
+                                    name="number" value="{{ old('number') }}" required autocomplete="number"
+                                    autofocus />
                             </div>
-                        </div>
-
-                        <div class="mb-3 row">
-                            <div class="col-12">
-                                <label for="dob">Date of Birth </label>
-
-                                <input id="dob" placeholder="Enter your date of birth" type="date"
-                                    class="input-text form-control @error('dob') is-invalid @enderror" name="dob"
-                                    value="{{ old('dob') }}" required autocomplete="bday" autofocus />
-
-                                @error('dob')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
+                            <div class="mt-2 col-12">
+                                <span id="valid-msg" class="d-none text-danger"></span>
+                                <span id="error-msg" class="d-none text-danger"></span>
                             </div>
-                        </div>
+                        </div>                        
 
                         <div class="mb-3 row">
                             <div class="col-12">
@@ -89,21 +72,6 @@
                                     <strong>{{ $message }}</strong>
                                 </span>
                                 @enderror
-                            </div>
-                        </div>
-
-                        <div class="mb-3 row">
-                            <div class="col-12 input-group w-100">
-                                <label for="">Phone Number</label>
-
-                                <input id="number" type="number"
-                                    class="input-text form-control w-100 @error('number') is-invalid @enderror"
-                                    name="number" value="{{ old('number') }}" required autocomplete="number"
-                                    autofocus />
-                            </div>
-                            <div class="mt-2 col-12">
-                                <span id="valid-msg" class="d-none text-danger"></span>
-                                <span id="error-msg" class="d-none text-danger"></span>
                             </div>
                         </div>
 

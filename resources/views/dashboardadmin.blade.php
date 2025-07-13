@@ -100,15 +100,15 @@
         @foreach ($data['stations'] as $station)
             <div class="col">
                 <div class="card mb-3">
-                    <div class="card-body d-flex justify-content-between rounded  p-3 ">
+                    <div class="card-body d-flex justify-content-between rounded  p-3 bg-dark">
                         <div class="d-flex align-items-center w-100">
                             <div class="icon-stations">
-                                <img class="" src="{{ asset("images/hadalabobabies/station{$station['id']}.webp") }}" alt="Station Image">
+                                <img class="" src="{{ asset("images/station/station_{$station['id']}.webp") }}" alt="Station Image">
                             </div>
                             <div class="d-flex flex-column">
-                                <h6 class="mb-1 text-dark text-sm">{{ $station['name'] }}</h6>
-                                <span class="text-xs">Average Time : <span
-                                        class="font-weight-bold">{{ $station['average_timespent'] }}
+                                <h6 class="mb-1 text-white text-sm">{{ $station['name'] }}</h6>
+                                <span class="text-xs text-light">Average Time : <span
+                                        class="font-weight-bold text-light">{{ $station['average_timespent'] }}
                                         minutes</span></span>
                             </div>
                         </div>
@@ -146,13 +146,13 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-6 mb-3">
+        <!-- <div class="col-lg-6 mb-3">
             <div class="card card h-100 mb-3">
                 <div class="card-body p-3">
                     <div id="findEventChart"></div>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
     <div class="row mt-1">
         <div class="col-lg-12 mb-lg-0 mb-3">
@@ -561,11 +561,11 @@
                     y: item.count || 0
                 };
             });
-            Highcharts.chart(getPieChartConfig({
-                renderTo: 'findEventChart',
-                title: 'How did you find this event?',
-                data: findEventData
-            }));
+            // Highcharts.chart(getPieChartConfig({
+            //     renderTo: 'findEventChart',
+            //     title: 'How did you find this event?',
+            //     data: findEventData
+            // }));
 
 
 

@@ -22,7 +22,7 @@ class StationSeeder extends Seeder
     {
         Station::create([
             'name' => 'Let Your Skin Dream Too',
-            'description' => 'Snap,Share,tag @kosemy',
+            'description' => 'Snap,Share,Tag @kosemy <br> #Sekkisei #SavetheBlue #SustainableBeauty <br> #BlueBottlePower #BeautywithPurpose',
         ]);
 
         Station::create([
@@ -32,7 +32,7 @@ class StationSeeder extends Seeder
 
         Station::create([
             'name' => 'Save the Blue Gallery',
-            'description' => 'Shine for hidden message',
+            'description' => 'Shine for Hidden Message',
         ]);
 
         Station::create([
@@ -42,7 +42,7 @@ class StationSeeder extends Seeder
 
         Station::create([
             'name' => 'Holistic Clean Beauty',
-            'description' => 'Match & Correct yout tone',
+            'description' => 'Match & Correct Your Tone',
         ]);
 
         Station::create([
@@ -58,10 +58,9 @@ class StationSeeder extends Seeder
 
         $user = User::create([
             'fname' => 'admin',
-            'lname' => 'admin',
-            'find' => 'Facebook',
-            'dob' => 'admin',
+            'find' => 'facebook',
             'number' => '0123456789',
+            'dob' => '10/20/2001',
             'email' => 'admin@gmail.com',
             'country' => 'Malaysia',
             'password' => Hash::make('WowsomeDutch'),

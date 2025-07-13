@@ -53,8 +53,8 @@
         <div class="sidenav-header border-bottom rounded-0">
             {{-- <i class="fas fa-times cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
                 aria-hidden="true" id="iconSidenav"></i> --}}
-            <a class="navbar-brand m-0 d-flex w-100 justify-content-center" href="" target="_blank">
-                <img src="{{ asset('images/dutchlady/Dutch Lady Logo Newww.png') }}" class="navbar-brand-img h-100" alt="main_logo" />
+            <a class="navbar-brand m-0 d-flex w-100 justify-content-center bg-dark" href="" target="_blank">
+                <img src="{{ asset('images/brand/logo.webp') }}" class="navbar-brand-img h-100" alt="main_logo" />
             </a>
         </div>
         <hr class="horizontal dark mt-0" />
@@ -64,7 +64,7 @@
                     <a class="nav-link {{ request()->routeIs('admin') ? 'active' : '' }}" href="{{ route('admin') }}">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-tv-2 text-primary text-sm opacity-10"></i>
+                            <i class="fa-solid fa-gauge text-dark text-sm opacity-10"></i>
                         </div>
                         <span class="nav-link-text ms-1">Dashboard</span>
                     </a>
@@ -73,18 +73,9 @@
                     <a class="nav-link {{ request()->routeIs('users') ? 'active' : '' }}" href="{{ route('users') }}">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-single-02 text-warning text-sm opacity-10"></i>
+                            <i class="fa-solid fa-users text-warning text-sm opacity-10"></i>
                         </div>
                         <span class="nav-link-text ms-1">Users</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('bookings') ? 'active' : '' }}" href="{{ route('bookings') }}">
-                        <div
-                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Bookings</span>
                     </a>
                 </li>
 
@@ -92,7 +83,7 @@
                     <a class="nav-link {{ request()->routeIs('scanner') ? 'active' : '' }}" href="{{ route('scanner') }}">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-mobile-button text-warning text-sm opacity-10"></i>
+                            <i class="fa-solid fa-barcode text-warning text-sm opacity-10"></i>
                         </div>
                         <span class="nav-link-text ms-1">Scanner</span>
                     </a>

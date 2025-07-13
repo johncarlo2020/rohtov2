@@ -115,7 +115,6 @@
                                 <th>ID</th>
                                 <th>Name</th>
                                 <th>Email</th>
-                                <th>DOB</th>
                                 <th>Number</th>
                                 <th>Country</th>
                                 @foreach ($data['stations'] as $station)
@@ -129,10 +128,8 @@
                             @foreach ($data['users'] as $user)
                                 <tr data-user-id="{{ $user->id }}">
                                     <td>{{ $user->id }}</td>
-                                    <td>{{ $user->fname }} {{ $user->lname }}</td>
+                                    <td>{{ $user->fname }}</td>
                                     <td>{{ $user->email }}</td>
-                                    <td>{{ $user->dob }}</td>
-
                                     <td>{{ $user->number }}</td>
                                     <td>{{ $user->country }}</td>
 

@@ -19,10 +19,6 @@ class AddViewer extends Seeder
     {
         $user = User::create([
             'fname' => 'viewer',
-            'lname' => 'viewer',
-            'find' => 'viewer',
-            'dob' => 'admin',
-
             'number' => '0123456789',
             'email' => 'viewer@gmail.com',
             'country' => 'Malaysia',

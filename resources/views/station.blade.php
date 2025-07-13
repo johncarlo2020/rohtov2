@@ -37,8 +37,8 @@
                 <p class="sub-heading mb-1 fw-thin">
                     {{ isset($station->name) ? $station->name : '' }}
                 </p>
-                <span class="mb-4 fw-thin">
-                    {{ isset($station->description) ? $station->description : '' }}
+                <span class="mb-4 fw-thin text-center">
+                    {!! $station->description !!}
                 </span>
             <div id="{{ $user ? '' : 'forceQr' }}" class="icon-container">
             </div>

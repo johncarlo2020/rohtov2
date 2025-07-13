@@ -23,6 +23,8 @@ class AddViewer extends Seeder
             'email' => 'viewer@gmail.com',
             'country' => 'Malaysia',
             'password' => Hash::make('WowsomeKoseViewer'),
+            'find' => 'facebook',
+            'dob' => '10/20/2001',
         ]);
 
         $permission = Permission::create(['name' => 'view']);

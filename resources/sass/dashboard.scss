@@ -60,7 +60,7 @@
 
     .navbar-vertical .navbar-brand>img, .navbar-vertical .navbar-brand-img {
         max-width: 100%;
-        max-height: 4rem;
+        max-height: 3.5rem;
     }
 
     .bg-dark {
@@ -76,7 +76,7 @@
     .navbar-vertical.navbar-expand-xs {
         display: block;
         position: fixed;
-        top: 0;
+        top: -1px;
         bottom: 0;
         width: 100%;
         max-width: 17.625rem !important;
@@ -86,6 +86,13 @@
         z-index: 9999;
     }
 
+    @import "variables";
+    .main-background {
+        background-image: $main-background;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
 
 }
 

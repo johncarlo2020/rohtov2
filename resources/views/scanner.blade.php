@@ -4,7 +4,7 @@
 </style>
 <div class="mt-4 row justify-content-center">
     <div class="mb-4 col-lg-8 mb-lg-0">
-        <div class="card text-center">
+        <div class="card scanner-container text-center">
             <div class="p-3 pb-0 card-header">
                 <h6 class="mb-2">QR Scanner</h6>
             </div>

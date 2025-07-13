@@ -117,7 +117,7 @@
         @endforeach
     </div>
     <div class="row mt-1">
-        <div class="col-lg-6 mb-lg-0 mb-3">
+        <div class="col-lg-6 mb-lg-3 mb-3">
             <div class="card z-index-2 h-100">
                 <div class="card-body p-3">
                     <figure class="highcharts-figure">
@@ -127,7 +127,7 @@
             </div>
         </div>
 
-        <div class="col-lg-6 mb-lg-0 mb-3">
+        <div class="col-lg-6 mb-lg-3 mb-3">
             <div class="card z-index-2 h-100">
                 <div class="card-body card-with-filter p-3">
                     <figure class="highcharts-figure">
@@ -138,43 +138,34 @@
         </div>
     </div>
     <div class="row mt-1">
-        <div class="col-lg-6 mb-3">
-            <div class="card card h-100 mb-3">
-                <div class="card-body p-3">
-                    <div id="countriesChart"></div>
-                </div>
-            </div>
-        </div>
-        <!-- <div class="col-lg-6 mb-3">
-            <div class="card card h-100 mb-3">
-                <div class="card-body p-3">
-                    <div id="findEventChart"></div>
-                </div>
-            </div>
-        </div> -->
-    </div>
-    <div class="row mt-1">
-        <div class="col-lg-12 mb-lg-0 mb-3">
-            <div class="card card h-100">
-                <div class="card-header pb-0 p-3">
+        <div class="col-lg-6 mb-lg-3 mb-4">
+            <div class="card h-100 p-3 mb-3">
+                <div class="card-header pb-0 px-3 pt-0">
                     <div class="d-flex justify-content-between">
-                        <h6 class="mb-2">Customer</h6>
+                        <h6 class="mb-2 card-header-text">Customer</h6>
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table class="table align-items-center ">
+                    <table class="table align-items-center border">
+                        <thead>
+                            <tr>
+                                <th >ID</th>
+                                <th>Name</th>
+                                <th>Station completed</th>
+                            </tr>
+                        </thead>
                         <tbody>
                             @foreach ($data['users'] as $user)
                                 <tr>
-                                    <td class="w-5">
-                                        <div class="d-flex px-2 py-1 align-items-center">
+                                    <td>
+                                        <div class="">
                                             <div class="ms-4">
                                                 <h6 class="text-sm mb-0">{{ $user->id }}</h6>
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="w-10">
-                                        <div class="d-flex px-2 py-1 align-items-center">
+                                    <td >
+                                        <div class="">
                                             <div class="ms-4">
                                                 <p class="text-xs font-weight-bold mb-0">Name</p>
                                                 <h6 class="text-sm mb-0">{{ $user->fname }} {{ $user->lname }}
@@ -182,36 +173,39 @@
                                             </div>
                                         </div>
                                     </td>
-                                    @foreach ($user['stations'] as $station)
-                                        <td>
-                                            <div class="text-center">
-                                                <p class="text-xs font-weight-bold mb-0">{{ $station['name'] }}
-                                                </p>
-                                                <h6
-                                                    class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-danger' }}">
-                                                    {{ $station['value'] ? 'Yes' : 'No' }}
-                                                </h6>
-
+                                    <td>
+                                        <div class="station-icon-wrapper">
+                                            @foreach ($user['stations'] as $station)
+                                                <div class="text-center">
+                                                    <img src="{{ asset('images/station/station_blue_' . $station['id'] . '.webp') }}"
+                                                        alt="{{ $station['name'] }}"
+                                                        title="{{ $station['name'] }}"
+                                                        class="station-image table-station-image {{ $station['value'] ? 'border-success' : 'border-secondary' }}"
+                                                        style="opacity: {{ $station['value'] ? '1' : '0.4' }};"
+                                                        data-bs-toggle="tooltip" data-bs-placement="bottom" />
+                                                </div>
+                                            @endforeach
+                                            <div class="completed-count d-flex justify-content-center align-items-center gap-2">
+                                                <p class="m-0 p-0">Completed  <span>{{ $user->completed_count }}</span></p>
                                             </div>
-                                        </td>
-                                    @endforeach
-
-
+                                        </div>
+                                    </td>
                                 </tr>
                             @endforeach
-
-
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-
-
-
-
-
+        <div class="col-lg-6 mb-3">
+            <div class="card h-100 mb-3">
+                <div class="card-body p-3">
+                    <div id="raceChart"></div>
+                </div>
+            </div>
+        </div>
     </div>
+
     <script src="{{ asset('assets/js/core/bootstrap.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/perfect-scrollbar.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/smooth-scrollbar.min.js') }}"></script>
@@ -540,17 +534,18 @@
         }
 
         (function() {
-            var countries = @json($data['country']);
-            var countryData = countries.map(function(item) {
+            // Pie chart for raceChart only
+            var races = @json($data['race']);
+            var raceData = races.map(function(item) {
                 return {
-                    name: item.country || item.name || item.label || '',
+                    name: item.race || item.name || item.label || '',
                     y: item.count || 0
                 };
             });
             Highcharts.chart(getPieChartConfig({
-                renderTo: 'countriesChart',
-                title: 'Country Distribution',
-                data: countryData
+                renderTo: 'raceChart',
+                title: 'Race Distribution',
+                data: raceData
             }));
 
             var findData = @json($data['where']);
@@ -565,9 +560,6 @@
             //     title: 'How did you find this event?',
             //     data: findEventData
             // }));
-
-
-
         })();
 
     </script>

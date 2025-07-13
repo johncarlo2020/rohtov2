@@ -67,8 +67,61 @@
         background-color: #152787 !important;
     }
 
+    .station-icon-wrapper {
+    display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
 
 }
+
+
+.table-station-image {
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #e7dede;
+}
+
+.table-station-count {
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #0dbb2a;
+    color: white;
+}
+
+.station-icon-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.card-header-text {
+    font-size: 1.2em;
+    font-weight: bold;
+    fill: rgb(51, 51, 51);
+}
+
+.completed-count {
+   background-color: #000000;
+    color: white;
+    padding: 2px 11px;
+    border-radius: 10px;
+
+    p {
+            font-size:10px;
+    }
+}
+
 
 
 

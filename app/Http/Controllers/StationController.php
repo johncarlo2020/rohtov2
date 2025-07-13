@@ -422,9 +422,12 @@ class StationController extends Controller
         $admin = User::find(auth()->id());
         $permission = $admin->getPermissionNames()->first();
         $today = Carbon::today();
-        $startDate = Carbon::create(2025, 6, 17);
+        $startDate = Carbon::create(2025, 7, 11);
+
         $data['users'] = User::with('stationUser')->take(4)->orderBy('id', 'desc')->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
             ->get();
+
+
         $data['usersCount'] = User::whereDate('created_at', '>=', $startDate->toDateString())->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
             ->count();
         $data['userToday'] = User::whereDate('created_at', $today)->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
@@ -484,7 +487,7 @@ class StationController extends Controller
 
         $count = 0;
 
-        foreach ($data['users'] as $user) {
+      foreach ($data['users'] as $user) {
             $userStations = $user->stationUser->pluck('station_id')->toArray();
             $numStations = count($userStations);
 
@@ -492,8 +495,12 @@ class StationController extends Controller
                 return [
                     'name' => $name,
                     'value' => in_array($id, $userStations),
+                    'id' => $id,
                 ];
             });
+
+            // Add completed_count to the user
+            $user->completed_count = $numStations;
         }
 
         $data['stations'] = $stations->map(function ($name, $id) use ($userStations, $averageTimespentByStation) {
@@ -508,9 +515,22 @@ class StationController extends Controller
         $averagePlaytimeByUser = StationUser::select('user_id', DB::raw('SUM(time_spent) / 60 as total_playtime'))->groupBy('user_id')->get();
 
         $totalAveragePlaytime = $averagePlaytimeByUser->avg('total_playtime');
-        // dd($totalAveragePlaytime);
-        //dd($data['users'][0]['stations']);
-        //  dd($data);
+
+
+        // get all users race column for pie chart
+        $data['race'] = User::where('race', '!=', 'admin')
+            ->whereDate('created_at', '>=', $startDate->toDateString())
+            ->selectRaw('race, COUNT(*) as count')
+            ->groupBy('race')
+            ->get()
+            ->map(function($item) {
+                return [
+                    'race' => $item->race,
+                    'count' => $item->count
+                ];
+            })
+            ->values()
+            ->toArray();
 
         return view('dashboardadmin', compact('data', 'permission'));
     }
@@ -704,7 +724,7 @@ class StationController extends Controller
             $user->otp_verified = 1;
             $user->email_verified_at = Carbon::now();
             $user->save();
-            
+
             //  $data = GlobalHelper::createSampleProfile();
               return back()->with('success', 'OTP verified successfully!');
         }

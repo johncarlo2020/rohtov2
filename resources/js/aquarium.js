@@ -818,22 +818,29 @@ function createSingleInitialNameBubble(pledge, index) {
         window.innerHeight * 0.35
     );
 
-    console.log(
-        `Creating initial name bubble ${index + 1} at position ${x}, ${y}`
-    );
+    // Calculate scale based on pledge text length
+    let textLength = pledge.text ? pledge.text.length : 0;
+    // Minimum scale for empty/short text, max for long text
+    const minScale = 0.12;
+    const maxScale = 0.28;
+    // For 0-30 chars, scale from minScale to maxScale
+    let scale = minScale;
+    if (textLength > 0) {
+        scale = minScale + (Math.min(textLength, 30) / 30) * (maxScale - minScale);
+    }
 
     // Create the name bubble sprite using tempBubbleKey
     let nameBubble;
     try {
         nameBubble = this.add
             .sprite(x, y, tempBubbleKey)
-            .setScale(TEMP_BUBBLE_SCALE);
+            .setScale(scale);
     } catch (error) {
-        console.warn("Name bubble image failed to load, using fallback");
+        // Name bubble image failed to load, using fallback
         nameBubble = this.add.circle(
             x,
             y,
-            (35 * TEMP_BUBBLE_SCALE) / 0.6,
+            (35 * scale) / 0.6,
             0x87ceeb,
             0.7
         );
@@ -923,24 +930,32 @@ function createNameBubble(pledge, textureKey) {
     const spawnX = fromLeft ? -60 : window.innerWidth + 60;
     const spawnY = window.innerHeight * 0.45 + Phaser.Math.Between(-40, 40); // a bit lower and with some vertical randomness
     // Create name bubble sprite
+    // Calculate scale based on pledge text length
+    let textLength = pledge.text ? pledge.text.length : 0;
+    const minScale = 0.12;
+    const maxScale = 0.28;
+    let scale = minScale;
+    if (textLength > 0) {
+        scale = minScale + (Math.min(textLength, 30) / 30) * (maxScale - minScale);
+    }
+
     let nameBubble;
     try {
         nameBubble = this.add
             .sprite(spawnX, spawnY, textureKey)
-            .setScale(TEMP_BUBBLE_SCALE);
-        // Set display size to match temp bubble scale for custom uploaded images
+            .setScale(scale);
+        // Set display size to match scale for custom uploaded images
         if (textureKey.startsWith("name_bubble_custom_")) {
-            // Use the same logic as temp bubbles: base size * TEMP_BUBBLE_SCALE
-            // Assume base image is 400x400 (like tempBubble), so 400 * TEMP_BUBBLE_SCALE
-            const baseSize = 900 * TEMP_BUBBLE_SCALE;
+            // Use the same logic as temp bubbles: base size * scale
+            const baseSize = 900 * scale;
             nameBubble.setDisplaySize(baseSize, baseSize);
         }
     } catch (error) {
-        console.warn("Name bubble image failed to load, using fallback");
+        // Name bubble image failed to load, using fallback
         nameBubble = this.add.circle(
             spawnX,
             spawnY,
-            (35 * TEMP_BUBBLE_SCALE) / 0.6,
+            (35 * scale) / 0.6,
             0x87ceeb,
             0.7
         );
@@ -1067,9 +1082,7 @@ function createBubbleChain(coral) {
     const numBubblesInChain = Phaser.Math.Between(20, 30); // 8-14 bubbles per chain
     const chainDelay = Phaser.Math.Between(50, 100); // Faster succession for visible chain effect
 
-    console.log(
-        `Creating coral bubble chain: ${numBubblesInChain} bubbles from coral at x=${coral.x}`
-    );
+    // ...existing code...
 
     for (let i = 0; i < numBubblesInChain; i++) {
         this.time.delayedCall(i * chainDelay, () => {

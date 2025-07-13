@@ -281,6 +281,11 @@ function create() {
         }
 
         if (data.type === "coral") {
+            // Prevent new coral entry if an entry animation is active
+            if (this.isAnyEntryActive) {
+                console.warn("Coral entry animation in progress, skipping new coral entry.");
+                return;
+            }
             const coralId = data.id || Date.now();
             let textureKey = `coral${data.coralId || 1}`;
             let image = data.image || data.img || null;
@@ -589,8 +594,18 @@ function createInitialCoral(index) {
 function spawnSingleCoral(customTextureKey) {
   if (!pledgeData.length) return;
 
+  // Prevent new coral entry if an entry animation is active
+  if (this.isAnyEntryActive) {
+    console.warn("Coral entry animation in progress, skipping new coral entry.");
+    return;
+  }
+  this.isAnyEntryActive = true;
+
   const coralPledges = pledgeData.filter(p => p.type === 'coral');
-  if (!coralPledges.length) return;
+  if (!coralPledges.length) {
+    this.isAnyEntryActive = false;
+    return;
+  }
 
   const pledge = coralPledges[coralPledges.length - 1];
   const slotIndex = currentCoralPositionIndex % CORAL_POSITIONS.length;
@@ -620,7 +635,13 @@ function spawnSingleCoral(customTextureKey) {
   }, 200);
 
   const path = createBezierPath(spawnX, spawnY, finalX, finalY);
-  startCoralTween.call(this, { coral, bubble, path, finalX, finalY, baseScale, coralPosition, textureKey });
+  // Wrap the onComplete logic to reset isAnyEntryActive
+  const self = this;
+  function onTweenCompleteWrapper(args) {
+    if (typeof args.onComplete === 'function') args.onComplete();
+    self.isAnyEntryActive = false;
+  }
+  startCoralTween.call(this, { coral, bubble, path, finalX, finalY, baseScale, coralPosition, textureKey, onTweenComplete: function() { self.isAnyEntryActive = false; } });
 }
 
 function getFinalPosition(coralPosition) {
@@ -711,7 +732,7 @@ function createBezierPath(startX, startY, endX, endY) {
   };
 }
 
-function startCoralTween({ coral, bubble, path, finalX, finalY, baseScale, coralPosition, textureKey }) {
+function startCoralTween({ coral, bubble, path, finalX, finalY, baseScale, coralPosition, textureKey, onTweenComplete }) {
   let tweenObj = { t: 0 };
   const bubbleStartScale = 0.18;
   const bubbleEndScale = 0.28;
@@ -767,6 +788,7 @@ function startCoralTween({ coral, bubble, path, finalX, finalY, baseScale, coral
               coral.setDisplaySize(finalSize, finalSize);
               startCoralBubbles.call(this, coral);
               currentCoralPositionIndex++;
+              if (typeof onTweenComplete === 'function') onTweenComplete();
             }
           });
         } else {
@@ -781,6 +803,7 @@ function startCoralTween({ coral, bubble, path, finalX, finalY, baseScale, coral
             onComplete: () => {
               startCoralBubbles.call(this, coral);
               currentCoralPositionIndex++;
+              if (typeof onTweenComplete === 'function') onTweenComplete();
             }
           });
         }

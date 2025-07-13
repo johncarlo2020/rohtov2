@@ -94,6 +94,7 @@
     .admin-login {
         height: auto;
         min-height: 100vh;
+        background-color:#ffffff !important;
 
         .main-content {
             padding: 2rem 1rem;
@@ -115,6 +116,16 @@
             }
         }
 
+        .card
+        {
+            border: 0 !important;
+        }
+
+        .shadow-lg
+        {
+            box-shadow: none !important;
+        }
+
         .p-5
         {
             padding: 2rem !important;
@@ -123,6 +134,8 @@
         .col-12.col-lg-5 {
             padding: 1rem !important;
         }
+
+        
     }
 }
 

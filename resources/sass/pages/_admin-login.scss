@@ -90,6 +90,42 @@
     }
 }
 
+@media (max-width: 575.98px) {
+    .admin-login {
+        height: auto;
+        min-height: 100vh;
+
+        .main-content {
+            padding: 2rem 1rem;
+            align-items: flex-start;
+        }
+
+        .admin-card {
+            width: 95% !important; // full width
+            height: auto !important;
+            // padding: 0.5rem 0.5rem !important;
+        }
+
+        .branding-container {
+            text-align: center;
+
+            .branding img {
+                width: 60vw;
+                max-width: 100%;
+            }
+        }
+
+        .p-5
+        {
+            padding: 2rem !important;
+        }
+
+        .col-12.col-lg-5 {
+            padding: 1rem !important;
+        }
+    }
+}
+
 @media (max-width: 991.98px) {
     .admin-login {
         height: auto;

@@ -10,7 +10,7 @@
             </div>
             <div id="reader">
             </div>
-            <div class="mt-3">
+            <div class="mt-3 py-3">
                 <h4>Scanned Code:</h4>
                 <div id="scanned-result" class="font-weight-bold"></div>
             </div>

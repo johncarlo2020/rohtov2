@@ -379,13 +379,21 @@
                                 lines.push(fitting);
                                 word = word.substring(fitLength);
                             }
-                            const testLine = currentLine + (currentLine ? ' ' : '') + word;
-                            const metrics = ctx.measureText(testLine);
-                            if (metrics.width > maxWidth && currentLine) {
-                                lines.push(currentLine);
+                            // If word starts with '-', force new line
+                            if (word.trim().startsWith('-')) {
+                                if (currentLine) {
+                                    lines.push(currentLine);
+                                }
                                 currentLine = word;
                             } else {
-                                currentLine = testLine;
+                                const testLine = currentLine + (currentLine ? ' ' : '') + word;
+                                const metrics = ctx.measureText(testLine);
+                                if (metrics.width > maxWidth && currentLine) {
+                                    lines.push(currentLine);
+                                    currentLine = word;
+                                } else {
+                                    currentLine = testLine;
+                                }
                             }
                         }
                         if (currentLine) {
@@ -396,7 +404,14 @@
                         const totalTextHeight = lines.length * lineHeight;
                         let startY = height / 2 - totalTextHeight / 2 + lineHeight / 2;
                         lines.forEach((line, i) => {
-                            ctx.fillText(line, width / 2, startY + i * lineHeight);
+                    // Center indented lines (starting with '-') within a smaller width
+                    let x = width / 2;
+                    if (line.trim().startsWith('-')) {
+                        // Center within 80% of the width, shifted right
+                        const indentWidth = width * 0.8;
+                        x = (width - indentWidth) / 2 + indentWidth / 2;
+                    }
+                    ctx.fillText(line, x, startY + i * lineHeight);
                         });
                     } else if (pledgeData.type === 'coral') {
                         const coralId = pledgeData.coral;

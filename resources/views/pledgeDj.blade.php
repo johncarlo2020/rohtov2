@@ -24,7 +24,7 @@
                 <div class="radio-image col">
                     <input type="radio" id="design2" name="design" value="coral" class="d-none">
                     <label for="design2">
-                        <img class="mb-3" src="{{ asset('images/brand/CoralWithName.webp') }}" alt="Design 2">
+                        <img class="mb-3" src="{{ asset('images/brand/CoralWithName.png') }}" alt="Design 2">
                         <p class="text-center">Coral with name</p>
                     </label>
                 </div>
@@ -364,42 +364,57 @@
                         const lines = [];
                         let currentLine = '';
                         for (let i = 0; i < words.length; i++) {
-                            let word = words[i];
-                            // If the word itself is too long, split it
-                            while (ctx.measureText(word).width > maxWidth) {
-                                // Find the largest substring of word that fits
-                                let fitLength = word.length;
-                                while (fitLength > 0 && ctx.measureText(word.substring(0, fitLength)).width > maxWidth) {
-                                    fitLength--;
-                                }
-                                if (fitLength === 0) break; // Should not happen
-                                const fitting = word.substring(0, fitLength);
-                                // Add currentLine if not empty
-                                if (currentLine) {
-                                    lines.push(currentLine);
-                                    currentLine = '';
-                                }
-                                lines.push(fitting);
-                                word = word.substring(fitLength);
-                            }
-                            const testLine = currentLine + (currentLine ? ' ' : '') + word;
-                            const metrics = ctx.measureText(testLine);
-                            if (metrics.width > maxWidth && currentLine) {
-                                lines.push(currentLine);
-                                currentLine = word;
-                            } else {
-                                currentLine = testLine;
-                            }
+                    let word = words[i];
+                    // If the word itself is too long, split it
+                    while (ctx.measureText(word).width > maxWidth) {
+                        // Find the largest substring of word that fits
+                        let fitLength = word.length;
+                        while (fitLength > 0 && ctx.measureText(word.substring(0, fitLength)).width > maxWidth) {
+                            fitLength--;
                         }
+                        if (fitLength === 0) break; // Should not happen
+                        const fitting = word.substring(0, fitLength);
+                        // Add currentLine if not empty
                         if (currentLine) {
                             lines.push(currentLine);
+                            currentLine = '';
+                        }
+                        lines.push(fitting);
+                        word = word.substring(fitLength);
+                    }
+                    // If word starts with '-', force new line
+                    if (word.trim().startsWith('-')) {
+                        if (currentLine) {
+                            lines.push(currentLine);
+                        }
+                        currentLine = word;
+                    } else {
+                        const testLine = currentLine + (currentLine ? ' ' : '') + word;
+                        const metrics = ctx.measureText(testLine);
+                        if (metrics.width > maxWidth && currentLine) {
+                            lines.push(currentLine);
+                            currentLine = word;
+                        } else {
+                            currentLine = testLine;
+                        }
+                    }
+                        }
+                        if (currentLine) {
+                    lines.push(currentLine);
                         }
                         // Center lines vertically
                         const lineHeight = 90;
                         const totalTextHeight = lines.length * lineHeight;
                         let startY = height / 2 - totalTextHeight / 2 + lineHeight / 2;
                         lines.forEach((line, i) => {
-                            ctx.fillText(line, width / 2, startY + i * lineHeight);
+                    // Center indented lines (starting with '-') within a smaller width
+                    let x = width / 2;
+                    if (line.trim().startsWith('-')) {
+                        // Center within 80% of the width, shifted right
+                        const indentWidth = width * 0.8;
+                        x = (width - indentWidth) / 2 + indentWidth / 2;
+                    }
+                    ctx.fillText(line, x, startY + i * lineHeight);
                         });
                     } else if (pledgeData.type === 'coral') {
                         const coralId = pledgeData.coral;

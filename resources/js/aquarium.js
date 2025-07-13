@@ -1,3 +1,50 @@
+// Configurable mapping from text length to temp bubble scale
+const TEMP_BUBBLE_SIZE_MAP = [
+    { len: 1, scale: 0.15 },
+    { len: 5, scale: 0.18 },
+    { len: 10, scale: 0.22 },
+    { len: 20, scale: 0.26 },
+    { len: 25, scale: 0.30 },
+];
+
+function getTempBubbleScale(textLength) {
+    if (!TEMP_BUBBLE_SIZE_MAP.length) return 0.15;
+    if (textLength <= TEMP_BUBBLE_SIZE_MAP[0].len) return TEMP_BUBBLE_SIZE_MAP[0].scale;
+    for (let i = 1; i < TEMP_BUBBLE_SIZE_MAP.length; i++) {
+        const prev = TEMP_BUBBLE_SIZE_MAP[i - 1];
+        const curr = TEMP_BUBBLE_SIZE_MAP[i];
+        if (textLength <= curr.len) {
+            const t = (textLength - prev.len) / (curr.len - prev.len);
+            return prev.scale + t * (curr.scale - prev.scale);
+        }
+    }
+    return TEMP_BUBBLE_SIZE_MAP[TEMP_BUBBLE_SIZE_MAP.length - 1].scale;
+}
+// Configurable mapping from text length to bubble scale
+const NAME_BUBBLE_SIZE_MAP = [
+    { len: 1, scale: 0.10 },
+    { len: 5, scale: 0.15 },
+    { len: 10, scale: 0.20 },
+    { len: 20, scale: 0.25 },
+    { len: 25, scale: 0.30 },
+];
+
+// Helper to get bubble scale for a given text length (interpolates between points)
+function getNameBubbleScale(textLength) {
+    if (!NAME_BUBBLE_SIZE_MAP.length) return 0.18;
+    if (textLength <= NAME_BUBBLE_SIZE_MAP[0].len) return NAME_BUBBLE_SIZE_MAP[0].scale;
+    for (let i = 1; i < NAME_BUBBLE_SIZE_MAP.length; i++) {
+        const prev = NAME_BUBBLE_SIZE_MAP[i - 1];
+        const curr = NAME_BUBBLE_SIZE_MAP[i];
+        if (textLength <= curr.len) {
+            // Linear interpolation between prev and curr
+            const t = (textLength - prev.len) / (curr.len - prev.len);
+            return prev.scale + t * (curr.scale - prev.scale);
+        }
+    }
+    // If longer than last, use last scale
+    return NAME_BUBBLE_SIZE_MAP[NAME_BUBBLE_SIZE_MAP.length - 1].scale;
+}
 import Phaser from "phaser";
 import PlasmaPost2FX from "./PlasmaPost2FX.js";
 import WigglePostFX from "./WigglePostFX.js";
@@ -280,10 +327,10 @@ function create() {
                     textureKey = `name_bubble_custom_${textId}`;
                 }
             }
-            // Push pledgeData BEFORE spawning
+            // Use data.name as the text for bubbles (for this event structure)
             pledgeData.push({
                 id: textId,
-                text: data.text || "",
+                text: data.name || data.text || "",
                 type: "text",
                 image,
                 textureKey,
@@ -818,15 +865,14 @@ function createSingleInitialNameBubble(pledge, index) {
         window.innerHeight * 0.35
     );
 
-    // Calculate scale based on pledge text length
+    // Calculate scale based on pledge text length using config map
     let textLength = pledge.text ? pledge.text.length : 0;
-    // Minimum scale for empty/short text, max for long text
-    const minScale = 0.12;
-    const maxScale = 0.28;
-    // For 0-30 chars, scale from minScale to maxScale
-    let scale = minScale;
-    if (textLength > 0) {
-        scale = minScale + (Math.min(textLength, 30) / 30) * (maxScale - minScale);
+    // Use temp bubble config for temp bubbles, otherwise normal config
+    let scale;
+    if (pledge.id && pledge.id.toString().startsWith('temp_')) {
+        scale = getTempBubbleScale(textLength);
+    } else {
+        scale = getNameBubbleScale(textLength);
     }
 
     // Create the name bubble sprite using tempBubbleKey
@@ -845,7 +891,7 @@ function createSingleInitialNameBubble(pledge, index) {
             0.7
         );
     }
-
+    nameBubble.baseScale = scale;
     nameBubble.objectType = "nameBubble";
     nameBubble.pledgeData = pledge;
 
@@ -930,26 +976,15 @@ function createNameBubble(pledge, textureKey) {
     const spawnX = fromLeft ? -60 : window.innerWidth + 60;
     const spawnY = window.innerHeight * 0.45 + Phaser.Math.Between(-40, 40); // a bit lower and with some vertical randomness
     // Create name bubble sprite
-    // Calculate scale based on pledge text length
+    // Calculate scale based on pledge text length using config map
     let textLength = pledge.text ? pledge.text.length : 0;
-    const minScale = 0.12;
-    const maxScale = 0.28;
-    let scale = minScale;
-    if (textLength > 0) {
-        scale = minScale + (Math.min(textLength, 30) / 30) * (maxScale - minScale);
-    }
+    let scale = getNameBubbleScale(textLength);
 
     let nameBubble;
     try {
         nameBubble = this.add
             .sprite(spawnX, spawnY, textureKey)
             .setScale(scale);
-        // Set display size to match scale for custom uploaded images
-        if (textureKey.startsWith("name_bubble_custom_")) {
-            // Use the same logic as temp bubbles: base size * scale
-            const baseSize = 900 * scale;
-            nameBubble.setDisplaySize(baseSize, baseSize);
-        }
     } catch (error) {
         // Name bubble image failed to load, using fallback
         nameBubble = this.add.circle(
@@ -960,6 +995,7 @@ function createNameBubble(pledge, textureKey) {
             0.7
         );
     }
+    nameBubble.baseScale = scale;
     nameBubble.alpha = 0;
     nameBubble.objectType = "nameBubble";
     nameBubble.pledgeData = pledge;
@@ -1032,10 +1068,9 @@ function createNameBubble(pledge, textureKey) {
                 nameBubble.setScale &&
                 !textureKey.startsWith("name_bubble_custom_")
             ) {
-                // Only wobble scale for normal bubbles, not custom images
+                // Use the correct scale from NAME_BUBBLE_SIZE_MAP, with a small wobble
                 const scaleWobble =
-                    TEMP_BUBBLE_SCALE +
-                    Math.sin(tweenObj.t * Math.PI * 2.2) * 0.012;
+                    scale + Math.sin(tweenObj.t * Math.PI * 2.2) * 0.012;
                 nameBubble.setScale(scaleWobble);
             }
         },
@@ -1386,6 +1421,10 @@ function update(time, delta) {
                 a.baseY +
                 Math.cos(a.floatTime * 0.8 + a.floatPhase) *
                     (a.floatRadius * 0.7);
+            // Always set scale to baseScale (from config)
+            if (a.setScale && a.baseScale) {
+                a.setScale(a.baseScale);
+            }
             // Keep bubbles in upper part only
             if (a.x < 60) a.x = 60;
             if (a.x > window.innerWidth - 60) a.x = window.innerWidth - 60;

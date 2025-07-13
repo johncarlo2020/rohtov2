@@ -264,7 +264,7 @@
             });
         } else {
             // Disable all input elements if permission is not 'full'
-            // $('input').not('#otp, [name="_token"]').prop('disabled', true);
+            $('#userForm :input').prop('disabled', true);
             // $('input[name="_token"]').prop('disabled', false); // ensure it's enabled
         }
     </script>

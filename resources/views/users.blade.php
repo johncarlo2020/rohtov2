@@ -208,9 +208,9 @@
             var permissionName = "{{ $permission }}";
             var table = $('#customer-table').DataTable({
                 responsive: true,
-                dom: "<\'row\'<\'col-sm-12 col-md-2\'l><\'col-sm-12 col-md-3\'B><\'col-sm-12 col-md-4\'f>>" +
-                    "<\'row\'<\'col-sm-12 table-responsive custom-table\'tr>>" +
-                    "<\'row\'<\'col-sm-12 col-md-6\'i><\'col-sm-12 col-md-6\'p>>",
+                dom: "<'row'<'col-sm-12 col-md-6'B><'col-sm-12 col-md-6 d-flex justify-content-end'f>>" +
+                    "<'row'<'col-sm-12 table-responsive custom-table' tr>>" +
+                    "<'row'<'d-flex justify-content-start col-sm-12 col-md-6 mt-3'i><'col-sm-12 col-md-6 mt-3 d-flex justify-content-end'p>>",
                 buttons: [{
                     extend: 'csv',
                     text: '<i class="fa fa-file-csv"></i> CSV',

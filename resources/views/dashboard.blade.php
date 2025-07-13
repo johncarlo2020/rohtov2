@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="py-5 map-page main-content main-background">
-        <div class="d-flex justify-content-center align-item-center">
+        <div class="d-flex justify-content-center align-item-center animate-entry">
             @include('components.branding')
         </div>
 
@@ -41,7 +41,7 @@
                 </div>
             </div>
         </div>
-        <div class="map mb-5">
+        <div class="map mb-5 animate-entry delay-2">
             <img class="map-img" src="{{ asset('images/brand/KOSE STB Map.webp') }}" alt="" />
             {{-- loop trough the $stations --}}
             {{-- <a class="map-pin start-pin"><span class="start-text">Start</span></a> --}}

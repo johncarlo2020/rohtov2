@@ -22,7 +22,7 @@ class StationSeeder extends Seeder
     {
         Station::create([
             'name' => 'Let Your Skin Dream Too',
-            'description' => 'Snap,Share,Tag @kosemy <br> #Sekkisei #SavetheBlue #SustainableBeauty <br> #BlueBottlePower #BeautywithPurpose',
+            'description' => 'Snap, Share, Tag @kosemy <br> #Sekkisei #SavetheBlue #SustainableBeauty <br> #BlueBottlePower #BeautywithPurpose',
         ]);
 
         Station::create([

@@ -7,17 +7,17 @@
     <div class="main-content">
         <div class="card p-0 shadow-lg rounded admin-card animate-entry">
             <div class="row g-0 h-100">
-                <div class="col-lg-6 col-md-0 main-background d-none d-lg-flex h-100">
-                    <div class="branding-container w-100 h-100 d-flex justify-content-center align-items-center animate-entry delay-2">
+                <div class="col-lg-6 col-md-0 main-background d-lg-flex h-lg-100 h-md-50 py-4">
+                    <div class="branding-container w-100 h-100  d-flex justify-content-center align-items-center animate-entry delay-2">
                         @include('components.branding')
                     </div>
                 </div>
-                <div class="col-12 col-lg-6 d-flex flex-column justify-content-center align-items-center p-5">
+                <div class="col-12 col-lg-6 d-flex flex-column justify-content-center align-items-center p-lg-5 px-md-5  p-3">
                     <form method="POST" id="loginForm" action="{{ route('authenticateAdmin') }}" class="w-100 animate-entry delay-5">
                         @csrf
-                        <div class="branding-container w-100 d-flex d-lg-none justify-content-center align-items-center mb-4 animate-entry delay-2">
+                        {{-- <div class="branding-container w-100 d-flex d-lg-none justify-content-center align-items-center mb-4 animate-entry delay-2">
                             @include('components.branding')
-                        </div>
+                        </div> --}}
                         <h4 class="mb-4 text-center">Welcome to {{ env('APP_NAME') }} Admin Panel</h4>
                         <div class="mb-4 input-group">
                             <span class="input-group-text"><i class="fas fa-envelope"></i></span>

@@ -22,7 +22,7 @@ class AddViewer extends Seeder
             'number' => '0123456789',
             'email' => 'viewer@gmail.com',
             'country' => 'Malaysia',
-            'password' => Hash::make('WowsomeRohtoViewer'),
+            'password' => Hash::make('WowsomeKoseViewer'),
         ]);
 
         $permission = Permission::create(['name' => 'view']);

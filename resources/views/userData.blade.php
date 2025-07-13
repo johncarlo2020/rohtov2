@@ -19,6 +19,12 @@
     </style>
     <div class="row">
         <div class="py-4 container-fluid">
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
             <div class="row">
                 <div class="col-md-12 mb-3">
                     <div class="shadow-lg card ">
@@ -103,13 +109,21 @@
                             <div class="card-body d-flex align-items-center gap-2 pt-0">
                                 <form method="POST" action="{{ route('verifyAdmin') }}" class="row">
                                     @csrf
+                                    <input type="hidden" name="user_id" value="{{ $user->id }}">
                                     <div class="col-auto">
-                                        <input type="text" class="form-control" id="otp" placeholder="Enter OTP">
+                                        <input type="text" class="form-control" id="otp" name="otp" placeholder="Enter OTP">
                                     </div>
                                     <div class="col-auto">
                                         <button type="submit" class="btn btn-primary mb-3">Verify</button>
                                     </div>
                                 </form>
+
+                                @if($errors->any())
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        {{ $errors->first('otp') }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -250,7 +264,8 @@
             });
         } else {
             // Disable all input elements if permission is not 'full'
-            $('input').prop('disabled', true);
+            // $('input').not('#otp, [name="_token"]').prop('disabled', true);
+            // $('input[name="_token"]').prop('disabled', false); // ensure it's enabled
         }
     </script>
 @endsection

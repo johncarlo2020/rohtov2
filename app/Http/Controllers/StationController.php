@@ -704,8 +704,8 @@ class StationController extends Controller
             $user->otp_verified = 1;
             $user->email_verified_at = Carbon::now();
             $user->save();
-
-             $data = GlobalHelper::createSampleProfile();
+            
+            //  $data = GlobalHelper::createSampleProfile();
               return back()->with('success', 'OTP verified successfully!');
         }
 

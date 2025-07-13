@@ -24,7 +24,7 @@
                 <div class="radio-image col">
                     <input type="radio" id="design2" name="design" value="coral" class="d-none">
                     <label for="design2">
-                        <img class="mb-3" src="{{ asset('images/brand/CoralWithName.webp') }}" alt="Design 2">
+                        <img class="mb-3" src="{{ asset('images/brand/CoralWithName.png') }}" alt="Design 2">
                         <p class="text-center">Coral with name</p>
                     </label>
                 </div>

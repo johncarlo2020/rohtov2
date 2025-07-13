@@ -116,6 +116,7 @@
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Number</th>
+                                <th>Race</th>
                                 <th>Country</th>
                                 @foreach ($data['stations'] as $station)
                                     <th>{{ $station['name'] }}</th>
@@ -131,6 +132,7 @@
                                     <td>{{ $user->fname }}</td>
                                     <td>{{ $user->email }}</td>
                                     <td>{{ $user->number }}</td>
+                                    <td>{{ $user->race }}</td>
                                     <td>{{ $user->country }}</td>
 
                                     @foreach ($user['stations'] as $station)

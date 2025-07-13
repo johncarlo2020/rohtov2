@@ -127,22 +127,14 @@ const CORAL_POSITIONS = [
         z: 1,
         tilt: -20,
     }, // Right middle rock
-    {
-        x: 0.75,
-        y: 0.47,
-        tiltOffsetX: -20,
-        tiltOffsetY: 8,
-        size: 0.3,
-        z: 1,
-        tilt: -30,
-    }, // Right upper rock
+    // Removed right upper rock (now permanent coral)
 ];
 
 let currentCoralPositionIndex = 0;
 
 // Limits for objects on screen
 
-const MAX_CORALS = 6;
+const MAX_CORALS = 5;
 const MAX_NAME_BUBBLES = 6;
 
 // Adjustable Variables
@@ -210,8 +202,8 @@ function preload() {
     this.load.image("aquarium_bg", "images/brand/live-feed/bg.webp");
 
     // Load tempCoral images for initial corals
-    for (let i = 1; i <= 1; i++) {
-        this.load.image(`tempCoral${i}`, `images/tempCoral/${i}.png`);
+    for (let i = 1; i <= 2; i++) {
+        this.load.image(`tempCoral${i}`, `images/tempCoral/${i}.webp`);
     }
 }
 
@@ -243,11 +235,94 @@ function create() {
     this.validateGroupSizes = validateGroupSizes.bind(this);
 
     preloadCustomPledgeImages(this, () => {
+        // Add permanent coral before other corals
+        addPermanentCoral.call(this);
         addCorals.call(this);
         addNameBubbles.call(this);
         addOceanFloorBubbles.call(this);
         addRandomAreaBubbles.call(this);
     });
+// Add a permanent coral at a fixed position that is never removed
+function addPermanentCoral() {
+    // Position and config as specified
+    const coralPosition = {
+        x: 0.75,
+        y: 0.47,
+        tiltOffsetX: -20,
+        tiltOffsetY: 8,
+        size: 0.3,
+        z: 1,
+        tilt: -30,
+    };
+    const aquariumContainer = document.getElementById("aquarium-container");
+    const aquariumWidth = aquariumContainer
+        ? aquariumContainer.clientWidth
+        : window.innerWidth;
+    const aquariumHeight = aquariumContainer
+        ? aquariumContainer.clientHeight
+        : window.innerHeight;
+    const finalX =
+        coralPosition.x * aquariumWidth + (coralPosition.tiltOffsetX || 0);
+    const finalY =
+        coralPosition.y * aquariumHeight + (coralPosition.tiltOffsetY || 0);
+    let coral;
+    const textureKey = "tempCoral2";
+    const baseScale = coralPosition.size || 1.4;
+    try {
+        coral = this.add.sprite(finalX, finalY, textureKey).setScale(baseScale);
+        coral.baseScale = baseScale;
+        coral.baseAlpha = 1.0;
+        coral.setPostPipeline("WigglePostFX");
+    } catch (error) {
+        const colors = [0xff6b6b, 0x4ecdc4, 0x45b7d1, 0xf9ca24, 0xf0932b, 0xeb4d4b];
+        coral = this.add.circle(
+            finalX,
+            finalY,
+            25,
+            colors[1]
+        );
+        coral.baseScale = 1.0;
+        coral.baseAlpha = 1.0;
+    }
+    coral.objectType = "permanentCoral";
+    coral.isPlanted = true;
+    coral.phase = "planted";
+    coral.swayTime = Math.random() * Math.PI * 2;
+    coral.bobTime = Math.random() * Math.PI * 2;
+    coral.originalX = coral.x;
+    coral.originalY = coral.y;
+    coral.setDepth(coralPosition.z || 5);
+    coral.swaySpeed = Phaser.Math.FloatBetween(0.7, 1.1);
+    coral.bobSpeed = Phaser.Math.FloatBetween(0.9, 1.2);
+    coral.primarySwayAmp = Phaser.Math.FloatBetween(3.5, 5.5);
+    coral.secondarySwayFreq = Phaser.Math.FloatBetween(1.5, 2.1);
+    coral.secondarySwayAmp = Phaser.Math.FloatBetween(1.0, 2.2);
+    coral.tertiarySwayFreq = Phaser.Math.FloatBetween(0.7, 1.1);
+    coral.tertiarySwayAmp = Phaser.Math.FloatBetween(1.2, 2.5);
+    coral.primaryBobFreq = Phaser.Math.FloatBetween(1.0, 1.2);
+    coral.primaryBobAmp = Phaser.Math.FloatBetween(1.0, 2.0);
+    coral.secondaryBobFreq = Phaser.Math.FloatBetween(1.5, 2.2);
+    coral.secondaryBobAmp = Phaser.Math.FloatBetween(0.5, 1.2);
+    coral.tiltFreq = Phaser.Math.FloatBetween(0.7, 1.1);
+    coral.tiltAmp = Phaser.Math.FloatBetween(0.07, 0.12);
+    coral.scaleFreq = Phaser.Math.FloatBetween(1.1, 1.5);
+    coral.scaleAmp = Phaser.Math.FloatBetween(0.015, 0.035);
+    coral.alphaFreq = Phaser.Math.FloatBetween(0.6, 0.9);
+    coral.alphaAmp = Phaser.Math.FloatBetween(0.08, 0.13);
+    coral.tintFreq = Phaser.Math.FloatBetween(0.4, 0.7);
+    coral.tintStrength = Phaser.Math.FloatBetween(0.12, 0.18);
+    coral.MIN_X = 80;
+    coral.MAX_X = window.innerWidth - 80;
+    coral.MIN_Y = 50;
+    coral.MAX_Y = window.innerHeight * 0.5;
+    coral.tiltOffsetX = coralPosition.tiltOffsetX || 0;
+    coral.tiltOffsetY = coralPosition.tiltOffsetY || 0;
+    if (typeof coralPosition.tilt === "number" && coral.setRotation) {
+        coral.setRotation(Phaser.Math.DegToRad(coralPosition.tilt));
+    }
+    // Not added to coralGroup or corals array, so never removed
+    startCoralBubbles.call(this, coral);
+}
 
     // Initialize bubble groups
     this.coralBubblesGroup = this.add.group();

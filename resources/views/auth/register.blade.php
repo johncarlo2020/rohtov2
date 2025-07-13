@@ -31,12 +31,17 @@
                                     class="input-text form-control w-100 @error('number') is-invalid @enderror"
                                     name="number" value="{{ old('number') }}" required autocomplete="number"
                                     autofocus />
+                                @error('number')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
                             </div>
                             <div class="mt-2 col-12">
                                 <span id="valid-msg" class="d-none text-danger"></span>
                                 <span id="error-msg" class="d-none text-danger"></span>
                             </div>
-                        </div>                        
+                        </div>
 
                         <div class="mb-3 row">
                             <div class="col-12">

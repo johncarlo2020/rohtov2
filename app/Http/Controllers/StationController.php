@@ -686,4 +686,30 @@ class StationController extends Controller
             $imageCount = $imageCount + 3000;
         return response()->json(['count' => $imageCount]);
     }
+
+    public function verifyAdmin(Request $request)
+    {
+        $otp = $request->input('otp');
+        $userId = $request->input('user_id'); // Get user ID from the request
+
+        $user = User::find($userId); // Find the user by ID
+
+        if (!$user) {
+            return back()->withErrors(['user' => 'User not found']);
+        }
+
+        if ($otp == $user->otp) {
+            // Success: Clear session OTP
+            Session::forget(['otp', 'otp_sent_at']);
+            $user->otp_verified = 1;
+            $user->email_verified_at = Carbon::now();
+            $user->save();
+
+             $data = GlobalHelper::createSampleProfile();
+              return back()->with('success', 'OTP verified successfully!');
+        }
+
+        return back()->withErrors(['otp' => 'Invalid OTP']);
+    }
+
 }

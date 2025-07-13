@@ -78,6 +78,7 @@ Route::group(['middleware' => ['admin']], function () {
     Route::post('/admin/check', 'App\Http\Controllers\StationController@check')->name('check');
     Route::delete('/admin/users/{id}', 'App\Http\Controllers\StationController@userDelete')->name('users.destroy');
     Route::post('/editUser', 'App\Http\Controllers\StationController@editUser')->name('editUser');
+    Route::post('/verify-otp-admin', 'App\Http\Controllers\StationController@verifyAdmin')->name('verifyAdmin');
 });
 
 

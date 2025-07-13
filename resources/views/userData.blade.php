@@ -32,7 +32,7 @@
                                 <div class="col-auto my-auto">
                                     <div class="h-100">
                                         <h5 class="mb-1">
-                                            {{ $user->fname }} {{ $user->lname }}
+                                            {{ $user->fname }}
                                         </h5>
                                         <p class="mb-0 text-sm font-weight-bold">
                                             {{ $user->email }}
@@ -62,8 +62,8 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="example-text-input" class="form-control-label">Last Name</label>
-                                            <input class="form-control" type="text" disabled value="{{ $user->lname }}">
+                                            <label for="example-text-input" class="form-control-label">OTP</label>
+                                            <input class="form-control" type="text" disabled value="{{ $user->otp }}">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -79,6 +79,12 @@
                                             <input class="form-control" type="text" disabled value="{{ $user->number }}">
                                         </div>
                                     </div>
+                                     <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="example-text-input" class="form-control-label">Date of birth</label>
+                                            <input id="dob" class="form-control" type="date" disabled value="{{ $user->dob }}">
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="d-flex justify-content-end">
                                     <button type="button" id="submitBtn"
@@ -88,9 +94,30 @@
                         </div>
                     </div>
                 </div>
+                @if ($user->otp_verified == 0 || $user->otp_verified == '')
+                    <div class="col-12 mt-3">
+                        <div class="card">
+                            <div class="p-3 card-header">
+                                <h6 class="mb-0">Manual OTP verify</h6>
+                            </div>
+                            <div class="card-body d-flex align-items-center gap-2 pt-0">
+                                <form method="POST" action="{{ route('verifyAdmin') }}" class="row">
+                                    @csrf
+                                    <div class="col-auto">
+                                        <input type="text" class="form-control" id="otp" placeholder="Enter OTP">
+                                    </div>
+                                    <div class="col-auto">
+                                        <button type="submit" class="btn btn-primary mb-3">Verify</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
                 <div class="col-md-12 mt-3">
                     <div class="card">
-                        <div class="p-3 pb-0 card-header">
+                        <div class="pb-0 card-header">
                             <h6 class="mb-0">Stations</h6>
                         </div>
                         <div class="p-3 card-body">
@@ -136,7 +163,7 @@
         </div>
     </div>
 
-    {{-- Success Modal --}}
+    <!-- {{-- Success Modal --}} -->
     <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -155,7 +182,7 @@
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    {{-- Include Bootstrap JS for modal functionality if not already included --}}
+    <!-- {{-- Include Bootstrap JS for modal functionality if not already included --}} -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         var permissionName = "{{ $permission }}";

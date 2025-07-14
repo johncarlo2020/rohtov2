@@ -874,84 +874,110 @@ function startCoralTween({
     textureKey,
     onTweenComplete,
 }) {
-    let tweenObj = { t: 0 };
+    // New: Two-stage animation - first to center, then to final location
+    let tweenObj1 = { t: 0 };
+    let tweenObj2 = { t: 0 };
     const bubbleStartScale = 0.18;
     const bubbleEndScale = 0.28;
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+    // Fix: Use initial spawn position for path1, not coral.x/y (which change during tween)
+    const spawnX = coral.x;
+    const spawnY = coral.y;
+    // Path 1: from spawn to center
+    const path1 = {
+        getPoint: (t) => {
+            const x = (1 - t) * spawnX + t * centerX;
+            const y = (1 - t) * spawnY + t * centerY;
+            return { x, y };
+        },
+    };
+    // Path 2: from center to final
+    const path2 = createBezierPath(centerX, centerY, finalX, finalY);
 
+    // First tween: to center (even slower and smoother)
     this.tweens.add({
-        targets: tweenObj,
+        targets: tweenObj1,
         t: 1,
-        duration: 3500,
+        duration: 5200,
         ease: "Sine.easeInOut",
         onUpdate: () => {
-            const pos = path.getPoint(tweenObj.t);
+            const pos = path1.getPoint(tweenObj1.t);
             coral.x = pos.x;
             coral.y = pos.y;
             bubble.x = pos.x;
             bubble.y = pos.y;
-
-            const pulse = Math.sin(tweenObj.t * Math.PI) * 0.5 + 0.5;
-            const bubbleScale =
-                bubbleStartScale + (bubbleEndScale - bubbleStartScale) * pulse;
+            const pulse = Math.sin(tweenObj1.t * Math.PI) * 0.5 + 0.5;
+            const bubbleScale = bubbleStartScale + (bubbleEndScale - bubbleStartScale) * pulse;
             bubble.setScale(bubbleScale);
         },
         onComplete: () => {
-            bubble.play("bubble_pop");
-            bubble.on("animationcomplete", () => {
-                bubble.destroy();
-                coral.x = finalX;
-                coral.y = finalY;
-                coral.originalX = finalX;
-                coral.originalY = finalY;
-
-                if (typeof coralPosition.tilt === "number") {
-                    coral.setRotation(Phaser.Math.DegToRad(coralPosition.tilt));
-                }
-
-                coral.setDepth(coralPosition.z || 5);
-                coral.isPlanted = true;
-                coral.phase = "planted";
-
-                if (textureKey.startsWith("coral_custom_")) {
-                    const screenWidth = window.innerWidth;
-                    const finalSize =
-                        screenWidth * (coralPosition.size || 0.25);
-                    const startSize = finalSize * 0.1;
-
-                    coral.setDisplaySize(startSize, startSize);
-                    coral.alpha = 0.9;
-
-                    this.tweens.add({
-                        targets: coral,
-                        displayWidth: finalSize,
-                        displayHeight: finalSize,
-                        duration: 2200,
-                        ease: "Elastic.easeOut",
-                        onComplete: () => {
-                            coral.setDisplaySize(finalSize, finalSize);
-                            startCoralBubbles.call(this, coral);
-                            currentCoralPositionIndex++;
-                            if (typeof onTweenComplete === "function")
-                                onTweenComplete();
-                        },
+            // Second tween: to final location (slower and smoother)
+            this.tweens.add({
+                targets: tweenObj2,
+                t: 1,
+                duration: 3200,
+                ease: "Sine.easeInOut",
+                onUpdate: () => {
+                    const pos = path2.getPoint(tweenObj2.t);
+                    coral.x = pos.x;
+                    coral.y = pos.y;
+                    bubble.x = pos.x;
+                    bubble.y = pos.y;
+                    const pulse = Math.sin(tweenObj2.t * Math.PI) * 0.5 + 0.5;
+                    const bubbleScale = bubbleStartScale + (bubbleEndScale - bubbleStartScale) * pulse;
+                    bubble.setScale(bubbleScale);
+                },
+                onComplete: () => {
+                    bubble.play("bubble_pop");
+                    bubble.on("animationcomplete", () => {
+                        bubble.destroy();
+                        coral.x = finalX;
+                        coral.y = finalY;
+                        coral.originalX = finalX;
+                        coral.originalY = finalY;
+                        if (typeof coralPosition.tilt === "number") {
+                            coral.setRotation(Phaser.Math.DegToRad(coralPosition.tilt));
+                        }
+                        coral.setDepth(coralPosition.z || 5);
+                        coral.isPlanted = true;
+                        coral.phase = "planted";
+                        if (textureKey.startsWith("coral_custom_")) {
+                            const screenWidth = window.innerWidth;
+                            const finalSize = screenWidth * (coralPosition.size || 0.25);
+                            const startSize = finalSize * 0.1;
+                            coral.setDisplaySize(startSize, startSize);
+                            coral.alpha = 0.9;
+                            this.tweens.add({
+                                targets: coral,
+                                displayWidth: finalSize,
+                                displayHeight: finalSize,
+                                duration: 2200,
+                                ease: "Elastic.easeOut",
+                                onComplete: () => {
+                                    coral.setDisplaySize(finalSize, finalSize);
+                                    startCoralBubbles.call(this, coral);
+                                    currentCoralPositionIndex++;
+                                    if (typeof onTweenComplete === "function") onTweenComplete();
+                                },
+                            });
+                        } else {
+                            const startScale = baseScale * 0.1;
+                            coral.setScale(startScale);
+                            this.tweens.add({
+                                targets: coral,
+                                scale: baseScale,
+                                duration: 1500,
+                                ease: "Elastic.easeOut",
+                                onComplete: () => {
+                                    startCoralBubbles.call(this, coral);
+                                    currentCoralPositionIndex++;
+                                    if (typeof onTweenComplete === "function") onTweenComplete();
+                                },
+                            });
+                        }
                     });
-                } else {
-                    const startScale = baseScale * 0.1;
-                    coral.setScale(startScale);
-
-                    this.tweens.add({
-                        targets: coral,
-                        scale: baseScale,
-                        duration: 1500,
-                        ease: "Elastic.easeOut",
-                        onComplete: () => {
-                            startCoralBubbles.call(this, coral);
-                            currentCoralPositionIndex++;
-                            if (typeof onTweenComplete === "function")
-                                onTweenComplete();
-                        },
-                    });
-                }
+                },
             });
         },
     });

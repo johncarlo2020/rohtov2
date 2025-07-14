@@ -768,7 +768,7 @@ function getFinalPosition(coralPosition) {
 }
 
 function createBubble(x, y, coralDepth) {
-    const bubbleStartScale = 0.18; // fixed bubble size
+    const bubbleStartScale = 0.55; // much larger bubble size
     const bubble = this.add
         .sprite(x, y, "bubble_anim", 0)
         .setScale(bubbleStartScale)
@@ -787,7 +787,7 @@ function createBubble(x, y, coralDepth) {
 function createCoral(textureKey, x, y, pledge, scale) {
     let coral;
     try {
-        coral = this.add.sprite(x, y, textureKey).setScale(0.1); // small start scale
+        coral = this.add.sprite(x, y, textureKey).setScale(0.28); // even larger start scale
         coral.setPostPipeline("WigglePostFX");
     } catch {
         const colors = [
@@ -845,8 +845,8 @@ function applyCoralAnimationConfig(coral) {
 
 function createBezierPath(startX, startY, endX, endY) {
     const controlX = (startX + endX) / 2;
-    const controlY =
-        Math.max(startY, endY) + Math.abs(endY - startY) * 0.6 + 100;
+    // Reduce downward curve: controlY is closer to the higher of startY/endY, less offset
+    const controlY = Math.max(startY, endY) + Math.abs(endY - startY) * 0.25 + 30;
 
     return {
         getPoint: (t) => ({
@@ -876,8 +876,8 @@ function startCoralTween({
     // New: Two-stage animation - first to center, then to final location
     let tweenObj1 = { t: 0 };
     let tweenObj2 = { t: 0 };
-    const bubbleStartScale = 0.18;
-    const bubbleEndScale = 0.28;
+    const bubbleStartScale = 0.55;
+    const bubbleEndScale = 0.7;
     const centerX = window.innerWidth / 2;
     const centerY = window.innerHeight / 2;
     // Fix: Use initial spawn position for path1, not coral.x/y (which change during tween)
@@ -950,7 +950,7 @@ function startCoralTween({
                             const screenWidth = window.innerWidth;
                             const finalSize =
                                 screenWidth * (coralPosition.size || 0.25);
-                            const startSize = finalSize * 0.1;
+                            const startSize = finalSize * 0.28;
                             coral.setDisplaySize(startSize, startSize);
                             coral.alpha = 0.9;
                             this.tweens.add({
@@ -968,7 +968,7 @@ function startCoralTween({
                                 },
                             });
                         } else {
-                            const startScale = baseScale * 0.1;
+                            const startScale = baseScale * 0.28;
                             coral.setScale(startScale);
                             this.tweens.add({
                                 targets: coral,

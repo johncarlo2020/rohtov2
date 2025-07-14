@@ -113,7 +113,7 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Name</th>
+                            <th class="sticky-action">Name</th>
                             <th>Email</th>
                             <th>Number</th>
                             <th>Race</th>
@@ -121,7 +121,7 @@
                             @foreach ($data['stations'] as $station)
                             <th>{{ $station['name'] }}</th>
                             @endforeach
-                            <th class="sticky-action">Action</th>
+                            <th>Action</th>
 
                         </tr>
                     </thead>
@@ -129,7 +129,7 @@
                         @foreach ($data['users'] as $user)
                         <tr data-user-id="{{ $user->id }}">
                             <td>{{ $user->id }}</td>
-                            <td>{{ $user->fname }}</td>
+                            <td class="sticky-action">{{ $user->fname }}</td>
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->number }}</td>
                             <td>{{ $user->race }}</td>
@@ -140,7 +140,7 @@
                                 {{ $station['value'] ? 'Yes' : 'No' }}</td>
                             @endforeach
 
-                            <td class="button-delete sticky-action">
+                            <td class="button-delete">
                                 <button class="btn btn-danger btn-sm delete-user-btn" data-user-id="{{ $user->id }}"
                                     data-user-name="{{ $user->fname }} {{ $user->lname }}">Delete</button>
                             </td>
@@ -185,13 +185,13 @@
 <style>
     .sticky-action {
         position: sticky !important;
-        right: 0 !important;
+        left: 0 !important;
         background-color: white !important;
         z-index: 10 !important;
-        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1) !important;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1) !important;
     }
 
-    /* Sticky header for the action column */
+    /* Sticky header for the name column */
     thead .sticky-action {
         background-color: #f8f9fa !important;
         z-index: 11 !important;
@@ -203,19 +203,19 @@
     }
 
     /* Make sure the sticky column has proper border */
-    .sticky-action::before {
+    .sticky-action::after {
         content: '';
         position: absolute;
-        left: -1px;
+        right: -1px;
         top: 0;
         bottom: 0;
         width: 1px;
         background-color: #dee2e6;
     }
 
-    /* Ensure minimum width for the action column */
+    /* Ensure minimum width for the name column */
     .sticky-action {
-        min-width: 100px !important;
+        min-width: 120px !important;
     }
 </style>
 <script src="{{ asset('assets/js/core/bootstrap.min.js') }}"></script>

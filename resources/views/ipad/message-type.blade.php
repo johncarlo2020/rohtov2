@@ -118,6 +118,10 @@
     @push('scripts')
         <script>
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            // Font and layout constants
+            const BUBBLE_FONT_SIZE = 130;
+            const CORAL_FONT_SIZE = 72;
+            const LINE_HEIGHT = 150; // line height for wrapped text
 
             const steps = ['type', 'text', 'coral', 'finish'];
             let currentStep = 0;
@@ -349,11 +353,13 @@
                     ctx.drawImage(bg, bubbleX, bubbleY, bubbleW, bubbleH);
                     if (pledgeData.type === 'text') {
                         ctx.fillStyle = 'white';
-                        ctx.font = 'bold 75px "Palatino", serif';
+                        ctx.font = `500 ${BUBBLE_FONT_SIZE}px "Forum", serif`;
                         ctx.textAlign = 'center';
                         ctx.textBaseline = 'middle';
                         ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
                         ctx.shadowBlur = 18;
+                        ctx.shadowOffsetX = 4;  // add horizontal shadow offset
+                        ctx.shadowOffsetY = 4;  // add vertical shadow offset
 
                         // Improved text wrapping logic: split long words if needed
                         const maxWidth = width * 0.6;
@@ -400,7 +406,7 @@
                             lines.push(currentLine);
                         }
                         // Center lines vertically
-                        const lineHeight = 90;
+                        const lineHeight = LINE_HEIGHT;
                         const totalTextHeight = lines.length * lineHeight;
                         let startY = height / 2 - totalTextHeight / 2 + lineHeight / 2;
                         lines.forEach((line, i) => {
@@ -472,7 +478,7 @@
                         // Draw background rectangle for text
                         const padding = 54; // 3x original
                         const text = pledgeData.text;
-                        ctx.font = 'bold 54px "Palatino", serif'; // 3x original
+                        ctx.font = `500 ${CORAL_FONT_SIZE}px "Forum", serif`;
                         const textWidth = ctx.measureText(text).width + padding * 2;
                         const textHeight = 114; // 3x original
                         ctx.fillStyle = signConfig.backgroundColor;
@@ -490,6 +496,8 @@
                         ctx.shadowColor = signConfig.textColor === '#ffffff' ?
                             'rgba(0,0,0,0.8)' : 'rgba(0,0,0,0.3)';
                         ctx.shadowBlur = 6;
+                        ctx.shadowOffsetX = 2;  // add horizontal shadow offset for coral text
+                        ctx.shadowOffsetY = 2;  // add vertical shadow offset for coral text
                         ctx.fillText(text, 0, 0);
 
                         ctx.restore();
@@ -614,7 +622,7 @@
                             formData.append('pledge_image', blob, `pledge_text_${Date.now()}.png`);
                             formData.append('pledge_text', pledgeData.text);
                             formData.append('pledge_type', pledgeData.type);
-                            fetch('{{ route('upload.babyIpad') }}', {
+                            fetch('{{ route("upload.babyIpad") }}', {
                                     method: 'POST',
                                     headers: {
                                         'X-CSRF-TOKEN': csrfToken
@@ -659,7 +667,7 @@
                                 formData.append('pledge_image', blob, `pledge_text_${Date.now()}.png`);
                                 formData.append('pledge_text', pledgeData.text);
                                 formData.append('pledge_type', pledgeData.type);
-                                fetch('{{ route('upload.babyIpad') }}', {
+                            fetch('{{ route("upload.babyIpad") }}', {
                                         method: 'POST',
                                         headers: {
                                             'X-CSRF-TOKEN': csrfToken
@@ -758,7 +766,7 @@
                     ctx.rotate((signConfig.tilt || 0) * Math.PI / 180);
                     const padding = 54;
                     const text = pledgeData.text;
-                    ctx.font = 'bold 54px "Palatino", serif';
+                    ctx.font = '500 72px "Forum", serif';
                     const textWidth = ctx.measureText(text).width + padding * 2;
                     const textHeight = 114;
                     ctx.fillStyle = signConfig.backgroundColor;
@@ -773,6 +781,8 @@
                     ctx.textBaseline = 'middle';
                     ctx.shadowColor = signConfig.textColor === '#ffffff' ? 'rgba(0,0,0,0.8)' : 'rgba(0,0,0,0.3)';
                     ctx.shadowBlur = 6;
+                    ctx.shadowOffsetX = 2;  // add horizontal shadow offset for upload coral text
+                    ctx.shadowOffsetY = 2;  // add vertical shadow offset for upload coral text
                     ctx.fillText(text, 0, 0);
                     ctx.restore();
                     // Upload the generated canvas
@@ -785,7 +795,7 @@
                         formData.append('pledge_image', blob, `pledge_coral_${Date.now()}.png`);
                         formData.append('pledge_text', pledgeData.text);
                         formData.append('pledge_type', pledgeData.type);
-                        fetch('{{ route('upload.babyIpad') }}', {
+                        fetch('{{ route("upload.babyIpad") }}', {
                                 method: 'POST',
                                 headers: {
                                     'X-CSRF-TOKEN': csrfToken
@@ -815,7 +825,7 @@
             }
 
             function returnToDashboard() {
-                // window.location.href = "{{ route('ipad.index') }}"; // Adjust route if needed
+                window.location.href = "{{ route('ipad.index') }}"; // Adjust route if needed
             }
 
 

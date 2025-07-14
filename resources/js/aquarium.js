@@ -113,13 +113,13 @@ const CORAL_POSITIONS = [
         tilt: -10,
     }, // Left upper rock
     {
-        x: 0.82,
-        y: 0.91,
-        tiltOffsetX: -18,
-        tiltOffsetY: 6,
-        size: 0.8,
+        x: 0.8,
+        y: 0.5,
+        tiltOffsetX: -20,
+        tiltOffsetY: 8,
+        size: 0.5,
         z: 1,
-        tilt: -25,
+        tilt: -15,
     }, // Right side bottom
     {
         x: 0.8,
@@ -128,7 +128,7 @@ const CORAL_POSITIONS = [
         tiltOffsetY: 4,
         size: 0.5,
         z: 1,
-        tilt: -20,
+        tilt: -15,
     }, // Right middle rock
     // Removed right upper rock (now permanent coral)
 ];
@@ -247,13 +247,13 @@ function create() {
     function addPermanentCoral() {
         // Position and config as specified
         const coralPosition = {
-            x: 0.8,
-            y: 0.5,
-            tiltOffsetX: -20,
-            tiltOffsetY: 8,
-            size: 0.5,
-            z: 1,
-            tilt: -30,
+            x: 0.82,
+            y: 0.91,
+            tiltOffsetX: -18,
+            tiltOffsetY: 6,
+            size: 0.8,
+            z: 4,
+            tilt: -10,
         };
         const aquariumContainer = document.getElementById("aquarium-container");
         const aquariumWidth = aquariumContainer
@@ -417,7 +417,6 @@ function create() {
                 image,
                 textureKey,
             });
-
 
             if (image) {
                 if (image.startsWith("data:")) {
@@ -908,7 +907,8 @@ function startCoralTween({
             bubble.x = pos.x;
             bubble.y = pos.y;
             const pulse = Math.sin(tweenObj1.t * Math.PI) * 0.5 + 0.5;
-            const bubbleScale = bubbleStartScale + (bubbleEndScale - bubbleStartScale) * pulse;
+            const bubbleScale =
+                bubbleStartScale + (bubbleEndScale - bubbleStartScale) * pulse;
             bubble.setScale(bubbleScale);
         },
         onComplete: () => {
@@ -925,7 +925,9 @@ function startCoralTween({
                     bubble.x = pos.x;
                     bubble.y = pos.y;
                     const pulse = Math.sin(tweenObj2.t * Math.PI) * 0.5 + 0.5;
-                    const bubbleScale = bubbleStartScale + (bubbleEndScale - bubbleStartScale) * pulse;
+                    const bubbleScale =
+                        bubbleStartScale +
+                        (bubbleEndScale - bubbleStartScale) * pulse;
                     bubble.setScale(bubbleScale);
                 },
                 onComplete: () => {
@@ -937,14 +939,17 @@ function startCoralTween({
                         coral.originalX = finalX;
                         coral.originalY = finalY;
                         if (typeof coralPosition.tilt === "number") {
-                            coral.setRotation(Phaser.Math.DegToRad(coralPosition.tilt));
+                            coral.setRotation(
+                                Phaser.Math.DegToRad(coralPosition.tilt)
+                            );
                         }
                         coral.setDepth(coralPosition.z || 5);
                         coral.isPlanted = true;
                         coral.phase = "planted";
                         if (textureKey.startsWith("coral_custom_")) {
                             const screenWidth = window.innerWidth;
-                            const finalSize = screenWidth * (coralPosition.size || 0.25);
+                            const finalSize =
+                                screenWidth * (coralPosition.size || 0.25);
                             const startSize = finalSize * 0.1;
                             coral.setDisplaySize(startSize, startSize);
                             coral.alpha = 0.9;
@@ -958,7 +963,8 @@ function startCoralTween({
                                     coral.setDisplaySize(finalSize, finalSize);
                                     startCoralBubbles.call(this, coral);
                                     currentCoralPositionIndex++;
-                                    if (typeof onTweenComplete === "function") onTweenComplete();
+                                    if (typeof onTweenComplete === "function")
+                                        onTweenComplete();
                                 },
                             });
                         } else {
@@ -972,7 +978,8 @@ function startCoralTween({
                                 onComplete: () => {
                                     startCoralBubbles.call(this, coral);
                                     currentCoralPositionIndex++;
-                                    if (typeof onTweenComplete === "function") onTweenComplete();
+                                    if (typeof onTweenComplete === "function")
+                                        onTweenComplete();
                                 },
                             });
                         }
@@ -1126,13 +1133,22 @@ function createSingleInitialNameBubble(pledge, index) {
     nameBubble.floatPhase = Math.random() * Math.PI * 2;
 
     // Improved bubble-like entry animation: more pronounced wavy path, scale pulse, gentle ease-out
-    const controlX = spawnX + (finalX - spawnX) * 0.45 + Phaser.Math.Between(-60, 60);
+    const controlX =
+        spawnX + (finalX - spawnX) * 0.45 + Phaser.Math.Between(-60, 60);
     const controlY = spawnY - Phaser.Math.Between(120, 200);
     const path = {
         getPoint: (t) => {
             // More pronounced horizontal and vertical wobble, like a bubble
-            const wobbleX = Math.sin(t * Math.PI * 3.2 + Math.sin(t * 8)) * 18 * (1 - t) * 0.7;
-            const wobbleY = Math.cos(t * Math.PI * 2.7 + Math.cos(t * 7)) * 12 * (1 - t) * 0.6;
+            const wobbleX =
+                Math.sin(t * Math.PI * 3.2 + Math.sin(t * 8)) *
+                18 *
+                (1 - t) *
+                0.7;
+            const wobbleY =
+                Math.cos(t * Math.PI * 2.7 + Math.cos(t * 7)) *
+                12 *
+                (1 - t) *
+                0.6;
             const x =
                 (1 - t) * (1 - t) * spawnX +
                 2 * (1 - t) * t * controlX +
@@ -1162,7 +1178,9 @@ function createSingleInitialNameBubble(pledge, index) {
             nameBubble.alpha = tweenObj.t;
             // Bubble scale pulse: grows then settles
             if (nameBubble.setScale) {
-                const pulse = 1 + Math.sin(tweenObj.t * Math.PI) * 0.13 * (1 - tweenObj.t);
+                const pulse =
+                    1 +
+                    Math.sin(tweenObj.t * Math.PI) * 0.13 * (1 - tweenObj.t);
                 nameBubble.setScale(baseScale * pulse);
             }
         },
@@ -1260,13 +1278,22 @@ function createNameBubble(pledge, textureKey) {
     nameBubble.floatRadius = Phaser.Math.Between(18, 36);
     nameBubble.floatPhase = Math.random() * Math.PI * 2;
     // Improved bubble-like entry animation: always from middle bottom, pronounced wavy path, scale pulse, gentle ease-out
-    const controlX = spawnX + (finalX - spawnX) * 0.45 + Phaser.Math.Between(-60, 60);
+    const controlX =
+        spawnX + (finalX - spawnX) * 0.45 + Phaser.Math.Between(-60, 60);
     const controlY = spawnY - Phaser.Math.Between(120, 200); // arched upward
     const path = {
         getPoint: (t) => {
             // More pronounced horizontal and vertical wobble, like a bubble
-            const wobbleX = Math.sin(t * Math.PI * 3.2 + Math.sin(t * 8)) * 18 * (1 - t) * 0.7;
-            const wobbleY = Math.cos(t * Math.PI * 2.7 + Math.cos(t * 7)) * 12 * (1 - t) * 0.6;
+            const wobbleX =
+                Math.sin(t * Math.PI * 3.2 + Math.sin(t * 8)) *
+                18 *
+                (1 - t) *
+                0.7;
+            const wobbleY =
+                Math.cos(t * Math.PI * 2.7 + Math.cos(t * 7)) *
+                12 *
+                (1 - t) *
+                0.6;
             const x =
                 (1 - t) * (1 - t) * spawnX +
                 2 * (1 - t) * t * controlX +
@@ -1296,7 +1323,9 @@ function createNameBubble(pledge, textureKey) {
             nameBubble.alpha = tweenObj.t;
             // Bubble scale pulse: grows then settles
             if (nameBubble.setScale) {
-                const pulse = 1 + Math.sin(tweenObj.t * Math.PI) * 0.13 * (1 - tweenObj.t);
+                const pulse =
+                    1 +
+                    Math.sin(tweenObj.t * Math.PI) * 0.13 * (1 - tweenObj.t);
                 nameBubble.setScale(baseScale * pulse);
             }
         },
@@ -1637,7 +1666,8 @@ function update(time, delta) {
                 // Bubble-like wavy floating (horizontal and vertical)
                 a.floatTime += dt * a.floatSpeed;
                 a.x =
-                    a.baseX + Math.sin(a.floatTime + a.floatPhase) * a.floatRadius;
+                    a.baseX +
+                    Math.sin(a.floatTime + a.floatPhase) * a.floatRadius;
                 a.y =
                     a.baseY +
                     Math.cos(a.floatTime * 0.8 + a.floatPhase) *

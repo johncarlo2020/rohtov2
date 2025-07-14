@@ -10,6 +10,8 @@
 <script>
     var clock;
     $(document).ready(function () {
+
+        console.log("Document is ready, initializing FlipClock...");
       clock = $('.clock').FlipClock(0, {
         clockFace: 'Counter',
         autoStart: false, // Do not start automatically

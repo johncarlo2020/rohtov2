@@ -696,6 +696,7 @@ class StationController extends Controller
 
     public function getValue()
     {
+
         // Count all image files in storage/app/public/babies
         $imageCount = collect(\Storage::files('public/babies'))
             ->filter(function($file) {

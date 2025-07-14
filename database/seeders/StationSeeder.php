@@ -40,29 +40,6 @@ class StationSeeder extends Seeder
             'name' => 'Gift Redemption',
         ]);
 
-        Workshop::create([
-            'title' => 'DIY Bento Workshop',
-            'time' => '2:00 PM - 3:00 PM',
-        ]);
-
-        Workshop::create([
-            'title' => 'Sip & Paint',
-            'time' => '4:00 PM - 5:00 PM',
-        ]);
-
-        Workshop::create([
-            'title' => 'DIY Bento Workshop',
-            'time' => '7:00 PM - 8:00 PM',
-        ]);
-
-        AppointmentDate::create([
-            'date' => '2025-07-05',
-        ]);
-
-        AppointmentDate::create([
-            'date' => '2025-07-06',
-        ]);
-
 
 
         $role = Role::create(['name' => 'client']);

@@ -1672,6 +1672,15 @@ function update(time, delta) {
                     a.baseY +
                     Math.cos(a.floatTime * 0.8 + a.floatPhase) *
                         (a.floatRadius * 0.7);
+                // Add gentle random drift if near the top (y < 120)
+                if (a.y < 120) {
+                    if (!a.driftPhase) a.driftPhase = Math.random() * Math.PI * 2;
+                    if (!a.driftSpeed) a.driftSpeed = Phaser.Math.FloatBetween(0.15, 0.35);
+                    if (!a.driftRadius) a.driftRadius = Phaser.Math.FloatBetween(12, 28);
+                    a.driftPhase += dt * a.driftSpeed;
+                    a.x += Math.sin(a.driftPhase) * a.driftRadius * dt * 0.18;
+                    a.y += Math.cos(a.driftPhase) * a.driftRadius * dt * 0.09;
+                }
                 // Always set scale to baseScale (from config)
                 if (a.setScale && a.baseScale) {
                     a.setScale(a.baseScale);
@@ -1688,6 +1697,58 @@ function update(time, delta) {
 
     // Ocean floor and random area bubbles are fully handled by their tween animations
     // No additional update needed since movement is in tween onUpdate callbacks
+
+    // Prevent name bubbles from overlapping (entry and floating)
+    preventNameBubbleOverlap.call(this);
+}
+// Helper to prevent name bubbles from overlapping (entry and floating)
+function preventNameBubbleOverlap() {
+    const bubbles = this.nameBubbles;
+    const SPRING = 0.08; // Lower = gentler spring force
+    const DAMPING = 0.85; // Damping for velocity
+    for (let i = 0; i < bubbles.length; i++) {
+        const a = bubbles[i];
+        if (!a.active || a.alpha < 0.7) continue;
+        if (!a.vx) a.vx = 0;
+        if (!a.vy) a.vy = 0;
+        const aRadius = a.displayWidth ? a.displayWidth / 2 : (a.baseScale || 0.2) * 70;
+        for (let j = i + 1; j < bubbles.length; j++) {
+            const b = bubbles[j];
+            if (!b.active || b.alpha < 0.7) continue;
+            if (!b.vx) b.vx = 0;
+            if (!b.vy) b.vy = 0;
+            const bRadius = b.displayWidth ? b.displayWidth / 2 : (b.baseScale || 0.2) * 70;
+            const dx = a.x - b.x;
+            const dy = a.y - b.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            const minDist = aRadius + bRadius + 8;
+            if (dist < minDist && dist > 0.1) {
+                // Spring force
+                const overlap = minDist - dist;
+                const force = (overlap / minDist) * SPRING;
+                const fx = (dx / dist) * force;
+                const fy = (dy / dist) * force;
+                a.vx += fx;
+                a.vy += fy;
+                b.vx -= fx;
+                b.vy -= fy;
+            }
+        }
+    }
+    // Apply velocity and damping
+    for (let i = 0; i < bubbles.length; i++) {
+        const a = bubbles[i];
+        if (!a.active || a.alpha < 0.7) continue;
+        if (!a.vx) a.vx = 0;
+        if (!a.vy) a.vy = 0;
+        a.x += a.vx;
+        a.y += a.vy;
+        a.vx *= DAMPING;
+        a.vy *= DAMPING;
+        // Clamp very small velocities to zero for stability
+        if (Math.abs(a.vx) < 0.001) a.vx = 0;
+        if (Math.abs(a.vy) < 0.001) a.vy = 0;
+    }
 }
 
 // Validation function to ensure group sizes never exceed limits

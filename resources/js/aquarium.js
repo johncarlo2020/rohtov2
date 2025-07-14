@@ -7,19 +7,26 @@ import WigglePostFX from "./WigglePostFX.js";
 const config = {
     parent: "aquarium-container",
     type: Phaser.AUTO,
-    width: 1080, // 1080p portrait width
-    height: 1920, // 1080p portrait height
+    width: 1080,
+    height: 1920,
     backgroundColor: "rgba(0,0,0,0)",
     render: {
         preserveDrawingBuffer: true,
-        transparent: true, // Enable transparency
+        transparent: true,
         contextAttributes: {
-            alpha: true, // Allow alpha channel for transparency
+            alpha: true,
             premultipliedAlpha: false,
         },
     },
     scale: {
-        mode: Phaser.Scale.NONE, // Fixed size, no auto-resize
+        mode: Phaser.Scale.NONE,
+    },
+    physics: {
+        default: "arcade",
+        arcade: {
+            debug: false, // ✅ This shows hitboxes (white outlines)
+             debugBodyColor: 0xff0000, // Red boxes
+        },
     },
     scene: { preload, create, update },
     pipeline: {
@@ -27,6 +34,7 @@ const config = {
         WigglePostFX,
     },
 };
+
 
 const game = new Phaser.Game(config);
 
@@ -218,6 +226,17 @@ function create() {
     // Initialize arrays for tracking objects
     this.corals = [];
     this.nameBubbles = [];
+
+
+    // Set up physics group for name bubbles (physics bounce/collisions disabled)
+    this.nameBubbleGroup = this.physics.add.group({
+        // disable world bounds and bounce to avoid glitchy sprite collisions
+        collideWorldBounds: false,
+        bounceX: 0,
+        bounceY: 0
+    });
+    // collision collider removed to rely on custom repulsion logic
+    // this.physics.add.collider(this.nameBubbleGroup, this.nameBubbleGroup);
 
     // Create bubble animation
     this.anims.create({
@@ -438,6 +457,35 @@ function create() {
     // Resize listener
     window.addEventListener("resize", () => resizeGame.call(this));
 }
+
+function getSafeFinalPosition(existingBubbles, minDistance = 100, maxTries = 20) {
+    let tries = 0;
+    let x, y;
+    let safe = false;
+
+    while (!safe && tries < maxTries) {
+        x = Phaser.Math.Between(100, window.innerWidth - 100);
+        y = Phaser.Math.Between(80, window.innerHeight * 0.4);
+
+        safe = true;
+
+        for (let bubble of existingBubbles) {
+            const dx = bubble.x - x;
+            const dy = bubble.y - y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < minDistance) {
+                safe = false;
+                break;
+            }
+        }
+
+        tries++;
+    }
+
+    return { x, y };
+}
+
 
 // Generic function to remove the oldest item from a group with a fade-out
 function removeOldestItem(group, array) {
@@ -994,7 +1042,15 @@ function startCoralTween({
 
 function addNameBubbles() {
     console.log("addNameBubbles function called");
-    this.nameBubbleGroup = this.add.group();
+    // Initialize physics-enabled group for name bubbles (including temp bubbles)
+    this.nameBubbleGroup = this.physics.add.group({
+        // Disable physics bounce and world bounds for name bubbles; using custom repulsion instead
+        collideWorldBounds: false,
+        bounceX: 0,
+        bounceY: 0
+    });
+    // Physics collider disabled to prevent visual glitches when bubbles collide
+    // this.physics.add.collider(this.nameBubbleGroup, this.nameBubbleGroup);
 
     // Create initial 6 name bubbles immediately (floating, no entry animation)
     console.log("Creating initial name bubbles directly floating...");
@@ -1081,11 +1137,12 @@ function createSingleInitialNameBubble(pledge, index) {
     const spawnY = window.innerHeight;
     let nameBubble;
     try {
-        nameBubble = this.add
+        // Create physics-enabled sprite for temp bubble
+        nameBubble = this.physics.add
             .sprite(spawnX, spawnY, tempBubbleKey)
             .setScale(scale);
     } catch (error) {
-        // Name bubble image failed to load, using fallback
+        // Fallback: circle with physics body
         nameBubble = this.add.circle(
             spawnX,
             spawnY,
@@ -1093,6 +1150,18 @@ function createSingleInitialNameBubble(pledge, index) {
             0x87ceeb,
             0.7
         );
+        this.physics.add.existing(nameBubble);
+        // Configure circular body
+        const radius = (35 * scale) / 0.6;
+        nameBubble.body.setCircle(radius);
+        nameBubble.body.setOffset(-radius, -radius);
+    }
+    // Common physics behavior for all initial bubbles
+    if (nameBubble.body) {
+        nameBubble.body.setCollideWorldBounds(true);
+        nameBubble.body.setBounce(1, 1);
+        // Disable collision during entry animation
+        nameBubble.body.enable = false;
     }
     nameBubble.baseScale = scale;
     nameBubble.alpha = 0;
@@ -1188,6 +1257,8 @@ function createSingleInitialNameBubble(pledge, index) {
             nameBubble.isFloating = true;
             nameBubble.alpha = 1;
             if (nameBubble.setScale) nameBubble.setScale(baseScale);
+            // Enable physics collisions after entry animation
+            if (nameBubble.body) nameBubble.body.enable = true;
         },
     });
 }
@@ -1216,37 +1287,50 @@ function spawnSingleNameBubble(customTextureKey) {
 
 function createNameBubble(pledge, textureKey) {
     console.log("Starting name bubble entry...");
+
     // Entry: always from the middle bottom of the screen
-    const finalX = Phaser.Math.Between(100, window.innerWidth - 100);
-    const finalY = Phaser.Math.Between(80, window.innerHeight * 0.4);
+    const { x: finalX, y: finalY } = getSafeFinalPosition(this.nameBubbles, 120);
+
     const spawnX = window.innerWidth / 2;
     const spawnY = window.innerHeight;
-    // Create name bubble sprite
-    // Calculate scale based on pledge text length using config map
+
     let textLength = pledge.text ? pledge.text.length : 0;
     let scale = getNameBubbleScale(textLength);
-
     let nameBubble;
+
     try {
-        nameBubble = this.add
+        // Try to create physics-enabled sprite
+        nameBubble = this.physics.add
             .sprite(spawnX, spawnY, textureKey)
             .setScale(scale);
     } catch (error) {
-        // Name bubble image failed to load, using fallback
-        nameBubble = this.add.circle(
-            spawnX,
-            spawnY,
-            (35 * scale) / 0.6,
-            0x87ceeb,
-            0.7
+        // Fallback: create graphics-based circle with physics
+        const radius = (35 * scale) / 0.6;
+        nameBubble = this.add.circle(spawnX, spawnY, radius, 0x87ceeb, 0.7);
+        this.physics.add.existing(nameBubble);
+
+        // Set body to be a circle and fix alignment
+        nameBubble.body.setCircle(radius);
+        nameBubble.body.setOffset(-radius, -radius);
+    }
+
+    // Common physics behavior
+    if (nameBubble.body) {
+        nameBubble.body.setCollideWorldBounds(true);
+        nameBubble.body.setBounce(1, 1);
+        nameBubble.body.setVelocity(
+            Phaser.Math.Between(-30, 30),
+            Phaser.Math.Between(-50, -100)
         );
     }
+
     nameBubble.baseScale = scale;
     nameBubble.alpha = 0;
     nameBubble.objectType = "nameBubble";
     nameBubble.pledgeData = pledge;
-    nameBubble.isFloating = false; // NEW: not floating until entry animation is done
-    // Remove oldest name bubble if at limit
+    nameBubble.isFloating = false;
+
+    // Remove oldest if at limit
     let attempts = 0;
     const maxAttempts = 10;
     while (
@@ -1262,28 +1346,28 @@ function createNameBubble(pledge, textureKey) {
         attempts++;
     }
     if (attempts >= maxAttempts) {
-        console.error(
-            `Maximum name bubble removal attempts reached, something is wrong with group management`
-        );
+        console.error("Maximum name bubble removal attempts reached");
     }
+
+    // Add to group and track
     this.nameBubbleGroup.add(nameBubble);
     this.nameBubbles.push(nameBubble);
     this.validateGroupSizes();
-    // Floating movement properties (match initial name bubbles)
-    // Pick a random float position in the upper 20-35% of the canvas
+
+    // Floating properties
     nameBubble.baseX = finalX;
     nameBubble.baseY = finalY;
     nameBubble.floatTime = Math.random() * Math.PI * 2;
     nameBubble.floatSpeed = Phaser.Math.FloatBetween(1.2, 2.2);
     nameBubble.floatRadius = Phaser.Math.Between(18, 36);
     nameBubble.floatPhase = Math.random() * Math.PI * 2;
-    // Improved bubble-like entry animation: always from middle bottom, pronounced wavy path, scale pulse, gentle ease-out
+
+    // Entry animation path (bubble-like bezier with wobble)
     const controlX =
         spawnX + (finalX - spawnX) * 0.45 + Phaser.Math.Between(-60, 60);
-    const controlY = spawnY - Phaser.Math.Between(120, 200); // arched upward
+    const controlY = spawnY - Phaser.Math.Between(120, 200);
     const path = {
         getPoint: (t) => {
-            // More pronounced horizontal and vertical wobble, like a bubble
             const wobbleX =
                 Math.sin(t * Math.PI * 3.2 + Math.sin(t * 8)) *
                 18 *
@@ -1307,10 +1391,11 @@ function createNameBubble(pledge, textureKey) {
             return { x, y };
         },
     };
+
     let tweenObj = { t: 0 };
-    // Slower entry: increase duration
     const entryDuration = Phaser.Math.Between(3200, 4200);
     const baseScale = scale;
+
     this.tweens.add({
         targets: tweenObj,
         t: 1,
@@ -1321,7 +1406,7 @@ function createNameBubble(pledge, textureKey) {
             nameBubble.x = pos.x;
             nameBubble.y = pos.y;
             nameBubble.alpha = tweenObj.t;
-            // Bubble scale pulse: grows then settles
+
             if (nameBubble.setScale) {
                 const pulse =
                     1 +
@@ -1333,9 +1418,20 @@ function createNameBubble(pledge, textureKey) {
             nameBubble.isFloating = true;
             nameBubble.alpha = 1;
             if (nameBubble.setScale) nameBubble.setScale(baseScale);
+
+            // Gentle float velocity after entry
+            if (nameBubble.body) {
+                nameBubble.body.setVelocity(
+                    Phaser.Math.Between(-20, 20),
+                    Phaser.Math.Between(-30, -10)
+                );
+            }
         },
     });
 }
+
+
+
 
 // Function to start bubble generation for planted corals
 function startCoralBubbles(coral) {
@@ -1378,10 +1474,9 @@ function createBubbleChain(coral) {
 
 // Function to create small bubbles rising from corals
 function createCoralBubble(coral, chainIndex = 0) {
-    // Use fixed position offset for all bubbles (no randomness)
+    // Determine start position for coral bubbles
     const bubbleX = coral.x;
     const bubbleY = coral.y - 30;
-
     let bubble;
     // Use a fixed bubble size based on parent coral's baseScale (from CORAL_POSITIONS size)
     const coralScale = coral.baseScale || 1.0;
@@ -1694,36 +1789,39 @@ function update(time, delta) {
             }
         }
     }
-
-    // Ocean floor and random area bubbles are fully handled by their tween animations
-    // No additional update needed since movement is in tween onUpdate callbacks
-
-    // Prevent name bubbles from overlapping (entry and floating)
+    // Prevent name bubbles from overlapping by applying repulsion forces
     preventNameBubbleOverlap.call(this);
 }
 // Helper to prevent name bubbles from overlapping (entry and floating)
 function preventNameBubbleOverlap() {
     const bubbles = this.nameBubbles;
-    const SPRING = 0.08; // Lower = gentler spring force
-    const DAMPING = 0.85; // Damping for velocity
+    const SPRING = 0.03; // Lowered for a much gentler spring force
+    const DAMPING = 0.92; // Increased for more sluggish, fluid movement
+    const REPULSION_RADIUS = 150; // New: Radius for gentle repulsion
+    const REPULSION_STRENGTH = 0.005; // New: How strongly they push each other away
+
     for (let i = 0; i < bubbles.length; i++) {
         const a = bubbles[i];
-        if (!a.active || a.alpha < 0.7) continue;
+        // Apply collision to ALL active bubbles (both floating and during entry)
+        if (!a.active || a.alpha < 0.1) continue;
         if (!a.vx) a.vx = 0;
         if (!a.vy) a.vy = 0;
         const aRadius = a.displayWidth ? a.displayWidth / 2 : (a.baseScale || 0.2) * 70;
+
         for (let j = i + 1; j < bubbles.length; j++) {
             const b = bubbles[j];
-            if (!b.active || b.alpha < 0.7) continue;
+            if (!b.active || b.alpha < 0.1) continue;
             if (!b.vx) b.vx = 0;
             if (!b.vy) b.vy = 0;
             const bRadius = b.displayWidth ? b.displayWidth / 2 : (b.baseScale || 0.2) * 70;
+
             const dx = a.x - b.x;
             const dy = a.y - b.y;
             const dist = Math.sqrt(dx * dx + dy * dy);
-            const minDist = aRadius + bRadius + 8;
+            const minDist = aRadius + bRadius + 12; // Increased buffer slightly
+
+            // Direct collision spring force (gentler)
             if (dist < minDist && dist > 0.1) {
-                // Spring force
                 const overlap = minDist - dist;
                 const force = (overlap / minDist) * SPRING;
                 const fx = (dx / dist) * force;
@@ -1733,16 +1831,34 @@ function preventNameBubbleOverlap() {
                 b.vx -= fx;
                 b.vy -= fy;
             }
+            // Gentle repulsion force to encourage spreading
+            else if (dist < REPULSION_RADIUS) {
+                const force = (1 - dist / REPULSION_RADIUS) * REPULSION_STRENGTH;
+                const fx = (dx / dist) * force;
+                const fy = (dy / dist) * force;
+                a.vx += fx;
+                a.vy += fy;
+                b.vx -= fx;
+                b.vy -= fy;
+            }
         }
     }
-    // Apply velocity and damping
+
+    // Apply velocity as persistent base offsets and damping to ALL bubbles
     for (let i = 0; i < bubbles.length; i++) {
         const a = bubbles[i];
-        if (!a.active || a.alpha < 0.7) continue;
-        if (!a.vx) a.vx = 0;
-        if (!a.vy) a.vy = 0;
-        a.x += a.vx;
-        a.y += a.vy;
+        if (!a.active || a.alpha < 0.1) continue;
+        a.vx = a.vx || 0;
+        a.vy = a.vy || 0;
+        // Persistently shift base positions to separate bubbles
+        if (a.baseX !== undefined && a.baseY !== undefined) {
+            a.baseX += a.vx;
+            a.baseY += a.vy;
+        } else {
+            a.x += a.vx;
+            a.y += a.vy;
+        }
+        // Apply damping
         a.vx *= DAMPING;
         a.vy *= DAMPING;
         // Clamp very small velocities to zero for stability
@@ -1755,7 +1871,7 @@ function preventNameBubbleOverlap() {
 function validateGroupSizes() {
     // Safely get group sizes, groups may not be initialized yet
     const coralCount = this.coralGroup ? this.coralGroup.getLength() : 0;
-    const nameBubbleCount = this.nameBubbleGroup
+       const nameBubbleCount = this.nameBubbleGroup
         ? this.nameBubbleGroup.getLength()
         : 0;
 

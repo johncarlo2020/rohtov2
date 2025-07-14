@@ -1,6 +1,6 @@
 // Configurable mapping from text length to temp bubble scale
 const TEMP_BUBBLE_SIZE_MAP = [
-    { len: 1, scale: 0.15 },
+    { len: 1, scale: 0.20 },
     { len: 5, scale: 0.18 },
     { len: 10, scale: 0.22 },
     { len: 20, scale: 0.26 },
@@ -54,8 +54,8 @@ import WigglePostFX from "./WigglePostFX.js";
 const config = {
     parent: "aquarium-container",
     type: Phaser.AUTO,
-    width: window.innerWidth,
-    height: window.innerHeight,
+    width: 1080, // 1080p portrait width
+    height: 1920, // 1080p portrait height
     backgroundColor: "rgba(0,0,0,0)",
     render: {
         preserveDrawingBuffer: true,
@@ -66,7 +66,7 @@ const config = {
         },
     },
     scale: {
-        mode: Phaser.Scale.RESIZE,
+        mode: Phaser.Scale.NONE, // Fixed size, no auto-resize
     },
     scene: { preload, create, update },
     pipeline: {
@@ -84,46 +84,46 @@ let pledgeData = [];
 const CORAL_POSITIONS = [
     {
         x: 0.2,
-        y: 0.85,
+        y: 0.91,
         tiltOffsetX: 18,
         tiltOffsetY: 20,
-        size: 0.7,
+        size: 0.8,
         z: 3,
         tilt: 0,
     }, // Left side bottom
     {
-        x: 0.2,
-        y: 0.7,
+        x: 0.15,
+        y: 0.78,
         tiltOffsetX: 40,
         tiltOffsetY: 10,
-        size: 0.4,
+        size: 0.6,
         z: 2,
         tilt: 10,
     }, // Left middle rock
     {
-        x: 0.15,
-        y: 0.6,
+        x: 0.10,
+        y: 0.63,
         tiltOffsetX: 20,
         tiltOffsetY: 8,
-        size: 0.3,
+        size: 0.4,
         z: 1,
         tilt: -10,
     }, // Left upper rock
     {
-        x: 0.8,
-        y: 0.84,
+        x: 0.82,
+        y: 0.91,
         tiltOffsetX: -18,
         tiltOffsetY: 6,
         size: 0.8,
         z: 1,
-        tilt: -30,
+        tilt: -25,
     }, // Right side bottom
     {
-        x: 0.7,
-        y: 0.65,
+        x: 0.8,
+        y: 0.67,
         tiltOffsetX: -12,
         tiltOffsetY: 4,
-        size: 0.3,
+        size: 0.5,
         z: 1,
         tilt: -20,
     }, // Right middle rock
@@ -202,9 +202,11 @@ function preload() {
     this.load.image("aquarium_bg", "images/brand/live-feed/bg.webp");
 
     // Load tempCoral images for initial corals
-    for (let i = 1; i <= 2; i++) {
+    for (let i = 1; i <= 5; i++) {
         this.load.image(`tempCoral${i}`, `images/tempCoral/${i}.webp`);
     }
+
+    this.load.image("permanentCoral", "images/tempCoral/permanent.webp");
 }
 
 function create() {
@@ -246,11 +248,11 @@ function create() {
 function addPermanentCoral() {
     // Position and config as specified
     const coralPosition = {
-        x: 0.75,
-        y: 0.47,
+        x: 0.80,
+        y: 0.50,
         tiltOffsetX: -20,
         tiltOffsetY: 8,
-        size: 0.3,
+        size: 0.5,
         z: 1,
         tilt: -30,
     };
@@ -266,7 +268,7 @@ function addPermanentCoral() {
     const finalY =
         coralPosition.y * aquariumHeight + (coralPosition.tiltOffsetY || 0);
     let coral;
-    const textureKey = "tempCoral2";
+    const textureKey = "permanentCoral";
     const baseScale = coralPosition.size || 1.4;
     try {
         coral = this.add.sprite(finalX, finalY, textureKey).setScale(baseScale);

@@ -65,7 +65,7 @@
 
 <body>
     <div id="aquarium-container">
-        <video id="aquarium-bg-video" src="{{ asset('video/840 x 1008.mp4') }}" width="840" height="1008" autoplay loop muted playsinline></video>
+        <video id="aquarium-bg-video" src="{{ asset('video/1080 x 1920 underworld.mp4') }}" width="1080" height="1920" autoplay loop muted playsinline></video>
     </div>
     <script>
         window.ASSET_BASE = "{{ asset('') }}".replace(/\/$/,'');

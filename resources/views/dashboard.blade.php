@@ -44,36 +44,16 @@
             </div>
 
         <div class="container">
-            <div class="col-12 d-flex justify-content-center align-items-center mt-3">
+            <div class="col-12 d-flex justify-content-center align-items-center mt-3 mb-4">
                 <img class="welcome_img" src="{{ asset('images/dutchlady/dashboardTextImg1.webp') }}" alt="" />
-                </div>
-            @php
-            $station5 = $stations->firstWhere('id', 5);
-            @endphp
-
-            @if ($station5)
-            <div class="row justify-content-center mb-3">
-                <div class="col-12 d-flex justify-content-center">
-                    <div class="redemption-btn {{ $station5->status ? 'completed' : '' }} {{ $canAccessStation5 ? 'station-5-accessible' : 'not-allowed' }}"
-                        onclick="{{ $canAccessStation5 ? 'gotoStation(' . $station5->id . ')' : 'showNotAllowedModal()' }}" >
-                       <img src="{{ asset('images/hadalabobabies/station' . $station5->id . '.webp') }}" alt="Slide {{ $station5->id }}">
-
-
-                        @if( $station5->status)
-                            <p class="redeemed">Redeemed!</p>
-                        @else
-                            <p class="{{ $canAccessStation5 ? '' : 'd-none' }} not-redeemed blink">Click here to claim yours</p>
-                        @endif
-                    </div>
-                </div>
             </div>
-            @endif
+
             <div class="row row-cols-2 row-cols-md-2 g-4 mb-5">
                 @foreach ($stations as $station)
-                @if ($station->id != 5)
+
                 <div class="col">
                     <div class="station-container {{ $station->status ? 'completed' : '' }}"
-                        onclick="gotoStation({{ $station->id }})">
+                        onclick="{{ $station->id == 5 ? ($canAccessStation5 ? 'gotoStation(' . $station->id . ')' : 'showNotAllowedModal()') : 'gotoStation(' . $station->id . ')' }}">
                         @if ($station->status == 'completed')
                         <img src="{{ asset('images/hadalabobabies/DL Station Map (' . $station->id . ') Check.webp') }}"
                             class="station-img img-fluid " alt="Slide {{ $station->id }}">
@@ -85,15 +65,7 @@
                 @endif
 
             </div>
-            @endif
             @endforeach
-
-            <div class="col">
-                <div class="station-container" onclick="window.location.href='{{ route('workshop'); }}'">
-                    <img src="{{ asset('images/dutchlady/workshopImg.webp') }}" class="station-img img-fluid"
-                        alt="Route Workshop">
-                </div>
-            </div>
 
             <div class="col">
                 <div class="station-container" onclick="window.location.href='{{ route('promotion') }}'">

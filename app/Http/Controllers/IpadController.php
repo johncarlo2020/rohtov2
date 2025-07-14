@@ -11,4 +11,9 @@ class IpadController extends Controller
         return view('ipad');
     }
 
+    public function index2()
+    {
+        return view('ipad.ipad2');
+    }
+
 }

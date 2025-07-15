@@ -211,6 +211,8 @@ function preload() {
 
     // Load background image for Phaser canvas
     this.load.image("aquarium_bg", "images/brand/live-feed/bg.webp");
+    // Load background music
+    this.load.audio('ambient', 'audio/ambient-pad-background-music-for-space-or-underwater-adventure-3323 (mp3cut.net).mp3');
 
     // Load tempCoral images for initial corals
     for (let i = 1; i <= 5; i++) {
@@ -222,7 +224,9 @@ function preload() {
 
 function create() {
     setupCanvas.call(this);
-
+    // Play ambient background music
+    const bgMusic = this.sound.add('ambient', { loop: true, volume: 0.5 });
+    bgMusic.play();
     // Initialize arrays for tracking objects
     this.corals = [];
     this.nameBubbles = [];
@@ -267,7 +271,7 @@ function create() {
         // Position and config as specified
         const coralPosition = {
             x: 0.82,
-            y: 0.91,
+            y: 0.94,
             tiltOffsetX: -18,
             tiltOffsetY: 6,
             size: 0.8,

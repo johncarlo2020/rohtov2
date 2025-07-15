@@ -88,6 +88,8 @@ function getNameBubbleScale(textLength) {
     return NAME_BUBBLE_SIZE_MAP[NAME_BUBBLE_SIZE_MAP.length - 1].scale;
 }
 
+
+
 // Pledge data storage
 let pledgeData = [];
 
@@ -343,6 +345,7 @@ function create() {
 
     // Initialize bubble groups
     this.coralBubblesGroup = this.add.group();
+    this.entryBubblesGroup = this.add.group(); // separate group for entry-phase trailing bubbles
     this.oceanFloorBubblesGroup = this.add.group();
     this.randomAreaBubblesGroup = this.add.group();
 
@@ -483,6 +486,9 @@ function getSafeFinalPosition(existingBubbles, minDistance = 100, maxTries = 20)
 
     return { x, y };
 }
+
+// create a traling of small bubbles behind the coral
+
 
 
 // Generic function to remove the oldest item from a group with a fade-out
@@ -773,6 +779,9 @@ function spawnSingleCoral(customTextureKey) {
 
     applyCoralAnimationConfig(coral);
 
+    // Create entry-phase bubble chains
+    createEntryBubbleChain.call(this, coral);
+
     if (this.coralGroup.getLength() >= MAX_CORALS) {
         removeOldestItem.call(this, this.coralGroup, this.corals);
     }
@@ -793,7 +802,7 @@ function spawnSingleCoral(customTextureKey) {
     }, 200);
 
     const path = createBezierPath(spawnX, spawnY, finalX, finalY);
-    // Start coral tween without blocking further entries
+    // Start coral tween with cleanup of trailing bubbles
     startCoralTween.call(this, {
         coral,
         bubble,
@@ -804,7 +813,7 @@ function spawnSingleCoral(customTextureKey) {
         coralPosition,
         textureKey,
         onTweenComplete: function () {
-            // Entry complete
+            // entry-phase chain complete
         },
     });
 }
@@ -1450,7 +1459,7 @@ function startCoralBubbles(coral) {
 
     // Create a single bubble chain generator that creates bubbles in sequence
     const bubbleEvent = this.time.addEvent({
-        delay: Phaser.Math.Between(500, 1000), // Initial delay before first bubble
+        delay: Phaser.Math.Between(500, 1000), // Faster initial bubble generation for corals
         callback: () => {
             if (coral && coral.isPlanted && !coral.shouldDestroy) {
                 createBubbleChain.call(this, coral);
@@ -1466,14 +1475,26 @@ function startCoralBubbles(coral) {
 // Function to create a chain of bubbles rising from corals
 function createBubbleChain(coral) {
     // Increase the number of bubbles per chain: 8-14
-    const numBubblesInChain = Phaser.Math.Between(20, 30); // 8-14 bubbles per chain
-    const chainDelay = Phaser.Math.Between(50, 100); // Faster succession for visible chain effect
+    const numBubblesInChain = Phaser.Math.Between(20, 30); // original bubbles per chain for planted corals
+    const chainDelay = Phaser.Math.Between(50, 100); // original succession for visible chain effect
 
     // ...existing code...
 
     for (let i = 0; i < numBubblesInChain; i++) {
         this.time.delayedCall(i * chainDelay, () => {
             if (coral && coral.isPlanted && !coral.shouldDestroy) {
+                createCoralBubble.call(this, coral, i);
+            }
+        });
+    }
+}
+// Separate chain function for entry-phase trailing bubbles
+function createEntryBubbleChain(coral) {
+    const numBubblesInChain = Phaser.Math.Between(50, 70);
+    const chainDelay = Phaser.Math.Between(30, 60);
+    for (let i = 0; i < numBubblesInChain; i++) {
+        this.time.delayedCall(i * chainDelay, () => {
+            if (coral && !coral.shouldDestroy) {
                 createCoralBubble.call(this, coral, i);
             }
         });
@@ -1488,7 +1509,7 @@ function createCoralBubble(coral, chainIndex = 0) {
     let bubble;
     // Use a fixed bubble size based on parent coral's baseScale (from CORAL_POSITIONS size)
     const coralScale = coral.baseScale || 1.0;
-    const fixedSize = 0.014 * coralScale; // Fixed size for all coral bubbles
+    const fixedSize = 0.014 * coralScale; // Reduced size to original smaller bubbles
 
     try {
         bubble = this.add
@@ -1500,7 +1521,7 @@ function createCoralBubble(coral, chainIndex = 0) {
         bubble = this.add.circle(bubbleX, bubbleY, radius, 0x87ceeb, 0.6);
     }
 
-    bubble.alpha = 0.7; // Fixed alpha for all coral bubbles
+    bubble.alpha = 0.9; // Revert to original opacity
     bubble.setDepth(15); // Higher depth to ensure bubbles appear above corals and other elements
 
     // STRAIGHT UP: No side-to-side, just animate straight up
@@ -1519,13 +1540,18 @@ function createCoralBubble(coral, chainIndex = 0) {
         },
     });
 
-    this.coralBubblesGroup.add(bubble);
+    // Add bubble to entry group during entry phase, otherwise to planted coral group
+    if (coral.phase === 'entry') {
+        this.entryBubblesGroup.add(bubble);
+    } else {
+        this.coralBubblesGroup.add(bubble);
+    }
 }
 
 // Function to add random ocean floor air bubbles
 function addOceanFloorBubbles() {
     this.time.addEvent({
-        delay: Phaser.Math.Between(3000, 6000), // Less frequent bubble chains
+        delay: Phaser.Math.Between(3000, 6000), // More frequent ocean floor bubble chains
         callback: () => {
             createOceanFloorBubbleChain.call(this);
         },
@@ -1535,8 +1561,8 @@ function addOceanFloorBubbles() {
 
 // Function to create a chain of bubbles from ocean floor
 function createOceanFloorBubbleChain() {
-    const numBubblesInChain = Phaser.Math.Between(3, 6); // 3-6 bubbles per chain
-    const chainDelay = Phaser.Math.Between(150, 400); // Faster succession for more visible chain effect
+    const numBubblesInChain = Phaser.Math.Between(3, 6); // Increased ocean floor bubbles per chain
+    const chainDelay = Phaser.Math.Between(150, 500); // Faster succession for denser effect
     const baseX = Phaser.Math.Between(50, window.innerWidth - 50); // Base position for chain
 
     console.log(
@@ -1559,7 +1585,7 @@ function createOceanFloorBubble(baseX = null, chainIndex = 0) {
     const bubbleY = window.innerHeight - Phaser.Math.Between(20, 60); // Near bottom
 
     let bubble;
-    const randomSize = Phaser.Math.FloatBetween(0.02, 0.06); // Smaller bubbles
+    const randomSize = Phaser.Math.FloatBetween(0.02, 0.06); // Larger ocean floor bubbles for visibility
 
     try {
         bubble = this.add
@@ -1571,7 +1597,7 @@ function createOceanFloorBubble(baseX = null, chainIndex = 0) {
         bubble = this.add.circle(bubbleX, bubbleY, radius, 0x87ceeb, 0.7);
     }
 
-    bubble.alpha = Phaser.Math.FloatBetween(0.3, 0.7); // Random transparency
+    bubble.alpha = Phaser.Math.FloatBetween(0.3, 0.7); // Increased opacity range for visibility
     bubble.setDepth(5); // Behind corals but above background
 
     // Add unique floating properties for natural movement (more variation)
@@ -1630,7 +1656,7 @@ function createOceanFloorBubble(baseX = null, chainIndex = 0) {
 // Function to add bubbles from random areas like coral bubbles
 function addRandomAreaBubbles() {
     this.time.addEvent({
-        delay: Phaser.Math.Between(4000, 8000), // Less frequent chains
+        delay: Phaser.Math.Between(4000, 8000), // More frequent random area bubble chains
         callback: () => {
             createRandomAreaBubbleChain.call(this);
         },
@@ -1640,8 +1666,8 @@ function addRandomAreaBubbles() {
 
 // Function to create a chain of bubbles from random areas
 function createRandomAreaBubbleChain() {
-    const numBubblesInChain = Phaser.Math.Between(2, 5); // 2-5 bubbles per chain
-    const chainDelay = Phaser.Math.Between(200, 500); // Faster succession for visible chain effect
+    const numBubblesInChain = Phaser.Math.Between(2, 7); // Increased random area bubbles
+    const chainDelay = Phaser.Math.Between(200, 500); // Faster succession for denser effect
     const baseX = Phaser.Math.Between(50, window.innerWidth - 50); // Base position for chain
     const baseY = Phaser.Math.Between(
         window.innerHeight * 0.4,
@@ -1674,7 +1700,7 @@ function createRandomAreaBubble(baseX = null, baseY = null, chainIndex = 0) {
 
     let bubble;
     // Make bubbles smaller and less transparent
-    const randomSize = Phaser.Math.FloatBetween(0.012, 0.025); // Smaller, more subtle bubbles
+    const randomSize = Phaser.Math.FloatBetween(0.02, 0.05); // Larger random area bubbles for visibility
 
     try {
         bubble = this.add
@@ -1686,7 +1712,7 @@ function createRandomAreaBubble(baseX = null, baseY = null, chainIndex = 0) {
         bubble = this.add.circle(bubbleX, bubbleY, radius, 0x87ceeb, 0.8);
     }
 
-    bubble.alpha = Phaser.Math.FloatBetween(0.7, 0.95); // Less transparent
+    bubble.alpha = Phaser.Math.FloatBetween(0.8, 1.0); // Increased opacity for visibility
     bubble.setDepth(8); // Between ocean floor bubbles and coral bubbles
 
     // STRAIGHT UP: No side-to-side, just animate straight up

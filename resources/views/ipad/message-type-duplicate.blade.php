@@ -173,8 +173,13 @@
                         console.error('Upload failed:', error);
                     })
                     .finally(() => {
+                        location.reload();
                     });
             }
+
+
+
+
 
             function updateStep() {
                 steps.forEach((step, index) => {

@@ -31,12 +31,12 @@
             {{-- <a id="homeButton" href="{{ route('guestAndWin') }}" class="button button-primary w-100 mb-3">
                Guess & Win
             </a> --}}
-            <a id="homeButton" href="{{ route('map') }}" class="button button-primary w-100 mb-3">
+            <!-- <a id="homeButton" href="{{ route('map') }}" class="button button-primary w-100 mb-3">
                 Ocean Or Plastic Roadshow
-            </a>
-               {{-- <button class="button button-primary w-100 mb-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            </a> -->
+                <button class="button button-primary w-100 mb-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 Ocean Or Plastic Roadshow
-            </button> --}}
+            </button>
             <a id="reschedule" href="{{ route('appointment') }}" class="button button-secondary w-100 mb-3"">
                 Reschedule
             </a>
@@ -54,7 +54,7 @@
                         <div class="map-img mb-3">
                             <img src="{{ asset('files/main/locci map_np shadow.webp') }}" alt="" />
                         </div>
-                        <p class="modal-main-text mb-4 px-2">This section will be available starting 24 June, see you
+                        <p class="modal-main-text mb-4 px-2">This section will be available starting 28 July, see you
                             then!</p>
                         {{-- <p class="warning-text text-center px-5">Note: You may reschedule your selected date
                         <strong>only once</strong>.

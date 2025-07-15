@@ -279,7 +279,7 @@ class StationController extends Controller
 
 
 
-        // dd($is2000);   adasdas
+        //  dd($is2000);
 
         $userAppointment = $user->userAppointments()
             ->whereHas('appointment', function ($q) {

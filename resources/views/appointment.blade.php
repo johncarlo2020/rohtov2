@@ -43,9 +43,11 @@
                     </p>
                 </div>
                 <div class="date-picker">
-                    <h2 class="heading-text text-center mb-2">Date selected: <span
-                            id="selectedDateText">21-05-2025</span></h2>
-                    <h4 class="text-center mb-4 d-none">Available Slots: <span id="availableSlotsText">0</span></h4>
+
+                        <h2 class="heading-text text-center mb-2">Date selected: <span id="selectedDateText">21-05-2025</span></h2>
+                        <h4 class="text-center mb-4 d-none">Available Slots: <span id="availableSlotsText">0</span></h4>
+
+
 
                     <div class="date-grid-container">
                         @foreach($appointments as $appointment)
@@ -83,10 +85,12 @@
                     <div id="qrCode" class="qr-code mb-3">
 
                     </div>
+                        <div id="dateSelected">
+                                <p class="sub-heading-text text-center mb-0">Date selected: <span id="selected-date">{{
+                                        $selectedAppointment->appointment->name ?? '' }}</span>, {{ $convertedDate }} <br /> Venue: IOI City Mall,
+                                    Putrajaya – West Court on Ground Floor</p>
+                        </div>
 
-                    <p class="sub-heading-text text-center mb-0">Date selected: <span id="selected-date">{{
-                            $selectedAppointment->appointment->name ?? '' }}</span>, {{ $convertedDate }} <br /> Venue: IOI City Mall,
-                        Putrajaya – West Court on Ground Floor</p>
                     <div class="p-3">
                         <p class="pharagraph-text mb-0"><Strong>Terms & Conditions</Strong></p>
                         <br>
@@ -240,7 +244,9 @@
    <script>
         document.addEventListener('DOMContentLoaded', function() {
             //if user is pre-reg or first 2000 users
-            @if ($is2000 == 1 || $user->type=='pre-reg')
+            @if ($is2000 == 1 && $user->type=='pre-reg')
+                document.getElementById('dateSelected').classList.remove('d-none');
+
                 @if($is2000>=0)
                     document.getElementById('qrContainer').classList.remove('d-none');
                     setTimeout(() => {
@@ -274,8 +280,20 @@
                 }, 100);
                 @endif
                 // If the user has selected an appointment, show the QR code
+            @elseif($is2000 == 1 && $user->type !='pre-reg')
+            const url = "{{ env('APP_URL') }}user?id={{ $user->id }}";
+
+            generateQRCode(url);
+                console.log('User is not pre-reg but is in the first 2000');
+                document.getElementById('dateSelected').classList.add('d-none');
+
+                document.getElementById('qrContainer').classList.remove('d-none');
+            setTimeout(() => {
+                document.getElementById('qrContainer').classList.add('fade-in');
+            }, 100);
             @else
-                document.getElementB   yId('qrContainer').classList.remove('d-none');
+
+                document.getElementById('qrContainer').classList.remove('d-none');
                 setTimeout(() => {
                     document.getElementById('qrContainer').classList.add('fade-in');
                 }, 100);

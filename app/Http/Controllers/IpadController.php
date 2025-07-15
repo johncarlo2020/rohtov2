@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Events\babyEvent; // Import the babyEvent event class
 
 class IpadController extends Controller
 {
@@ -13,7 +14,24 @@ class IpadController extends Controller
 
     public function index2()
     {
-        return view('ipad.ipad2');
+        return view('ipad.message-type-duplicate');
     }
 
+    public function pushCoral(Request $request)
+    {
+        $request->validate([
+            'coral_image_id' => 'required|string|max:2048', // max 2MB
+        ]);
+
+        $publicPath = asset('images/vip/' . $request->coral_image_id . '.webp'); // Generate URL for the image
+
+        // Fire the event (use correct fields)
+        broadcast(new babyEvent($publicPath, 'test', 'coral-vip', charname: 'name'))->toOthers();
+
+        // Return success response
+        return response()->json([
+            'success' => true,
+            'message' => 'sent successfully',
+        ]);
+    }
 }

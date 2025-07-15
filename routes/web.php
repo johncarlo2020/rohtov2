@@ -30,23 +30,32 @@ Route::get('/upload-baby', function () {
 
 Route::post('/uploadBabyIpad', 'App\Http\Controllers\StationController@uploadBabyIpad')->name('upload.babyIpad');
 
+Route::post('/pushCoral', [IpadController::class, 'pushCoral'])->name('ipad.pushCoral');
+
 Route::get('/listen-baby', function () {
     return view('listen-baby');
 })->name('listen.baby.form');
+
+Route::get('/listen-babyV2', function () {
+    return view('liveFeedVip');
+})->name('liveFeedVip');
+
+
 
 Route::get('/pad', function () {
     return view('error');
 });
 
 
-Route::get('/admin/login', function () {
+Route::get('/admin/login', action: function () {
     return view('auth.admin-login');
 });
 
 Route::get('/ipad', [IpadController::class, 'index'])->name('ipad.index');
 Route::get('/ipad-2', [IpadController::class, 'index2'])->name('ipad.index2');
+
 Route::get('/counter-value', 'App\Http\Controllers\StationController@getValue')->name('pledge.counter');
-Route::get('/ipad-pledge-info',function(){
+Route::get('/ipad-pledge-info',action: function(){
         return view('ipad.info');
     })->name('ipad.info');
 
@@ -79,11 +88,11 @@ Route::group(['middleware' => ['admin']], function () {
     Route::get('/admin', 'App\Http\Controllers\StationController@admin')->name('admin');
     Route::get('/admin/users', 'App\Http\Controllers\StationController@users')->name('users');
     Route::get('/admin/scanner', 'App\Http\Controllers\StationController@scanner')->name('scanner');
-    
+
     Route::post('verify-otp-admin', 'App\Http\Controllers\StationController@verifyAdmin')->name('verifyAdmin');
 
     Route::post('/workshop/scan', 'App\Http\Controllers\WorkshopController@scan')->name('workshop.scan');
-    
+
     Route::post('/admin/logout', 'App\Http\Controllers\LoginController@destroy')->name('admin.logout');
 
     Route::get('/admin/bookings', [BookingController::class, 'index'])->name('bookings');
@@ -92,7 +101,7 @@ Route::group(['middleware' => ['admin']], function () {
     Route::post('/admin/check', 'App\Http\Controllers\StationController@check')->name('check');
     Route::delete('/admin/users/{id}', 'App\Http\Controllers\StationController@userDelete')->name('users.destroy');
     Route::post('/editUser', 'App\Http\Controllers\StationController@editUser')->name('editUser');
-    
+
 });
 
 

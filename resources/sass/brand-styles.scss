@@ -440,3 +440,59 @@
     }
 
 }
+
+.ipad-for-client {
+    #type {
+        .heading {
+            margin-top: 15vh;
+        }
+
+        .mb-5.fw-thin {
+            font-size: 30px !important;
+            margin-top: 20px;
+            margin-bottom: 30vh !important;
+        }
+    }
+
+    #text {
+        padding: 0 10vw;
+
+        .form-select {
+            font-size: 24px;
+            text-align: center;
+            height: 70px;
+
+            option {
+                text-align: start;
+            }
+
+            &::placeholder {
+                font-size: 24px;
+            }
+        }
+    }
+
+    #finish {
+        #bubbleContainer {
+            #selectedOption {
+                width: 100%;
+                height: 100%;
+
+                position: absolute;
+                top: 0;
+                left: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                img {
+                    width: 100%;
+                    height: auto;
+                    object-fit: contain;
+                }
+            }
+        }
+    }
+}
+
+

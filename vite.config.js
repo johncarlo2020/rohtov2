@@ -5,7 +5,7 @@ import { visualizer } from "rollup-plugin-visualizer";
 export default defineConfig({
     plugins: [
         laravel({
-            input: ["resources/sass/app.scss", "resources/sass/dashboard.scss", "resources/js/app.js", "resources/js/aquarium.js",'resources/js/argon-dashboard.js', 'resources/js/station.js', 'resources/sass/admin.scss' ,'resources/js/admin.js'],
+            input: ["resources/sass/app.scss", "resources/sass/dashboard.scss", "resources/js/app.js", "resources/js/aquarium.js","resources/js/aquariumVip.js",'resources/js/argon-dashboard.js', 'resources/js/station.js', 'resources/sass/admin.scss' ,'resources/js/admin.js'],
             refresh: true,
         }),
     ],

@@ -46,37 +46,38 @@ class StationSeeder extends Seeder
 
 
         Appointment::create([
-            'name' => '05-27-2025',
-            'total' => '413',
+            'name' => '08-03-2025',
+            'total' => '250',
+            'status' => '1'
         ]);
 
         Appointment::create([
-            'name' => '05-28-2025',
-            'total' => '413',
+            'name' => '08-02-2025',
+            'total' => '250',
+            'status' => '1'
         ]);
         Appointment::create([
-            'name' => '05-29-2025',
-            'total' => '412',
+            'name' => '08-01-2025',
+            'total' => '200',
+            'status' => '1'
         ]);
         Appointment::create([
-            'name' => '05-30-2025',
-            'total' => '412',
+            'name' => '07-31-2025',
+            'total' => '200',
+            'status' => '1'
+        ]);
+        Appointment::create([
+            'name' => '07-30-2025',
+            'total' => '200',
+            'status' => '1'
+        ]);
+        Appointment::create([
+            'name' => '07-29-2025',
+            'total' => '200',
+            'status' => '1'
         ]);
 
-        Appointment::create([
-            'name' => '05-31-2025',
-            'total' => '117',
-        ]);
 
-        Appointment::create([
-            'name' => '06-01-2025',
-            'total' => '117',
-        ]);
-
-        Appointment::create([
-            'name' => '06-02-2025',
-            'total' => '116',
-        ]);
 
         Task::create([
             'name' => 'Join our Big Little Things Program',
@@ -115,7 +116,7 @@ class StationSeeder extends Seeder
             'number' => '0123456789',
             'email' => 'admin@gmail.com',
             'country' => 'Malaysia',
-            'password' => Hash::make('WowsomeRohto'),
+            'password' => Hash::make('WowsomeLoccitane2025'),
         ]);
 
         $user->assignRole('admin');

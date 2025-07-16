@@ -96,11 +96,11 @@ let pledgeData = [];
 // Predefined coral positions based on the aquarium layout
 const CORAL_POSITIONS = [
     {
-        x: 0.2,
-        y: 0.91,
+        x: 0.7,
+        y: 0.54,
         tiltOffsetX: 18,
         tiltOffsetY: 20,
-        size: 0.8,
+        size: 0.6,
         z: 3,
         tilt: 0,
     }, // Left side bottom
@@ -115,10 +115,10 @@ const CORAL_POSITIONS = [
     }, // Left middle rock
     {
         x: 0.7,
-        y: 0.55,
+        y: 0.70,
         tiltOffsetX: -12,
         tiltOffsetY: 4,
-        size: 0.5,
+        size: 0.6,
         z: 1,
         tilt: -15,
     }, // Right middle rock
@@ -721,18 +721,9 @@ function spawnSingleCoral(customTextureKey) {
         return;
     }
 
-    // Find the next available slot (not occupied by a planted coral)
-    let slotIndex = 0;
-    const usedSlots = this.corals
-        .filter(c => c.isPlanted && typeof c.slotIndex === 'number')
-        .map(c => c.slotIndex);
-    for (let i = 0; i < CORAL_POSITIONS.length; i++) {
-        if (!usedSlots.includes(i)) {
-            slotIndex = i;
-            break;
-        }
-    }
-    currentCoralPositionIndex = (slotIndex + 1) % CORAL_POSITIONS.length;
+    // Always use and increment currentCoralPositionIndex for round-robin slot assignment
+    let slotIndex = currentCoralPositionIndex % CORAL_POSITIONS.length;
+    currentCoralPositionIndex = (currentCoralPositionIndex + 1) % CORAL_POSITIONS.length;
     const pledge = coralPledges[coralPledges.length - 1];
     const coralPosition = CORAL_POSITIONS[slotIndex];
     const { finalX, finalY } = getFinalPosition(coralPosition);
@@ -873,7 +864,7 @@ function createCoral(textureKey, x, y, pledge, scale) {
         alpha: 0,
         isPlanted: false,
         phase: "entry",
-        slotIndex: typeof currentCoralPositionIndex === 'number' ? (currentCoralPositionIndex - 1 + CORAL_POSITIONS.length) % CORAL_POSITIONS.length : 0
+        slotIndex: (currentCoralPositionIndex - 1 + CORAL_POSITIONS.length) % CORAL_POSITIONS.length
     });
 
     return coral;

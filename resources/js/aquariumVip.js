@@ -1141,7 +1141,7 @@ function createSingleInitialNameBubble(pledge, index) {
     // Calculate scale based on pledge type and config maps
     const textLength = 70;
     let scale;
-    const MAX_TEMP_BUBBLE_SCALE = 0.25; // Set your desired max scale here
+    const MAX_TEMP_BUBBLE_SCALE = 0.22; // Set your desired max scale here
     if (pledge.id && pledge.id.toString().startsWith("temp_")) {
         // Placeholder initial bubble: size from TEMP_BUBBLE_SIZE_MAP config
         scale = Math.min(getTempBubbleScale(textLength), MAX_TEMP_BUBBLE_SCALE);

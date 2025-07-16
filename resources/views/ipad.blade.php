@@ -14,7 +14,7 @@
                         <h2 class="text-center animate-entry mb-2 heading"><strong>Start Pledge</strong></h2>
                         <p class="mb-4">Pledge for the Blue</p>
                         <div class="col mb-3 animate-entry delay-2">
-                            <a href="{{ route('ipad.info') }}" class="custom-btn custom-btn-secondary">START</a>
+                            <a href="{{ route('ipad.message.type') }}" class="custom-btn custom-btn-secondary">START</a>
                         </div>
                     </div>
                 </div>

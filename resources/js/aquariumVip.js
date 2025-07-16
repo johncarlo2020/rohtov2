@@ -261,7 +261,7 @@ function create() {
             tiltOffsetX: -18,
             tiltOffsetY: 6,
             size: 0.8,
-            z: 4,
+            z: 9,
             tilt: -10,
         };
         const aquariumContainer = document.getElementById("aquarium-container");

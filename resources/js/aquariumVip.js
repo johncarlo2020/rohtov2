@@ -106,26 +106,16 @@ const CORAL_POSITIONS = [
     }, // Left side bottom
     {
         x: 0.15,
-        y: 0.78,
+        y: 0.70,
         tiltOffsetX: 40,
         tiltOffsetY: 10,
         size: 0.6,
         z: 2,
         tilt: 10,
     }, // Left middle rock
-
-    // {
-    //     x: 0.8,
-    //     y: 0.5,
-    //     tiltOffsetX: -20,
-    //     tiltOffsetY: 8,
-    //     size: 0.5,
-    //     z: 1,
-    //     tilt: -15,
-    // }, // Right side bottom
     {
-        x: 0.8,
-        y: 0.67,
+        x: 0.7,
+        y: 0.55,
         tiltOffsetX: -12,
         tiltOffsetY: 4,
         size: 0.5,
@@ -267,7 +257,7 @@ function create() {
         // Position and config as specified
         const coralPosition = {
             x: 0.82,
-            y: 0.94,
+            y: 0.90,
             tiltOffsetX: -18,
             tiltOffsetY: 6,
             size: 0.8,
@@ -731,10 +721,19 @@ function spawnSingleCoral(customTextureKey) {
         return;
     }
 
+    // Find the next available slot (not occupied by a planted coral)
+    let slotIndex = 0;
+    const usedSlots = this.corals
+        .filter(c => c.isPlanted && typeof c.slotIndex === 'number')
+        .map(c => c.slotIndex);
+    for (let i = 0; i < CORAL_POSITIONS.length; i++) {
+        if (!usedSlots.includes(i)) {
+            slotIndex = i;
+            break;
+        }
+    }
+    currentCoralPositionIndex = (slotIndex + 1) % CORAL_POSITIONS.length;
     const pledge = coralPledges[coralPledges.length - 1];
-    const slotIndex = currentCoralPositionIndex % CORAL_POSITIONS.length;
-    // advance index immediately so concurrent spawns use different slots
-    currentCoralPositionIndex = (currentCoralPositionIndex + 1) % CORAL_POSITIONS.length;
     const coralPosition = CORAL_POSITIONS[slotIndex];
     const { finalX, finalY } = getFinalPosition(coralPosition);
     // determine dynamic spawn position (left, top, right)
@@ -874,6 +873,7 @@ function createCoral(textureKey, x, y, pledge, scale) {
         alpha: 0,
         isPlanted: false,
         phase: "entry",
+        slotIndex: typeof currentCoralPositionIndex === 'number' ? (currentCoralPositionIndex - 1 + CORAL_POSITIONS.length) % CORAL_POSITIONS.length : 0
     });
 
     return coral;

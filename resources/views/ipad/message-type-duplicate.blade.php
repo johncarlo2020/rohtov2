@@ -139,7 +139,7 @@
 
             pledgeBtn.addEventListener('click', function() {
              // Prevent multiple clicks
-             pledgeBtn.disabled = true;
+             pledgeBtn.classList.add('d-none');
              trigerWebSocket();
             });
 

@@ -38,6 +38,19 @@ const config = {
 
 const game = new Phaser.Game(config);
 
+// Helper to fix asset/image URLs for compatibility everywhere
+function fixImageUrl(img) {
+    if (!img) return null;
+    if (img.startsWith("http") || img.startsWith("data:")) return img;
+    let base =
+        typeof window !== "undefined" && window.ASSET_BASE
+            ? window.ASSET_BASE
+            : "";
+    img = img.replace(/^\//, "");
+    if (base && img.startsWith(base)) return img;
+    return base ? base + "/" + img : img;
+}
+
 // Configurable mapping from text length to temp bubble scale
 const TEMP_BUBBLE_SIZE_MAP = [
     { len: 1, scale: 0.2 },
@@ -173,17 +186,7 @@ const CORAL_TILT_OFFSET_Y = 6; // How much tilt affects Y position (pixels)
 
 function preload() {
     // Helper to fix asset paths (copied from create)
-    function fixImageUrl(img) {
-        if (!img) return null;
-        if (img.startsWith("http") || img.startsWith("data:")) return img;
-        let base =
-            typeof window !== "undefined" && window.ASSET_BASE
-                ? window.ASSET_BASE
-                : "";
-        img = img.replace(/^\//, "");
-        if (base && img.startsWith(base)) return img;
-        return base ? base + "/" + img : img;
-    }
+    // ...existing code...
     // Add error handling for image loading
     this.load.on("loaderror", function (file) {
         console.error("Failed to load:", file.src);
@@ -358,105 +361,145 @@ function create() {
         encrypted: true,
     });
 
+    // Queues for corals and name bubbles
+    this.coralQueue = [];
+    this.bubbleQueue = [];
+    this.isProcessingCoral = false;
+    this.isProcessingBubble = false;
+
     const channel = pusher.subscribe("baby-channel");
     channel.bind("baby-event", (data) => {
         console.log("Pusher event received:", data);
         // Accept both data.image and data.img for compatibility
         const BASE_PATH = "";
-        function fixImageUrl(img) {
-            if (!img) return null;
-            if (img.startsWith("http") || img.startsWith("data:")) return img;
-            // Use window.ASSET_BASE for relative asset paths
-            let base =
-                typeof window !== "undefined" && window.ASSET_BASE
-                    ? window.ASSET_BASE
-                    : "";
-            // Remove any leading slash from img to avoid double slashes
-            img = img.replace(/^\//, "");
-            // If already starts with base, don't double it
-            if (base && img.startsWith(base)) return img;
-            return base ? base + "/" + img : img;
-        }
+        // ...existing code...
 
         if (data.type === "coral") {
-            // Prevent new coral entry if an entry animation is active
-            if (this.isAnyEntryActive) {
-                console.warn(
-                    "Coral entry animation in progress, skipping new coral entry."
-                );
-                return;
-            }
-            const coralId = data.id || Date.now();
-            let textureKey = `coral${data.coralId || 1}`;
-            let image = data.image || data.img || null;
-            image = fixImageUrl(image);
-            if (image) {
-                if (image.startsWith("data:")) {
-                    textureKey = `coral_custom_${coralId}`;
-                } else {
-                    textureKey = `coral_custom_${coralId}`;
-                }
-            }
-            // Push pledgeData BEFORE spawning
-            pledgeData.push({
-                id: coralId,
-                name: data.name || "",
-                coralId: data.coralId || 1,
-                type: "coral",
-                image,
-                textureKey,
-            });
-            if (image) {
-                if (image.startsWith("data:")) {
-                    this.textures.addBase64(textureKey, image);
-                    spawnSingleCoral.call(this, textureKey, 0.45); // Increased scale
-                } else {
-                    this.load.image(textureKey, image);
-                    this.load.once("complete", () => {
-                        spawnSingleCoral.call(this, textureKey, 0.45); // Increased scale
-                    });
-                    this.load.start();
-                }
-            } else {
-                spawnSingleCoral.call(this, textureKey, 0.45); // Increased scale
-            }
+            this.coralQueue.push(data);
+            processCoralQueue.call(this);
         } else if (data.type === "text") {
-            const textId = data.id || Date.now();
-            let textureKey = "name_bubble";
-            let image = data.image || data.img || null;
-            image = fixImageUrl(image);
-            if (image) {
-                if (image.startsWith("data:")) {
-                    textureKey = `name_bubble_custom_${textId}`;
-                } else {
-                    textureKey = `name_bubble_custom_${textId}`;
-                }
-            }
-            // Use data.name as the text for bubbles (for this event structure)
-            pledgeData.push({
-                id: textId,
-                text: data.name || data.text || "",
-                type: "text",
-                image,
-                textureKey,
-            });
-
-            if (image) {
-                if (image.startsWith("data:")) {
-                    this.textures.addBase64(textureKey, image);
-                    spawnSingleNameBubble.call(this, textureKey, 0.55); // Increased scale
-                } else {
-                    this.load.image(textureKey, image);
-                    this.load.once("complete", () => {
-                        spawnSingleNameBubble.call(this, textureKey, 0.55); // Increased scale
-                    });
-                    this.load.start();
-                }
-            } else {
-                spawnSingleNameBubble.call(this, textureKey, 0.55); // Increased scale
-            }
+            this.bubbleQueue.push(data);
+            processBubbleQueue.call(this);
         }
     });
+
+    // Coral queue processor
+    function processCoralQueue() {
+        if (this.isProcessingCoral || this.isAnyEntryActive) return;
+        if (!this.coralQueue.length) return;
+        this.isProcessingCoral = true;
+        const data = this.coralQueue.shift();
+        const coralId = data.id || Date.now();
+        let textureKey = `coral${data.coralId || 1}`;
+        let image = data.image || data.img || null;
+        image = fixImageUrl(image);
+        if (image) {
+            textureKey = `coral_custom_${coralId}`;
+        }
+        // Push pledgeData BEFORE spawning
+        pledgeData.push({
+            id: coralId,
+            name: data.name || "",
+            coralId: data.coralId || 1,
+            type: "coral",
+            image,
+            textureKey,
+        });
+        const finish = () => {
+            this.isProcessingCoral = false;
+            setTimeout(() => processCoralQueue.call(this), 100); // Process next coral if any
+        };
+        if (image) {
+            if (image.startsWith("data:")) {
+                this.textures.addBase64(textureKey, image);
+                spawnSingleCoral.call(this, textureKey, 0.45);
+                // Wait for animation to finish before next
+                waitForCoralEntryFinish.call(this, finish);
+            } else {
+                this.load.image(textureKey, image);
+                this.load.once("complete", () => {
+                    spawnSingleCoral.call(this, textureKey, 0.45);
+                    waitForCoralEntryFinish.call(this, finish);
+                });
+                this.load.start();
+            }
+        } else {
+            spawnSingleCoral.call(this, textureKey, 0.45);
+            waitForCoralEntryFinish.call(this, finish);
+        }
+    }
+
+    // Helper to wait for coral entry animation to finish
+    function waitForCoralEntryFinish(callback) {
+        // Poll until isAnyEntryActive is false, then call callback
+        const check = () => {
+            if (!this.isAnyEntryActive) {
+                callback();
+            } else {
+                setTimeout(check, 100);
+            }
+        };
+        check();
+    }
+
+    // Bubble queue processor
+    function processBubbleQueue() {
+        if (this.isProcessingBubble) return;
+        if (!this.bubbleQueue.length) return;
+        this.isProcessingBubble = true;
+        const data = this.bubbleQueue.shift();
+        const textId = data.id || Date.now();
+        let textureKey = "name_bubble";
+        let image = data.image || data.img || null;
+        image = fixImageUrl(image);
+        if (image) {
+            textureKey = `name_bubble_custom_${textId}`;
+        }
+        pledgeData.push({
+            id: textId,
+            text: data.name || data.text || "",
+            type: "text",
+            image,
+            textureKey,
+        });
+        const finish = () => {
+            this.isProcessingBubble = false;
+            setTimeout(() => processBubbleQueue.call(this), 100); // Process next bubble if any
+        };
+        if (image) {
+            if (image.startsWith("data:")) {
+                this.textures.addBase64(textureKey, image);
+                spawnSingleNameBubble.call(this, textureKey, 0.55);
+                waitForBubbleEntryFinish.call(this, finish);
+            } else {
+                this.load.image(textureKey, image);
+                this.load.once("complete", () => {
+                    spawnSingleNameBubble.call(this, textureKey, 0.55);
+                    waitForBubbleEntryFinish.call(this, finish);
+                });
+                this.load.start();
+            }
+        } else {
+            spawnSingleNameBubble.call(this, textureKey, 0.55);
+            waitForBubbleEntryFinish.call(this, finish);
+        }
+    }
+
+    // Helper to wait for bubble entry animation to finish
+    function waitForBubbleEntryFinish(callback) {
+        // Wait for the most recent name bubble to finish entry (isFloating=true)
+        const check = () => {
+            if (
+                this.nameBubbles.length &&
+                this.nameBubbles[this.nameBubbles.length - 1].isFloating
+            ) {
+                callback();
+            } else {
+                setTimeout(check, 100);
+            }
+        };
+        check();
+    }
 
     // Resize listener
     window.addEventListener("resize", () => resizeGame.call(this));

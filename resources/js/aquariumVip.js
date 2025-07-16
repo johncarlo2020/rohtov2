@@ -119,7 +119,7 @@ const CORAL_POSITIONS = [
         tiltOffsetX: -12,
         tiltOffsetY: 4,
         size: 0.6,
-        z: 1,
+        z: 7,
         tilt: -15,
     }, // Right middle rock
     // Removed right upper rock (now permanent coral)
@@ -366,13 +366,7 @@ function create() {
         }
 
         if (data.type === "coral-vip") {
-            // Prevent new coral entry if an entry animation is active
-            if (this.isAnyEntryActive) {
-                console.warn(
-                    "Coral entry animation in progress, skipping new coral entry."
-                );
-                return;
-            }
+            // Allow multiple corals to animate in at the same time
             const coralId = data.id || Date.now();
             let textureKey = `coral${data.coralId || 1}`;
             let image = data.image || data.img || null;
@@ -407,7 +401,7 @@ function create() {
             } else {
                 spawnSingleCoral.call(this, textureKey, 0.45); // Increased scale
             }
-        } else if (data.type === "text") {
+        } else if (data.type === "text-vip") {
             const textId = data.id || Date.now();
             let textureKey = "name_bubble";
             let image = data.image || data.img || null;
@@ -721,7 +715,7 @@ function spawnSingleCoral(customTextureKey) {
         return;
     }
 
-    // Always use and increment currentCoralPositionIndex for round-robin slot assignment
+    // Assign a unique slot index for this coral at spawn time, increment for each new coral
     let slotIndex = currentCoralPositionIndex % CORAL_POSITIONS.length;
     currentCoralPositionIndex = (currentCoralPositionIndex + 1) % CORAL_POSITIONS.length;
     const pledge = coralPledges[coralPledges.length - 1];
@@ -1017,7 +1011,8 @@ function startCoralTween({
                                 onComplete: () => {
                                     coral.setDisplaySize(finalSize, finalSize);
                                     startCoralBubbles.call(this, coral);
-                                    currentCoralPositionIndex++;
+                                    // Increment position index only after animation completes
+                                    currentCoralPositionIndex = (currentCoralPositionIndex + 1) % CORAL_POSITIONS.length;
                                     if (typeof onTweenComplete === "function")
                                         onTweenComplete();
                                 },
@@ -1032,7 +1027,8 @@ function startCoralTween({
                                 ease: "Elastic.easeOut",
                                 onComplete: () => {
                                     startCoralBubbles.call(this, coral);
-                                    currentCoralPositionIndex++;
+                                    // Increment position index only after animation completes
+                                    currentCoralPositionIndex = (currentCoralPositionIndex + 1) % CORAL_POSITIONS.length;
                                     if (typeof onTweenComplete === "function")
                                         onTweenComplete();
                                 },

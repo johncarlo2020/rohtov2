@@ -111,7 +111,7 @@
                                 Home
                             </a>
 
-                            <button type="button" class="button button-secondary w-100" @disabled(!is_object($selectedAppointment) ||
+                            <button type="button" class="button button-secondary w-100 {{ $user->type != 'pre-reg' ? 'd-none' : '' }}" @disabled(!is_object($selectedAppointment) ||
                                 ($selectedAppointment->rescheduled == 1)) data-bs-toggle="modal"
                                 data-bs-target="#exampleModal">
                                 Reschedule

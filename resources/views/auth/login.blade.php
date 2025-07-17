@@ -9,7 +9,6 @@
             <h1 class="heading-text mb-1 text-center">
                 LOG IN
             </h1>
-            <p class="sub-heading-text-small text-center mb-3">If you've signed up for a previous event or pre-registered, just enter your registered email to log in.</p>
             <form method="POST" action="{{ route('login') }}">
                 @csrf
                 <div class="mb-2 row">

@@ -341,15 +341,16 @@
             reset();
             if (!input.value.trim()) {
                 showError("Required");
-                // submitButton.disabled = true;
+                submitButton.disabled = true;
             } else if (iti.isValidNumber()) {
                 validMsg.classList.remove("d-none");
+                submitButton.disabled = false;
                 // leave disabled until reCAPTCHA is completed
             } else {
                 const errorCode = iti.getValidationError();
                 const msg = errorMap[errorCode] || "Invalid number";
                 showError(msg);
-                // submitButton.disabled = true;
+                 submitButton.disabled = true;
             }
         });
     });

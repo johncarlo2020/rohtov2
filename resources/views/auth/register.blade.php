@@ -128,7 +128,7 @@
         </div>
     </div>
 </x-guest-layout>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/intlTelInput.min.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const form = document.querySelector("#form");
@@ -147,7 +147,7 @@
             initialCountry: "my",
             onlyCountries: ["my"],
             hiddenInput: "country",
-            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js", // just for formatting/placeholders etc
+           utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/utils.js"
         });
 
         const reset = () => {

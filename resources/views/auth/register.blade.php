@@ -320,6 +320,7 @@
         const submitButton = document.querySelector("#submitButton");
         const iti = window.intlTelInput(input, {
             initialCountry: "my",
+            onlyCountries: ["my"],
             hiddenInput: "country",
             utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js", // just for formatting/placeholders etc
         });

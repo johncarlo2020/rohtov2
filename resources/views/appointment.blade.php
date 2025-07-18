@@ -77,10 +77,13 @@
                 <div id="qrContainer" class=" bg-white p-3 rounded d-none">
                     <div class="text-center mb-2 px-1">
                         <h2 class="heading-text text-center mb-2">Congratulations, {{auth()->user()->fname}}!</h2>
-                        <p class="pharagraph-text text-center">You’re among the first 500 sign-ups and eligible to redeem our
-                            exclusive Upcycled Marine Phone Charm!</p>
+                        <p class="pharagraph-text text-center">You're among the first 500 sign-ups and are eligible to redeem our exclusive Upcycled Marine Phone Charm — sustainably
+                        crafted as part of our commitment to protecting the ocean</p>
                         <br>
-                        <p>Kindly present this QR code at the redemption counter</p>
+                        <p>To fully experience the roadshow journey, please ensure you log in to the microsite. It will be your personal guide
+                        throughout — from interactive touchpoints to completing activities and unlocking rewards.
+                        <br>
+                        We look forward to seeing you there!</p>
                     </div>
                     <div id="qrCode" class="qr-code mb-3">
 
@@ -124,11 +127,12 @@
         <div id="qrContainer" class=" bg-white p-3 rounded d-none">
             <div class="text-center mb-2 px-1">
                 <h2 class="heading-text text-center mb-2">Thank you, {{auth()->user()->fname}}!</h2>
-                <p class="pharagraph-text text-center">Your registration is now complete.</p>
+                <p class="pharagraph-text text-center">We’re thrilled to have you join us in our commitment to protecting the ocean and making mindful choices for our planet.</p>
                 <br>
-                <h1 class="pharagraph-text text-center">Start your Ocean or Plastic journey to explore the impact of everyday choices — and redeem your complimentary 5-piece
-                sample kit upon completion.</h1>
-                <p class="pharagraph-text text-center">Let’s take a step toward a cleaner ocean, together.</p>
+                <h1 class="pharagraph-text text-center">As you explore the experience, the microsite will be your personal guide — helping you navigate each step of our
+                roadshow journey.</h1>
+                <p class="pharagraph-text text-center">Complete the experience to redeem your 5-piece sample kit, curated with care to nurture you from head to toe, while
+                staying kind to the Earth.</p>
 
             </div>
 

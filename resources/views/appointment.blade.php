@@ -44,7 +44,8 @@
                 </div>
                 <div class="date-picker">
 
-                        <h2 class="heading-text text-center mb-2">Date selected: <span id="selectedDateText">21-05-2025</span></h2>
+                        <h2 class="heading-text text-center mb-2">Venue : <span> South Key Mall, JB - Centre Court on Ground Floor</span></h2>
+                        <h2 class="heading-text text-center mb-2">Date selected: <span id="selectedDateText">28-07-2025</span></h2>
                         <h4 class="text-center mb-4 d-none">Available Slots: <span id="availableSlotsText">0</span></h4>
 
 
@@ -90,8 +91,7 @@
                     </div>
                         <div id="dateSelected">
                                 <p class="sub-heading-text text-center mb-0">Date selected: <span id="selected-date">{{
-                                        $selectedAppointment->appointment->name ?? '' }}</span>, {{ $convertedDate }} <br /> Venue: IOI City Mall,
-                                    Putrajaya – West Court on Ground Floor</p>
+                                        $selectedAppointment->appointment->name ?? '' }}</span>, {{ $convertedDate }} <br /> Venue: South Key Mall, JB - Centre Court on Ground Floor</p>
                         </div>
 
                     <div class="p-3">

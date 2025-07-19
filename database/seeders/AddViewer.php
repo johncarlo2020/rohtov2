@@ -28,14 +28,14 @@ class AddViewer extends Seeder
             'password' => Hash::make('loccitane2025'),
         ]);
 
-        // $permission = Permission::create(['name' => 'view']);
-        // $permission = Permission::create(['name' => 'full']);
+         $permission = Permission::create(['name' => 'view']);
+         $permission = Permission::create(['name' => 'full']);
 
         $user->assignRole('admin');
 
         $user->givePermissionTo('view');
 
-        // $user2 = User::find(1);
-        // $user2->givePermissionTo('full');
+         $user2 = User::find(1);
+         $user2->givePermissionTo('full');
     }
 }

@@ -48,7 +48,7 @@ class RegisteredUserController extends Controller
         $request->validate([
             'fname' => ['required', 'string', 'max:255'],
             'lname' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
             'dob' => ['required', 'date', function ($attribute, $value, $fail) {
                 if (Carbon::parse($value)->age < 18) {
                     $fail('You must be at least 18 years old to register.');

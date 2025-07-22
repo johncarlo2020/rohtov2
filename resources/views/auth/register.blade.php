@@ -1,4 +1,9 @@
 <x-guest-layout>
+    <style>
+    span.iti__country-name {
+        color: #000000 !important;
+    }
+    </style>
     <div class="register-main main-content with-scroll">
         <div class="justify-content-center w-100">
             <div class="col-12 d-flex justify-content-center animate-entry">
@@ -144,8 +149,6 @@
         ];
         const submitButton = document.querySelector("#submitButton");
         const iti = window.intlTelInput(input, {
-            initialCountry: "my",
-            onlyCountries: ["my"],
             hiddenInput: "country",
            utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/utils.js"
         });
@@ -169,14 +172,8 @@
                 showError("Required");
                 submitButton.disabled = true;
             } else if (iti.isValidNumber()) {
-                // Ensure the selected country is Malaysia
-                if (iti.getSelectedCountryData().iso2 !== "my") {
-                    showError("Only Malaysian numbers are allowed");
-                    submitButton.disabled = true;
-                } else {
-                    validMsg.classList.remove("d-none");
-                    submitButton.disabled = false;
-                }
+                validMsg.classList.remove("d-none");
+                submitButton.disabled = false;
             } else {
                 const errorCode = iti.getValidationError();
                 const msg = errorMap[errorCode] || "Invalid number";
@@ -187,8 +184,8 @@
 
         // Prevent form submission if not Malaysian number
         form.addEventListener("submit", function (e) {
-            if (!iti.isValidNumber() || iti.getSelectedCountryData().iso2 !== "my") {
-                showError("Only Malaysian numbers are allowed");
+            if (!iti.isValidNumber()) {
+                showError("Please enter a valid phone number");
                 e.preventDefault();
                 submitButton.disabled = true;
             }

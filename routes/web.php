@@ -24,6 +24,12 @@ Route::get('/', function () {
 
 
 
+Route::get('/game', function () {
+    return view('mobile-game.index');
+})->name('game.index');
+
+
+
 Route::get('/upload-baby', function () {
     return view('upload-baby');
 })->name('upload.baby.form');
@@ -92,11 +98,11 @@ Route::group(['middleware' => ['admin']], function () {
     Route::get('/admin', 'App\Http\Controllers\StationController@admin')->name('admin');
     Route::get('/admin/users', 'App\Http\Controllers\StationController@users')->name('users');
     Route::get('/admin/scanner', 'App\Http\Controllers\StationController@scanner')->name('scanner');
-    
+
     Route::post('verify-otp-admin', 'App\Http\Controllers\StationController@verifyAdmin')->name('verifyAdmin');
 
     Route::post('/workshop/scan', 'App\Http\Controllers\WorkshopController@scan')->name('workshop.scan');
-    
+
     Route::post('/admin/logout', 'App\Http\Controllers\LoginController@destroy')->name('admin.logout');
 
     Route::get('/admin/bookings', [BookingController::class, 'index'])->name('bookings');
@@ -105,7 +111,7 @@ Route::group(['middleware' => ['admin']], function () {
     Route::post('/admin/check', 'App\Http\Controllers\StationController@check')->name('check');
     Route::delete('/admin/users/{id}', 'App\Http\Controllers\StationController@userDelete')->name('users.destroy');
     Route::post('/editUser', 'App\Http\Controllers\StationController@editUser')->name('editUser');
-    
+
 });
 
 

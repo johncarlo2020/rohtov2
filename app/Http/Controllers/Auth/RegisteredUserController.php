@@ -20,6 +20,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use App\Rules\InternationalPhoneNumber;
+use Illuminate\Http\JsonResponse;
+
 
 class RegisteredUserController extends Controller
 {
@@ -36,61 +38,67 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request) : JsonResponse
     {
         $request->validate([
-            'fname' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
-            'country' => [
-                'required',
-                'string',
-                function ($attribute, $value, $fail) {
-                    if (User::where('number', $value)->exists()) {
-                      $fail('This phone number is already registered. If you’ve signed up for a previous event or pre-registered, please. <a href="' . route('login') . '">Login</a> instead');
-                    }
-                }
-            ],
+            'fname' => ['required', 'string', 'max:10'],
+            // 'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
+            // 'country' => [
+            //     'required',
+            //     'string',
+            //     function ($attribute, $value, $fail) {
+            //         if (User::where('number', $value)->exists()) {
+            //           $fail('This phone number is already registered. If you’ve signed up for a previous event or pre-registered, please. <a href="' . route('login') . '">Login</a> instead');
+            //         }
+            //     }
+            // ],
 
         ]);
-        $marketing = false;
+        // $marketing = false;
 
-        if($request->has('marketing')){
-            $marketing = true;
-        }
+        // if($request->has('marketing')){
+        //     $marketing = true;
+        // }
 
         // After validation, fetch country by phone number
-        $phoneNumber = $request->input('country');
+        // $phoneNumber = $request->input('country');
 
       // Extract the phone prefix
-        $phonePrefix = '+' . substr($phoneNumber, 1, 2); // This assumes the prefix is always 2 characters after the '+'
+        // $phonePrefix = '+' . substr($phoneNumber, 1, 2); // This assumes the prefix is always 2 characters after the '+'
 
         // Query the country based on the phone prefix
-        $country = Countries::where('phone_code', $phonePrefix)->first();
-        $otp = rand(100000, 999999);
+        // $country = Countries::where('phone_code', $phonePrefix)->first();
+        // $otp = rand(100000, 999999);
 
         $user = User::create([
             'fname' => $request->fname,
-            'race' => $request->race,
-            'number' => $phoneNumber,
-            'email' => $request->email,
-            'otp' => $otp,
-            'find' => '',
-            'dob' => '',
-            'country'=> $country->name,
-            'marketing' => $marketing,
-            'last_login_at' => Carbon::now(),
-            'password' => Hash::make('password'),
+            'avatar_id' => $request->avatar_id,
+            // 'race' => $request->race,
+            // 'number' => $phoneNumber,
+            // 'email' => $request->email,
+            // 'otp' => $otp,
+            // 'find' => '',
+            // 'dob' => '',
+            // 'country'=> $country->name,
+            // 'marketing' => $marketing,
+            // 'last_login_at' => Carbon::now(),
+            // 'password' => Hash::make('password'),
         ]);
 
-        $user->assignRole('client');
+        // $user->assignRole('client');
         // $request->session()->flash('showWelcomeModal', true);
         // Use the insert method to insert multiple records in one query
         event(new Registered($user));
-        GlobalHelper::sendOtpSms($phoneNumber, $otp);
+        // GlobalHelper::sendOtpSms($phoneNumber, $otp);
 
-        Auth::login($user);
+        // Auth::login($user);
 
         // return redirect(RouteServiceProvider::HOME);
-        return redirect()->route('otp')->with('message', 'OTP has been sent to your phone.');
+        // return redirect()->route('otp')->with('message', 'OTP has been sent to your phone.');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Registration successful',
+        ]);
     }
 }

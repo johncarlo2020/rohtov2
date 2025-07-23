@@ -3,7 +3,8 @@
 // import _variables.scss
 @import "variables";
 .main-background {
-    background-image: $main-background;
+    // background-image: $main-background;
+    background-color: #ffff;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -47,9 +48,9 @@
         }
     }
 }
-.text-dark {
-    color: #152787 !important;
-}
+// .text-dark {
+//     color: #152787 !important;
+// }
 
 .bg-dark {
     background-color: #152787 !important;

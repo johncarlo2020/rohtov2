@@ -75,6 +75,19 @@ Route::post('/castVote', 'App\Http\Controllers\StationController@castVote')->nam
 Route::get('/voteData', 'App\Http\Controllers\StationController@voteData')->name('voteData');
 Route::get('/congratsVote', 'App\Http\Controllers\StationController@congratsVote')->name('congratsVote');
 
+//royal canine
+Route::get('/join', function () {
+    return view('join');
+})->name('join.welcome');
+
+Route::get('/avatar-select', function () {
+    return view('join.selectAvatar');
+})->name('avatar.select');
+
+Route::get('/avatar-register', function () {
+    return view('join.registerAvatar');
+})->name('avatar.register');
+
 Route::group(['middleware' => ['admin']], function () {
     Route::get('/admin', 'App\Http\Controllers\StationController@admin')->name('admin');
     Route::get('/admin/users', 'App\Http\Controllers\StationController@users')->name('users');

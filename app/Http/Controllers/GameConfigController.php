@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\GameConfig;
+use App\Events\LiveFeedEvent;
 use Illuminate\Http\Request;
 
 class GameConfigController extends Controller
@@ -72,5 +73,24 @@ class GameConfigController extends Controller
     {
         $config = GameConfig::getActive();
         return view('gameTrigger', compact('config'));
+    }
+
+    /**
+     * Trigger a live feed event
+     */
+    public function triggerLiveFeed(Request $request)
+    {
+        $request->validate([
+            'action' => 'required|string',
+            'data' => 'nullable|array'
+        ]);
+
+        // Trigger the live feed event
+        event(new LiveFeedEvent($request->action, $request->data));
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Live feed event triggered successfully'
+        ]);
     }
 }

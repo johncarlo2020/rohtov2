@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\GameConfig;
 
 class LiveFeedController extends Controller
 {
@@ -13,7 +14,11 @@ class LiveFeedController extends Controller
         $users = User::latest()
             ->limit(30)
             ->get();
-        return view('live-feed.index', compact('users', 'totalUsersCount'));
+            
+        // Get game configuration for the live feed
+        $gameConfig = GameConfig::getActive();
+        
+        return view('live-feed.index', compact('users', 'totalUsersCount', 'gameConfig'));
     }
 
     public function getData()

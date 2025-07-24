@@ -179,11 +179,51 @@
 }
 </style>
 
+<script src="https://js.pusher.com/7.2/pusher.min.js"></script>
 <script>
 let currentWeight = 0.0; // Starting weight in kg - Always start with 0
 let maxWeight = {{ $config->max_weight ?? 4.0 }}; // Maximum weight in kg from database
 let incrementGrams = {{ $config->increment_grams ?? 100 }}; // Increment per click in grams from database
 const INTERNAL_MAX = 400; // Internal calculation range (0-400)
+
+// Pusher setup for broadcasting events
+const pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
+    cluster: '{{ env('PUSHER_APP_CLUSTER') }}',
+    encrypted: true,
+});
+
+const channel = pusher.subscribe("live-feed-channel");
+
+channel.bind("live-feed-event", (data) => {
+    console.log("Received live feed event:", data);
+});
+
+// CSRF token for Laravel
+const csrfToken = '{{ csrf_token() }}';
+
+// Function to trigger LiveFeedEvent
+async function triggerLiveFeedEvent(action, data = null) {
+    try {
+        const response = await fetch('/trigger-live-feed', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                action: action,
+                data: data
+            })
+        });
+
+        if (response.ok) {
+            console.log(`LiveFeedEvent triggered: ${action}`);
+        }
+    } catch (error) {
+        console.error('Error triggering live feed event:', error);
+    }
+}
 
 // Load configuration from database (fallback API call if needed)
 async function loadConfiguration() {
@@ -262,6 +302,13 @@ function startGame() {
     // Reset the scale to 0 when starting
     currentWeight = 0.0;
     updateMeter();
+
+    // Trigger live feed event for game start
+    triggerLiveFeedEvent('start', {
+        maxWeight: maxWeight,
+        incrementGrams: incrementGrams,
+        status: 'game_started'
+    });
 
     console.log('Game started!');
 }

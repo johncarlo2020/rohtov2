@@ -37,6 +37,7 @@ Route::get('/game-config', [GameConfigController::class, 'index'])->name('game.c
 // Game config API routes
 Route::post('/game-config/save', [GameConfigController::class, 'store'])->name('game.config.store');
 Route::get('/game-config/active', [GameConfigController::class, 'getActive'])->name('game.config.active');
+Route::post('/trigger-live-feed', [GameConfigController::class, 'triggerLiveFeed'])->name('trigger.live.feed');
 
 // live feed route
 Route::get('/live-feed', [LiveFeedController::class, 'index'])->name('live.feed.index');

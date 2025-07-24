@@ -122,8 +122,8 @@
                     </div>
                 </div>
                 <p class="pharagraph-text">
-                    *Please ensure you enter an active Malaysian mobile number. An OTP (One-Time Passcode) will be sent to this number
-                    for verification.
+                    *Please make sure you are using an active phone number. Please fill in your mobile number. An OTP
+                    (One Time Passcode) will be sent for verification.
                 </p>
 
                 <p class="pharagraph-text">

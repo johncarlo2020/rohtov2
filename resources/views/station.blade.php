@@ -60,38 +60,6 @@
             </div>
         </div>
 
-        <!-- Staff Selection Modal -->
-        <div class="modal fade" data-bs-backdrop="static" id="staffSelectionModal" tabindex="-1" role="dialog"
-            aria-labelledby="staffSelectionModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> --}}
-                    <div class="modal-body">
-                        <form id="staffForm">
-                            <p class="fw-bold">Kindly have your Beauty Advisor to include their ID</p>
-                            <div class="form-group mb-3">
-                                <select class="form-select" id="floatingSelectStaff" name="staff_id"
-                                    aria-label="Floating label select example">
-                                    <option selected disabled value="">Select advisor ID</option>
-                                    @if (isset($stafs))
-                                        @foreach ($stafs as $staf)
-                                            <option value="{{ $staf->id }}">{{ $staf->name }}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </div>
-                            <button type="submit" class="button button-primary w-100 my-2" data-dismiss="modal"
-                                id="confirmStaffButton" disabled>Confirm</button>
-                            <a href="{{ route('map') }}"
-                                class="button button-white mt-2 border-danger border text-danger w-100 text-center">
-                                Back
-                            </a>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="mb-3 branding-container">
             @include('components.branding')
         </div>
@@ -103,14 +71,6 @@
             <img class="mt-2 station-image station-img-{{ $station->id }}"
                 src="{{ asset('files/station/' . $station->id . '.webp') }}" alt="Station Image">
 
-            {{-- Display Selected Staff --}}
-            @if ($station->id == 3 && $selectedStaff !== null)
-                <div class="selected-staff p-3 rounded bg-white w-75 mx-auto mt-3">
-                    <img class="small-logo mb-2" src="{{ asset('files/main/logo.webp') }}" alt="" />
-                    <p class="mb-1 fw-bold">Your Beauty Advisor:</p>
-                    <p class="selected-id">{{ $selectedStaff->name }}</p>
-                </div>
-            @endif
 
             {{-- Display Selected Product (New) --}}
             {{-- This can be shown for a specific station or globally if a product is selected --}}
@@ -160,12 +120,7 @@
             @endif
 
 
-        @if ($user != true && $station->id == 3)
-            {{-- For Station 3, trigger staff modal --}}
-            <button id="start-scanner" class="btn btn-info mx-auto mt-2 camera-btn">
-                <i class="fa-solid fa-camera"></i>
-            </button>
-        @elseif ($user != true && $station->id == 5)
+        @if ($user != true && $station->id == 5)
             @if (count($selectedProduct) > 0)
                 {{-- For Station 5, trigger product modal --}}
                 <button id="start-scanner" type="button" class="btn btn-info mx-auto mt-2 camera-btn">
@@ -220,11 +175,6 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
 
     <script>
-        @if ($user != true && $station->id == 3 && $selectedStaff == null)
-            document.addEventListener('DOMContentLoaded', function() {
-                $('#staffSelectionModal').modal('show');
-            });
-        @endif
 
 
         const mainContent = document.getElementById('mainContent');

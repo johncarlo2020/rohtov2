@@ -623,8 +623,8 @@ class StationController extends Controller
         $stationDescription = [
             1 => 'Experience the ocean’s wonder—and the urgent reality beneath the waves',
             2 => 'Drop off your used plastics here and discover how they’re transformed — not just recycled, but upcycled',
-            3 => 'Experience a personalised skin consultation and begin your journey to radiant skin',
-            4 => 'Experience a moment of indulgence — nourishing your skin with rich almond oil for a smoother body, softer skin, and a soothed sense',
+            3 => 'Experience a moment of indulgence — nourishing your skin with rich almond oil for a smoother body, softer skin, and a soothed sense',
+            4 => 'Experience a personalised skin consultation and begin your journey to radiant skin',
             5 => 'Experience a personalised hair and scalp analysis designed to uncover your unique needs',
             6 => 'Redeem your complimentary 5-piece sample kit— beauty essentials crafted with care for a conscious choice',
         ];

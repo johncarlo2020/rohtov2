@@ -148,6 +148,47 @@
     }
 }
 
+.game-trigger {
+    width: 100%;
+    height: 100%;
+
+    .control-buttons .btn-success {
+        background-color: #ffffff !important;
+        border: 2px solid #28a745 !important;
+        color: #28a745 !important;
+        padding: 15px 30px !important;
+        font-size: 18px !important;
+        font-weight: bold !important;
+        border-radius: 12px !important;
+        box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2) !important;
+        transition: all 0.3s ease !important;
+        min-width: 160px !important;
+        cursor: pointer !important;
+        position: relative !important;
+        z-index: 10 !important;
+
+        &:hover {
+            background-color: #28a745 !important;
+            border-color: #28a745 !important;
+            color: #ffffff !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 6px 12px rgba(40, 167, 69, 0.4) !important;
+        }
+
+        &:focus, &:active {
+            background-color: #1e7e34 !important;
+            border-color: #1c7430 !important;
+            color: #ffffff !important;
+            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.5) !important;
+        }
+
+        i.fa-solid {
+            margin-right: 8px !important;
+            font-size: 20px !important;
+        }
+    }
+}
+
 
 
 

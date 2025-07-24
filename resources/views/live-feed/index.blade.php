@@ -11,40 +11,32 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flipclock@0.7.8/compiled/flipclock.css" />
     @vite(['resources/sass/app.scss'])
     </body>
-
-    <!-- Pusher -->
     <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
-    <style>
-        @font-face {
-            font-family: 'Stella Demo';
-            src: url('{{ asset('images/font/Stella Demo.otf') }}') format('opentype');
-            font-weight: normal;
-            font-style: normal;
-        }
-
-
-        html,
-        body {
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-    </style>
 </head>
 
-<body>
-    <div class="live-feed-lobby">
+<body class="live-feed">
+    <div class="live-feed-lobby d-none">
+        <img src="{{ asset('images/brand/cat-background.webp') }}" alt="" class="cat-background">
         <div class="player-list rounded">
             <div class="player-list-header">
-                <h2>User joined</h2>
-
+                <h2 class="heading-text">User joined</h2>
+                <div class="player-count">
+                    <span id="player-count">300</span>
+                    <img src="{{ asset('images/brand/paw-icon.webp') }}" alt="Paw Icon" class="paw-icon">
+                </div>
             </div>
             <div class="player-list-body">
             </div>
         </div>
+
+        <div class="qr-container">
+            <img src="{{ asset('images/brand/logo.webp') }}" alt="Brand Logo" class="brand-logo">
+            <img src="{{ asset('images/brand/qr-code.webp') }}" alt="QR Code" class="qr-code">
+            <p>Scan for Excitement</p>
+        </div>
+    </div>
+    <div class="live-game">
+        <div id="game"></div>
     </div>
     <script>
         window.ASSET_BASE = "{{ asset('') }}".replace(/\/$/, '');

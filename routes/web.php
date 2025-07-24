@@ -6,6 +6,7 @@ use App\Http\Controllers\IpadController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\BookingController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LiveFeedController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +28,8 @@ Route::get('/', function () {
 Route::get('/game', function () {
     return view('mobile-game.index');
 })->name('game.index');
+
+Route::get('/live-feed', [LiveFeedController::class, 'index'])->name('live.feed.index');
 
 
 

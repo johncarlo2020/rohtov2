@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\GameConfig;
+use App\Events\LiveFeedEvent;
 
 class LiveFeedController extends Controller
 {
@@ -30,5 +31,11 @@ class LiveFeedController extends Controller
     public function trigger()
     {
         return view('gameTrigger');
+    }
+
+    public function start()
+    {
+        event(new LiveFeedEvent('enable-increase', null));
+        return response()->json(['success' => true, 'message' => 'Game started successfully!']);
     }
 }

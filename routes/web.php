@@ -43,6 +43,8 @@ Route::get('/live-feed', [LiveFeedController::class, 'index'])->name('live.feed.
 //get live feed data
 Route::get('/live-feed/data', [LiveFeedController::class, 'getData'])->name('live.feed.data');
 
+Route::get('/start', [LiveFeedController::class, 'start'])->name('start');
+
 Route::get('/upload-baby', function () {
     return view('upload-baby');
 })->name('upload.baby.form');

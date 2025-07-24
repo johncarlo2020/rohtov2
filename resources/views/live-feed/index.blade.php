@@ -8,6 +8,7 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flipclock@0.7.8/compiled/flipclock.css" />
     @vite(['resources/sass/app.scss'])
 
@@ -61,40 +62,19 @@
         /* Scale Pin/Needle */
         .scale-pin {
             position: absolute;
-            width: 4px;
+            width: 40px;
             height: 80px;
-            background-color: #000;
-            bottom: 40px;
+            background-image: url('{{ asset('images/brand/neddle.webp') }}');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center bottom;
+            bottom: 5px;
             left: 50%;
-            transform: translateX(-50%);
-            transform-origin: bottom center;
+            transform: translateX(-50%) rotate(-90deg); /* Start at -90deg (0kg) to match gameTrigger */
+            transform-origin: center bottom;
             z-index: 60;
             transition: transform 0.5s ease;
-        }
-
-        .scale-pin::before {
-            content: '';
-            position: absolute;
-            top: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 8px solid transparent;
-            border-right: 8px solid transparent;
-            border-bottom: 16px solid #000;
-        }
-
-        .scale-pin::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 16px;
-            height: 16px;
-            background-color: #000;
-            border-radius: 50%;
+            /* Debug border to see if element is there */
         }
     </style>
     </body>
@@ -155,6 +135,9 @@
 
         <div id="game"></div>
     </div>
+    <div class="finish d-none">
+        <img src="{{ asset('images/brand/finish_led.webp') }}" alt="">
+    </div>
     <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
     <script>
         window.ASSET_BASE = "{{ asset('') }}".replace(/\/$/, '');
@@ -165,6 +148,11 @@
             cluster: '{{ env('PUSHER_APP_CLUSTER') }}'
         };
 
+        // Routes configuration
+        window.ROUTES = {
+            start: '{{ route("start") }}'
+        };
+
         // Game configuration from database
         window.GAME_CONFIG = {
             maxWeight: {{ intval($gameConfig->max_weight ?? 4) }}, // Maximum weight in kg
@@ -173,25 +161,6 @@
             medianWeight: {{ intval(($gameConfig->max_weight ?? 4) / 2) }}, // Median weight (half of max, no decimal)
             internalMax: 400 // Internal calculation range (0-400)
         };
-
-        // Function to move the scale pin
-        window.moveScalePin = function(currentWeight) {
-            const pin = document.getElementById('scale-pin');
-            if (pin && window.GAME_CONFIG) {
-                // Calculate rotation angle based on weight (from -45deg to +45deg)
-                const maxWeight = window.GAME_CONFIG.maxWeight;
-                const percentage = Math.min(currentWeight / maxWeight, 1); // Clamp to max 1
-                const angle = (percentage * 90) - 45; // -45 to +45 degrees
-
-                pin.style.transform = `translateX(-50%) rotate(${angle}deg)`;
-                console.log(`Scale pin moved to ${currentWeight}kg (${angle}°)`);
-            }
-        };
-
-        // Initialize pin at 0 position (leftmost)
-        document.addEventListener('DOMContentLoaded', function() {
-            window.moveScalePin(0); // Start at 0kg (-45 degrees)
-        });
     </script>
     @vite('resources/js/live-feed.js')
 

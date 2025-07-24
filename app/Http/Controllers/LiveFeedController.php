@@ -10,14 +10,15 @@ class LiveFeedController extends Controller
 {
     public function index()
     {
-        $totalUsersCount = User::count();
-        $users = User::latest()
+        $totalUsersCount = User::whereNotNull('avatar_id')->count();
+        $users = User::whereNotNull('avatar_id')
+            ->latest()
             ->limit(30)
             ->get();
-            
+
         // Get game configuration for the live feed
         $gameConfig = GameConfig::getActive();
-        
+
         return view('live-feed.index', compact('users', 'totalUsersCount', 'gameConfig'));
     }
 

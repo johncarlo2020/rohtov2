@@ -36,9 +36,14 @@
 </head>
 
 <body>
-    <div id="mobile-game-container"></div>
+    <div class="w-100 d-flex flex-column justify-content-center align-items-center animate-entry p-4 mt-5" style="z-index: 99;">
+        @include('components.branding')
+        <img class="waiting-img" src="{{ asset('images/brand/waiting-page.webp') }}" alt="Brand Logo" />
+    </div>
+    <div id="mobile-game-container d-none"></div>
     <script>
         window.ASSET_BASE = "{{ asset('') }}".replace(/\/$/, '');
     </script>
     @vite('resources/js/mobile-game.js')
+
 </html>

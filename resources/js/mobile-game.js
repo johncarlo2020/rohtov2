@@ -66,19 +66,14 @@ function create() {
   const centerX = this.cameras.main.width / 2;
   const centerY = this.cameras.main.height / 2;
 
-  // Start button
-  startBtn = this.add.image(centerX, centerY, 'startBtn').setInteractive();
-  startBtn.setScale(0.8);
+  // Game starts immediately
+  isGameStarted = true;
 
-  // Create bag at bottom of screen (initially closed)
+  // Create bag at bottom of screen (initially closed with 0 opacity)
   bag = this.add.image(centerX, this.cameras.main.height - 250, 'bagClosed');
   bag.setScale(0.7); // Reduced size and moved higher to prevent cutting
   bag.setDepth(10); // Make sure bag appears above other elements
-
-  startBtn.on('pointerdown', () => {
-    startBtn.destroy(); // Remove start button
-    isGameStarted = true;
-  });
+  bag.setAlpha(0); // Set opacity to 0
 
   // Main game click
   this.input.on('pointerdown', (pointer) => {

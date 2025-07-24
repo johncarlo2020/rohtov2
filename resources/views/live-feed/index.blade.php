@@ -43,23 +43,61 @@
         }
 
         .scale-min {
-            left: 774px;
+            left: 601px;
             bottom: 7px;
         }
 
         .scale-median {
             left: 50%;
-            bottom: 178px;
+            bottom: 118px;
             transform: translateX(-50%);
         }
 
         .scale-max {
-           right: 803px;
-        bottom: 7px;
+            right: 601px;
+            bottom: 7px;
+        }
+
+        /* Scale Pin/Needle */
+        .scale-pin {
+            position: absolute;
+            width: 4px;
+            height: 80px;
+            background-color: #000;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            transform-origin: bottom center;
+            z-index: 60;
+            transition: transform 0.5s ease;
+        }
+
+        .scale-pin::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 16px solid #000;
+        }
+
+        .scale-pin::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 16px;
+            height: 16px;
+            background-color: #000;
+            border-radius: 50%;
         }
     </style>
     </body>
-    <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
 </head>
 
 <body class="live-feed">
@@ -69,11 +107,20 @@
             <div class="player-list-header">
                 <h2 class="heading-text">User joined</h2>
                 <div class="player-count">
-                    <span id="player-count">300</span>
+                    <span id="player-count">{{ $totalUsersCount }}</span>
                     <img src="{{ asset('images/brand/paw-icon.webp') }}" alt="Paw Icon" class="paw-icon">
                 </div>
             </div>
             <div class="player-list-body">
+                <div class="user-container">
+                    @foreach ($users as $user)
+                        <div class="user-item">
+                            <img src="{{ asset('images/avatarCats/02_cat0' . $user->avatar_id . '.webp') }}"
+                                alt="Avatar" class="avatar">
+                            <p class="username-text"><span class="username">{{ $user->fname }}</span> Joined</p>
+                        </div>
+                    @endforeach
+                </div>
             </div>
         </div>
 
@@ -83,9 +130,17 @@
             <p>Scan for Excitement</p>
         </div>
     </div>
+
+    <div class="count-down d-none">
+        <img src="{{ asset('images/brand/logo.webp') }}" alt="Brand Logo" class="brand-logo">
+    </div>
+
     <div class="live-game d-none">
         <img src="{{ asset('images/brand/gameBg.webp') }}" alt="" class="game-background">
         <img src="{{ asset('images/brand/scale.webp') }}" alt="" class="scale-image">
+
+        <!-- Scale Pin/Needle -->
+        <div class="scale-pin" id="scale-pin"></div>
 
         <!-- Scale Value Labels -->
         <div class="scale-label scale-min">
@@ -100,9 +155,15 @@
 
         <div id="game"></div>
     </div>
-     @push('scripts')
+    <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
     <script>
         window.ASSET_BASE = "{{ asset('') }}".replace(/\/$/, '');
+
+        // Pusher configuration
+        window.PUSHER_CONFIG = {
+            key: '{{ env('PUSHER_APP_KEY') }}',
+            cluster: '{{ env('PUSHER_APP_CLUSTER') }}'
+        };
 
         // Game configuration from database
         window.GAME_CONFIG = {
@@ -113,8 +174,25 @@
             internalMax: 400 // Internal calculation range (0-400)
         };
 
-        console.log('Game Configuration loaded:', window.GAME_CONFIG);
+        // Function to move the scale pin
+        window.moveScalePin = function(currentWeight) {
+            const pin = document.getElementById('scale-pin');
+            if (pin && window.GAME_CONFIG) {
+                // Calculate rotation angle based on weight (from -45deg to +45deg)
+                const maxWeight = window.GAME_CONFIG.maxWeight;
+                const percentage = Math.min(currentWeight / maxWeight, 1); // Clamp to max 1
+                const angle = (percentage * 90) - 45; // -45 to +45 degrees
+
+                pin.style.transform = `translateX(-50%) rotate(${angle}deg)`;
+                console.log(`Scale pin moved to ${currentWeight}kg (${angle}°)`);
+            }
+        };
+
+        // Initialize pin at 0 position (leftmost)
+        document.addEventListener('DOMContentLoaded', function() {
+            window.moveScalePin(0); // Start at 0kg (-45 degrees)
+        });
     </script>
     @vite('resources/js/live-feed.js')
-   @endpush
+
 </html>

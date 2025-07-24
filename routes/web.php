@@ -37,7 +37,6 @@ Route::get('/game-config', [GameConfigController::class, 'index'])->name('game.c
 // Game config API routes
 Route::post('/game-config/save', [GameConfigController::class, 'store'])->name('game.config.store');
 Route::get('/game-config/active', [GameConfigController::class, 'getActive'])->name('game.config.active');
-Route::post('/trigger-live-feed', [GameConfigController::class, 'triggerLiveFeed'])->name('trigger.live.feed');
 
 // live feed route
 Route::get('/live-feed', [LiveFeedController::class, 'index'])->name('live.feed.index');
@@ -113,6 +112,9 @@ Route::group(['middleware' => ['admin']], function () {
     Route::get('/admin/users', 'App\Http\Controllers\StationController@users')->name('users');
     Route::get('/admin/scanner', 'App\Http\Controllers\StationController@scanner')->name('scanner');
     Route::get('/admin/trigger', [LiveFeedController::class, 'trigger'])->name('trigger');
+
+    // Game trigger live feed route
+    Route::post('/trigger-live-feed', [GameConfigController::class, 'triggerLiveFeed'])->name('trigger.live.feed');
 
     Route::post('verify-otp-admin', 'App\Http\Controllers\StationController@verifyAdmin')->name('verifyAdmin');
 

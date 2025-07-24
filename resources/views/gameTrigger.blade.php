@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="game-trigger">
+<div class="game-trigger main-content">
     <div class="card mt-5">
         <div class="card-body">
             <h4 class="card-title text-center mb-4">Game Scale Meter</h4>
@@ -23,6 +23,7 @@
 
             <!-- Control Buttons -->
             <div class="control-buttons text-center">
+                <input type="hidden" id="csrf-token" value="{{ csrf_token() }}">
                 <button class="btn btn-success" id="startButton" onclick="startGame()">
                     <i class="fa-solid fa-play"></i> Start
                 </button>
@@ -198,31 +199,29 @@ channel.bind("live-feed-event", (data) => {
     console.log("Received live feed event:", data);
 });
 
-// CSRF token for Laravel
-const csrfToken = '{{ csrf_token() }}';
+// Get CSRF token from hidden input
+const csrfToken = document.getElementById('csrf-token').value;
 
 // Function to trigger LiveFeedEvent
-async function triggerLiveFeedEvent(action, data = null) {
-    try {
-        const response = await fetch('/trigger-live-feed', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                action: action,
-                data: data
-            })
-        });
-
-        if (response.ok) {
+function triggerLiveFeedEvent(action, data = null) {
+    console.log(`Triggering live feed event: ${action}`, data);
+    $.ajax({
+        url: '{{ route('trigger.live.feed') }}',
+        type: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': csrfToken
+        },
+        data: {
+            action: action,
+            data: data
+        },
+        success: function(response) {
             console.log(`LiveFeedEvent triggered: ${action}`);
+        },
+        error: function(xhr, status, error) {
+            console.error('Error triggering live feed event:', error);
         }
-    } catch (error) {
-        console.error('Error triggering live feed event:', error);
-    }
+    });
 }
 
 // Load configuration from database (fallback API call if needed)
@@ -253,10 +252,10 @@ async function loadConfiguration() {
         console.log('Using default configuration, database not available:', error);
         // Keep the server-side values if API fails
     }
-}function updateMeter() {
+}
+
+function updateMeter() {
     const gaugeNeedle = document.getElementById('gaugeNeedle');
-    const currentValueBadge = document.getElementById('currentValue');
-    const rawValueBadge = document.getElementById('rawValue');
 
     // Convert current weight to percentage based on max weight
     const percentage = (currentWeight / maxWeight) * 100;
@@ -269,10 +268,6 @@ async function loadConfiguration() {
 
     // Update needle rotation
     gaugeNeedle.style.transform = `translate(-50%, -100%) rotate(${angle}deg)`;
-
-    // Update displays
-    currentValueBadge.textContent = currentWeight.toFixed(3) + 'kg';
-    rawValueBadge.textContent = Math.round(internalValue);
 }
 
 // Update gauge labels dynamically

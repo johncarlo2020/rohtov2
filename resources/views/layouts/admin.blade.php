@@ -78,14 +78,22 @@
                         <span class="nav-link-text ms-1">Users</span>
                     </a>
                 </li>
-
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('scanner') ? 'active' : '' }}" href="{{ route('scanner') }}">
+                    <a class="nav-link {{ request()->routeIs('game.trigger') ? 'active' : '' }}" href="{{ route('game.trigger') }}">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fa-solid fa-barcode text-warning text-sm opacity-10"></i>
+                            <i class="fa-solid fa-gamepad text-warning text-sm opacity-10"></i>
                         </div>
-                        <span class="nav-link-text ms-1">Scanner</span>
+                        <span class="nav-link-text ms-1">Game Trigger</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('game.config') ? 'active' : '' }}" href="{{ route('game.config') }}">
+                        <div
+                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fa-solid fa-cog text-warning text-sm opacity-10"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Game Config</span>
                     </a>
                 </li>
             </ul>

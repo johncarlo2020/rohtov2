@@ -5,7 +5,9 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\IpadController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\GameConfigController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LiveFeedController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +25,25 @@ Route::get('/', function () {
 })->name('welcome');
 
 
+
+Route::get('/game', function () {
+    return view('mobile-game.index');
+})->name('game.index');
+
+// Game trigger routes
+Route::get('/game-trigger', [GameConfigController::class, 'trigger'])->name('game.trigger');
+Route::get('/game-config', [GameConfigController::class, 'index'])->name('game.config');
+
+// Game config API routes
+Route::post('/game-config/save', [GameConfigController::class, 'store'])->name('game.config.store');
+Route::get('/game-config/active', [GameConfigController::class, 'getActive'])->name('game.config.active');
+
+// live feed route
+Route::get('/live-feed', [LiveFeedController::class, 'index'])->name('live.feed.index');
+//get live feed data
+Route::get('/live-feed/data', [LiveFeedController::class, 'getData'])->name('live.feed.data');
+
+Route::get('/start', [LiveFeedController::class, 'start'])->name('start');
 
 Route::get('/upload-baby', function () {
     return view('upload-baby');
@@ -92,11 +113,15 @@ Route::group(['middleware' => ['admin']], function () {
     Route::get('/admin', 'App\Http\Controllers\StationController@admin')->name('admin');
     Route::get('/admin/users', 'App\Http\Controllers\StationController@users')->name('users');
     Route::get('/admin/scanner', 'App\Http\Controllers\StationController@scanner')->name('scanner');
-    
+    Route::get('/admin/trigger', [LiveFeedController::class, 'trigger'])->name('trigger');
+
+    // Game trigger live feed route
+    Route::post('/trigger-live-feed', [GameConfigController::class, 'triggerLiveFeed'])->name('trigger.live.feed');
+
     Route::post('verify-otp-admin', 'App\Http\Controllers\StationController@verifyAdmin')->name('verifyAdmin');
 
     Route::post('/workshop/scan', 'App\Http\Controllers\WorkshopController@scan')->name('workshop.scan');
-    
+
     Route::post('/admin/logout', 'App\Http\Controllers\LoginController@destroy')->name('admin.logout');
 
     Route::get('/admin/bookings', [BookingController::class, 'index'])->name('bookings');
@@ -105,7 +130,7 @@ Route::group(['middleware' => ['admin']], function () {
     Route::post('/admin/check', 'App\Http\Controllers\StationController@check')->name('check');
     Route::delete('/admin/users/{id}', 'App\Http\Controllers\StationController@userDelete')->name('users.destroy');
     Route::post('/editUser', 'App\Http\Controllers\StationController@editUser')->name('editUser');
-    
+
 });
 
 

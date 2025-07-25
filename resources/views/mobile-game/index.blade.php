@@ -61,8 +61,8 @@
 
                     break;
                 case 'finish':
-                case 'reset':
-
+                    //goto congrats page
+                    window.location.href = "{{ route('congrats') }}";
                     break;
             }
         };

@@ -68,6 +68,9 @@ function initializePusher() {
                 case "reset":
                     handleGameReset(data.data);
                     break;
+                case "joined":
+                   handleUserJoined(data.data);
+                    break;
                 default:
                     console.log("Unknown action:", data.action);
             }
@@ -374,6 +377,233 @@ function handleGameUpdate(data) {
     }
 }
 
+// User join queue system
+let userJoinQueue = [];
+let isProcessingQueue = false;
+const MAX_VISIBLE_USERS = 11; // Match your PHP limit
+
+function handleUserJoined(data) {
+    console.log("User joined:", data);
+
+    // Add to queue for processing
+    userJoinQueue.push(data);
+    console.log("Added to queue. Queue length:", userJoinQueue.length);
+
+    // Process queue if not already processing
+    if (!isProcessingQueue) {
+        processUserQueue();
+    }
+}
+
+async function processUserQueue() {
+    if (userJoinQueue.length === 0 || isProcessingQueue) {
+        return;
+    }
+
+    isProcessingQueue = true;
+    console.log("Starting queue processing...");
+
+    while (userJoinQueue.length > 0) {
+        const data = userJoinQueue.shift(); // Get first item from queue
+        await addUserToList(data); // Process user addition
+
+        // Small delay between processing to ensure smooth animations
+        await new Promise(resolve => setTimeout(resolve, 600));
+    }
+
+    isProcessingQueue = false;
+    console.log("Queue processing complete");
+}
+
+async function addUserToList(data) {
+    console.log("Processing user:", data.user?.fname);
+
+    // Update player count
+    if (data.totalUsers) {
+        const playerCountElement = document.getElementById('player-count');
+        if (playerCountElement) {
+            console.log("Updating player count to:", data.totalUsers);
+            playerCountElement.textContent = data.totalUsers;
+
+            // Trigger count animation
+            animatePlayerCount();
+        }
+    }
+
+    // Add new user to the list
+    if (data.user) {
+        const userContainer = document.querySelector('.user-container');
+        if (!userContainer) {
+            console.error("User container not found!");
+            return;
+        }
+
+        // Check if we need to remove the oldest user first
+        const currentUsers = userContainer.querySelectorAll('.user-item');
+        if (currentUsers.length >= MAX_VISIBLE_USERS) {
+            console.log("Max users reached, removing oldest user");
+            await removeOldestUser(userContainer);
+        }
+
+        // Create and add new user
+        const userItem = createUserElement(data.user);
+
+        // Add floating hearts effect before adding user to DOM
+        // We'll use a temporary position for hearts based on container bottom
+        const containerRect = userContainer.getBoundingClientRect();
+        const heartX = containerRect.left + containerRect.width / 2;
+        const heartY = containerRect.bottom;
+        createFloatingHeartsAtPosition(heartX, heartY);
+
+        userContainer.appendChild(userItem);
+
+        // Animate new user in
+        await animateUserIn(userItem);
+
+        console.log("User added successfully:", data.user.fname);
+    }
+}
+
+async function removeOldestUser(container) {
+    const oldestUser = container.querySelector('.user-item');
+    if (!oldestUser) return;
+
+    const userName = oldestUser.querySelector('.username')?.textContent || 'Unknown';
+    console.log("Fading out oldest user:", userName);
+
+    // Fade out animation
+    oldestUser.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    oldestUser.style.opacity = '0';
+    oldestUser.style.transform = 'translateX(-20px)'; // Slide left while fading
+
+    // Wait for animation to complete, then remove
+    return new Promise(resolve => {
+        setTimeout(() => {
+            if (oldestUser.parentNode) {
+                oldestUser.remove();
+                console.log("Oldest user removed:", userName);
+            }
+            resolve();
+        }, 600); // Match transition duration
+    });
+}
+
+function createUserElement(user) {
+    // Create user item container
+    const userItem = document.createElement('div');
+    userItem.className = 'user-item';
+
+    // Create avatar image
+    const avatarImg = document.createElement('img');
+    avatarImg.src = `${window.ASSET_BASE}/images/avatarCats/02_cat0${user.avatar_id}.webp`;
+    avatarImg.alt = 'Avatar';
+    avatarImg.className = 'avatar';
+
+    // Create username text
+    const usernameText = document.createElement('p');
+    usernameText.className = 'username-text';
+    usernameText.innerHTML = `<span class="username">${user.fname}</span> <span class="joined-text">Joined</span>`;
+
+    // Add elements to user item
+    userItem.appendChild(avatarImg);
+    userItem.appendChild(usernameText);
+
+    // Set initial state for animation (hidden)
+    userItem.style.opacity = '0';
+    userItem.style.transform = 'translateY(20px)';
+
+    return userItem;
+}
+
+async function animateUserIn(userItem) {
+    // Force a reflow to ensure initial styles are applied
+    userItem.offsetHeight;
+
+    // Apply transition and animate in
+    userItem.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+    userItem.style.opacity = '1';
+    userItem.style.transform = 'translateY(0)';
+
+    // Wait for animation to complete
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve();
+        }, 800); // Match transition duration
+    });
+}
+
+// Create floating hearts animation when user joins
+function createFloatingHearts(userElement) {
+    // Get the position of the user element
+    const rect = userElement.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    createFloatingHeartsAtPosition(centerX, centerY);
+}
+
+// Create floating hearts at specific coordinates
+function createFloatingHeartsAtPosition(centerX, centerY) {
+    // Create multiple hearts for a nice effect
+    const heartCount = 5;
+
+    for (let i = 0; i < heartCount; i++) {
+        setTimeout(() => {
+            createSingleHeart(centerX, centerY);
+        }, i * 200); // Stagger hearts every 200ms
+    }
+}
+
+function createSingleHeart(startX, startY) {
+    const heart = document.createElement('div');
+    heart.className = 'floating-heart';
+    heart.innerHTML = '💖'; // Heart emoji
+
+    // Random slight offset for variety
+    const offsetX = (Math.random() - 0.5) * 60; // ±30px horizontal spread
+    const offsetY = (Math.random() - 0.5) * 40; // ±20px vertical spread
+
+    heart.style.cssText = `
+        position: fixed;
+        left: ${startX + offsetX}px;
+        top: ${startY + offsetY}px;
+        font-size: 24px;
+        pointer-events: none;
+        z-index: 1000;
+        animation: floatUpHeart 3s ease-out forwards;
+        transform: translateX(-50%) translateY(-50%);
+    `;
+
+    document.body.appendChild(heart);
+
+    // Remove heart after animation completes
+    setTimeout(() => {
+        if (heart.parentNode) {
+            heart.parentNode.removeChild(heart);
+        }
+    }, 3000);
+}
+
+// Animate player count when it updates
+function animatePlayerCount() {
+    const playerCountContainer = document.querySelector('.player-count');
+    if (!playerCountContainer) return;
+
+    // Remove any existing animation class
+    playerCountContainer.classList.remove('count-updated');
+
+    // Force a reflow to ensure the class removal takes effect
+    playerCountContainer.offsetHeight;
+
+    // Add the animation class
+    playerCountContainer.classList.add('count-updated');
+
+    // Remove the class after animation completes
+    setTimeout(() => {
+        playerCountContainer.classList.remove('count-updated');
+    }, 600); // Match animation duration
+}
+
 const finishDiv = document.querySelector(".finish");
 
 function handleGameComplete(data) {
@@ -598,7 +828,7 @@ function triggerKibbleFall(kibbleCount = null) {
     }
 }
 
-// Add kibble falling animation CSS
+// Add kibble falling animation CSS and floating hearts CSS
 function addKibbleStyles() {
     if (!document.getElementById("kibble-styles")) {
         const style = document.createElement("style");
@@ -615,8 +845,29 @@ function addKibbleStyles() {
                 }
             }
 
+            @keyframes floatUpHeart {
+                0% {
+                    transform: translateX(-50%) translateY(-50%) scale(0.5);
+                    opacity: 0;
+                }
+                20% {
+                    transform: translateX(-50%) translateY(-50%) scale(1.2);
+                    opacity: 1;
+                }
+                100% {
+                    transform: translateX(-50%) translateY(-250px) scale(0.8);
+                    opacity: 0;
+                }
+            }
+
             .falling-kibble {
                 transition: none;
+            }
+
+            .floating-heart {
+                transition: none;
+                user-select: none;
+                animation-timing-function: ease-out;
             }
         `;
         document.head.appendChild(style);
@@ -628,7 +879,7 @@ let kibbleRetryAttempts = 0;
 const maxKibbleRetries = 3;
 const kibbleRetryDelay = 1000; // 1 second
 
-// Initialize kibble system with retry mechanism
+// Initialize animation system with retry mechanism
 function initializeKibble() {
     try {
         addKibbleStyles();
@@ -636,11 +887,11 @@ function initializeKibble() {
         // Verify that the styles were added successfully
         const stylesElement = document.getElementById("kibble-styles");
         if (!stylesElement) {
-            throw new Error("Failed to add kibble styles to DOM");
+            throw new Error("Failed to add animation styles to DOM");
         }
 
         console.log(
-            "Kibble system initialized successfully - will fall when weight increases"
+            "Animation system initialized successfully - kibble and hearts will animate properly"
         );
         kibbleRetryAttempts = 0; // Reset counter on success
     } catch (error) {

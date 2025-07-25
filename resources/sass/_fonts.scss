@@ -1,27 +1,156 @@
+// DIN Pro Font Family - Regular weights
 @font-face {
-    font-family: 'Palatino';
-    src: url('../fonts/PALA.TTF') format('truetype');
-    font-weight: normal;
+    font-family: 'DIN Pro';
+    src: url('../fonts/dinpro-regular.otf') format('opentype');
+    font-weight: 400;
     font-style: normal;
 }
 
 @font-face {
-    font-family: 'Palatino';
-    src: url('../fonts/PALAB.TTF') format('truetype');
-    font-weight: bold;
+    font-family: 'DIN Pro';
+    src: url('../fonts/dinpro.otf') format('opentype');
+    font-weight: 400;
     font-style: normal;
 }
 
 @font-face {
-    font-family: 'Palatino';
-    src: url('../fonts/PALAI.TTF') format('truetype');
-    font-weight: normal;
+    font-family: 'DIN Pro';
+    src: url('../fonts/dinpro_italic.otf') format('opentype');
+    font-weight: 400;
     font-style: italic;
 }
 
+// DIN Pro Font Family - Light weights
 @font-face {
-    font-family: 'Palatino';
-    src: url('../fonts/PALABI.TTF') format('truetype');
-    font-weight: bold;
+    font-family: 'DIN Pro';
+    src: url('../fonts/dinpro_light.otf') format('opentype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'DIN Pro';
+    src: url('../fonts/dinpro_lightitalic.ttf') format('truetype');
+    font-weight: 300;
+    font-style: italic;
+}
+
+// DIN Pro Font Family - Medium weights
+@font-face {
+    font-family: 'DIN Pro';
+    src: url('../fonts/dinpro_medium.otf') format('opentype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'DIN Pro';
+    src: url('../fonts/dinpro_mediumitalic.otf') format('opentype');
+    font-weight: 500;
+    font-style: italic;
+}
+
+// DIN Pro Font Family - Bold weights
+@font-face {
+    font-family: 'DIN Pro';
+    src: url('../fonts/dinpro_bold.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'DIN Pro';
+    src: url('../fonts/dinpro_bolditalic.otf') format('opentype');
+    font-weight: 700;
+    font-style: italic;
+}
+
+// DIN Pro Font Family - Black weights
+@font-face {
+    font-family: 'DIN Pro';
+    src: url('../fonts/dinpro_black.otf') format('opentype');
+    font-weight: 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'DIN Pro';
+    src: url('../fonts/dinpro_blackitalic.otf') format('opentype');
+    font-weight: 900;
+    font-style: italic;
+}
+
+// DIN Pro Font Family - Condensed Regular
+@font-face {
+    font-family: 'DIN Pro Condensed';
+    src: url('../fonts/dinpro_condensedregular.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'DIN Pro Condensed';
+    src: url('../fonts/dinpro_condenseditalic.otf') format('opentype');
+    font-weight: 400;
+    font-style: italic;
+}
+
+// DIN Pro Font Family - Condensed Light
+@font-face {
+    font-family: 'DIN Pro Condensed';
+    src: url('../fonts/dinpro_condensedlight.otf') format('opentype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'DIN Pro Condensed';
+    src: url('../fonts/dinpro_condensedlightitalic.otf') format('opentype');
+    font-weight: 300;
+    font-style: italic;
+}
+
+// DIN Pro Font Family - Condensed Medium
+@font-face {
+    font-family: 'DIN Pro Condensed';
+    src: url('../fonts/dinpro_condensedmedium.otf') format('opentype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'DIN Pro Condensed';
+    src: url('../fonts/dinpro_condensedmediumitalic.otf') format('opentype');
+    font-weight: 500;
+    font-style: italic;
+}
+
+// DIN Pro Font Family - Condensed Bold
+@font-face {
+    font-family: 'DIN Pro Condensed';
+    src: url('../fonts/dinpro_condensedbold.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'DIN Pro Condensed';
+    src: url('../fonts/dinpro_condensedbolditalic.otf') format('opentype');
+    font-weight: 700;
+    font-style: italic;
+}
+
+// DIN Pro Font Family - Condensed Black
+@font-face {
+    font-family: 'DIN Pro Condensed';
+    src: url('../fonts/dinpro_condensedblack.otf') format('opentype');
+    font-weight: 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'DIN Pro Condensed';
+    src: url('../fonts/dinpro_condensedblackitalic.otf') format('opentype');
+    font-weight: 900;
     font-style: italic;
 }

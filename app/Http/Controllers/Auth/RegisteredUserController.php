@@ -21,6 +21,10 @@ use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use App\Rules\InternationalPhoneNumber;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
+// Live
+use App\Events\LiveFeedEvent;
 
 
 class RegisteredUserController extends Controller
@@ -95,6 +99,16 @@ class RegisteredUserController extends Controller
 
         // return redirect(RouteServiceProvider::HOME);
         // return redirect()->route('otp')->with('message', 'OTP has been sent to your phone.');
+
+        // get all users with avatar_id
+        $totalUsersCount = User::whereNotNull('avatar_id')->count();
+
+        $data = [
+            'user' => $user,
+            'totalUsers' => $totalUsersCount
+        ];
+
+        event(new LiveFeedEvent('joined', $data));
 
         return response()->json([
             'success' => true,

@@ -55,7 +55,7 @@
         }
 
         .scale-max {
-            right: 601px;
+            right: 619px;
             bottom: 7px;
         }
 
@@ -75,6 +75,18 @@
             z-index: 60;
             transition: transform 0.5s ease;
             /* Debug border to see if element is there */
+        }
+
+        /* User Container Overflow Prevention */
+        .user-container {
+            overflow: hidden; /* Hide users that don't fit */
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Smooth animation for new users */
+        .user-item {
+            flex-shrink: 0; /* Prevent items from shrinking */
         }
     </style>
     </body>
@@ -97,7 +109,7 @@
                         <div class="user-item">
                             <img src="{{ asset('images/avatarCats/02_cat0' . $user->avatar_id . '.webp') }}"
                                 alt="Avatar" class="avatar">
-                            <p class="username-text"><span class="username">{{ $user->fname }}</span> Joined</p>
+                            <p class="username-text"><span class="username">{{ $user->fname }}</span> <span class="joined-text">Joined</span> </p>
                         </div>
                     @endforeach
                 </div>

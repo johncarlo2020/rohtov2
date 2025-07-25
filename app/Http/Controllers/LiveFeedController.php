@@ -14,7 +14,7 @@ class LiveFeedController extends Controller
         $totalUsersCount = User::whereNotNull('avatar_id')->count();
         $users = User::whereNotNull('avatar_id')
             ->latest()
-            ->limit(30)
+            ->limit(11)
             ->get();
 
         // Get game configuration for the live feed

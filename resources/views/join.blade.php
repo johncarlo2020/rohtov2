@@ -16,10 +16,10 @@
                         </div>
                     </div>
                 </div>
-                <x-footer />
+                {{-- <x-footer /> --}}
         </div>
     </div>
 </x-guest-layout>
 <script>
-    
+
 </script>

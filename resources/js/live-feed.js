@@ -39,6 +39,10 @@ function initializePusher() {
         // Subscribe to channel
         channel = pusher.subscribe("live-feed-channel");
 
+        // Make pusher and channel available globally for modal status checking
+        window.pusher = pusher;
+        window.channel = channel;
+
         // Log when channel subscription is successful
         channel.bind("pusher:subscription_succeeded", function () {
             console.log("Successfully subscribed to live-feed-channel");
@@ -213,6 +217,209 @@ const lobby = document.querySelector(".live-feed-lobby");
 const liveGame = document.querySelector(".live-game");
 const countDown = document.querySelector(".count-down");
 
+// Background music management
+let lobbyMusic = null;
+let gameMusic = null;
+let countdownSound = null;
+let kibbleSound = null;
+let finishSound = null;
+let musicInitialized = false;
+let meowSound = null;
+
+// Initialize lobby music and sound effects
+function initializeLobbyMusic() {
+    if (musicInitialized) return;
+
+    try {
+        lobbyMusic = new Audio(`${window.ASSET_BASE}/sounds/lobby.mp3`);
+        lobbyMusic.loop = true;
+        lobbyMusic.volume = 0.3; // Set volume to 30%
+
+        // Initialize game music
+        gameMusic = new Audio(`${window.ASSET_BASE}/sounds/game.mp3`);
+        gameMusic.loop = true;
+        gameMusic.volume = 0.4; // Set volume to 40% for game music
+
+        // Initialize countdown sound
+        countdownSound = new Audio(`${window.ASSET_BASE}/sounds/count-down.mp3`);
+        countdownSound.volume = 0.6; // Set volume to 60% for countdown sound
+
+        // Initialize kibble falling sound
+        kibbleSound = new Audio(`${window.ASSET_BASE}/sounds/kibble.mp3`);
+        kibbleSound.volume = 0.4; // Set volume to 40% for kibble sound
+
+        // Initialize finish sound (for confetti celebration)
+        finishSound = new Audio(`${window.ASSET_BASE}/sounds/finish.mp3`);
+        finishSound.volume = 0.7; // Set volume to 70% for finish sound
+
+        // Initialize meow sound effects (8 different cat sounds available)
+        // We'll randomly select one each time we need to play a sound
+        meowSound = []; // Array to hold all cat sounds
+        for (let i = 1; i <= 8; i++) {
+            const catSound = new Audio(`${window.ASSET_BASE}/images/brand/cat_sounds/cat_sound_${i}.mp3`);
+            catSound.volume = 0.5; // Set volume to 50% for sound effect
+            meowSound.push(catSound);
+        }
+
+        musicInitialized = true;
+        console.log("Lobby music, game music, countdown sound, kibble sound, finish sound and 8 cat sound effects initialized (ready to play on user interaction)");
+
+        // Listen for start experience event from modal
+        window.addEventListener('startExperience', function() {
+            console.log("Start experience event received - playing lobby music");
+            playLobbyMusic();
+        });
+
+    } catch (error) {
+        console.error("Error initializing lobby music and sounds:", error);
+    }
+}// Play lobby music
+function playLobbyMusic() {
+    if (lobbyMusic && !isGameStarting) {
+        lobbyMusic.play().catch(error => {
+            console.warn("Could not play lobby music (user interaction required):", error);
+        });
+    }
+}
+
+// Stop lobby music
+function stopLobbyMusic() {
+    if (lobbyMusic) {
+        lobbyMusic.pause();
+        lobbyMusic.currentTime = 0;
+    }
+}
+
+// Play game music
+function playGameMusic() {
+    if (gameMusic && musicInitialized) {
+        gameMusic.play().catch(error => {
+            console.warn("Could not play game music:", error);
+        });
+        console.log("Game music started");
+    }
+}
+
+// Stop game music
+function stopGameMusic() {
+    if (gameMusic) {
+        gameMusic.pause();
+        gameMusic.currentTime = 0;
+    }
+}
+
+// Play meow sound when user joins
+function playMeowSound() {
+    console.log("playMeowSound called - checking conditions...");
+    console.log("meowSound array:", meowSound);
+    console.log("musicInitialized:", musicInitialized);
+
+    if (meowSound && meowSound.length > 0 && musicInitialized) {
+        // Randomly select one of the 8 cat sounds
+        const randomIndex = Math.floor(Math.random() * meowSound.length);
+        const selectedCatSound = meowSound[randomIndex];
+
+        console.log(`Attempting to play cat sound ${randomIndex + 1}`);
+
+        // Reset sound to beginning in case it's already playing
+        selectedCatSound.currentTime = 0;
+
+        // Play the sound with enhanced error handling
+        const playPromise = selectedCatSound.play();
+
+        if (playPromise !== undefined) {
+            playPromise.then(() => {
+                console.log(`✅ Cat sound ${randomIndex + 1} played successfully!`);
+            }).catch(error => {
+                console.warn(`❌ Could not play cat sound ${randomIndex + 1}:`, error);
+                console.log("This might be due to browser autoplay policy - sound will work after user interaction");
+            });
+        }
+    } else {
+        console.warn("Cannot play meow sound:", {
+            meowSoundExists: !!meowSound,
+            meowSoundLength: meowSound ? meowSound.length : 0,
+            musicInitialized: musicInitialized
+        });
+    }
+}
+
+// Play countdown sound
+function playCountdownSound() {
+    console.log("Playing countdown sound...");
+
+    if (countdownSound && musicInitialized) {
+        // Reset sound to beginning in case it's already playing
+        countdownSound.currentTime = 0;
+
+        // Play the countdown sound
+        const playPromise = countdownSound.play();
+
+        if (playPromise !== undefined) {
+            playPromise.then(() => {
+                console.log("✅ Countdown sound played successfully!");
+            }).catch(error => {
+                console.warn("❌ Could not play countdown sound:", error);
+                console.log("This might be due to browser autoplay policy - sound will work after user interaction");
+            });
+        }
+    } else {
+        console.warn("Cannot play countdown sound:", {
+            countdownSoundExists: !!countdownSound,
+            musicInitialized: musicInitialized
+        });
+    }
+}
+
+// Play kibble falling sound
+function playKibbleSound() {
+    if (kibbleSound && musicInitialized) {
+        // Create a copy of the sound to allow overlapping plays
+        const kibbleSoundClone = kibbleSound.cloneNode();
+        kibbleSoundClone.volume = kibbleSound.volume;
+
+        const playPromise = kibbleSoundClone.play();
+
+        if (playPromise !== undefined) {
+            playPromise.then(() => {
+                console.log("🥣 Kibble sound played!");
+            }).catch(error => {
+                console.warn("❌ Could not play kibble sound:", error);
+            });
+        }
+    } else {
+        console.warn("Cannot play kibble sound:", {
+            kibbleSoundExists: !!kibbleSound,
+            musicInitialized: musicInitialized
+        });
+    }
+}
+
+// Play finish sound (for confetti celebration)
+function playFinishSound() {
+    console.log("Playing finish sound for celebration...");
+
+    if (finishSound && musicInitialized) {
+        // Reset sound to beginning in case it's already playing
+        finishSound.currentTime = 0;
+
+        const playPromise = finishSound.play();
+
+        if (playPromise !== undefined) {
+            playPromise.then(() => {
+                console.log("🎉 Finish sound played successfully!");
+            }).catch(error => {
+                console.warn("❌ Could not play finish sound:", error);
+            });
+        }
+    } else {
+        console.warn("Cannot play finish sound:", {
+            finishSoundExists: !!finishSound,
+            musicInitialized: musicInitialized
+        });
+    }
+}
+
 // Scale pin management
 let currentWeight = 0;
 
@@ -276,6 +483,9 @@ document.addEventListener("DOMContentLoaded", function () {
         );
         handleKibbleInitFailure();
     }
+
+    // Initialize lobby music
+    initializeLobbyMusic();
 });
 
 // Game state tracking
@@ -297,6 +507,10 @@ function handleGameStart(data) {
     isGameStarting = true;
     console.log("Setting game starting state to true");
 
+    // Stop lobby music and start game music
+    stopLobbyMusic();
+    playGameMusic();
+
     // Clear any existing timeout
     if (gameStartTimeout) {
         clearTimeout(gameStartTimeout);
@@ -310,6 +524,9 @@ function handleGameStart(data) {
     countDown.classList.remove("d-none");
 
     console.log("Starting 3-second countdown to live game");
+
+    // Start countdown image sequence
+    startCountdownSequence();
 
     // Count down 3 seconds then go to live game with fallback
     gameStartTimeout = setTimeout(() => {
@@ -339,6 +556,65 @@ function handleGameStart(data) {
             enableIncreaseOnAdmin();
         }
     }, 5000);
+}
+
+// Countdown image sequence function
+function startCountdownSequence() {
+    console.log("Starting countdown image sequence: 3, 2, 1");
+
+    // Play countdown sound
+    playCountdownSound();
+
+    // Hide all countdown images first
+    const allCountdownImages = document.querySelectorAll('.countdown-image');
+    allCountdownImages.forEach(img => img.classList.remove('active'));
+
+    // Show countdown 3
+    setTimeout(() => {
+        const countdown3 = document.getElementById('countdown-3');
+        if (countdown3) {
+            countdown3.classList.add('active');
+            console.log("Showing countdown: 3");
+        }
+    }, 0);
+
+    // Show countdown 2
+    setTimeout(() => {
+        const countdown3 = document.getElementById('countdown-3');
+        const countdown2 = document.getElementById('countdown-2');
+        if (countdown3) countdown3.classList.remove('active');
+        if (countdown2) {
+            countdown2.classList.add('active');
+            console.log("Showing countdown: 2");
+        }
+    }, 1000);
+
+    // Show countdown 1
+    setTimeout(() => {
+        const countdown2 = document.getElementById('countdown-2');
+        const countdown1 = document.getElementById('countdown-1');
+        if (countdown2) countdown2.classList.remove('active');
+        if (countdown1) {
+            countdown1.classList.add('active');
+            console.log("Showing countdown: 1");
+        }
+    }, 2000);
+
+    // Hide countdown 1 after sequence completes
+    setTimeout(() => {
+        const countdown1 = document.getElementById('countdown-1');
+        if (countdown1) {
+            countdown1.classList.remove('active');
+            console.log("Countdown sequence complete");
+        }
+    }, 3000);
+}
+
+// Reset countdown images to initial state
+function resetCountdownImages() {
+    const allCountdownImages = document.querySelectorAll('.countdown-image');
+    allCountdownImages.forEach(img => img.classList.remove('active'));
+    console.log("Countdown images reset");
 }
 
 function handleGameUpdate(data) {
@@ -384,6 +660,9 @@ const MAX_VISIBLE_USERS = 11; // Match your PHP limit
 
 function handleUserJoined(data) {
     console.log("User joined:", data);
+
+    // Play meow sound when someone joins
+    playMeowSound();
 
     // Add to queue for processing
     userJoinQueue.push(data);
@@ -626,6 +905,10 @@ function handleGameComplete(data) {
         lobby.classList.remove("d-none");
         countDown.classList.add("d-none");
         moveScalePin(0); // Reset pin to 0
+
+        // Stop game music and restart lobby music when returning to lobby
+        stopGameMusic();
+        playLobbyMusic();
     }, 5000);
 }
 
@@ -669,6 +952,9 @@ function proceedWithGameFinish(data) {
 }
 
 function handleGameReset(data) {
+    // Stop all music before reload
+    stopLobbyMusic();
+    stopGameMusic();
     location.reload();
 }
 
@@ -685,6 +971,10 @@ window.forceGameStart = function () {
     lobby.classList.add("d-none");
     countDown.classList.add("d-none");
     liveGame.classList.remove("d-none");
+
+    // Reset countdown images
+    resetCountdownImages();
+
     enableIncreaseOnAdmin();
     console.log("Forced game start complete");
 };
@@ -704,6 +994,13 @@ window.resetGameState = function () {
     countDown.classList.add("d-none");
     lobby.classList.remove("d-none");
     moveScalePin(0);
+
+    // Reset countdown images
+    resetCountdownImages();
+
+    // Stop game music and restart lobby music
+    stopGameMusic();
+    playLobbyMusic();
 
     console.log("Game state manually reset to lobby");
 };
@@ -748,6 +1045,81 @@ window.testPinRange = function () {
     testNext();
 };
 
+// Debug function to test cat sounds manually
+window.testCatSound = function(soundNumber = null) {
+    console.log("Testing cat sound manually...");
+
+    if (soundNumber && soundNumber >= 1 && soundNumber <= 8) {
+        // Test specific sound
+        const catSound = meowSound[soundNumber - 1];
+        catSound.currentTime = 0;
+        catSound.play().then(() => {
+            console.log(`✅ Cat sound ${soundNumber} played successfully!`);
+        }).catch(error => {
+            console.warn(`❌ Could not play cat sound ${soundNumber}:`, error);
+        });
+    } else {
+        // Test random sound (same as user join)
+        playMeowSound();
+    }
+};
+
+// Debug function to test all cat sounds in sequence
+window.testAllCatSounds = function() {
+    console.log("Testing all 8 cat sounds in sequence...");
+
+    for (let i = 0; i < 8; i++) {
+        setTimeout(() => {
+            console.log(`Playing cat sound ${i + 1}...`);
+            const catSound = meowSound[i];
+            catSound.currentTime = 0;
+            catSound.play().then(() => {
+                console.log(`✅ Cat sound ${i + 1} played!`);
+            }).catch(error => {
+                console.warn(`❌ Cat sound ${i + 1} failed:`, error);
+            });
+        }, i * 1500); // 1.5 second delay between sounds
+    }
+};
+
+// Debug function to test countdown sound manually
+window.testCountdownSound = function() {
+    console.log("Testing countdown sound manually...");
+    playCountdownSound();
+};
+
+// Debug function to test kibble sound manually
+window.testKibbleSound = function() {
+    console.log("Testing kibble sound manually...");
+    playKibbleSound();
+};
+
+// Debug function to test finish sound manually
+window.testFinishSound = function() {
+    console.log("Testing finish sound manually...");
+    playFinishSound();
+};
+
+// Debug function to test countdown sequence manually
+window.testCountdownSequence = function() {
+    console.log("Testing countdown sequence manually...");
+
+    // Show countdown container
+    countDown.classList.remove("d-none");
+    lobby.classList.add("d-none");
+    liveGame.classList.add("d-none");
+
+    // Start the countdown sequence
+    startCountdownSequence();
+
+    // Reset back to lobby after countdown completes
+    setTimeout(() => {
+        countDown.classList.add("d-none");
+        lobby.classList.remove("d-none");
+        console.log("Countdown test complete - returned to lobby");
+    }, 4000);
+};
+
 // Falling kibble animation with tracking
 let activeKibbles = 0; // Track number of kibbles currently falling
 
@@ -773,6 +1145,9 @@ function createFallingKibble(x, y) {
     `;
 
     document.body.appendChild(kibble);
+
+    // Play kibble sound when kibble starts falling
+    playKibbleSound();
 
     // Remove kibble after animation and decrement counter
     setTimeout(() => {
@@ -994,6 +1369,9 @@ function triggerConfettiCelebration() {
     console.log(
         "🎉 Starting confetti celebration for reaching maximum weight!"
     );
+
+    // Play finish sound for celebration
+    playFinishSound();
 
     // Main confetti burst from center
     confetti({

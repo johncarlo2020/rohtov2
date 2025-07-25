@@ -205,6 +205,22 @@
         margin: 0 auto;
         margin-top: 10vh;
     }
+
+    .countdown-image {
+        width: 300px;
+        height: auto;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: 35;
+
+        &.active {
+            opacity: 1;
+        }
+    }
 }
 
 .finish {

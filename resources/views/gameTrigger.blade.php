@@ -50,16 +50,16 @@
                     <div class="kibble-description">Set how many kibbles fall on live feed per weight increase</div>
                 </div>
 
-                <button class="btn btn-success" id="startButton" onclick="startGame()">
+                <button class="btn btn-success mobile-friendly-btn" id="startButton" onclick="startGame()">
                     <i class="fa-solid fa-play"></i> Start
                 </button>
-                <button class="btn btn-success d-none" id="increaseButton" onclick="increaseScale()">
+                <button class="btn btn-success d-none mobile-friendly-btn" id="increaseButton" onclick="increaseScale()">
                     <i class="fa-solid fa-paw"></i> Increase
                 </button>
 
                 <!-- Reset Button Area -->
                 <div class="reset-button-area mt-3 d-none" id="resetButtonArea">
-                    <button class="btn btn-reset rounded-pill" id="resetButton" onclick="resetGame()">
+                    <button class="btn btn-reset rounded-pill mobile-friendly-btn" id="resetButton" onclick="resetGame()">
                         <i class="fa-solid fa-rotate-left"></i> Reset Game
                     </button>
                 </div>
@@ -329,6 +329,54 @@
 .control-buttons .btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Mobile-friendly button styles to prevent zoom */
+.mobile-friendly-btn {
+    min-width: 150px !important;
+    min-height: 50px !important;
+    font-size: 16px !important;
+    padding: 15px 25px !important;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+}
+
+/* Prevent zoom on mobile devices */
+@media (max-width: 768px) {
+    .mobile-friendly-btn {
+        min-width: 200px !important;
+        min-height: 60px !important;
+        font-size: 18px !important;
+        padding: 20px 30px !important;
+        margin: 10px 5px !important;
+    }
+
+    .kibble-btn {
+        min-width: 55px !important;
+        min-height: 55px !important;
+        font-size: 18px !important;
+        touch-action: manipulation !important;
+        -webkit-tap-highlight-color: transparent !important;
+    }
+
+    .control-buttons {
+        padding: 20px 10px !important;
+    }
+
+    /* Prevent text selection and callouts */
+    * {
+        -webkit-tap-highlight-color: transparent !important;
+        -webkit-touch-callout: none !important;
+        -webkit-user-select: none !important;
+        -moz-user-select: none !important;
+        -ms-user-select: none !important;
+        user-select: none !important;
+    }
 }
 
 .kibble-control-box {
@@ -1077,7 +1125,62 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize connection monitoring
     initializeConnectionMonitoring();
+
+    // Prevent zoom on mobile devices
+    preventMobileZoom();
 });
+
+// Prevent mobile zoom and improve touch interaction
+function preventMobileZoom() {
+    // Prevent double-tap zoom
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', function (event) {
+        const now = (new Date()).getTime();
+        if (now - lastTouchEnd <= 300) {
+            event.preventDefault();
+        }
+        lastTouchEnd = now;
+    }, false);
+
+    // Prevent pinch zoom
+    document.addEventListener('gesturestart', function (e) {
+        e.preventDefault();
+    });
+
+    document.addEventListener('gesturechange', function (e) {
+        e.preventDefault();
+    });
+
+    document.addEventListener('gestureend', function (e) {
+        e.preventDefault();
+    });
+
+    // Improve button touch handling
+    const buttons = document.querySelectorAll('.mobile-friendly-btn, .kibble-btn');
+    buttons.forEach(button => {
+        // Prevent default touch behaviors that can cause zoom
+        button.addEventListener('touchstart', function(e) {
+            e.stopPropagation();
+        }, { passive: true });
+
+        button.addEventListener('touchend', function(e) {
+            e.stopPropagation();
+        }, { passive: true });
+
+        // Add visual feedback for touch
+        button.addEventListener('touchstart', function() {
+            this.style.transform = 'scale(0.95)';
+        });
+
+        button.addEventListener('touchend', function() {
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 150);
+        });
+    });
+
+    console.log('Mobile zoom prevention and touch optimization initialized');
+}
 
 // Connection monitoring
 let lastHeartbeat = Date.now();

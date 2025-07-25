@@ -40,7 +40,7 @@
         @include('components.branding')
         <img id="game-status-image" class="waiting-img my-4" src="{{ asset('images/brand/waiting-page.webp') }}" alt="Waiting for Game" />
     </div>
-    <div id="mobile-game-container d-none"></div>
+    <div id="mobile-game-container" ></div>
     <script>
         window.ASSET_BASE = "{{ asset('') }}".replace(/\/$/, '');
 

@@ -193,20 +193,68 @@ function handleGameEvent(data) {
 // Game event handlers
 function handleGameStart(data) {
     console.log("Mobile game: Game started", data);
+    console.log("Mobile game: Current bag object:", bag);
+    console.log("Mobile game: Current isGameStarted:", isGameStarted);
+
+    // Force bag creation if it doesn't exist (timing issue fix)
+    if (!bag) {
+        console.warn("Mobile game: Bag not found, attempting to find it in Phaser game");
+        if (game && game.scene && game.scene.scenes[0]) {
+            const scene = game.scene.scenes[0];
+            // Try to find bag in scene children
+            const bagInScene = scene.children.list.find(child => child.texture && child.texture.key === 'bagClosed');
+            if (bagInScene) {
+                bag = bagInScene;
+                console.log("Mobile game: Found bag in scene:", bag);
+            }
+        }
+    }
+
     if (!isGameStarted) {
         isGameStarted = true;
+        console.log("Mobile game: Setting isGameStarted to true");
+
+        // Show the bag when game starts (container stays visible for tapping)
         if (bag) {
-            bag.setAlpha(1); // Show the bag when game starts
+            console.log("Mobile game: Showing bag - setting alpha to 1");
+            bag.setAlpha(1);
+            console.log("Mobile game: Bag alpha after setting:", bag.alpha);
+
+            // Force a visual update
+            if (bag.scene) {
+                bag.scene.sys.displayList.dirty = true;
+            }
+        } else {
+            console.error("Mobile game: Bag object is still null or undefined after search!");
+
+            // Try to create bag manually if it doesn't exist
+            if (game && game.scene && game.scene.scenes[0]) {
+                const scene = game.scene.scenes[0];
+                console.log("Mobile game: Attempting to create bag manually with responsive positioning");
+                const centerX = scene.cameras.main.width / 2;
+                const bagY = scene.cameras.main.height * 0.6;
+                const desiredBagWidth = scene.cameras.main.width * 0.38;
+                const bagTexture = scene.textures.get('bagClosed').getSourceImage();
+                const bagOriginalWidth = bagTexture.width;
+                const scaleX = desiredBagWidth / bagOriginalWidth;
+                const scaleY = scaleX;
+
+                bag = scene.add.image(centerX, bagY, 'bagClosed');
+                bag.setScale(scaleX, scaleY);
+                bag.setDepth(10);
+                bag.setAlpha(1);
+                console.log("Mobile game: Manually created responsive bag at:", centerX, bagY, "with scaleX:", scaleX);
+            }
         }
+    } else {
+        console.log("Mobile game: Game already started, skipping bag show");
     }
 
     // Call image switching function if available
     if (typeof window.switchGameImage === 'function') {
         window.switchGameImage('start');
     }
-}
-
-function handleGameUpdate(data) {
+}function handleGameUpdate(data) {
     console.log("Mobile game: Game updated", data);
     // Handle weight updates or other game state changes
 }
@@ -229,8 +277,10 @@ function handleGameReset(data) {
     // Reset game state
     gameOver = false;
     isGameStarted = false;
+
+    // Hide bag on reset (container stays visible for tapping)
     if (bag) {
-        bag.setAlpha(0); // Hide bag on reset
+        bag.setAlpha(0);
         bag.setTexture('bagClosed');
     }
 
@@ -332,6 +382,17 @@ let kibbleOffset = 0;  // Offset for kibble position (adjust to align under paw)
 }
 
 function preload() {
+  // Add loading event listeners for debugging
+  this.load.on('filecomplete', (key, type, data) => {
+    if (key === 'bagClosed' || key === 'bagOpen') {
+      console.log(`Mobile game: Successfully loaded ${type} - ${key}`);
+    }
+  });
+
+  this.load.on('loaderror', (file) => {
+    console.error(`Mobile game: Failed to load file:`, file.key, file.src);
+  });
+
   // Load paw images using a loop
   for (let i = 1; i <= 9; i++) {
     this.load.image(`paw${i}`, fixImageUrl(`images/brand/animal_paws/cat_paw_${i}.png`));
@@ -343,9 +404,16 @@ function preload() {
   // Load kibble image
   this.load.image('kibble', fixImageUrl(`images/brand/mobile_game_object/kibble.webp`));
 
-  // Load bag images
-  this.load.image('bagClosed', fixImageUrl(`images/brand/mobile_game_object/bag_close.webp`));
-  this.load.image('bagOpen', fixImageUrl(`images/brand/mobile_game_object/bag_open.webp`));
+  // Load bag images with debugging
+  const bagClosedUrl = fixImageUrl(`images/brand/mobile_game_object/bag_close.webp`);
+  const bagOpenUrl = fixImageUrl(`images/brand/mobile_game_object/bag_open.webp`);
+
+  console.log(`Mobile game: Loading bag images:`);
+  console.log(`- bagClosed: ${bagClosedUrl}`);
+  console.log(`- bagOpen: ${bagOpenUrl}`);
+
+  this.load.image('bagClosed', bagClosedUrl);
+  this.load.image('bagOpen', bagOpenUrl);
 
   // Load cat sounds using a loop
   for (let i = 1; i <= 8; i++) {
@@ -357,18 +425,50 @@ function create() {
   const centerX = this.cameras.main.width / 2;
   const centerY = this.cameras.main.height / 2;
 
-  // Game starts immediately
-  isGameStarted = true;
+  // Game starts hidden - bag will be shown when 'start' event is received
+  // But allow tapping even before official start for testing
+  isGameStarted = false;
 
-  // Create bag at bottom of screen (initially visible)
-  bag = this.add.image(centerX, this.cameras.main.height - 250, 'bagClosed');
-  bag.setScale(0.7); // Reduced size and moved higher to prevent cutting
+  // Check if bag textures are loaded before creating bag
+  console.log("Mobile game: Checking available textures:");
+  console.log("- bagClosed texture exists:", this.textures.exists('bagClosed'));
+  console.log("- bagOpen texture exists:", this.textures.exists('bagOpen'));
+
+  if (!this.textures.exists('bagClosed')) {
+    console.error("Mobile game: bagClosed texture not found! Cannot create bag.");
+    console.log("Available textures:", Object.keys(this.textures.list));
+    return;
+  }
+
+  // Create bag at responsive position for mobile (initially hidden until game starts)
+  // Position bag at 60% of screen height to ensure it's visible on all mobile devices
+  const bagY = this.cameras.main.height * 0.6;
+
+  // Set bag width to a fixed percentage of screen width (e.g., 38%)
+  const desiredBagWidth = this.cameras.main.width * 0.38;
+  const bagTexture = this.textures.get('bagClosed').getSourceImage();
+  const bagOriginalWidth = bagTexture.width;
+  const bagOriginalHeight = bagTexture.height;
+  const scaleX = desiredBagWidth / bagOriginalWidth;
+  const scaleY = scaleX; // Keep aspect ratio
+
+  bag = this.add.image(centerX, bagY, 'bagClosed');
+  bag.setScale(scaleX, scaleY);
   bag.setDepth(10); // Make sure bag appears above other elements
-  bag.setAlpha(1); // Set opacity to 1 to show the bag
+  bag.setAlpha(0); // Initially hidden - will show when game starts
 
-  // Main game click
+  console.log("Mobile game: Screen dimensions:", this.cameras.main.width, "x", this.cameras.main.height);
+  console.log("Mobile game: Bag created at responsive position:", centerX, bagY);
+  console.log("Mobile game: Bag scale:", scaleX);
+  console.log("Mobile game: Bag object:", bag);
+  console.log("Mobile game: Initial bag alpha:", bag.alpha);
+  console.log("Mobile game: Bag texture key:", bag.texture.key);
+  console.log("Mobile game: Bag visible:", bag.visible);
+  console.log("Mobile game: Bag bounds:", bag.getBounds());
+
+  // Main game click - allow tapping even when game hasn't officially started
   this.input.on('pointerdown', (pointer) => {
-    if (!isGameStarted || gameOver) return;
+    if (gameOver) return; // Only prevent when game is over
 
     // Send tap event to server for live feed integration
     sendTapEvent();
@@ -649,6 +749,90 @@ window.mobileGameDebug = {
             pusher.connection.send_event('pusher:ping', {});
         } else {
             console.log("Pusher not initialized");
+        }
+    },
+    // New bag debugging functions
+    bagStatus: () => ({
+        exists: !!bag,
+        alpha: bag ? bag.alpha : null,
+        position: bag ? { x: bag.x, y: bag.y } : null,
+        texture: bag ? bag.texture.key : null,
+        scale: bag ? bag.scaleX : null,
+        depth: bag ? bag.depth : null,
+        visible: bag ? bag.visible : null,
+        gameScene: game && game.scene ? 'exists' : 'missing',
+        sceneChildren: game && game.scene && game.scene.scenes[0] ? game.scene.scenes[0].children.list.length : 0,
+        texturesLoaded: game && game.scene && game.scene.scenes[0] ? {
+            bagClosed: game.scene.scenes[0].textures.exists('bagClosed'),
+            bagOpen: game.scene.scenes[0].textures.exists('bagOpen'),
+            availableTextures: Object.keys(game.scene.scenes[0].textures.list).filter(key => key.includes('bag'))
+        } : 'scene not available'
+    }),
+    showBag: () => {
+        if (bag) {
+            console.log("Manually showing bag");
+            bag.setAlpha(1);
+            console.log("Bag alpha after manual show:", bag.alpha);
+        } else {
+            console.error("Bag not found for manual show");
+        }
+    },
+    hideBag: () => {
+        if (bag) {
+            console.log("Manually hiding bag");
+            bag.setAlpha(0);
+            console.log("Bag alpha after manual hide:", bag.alpha);
+        } else {
+            console.error("Bag not found for manual hide");
+        }
+    },
+    testGameStart: () => {
+        console.log("Manually triggering game start");
+        handleGameStart({ test: true });
+    },
+    forceBagShow: () => {
+        console.log("Force bag show - searching all possibilities");
+
+        // Try current bag reference
+        if (bag) {
+            bag.setAlpha(1);
+            console.log("Used existing bag reference, alpha:", bag.alpha);
+            return;
+        }
+
+        // Search in game scene
+        if (game && game.scene && game.scene.scenes[0]) {
+            const scene = game.scene.scenes[0];
+            console.log("Searching in scene with", scene.children.list.length, "children");
+
+            const bagInScene = scene.children.list.find(child =>
+                child.texture && (child.texture.key === 'bagClosed' || child.texture.key === 'bagOpen')
+            );
+
+            if (bagInScene) {
+                bag = bagInScene;
+                bag.setAlpha(1);
+                console.log("Found and showed bag in scene, alpha:", bag.alpha);
+                return;
+            }
+
+            // If not found, create new bag with responsive positioning
+            console.log("Creating new bag with responsive positioning");
+            const centerX = scene.cameras.main.width / 2;
+            const bagY = scene.cameras.main.height * 0.6; // 60% down the screen
+            const desiredBagWidth = scene.cameras.main.width * 0.38;
+            const bagTexture = scene.textures.get('bagClosed').getSourceImage();
+            const bagOriginalWidth = bagTexture.width;
+            const scaleX = desiredBagWidth / bagOriginalWidth;
+            const scaleY = scaleX;
+
+            bag = scene.add.image(centerX, bagY, 'bagClosed');
+            bag.setScale(scaleX, scaleY);
+            bag.setDepth(10);
+            bag.setAlpha(1);
+            console.log("Created new responsive bag at:", centerX, bagY, "with scaleX:", scaleX);
+        } else {
+            console.error("Game scene not available");
         }
     }
 };

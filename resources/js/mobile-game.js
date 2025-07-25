@@ -1,5 +1,272 @@
 import Phaser from "phaser";
 
+// Pusher configuration and setup
+let pusher = null;
+let channel = null;
+let reconnectAttempts = 0;
+const maxReconnectAttempts = 5;
+const reconnectDelay = 2000; // 2 seconds
+
+// Initialize Pusher connection
+function initializePusher() {
+    try {
+        const pusherConfig = window.PUSHER_CONFIG;
+        if (!pusherConfig) {
+            console.warn("Pusher config not found in mobile game");
+            return;
+        }
+
+        console.log("Mobile game: Initializing Pusher with config:", {
+            key: pusherConfig.key,
+            cluster: pusherConfig.cluster
+        });
+
+        pusher = new Pusher(pusherConfig.key, {
+            cluster: pusherConfig.cluster,
+            encrypted: true,
+            enabledTransports: ['ws', 'wss'], // Prioritize WebSocket
+            disabledTransports: [], // Allow all transports as fallback
+            activityTimeout: 120000, // 2 minutes
+            pongTimeout: 30000, // 30 seconds
+            unavailableTimeout: 10000 // 10 seconds
+        });
+
+        // Log connection events with more detail
+        pusher.connection.bind("connected", function () {
+            console.log("Mobile game: Pusher connection established successfully!");
+            console.log("Connection state:", pusher.connection.state);
+            console.log("Socket ID:", pusher.connection.socket_id);
+            reconnectAttempts = 0; // Reset on successful connection
+        });
+
+        pusher.connection.bind("connecting", function () {
+            console.log("Mobile game: Pusher connecting...");
+        });
+
+        pusher.connection.bind("disconnected", function () {
+            console.warn("Mobile game: Pusher connection disconnected");
+            console.log("Reconnect attempts:", reconnectAttempts);
+            handleReconnection();
+        });
+
+        pusher.connection.bind("failed", function () {
+            console.error("Mobile game: Pusher connection failed");
+            handleReconnection();
+        });
+
+        pusher.connection.bind("error", function (error) {
+            console.error("Mobile game: Pusher connection error:", error);
+        });
+
+        pusher.connection.bind("state_change", function (states) {
+            console.log("Mobile game: Pusher state changed from", states.previous, "to", states.current);
+        });
+
+        // Subscribe to live feed channel
+        channel = pusher.subscribe("live-feed-channel");
+
+        // Log channel events
+        channel.bind("pusher:subscription_succeeded", function () {
+            console.log("Mobile game: Successfully subscribed to live-feed-channel");
+        });
+
+        channel.bind("pusher:subscription_error", function (error) {
+            console.error("Mobile game: Channel subscription error:", error);
+        });
+
+        // Handle game events
+        channel.bind("live-feed-event", (data) => {
+            console.log("Mobile game received event:", data);
+            handleGameEvent(data);
+        });
+
+        console.log("Mobile game: Pusher initialized successfully");
+    } catch (error) {
+        console.error("Mobile game: Error initializing Pusher:", error);
+        handleReconnection();
+    }
+}
+
+// Handle reconnection attempts
+function handleReconnection() {
+    if (reconnectAttempts < maxReconnectAttempts) {
+        reconnectAttempts++;
+        const delay = reconnectDelay * Math.pow(2, reconnectAttempts - 1); // Exponential backoff
+
+        console.log(`Mobile game: Attempting reconnection ${reconnectAttempts}/${maxReconnectAttempts} in ${delay/1000} seconds...`);
+
+        setTimeout(() => {
+            console.log("Mobile game: Reconnecting to Pusher...");
+
+            // Disconnect existing connection if any
+            if (pusher) {
+                pusher.disconnect();
+            }
+
+            // Reinitialize Pusher
+            initializePusher();
+        }, delay);
+    } else {
+        console.error(`Mobile game: Failed to connect after ${maxReconnectAttempts} attempts. Please refresh the page.`);
+        showConnectionError();
+    }
+}
+
+// Show connection error to user
+function showConnectionError() {
+    // Create error notification
+    let errorDiv = document.getElementById("mobile-pusher-error");
+    if (!errorDiv) {
+        errorDiv = document.createElement("div");
+        errorDiv.id = "mobile-pusher-error";
+        errorDiv.style.cssText = `
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #dc3545;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 9999;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            max-width: 300px;
+        `;
+        document.body.appendChild(errorDiv);
+    }
+
+    errorDiv.innerHTML = `
+        <strong>Connection Lost</strong><br>
+        Unable to connect to game server. <br>
+        <button onclick="retryMobileConnection()" style="
+            background: white;
+            color: #dc3545;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            margin-top: 8px;
+            cursor: pointer;
+        ">Retry Connection</button>
+    `;
+}
+
+// Manual retry function
+window.retryMobileConnection = function () {
+    console.log("Mobile game: Manual retry requested");
+    reconnectAttempts = 0; // Reset counter for manual retry
+
+    // Hide error notification
+    const errorDiv = document.getElementById("mobile-pusher-error");
+    if (errorDiv) {
+        errorDiv.remove();
+    }
+
+    // Disconnect and reconnect
+    if (pusher) {
+        pusher.disconnect();
+    }
+
+    initializePusher();
+};
+
+// Handle incoming game events
+function handleGameEvent(data) {
+    switch (data.action) {
+        case "start":
+            handleGameStart(data.data);
+            break;
+        case "update":
+            handleGameUpdate(data.data);
+            break;
+        case "finish":
+            handleGameFinish(data.data);
+            break;
+        case "reset":
+            handleGameReset(data.data);
+            break;
+        default:
+            console.log("Mobile game: Unknown action:", data.action);
+    }
+}
+
+// Game event handlers
+function handleGameStart(data) {
+    console.log("Mobile game: Game started", data);
+    if (!isGameStarted) {
+        isGameStarted = true;
+        if (bag) {
+            bag.setAlpha(1); // Show the bag when game starts
+        }
+    }
+
+    // Call image switching function if available
+    if (typeof window.switchGameImage === 'function') {
+        window.switchGameImage('start');
+    }
+}
+
+function handleGameUpdate(data) {
+    console.log("Mobile game: Game updated", data);
+    // Handle weight updates or other game state changes
+}
+
+function handleGameFinish(data) {
+    console.log("Mobile game: Game finished", data);
+    gameOver = true;
+    if (bag) {
+        bag.setAlpha(0.5); // Dim the bag when game ends
+    }
+
+    // Call image switching function if available
+    if (typeof window.switchGameImage === 'function') {
+        window.switchGameImage('finish');
+    }
+}
+
+function handleGameReset(data) {
+    console.log("Mobile game: Game reset", data);
+    // Reset game state
+    gameOver = false;
+    isGameStarted = false;
+    if (bag) {
+        bag.setAlpha(0); // Hide bag on reset
+        bag.setTexture('bagClosed');
+    }
+
+    // Call image switching function if available
+    if (typeof window.switchGameImage === 'function') {
+        window.switchGameImage('reset');
+    }
+}
+
+// Function to send tap event to server
+function sendTapEvent() {
+    if (!channel) {
+        console.warn("Mobile game: Pusher channel not available for sending events");
+        return;
+    }
+
+    // Send tap event via AJAX to trigger weight increase
+    if (window.$ && window.ROUTES && window.ROUTES.increase) {
+        $.ajax({
+            url: window.ROUTES.increase,
+            type: "POST",
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            success: function (data) {
+                console.log("Mobile game: Tap event sent successfully", data);
+            },
+            error: function (xhr, status, error) {
+                console.error("Mobile game: Error sending tap event:", error);
+            },
+        });
+    } else {
+        console.warn("Mobile game: Required dependencies not available for sending tap events");
+    }
+}
+
 const config = {
 parent: 'mobile-game-container',
   type: Phaser.AUTO,
@@ -14,6 +281,30 @@ parent: 'mobile-game-container',
 };
 
 let game = new Phaser.Game(config);
+
+// Initialize Pusher when the game loads
+document.addEventListener("DOMContentLoaded", function () {
+    initializePusher();
+
+    // Start connection monitoring
+    startConnectionMonitoring();
+});
+
+// Connection monitoring
+function startConnectionMonitoring() {
+    setInterval(() => {
+        if (pusher) {
+            const state = pusher.connection.state;
+            console.log("Mobile game: Connection health check - State:", state);
+
+            // If disconnected for too long, try to reconnect
+            if (state === 'disconnected' || state === 'failed') {
+                console.warn("Mobile game: Connection appears stuck, attempting reconnection...");
+                handleReconnection();
+            }
+        }
+    }, 30000); // Check every 30 seconds
+}
 
 let gameOver = false;
 let isGameStarted = false;
@@ -69,15 +360,18 @@ function create() {
   // Game starts immediately
   isGameStarted = true;
 
-  // Create bag at bottom of screen (initially closed with 0 opacity)
+  // Create bag at bottom of screen (initially visible)
   bag = this.add.image(centerX, this.cameras.main.height - 250, 'bagClosed');
   bag.setScale(0.7); // Reduced size and moved higher to prevent cutting
   bag.setDepth(10); // Make sure bag appears above other elements
-  bag.setAlpha(0); // Set opacity to 0
+  bag.setAlpha(1); // Set opacity to 1 to show the bag
 
   // Main game click
   this.input.on('pointerdown', (pointer) => {
     if (!isGameStarted || gameOver) return;
+
+    // Send tap event to server for live feed integration
+    sendTapEvent();
 
     const pawKey = Phaser.Utils.Array.GetRandom(pawImages);
     const catSoundKey = Phaser.Utils.Array.GetRandom(catSounds);
@@ -321,3 +615,40 @@ function endGame() {
 }
 
 function update() {}
+
+// Cleanup Pusher connection when page unloads
+window.addEventListener('beforeunload', function() {
+    if (pusher) {
+        pusher.disconnect();
+        console.log("Mobile game: Pusher disconnected on page unload");
+    }
+});
+
+// Expose functions for debugging
+window.mobileGameDebug = {
+    sendTapEvent,
+    gameState: () => ({ gameOver, isGameStarted }),
+    pusherStatus: () => ({
+        connected: pusher ? pusher.connection.state : 'not initialized',
+        socketId: pusher ? pusher.connection.socket_id : null,
+        channel: channel ? 'subscribed' : 'not subscribed',
+        reconnectAttempts: reconnectAttempts,
+        config: window.PUSHER_CONFIG
+    }),
+    reconnect: () => {
+        console.log("Manual reconnection triggered");
+        handleReconnection();
+    },
+    testConnection: () => {
+        if (pusher) {
+            console.log("Connection state:", pusher.connection.state);
+            console.log("Socket ID:", pusher.connection.socket_id);
+            console.log("Channel subscribed:", channel ? true : false);
+
+            // Test ping
+            pusher.connection.send_event('pusher:ping', {});
+        } else {
+            console.log("Pusher not initialized");
+        }
+    }
+};

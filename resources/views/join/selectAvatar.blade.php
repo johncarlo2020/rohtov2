@@ -3,7 +3,7 @@
 
          .avatar-wrapper {
             overflow: hidden;
-            position: relative; 
+            position: relative;
             width: 140px;
             height: 140px;
             border-radius: 50%;
@@ -85,7 +85,7 @@
                 @include('components.branding')
             </div>
                  <div class="mb-4 w-100 animate-entry delay-3 px-2">
-                    <h4 class="mb-5 text-dark text-center">SELECT YOUR AVATAR</h4>
+                    <h4 class="my-5 text-dark text-center">SELECT YOUR AVATAR</h4>
                     <div class="avatar-grid d-flex flex-wrap gap-2 justify-content-center pt-2">
                         @for ($i = 1; $i <= 9; $i++)
                             <div class="avatar-wrapper" data-avatar-id="{{ $i }}">

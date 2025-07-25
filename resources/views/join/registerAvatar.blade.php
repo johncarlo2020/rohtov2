@@ -29,7 +29,7 @@
 
                     {{-- Selected Avatar --}}
                     <div class="d-flex justify-content-center">
-                        <img src="{{ $avatarPath }}" class="rounded-circle" style="width: 160px; height: 160px; object-fit: cover; filter: grayscale(100%);">
+                        <img src="{{ $avatarPath }}" class="rounded-circle border" style="width: 160px; height: 160px; object-fit: cover; filter: grayscale(100%);">
                     </div>
 
                     {{-- Form --}}
@@ -117,7 +117,7 @@ $('#register-avatar-form').on('submit', function(e) {
 
         // 🔄 Show loader before request is sent
         beforeSend: function() {
-            loadingContainer.removeClass('d-none');
+
         },
 
         // ✅ Handle successful response
@@ -134,7 +134,7 @@ $('#register-avatar-form').on('submit', function(e) {
 
         // ✅ Always hide loader (whether success or error)
         complete: function() {
-            loadingContainer.addClass('d-none');
+
         }
     });
 });

@@ -10,7 +10,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flipclock@0.7.8/compiled/flipclock.css" />
     @vite(['resources/sass/app.scss'])
-    </body>
+
 
     <!-- Pusher -->
     <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
@@ -38,12 +38,35 @@
 <body>
     <div class="w-100 d-flex flex-column justify-content-center align-items-center animate-entry p-4 mt-5" style="z-index: 99;">
         @include('components.branding')
-        <img class="waiting-img" src="{{ asset('images/brand/waiting-page.webp') }}" alt="Brand Logo" />
+        <img id="game-status-image" class="waiting-img my-4" src="{{ asset('images/brand/waiting-page.webp') }}" alt="Waiting for Game" />
     </div>
     <div id="mobile-game-container d-none"></div>
     <script>
         window.ASSET_BASE = "{{ asset('') }}".replace(/\/$/, '');
-    </script>
-    @vite('resources/js/mobile-game.js')
 
+        // Pusher configuration for mobile game page
+          window.PUSHER_CONFIG = {
+            key: '{{ env('PUSHER_APP_KEY') }}',
+            cluster: '{{ env('PUSHER_APP_CLUSTER') }}'
+        };
+
+        // Handle image switching based on game state
+        window.switchGameImage = function(action) {
+
+            const gameImage = document.getElementById('game-status-image');
+            switch(action) {
+                case 'start':
+                    // Switch to start game text and show game container
+                    gameImage.src = "{{ asset('images/brand/start-game-text.webp') }}";
+
+                    break;
+                case 'finish':
+                case 'reset':
+
+                    break;
+            }
+        };
+    </script>
+    @vite('resources/js/mobile-game.js')</html>
+    </body>
 </html>

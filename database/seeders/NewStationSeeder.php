@@ -28,6 +28,7 @@ class NewStationSeeder extends Seeder
             'Immortelle Discovery',
             'Hair Care Lounge',
             'Redemption Counter',
+            'Upcycled Marine Charm Corner'
         ];
 
         foreach ($stations as $stationName) {

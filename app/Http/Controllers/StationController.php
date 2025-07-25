@@ -1010,12 +1010,12 @@ class StationController extends Controller
 
         //   dd($data['where']);
         $data['registrationsPerHour'] = User::select(
-                DB::raw('DATE(DATE_ADD(created_at, INTERVAL 8 HOUR)) as date'),
-                DB::raw('LOWER(DATE_FORMAT(DATE_ADD(created_at, INTERVAL 8 HOUR), "%l%p")) as hour'),
+                DB::raw('DATE(created_at) as date'),
+                DB::raw('LOWER(DATE_FORMAT(created_at, "%l%p")) as hour'),
                 DB::raw('COUNT(*) as registrations')
             )
                 ->whereNotNull('created_at')
-                ->where(DB::raw('DATE(DATE_ADD(created_at, INTERVAL 8 HOUR))'), '>=', $startDate->toDateString())
+                ->where(DB::raw('DATE(created_at)'), '>=', $startDate->toDateString())
                 ->groupBy('date', 'hour')
                 ->havingRaw('hour IS NOT NULL AND hour <> \'\'')
                 ->get()
@@ -1180,7 +1180,7 @@ class StationController extends Controller
                 'average_timespent' => number_format(($avgData->average_timespent ?? 0) / 60, 2),
             ];
         });
-        // dd($data);
+         dd($data);
         // Provide date options and default filter values
         $data['dates'] = User::select(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as date'))
             ->groupBy('date')
@@ -1286,6 +1286,7 @@ class StationController extends Controller
         }
 
         $data['users'] = $plain_users;
+        // dd($data['users']);
 
         //  dd($data['users'][0]['stations']);
 

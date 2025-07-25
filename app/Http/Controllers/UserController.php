@@ -78,7 +78,7 @@ class UserController extends Controller
                 $user_station_value = $record->stations()->where('station_id', $station->id)->first();
                 $display_value = 'No';
                 if ($user_station_value) {
-                    $date = \Carbon\Carbon::parse($user_station_value->pivot->created_at)->format('F j');
+                    $date = \Carbon\Carbon::parse($user_station_value->pivot->created_at)->format('F j g:i A');
                     $display_value = 'Yes (' . $date . ')';
                 }
                 $user_stations[] = [
@@ -163,7 +163,7 @@ class UserController extends Controller
                     $user_station_value = $user->stations()->where('station_id', $station->id)->first();
                     $display_value = 'No';
                     if ($user_station_value) {
-                        $date = \Carbon\Carbon::parse($user_station_value->pivot->created_at)->format('F j');
+                        $date = \Carbon\Carbon::parse($user_station_value->pivot->created_at)->format('F j, Y g:i A');
                         $display_value = 'Yes (' . $date . ')';
                     }
                     $data[] = $display_value;

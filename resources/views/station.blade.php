@@ -278,8 +278,8 @@
                     $('.station_id').html(lastCharacter);
 
 
-                    if (lastCharacter == 9) {
-                        document.getElementById('routeBtn').setAttribute('href', '{{ route('congrats') }}');
+                    if (lastCharacter == 6) {
+                        document.getElementById('routeBtn').setAttribute('href', '{{ route('station', $station) }}');
                     }
 
                     // show the selected staff container with staff id

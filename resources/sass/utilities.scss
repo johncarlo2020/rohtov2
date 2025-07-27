@@ -10,6 +10,22 @@
     background-size: cover;
 }
 
+.ipad-background
+{
+    background-image: $ipad-background;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.pledge-wall-background
+{
+    background-image: $pw-background;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
 .main-content {
     position: relative;
     width: 100%;

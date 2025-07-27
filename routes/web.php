@@ -66,7 +66,9 @@ Route::get('/admin/login', function () {
 
 Route::get('/ipad', [IpadController::class, 'index'])->name('ipad.index');
 Route::get('/ipad-2', [IpadController::class, 'index2'])->name('ipad.index2');
-Route::get('/counter-value', 'App\Http\Controllers\StationController@getValue')->name('pledge.counter');
+
+Route::get('/counter-value',[IpadController::class, 'donationCount'])->name('pledge.counter');
+
 Route::get('/ipad-pledge-info',function(){
         return view('ipad.info');
     })->name('ipad.info');
@@ -88,6 +90,11 @@ Route::get('/congrats', function () {
     return view('congrats');
 })->name('congrats');
 
+Route::get('/pledge-wall',function()
+{
+     return view('ipad.pledgewall');
+});
+
 Route::get('/voteyourfav', function () {
     return view('welcomeVote');
 })->name('welcomeVote');
@@ -108,6 +115,8 @@ Route::get('/avatar-select', function () {
 Route::get('/avatar-register', function () {
     return view('join.registerAvatar');
 })->name('avatar.register');
+
+Route::post('/donate', [IpadController::class, 'store'])->name('ipad.store');
 
 Route::group(['middleware' => ['admin']], function () {
     Route::get('/admin', 'App\Http\Controllers\StationController@admin')->name('admin');

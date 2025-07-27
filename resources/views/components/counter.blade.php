@@ -24,16 +24,42 @@
 
 </div> -->
 
-<div class="tick" data-value="00,000.000" data-did-init="handleTickInit">
+<div class="tick " id="ticker1" data-credits="false" data-value="00,000.000" data-did-init="handleTickInit2">
     <div data-value-mapping="money"
          data-credits="false"
          data-layout="horizontal fit"
          data-transform="
            -> split
            -> delay(rtl, 100, 150)
-         ">
+         "
+         style="
+         background-color:#fc0000;
+         padding:20px;
+         border-radius:20px;
+         "
+         >
       <span data-repeat="true">
-        <span data-view="flip"></span>
+        <span id="pledge" data-view="flip"></span>
+      </span>
+    </div>
+  </div>
+
+<div class="tick" id="ticker2" data-credits="false" data-value="00,000.000" data-did-init="handleTickInit">
+    <div data-value-mapping="money"
+         data-credits="false"
+         data-layout="horizontal fit"
+         data-transform="
+           -> split
+           -> delay(rtl, 100, 150)
+         "
+         style="
+         background-color:#fc0000;
+         padding:20px;
+         border-radius:20px;
+         "
+         >
+      <span data-repeat="true">
+        <span id="percentage" data-view="flip"></span>
       </span>
     </div>
   </div>
@@ -41,6 +67,62 @@
 @push('styles')
 <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flipclock@0.7.8/compiled/flipclock.css" /> -->
 <link rel="stylesheet" id="pagestyle" href="{{ asset('assets/css/flip.css') }}"  />
+<style>
+#percentage span,
+#pledge span
+{
+color:rgb(252, 0, 0);
+
+border-radius:0 !important;
+}
+
+span#pledge,
+span#percentage 
+{
+  margin: 1px;
+}
+
+.tick-flip-panel {
+    background-color: #fff;
+}
+
+/* 1920x1080 */
+
+div#ticker1 {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #fc0000;
+    border-radius: 20px;
+    /* padding: 20px; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 150px;
+    color: white;
+    white-space: nowrap;
+}
+
+div#ticker2 {
+    position: absolute;
+    top: 64%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #fc0000;
+    border-radius: 20px;
+    /* padding: 20px; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 150px;
+    color: white;
+    white-space: nowrap;
+}
+
+
+
+</style>
 
 @endpush
 
@@ -50,43 +132,64 @@
 <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
 
 <script>
-    function formatToMoneyString(value) {
-        // Pad to 8 digits (e.g. 3008 → "00003008")
-        const str = value.toString().padStart(8, '0');
-        const whole = str.slice(0, 5);    // first 5 digits
-        const decimal = str.slice(5);     // last 3 digits
-        const formattedWhole = whole.replace(/(\d{2})(\d{3})/, '$1,$2');
-        return `${formattedWhole}.${decimal}`;
+     function formatToMoneyString(value) {
+      const str = value.toString().padStart(8, '0'); // e.g., "003008"
+      const whole = str.slice(0, 5);  // "003"
+      const decimal = str.slice(5);  // "008"
+      const formattedWhole = whole.replace(/(\d{2})(\d{3})/, '$1,$2'); // "003" → "00,003"
+      return `${formattedWhole}.${decimal}`; // No $
     }
 
-    function handleTickInit(tick) {
-        // Save tick globally so Pusher can access it
-        window._tickInstance = tick;
+    
+let currentCounterValue = null;
+let currentPercentageValue = null;
 
-        // Optional: fetch once initially
-        fetchAndUpdateCounter();
+function handleTickInit(tick) {
+    window._tickInstance = tick;
+    fetchAndUpdateData();
+}
+
+function handleTickInit2(tick) {
+    window._tickInstance2 = tick;
+    fetchAndUpdateData();
+}
+
+function fetchAndUpdateData() {
+    fetch(`{{ route('pledge.counter') }}`)
+        .then(res => res.json())
+        .then(data => {
+            updateCounter(data.count);
+            updatePercentage(data.percentage);
+        })
+        .catch(err => console.error("Fetch error:", err));
+}
+
+function updateCounter(count) {
+    if (typeof count === 'undefined') return;
+
+    const value = parseInt(count, 10);
+    if (!isNaN(value) && value !== currentCounterValue) {
+        currentCounterValue = value;
+        const formatted = formatToMoneyString(value);
+        if (window._tickInstance) {
+            window._tickInstance.value = formatted;
+        }
     }
+}
 
-    function fetchAndUpdateCounter() {
-        fetch(`{{ route('pledge.counter') }}`)
-            .then(res => res.json())
-            .then(data => {
-                if (data && data.count !== undefined) {
-                    const value = parseInt(data.count, 10);
-                    if (!isNaN(value)) {
-                        const formatted = formatToMoneyString(value);
-                        if (window._tickInstance) {
-                            window._tickInstance.value = `${formatted}`; // note: wrapped in single quotes
-                        }
-                    }
-                } else {
-                    console.error("Invalid data:", data);
-                }
-            })
-            .catch(err => console.error("Fetch error:", err));
+function updatePercentage(percentage) {
+    if (typeof percentage === 'undefined') return;
+
+    const value = parseInt(percentage, 10);
+    if (!isNaN(value) && value !== currentPercentageValue) {
+        currentPercentageValue = value;
+        const formatted = formatToMoneyString(value);
+        if (window._tickInstance2) {
+            window._tickInstance2.value = formatted;
+        }
     }
+}
 
-    // Initialize Pusher
     Pusher.logToConsole = false;
 
     const pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
@@ -95,68 +198,18 @@
     });
 
     const channel = pusher.subscribe('live-feed-channel');
-    channel.bind('live-feed-channel', function (data) {
-        // Whenever the event is triggered, update the counter
-        fetchAndUpdateCounter();
+
+    channel.bind('live-feed-event', function (data) {
+        console.log('LiveFeedEvent received:', data);
+        fetchAndUpdateData();
+        // fetchAndUpdatePercentage();
     });
+
 </script>
 
-<!-- <script>
-    // Format number like 3008 → 00,003.008
-    function formatToMoneyString(value) {
-      const str = value.toString().padStart(8, '0'); // e.g., "003008"
-      const whole = str.slice(0, 5);  // "003"
-      const decimal = str.slice(5);  // "008"
-      const formattedWhole = whole.replace(/(\d{2})(\d{3})/, '$1,$2'); // "003" → "00,003"
-      return `${formattedWhole}.${decimal}`; // No $
-    }
-
-    function handleTickInit(tick) {
-      Tick.data.poll(
-        '{{ route('pledge.counter') }}', // Your Laravel route
-        function (response) {
-          try {
-            const data = JSON.parse(response);
-            const value = parseInt(data.count, 10);
-            if (!isNaN(value)) {
-              const formatted = formatToMoneyString(value); // e.g., "00,003.008"
-              console.log(formatted);
-              tick.value = `${formatted}`; // Must be wrapped in single quotes
-            }
-          } catch (e) {
-            console.error('Invalid server response:', response);
-          }
-        },
-      );
-    }
-  </script> -->
 
 
-<!-- <script>
-    function handleTickInit(tick) {
-    // Polling your Laravel route every 5 seconds
-    Tick.data.poll(
-        '{{ route('pledge.counter') }}',
-        function (response) {
-            try {
-                // Parse JSON response
-                const data = JSON.parse(response);
-                const value = parseFloat(data.count);
-
-                if (!isNaN(value)) {
-                    tick.value = value;
-                } else {
-                    console.warn('Invalid number in response:', data.count);
-                }
-
-            } catch (e) {
-                console.error('Failed to parse response:', response);
-            }
-        },
-        5000
-    );
-}
-</script> -->
+   
 <!-- <script>
     var clock;
     $(document).ready(function () {

@@ -34,7 +34,7 @@
                             @endforeach
                             </div>
 
-                            <button type="submit" class="custom-btn btn-primary btn-lg">Submit</button>
+                            <button type="submit" class="custom-btn bg-danger text-white btn-lg">Submit</button>
                         </form>
                         <!-- <div class="col mb-3 animate-entry delay-2">
                             <a href="{{ route('ipad.info') }}" class="custom-btn custom-btn-secondary">START</a>
@@ -44,7 +44,23 @@
             </div>
             <x-footer />
         </div>
+
+        <!-- Thank You Modal -->
+        <div class="modal modal-sm fade" id="thankYouModal" tabindex="-1" aria-labelledby="thankYouModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center p-5">
+              <div class="modal-body">
+              <!-- <h5 class="modal-title w-100 text-dark" id="thankYouModalLabel">Thank You!</h5> -->
+                <p class="fs-5 text-dark">Thank you for pledging!</p>
+              </div>
+              <div class="justify-content-center">
+                <a href="{{ route('ipad.index') }}" class="custom-btn bg-danger text-white">Submit</a>
+              </div>
+            </div>
+          </div>
+        </div>
     </div>
+    
     <script>
   const buttons = document.querySelectorAll('.weight-button');
   const hiddenInput = document.getElementById('selectedWeight');
@@ -68,4 +84,12 @@
     }
   });
 </script>
+@if(session('success'))
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    const modal = new bootstrap.Modal(document.getElementById('thankYouModal'));
+    modal.show();
+  });
+</script>
+@endif
 </x-app-layout>

@@ -9,5 +9,5 @@ class Donation extends Model
 {
     use HasFactory;
     
-    protected $fillable = ['id','value', 'unit','created_at','updated_at'];
+    protected $fillable = ['id','value', 'unit','percentage','created_at','updated_at'];
 }

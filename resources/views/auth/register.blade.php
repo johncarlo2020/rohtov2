@@ -25,6 +25,7 @@
             </div>
         <div class="container">
             <div>
+                <a href="{{ route('welcome') }}" class="go-home"><i class="fa-solid fa-arrow-left"></i></a>
                 @include('components.branding')
             </div>
         </div>
@@ -202,9 +203,9 @@
                         <button id="submitButton" type="submit" class="button button-primary w-100 mb-2">
                             {{ __('SUBMIT') }}
                         </button>
-                        <div class="bottom-text text-center">
+                        {{-- <div class="bottom-text text-center">
                             <a class="button-text" href="{{ route('login') }}" class="">Back</a>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </form>

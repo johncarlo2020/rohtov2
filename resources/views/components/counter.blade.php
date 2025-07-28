@@ -77,7 +77,7 @@ border-radius:0 !important;
 }
 
 span#pledge,
-span#percentage 
+span#percentage
 {
   margin: 1px;
 }
@@ -140,7 +140,7 @@ div#ticker2 {
       return `${formattedWhole}.${decimal}`; // No $
     }
 
-    
+
 let currentCounterValue = null;
 let currentPercentageValue = null;
 
@@ -200,16 +200,19 @@ function updatePercentage(percentage) {
     const channel = pusher.subscribe('live-feed-channel');
 
     channel.bind('live-feed-event', function (data) {
-        console.log('LiveFeedEvent received:', data);
-        fetchAndUpdateData();
-        // fetchAndUpdatePercentage();
+
+        // dito lng dapat ung update ng data remove mo na ung  fetch manually since pinapasa na natin ung data sa store
+        if (data.action === 'pledge') {
+            updateCounter(data.count);
+            updatePercentage(data.percentage);
+        }
     });
 
 </script>
 
 
 
-   
+
 <!-- <script>
     var clock;
     $(document).ready(function () {

@@ -8,8 +8,12 @@ use Illuminate\Http\Request;
 class IpadController extends Controller
 {
     public function index()
+
     {
-        return view('ipad');
+        $donationData = $this->donationCount();
+
+        // update mo to sa view eto ung initial data for the view
+        return view('ipad', compact('donationData'));
     }
 
     public function index2()
@@ -65,26 +69,15 @@ class IpadController extends Controller
             'percentage' => $tenPercentValue,
         ]);
 
+        $donationData = $this->donationCount();
+
+        event(new LiveFeedEvent('pledge', $donationData));
+
         return back()->with('success', true);
     }
 
     public function donationCount()
     {
-
-        // // Calculate total in grams
-        // $totalGrams = Donation::all()->sum(function ($w) {
-        //     return strtoupper($w->unit) === 'KG'
-        //         ? $w->value * 1000
-        //         : $w->value;
-        // });
-
-        // // Optional: Format total as comma-separated
-        // $totalDonations = ($totalGrams);
-
-        // return response()->json(['count' => $totalDonations]);
-
-        // Calculate total in grams
-        
         // Total weight in grams (normalize units)
         $totalGrams = Donation::all()->sum(function ($w) {
             return strtoupper($w->unit) === 'KG'
@@ -94,7 +87,7 @@ class IpadController extends Controller
 
         // Sum of 10% values from the column
         $percentage = Donation::sum('percentage');
-        
+
 
         $data = [
             'count' => $totalGrams,
@@ -102,13 +95,7 @@ class IpadController extends Controller
         ];
 
 
-        event(new LiveFeedEvent('joined', $data));
-
-        // Return as JSON
-        return response()->json([
-            'count' => $totalGrams,
-            'percentage' => $percentage,
-        ]);
+        return response()->json($data);
     }
 
 }

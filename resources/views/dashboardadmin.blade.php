@@ -193,10 +193,22 @@
         <div class="col-lg-2">
             <div class="card">
                 <div class="card-header pb-0 p-3">
-                    <h6 class="mb-0">Where</h6>
+                    <h6 class="mb-0">Age group</h6>
                 </div>
                 <div class="card-body p-3">
-
+                    <ul class="list-group">
+                        @foreach ($data['ageGroup'] as $age)
+                        <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                            <div class="d-flex align-items-center">
+                                <div class="d-flex flex-column">
+                                    <h6 class="mb-1 text-dark text-sm">{{ $age->age_group }}</h6>
+                                    <span class="text-xs">Count : <span class="font-weight-bold">{{ $age->count
+                                            }}</span></span>
+                                </div>
+                            </div>
+                        </li>
+                        @endforeach
+                    </ul>
                 </div>
             </div>
         </div>

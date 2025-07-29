@@ -237,6 +237,8 @@
                  submitButton.disabled = true;
             } else if (iti.isValidNumber()) {
                 validMsg.classList.remove("d-none");
+                submitButton.disabled = false;
+
                 // leave disabled until reCAPTCHA is completed
             } else {
                 const errorCode = iti.getValidationError();

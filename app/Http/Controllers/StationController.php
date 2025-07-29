@@ -741,10 +741,14 @@ public function embarckJourney()
         $data['usersCount'] = User::whereDate('created_at', '>=', $startDate->toDateString())->count();
         $data['userToday'] = User::whereDate('created_at', $today)->count();
         $data['country'] = User::selectRaw('country , COUNT(*) as count')->groupBy('country')->where('country' ,'!=','admin')->get();
+        $data['ageGroup'] = User::selectRaw('age_group, COUNT(*) as count')
+    ->where('age_group', '!=', 'admin')
+    ->groupBy('age_group')
+    ->orderByRaw("FIELD(age_group, '13-19', '20-29', '30-39', '40-49', '50-59', '60-69', 'Others')")
+    ->get();
 
 
-
-        $usersWithSixStationUsers = User::with('stationUser')->whereDate('created_at', '>=', $startDate->toDateString())->has('stationUser', '>=', 4)->count();
+        $usersWithSixStationUsers = User::with('stationUser')->whereDate('created_at', '>=', $startDate->toDateString())->has('stationUser', '>=', 2)->count();
         // dd($usersWithSixStationUsers);
         $data['completedUsers'] = $usersWithSixStationUsers;
         // dd($usersWithSixStationUsers);

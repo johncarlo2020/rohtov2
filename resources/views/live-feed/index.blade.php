@@ -71,7 +71,8 @@
             background-position: center bottom;
             bottom: 5px;
             left: 50%;
-            transform: translateX(-50%) rotate(-90deg); /* Start at -90deg (0kg) to match gameTrigger */
+            transform: translateX(-50%) rotate(-90deg);
+            /* Start at -90deg (0kg) to match gameTrigger */
             transform-origin: center bottom;
             z-index: 60;
             transition: transform 0.5s ease;
@@ -80,21 +81,23 @@
 
         /* User Container Overflow Prevention */
         .user-container {
-            overflow: hidden; /* Hide users that don't fit */
+            overflow: hidden;
+            /* Hide users that don't fit */
             display: flex;
             flex-direction: column;
         }
 
         /* Smooth animation for new users */
         .user-item {
-            flex-shrink: 0; /* Prevent items from shrinking */
+            flex-shrink: 0;
+            /* Prevent items from shrinking */
         }
 
         /* Connection Modal Styles */
         .modal-content {
             border-radius: 15px;
             border: none;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
         .modal-header {
@@ -157,13 +160,46 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
+
+        .cart-tail,
+        .cat-left,
+        .cat-right {
+            position: absolute !important;
+            z-index: 10;
+        }
+
+        .cat-tail {
+            top: 0;
+            right: 0;
+            width: 426px;
+            height: auto;
+            position: absolute
+        }
+
+        .cat-left {
+            left: 452px;
+            top: 57%;
+            transform: translateY(-50%);
+            width: 257px;
+            height: auto;
+        }
+
+        .cat-right {
+            right: 515px;
+            top: 79%;
+            transform: translateY(-50%);
+            width: 254px;
+            height: auto;
+        }
     </style>
     </body>
 </head>
 
 <body class="live-feed">
     <div class="live-feed-lobby">
-        <img src="{{ asset('images/brand/cat-background.webp') }}" alt="" class="cat-background">
+        <img src="{{ asset('images/brand/cat-tail.webp') }}" alt="" class="cat-tail">
+        <img src="{{ asset('images/brand/cat-left.webp') }}" alt="" class="cat-left">
+        <img src="{{ asset('images/brand/cat-right.webp') }}" alt="" class="cat-right">
         <div class="player-list rounded">
             <div class="player-list-header">
                 <h2 class="heading-text">User joined</h2>
@@ -178,7 +214,8 @@
                         <div class="user-item">
                             <img src="{{ asset('images/avatarCats/02_cat0' . $user->avatar_id . '.webp') }}"
                                 alt="Avatar" class="avatar">
-                            <p class="username-text"><span class="username">{{ $user->fname }}</span> <span class="joined-text">Joined</span> </p>
+                            <p class="username-text"><span class="username">{{ $user->fname }}</span> <span
+                                    class="joined-text">Joined</span> </p>
                         </div>
                     @endforeach
                 </div>
@@ -194,9 +231,12 @@
 
     <div class="count-down d-none">
         <img src="{{ asset('images/brand/logo.webp') }}" alt="Brand Logo" class="brand-logo">
-        <img src="{{ asset('images/brand/countdown_images/3.webp') }}" alt="Countdown 3" class="countdown-image" id="countdown-3">
-        <img src="{{ asset('images/brand/countdown_images/2.webp') }}" alt="Countdown 2" class="countdown-image" id="countdown-2">
-        <img src="{{ asset('images/brand/countdown_images/1.webp') }}" alt="Countdown 1" class="countdown-image" id="countdown-1">
+        <img src="{{ asset('images/brand/countdown_images/3.webp') }}" alt="Countdown 3" class="countdown-image"
+            id="countdown-3">
+        <img src="{{ asset('images/brand/countdown_images/2.webp') }}" alt="Countdown 2" class="countdown-image"
+            id="countdown-2">
+        <img src="{{ asset('images/brand/countdown_images/1.webp') }}" alt="Countdown 1" class="countdown-image"
+            id="countdown-1">
     </div>
 
     <div class="live-game d-none">
@@ -224,7 +264,8 @@
     </div>
 
     <!-- Connection Status Modal -->
-    <div class="modal fade" id="connectionModal" tabindex="-1" aria-labelledby="connectionModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal fade" id="connectionModal" tabindex="-1" aria-labelledby="connectionModalLabel"
+        aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -263,7 +304,8 @@
                     </div>
                 </div>
                 <div class="modal-footer justify-content-center">
-                    <button type="button" id="start-experience-btn" class="btn btn-primary btn-lg d-none" data-bs-dismiss="modal">
+                    <button type="button" id="start-experience-btn" class="btn btn-primary btn-lg d-none"
+                        data-bs-dismiss="modal">
                         🎵 Start Experience
                     </button>
                     <button type="button" id="retry-connection-btn" class="btn btn-outline-primary d-none">
@@ -286,7 +328,7 @@
 
         // Routes configuration
         window.ROUTES = {
-            start: '{{ route("start") }}'
+            start: '{{ route('start') }}'
         };
 
         // Game configuration from database

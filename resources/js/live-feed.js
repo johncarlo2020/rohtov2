@@ -486,6 +486,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Initialize lobby music
     initializeLobbyMusic();
+
+    // Start continuous hearts animation
+    startContinuousHearts();
 });
 
 // Game state tracking
@@ -1453,4 +1456,20 @@ function enableIncreaseOnAdmin() {
             console.error("Error enabling increase:", error);
         },
     });
+}
+
+// --- Continuous Floating Hearts Animation ---
+function startContinuousHearts() {
+    const spawnInterval = 800; // ms between hearts
+    // Find the user list container
+    const userContainer = document.querySelector('.user-container');
+    if (!userContainer) return;
+    const rect = userContainer.getBoundingClientRect();
+    // Position hearts beside the user list (right side, vertically centered)
+    const centerX = rect.right + 30; // 30px to the right of user list
+    const centerY = window.innerHeight + 30; // 30px below bottom of user list
+
+    setInterval(() => {
+        createSingleHeart(centerX, centerY);
+    }, spawnInterval);
 }

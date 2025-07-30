@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('game_configs', function (Blueprint $table) {
             $table->id();
-            $table->decimal('max_weight', 4, 1)->default(4.0);
+            $table->decimal('max_weight', 4, 1)->default(300.0);
             $table->integer('increment_grams')->default(100);
             $table->boolean('is_active')->default(true);
             $table->timestamps();

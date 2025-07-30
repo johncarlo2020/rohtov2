@@ -213,43 +213,38 @@ function handleGameStart(data) {
     if (!isGameStarted) {
         isGameStarted = true;
         console.log("Mobile game: Setting isGameStarted to true");
-
-        // Show the bag when game starts (container stays visible for tapping)
-        if (bag) {
-            console.log("Mobile game: Showing bag - setting alpha to 1");
-            bag.setAlpha(1);
-            console.log("Mobile game: Bag alpha after setting:", bag.alpha);
-
-            // Force a visual update
-            if (bag.scene) {
-                bag.scene.sys.displayList.dirty = true;
-            }
-        } else {
-            console.error("Mobile game: Bag object is still null or undefined after search!");
-
-            // Try to create bag manually if it doesn't exist
-            if (game && game.scene && game.scene.scenes[0]) {
-                const scene = game.scene.scenes[0];
-                console.log("Mobile game: Attempting to create bag manually with responsive positioning");
-                const centerX = scene.cameras.main.width / 2;
-                const bagY = scene.cameras.main.height * 0.6;
-                const desiredBagWidth = scene.cameras.main.width * 0.38;
-                const bagTexture = scene.textures.get('bagClosed').getSourceImage();
-                const bagOriginalWidth = bagTexture.width;
-                const scaleX = desiredBagWidth / bagOriginalWidth;
-                const scaleY = scaleX;
-
-                bag = scene.add.image(centerX, bagY, 'bagClosed');
-                bag.setScale(scaleX, scaleY);
-                bag.setDepth(10);
+        // Show bag only after countdown
+        window.showBagAfterCountdown = function() {
+            if (bag) {
+                console.log("Mobile game: Showing bag - setting alpha to 1");
                 bag.setAlpha(1);
-                console.log("Mobile game: Manually created responsive bag at:", centerX, bagY, "with scaleX:", scaleX);
+                console.log("Mobile game: Bag alpha after setting:", bag.alpha);
+                if (bag.scene) {
+                    bag.scene.sys.displayList.dirty = true;
+                }
+            } else {
+                console.error("Mobile game: Bag object is still null or undefined after search!");
+                if (game && game.scene && game.scene.scenes[0]) {
+                    const scene = game.scene.scenes[0];
+                    console.log("Mobile game: Attempting to create bag manually with responsive positioning");
+                    const centerX = scene.cameras.main.width / 2;
+                    const bagY = scene.cameras.main.height * 0.6;
+                    const desiredBagWidth = scene.cameras.main.width * 0.38;
+                    const bagTexture = scene.textures.get('bagClosed').getSourceImage();
+                    const bagOriginalWidth = bagTexture.width;
+                    const scaleX = desiredBagWidth / bagOriginalWidth;
+                    const scaleY = scaleX;
+                    bag = scene.add.image(centerX, bagY, 'bagClosed');
+                    bag.setScale(scaleX, scaleY);
+                    bag.setDepth(10);
+                    bag.setAlpha(1);
+                    console.log("Mobile game: Manually created responsive bag at:", centerX, bagY, "with scaleX:", scaleX);
+                }
             }
-        }
+        };
     } else {
         console.log("Mobile game: Game already started, skipping bag show");
     }
-
     // Call image switching function if available
     if (typeof window.switchGameImage === 'function') {
         window.switchGameImage('start');

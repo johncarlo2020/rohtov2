@@ -491,6 +491,7 @@ class StationController extends Controller
               return back()->with('success', 'OTP verified successfully!');
         }
 
+
         return back()->withErrors(['otp' => 'Invalid OTP']);
     }
 
@@ -970,6 +971,17 @@ class StationController extends Controller
             $stationUser->save();
             DB::commit();
             // Success response
+
+
+            //logger
+            $logData = [
+                'user_id' => auth()->id(),
+                'station_id' => $station_id,
+                'time_spent' => $secondsSpent,
+                'created_at' => now(),
+            ];
+            \Log::info('Station ID updated from user', $logData);
+
             return response()->json(['message' => 'Station ID updated successfully'], 200);
         } catch (\Exception $e) {
             DB::rollback();
@@ -1437,6 +1449,13 @@ class StationController extends Controller
         } else {
             $check->delete();
         }
+
+        // add logger
+        \Log::info('Station user checked from admin', [
+            'user_id' => $request->user_id,
+            'station_id' => $request->station_id,
+            'exists' => (bool)$check,
+        ]);
 
         return $check;
     }

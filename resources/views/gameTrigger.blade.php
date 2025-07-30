@@ -64,6 +64,13 @@
                     </button>
                 </div>
             </div>
+
+            <!-- Remaining Clicks Display -->
+            <div class="remaining-clicks-box text-center mb-3">
+                <span id="remainingClicksLabel" style="font-weight:700;font-size:16px;color:#2c3e50;background:#f8f9fa;padding:8px 18px;border-radius:12px;border:2px solid #e9ecef;box-shadow:0 2px 8px rgba(0,0,0,0.08);display:inline-block;">
+                    Remaining Clicks: <span id="remainingClicksValue"></span>
+                </span>
+            </div>
         </div>
     </div>
 </div>
@@ -923,6 +930,7 @@ function updateMeter() {
 
     // Update needle rotation
     gaugeNeedle.style.transform = `translate(-50%, -100%) rotate(${angle}deg)`;
+    updateRemainingClicks();
 }
 
 // Update gauge labels dynamically
@@ -934,6 +942,13 @@ function updateLabels() {
         const maxWeightValue = parseFloat(maxWeight) || 4.0;
         maxWeightLabel.innerHTML = `${maxWeightValue.toFixed(1)}kg<br><small>400</small>`;
     }
+}
+
+// Calculate and update remaining clicks display
+function updateRemainingClicks() {
+    // Calculate remaining clicks based on maxWeight, currentWeight, and incrementGrams
+    const remaining = Math.max(0, Math.floor((maxWeight - currentWeight) * 1000 / incrementGrams));
+    document.getElementById('remainingClicksValue').textContent = remaining;
 }
 
 // Increase kibble count

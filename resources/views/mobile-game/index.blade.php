@@ -32,6 +32,21 @@
             padding: 0;
             box-sizing: border-box;
         }
+
+        .waiting-img {
+            animation: blinkWaiting 1.2s infinite;
+        }
+
+        @keyframes blinkWaiting {
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+        }
     </style>
 </head>
 
@@ -40,7 +55,7 @@
         @include('components.branding')
         <img id="game-status-image" class="waiting-img my-4" src="{{ asset('images/brand/waiting-page.webp') }}" alt="Waiting for Game" />
     </div>
-    <div id="mobile-game-container" ></div>
+    <div id="mobile-game-container"></div>
     <script>
         window.ASSET_BASE = "{{ asset('') }}".replace(/\/$/, '');
 

@@ -230,7 +230,8 @@
     </div>
 
     <div class="count-down d-none">
-        <img src="{{ asset('images/brand/logo.webp') }}" alt="Brand Logo" class="brand-logo">
+        {{-- <img src="{{ asset('images/brand/logo.webp') }}" alt="Brand Logo" class="pattern-left">
+        <img src="{{ asset('images/brand/logo.webp') }}" alt="Brand Logo" class="pattern-right"> --}}
         <img src="{{ asset('images/brand/countdown_images/3.webp') }}" alt="Countdown 3" class="countdown-image"
             id="countdown-3">
         <img src="{{ asset('images/brand/countdown_images/2.webp') }}" alt="Countdown 2" class="countdown-image"

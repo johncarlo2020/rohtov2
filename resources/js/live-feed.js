@@ -1467,9 +1467,17 @@ function startContinuousHearts() {
     const rect = userContainer.getBoundingClientRect();
     // Position hearts beside the user list (right side, vertically centered)
     const centerX = rect.right + 30; // 30px to the right of user list
-    const centerY = window.innerHeight + 30; // 30px below bottom of user list
+    const centerY = window.innerHeight + 30;
 
-    setInterval(() => {
-        createSingleHeart(centerX, centerY);
-    }, spawnInterval);
+    let heartInterval = null;
+
+    function spawnHeartsIfLobby() {
+        // Only show hearts if lobby is visible
+        const lobby = document.querySelector('.live-feed-lobby');
+        if (lobby && !lobby.classList.contains('d-none')) {
+            createSingleHeart(centerX, centerY);
+        }
+    }
+
+    heartInterval = setInterval(spawnHeartsIfLobby, spawnInterval);
 }

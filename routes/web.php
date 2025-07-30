@@ -113,7 +113,10 @@ Route::group(['middleware' => ['client']], function () {
     Route::post('/upload', 'App\Http\Controllers\StationController@uploadBaby')->name('upload.baby');
 
     Route::get('/otp', function () {
-    return view('otp');
+        if (Auth::user() && Auth::user()->otp_verified == 1) {
+            return redirect()->route('dashboard'); // or your desired route
+        }
+        return view('otp');
     })->name('otp');
 
     Route::get('/resend-otp', 'App\Http\Controllers\StationController@resend')->name('resend.otp');

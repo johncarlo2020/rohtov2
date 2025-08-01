@@ -17,7 +17,7 @@
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label for="incrementInput" class="form-label">Increment per Click (grams):</label>
-                        <input type="number" class="form-control" id="incrementInput" min="10" max="1000" step="10" value="{{ $config->increment_grams ?? 100 }}" oninput="updateIncrement()">
+                        <input type="number" class="form-control" id="incrementInput" step="10" value="{{ $config->increment_grams ?? 100 }}" oninput="updateIncrement()">
                         <div class="form-text">How much weight each +/- button adds/removes</div>
                     </div>
                 </div>
@@ -101,7 +101,7 @@ function updateIncrement() {
     const input = document.getElementById('incrementInput');
     const newIncrement = parseInt(input.value);
 
-    if (newIncrement >= 10 && newIncrement <= 1000) {
+    if (!isNaN(newIncrement) && newIncrement > 0) {
         incrementGrams = newIncrement;
         updateConfigDisplay();
     }

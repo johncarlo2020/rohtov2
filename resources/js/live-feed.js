@@ -1472,9 +1472,11 @@ function startContinuousHearts() {
     let heartInterval = null;
 
     function spawnHeartsIfLobby() {
-        // Only show hearts if lobby is visible
+        // Only show hearts if lobby is visible and there is at least one user
         const lobby = document.querySelector('.live-feed-lobby');
-        if (lobby && !lobby.classList.contains('d-none')) {
+        const userContainer = document.querySelector('.user-container');
+        const hasUsers = userContainer && userContainer.querySelectorAll('.user-item').length > 0;
+        if (lobby && !lobby.classList.contains('d-none') && hasUsers) {
             createSingleHeart(centerX, centerY);
         }
     }

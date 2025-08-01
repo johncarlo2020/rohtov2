@@ -233,7 +233,7 @@
         <div class="qr-container">
             <img src="{{ asset('images/brand/logo.webp') }}" alt="Brand Logo" class="brand-logo">
             <img src="{{ asset('images/brand/qr.png') }}" alt="QR Code" class="qr-code">
-            <p>Scan for Excitement</p>
+            <img src="{{ asset('images/brand/scan_for_excitement.webp') }}" alt="Scan for Excitement" class="scan-image">
         </div>
     </div>
 

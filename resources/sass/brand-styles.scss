@@ -231,16 +231,6 @@
 .finish {
     width: 100vw;
     height: 100vh;
-
-    img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: -1;
-    }
 }
 
 // Player count animation keyframes
@@ -306,5 +296,46 @@
         height: auto;
         object-fit: contain;
         margin-top: 5vh;
+    }
+}
+
+.finish {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+
+    .donate-gif {
+          width: 28vw;
+        height: auto;
+        object-fit: contain;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+    }
+
+    .thank-end {
+        width: 80vw;
+        height: auto;
+        -o-object-fit: contain;
+        object-fit: contain;
+        position: absolute;
+       bottom: 74px !important;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 2;
+    }
+
+    .brand-logo {
+        width: 100%;
+        height: 13vh;
+        object-fit: contain;
+        margin: 0 auto;
+        margin-top: 10vh;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
     }
 }

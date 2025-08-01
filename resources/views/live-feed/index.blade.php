@@ -193,14 +193,14 @@
         }
 
         .progress-container {
-    position: absolute;
-    left: 160px;
-    top: 136px;
-    width: 10vw;
-    height: 72vh;
-    /* background: red; */
-    z-index: 90;
-}
+            position: absolute;
+            left: 160px;
+            top: 136px;
+            width: 10vw;
+            height: 72vh;
+            /* background: red; */
+            z-index: 90;
+        }
     </style>
     </body>
 </head>
@@ -272,7 +272,9 @@
         <div id="game"></div>
     </div>
     <div class="finish d-none">
-        <img src="{{ asset('images/brand/finish_led.webp') }}" alt="">
+        <img src="{{ asset('images/brand/logo.webp') }}" alt="Brand Logo" class="brand-logo">
+        <img src="{{ asset('images/brand/donate gif.gif') }}" alt="" class="donate-gif">
+        <img src="{{ asset('images/brand/thank-end.webp') }}" alt="" class="thank-end">
     </div>
 
     <!-- Connection Status Modal -->

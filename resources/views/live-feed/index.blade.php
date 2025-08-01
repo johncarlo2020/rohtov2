@@ -211,10 +211,10 @@
         <div class="player-list rounded">
             <div class="player-list-header">
                 <h2 class="heading-text">User joined</h2>
-                <div class="player-count">
-                    {{-- <span id="player-count">{{ $totalUsersCount }}</span> --}}
+                {{-- <div class="player-count">
+                    <span id="player-count">{{ $totalUsersCount }}</span>
                     <img src="{{ asset('images/brand/paw-icon.webp') }}" alt="Paw Icon" class="paw-icon">
-                </div>
+                </div> --}}
             </div>
             <div class="player-list-body">
                 <div class="user-container">

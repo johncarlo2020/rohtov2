@@ -1079,7 +1079,7 @@ function resetGame() {
         //call game-reset route to reset the game state
         $.ajax({
             url: '{{ route('game.reset') }}',
-            type: 'POST',
+            type: 'get',
             headers: {
                 'X-CSRF-TOKEN': csrfToken
             },

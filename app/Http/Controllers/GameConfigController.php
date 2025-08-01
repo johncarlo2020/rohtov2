@@ -39,7 +39,7 @@ class GameConfigController extends Controller
     {
         $request->validate([
             'max_weight' => 'required|numeric|min:1',
-            'increment_grams' => 'required|integer|min:10|max:1000'
+            'increment_grams' => 'required|integer|min:10'
         ]);
 
         // Get the current active config or create new one

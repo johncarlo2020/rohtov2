@@ -385,7 +385,7 @@
                 resetConnectionCheck();
                 // Trigger reconnection in live-feed.js
                 if (window.retryConnection) {
-                    window.retryConnection();
+                   location.reload();
                 }
             });
         });

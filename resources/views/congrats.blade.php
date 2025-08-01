@@ -5,8 +5,8 @@
                 @include('components.branding')
             </div>
 
-            <img class="waiting-img my-5" src="{{ asset('images/brand/thank-you-text.webp') }}" alt="Waiting for Game" />
-            <img class="waiting-img my-5" src="{{ asset('images/brand/congrats_image.webp') }}" alt="Waiting for Game" />
+            <h2 class="my-5 text-center congrats-text">Thanks for being part of something impactful!</h2>
+            <img class="waiting-img my-5" src="{{ asset('images/brand/donate gif.gif') }}" alt="Waiting for Game" />
             <img class="cat-walking mt-5" src="{{ asset('images/brand/cat-walking.webp') }}" alt="Waiting for Game" />
         </div>
     </div>

@@ -361,7 +361,7 @@ let bag; // Bag object at bottom of screen
 
 // Size configuration variables
 let handSize = 1;  // Scale for the cat arm/hand
-let kibbleSize = 1;  // Scale for the kibble marks
+let kibbleSize = 0.2;  // Scale for the kibble marks
 let kibbleOffset = 0;  // Offset for kibble position (adjust to align under paw)
 
   function fixImageUrl(img) {

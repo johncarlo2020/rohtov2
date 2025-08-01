@@ -20,6 +20,7 @@
             object-fit: cover;
             border-radius: 50%;
             display: block;
+            border: red 1px solid;
         }
 
         .avatar-wrapper.selected {

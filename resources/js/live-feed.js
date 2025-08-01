@@ -701,16 +701,16 @@ async function addUserToList(data) {
     console.log("Processing user:", data.user?.fname);
 
     // Update player count
-    if (data.totalUsers) {
-        const playerCountElement = document.getElementById('player-count');
-        if (playerCountElement) {
-            console.log("Updating player count to:", data.totalUsers);
-            playerCountElement.textContent = data.totalUsers;
+    // if (data.totalUsers) {
+    //     const playerCountElement = document.getElementById('player-count');
+    //     if (playerCountElement) {
+    //         console.log("Updating player count to:", data.totalUsers);
+    //         playerCountElement.textContent = data.totalUsers;
 
-            // Trigger count animation
-            animatePlayerCount();
-        }
-    }
+    //         // Trigger count animation
+    //         animatePlayerCount();
+    //     }
+    // }
 
     // Add new user to the list
     if (data.user) {

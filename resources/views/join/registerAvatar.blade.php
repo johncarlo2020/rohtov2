@@ -46,7 +46,6 @@
                                     <input type="text" name="fname" maxlength="10" class="form-control" placeholder="Enter your name" required>
                                     <div class="form-text text-muted">*MAX 10 characters</div>
                                 </div>
-
                                 <button type="submit" class="w-100 btn btn-danger rounded-pill">SUBMIT</button>
                             </form>
                         </div>
@@ -55,8 +54,10 @@
             </div>
 
             {{-- <x-footer /> --}}
+
         </div>
     </div>
+     <img src="{{ asset('images/brand/submit-rat.webp') }}" class="rat" alt="">
 </x-guest-layout>
 
 {{-- AJAX Script --}}

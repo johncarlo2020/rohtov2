@@ -7,7 +7,7 @@
         //set the width and height of the logo
         height: auto;
         min-width: 208px;
-        max-width: 63vw;
+        max-width: 40vw;
         object-fit: contain;
     }
 }
@@ -366,5 +366,16 @@
     object-fit: contain;
     margin-left: auto;
     transform: translateX(-50%);
+    z-index: 1;
+}
+
+.rat {
+    width: 40vw;
+    height: auto;
+    -o-object-fit: contain;
+    object-fit: contain;
+    position: absolute;
+    bottom: 81px;
+    right: 26px;
     z-index: 1;
 }

@@ -34,8 +34,8 @@
 
         .scale-value {
             color: #fff;
-            font-weight: bold;
-            font-size: 30px;
+            font-weight: normal;
+            font-size: 21px;
         }
 
         .scale-label {
@@ -45,18 +45,18 @@
         }
 
         .scale-min {
-            left: 601px;
+            left: 726px;
             bottom: 7px;
         }
 
         .scale-median {
             left: 50%;
-            bottom: 118px;
+            bottom: 84px;
             transform: translateX(-50%);
         }
 
         .scale-max {
-            right: 619px;
+            right: 731px;
             bottom: 7px;
         }
 
@@ -65,7 +65,7 @@
             position: absolute;
             width: 40px;
             height: 80px;
-            background-image: url('{{ asset('images/brand/neddle.webp') }}');
+            background-image: url('{{ asset('images/brand/niddle.webp') }}');
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center bottom;
@@ -191,14 +191,22 @@
             width: 254px;
             height: auto;
         }
+
+        .progress-container {
+    position: absolute;
+    left: 160px;
+    top: 136px;
+    width: 10vw;
+    height: 72vh;
+    /* background: red; */
+    z-index: 90;
+}
     </style>
     </body>
 </head>
 
 <body class="live-feed">
     <div class="live-feed-lobby">
-        <img src="{{ asset('images/brand/cat-tail.webp') }}" alt="" class="cat-tail">
-        <img src="{{ asset('images/brand/cat-left.webp') }}" alt="" class="cat-left">
         <img src="{{ asset('images/brand/cat-right.webp') }}" alt="" class="cat-right">
         <div class="player-list rounded">
             <div class="player-list-header">
@@ -243,6 +251,9 @@
     <div class="live-game d-none">
         <img src="{{ asset('images/brand/gameBg.webp') }}" alt="" class="game-background">
         <img src="{{ asset('images/brand/scale.webp') }}" alt="" class="scale-image">
+        <div class="progress-container">
+            <img src="{{ asset('images/brand/bar.webp') }}" alt="" class="bar-image">
+        </div>
 
         <!-- Scale Pin/Needle -->
         <div class="scale-pin" id="scale-pin"></div>

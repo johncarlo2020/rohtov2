@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('country')->nullable();;
             $table->string('email')->unique()->nullable();;
             $table->string('pledge_image')->nullable();
+            $table->string('game_status')->nullable();
             $table->text('pledge_text')->nullable();
             $table->timestamp('last_login_at')->nullable();
             $table->timestamp('email_verified_at')->nullable();

@@ -18,7 +18,6 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: grayscale(100%);
             border-radius: 50%;
             display: block;
         }
@@ -85,7 +84,7 @@
                 @include('components.branding')
             </div>
                  <div class="mb-4 w-100 animate-entry delay-3 px-2">
-                    <h4 class="my-5 text-dark text-center">SELECT YOUR AVATAR</h4>
+                    <img  class="select-avatar-text my-3" src="{{ asset('images/brand/select-avatar-text.webp') }}" alt="Brand Logo" />
                     <div class="avatar-grid d-flex flex-wrap gap-2 justify-content-center pt-2">
                         @for ($i = 1; $i <= 9; $i++)
                             <div class="avatar-wrapper" data-avatar-id="{{ $i }}">

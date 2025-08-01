@@ -63,7 +63,7 @@ class StationSeeder extends Seeder
             'dob' => '10/20/2001',
             'email' => 'admin@gmail.com',
             'country' => 'Malaysia',
-            'password' => Hash::make('WowsomeKose2025'),
+            'password' => Hash::make('WowsomeRoyalCanin2025'),
         ]);
 
         $user->assignRole('admin');

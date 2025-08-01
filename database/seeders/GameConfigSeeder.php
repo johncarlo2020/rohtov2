@@ -15,7 +15,7 @@ class GameConfigSeeder extends Seeder
     {
         // Create default game configuration
         GameConfig::create([
-            'max_weight' => 4.0,
+            'max_weight' => 300.0,
             'increment_grams' => 100,
             'is_active' => true,
         ]);

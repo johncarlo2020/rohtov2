@@ -77,6 +77,7 @@ class RegisteredUserController extends Controller
         $user = User::create([
             'fname' => $request->fname,
             'avatar_id' => $request->avatar_id,
+            'game_status' => 'active',
             // 'race' => $request->race,
             // 'number' => $phoneNumber,
             // 'email' => $request->email,

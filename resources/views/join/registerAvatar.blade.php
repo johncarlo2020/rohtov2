@@ -21,7 +21,7 @@
             </div>
 
             <div class="mt-4 w-100 animate-entry delay-3">
-                <div class="mt-5">
+                <div class="">
                     @php
                         $avatarId = request()->get('avatar'); // e.g. "3"
                         $avatarPath = asset('images/avatarCats/02_cat0' . $avatarId . '.webp'); // dynamic image
@@ -29,7 +29,7 @@
 
                     {{-- Selected Avatar --}}
                     <div class="d-flex justify-content-center">
-                        <img src="{{ $avatarPath }}" class="rounded-circle border" style="width: 160px; height: 160px; object-fit: cover; filter: grayscale(100%);">
+                        <img src="{{ $avatarPath }}" class="rounded-circle border" style="width: 125px; height: 125px; object-fit: cover;">
                     </div>
 
                     {{-- Form --}}

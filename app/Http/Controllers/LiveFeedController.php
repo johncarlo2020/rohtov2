@@ -11,8 +11,9 @@ class LiveFeedController extends Controller
 {
     public function index()
     {
-        $totalUsersCount = User::whereNotNull('avatar_id')->count();
+        $totalUsersCount = User::whereNotNull('avatar_id')->where('game_status', 'active')->count();
         $users = User::whereNotNull('avatar_id')
+            ->where('game_status', 'active')
             ->latest()
             ->limit(11)
             ->get();

@@ -111,6 +111,7 @@
                     </div>
                 </div>
         </div>
+        <img class="bottom-img-paw" src="{{ asset('images/brand/bottom-img.webp') }}" alt="">
     </div>
 </x-guest-layout>
 <script>

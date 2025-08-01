@@ -305,7 +305,7 @@
     height: 100vh;
 
     .donate-gif {
-          width: 28vw;
+        width: 28vw;
         height: auto;
         object-fit: contain;
         position: absolute;
@@ -321,7 +321,7 @@
         -o-object-fit: contain;
         object-fit: contain;
         position: absolute;
-       bottom: 74px !important;
+        bottom: 74px !important;
         left: 50%;
         transform: translateX(-50%);
         z-index: 2;
@@ -345,4 +345,26 @@
     font-weight: bold;
     color: #7d7979;
     text-transform: uppercase;
+}
+
+.btn-with-icon {
+    position: relative;
+
+    .cat-button-icon {
+        position: absolute;
+        left: -62px;
+        top: -18px;
+        width: 60px;
+        height: 60px;
+        object-fit: contain;
+    }
+}
+
+.bottom-img-paw {
+    width: 74px;
+    height: auto;
+    object-fit: contain;
+    margin-left: auto;
+    transform: translateX(-50%);
+    z-index: 1;
 }

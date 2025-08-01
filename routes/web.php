@@ -33,6 +33,7 @@ Route::get('/game', function () {
 // Game trigger routes
 Route::get('/game-trigger', [GameConfigController::class, 'trigger'])->name('game.trigger');
 Route::get('/game-config', [GameConfigController::class, 'index'])->name('game.config');
+Route::get('/game-reset', [GameConfigController::class, 'resetGame'])->name('game.reset');
 
 // Game config API routes
 Route::post('/game-config/save', [GameConfigController::class, 'store'])->name('game.config.store');

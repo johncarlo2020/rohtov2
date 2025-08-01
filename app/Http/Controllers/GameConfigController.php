@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\GameConfig;
 use App\Events\LiveFeedEvent;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class GameConfigController extends Controller
 {
@@ -17,13 +18,27 @@ class GameConfigController extends Controller
         return view('gameConfig', compact('config'));
     }
 
+
+    public function resetGame()
+    {
+       // get all user records with game_status 'active'
+        $activeUsers = User::where('game_status', 'active')->get();
+        // reset their game_status to 'completed'
+        foreach ($activeUsers as $user) {
+            $user->game_status = 'completed';
+            $user->save();
+        }
+
+        return redirect()->route('game.config')->with('success', 'Game has been reset successfully.');
+    }
+
     /**
      * Save the game configuration
      */
     public function store(Request $request)
     {
         $request->validate([
-            'max_weight' => 'required|numeric|min:1|max:10',
+            'max_weight' => 'required|numeric|min:1',
             'increment_grams' => 'required|integer|min:10|max:1000'
         ]);
 

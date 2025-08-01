@@ -1075,7 +1075,21 @@ function showResetButton() {
 function resetGame() {
     console.log('Resetting game by reloading page...');
         triggerLiveFeedEventWithRetry('reset', null);
-    location.reload();
+
+        //call game-reset route to reset the game state
+        $.ajax({
+            url: '{{ route('game.reset') }}',
+            type: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
+            success: function(response) {
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                console.error('Error resetting game state:', error);
+            }
+        });
 }
 
 // Game start state tracking

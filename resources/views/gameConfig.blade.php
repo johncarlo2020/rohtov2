@@ -10,7 +10,7 @@
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label for="maxValueInput" class="form-label">Max Gauge Value (kg):</label>
-                        <input type="number" class="form-control" id="maxValueInput" min="1" max="10" step="0.1" value="{{ $config->max_weight ?? 4 }}" oninput="updateMaxValue()">
+                        <input type="number" class="form-control" id="maxValueInput" step="0.1" value="{{ $config->max_weight ?? 4 }}" oninput="updateMaxValue()">
                         <div class="form-text">Set the maximum weight the gauge can display</div>
                     </div>
                 </div>
@@ -90,7 +90,7 @@ function updateMaxValue() {
     const input = document.getElementById('maxValueInput');
     const newMax = parseFloat(input.value);
 
-    if (newMax >= 1 && newMax <= 10) {
+    if (!isNaN(newMax) && newMax > 0) {
         maxWeight = newMax;
         updateConfigDisplay();
     }

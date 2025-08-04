@@ -251,9 +251,66 @@
     <div class="live-game d-none">
         <img src="{{ asset('images/brand/gameBg.webp') }}" alt="" class="game-background">
         <img src="{{ asset('images/brand/scale.webp') }}" alt="" class="scale-image">
-        <div class="progress-container">
-            <img src="{{ asset('images/brand/bar.webp') }}" alt="" class="bar-image">
+
+        <div class="progress-container" style="position: absolute; left: 160px; top: 136px; width: 32px; height: 60vh; min-height: 300px; max-height: 700px; z-index: 90;">
+            <div style="position: absolute; left: 40px; top: 0; height: 100%; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; z-index: 91; pointer-events: none;">
+                <span style="color: #000; font-weight: bold; font-size: 1.1em; text-shadow: 0 1px 2px #fff;">{{ $gameConfig->max_weight ?? 4 }}KG</span>
+                <span style="color: #000; font-weight: bold; font-size: 1.1em; text-shadow: 0 1px 2px #fff; align-self: center;">{{ intval(($gameConfig->max_weight ?? 4) / 2) }}KG</span>
+                <span style="color: #000; font-weight: bold; font-size: 1.1em; text-shadow: 0 1px 2px #fff;">{{ $gameConfig->min_weight ?? 0 }}KG</span>
+            </div>
+            <div class="progress-bar-bg" style="position: relative; width: 100%; height: 100%; background: linear-gradient(180deg, #FF0101 0%, #FFA600 36%, #F7FF00 91%); border: 2px solid #e6c97a; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                <div id="game-progress-bar" class="progress-bar-fill" style="
+                    position: absolute;
+                    left: 0;
+                    bottom: 0;
+                    width: 100%;
+                    height: 0%;
+                    background: lime;
+                    transition: height 0.5s cubic-bezier(.4,2,.6,1);
+                    opacity: 0.95;
+                    border-radius: 20px;
+                "></div>
+                <!-- Rounded circle cap, positioned with JS -->
+                <div id="progress-cap" class="progress-cap" style="
+                    position: absolute;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: 30%;
+                    aspect-ratio: 1/1;
+                    background-color: lime;
+                    border-radius: 50%;
+                    box-shadow: 0 0 10px rgba(0,255,0,0.4);
+                    bottom: 0%;
+                    z-index: 2;
+                    transition: bottom 0.5s cubic-bezier(.4,2,.6,1);
+                "></div>
+            </div>
         </div>
+
+<script>
+// Example: update the progress bar based on current value (0-100%)
+// You should call this function whenever the game value changes
+function setGameProgressBar(percent) {
+    // percent: 0 to 100
+    const bar = document.getElementById('game-progress-bar');
+    const cap = document.getElementById('progress-cap');
+    const fillPercent = Math.max(0, Math.min(100, percent));
+    if (bar) {
+        bar.style.height = fillPercent + '%';
+    }
+    if (cap) {
+        // Cap's bottom should match the top of the fill
+        cap.style.bottom = `calc(${fillPercent}% - 15px)`; // 15px is half the cap's height (adjust as needed)
+        // Hide cap if fill is 0
+        cap.style.opacity = fillPercent > 0 ? 1 : 0;
+    }
+}
+
+// Example usage: set to 50% on load (replace with your actual logic)
+// document.addEventListener('DOMContentLoaded', function() {
+//     setGameProgressBar(50);
+// });
+</script>
 
         <!-- Scale Pin/Needle -->
         <div class="scale-pin" id="scale-pin"></div>

@@ -442,6 +442,12 @@ function moveScalePin(weight) {
         );
         console.log("Applied transform:", pin.style.transform);
 
+        // Align progress bar with scale
+        // Also update the vertical progress bar in the Blade file
+        if (typeof setGameProgressBar === 'function') {
+            setGameProgressBar(percentage);
+        }
+
         // Check if maximum weight is reached and trigger confetti
         if (weight >= maxWeight) {
             console.log(

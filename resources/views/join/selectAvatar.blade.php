@@ -4,8 +4,8 @@
          .avatar-wrapper {
             overflow: hidden;
             position: relative;
-            width: 140px;
-            height: 140px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
             border: 3px solid transparent;
             overflow: hidden;
@@ -47,7 +47,7 @@
         }
 
         .avatar-grid {
-            max-height: 440px;
+            height: 45vh;
             overflow-y: auto;
         }
 

@@ -29,7 +29,7 @@
                     <strong>Current Config:</strong>
                     Max: <span id="configMax">{{ ($config->max_weight ?? 4) }}kg</span> |
                     Increment: <span id="configIncrement">{{ ($config->increment_grams ?? 100) }}g</span> per click |
-                    Range: <span id="configRange">0-400</span>
+                    Clicks to Complete: <span id="configClicks">0</span>
                 </small>
             </div>
 
@@ -114,7 +114,15 @@ function updateConfigDisplay() {
 
     document.getElementById('configMax').textContent = maxWeightNum.toFixed(1) + 'kg';
     document.getElementById('configIncrement').textContent = incrementGramsNum + 'g';
-    document.getElementById('configRange').textContent = `0-${INTERNAL_MAX}`;
+
+    // Calculate how many clicks to complete (from 0 to maxWeight, in increments of incrementGrams)
+    // Convert maxWeight (kg) to grams
+    const maxWeightGrams = maxWeightNum * 1000;
+    let clicks = 0;
+    if (incrementGramsNum > 0) {
+        clicks = Math.ceil(maxWeightGrams / incrementGramsNum);
+    }
+    document.getElementById('configClicks').textContent = clicks;
 }
 
 // Show message to user

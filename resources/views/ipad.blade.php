@@ -43,29 +43,34 @@
     }
 
     .counter {
-      position: absolute;
-      bottom: 5px;
-      left: 10px;
-      background: #fff;
-      color: #e74c3c;
-      border-radius: 50%;
-      padding: 2px 6px;
-      font-size: 0.8rem;
+        position: absolute;
+        bottom: 5px;
+        left: 5px;
+        width: 28px;
+        height: 28px;
+        background: white;
+        color: #dc3545;
+        font-size: 1rem;
+        font-weight: bold;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .remove-btn {
-      position: absolute;
-      top: -8px;
-      right: -8px;
-      background: #fff;
-      border: 2px solid #e74c3c;
-      border-radius: 50%;
-      color: #e74c3c;
-      width: 20px;
-      height: 20px;
-      line-height: 18px;
-      font-size: 14px;
-      cursor: pointer;
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background: #fff;
+        border: 2px solid #e74c3c;
+        border-radius: 50%;
+        color: #e74c3c;
+        width: 30px;
+        height: 30px;
+        line-height: 21px;
+        font-size: 20px;
+        cursor: pointer;
     }
 
     .submit-btn {
@@ -144,36 +149,10 @@
           </div>
         </div>
     </div>
-    
-<!-- <script>
-  const buttons = document.querySelectorAll('.weight-button');
-  const hiddenInput = document.getElementById('selectedWeight');
-
-  buttons.forEach(button => {
-    button.addEventListener('click', () => {
-      // Remove active class from all
-      buttons.forEach(btn => btn.classList.remove('active'));
-      // Add active class to the clicked one
-      button.classList.add('active');
-      // Set the hidden input value
-      hiddenInput.value = button.dataset.weight;
-    });
-  });
-
-  // Optional: prevent submission if nothing is selected
-  document.getElementById('weightForm').addEventListener('submit', function(e) {
-    if (!hiddenInput.value) {
-      e.preventDefault();
-      alert("Please select a weight before submitting.");
-    }
-  });
-</script> -->
-
 <script>
     const weights = [
-      '80Kg', '60Kg', '50Kg', '40Kg',
-      '20Kg', '10Kg', '80g', '60g',
-      '50g', '40g', '20g', '10g'
+      '4Kg', '2Kg', '1.5Kg', '1.2Kg',
+      '800g', '400g', '300g', '85g'
     ];
 
     const grid = document.getElementById('weight-grid');

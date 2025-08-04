@@ -3,6 +3,7 @@
     h2#total-weight
     {
         width: 25vw;
+        font-size:48px;
     }
     .weight-button {
       opacity: 0.7;
@@ -48,11 +49,12 @@
         left: 5px;
         width: 28px;
         height: 28px;
-        background: white;
-        color: #dc3545;
+        background: #dc3545;
+        color: #fff;
         font-size: 1rem;
         font-weight: bold;
         border-radius: 50%;
+        border: 2px solid #fff;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -62,10 +64,10 @@
         position: absolute;
         top: -8px;
         right: -8px;
-        background: #fff;
-        border: 2px solid #e74c3c;
+        background: #e74c3c;
+        border: 2px solid #fff;
         border-radius: 50%;
-        color: #e74c3c;
+        color: #fff;
         width: 30px;
         height: 30px;
         line-height: 21px;
@@ -108,13 +110,13 @@
 
                             <div class="d-flex align-items-center justify-content-center gap-2 mb-4">
                             <!-- Placeholder Icon (Replace src if needed) -->
-                            <img src="{{ asset('images/brand/rc_scale_img.png') }}" alt="scale" style="width: 30px; height: 30px;" />
+                            <img src="{{ asset('images/brand/rc_scale_img.png') }}" alt="scale" style="width: 48px; height: 48px;" />
 
                             <!-- Total Display -->
                             <h2 class="m-0 fw-bold text-dark" id="total-weight">0</h2>
 
                             <!-- G Box -->
-                            <span class="bg-danger text-white rounded-2 px-3 py-1 fw-bold">G</span>
+                            <span class="bg-danger text-white rounded-2 px-3 py-1 fw-bold" style="font-size:30px;">G</span>
                             </div>
 
                             <div class="grid" id="weight-grid">

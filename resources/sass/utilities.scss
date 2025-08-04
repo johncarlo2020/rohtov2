@@ -13,9 +13,9 @@
 .ipad-background
 {
     background-image: $ipad-background;
-    background-position: center;
+    background-position: bottom;
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: contain;
 }
 
 .pledge-wall-background

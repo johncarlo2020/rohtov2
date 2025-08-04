@@ -1155,8 +1155,27 @@ function createFallingKibble(x, y) {
 
     document.body.appendChild(kibble);
 
-    // Play kibble sound when kibble starts falling
-    playKibbleSound();
+    // Play kibble sound when it visually reaches the scale-image
+    // Find the scale-image element and get its top position
+    const scaleImg = document.querySelector('.scale-image');
+    let scaleY = window.innerHeight * 0.5; // fallback if not found
+    if (scaleImg) {
+        const scaleRect = scaleImg.getBoundingClientRect();
+        scaleY = scaleRect.top; // top of the scale for more immediate sound
+    }
+    // Kibble starts at y (usually -30), falls to scaleY
+    const startY = y;
+    const endY = scaleY;
+    const totalFall = endY - startY;
+    const totalDuration = 2000; // ms, matches animation
+    // Calculate when the kibble would reach the scale
+    let timeToScale = totalDuration;
+    if (totalFall > 0) {
+        timeToScale = Math.max(0, Math.min(totalDuration, (totalFall / window.innerHeight) * totalDuration));
+    }
+    setTimeout(() => {
+        playKibbleSound();
+    }, timeToScale);
 
     // Remove kibble after animation and decrement counter
     setTimeout(() => {

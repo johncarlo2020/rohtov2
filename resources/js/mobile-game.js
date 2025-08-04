@@ -279,6 +279,11 @@ function handleGameReset(data) {
         bag.setTexture('bagClosed');
     }
 
+    // Hide lid indicator on reset
+    if (lidIndicator) {
+        lidIndicator.setAlpha(0);
+    }
+
     // Call image switching function if available
     if (typeof window.switchGameImage === 'function') {
         window.switchGameImage('reset');
@@ -358,6 +363,7 @@ let kibbleImages = ['kibble']; // Single kibble image
 let catSounds = Array.from({length: 8}, (_, i) => `catSound${i + 1}`);
 let startBtn;
 let bag; // Bag object at bottom of screen
+let lidIndicator; // Separate lid indicator object that appears behind bag
 
 // Size configuration variables
 let handSize = 1;  // Scale for the cat arm/hand
@@ -379,7 +385,7 @@ let kibbleOffset = 0;  // Offset for kibble position (adjust to align under paw)
 function preload() {
   // Add loading event listeners for debugging
   this.load.on('filecomplete', (key, type, data) => {
-    if (key === 'bagClosed' || key === 'bagOpen') {
+    if (key === 'bagClosed' || key === 'bagOpen' || key === 'lidBag') {
       console.log(`Mobile game: Successfully loaded ${type} - ${key}`);
     }
   });
@@ -400,15 +406,18 @@ function preload() {
   this.load.image('kibble', fixImageUrl(`images/brand/mobile_game_object/kibble.webp`));
 
   // Load bag images with debugging
-  const bagClosedUrl = fixImageUrl(`images/brand/mobile_game_object/bag_close.webp`);
+  const bagClosedUrl = fixImageUrl(`images/brand/mobile_game_object/05_cat food close01.webp`);
   const bagOpenUrl = fixImageUrl(`images/brand/mobile_game_object/bag_open.webp`);
+  const lidBagUrl = fixImageUrl(`images/brand/mobile_game_object/lid_bag.webp`);
 
   console.log(`Mobile game: Loading bag images:`);
   console.log(`- bagClosed: ${bagClosedUrl}`);
   console.log(`- bagOpen: ${bagOpenUrl}`);
+  console.log(`- lidBag: ${lidBagUrl}`);
 
   this.load.image('bagClosed', bagClosedUrl);
   this.load.image('bagOpen', bagOpenUrl);
+  this.load.image('lidBag', lidBagUrl);
 
   // Load cat sounds using a loop
   for (let i = 1; i <= 8; i++) {
@@ -428,6 +437,7 @@ function create() {
   console.log("Mobile game: Checking available textures:");
   console.log("- bagClosed texture exists:", this.textures.exists('bagClosed'));
   console.log("- bagOpen texture exists:", this.textures.exists('bagOpen'));
+  console.log("- lidBag texture exists:", this.textures.exists('lidBag'));
 
   if (!this.textures.exists('bagClosed')) {
     console.error("Mobile game: bagClosed texture not found! Cannot create bag.");
@@ -451,6 +461,12 @@ function create() {
   bag.setScale(scaleX, scaleY);
   bag.setDepth(10); // Make sure bag appears above other elements
   bag.setAlpha(0); // Initially hidden - will show when game starts
+
+  // Create separate lid indicator that appears behind the bag
+  lidIndicator = this.add.image(centerX, bagY, 'lidBag');
+  lidIndicator.setScale(scaleX, scaleY); // Same scale as bag
+  lidIndicator.setDepth(9); // Behind the bag (lower depth)
+  lidIndicator.setAlpha(0); // Initially hidden
 
   console.log("Mobile game: Screen dimensions:", this.cameras.main.width, "x", this.cameras.main.height);
   console.log("Mobile game: Bag created at responsive position:", centerX, bagY);
@@ -599,14 +615,21 @@ function create() {
                 duration: 1000,
                 ease: 'Power2.easeIn', // Simple accelerating fall, no bounce
                 onStart: () => {
-                  // Check if kibble will fall into bag area and open it immediately
-                  const bagBounds = bag.getBounds();
-                  if (kibble.x >= bagBounds.left && kibble.x <= bagBounds.right) {
-                    // Kibble will fall into bag - open it now
-                    bag.setTexture('bagOpen');
+                  // Only allow bag entry if bag is visible (alpha > 0.5)
+                  kibble._canEnterBag = bag && bag.alpha > 0.5;
+                  if (kibble._canEnterBag) {
+                    // Check if kibble will fall into bag area and show lid indicator behind bag
+                    const bagBounds = bag.getBounds();
+                    if (kibble.x >= bagBounds.left && kibble.x <= bagBounds.right) {
+                      // Show lid indicator behind the bag (don't change bag texture)
+                      if (lidIndicator) {
+                        lidIndicator.setAlpha(1); // Show lid behind bag
+                      }
+                    }
                   }
                 },
                 onUpdate: () => {
+                  if (!kibble._canEnterBag) return; // If bag is hidden, skip bag logic
                   // Check if kibble has reached the bag level for scoring
                   const bagBounds = bag.getBounds();
                   const kibbleBounds = kibble.getBounds();
@@ -627,18 +650,20 @@ function create() {
                         onComplete: () => kibble.destroy()
                       });
 
-                      // Close the bag after a short delay
+                      // Hide lid indicator after kibble enters (preserve all bag textures)
                       this.time.delayedCall(500, () => {
-                        bag.setTexture('bagClosed');
+                        if (lidIndicator) {
+                          lidIndicator.setAlpha(0); // Hide lid indicator
+                        }
                       });
                     }
                   }
                 },
                 onComplete: () => {
                   kibble.destroy();
-                  // Close bag if it was opened but no kibble was caught
-                  if (bag.texture.key === 'bagOpen') {
-                    bag.setTexture('bagClosed');
+                  // Hide lid indicator when kibble misses (never touch bag textures)
+                  if (lidIndicator) {
+                    lidIndicator.setAlpha(0);
                   }
                 }
               });
@@ -748,18 +773,30 @@ window.mobileGameDebug = {
     },
     // New bag debugging functions
     bagStatus: () => ({
-        exists: !!bag,
-        alpha: bag ? bag.alpha : null,
-        position: bag ? { x: bag.x, y: bag.y } : null,
-        texture: bag ? bag.texture.key : null,
-        scale: bag ? bag.scaleX : null,
-        depth: bag ? bag.depth : null,
-        visible: bag ? bag.visible : null,
+        bag: {
+            exists: !!bag,
+            alpha: bag ? bag.alpha : null,
+            position: bag ? { x: bag.x, y: bag.y } : null,
+            texture: bag ? bag.texture.key : null,
+            scale: bag ? bag.scaleX : null,
+            depth: bag ? bag.depth : null,
+            visible: bag ? bag.visible : null,
+        },
+        lidIndicator: {
+            exists: !!lidIndicator,
+            alpha: lidIndicator ? lidIndicator.alpha : null,
+            position: lidIndicator ? { x: lidIndicator.x, y: lidIndicator.y } : null,
+            texture: lidIndicator ? lidIndicator.texture.key : null,
+            scale: lidIndicator ? lidIndicator.scaleX : null,
+            depth: lidIndicator ? lidIndicator.depth : null,
+            visible: lidIndicator ? lidIndicator.visible : null,
+        },
         gameScene: game && game.scene ? 'exists' : 'missing',
         sceneChildren: game && game.scene && game.scene.scenes[0] ? game.scene.scenes[0].children.list.length : 0,
         texturesLoaded: game && game.scene && game.scene.scenes[0] ? {
             bagClosed: game.scene.scenes[0].textures.exists('bagClosed'),
             bagOpen: game.scene.scenes[0].textures.exists('bagOpen'),
+            lidBag: game.scene.scenes[0].textures.exists('lidBag'),
             availableTextures: Object.keys(game.scene.scenes[0].textures.list).filter(key => key.includes('bag'))
         } : 'scene not available'
     }),
@@ -801,7 +838,7 @@ window.mobileGameDebug = {
             console.log("Searching in scene with", scene.children.list.length, "children");
 
             const bagInScene = scene.children.list.find(child =>
-                child.texture && (child.texture.key === 'bagClosed' || child.texture.key === 'bagOpen')
+                child.texture && (child.texture.key === 'bagClosed' || child.texture.key === 'bagOpen' || child.texture.key === 'lidBag')
             );
 
             if (bagInScene) {
@@ -828,6 +865,38 @@ window.mobileGameDebug = {
             console.log("Created new responsive bag at:", centerX, bagY, "with scaleX:", scaleX);
         } else {
             console.error("Game scene not available");
+        }
+    },
+    testLidIndicator: () => {
+        if (lidIndicator && bag) {
+            console.log("Testing lid indicator (shows behind bag)");
+            console.log("Bag texture stays:", bag.texture.key);
+            lidIndicator.setAlpha(1);
+            console.log("Lid indicator alpha set to 1, bag texture unchanged");
+
+            // Hide lid indicator after 2 seconds
+            setTimeout(() => {
+                lidIndicator.setAlpha(0);
+                console.log("Lid indicator hidden, bag texture still:", bag.texture.key);
+            }, 2000);
+        } else {
+            console.error("Lid indicator or bag not found for test");
+        }
+    },
+    showLidIndicator: () => {
+        if (lidIndicator) {
+            lidIndicator.setAlpha(1);
+            console.log("Lid indicator shown");
+        } else {
+            console.error("Lid indicator not found");
+        }
+    },
+    hideLidIndicator: () => {
+        if (lidIndicator) {
+            lidIndicator.setAlpha(0);
+            console.log("Lid indicator hidden");
+        } else {
+            console.error("Lid indicator not found");
         }
     }
 };

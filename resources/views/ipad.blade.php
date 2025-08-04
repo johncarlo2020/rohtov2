@@ -121,7 +121,7 @@
                                 <!-- Buttons will be added dynamically -->
                             </div>
 
-                            <button type="submit" class="submit-btn" style="width:550px;">SUBMIT</button>
+                            <button type="submit" class="submit-btn" style="width:570px;">SUBMIT</button>
 
                             <!-- <button type="submit" class="custom-btn bg-danger text-white submit-btn">SUBMIT</button> -->
                         </form>

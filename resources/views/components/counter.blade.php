@@ -24,7 +24,7 @@
 
 </div> -->
 
-<div class="tick " id="ticker1" data-credits="false" data-value="00,000.000" data-did-init="handleTickInit2">
+<div class="tick " id="ticker1" data-credits="false" data-value="0,000.000" data-did-init="handleTickInit2">
     <div data-value-mapping="money"
          data-credits="false"
          data-layout="horizontal fit"
@@ -38,13 +38,16 @@
          border-radius:20px;
          "
          >
-      <span data-repeat="true">
-        <span id="pledge" data-view="flip"></span>
-      </span>
+      <div class="container-repeater">
+        <span data-repeat="true">
+          <span id="pledge" data-view="flip"></span>
+        </span>
+      </div>
+      <!-- <span class="unit-label" style="color:white; font-size:130px; margin-left:10px; text-dark">g</span> -->
     </div>
   </div>
 
-<div class="tick" id="ticker2" data-credits="false" data-value="00,000.000" data-did-init="handleTickInit">
+<div class="tick" id="ticker2" data-credits="false" data-value="0,000.000" data-did-init="handleTickInit">
     <div data-value-mapping="money"
          data-credits="false"
          data-layout="horizontal fit"
@@ -102,6 +105,7 @@ div#ticker1 {
     font-size: 150px;
     color: white;
     white-space: nowrap;
+    font-size:130px;
 }
 
 div#ticker2 {
@@ -133,10 +137,10 @@ div#ticker2 {
 
 <script>
      function formatToMoneyString(value) {
-      const str = value.toString().padStart(8, '0'); // e.g., "003008"
-      const whole = str.slice(0, 5);  // "003"
-      const decimal = str.slice(5);  // "008"
-      const formattedWhole = whole.replace(/(\d{2})(\d{3})/, '$1,$2'); // "003" → "00,003"
+      const str = value.toString().padStart(7, '0'); // e.g., "003008"
+      const whole = str.slice(0, 4);  // "003"
+      const decimal = str.slice(4);  // "008"
+      const formattedWhole = whole.replace(/(\d)(\d{3})/, '$1,$2')  ; // "003" → "00,003"
       return `${formattedWhole}.${decimal}`; // No $
     }
 

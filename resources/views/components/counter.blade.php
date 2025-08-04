@@ -1,30 +1,4 @@
-<!-- <div class="clock d-flex justify-content-center" data-url="{{ route('pledge.counter') }}">dd</div> -->
-
-<!-- <div class="tick" data-value="" data-did-init="handleTickInit">
-
-    <div data-value-mapping="indexes" data-layout="horizontal fit" data-transform="arrive(.2) -&gt; round -&gt; split -&gt; delay(rtl, 100, 150)">
-
-        <span class="tick-text-inline">$</span>
-
-        <span data-view="flip">1</span>
-        <span data-view="flip">2</span>
-
-        <span class="tick-text-inline text-dark">,</span>
-
-        <span data-view="flip">8</span>
-        <span data-view="flip">5</span>
-        <span data-view="flip">0</span>
-
-        <span class="tick-text-inline text-dark">.</span>
-        <span data-view="flip">0</span>
-        <span data-view="flip">0</span>
-        <span data-view="flip">0</span>
-
-    </div>
-
-</div> -->
-
-<div class="tick " id="ticker1" data-credits="false" data-value="0,000.000" data-did-init="handleTickInit2">
+<div class="tick " id="ticker1" data-credits="false" data-value="00,000,000.00" data-did-init="handleTickInit2">
     <div data-value-mapping="money"
          data-credits="false"
          data-layout="horizontal fit"
@@ -32,22 +6,24 @@
            -> split
            -> delay(rtl, 100, 150)
          "
-         style="
-         background-color:#fc0000;
-         padding:20px;
-         border-radius:20px;
-         "
          >
-      <div class="container-repeater">
-        <span data-repeat="true">
-          <span id="pledge" data-view="flip"></span>
-        </span>
+      <div class="d-block">
+        <div>
+        <span class="text-dark" style="font-size:48px;"><strong>TOTAL PLEDGE</strong></span>
       </div>
-      <!-- <span class="unit-label" style="color:white; font-size:130px; margin-left:10px; text-dark">g</span> -->
+      <div class="d-flex">
+        <div class="container-repeater">
+          <span data-repeat="true">
+            <span id="pledge" data-view="flip"></span>
+          </span>
+        </div>
+        <span class="unit-label text-dark d-flex align-items-center ms-4" style="font-size:70px;" ><strong>g</strong></span>
+      </div>
+      </div>
     </div>
   </div>
 
-<div class="tick" id="ticker2" data-credits="false" data-value="0,000.000" data-did-init="handleTickInit">
+<div class="tick" id="ticker2" data-credits="false" data-value="00,000.000" data-did-init="handleTickInit">
     <div data-value-mapping="money"
          data-credits="false"
          data-layout="horizontal fit"
@@ -55,17 +31,24 @@
            -> split
            -> delay(rtl, 100, 150)
          "
-         style="
-         background-color:#fc0000;
-         padding:20px;
-         border-radius:20px;
-         "
+  
          >
-      <span data-repeat="true">
-        <span id="percentage" data-view="flip"></span>
-      </span>
+      <div class="d-block mt-5">
+        <div class="mt-5 mb-4" style="line-height:0";>
+        <span id="contrib-text" class="text-dark" style="font-size:90px;"><strong>YOUR CONTRIBUTION <br>FROM YOUR PURCHASE</strong></span>
+      </div>
+      <div class="d-flex">
+        <div class="container-repeater">
+          <span data-repeat="true">
+            <span id="percentage" data-view="flip"></span>
+          </span>
+        </div>
+        <span class="unit-label text-dark d-flex align-items-center ms-4" style="font-size:90px;" ><strong>g</strong></span>
+      </div>
+      </div>
     </div>
   </div>
+<audio id="flip-sound" src="{{ asset('assets/sound/flipcard.mp3') }}" preload="auto"></audio>
 
 @push('styles')
 <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flipclock@0.7.8/compiled/flipclock.css" /> -->
@@ -91,12 +74,18 @@ span#percentage
 
 /* 1920x1080 */
 
+.container-repeater {
+    padding: 15px 28px;
+    background: #fc0000;
+    border-radius: 20px;
+}
+
 div#ticker1 {
     position: absolute;
-    top: 25%;
+    top: 5%;
     left: 50%;
     transform: translateX(-50%);
-    background-color: #fc0000;
+    /* background-color: #fc0000; */
     border-radius: 20px;
     /* padding: 20px; */
     display: flex;
@@ -105,15 +94,15 @@ div#ticker1 {
     font-size: 150px;
     color: white;
     white-space: nowrap;
-    font-size:130px;
+    font-size:100px;
 }
 
 div#ticker2 {
     position: absolute;
-    top: 64%;
+    top: 30%;
     left: 50%;
     transform: translateX(-50%);
-    background-color: #fc0000;
+    /* background-color: #fc0000; */
     border-radius: 20px;
     /* padding: 20px; */
     display: flex;
@@ -132,21 +121,55 @@ div#ticker2 {
 
 @push('scripts')
 <!-- <script src="https://cdn.jsdelivr.net/npm/flipclock@0.7.8/compiled/flipclock.min.js"></script> -->
- <script src="{{ asset('assets/js/plugins/flip.js') }}"></script>
+<script src="{{ asset('assets/js/plugins/flip.js') }}"></script>
 <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
 
 <script>
+
+  let currentCounterValue = null;
+  let currentPercentageValue = null;
+  let canPlaySound = false;
+  const flipAudio = document.getElementById('flip-sound');
+
+  // Enable sound on first user interaction
+  function enableFlipSound() {
+      canPlaySound = true;
+      window.removeEventListener('click', enableFlipSound);
+      window.removeEventListener('keydown', enableFlipSound);
+      window.removeEventListener('touchstart', enableFlipSound);
+  }
+  window.addEventListener('click', enableFlipSound);
+  window.addEventListener('keydown', enableFlipSound);
+  window.addEventListener('touchstart', enableFlipSound);
+
+  function playFlipSound() {
+      if (canPlaySound && flipAudio) {
+          flipAudio.currentTime = 0;
+          flipAudio.play().catch(err => {
+              console.warn("Audio play failed:", err);
+          });
+      }
+  }
+
      function formatToMoneyString(value) {
-      const str = value.toString().padStart(7, '0'); // e.g., "003008"
-      const whole = str.slice(0, 4);  // "003"
-      const decimal = str.slice(4);  // "008"
-      const formattedWhole = whole.replace(/(\d)(\d{3})/, '$1,$2')  ; // "003" → "00,003"
+      const str = value.toString().padStart(8, '0'); // e.g., "003008"
+      const whole = str.slice(0, 6);  // "003"
+      const decimal = str.slice(6);  // "008"
+      const formattedWhole = whole.replace(/(\d{3})(\d{3})/, '$1,$2'); // "003" → "00,003"
       return `${formattedWhole}.${decimal}`; // No $
     }
 
+    function formatToMoneyString2(value) {
+      // Ensure value has 2 decimal places
+      const str = value.toString().padStart(10, '0'); // Pad to 11 digits total
+      const whole = str.slice(0, 8);   // Get 9 digits for the whole part
+      const decimal = str.slice(8);    // Last 2 digits for decimal
+
+      const formattedWhole = whole.replace(/(\d{2})(\d{3})(\d{3})/, '$1,$2,$3');
+      return `${formattedWhole}.${decimal}`;
+    }
+
     
-let currentCounterValue = null;
-let currentPercentageValue = null;
 
 function handleTickInit(tick) {
     window._tickInstance = tick;
@@ -158,18 +181,33 @@ function handleTickInit2(tick) {
     fetchAndUpdateData();
 }
 
+// function fetchAndUpdateData() {
+//     fetch(`{{ route('pledge.counter') }}`)
+//         .then(res => res.json())
+//         .then(data => {
+//             playFlipSound();
+//             updateCounter(data.count);
+//             updatePercentage(data.percentage);
+//         })
+//         .catch(err => console.error("Fetch error:", err));
+// }
+
 function fetchAndUpdateData() {
     fetch(`{{ route('pledge.counter') }}`)
         .then(res => res.json())
         .then(data => {
-            updateCounter(data.count);
-            updatePercentage(data.percentage);
+            const countChanged = updateCounter(data.count);
+            const percentageChanged = updatePercentage(data.percentage);
+
+            if (countChanged || percentageChanged) {
+                playFlipSound();
+            }
         })
         .catch(err => console.error("Fetch error:", err));
 }
 
 function updateCounter(count) {
-    if (typeof count === 'undefined') return;
+    if (typeof count === 'undefined') return false;
 
     const value = parseInt(count, 10);
     if (!isNaN(value) && value !== currentCounterValue) {
@@ -178,21 +216,52 @@ function updateCounter(count) {
         if (window._tickInstance) {
             window._tickInstance.value = formatted;
         }
+        return true;
     }
+    return false;
 }
 
 function updatePercentage(percentage) {
-    if (typeof percentage === 'undefined') return;
+    if (typeof percentage === 'undefined') return false;
 
     const value = parseInt(percentage, 10);
     if (!isNaN(value) && value !== currentPercentageValue) {
         currentPercentageValue = value;
-        const formatted = formatToMoneyString(value);
+        const formatted = formatToMoneyString2(value);
         if (window._tickInstance2) {
             window._tickInstance2.value = formatted;
         }
+        return true;
     }
+    return false;
 }
+
+// function updateCounter(count) {
+//     if (typeof count === 'undefined') return;
+
+//     const value = parseInt(count, 10);
+//     if (!isNaN(value) && value !== currentCounterValue) {
+//         currentCounterValue = value;
+//         const formatted = formatToMoneyString(value);
+//         if (window._tickInstance) {
+//             window._tickInstance.value = formatted;
+//         }
+//     }
+// }
+
+// function updatePercentage(percentage) {
+//     if (typeof percentage === 'undefined') return;
+
+//     const value = parseInt(percentage, 10);
+//     if (!isNaN(value) && value !== currentPercentageValue) {
+//         currentPercentageValue = value;
+//         const formatted = formatToMoneyString2(value);
+//         console.log(formatted);
+//         if (window._tickInstance2) {
+//             window._tickInstance2.value = formatted;
+//         }
+//     }
+// }
 
     Pusher.logToConsole = false;
 

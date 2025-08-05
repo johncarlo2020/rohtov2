@@ -80,13 +80,13 @@
         }
     </style>
     <div class="select-avatar-main main-content with-scroll">
-        <div class="d-flex flex-column justify-content-between h-100">
-            <div class="col-12 d-flex justify-content-center animate-entry">
+        <div class="mx-auto h-100">
+            <div class="animate-entry">
                 @include('components.branding')
             </div>
-                 <div class="mb-4 w-100 animate-entry delay-3 px-2">
-                    <img  class="select-avatar-text my-3" src="{{ asset('images/brand/select-avatar-text.webp') }}" alt="Brand Logo" />
-                    <div class="avatar-grid d-flex flex-wrap gap-2 justify-content-center pt-2">
+            <div class="mb-4 w-100 animate-entry delay-3 px-2">
+                <img class="select-avatar-text my-3" src="{{ asset('images/brand/select-avatar-text.webp') }}" alt="Brand Logo" />
+                <div class="avatar-grid d-flex flex-wrap gap-2 justify-content-center pt-2">
                         @for ($i = 1; $i <= 10; $i++)
                             <div class="avatar-wrapper" data-avatar-id="{{ $i }}">
                                 <img src="{{ asset('images/avatarCats/02_cat0' . $i . '.webp') }}"

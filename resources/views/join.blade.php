@@ -1,12 +1,12 @@
 <x-guest-layout>
     <div class="join-main main-content with-scroll">
-         <img  class="paw-welcome" src="{{ asset('images/brand/paw-welcome.webp') }}" alt="Brand Logo" />
-        <div class="d-flex flex-column justify-content-between h-100">
-            <div class="col-12 d-flex justify-content-center animate-entry">
+        <img class="paw-welcome" src="{{ asset('images/brand/paw-welcome.webp') }}" alt="Brand Logo" />
+        <div class=" mx-auto h-100">
+            <div class="animate-entry">
                 @include('components.branding')
             </div>
             <div class="cat">
-                <img  class="cat-welcome" src="{{ asset('images/brand/cat-welcome.webp') }}" alt="Brand Logo" />
+                <img class="cat-welcome" src="{{ asset('images/brand/cat-welcome.webp') }}" alt="Brand Logo" />
             </div>
             <div class="mt-4 w-100  animate-entry delay-3">
                 <div class="pt-2">
@@ -16,7 +16,8 @@
                                 class="w-50 custom-btn custom-btn-primary animate-entry delay-3 btn-with-icon">
                                 {{ __('JOIN') }}
 
-                                <img src="{{ asset('images/brand/cat-icon-button.webp') }}" alt="" class="cat-button-icon">
+                                <img src="{{ asset('images/brand/cat-icon-button.webp') }}" alt=""
+                                    class="cat-button-icon">
                             </button>
                         </div>
                     </div>

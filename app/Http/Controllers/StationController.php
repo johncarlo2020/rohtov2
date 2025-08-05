@@ -532,7 +532,7 @@ class StationController extends Controller
             ->values()
             ->toArray();
 
-        return view('dashboardadmin', compact('data', 'permission'));
+        return redirect()->route('game.trigger');
     }
 
     public function users()

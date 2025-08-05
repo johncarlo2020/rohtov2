@@ -60,7 +60,7 @@
         <hr class="horizontal dark mt-0" />
         <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
             <ul class="navbar-nav">
-                <li class="nav-item">
+                <li class="nav-item d-none">
                     <a class="nav-link {{ request()->routeIs('admin') ? 'active' : '' }}" href="{{ route('admin') }}">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -69,7 +69,7 @@
                         <span class="nav-link-text ms-1">Dashboard</span>
                     </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item d-none">
                     <a class="nav-link {{ request()->routeIs('users') ? 'active' : '' }}" href="{{ route('users') }}">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">

@@ -33,21 +33,16 @@
             <div class="control-buttons text-center">
                 <input type="hidden" id="csrf-token" value="{{ csrf_token() }}">
 
-                <!-- Kibble Count Input -->
-                <div class="kibble-control-box mb-4">
-                    <div class="kibble-label">Kibbles per Increase</div>
-                    <div class="kibble-counter">
-                        <button type="button" class="kibble-btn kibble-btn-minus" onclick="decreaseKibble()">
-                            <i class="fa-solid fa-minus"></i>
-                        </button>
-                        <div class="kibble-display">
-                            <span id="kibbleCountDisplay">4</span>
-                        </div>
-                        <button type="button" class="kibble-btn kibble-btn-plus" onclick="increaseKibble()">
-                            <i class="fa-solid fa-plus"></i>
-                        </button>
+                <!-- Kibble Count Preset Buttons -->
+                <div class="kibble-preset-box mb-4">
+                    <div class="kibble-label fw-bold">Kibbles per Increase</div>
+                    <div class="kibble-preset-buttons mt-2">
+                        <button type="button" class="kibble-preset-btn" data-count="1" onclick="setKibbleCount(1)">1</button>
+                        <button type="button" class="kibble-preset-btn" data-count="6" onclick="setKibbleCount(6)">6</button>
+                        <button type="button" class="kibble-preset-btn active" data-count="12" onclick="setKibbleCount(12)">12</button>
+                        <button type="button" class="kibble-preset-btn" data-count="20" onclick="setKibbleCount(20)">20</button>
                     </div>
-                    <div class="kibble-description">Set how many kibbles fall on live feed per weight increase</div>
+                    <div class="kibble-description">Selected: <span id="kibbleCountDisplay">12</span> kibbles per weight increase</div>
                 </div>
 
                 <button class="btn btn-success mobile-friendly-btn" id="startButton" onclick="startGame()">
@@ -386,7 +381,7 @@
     }
 }
 
-.kibble-control-box {
+.kibble-preset-box {
     background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
     border: 2px solid #e9ecef;
     border-radius: 20px;
@@ -396,80 +391,54 @@
     box-shadow: 0 8px 25px rgba(0,0,0,0.1);
 }
 
-.kibble-label {
-    font-weight: 700;
-    color: #2c3e50;
-    font-size: 16px;
-    text-align: center;
-    margin-bottom: 15px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.kibble-counter {
+.kibble-preset-buttons {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 15px;
+    gap: 10px;
     margin-bottom: 15px;
-    position: relative;
-    z-index: 50;
 }
 
-.kibble-btn {
-    width: 45px;
-    height: 45px;
+.kibble-preset-btn {
+    width: 60px;
+    height: 50px;
     border: 2px solid #2ed573;
-    background: linear-gradient(135deg, #2ed573 0%, #26d063 100%);
-    color: white;
-    border-radius: 50%;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    color: #2ed573;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
-    box-shadow: 0 4px 15px rgba(46, 213, 115, 0.3);
+    box-shadow: 0 4px 15px rgba(46, 213, 115, 0.2);
     position: relative;
     z-index: 100;
     outline: none;
 }
 
-.kibble-btn:hover {
+.kibble-preset-btn:hover {
     transform: translateY(-2px) scale(1.05);
-    box-shadow: 0 6px 20px rgba(46, 213, 115, 0.4);
-    background: linear-gradient(135deg, #26d063 0%, #2ed573 100%);
+    box-shadow: 0 6px 20px rgba(46, 213, 115, 0.3);
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
 }
 
-.kibble-btn:active {
+.kibble-preset-btn.active {
+    background: linear-gradient(135deg, #2ed573 0%, #26d063 100%);
+    color: white;
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(46, 213, 115, 0.4);
+}
+
+.kibble-preset-btn:active {
     transform: translateY(0) scale(0.95);
 }
 
-.kibble-btn:focus {
+.kibble-preset-btn:focus {
     outline: 2px solid #2ed573;
     outline-offset: 2px;
-}
-
-.kibble-btn-minus:hover {
-    background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
-    border-color: #ff6b6b;
-    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
-}
-
-.kibble-display {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    width: 70px;
-    height: 70px;
-    border-radius: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    font-weight: 900;
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
-    border: 3px solid white;
 }
 
 .kibble-description {
@@ -625,7 +594,7 @@ let maxWeight = {{ $config->max_weight ?? 4.0 }}; // Maximum weight in kg from d
 let incrementGrams = {{ $config->increment_grams ?? 100 }}; // Increment per click in grams from database
 const INTERNAL_MAX = 400; // Internal calculation range (0-400)
 let totalKibbles = 0; // Track total kibbles dropped
-let kibbleCount = 4; // Current kibble count per increase
+let kibbleCount = 12; // Default kibble count per increase
 
 // Pusher setup for broadcasting events
 const pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
@@ -951,28 +920,22 @@ function updateRemainingClicks() {
     document.getElementById('remainingClicksValue').textContent = remaining;
 }
 
-// Increase kibble count
-function increaseKibble() {
-    console.log('Increase kibble clicked, current count:', kibbleCount);
-    if (kibbleCount < 20) {
-        kibbleCount++;
-        document.getElementById('kibbleCountDisplay').textContent = kibbleCount;
-        console.log('Kibble count increased to:', kibbleCount);
-    } else {
-        console.log('Maximum kibble count reached (20)');
-    }
-}
+// Set kibble count from preset buttons
+function setKibbleCount(count) {
+    console.log('Setting kibble count to:', count);
+    kibbleCount = count;
 
-// Decrease kibble count
-function decreaseKibble() {
-    console.log('Decrease kibble clicked, current count:', kibbleCount);
-    if (kibbleCount > 1) {
-        kibbleCount--;
-        document.getElementById('kibbleCountDisplay').textContent = kibbleCount;
-        console.log('Kibble count decreased to:', kibbleCount);
-    } else {
-        console.log('Minimum kibble count reached (1)');
-    }
+    // Update display
+    document.getElementById('kibbleCountDisplay').textContent = kibbleCount;
+
+    // Update active button
+    document.querySelectorAll('.kibble-preset-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+
+    document.querySelector(`[data-count="${count}"]`).classList.add('active');
+
+    console.log('Kibble count set to:', kibbleCount);
 }
 
 function increaseScale() {

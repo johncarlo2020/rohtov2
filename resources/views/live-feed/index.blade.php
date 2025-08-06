@@ -185,10 +185,10 @@
         }
 
         .cat-right {
-            right: 25px;
+            right: -112px;
             top: 56%;
             transform: translateY(-50%);
-            width: 566px;
+            width: 498px;
             height: auto;
         }
 

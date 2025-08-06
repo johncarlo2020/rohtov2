@@ -322,7 +322,7 @@ function setGameProgressBar(percent) {
             <span class="scale-value">{{ intval(($gameConfig->max_weight ?? 4) / 2) }}KG</span>
         </div>
         <div class="scale-label scale-max">
-            <span class="scale-value">{{ intval($gameConfig->max_weight ?? 4) }}KG</span>
+            <span class="scale-value">MAX</span>
         </div>
 
         <div id="game"></div>

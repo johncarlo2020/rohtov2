@@ -36,6 +36,7 @@
             color: #fff;
             font-weight: normal;
             font-size: 17px;
+            font-weight: bold;
         }
 
         .scale-label {
@@ -315,7 +316,7 @@
         <div class="scale-label scale-min">
             <span class="scale-value">{{ intval($gameConfig->min_weight ?? 0) }}KG</span>
         </div>
-        <div class="scale-label scale-median">
+        <div class="scale-label scale-median d-none">
             <span class="scale-value">{{ intval(($gameConfig->max_weight ?? 4) / 2) }}KG</span>
         </div>
         <div class="scale-label scale-max">

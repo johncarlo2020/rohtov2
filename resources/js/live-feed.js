@@ -665,7 +665,7 @@ function handleGameUpdate(data) {
 // User join queue system
 let userJoinQueue = [];
 let isProcessingQueue = false;
-const MAX_VISIBLE_USERS = 11; // Match your PHP limit
+const MAX_VISIBLE_USERS = 8; // Match your PHP limit
 
 function handleUserJoined(data) {
     console.log("User joined:", data);
@@ -1132,9 +1132,46 @@ window.testCountdownSequence = function() {
 // Falling kibble animation with tracking
 let activeKibbles = 0; // Track number of kibbles currently falling
 
+// Kibble configuration - adjustable settings
+const KIBBLE_CONFIG = {
+    disappearOffset: -4, // pixels: positive = disappear before scale, negative = after scale
+    fallSpeed: 200, // pixels per second (higher = faster fall)
+    soundTiming: 0.8 // when to play sound (0.8 = 80% through animation)
+};
+
+// Function to adjust kibble disappear offset
+window.setKibbleOffset = function(offset) {
+    KIBBLE_CONFIG.disappearOffset = offset;
+    console.log(`Kibble disappear offset set to: ${offset}px`);
+};
+
+// Function to adjust kibble fall speed
+window.setKibbleFallSpeed = function(speed) {
+    KIBBLE_CONFIG.fallSpeed = speed;
+    console.log(`Kibble fall speed set to: ${speed} pixels/second`);
+};
+
 function createFallingKibble(x, y) {
     activeKibbles++; // Increment active kibble count
     console.log(`Creating kibble. Active kibbles: ${activeKibbles}`);
+
+    // Find the scale-image element and get its position
+    const scaleImg = document.querySelector('.scale-image');
+    let scaleY = window.innerHeight * 0.8; // fallback if not found
+    let animationDuration = 2000; // default duration
+
+    if (scaleImg) {
+        const scaleRect = scaleImg.getBoundingClientRect();
+        scaleY = scaleRect.top + KIBBLE_CONFIG.disappearOffset; // Apply offset to disappear position
+
+        // Calculate precise animation duration based on distance to scale
+        const startY = y;
+        const endY = scaleY;
+        const totalFall = Math.max(endY - startY, 100); // Minimum 100px fall
+        animationDuration = (totalFall / KIBBLE_CONFIG.fallSpeed) * 1000; // Convert to milliseconds
+
+        console.log(`Kibble will fall ${totalFall}px in ${animationDuration}ms and disappear at scale position + ${KIBBLE_CONFIG.disappearOffset}px offset`);
+    }
 
     const kibble = document.createElement("div");
     kibble.className = "falling-kibble";
@@ -1150,34 +1187,19 @@ function createFallingKibble(x, y) {
         top: ${y - 15}px;
         z-index: 33;
         pointer-events: none;
-        animation: fallAndSpin 2s ease-in forwards;
+        animation: fallAndSpinToScale ${animationDuration}ms ease-in forwards;
+        --fall-distance: ${scaleY - y}px;
     `;
 
     document.body.appendChild(kibble);
 
-    // Play kibble sound when it visually reaches the scale-image
-    // Find the scale-image element and get its top position
-    const scaleImg = document.querySelector('.scale-image');
-    let scaleY = window.innerHeight * 0.5; // fallback if not found
-    if (scaleImg) {
-        const scaleRect = scaleImg.getBoundingClientRect();
-        scaleY = scaleRect.top; // top of the scale for more immediate sound
-    }
-    // Kibble starts at y (usually -30), falls to scaleY
-    const startY = y;
-    const endY = scaleY;
-    const totalFall = endY - startY;
-    const totalDuration = 2000; // ms, matches animation
-    // Calculate when the kibble would reach the scale
-    let timeToScale = totalDuration;
-    if (totalFall > 0) {
-        timeToScale = Math.max(0, Math.min(totalDuration, (totalFall / window.innerHeight) * totalDuration));
-    }
+    // Play kibble sound when it visually reaches the scale (adjustable timing)
+    const soundTiming = animationDuration * KIBBLE_CONFIG.soundTiming;
     setTimeout(() => {
         playKibbleSound();
-    }, timeToScale);
+    }, soundTiming);
 
-    // Remove kibble after animation and decrement counter
+    // Remove kibble when animation completes and decrement counter
     setTimeout(() => {
         if (kibble.parentNode) {
             kibble.parentNode.removeChild(kibble);
@@ -1191,7 +1213,7 @@ function createFallingKibble(x, y) {
             proceedWithGameFinish(window.pendingGameFinish);
             window.pendingGameFinish = null;
         }
-    }, 2000);
+    }, animationDuration);
 }
 
 // Trigger kibble fall from random positions at top of screen
@@ -1237,6 +1259,21 @@ function addKibbleStyles() {
         const style = document.createElement("style");
         style.id = "kibble-styles";
         style.textContent = `
+            @keyframes fallAndSpinToScale {
+                0% {
+                    transform: translateY(0) rotate(0deg);
+                    opacity: 1;
+                }
+                95% {
+                    transform: translateY(var(--fall-distance)) rotate(720deg);
+                    opacity: 1;
+                }
+                100% {
+                    transform: translateY(var(--fall-distance)) rotate(720deg);
+                    opacity: 0;
+                }
+            }
+
             @keyframes fallAndSpin {
                 0% {
                     transform: translateY(0) rotate(0deg);

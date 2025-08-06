@@ -117,8 +117,6 @@ Route::get('/avatar-register', function () {
     return view('join.registerAvatar');
 })->name('avatar.register');
 
-Route::post('/donate', [IpadController::class, 'store'])->name('ipad.store');
-
 Route::group(['middleware' => ['admin']], function () {
     Route::get('/admin', 'App\Http\Controllers\StationController@admin')->name('admin');
     Route::get('/admin/users', 'App\Http\Controllers\StationController@users')->name('users');

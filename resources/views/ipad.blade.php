@@ -103,9 +103,7 @@
                 <h1 class="text-center animate-entry heading text-dark mt-4">BUYER'S VOLUME</h1>
                 <div class="text-center col-12 mt-5 d-flex flex-column justify-content-center align-items-center">
                     <div class="d-block">
-                        <form method="POST" action="{{route('ipad.store')}}" id="weightForm">
-                            @csrf
-
+                        <form id="weightForm">
                             <input type="hidden" name="weight" id="selectedWeight">
 
                             <div class="d-flex align-items-center justify-content-center gap-2 mb-4">
@@ -219,14 +217,41 @@
     };
 
     renderButtons();
-  </script>
 
-@if(session('success'))
-<script>
-  window.addEventListener('DOMContentLoaded', () => {
-    const modal = new bootstrap.Modal(document.getElementById('thankYouModal'));
-    modal.show();
-  });
-</script>
-@endif
+    // Handle form submission via AJAX
+    document.getElementById('weightForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+        formData.append('_token', '{{ csrf_token() }}');
+
+        try {
+            const response = await fetch('{{ route("api.ipad.store") }}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                // Reset the form state
+                Object.keys(state).forEach(key => delete state[key]);
+                renderButtons();
+                updateTotal();
+
+                // Show the thank you modal
+                const modal = new bootstrap.Modal(document.getElementById('thankYouModal'));
+                modal.show();
+            } else {
+                alert('Error: ' + (result.message || 'Something went wrong'));
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Network error occurred. Please try again.');
+        }
+    });
+  </script>
 </x-app-layout>

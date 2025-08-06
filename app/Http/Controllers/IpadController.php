@@ -45,7 +45,12 @@ class IpadController extends Controller
 
         event(new LiveFeedEvent('pledge', $donationData));
 
-        return back()->with('success', true);   
+        return response()->json([
+            'success' => true,
+            'message' => 'Donation recorded successfully',
+            'data' => $donationData->getData(),
+            'redirect' => route('ipad.index')
+        ]);   
 
         // $rawWeight = $request->input('weight'); // e.g., "200G" or "4KG"
 

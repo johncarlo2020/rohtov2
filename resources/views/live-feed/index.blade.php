@@ -254,9 +254,8 @@
 
         <div class="progress-container" style="position: absolute; left: 160px; top: 136px; width: 32px; height: 60vh; min-height: 300px; max-height: 700px; z-index: 90;">
             <div style="position: absolute; left: 40px; top: 0; height: 100%; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; z-index: 91; pointer-events: none;">
-                <span style="color: #000; font-weight: bold; font-size: 1.1em; text-shadow: 0 1px 2px #fff;">{{ intval($gameConfig->max_weight ?? 4) }}KG</span>
-                <span style="color: #000; font-weight: bold; font-size: 1.1em; text-shadow: 0 1px 2px #fff; align-self: center;">{{ intval(($gameConfig->max_weight ?? 4) / 2) }}KG</span>
-                <span style="color: #000; font-weight: bold; font-size: 1.1em; text-shadow: 0 1px 2px #fff;">{{ intval($gameConfig->min_weight ?? 0) }}KG</span>
+                <span style="color: #000; font-weight: bold; font-size: 1.1em; text-shadow: 0 1px 2px #fff;">MAX</span>
+                <span style="color: #000; font-weight: bold; font-size: 1.1em; text-shadow: 0 1px 2px #fff;">0kg</span>
             </div>
             <div class="progress-bar-bg" style="position: relative; width: 100%; height: 100%; background: linear-gradient(180deg, #FF0101 0%, #FFA600 36%, #F7FF00 91%); border: 2px solid #e6c97a; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
                 <div id="game-progress-bar" class="progress-bar-fill" style="

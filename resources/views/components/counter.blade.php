@@ -127,7 +127,7 @@ div#ticker2 {
 <script>
 
   let currentCounterValue = null;
-  let currentPercentageValue = null;
+  let currentPercentageValue = 100000;
   let canPlaySound = false;
   const flipAudio = document.getElementById('flip-sound');
 
@@ -152,20 +152,33 @@ div#ticker2 {
   }
 
      function formatToMoneyString(value) {
-      const str = value.toString().padStart(8, '0'); // e.g., "003008"
-      const whole = str.slice(0, 6);  // "003"
-      const decimal = str.slice(6);  // "008"
-      const formattedWhole = whole.replace(/(\d{3})(\d{3})/, '$1,$2'); // "003" → "00,003"
-      return `${formattedWhole}.${decimal}`; // No $
+      // const str = value.toString().padStart(8, '0'); // e.g., "003008"
+      // const whole = str.slice(0, 6);  // "003"
+      // const decimal = str.slice(6);  // "008"
+      // const formattedWhole = whole.replace(/(\d{3})(\d{3})/, '$1,$2'); // "003" → "00,003"
+      // return `${formattedWhole}.${decimal}`; // No $
+
+      let [whole, decimal] = parseFloat(value).toFixed(2).split('.');
+
+      // Pad with leading zeros to ensure at least 8 digits
+      whole = whole.padStart(6, '0'); // e.g., "00100400"
+
+      // Format into 00,000,
+      const formattedWhole = whole.replace(/(\d{3})(\d{3})/, '$1,$2');
+
+      return `${formattedWhole}.${decimal}`;
     }
 
     function formatToMoneyString2(value) {
-      // Ensure value has 2 decimal places
-      const str = value.toString().padStart(10, '0'); // Pad to 11 digits total
-      const whole = str.slice(0, 8);   // Get 9 digits for the whole part
-      const decimal = str.slice(8);    // Last 2 digits for decimal
+      // Convert value to fixed 2 decimal string
+      let [whole, decimal] = parseFloat(value).toFixed(2).split('.');
 
+      // Pad with leading zeros to ensure at least 8 digits
+      whole = whole.padStart(8, '0'); // e.g., "00100400"
+
+      // Format into 00,000,000
       const formattedWhole = whole.replace(/(\d{2})(\d{3})(\d{3})/, '$1,$2,$3');
+
       return `${formattedWhole}.${decimal}`;
     }
 
@@ -180,17 +193,6 @@ function handleTickInit2(tick) {
     window._tickInstance2 = tick;
     fetchAndUpdateData();
 }
-
-// function fetchAndUpdateData() {
-//     fetch(`{{ route('pledge.counter') }}`)
-//         .then(res => res.json())
-//         .then(data => {
-//             playFlipSound();
-//             updateCounter(data.count);
-//             updatePercentage(data.percentage);
-//         })
-//         .catch(err => console.error("Fetch error:", err));
-// }
 
 function fetchAndUpdateData() {
     fetch(`{{ route('pledge.counter') }}`)
@@ -225,14 +227,17 @@ function updatePercentage(percentage) {
     if (typeof percentage === 'undefined') return false;
 
     const value = parseInt(percentage, 10);
-    if (!isNaN(value) && value !== currentPercentageValue) {
-        currentPercentageValue = value;
-        const formatted = formatToMoneyString2(value);
+    if (!isNaN(value)) {
+        const newValue = currentPercentageValue + value;
+        const formatted = formatToMoneyString2(newValue);
+
         if (window._tickInstance2) {
             window._tickInstance2.value = formatted;
         }
+
         return true;
     }
+
     return false;
 }
 

@@ -165,7 +165,7 @@
         .cat-left,
         .cat-right {
             position: absolute !important;
-            z-index: 10;
+            z-index: 0;
         }
 
         .cat-tail {

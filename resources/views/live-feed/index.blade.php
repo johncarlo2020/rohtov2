@@ -35,7 +35,7 @@
         .scale-value {
             color: #fff;
             font-weight: normal;
-            font-size: 21px;
+            font-size: 17px;
         }
 
         .scale-label {
@@ -45,18 +45,18 @@
         }
 
         .scale-min {
-            left: 726px;
+            left: 419px;
             bottom: 7px;
         }
 
         .scale-median {
             left: 50%;
-            bottom: 84px;
+            bottom: 56px;
             transform: translateX(-50%);
         }
 
         .scale-max {
-            right: 731px;
+            right: 420px;
             bottom: 7px;
         }
 
@@ -191,16 +191,6 @@
             width: 498px;
             height: auto;
         }
-
-        .progress-container {
-            position: absolute;
-            left: 160px;
-            top: 136px;
-            width: 10vw;
-            height: 72vh;
-            /* background: red; */
-            z-index: 90;
-        }
     </style>
     </body>
 </head>
@@ -233,7 +223,8 @@
         <div class="qr-container">
             <img src="{{ asset('images/brand/logo.webp') }}" alt="Brand Logo" class="brand-logo">
             <img src="{{ asset('images/brand/qr.png') }}" alt="QR Code" class="qr-code">
-            <img src="{{ asset('images/brand/scan_for_excitement.webp') }}" alt="Scan for Excitement" class="scan-image">
+            <img src="{{ asset('images/brand/scan_for_excitement.webp') }}" alt="Scan for Excitement"
+                class="scan-image">
         </div>
     </div>
 
@@ -252,13 +243,16 @@
         <img src="{{ asset('images/brand/gameBg.webp') }}" alt="" class="game-background">
         <img src="{{ asset('images/brand/scale.webp') }}" alt="" class="scale-image">
 
-        <div class="progress-container" style="position: absolute; left: 160px; top: 136px; width: 32px; height: 60vh; min-height: 300px; max-height: 700px; z-index: 90;">
-            <div style="position: absolute; left: 40px; top: 0; height: 100%; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; z-index: 91; pointer-events: none;">
+        <div class="progress-container">
+            <div
+                style="position: absolute; left: 40px; top: 0; height: 100%; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; z-index: 91; pointer-events: none;">
                 <span style="color: #000; font-weight: bold; font-size: 1.1em; text-shadow: 0 1px 2px #fff;">MAX</span>
                 <span style="color: #000; font-weight: bold; font-size: 1.1em; text-shadow: 0 1px 2px #fff;">0kg</span>
             </div>
-            <div class="progress-bar-bg" style="position: relative; width: 100%; height: 100%; background: linear-gradient(180deg, #FF0101 0%, #FFA600 36%, #F7FF00 91%); border: 2px solid #e6c97a; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                <div id="game-progress-bar" class="progress-bar-fill" style="
+            <div class="progress-bar-bg"
+                style="position: relative; width: 100%; height: 100%; background: linear-gradient(180deg, #FF0101 0%, #FFA600 36%, #F7FF00 91%); border: 2px solid #e6c97a; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                <div id="game-progress-bar" class="progress-bar-fill"
+                    style="
                     position: absolute;
                     left: 0;
                     bottom: 0;
@@ -268,9 +262,11 @@
                     transition: height 0.5s cubic-bezier(.4,2,.6,1);
                     opacity: 0.95;
                     border-radius: 20px;
-                "></div>
+                ">
+                </div>
                 <!-- Rounded circle cap, positioned with JS -->
-                <div id="progress-cap" class="progress-cap" style="
+                <div id="progress-cap" class="progress-cap"
+                    style="
                     position: absolute;
                     left: 50%;
                     transform: translateX(-50%);
@@ -282,34 +278,35 @@
                     bottom: 0%;
                     z-index: 2;
                     transition: bottom 0.5s cubic-bezier(.4,2,.6,1);
-                "></div>
+                ">
+                </div>
             </div>
         </div>
 
-<script>
-// Example: update the progress bar based on current value (0-100%)
-// You should call this function whenever the game value changes
-function setGameProgressBar(percent) {
-    // percent: 0 to 100
-    const bar = document.getElementById('game-progress-bar');
-    const cap = document.getElementById('progress-cap');
-    const fillPercent = Math.max(0, Math.min(100, percent));
-    if (bar) {
-        bar.style.height = fillPercent + '%';
-    }
-    if (cap) {
-        // Cap's bottom should match the top of the fill
-        cap.style.bottom = `calc(${fillPercent}% - 15px)`; // 15px is half the cap's height (adjust as needed)
-        // Hide cap if fill is 0
-        cap.style.opacity = fillPercent > 0 ? 1 : 0;
-    }
-}
+        <script>
+            // Example: update the progress bar based on current value (0-100%)
+            // You should call this function whenever the game value changes
+            function setGameProgressBar(percent) {
+                // percent: 0 to 100
+                const bar = document.getElementById('game-progress-bar');
+                const cap = document.getElementById('progress-cap');
+                const fillPercent = Math.max(0, Math.min(100, percent));
+                if (bar) {
+                    bar.style.height = fillPercent + '%';
+                }
+                if (cap) {
+                    // Cap's bottom should match the top of the fill
+                    cap.style.bottom = `calc(${fillPercent}% - 15px)`; // 15px is half the cap's height (adjust as needed)
+                    // Hide cap if fill is 0
+                    cap.style.opacity = fillPercent > 0 ? 1 : 0;
+                }
+            }
 
-// Example usage: set to 50% on load (replace with your actual logic)
-// document.addEventListener('DOMContentLoaded', function() {
-//     setGameProgressBar(50);
-// });
-</script>
+            // Example usage: set to 50% on load (replace with your actual logic)
+            // document.addEventListener('DOMContentLoaded', function() {
+            //     setGameProgressBar(50);
+            // });
+        </script>
 
         <!-- Scale Pin/Needle -->
         <div class="scale-pin" id="scale-pin"></div>
@@ -441,7 +438,7 @@ function setGameProgressBar(percent) {
                 resetConnectionCheck();
                 // Trigger reconnection in live-feed.js
                 if (window.retryConnection) {
-                   location.reload();
+                    location.reload();
                 }
             });
         });

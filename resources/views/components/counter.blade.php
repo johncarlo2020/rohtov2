@@ -144,6 +144,7 @@ div#ticker2 {
   let currentCounterValue = null;
   let currentPercentageValue = 100000;
   let canPlaySound = false;
+  let resetTimer = null;
   const flipAudio = document.getElementById('flip-sound');
 
   // Enable sound on first user interaction
@@ -239,6 +240,22 @@ function updateCounter(count) {
         if (window._tickInstance) {
             window._tickInstance.value = formatted;
         }
+
+        // Clear any existing timer
+        if (resetTimer) {
+            clearTimeout(resetTimer);
+        }
+
+        // Set timer to reset to 0 after 10 seconds
+        resetTimer = setTimeout(() => {
+            const resetFormatted = formatToMoneyString(0);
+            if (window._tickInstance) {
+                window._tickInstance.value = resetFormatted;
+                currentCounterValue = 0;
+                console.log('Bottom counter reset to 0 after 10 seconds');
+            }
+        }, 10000);
+
         return true;
     }
     return false;

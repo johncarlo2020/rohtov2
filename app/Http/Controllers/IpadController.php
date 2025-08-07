@@ -50,7 +50,7 @@ class IpadController extends Controller
             'message' => 'Donation recorded successfully',
             'data' => $donationData->getData(),
             'redirect' => route('ipad.index')
-        ]);   
+        ]);
 
         // $rawWeight = $request->input('weight'); // e.g., "200G" or "4KG"
 
@@ -96,8 +96,9 @@ class IpadController extends Controller
                 : $w->value;
         });
 
-        // Sum of 10% values from the column
-        $percentage = Donation::sum('percentage');
+        // Get the latest donation's percentage value
+        $latestDonation = Donation::latest()->first();
+        $percentage = $latestDonation ? $latestDonation->percentage : 0;
 
 
         $data = [

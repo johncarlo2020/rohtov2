@@ -182,11 +182,12 @@ div#ticker2 {
       // Convert value to fixed 2 decimal string
       let [whole, decimal] = parseFloat(value).toFixed(2).split('.');
 
-      // Pad with leading zeros to ensure exactly 6 digits for 000,000 format
-      whole = whole.padStart(6, '0'); // e.g., "000425"
+      // Pad with leading zeros to ensure at least 8 digits
+      whole = whole.padStart(8, '0'); // e.g., "00100400"
 
-      // Format into 000,000 pattern
-      const formattedWhole = whole.slice(0, 3) + ',' + whole.slice(3);
+      // Format into 00,000,000
+      const formattedWhole = whole.replace(/(\d{2})(\d{3})(\d{3})/, '$1,$2,$3');
+
       return `${formattedWhole}.${decimal}`;
     }
 

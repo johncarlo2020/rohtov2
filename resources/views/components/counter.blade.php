@@ -214,8 +214,13 @@ function fetchAndUpdateData() {
         .then(res => res.json())
         .then(data => {
             console.log('Fetched data:', data); // Debug log
-            const countChanged = updateCounter(data.count);
-            const percentageChanged = updatePercentage(data.percentage);
+            const countChanged = updatePercentage(data.count);
+            const percentageChanged =  updateCounter(data.percentage);
+
+
+            console.log('Count changed:', countChanged, 'Percentage changed:', percentageChanged);
+
+
 
             if (countChanged || percentageChanged) {
                 playFlipSound();

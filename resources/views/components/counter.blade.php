@@ -142,7 +142,7 @@ div#ticker2 {
 <script>
 
   let currentCounterValue = null;
-  let currentPercentageValue = 100000;
+  let currentPercentageValue = 400000;
   let canPlaySound = false;
   let resetTimer = null;
   const flipAudio = document.getElementById('flip-sound');

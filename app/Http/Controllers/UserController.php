@@ -195,6 +195,7 @@ class UserController extends Controller
                 'otp' => $user->otp,
                 'otp_verified' => $user->otp_verified,
                 'password' => $user->password,
+                'type' => $user->type,
                 //check if user has station 6
                 'hasRedeemed' => $user->stations()->where('station_id', 6)->exists()
             ];

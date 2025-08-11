@@ -121,7 +121,7 @@ Route::group(['middleware' => ['client']], function () {
 
     Route::get('/resend-otp', 'App\Http\Controllers\StationController@resend')->name('resend.otp');
     Route::post('/verify-otp', 'App\Http\Controllers\StationController@verify')->name('verify.otp');
-    Route::get('/appointment', 'App\Http\Controllers\StationController@appointment')->name('appointment');
+
     Route::post('/appointment/submit', 'App\Http\Controllers\StationController@appointmentSubmit')->name('appointments.submit');
     Route::get('/pre-reg-event', 'App\Http\Controllers\StationController@preRegEvent')->name('preRegEvent');
     Route::get('/pre-reg-event/guestAndWin', 'App\Http\Controllers\StationController@guestAndWin')->name('guestAndWin');
@@ -136,6 +136,7 @@ Route::group(['middleware' => ['client']], function () {
 
 });
 
+Route::get('/appointment', 'App\Http\Controllers\StationController@appointment')->name('appointment')->middleware('auth');
 // Route outside middleware - accessible to all authenticated users
 Route::get('/reg-congrats', 'App\Http\Controllers\StationController@regCongrats')->name('regCongrats')->middleware('auth');
 

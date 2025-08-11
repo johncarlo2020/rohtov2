@@ -22,5 +22,6 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\SendVerifiedUsersToCprv::class,
         \App\Console\Commands\ImportUsersFromJson::class,
         \App\Console\Commands\UpdateUsersHasRedeemed::class,
+        \App\Console\Commands\UpdateUsersType::class,
     ];
 }

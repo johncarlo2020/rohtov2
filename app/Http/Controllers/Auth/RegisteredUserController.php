@@ -35,6 +35,7 @@ class RegisteredUserController extends Controller
         if ($request->has('utm_medium')) {
             session(['utm.medium' => $request->get('utm_medium')]);
         }
+
         return view('auth.register');
     }
 

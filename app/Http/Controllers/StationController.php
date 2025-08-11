@@ -258,11 +258,15 @@ class StationController extends Controller
             return $appointment;
         });
 
-        $is2000 = User::where('otp_verified', 1)
-        ->orderBy('email_verified_at', 'asc')
-        ->take(1300)
-        ->pluck('id')
-        ->contains(auth()->id());
+
+
+        // Check if all appointment slots have been occupied
+        $is2000 = Appointment::where('status', 1)
+            ->get()
+            ->every(function ($appointment) {
+                $occupiedSlots = $appointment->userAppointments()->count();
+                return $occupiedSlots < $appointment->total;
+            });
 
         // $claimed = StationUser::where('user_id', auth()->id())
         //     ->where('station_id', 7)
@@ -290,7 +294,10 @@ class StationController extends Controller
             ->whereHas('appointment', function ($q) {
                 $q->where('status', 1);
             })->with('appointment')->first() ?? '';
+
         $convertedDate = '';
+
+
         if ($selectedAppointment && isset($selectedAppointment->appointment->name)) {
             try {
                 $convertedDate = Carbon::createFromFormat('m-d-Y', $selectedAppointment->appointment->name)->format('l');
@@ -303,7 +310,14 @@ class StationController extends Controller
 
         //check if user is on first 2000 verified users
 
+
         return view('appointment', compact('appointments','user','is2000','userAppointment','selectedAppointment','convertedDate'));
+    }
+
+    public function regCongrats()
+    {
+        $user = Auth::user();
+        return view('tempCongrats', compact('user'));
     }
 
     public function appointmentSubmit(Request $request)

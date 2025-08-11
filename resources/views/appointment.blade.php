@@ -44,8 +44,8 @@
                 </div>
                 <div class="date-picker">
 
-                        <h2 class="heading-text text-center mb-2">Venue : <span> South Key Mall, JB - Centre Court on Ground Floor</span></h2>
-                        <h2 class="heading-text text-center mb-2">Date selected: <span id="selectedDateText">28-07-2025</span></h2>
+                        <h2 class="heading-text text-center mb-2">Venue : <span>Mid Valley Megamall, Kl - Centre Court on Ground floor</span></h2>
+                        <h2 class="heading-text text-center mb-2">Date selected: <span id="selectedDateText"></span></h2>
                         <h4 class="text-center mb-4 d-none">Available Slots: <span id="availableSlotsText">0</span></h4>
 
 

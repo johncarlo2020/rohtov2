@@ -29,7 +29,7 @@ class LoginController extends Controller
             // Check if user has completed stations (excluding station 7)
             $stationCount = $user->stationUser()->where('station_id', '!=', 7)->count();
 
-            if ($stationCount > 0) {
+            if ($stationCount > 0 || $user->hasRedeemed === true) {
                 return redirect()->route('regCongrats');
             } else {
                 return redirect()->intended('appointment');

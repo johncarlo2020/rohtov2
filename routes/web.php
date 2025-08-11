@@ -107,7 +107,6 @@ Route::group(['middleware' => ['client']], function () {
     Route::post('/saveStaff', 'App\Http\Controllers\StationController@saveStaff')->name('saveStaff');
     Route::post('/save-product', 'App\Http\Controllers\StationController@saveProduct')->name('saveProduct');
     Route::post('/submit-pledge', 'App\Http\Controllers\StationController@submitPledge')->name('pledge.submit');
-    Route::get('/reg-congrats', 'App\Http\Controllers\StationController@regCongrats')->name('regCongrats');
 
 
 
@@ -136,5 +135,8 @@ Route::group(['middleware' => ['client']], function () {
 
 
 });
+
+// Route outside middleware - accessible to all authenticated users
+Route::get('/reg-congrats', 'App\Http\Controllers\StationController@regCongrats')->name('regCongrats')->middleware('auth');
 
 require __DIR__ . '/auth.php';

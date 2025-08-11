@@ -20,5 +20,7 @@ class Kernel extends ConsoleKernel
      */
      protected $commands = [
         \App\Console\Commands\SendVerifiedUsersToCprv::class,
+        \App\Console\Commands\ImportUsersFromJson::class,
+        \App\Console\Commands\UpdateUsersHasRedeemed::class,
     ];
 }

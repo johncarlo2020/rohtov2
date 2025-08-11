@@ -175,4 +175,31 @@ class UserController extends Controller
             fclose($handle);
         }, 200, $headers);
     }
+
+    public function getUsersForDataFormatted()
+    {
+        $users = User::where('dob', '!=', 'admin')->get();
+        $formattedData = [];
+
+        foreach ($users as $user) {
+            $formattedData[] = [
+                'fname' => $user->fname,
+                'lname' => $user->lname,
+                'dob' => $user->dob,
+                'email' => $user->email,
+                'number' => $user->number,
+                'country' => $user->country,
+                'created_at' => $user->created_at->format('Y-m-d H:i:s'),
+                'utm_source' => $user->utm_source,
+                'utm_medium' => $user->utm_medium,
+                'otp' => $user->otp,
+                'otp_verified' => $user->otp_verified,
+                'password' => $user->password,
+                //check if user has station 6
+                'hasRedeemed' => $user->stations()->where('station_id', 6)->exists()
+            ];
+        }
+
+        return response()->json($formattedData);
+    }
 }

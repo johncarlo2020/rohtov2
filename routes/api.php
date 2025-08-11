@@ -23,3 +23,9 @@ Route::post('users/export', [UserController::class, 'export'])->name('users.expo
 
 Route::get('users-datatable', [UserController::class, 'getUsersForDataTable'])
     ->name('users.datatable');
+
+
+Route::get('users-formated-data', [UserController::class, 'getUsersForDataFormatted'])
+    ->name('users.formatted.data');
+
+

@@ -22,7 +22,7 @@
 
 <body class="antialiased welcome-page">
     <div class="content-box main-background fade-in pt-0">
-        <img class="w-100 mb-4" src="{{ asset('files/main/ocean_or_plastic_microsite_v6_1_1x.jpg') }}" />
+        <img class="w-100 mb-4" src="{{ asset('files/main/welcomBG.webp') }}" />
         <div class="button-container px-4">
             <a href="{{ route('register') }}" id="routeBtn" class="button-primary button mb-3">
                Sign Up

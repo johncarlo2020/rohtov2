@@ -20,19 +20,19 @@
 
         </div>
 
-        <div class="button-container px-3 mt-5 fade-in">
+          <div class="button-container px-3 mt-5 fade-in">
             <a id="homeButton" href="{{ route('embarckJourney') }}" class="button button-primary w-100 mb-3">
                 Be Part of the Change
             </a>
             {{-- <a id="homeButton" href="{{ route('guestAndWin') }}" class="button button-primary w-100 mb-3">
                Guess & Win
             </a> --}}
-            <!-- <a id="homeButton" href="{{ route('map') }}" class="button button-primary w-100 mb-3">
+            <a id="homeButton" href="{{ route('map') }}" class="button button-primary w-100 mb-3">
                 Ocean Or Plastic Roadshow
-            </a> -->
-                <button class="button button-primary w-100 mb-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            </a>
+                <!-- <button class="button button-primary w-100 mb-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 Ocean Or Plastic Roadshow
-            </button>
+            </button> -->
             <a id="reschedule" href="{{ route('appointment') }}" class="button button-secondary w-100 mb-3 {{ auth()->user()->type != 'pre-reg' ? 'd-none' : '' }}">
                 Reschedule
             </a>

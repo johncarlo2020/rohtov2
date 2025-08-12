@@ -23,5 +23,6 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\ImportUsersFromJson::class,
         \App\Console\Commands\UpdateUsersHasRedeemed::class,
         \App\Console\Commands\UpdateUsersType::class,
+        \App\Console\Commands\UpdateUsersCreatedDate::class,
     ];
 }

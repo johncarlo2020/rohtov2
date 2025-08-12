@@ -29,7 +29,7 @@ class UpdateUsersCreatedDate extends Command
     public function handle()
     {
         $filePath = $this->argument('file');
-        
+
         if (!file_exists($filePath)) {
             $this->error("File not found: {$filePath}");
             return 1;
@@ -50,7 +50,7 @@ class UpdateUsersCreatedDate extends Command
         $invalidDate = 0;
 
         DB::beginTransaction();
-        
+
         try {
             foreach ($data as $userData) {
                 if (!isset($userData['email'])) {
@@ -59,20 +59,24 @@ class UpdateUsersCreatedDate extends Command
 
                 // Find user by email and update created_at
                 $user = User::where('email', $userData['email'])->first();
-                
+
                 if ($user) {
                     if (isset($userData['created_at'])) {
                         try {
                             // Parse the date from JSON
                             $createdAt = Carbon::parse($userData['created_at']);
-                            
-                            $user->update([
-                                'created_at' => $createdAt,
-                                'updated_at' => $userData['updated_at'] ?? $createdAt
-                            ]);
-                            
+                            $updatedAt = isset($userData['updated_at']) ? Carbon::parse($userData['updated_at']) : $createdAt;
+
+                            // Use DB update to bypass fillable restrictions and timestamps
+                            DB::table('users')
+                                ->where('email', $userData['email'])
+                                ->update([
+                                    'created_at' => $createdAt,
+                                    'updated_at' => $updatedAt
+                                ]);
+
                             $updated++;
-                            
+
                             if ($updated % 100 == 0) {
                                 $this->info("Updated: {$updated} users...");
                             }
@@ -89,13 +93,13 @@ class UpdateUsersCreatedDate extends Command
             }
 
             DB::commit();
-            
+
             $this->info("Created date update completed successfully!");
             $this->info("Updated: {$updated} users");
             $this->info("Not found: {$notFound} users");
             $this->info("No created_at field: {$noCreatedAt} users");
             $this->info("Invalid date format: {$invalidDate} users");
-            
+
         } catch (\Exception $e) {
             DB::rollback();
             $this->error('Update failed: ' . $e->getMessage());

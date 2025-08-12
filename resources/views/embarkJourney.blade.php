@@ -15,7 +15,7 @@
                         <h2 class="heading-text mb-0">Be Part of The Change <br> & Get Rewarded</h2>
                         <p class="sub-heading-text mb-2">Complete at least 3 of our 5 eco-challenges and earn a RM20 cash voucher (min. spend RM150).
                         </p>
-                        <p class="sub-heading-text mb-0">Redeem exclusively at our Ocean or Plastic Roadshow, South Key Mall JB.
+                        <p class="sub-heading-text mb-0">Redeem exclusively at our Ocean or Plastic Roadshow, Mid Valley Megamall, Kl - Centre Court on Ground floor.
                         </p>
                     </div>
                 </div>

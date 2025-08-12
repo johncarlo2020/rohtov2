@@ -91,7 +91,7 @@
                     </div>
                         <div id="dateSelected">
                                 <p class="sub-heading-text text-center mb-0">Date selected: <span id="selected-date">{{
-                                        $selectedAppointment->appointment->name ?? '' }}</span>, {{ $convertedDate }} <br /> Venue: South Key Mall, JB - Centre Court on Ground Floor</p>
+                                        $selectedAppointment->appointment->name ?? '' }}</span>, {{ $convertedDate }} <br />Venue: Mid Valley Megamall, Kl - Centre Court on Ground floor</p>
                         </div>
 
                     <div class="p-3">

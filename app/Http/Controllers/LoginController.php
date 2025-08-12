@@ -26,8 +26,8 @@ class LoginController extends Controller
 
             $user = Auth::user();
 
-            // Check if user has completed stations (excluding station 7)
-            $stationCount = $user->stationUser()->where('station_id', '!=', 7)->count();
+            // Check if user has completed station 6
+            $stationCount = $user->stationUser()->where('station_id', 6)->count();
 
             if ($stationCount > 0 || $user->hasRedeemed === true) {
                 return redirect()->route('regCongrats');

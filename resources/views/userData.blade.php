@@ -49,8 +49,12 @@
                         <div class="card-body">
                             <div class="header d-flex justify-content-between align-items-center mb-3">
                                 <p class="text-sm text-uppercase">User Information</p>
-                                <button id="editBtn" class="btn btn-secondary btn-sm px-3"><i
-                                        class="fa-solid fa-pen-to-square"></i> Edit</button>
+                                @if ($isRedeemed)
+                                    <span class="badge bg-success">Redeemed</span>
+                                @else
+                                    <button id="editBtn" class="btn btn-secondary btn-sm px-3"><i
+                                    class="fa-solid fa-pen-to-square"></i> Edit</button>
+                                @endif
                             </div>
                             <form id="userForm">
                                 <div class="row">
@@ -160,7 +164,8 @@
                                         <div>
                                             <input type="checkbox" data-id="{{ $station['id'] }}"
                                                 id="station_checkbox_{{ $station['id'] }}" class="big-checkbox"
-                                                {{ $station['value'] ? 'checked' : '' }}>
+                                                {{ $station['value'] ? 'checked' : '' }}
+                                                disabled={{$isRedeemed}}>
                                         </div>
                                     </li>
                                 @endforeach

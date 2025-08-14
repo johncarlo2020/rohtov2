@@ -75,21 +75,32 @@ class UserController extends Controller
 
             $user_stations = [];
             foreach ($stations as $station) {
-                $user_station_value = $record->stations()->where('station_id', $station->id)->first();
+                $user_station_value = $record->stationUser()->where('station_id', $station->id)->first();
                 $display_value = 'No';
+
                 if ($user_station_value) {
-                    $date = \Carbon\Carbon::parse($user_station_value->pivot->created_at)->format('F j g:i A');
+                    $date = \Carbon\Carbon::parse($user_station_value->created_at)->format('F j g:i A');
                     $display_value = 'Yes (' . $date . ')';
+                } elseif ($station->id == 6 && $record->hasRedeemed == 1) {
+                    // If it's station 6 and user has hasRedeemed flag, show as redeemed
+                    $display_value = 'Yes (Redeemed)';
                 }
+
                 $user_stations[] = [
                     'name' => $station->name,
-                    'value' => $user_station_value ? $user_station_value->pivot->time_spent : null,
+                    'value' => $user_station_value ? $user_station_value->time_spent : null,
                     'display_value' => $display_value,
                 ];
             }
 
+            // Check if user was created after August 11, 2025
+            $cutoffDate = \Carbon\Carbon::create(2025, 8, 11, 23, 59, 59);
+            $isNew = $record->created_at->gt($cutoffDate);
+            $badge = $isNew ? '<span class="badge bg-primary badge-success ms-2">NEW</span>' : '<span class="badge bg-warning badge-secondary ms-2">OLD</span>';
+            $idWithBadge = $record->id . '&nbsp;&nbsp;' . $badge;
+
             $data_arr[] = array(
-                "id" => $record->id,
+                "id" => $idWithBadge,
                 "name" => $record->fname . ' ' . $record->lname,
                 "fname" => $record->fname,
                 "lname" => $record->lname,
@@ -144,8 +155,14 @@ class UserController extends Controller
                     $appointment_dates_string = 'n/a';
                 }
 
+                // Check if user was created after August 11, 2025
+                $cutoffDate = \Carbon\Carbon::create(2025, 8, 11, 23, 59, 59);
+                $isNew = $user->created_at->gt($cutoffDate);
+                $badge = $isNew ? ' (NEW)' : ' (OLD)';
+                $idWithBadge = $user->id . $badge;
+
                 $data = [
-                    $user->id,
+                    $idWithBadge,
                     $user->fname . ' ' . $user->lname,
                     $user->dob,
                     $user->email,

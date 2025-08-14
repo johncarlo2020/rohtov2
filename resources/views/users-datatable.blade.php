@@ -111,7 +111,13 @@
             serverSide: true,
             ajax: "{{ route('users.datatable') }}",
             columns: [
-                { data: 'id', name: 'id' },
+                {
+                    data: 'id',
+                    name: 'id',
+                    render: function(data, type, row) {
+                        return data; // Allow HTML rendering
+                    }
+                },
                 { data: 'name', name: 'name' },
                 { data: 'dob', name: 'dob' },
                 { data: 'email', name: 'email' },

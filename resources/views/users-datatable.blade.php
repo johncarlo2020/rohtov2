@@ -171,9 +171,12 @@
                 // Extract user ID from the clicked row's data
                 var userId = data.id;
 
+                // Extract just the numeric ID from the HTML (remove badges and HTML)
+                var numericId = userId.replace(/&nbsp;/g, ' ').replace(/<[^>]*>/g, '').trim().split(' ')[0];
+
                 // Redirect to the user data route with the user ID
-                if (userId) {
-                    window.location.href = "{{ route('userData', ['user' => ':userId']) }}".replace(':userId', userId);
+                if (numericId) {
+                    window.location.href = "{{ route('userData', ['user' => ':userId']) }}".replace(':userId', numericId);
                 }
             }
         });

@@ -27,7 +27,7 @@
                 alt="" />
         </div> --}}
         <div class="map mb-5">
-            <img class="map-img" src="{{ asset('files/main/locci map_np shadow.webp') }}" alt="" />
+            <img class="map-img" src="{{ asset('files/main/mapv2.webp') }}" alt="" />
             {{-- loop trough the $stations --}}
             {{-- <a class="map-pin start-pin"><span class="start-text">Start</span></a> --}}
             @foreach ($stations as $station)

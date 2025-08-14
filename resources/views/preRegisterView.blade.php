@@ -47,7 +47,7 @@
 
                         <p class="heading-text text-center mb-2">Ocean Or Plastic Roadshow</p>
                         <div class="map-img mb-3">
-                            <img src="{{ asset('files/main/locci map_np shadow.webp') }}" alt="" />
+                            <img src="{{ asset('files/main/modal-map.webp') }}" alt="" />
                         </div>
                         <p class="modal-main-text mb-4 px-2">This section will be available starting 18 August, see you
                             then!</p>

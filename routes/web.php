@@ -139,4 +139,5 @@ Route::get('/appointment', 'App\Http\Controllers\StationController@appointment')
 // Route outside middleware - accessible to all authenticated users
 Route::get('/reg-congrats', 'App\Http\Controllers\StationController@regCongrats')->name('regCongrats')->middleware('auth');
 
+
 require __DIR__ . '/auth.php';

@@ -7,6 +7,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Spatie\Permission\Models\Permission;
 
 class AdminCharmConfigSeeder extends Seeder
 {
@@ -33,6 +34,17 @@ class AdminCharmConfigSeeder extends Seeder
 
         // Assign admin role to the user
         $admin->assignRole('admin');
+
+        // Create permissions if they don't exist
+        if (!Permission::where('name', 'full')->exists()) {
+            Permission::create(['name' => 'full']);
+        }
+        if (!Permission::where('name', 'view')->exists()) {
+            Permission::create(['name' => 'view']);
+        }
+
+        // Give full permission to admin user
+        $admin->givePermissionTo('full');
 
         // Create charm config
         DB::table('charm_configs')->insert([

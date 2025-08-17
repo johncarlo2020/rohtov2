@@ -129,7 +129,7 @@
                 </li>
                 @endcan
 
-                @canany(['view', 'full'])
+                @if(auth()->user()->email === 'admin@loccitane.com')
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('charmConfig') ? 'active' : '' }}" href="{{ route('charmConfig') }}">
                         <div
@@ -139,7 +139,7 @@
                         <span class="nav-link-text ms-1">Charm Config</span>
                     </a>
                 </li>
-                @endcan
+                @endif
             </ul>
         </div>
     </aside>

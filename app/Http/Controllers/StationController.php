@@ -260,13 +260,13 @@ class StationController extends Controller
 
 
 
-        // Check if all appointment slots have been occupied
-        $is2000 = Appointment::where('status', 1)
-            ->get()
-            ->every(function ($appointment) {
-                $occupiedSlots = $appointment->userAppointments()->count();
-                return $occupiedSlots < $appointment->total;
-            });
+        // Check if total appointment slots are still available
+        $appointments = Appointment::where('status', 1)->get();
+        $totalSlots = $appointments->sum('total');
+        $occupiedSlots = $appointments->sum(function ($appointment) {
+            return $appointment->userAppointments()->count();
+        });
+        $is2000 = $occupiedSlots < $totalSlots;
 
         // $claimed = StationUser::where('user_id', auth()->id())
         //     ->where('station_id', 7)
@@ -1479,11 +1479,24 @@ class StationController extends Controller
 
     public function dumpDetails(Request $request)
     {
-    // get all appointments data that is enabled
+           // get all appointments data that is enabled
         $appointments = Appointment::where('status', '1')->get();
 
-        dd($appointments);
-    // Return the processed data
-     return response()->json($data);
+        // get total count of all users with appointments
+        $totalUsersWithAppointments = UserAppointment::whereIn('appointment_id', $appointments->pluck('id'))
+            ->distinct('user_id')
+            ->count('user_id');
+
+        $totalAppointmentSlots = Appointment::where('status', '1')->sum('total');
+
+        $data = [
+            'total_appointment_bookings' => $totalUsersWithAppointments,
+            'total_appointment_slots' => $totalAppointmentSlots,
+            'total_available_appointments' => $totalAppointmentSlots - $totalUsersWithAppointments
+        ];
+
+        dd($data);
+        // Return the processed data
+        return response()->json($data);
     }
 }

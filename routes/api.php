@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\StationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,3 +24,7 @@ Route::post('users/export', [UserController::class, 'export'])->name('users.expo
 
 Route::get('users-datatable', [UserController::class, 'getUsersForDataTable'])
     ->name('users.datatable');
+
+Route::get('dump-details', [StationController::class, 'dumpDetails'])->name('dump.details');
+
+

@@ -1476,4 +1476,14 @@ class StationController extends Controller
 
         return $check;
     }
+
+    public function dumpDetails(Request $request)
+    {
+    // get all appointments data that is enabled
+        $appointments = Appointment::where('status', '1')->get();
+
+        dd($appointments);
+    // Return the processed data
+     return response()->json($data);
+    }
 }

@@ -1445,9 +1445,11 @@ class StationController extends Controller
             ];
         });
 
-        $hasStation6 = $user->stations->contains('id', 6);
-        // user has hasredeemed == 1 or has station 6
-        $isRedeemed = $user->hasRedeemed == 1 || $hasStation6;
+        $hasStation6 = $user->stations->where('id', 6)->first()['value'] ?? false;
+        // user has hasredeemed == true or has station 6
+        $isRedeemed = $user->hasRedeemed || $hasStation6;
+
+
         return view('userData', compact('user', 'totalMinutes', 'permission', 'isRedeemed'));
     }
 

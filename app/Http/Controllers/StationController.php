@@ -88,12 +88,13 @@ class StationController extends Controller
         $claimed = StationUser::where('user_id', auth()->id())
             ->where('station_id', 7)
             ->exists();
+
+        $charmData = $this->isCharmCountFull();
+
         if ($claimed) {
-            $is2000 = false; // User has already claimed the station, so they are not in the first 2000
-        }else{
-            $is2000 = StationUser::where('station_id', 7)
-            ->whereBetween('created_at', ['2025-06-24 00:00:00', '2025-06-30 23:59:59'])
-            ->count() != 500;
+            $is2000 = false;
+        } else {
+            $is2000 = !$charmData['is_full'];
         }
 
         $userAppointment = $user->userAppointments()->count();
@@ -270,7 +271,7 @@ class StationController extends Controller
 
         if ($claimed) {
             $is2000 = false;
-        }else{
+        } else {
             $is2000 = !$charmData['is_full'];
         }
 

@@ -165,7 +165,7 @@
                                             <input type="checkbox" data-id="{{ $station['id'] }}"
                                                 id="station_checkbox_{{ $station['id'] }}" class="big-checkbox"
                                                 {{ $station['value'] ? 'checked' : '' }}
-                                                disabled={{$isRedeemed}}>
+                                                {{ ($isRedeemed && $isOldUser) ? 'disabled' : '' }}>
                                         </div>
                                     </li>
                                 @endforeach

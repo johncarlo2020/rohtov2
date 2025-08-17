@@ -1438,10 +1438,12 @@ class StationController extends Controller
 
         $hasStation6 = $user->stations->where('id', 6)->first()['value'] ?? false;
         // user has hasredeemed == true or has station 6
-        $isRedeemed = $user->hasRedeemed || $hasStation6;
 
+        $isOldUser = $user->created_at < Carbon::create(2025, 8, 11);
 
-        return view('userData', compact('user', 'totalMinutes', 'permission', 'isRedeemed'));
+          $isRedeemed = $user->hasRedeemed || $hasStation6;
+
+        return view('userData', compact('user', 'totalMinutes', 'permission', 'isRedeemed', 'isOldUser'));
     }
 
     public function check(Request $request)

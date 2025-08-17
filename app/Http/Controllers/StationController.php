@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Http;
 use App\Providers\RouteServiceProvider;
-use App\Helpers\GlobalHelper;
+use App\Models\CharmConfig;
 
 class StationController extends Controller
 {
@@ -260,30 +260,20 @@ class StationController extends Controller
 
 
 
-        // Check if total appointment slots are still available
-        $appointments = Appointment::where('status', 1)->get();
-        $totalSlots = $appointments->sum('total');
-        $occupiedSlots = $appointments->sum(function ($appointment) {
-            return $appointment->userAppointments()->count();
-        });
-        $is2000 = $occupiedSlots < $totalSlots;
-
-        // $claimed = StationUser::where('user_id', auth()->id())
-        //     ->where('station_id', 7)
-        //     ->exists();
-        // if ($claimed) {
-        //     $is2000 = false; // User has already claimed the station, so they are not in the first 2000
-        // }else{
-        //     $is2000 = StationUser::where('station_id', 7)
-        //     ->whereBetween('created_at', ['2025-06-24 00:00:00', '2025-06-30 23:59:59'])
-        //     ->count() != 500;
-        // }
-
-        // dd($is2000);
 
 
+        $claimed = StationUser::where('user_id', auth()->id())
+            ->where('station_id', 7)
+            ->exists();
 
-        //  dd($is2000);
+        $charmData = $this->isCharmCountFull();
+
+        if ($claimed) {
+            $is2000 = false;
+        }else{
+            $is2000 = !$charmData['is_full'];
+        }
+
 
         $userAppointment = $user->userAppointments()
             ->whereHas('appointment', function ($q) {
@@ -1497,8 +1487,69 @@ class StationController extends Controller
             'total_available_appointments' => $totalAppointmentSlots - $totalUsersWithAppointments
         ];
 
-        dd($data);
         // Return the processed data
         return response()->json($data);
+    }
+
+    public function isCharmCountFull()
+    {
+       // count all user who claimed
+       $claimedCount = StationUser::where('station_id', 7)
+        ->whereDate('created_at', '>=', '2025-08-18')
+        ->count();
+
+        $charmConfig = CharmConfig::first();
+
+        $data = [
+            'claimed_count' => $claimedCount,
+            'is_full' => !($charmConfig->is_enabled ?? true) || $claimedCount >= ($charmConfig->charm_count ?? 0)
+        ];
+
+        return $data;
+    }
+
+    public function charmConfig()
+    {
+        $charmConfig = CharmConfig::first();
+        return view('admin.charmConfig', compact('charmConfig'));
+    }
+
+    public function charmConfigUpdate(Request $request)
+    {
+        try {
+            $request->validate([
+                'charm_count' => 'required|integer|min:0',
+                'is_enabled' => 'nullable'
+            ]);
+
+            $charmConfig = CharmConfig::first();
+
+            $data = [
+                'charm_count' => $request->charm_count,
+                'is_enabled' => $request->is_enabled == '1' ? true : false
+            ];
+
+            if ($charmConfig) {
+                $charmConfig->update($data);
+            } else {
+                CharmConfig::create($data);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Charm configuration updated successfully'
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

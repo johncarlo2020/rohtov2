@@ -41,8 +41,6 @@
 
     <!-- CSS Files -->
     <link id="pagestyle" href="{{ asset('assets/css/argon-dashboard.css?v=2.0.4') }}" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     @vite(['resources/sass/dashboard.scss'])
 </head>
@@ -130,6 +128,18 @@
                     </a>
                 </li>
                 @endcan
+
+                @canany(['view', 'full'])
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('charmConfig') ? 'active' : '' }}" href="{{ route('charmConfig') }}">
+                        <div
+                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fa-solid fa-gear text-warning text-sm opacity-10"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Charm Config</span>
+                    </a>
+                </li>
+                @endcan
             </ul>
         </div>
     </aside>
@@ -187,6 +197,8 @@
     <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
     <script src="{{ asset('assets/js/argon-dashboard.min.js?v=2.0.4') }}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
 </body>
 

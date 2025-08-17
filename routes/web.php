@@ -80,6 +80,8 @@ Route::group(['middleware' => ['admin']], function () {
     Route::get('/export-embark-all', [ExportController::class, 'exportEmbarkAll'])->name('export.embark.all');
     Route::post('/tasks/complete', 'App\Http\Controllers\StationController@tasksComplete')->name('tasks.complete');
     Route::get('/admin/scanner', 'App\Http\Controllers\StationController@scanner')->name('scanner');
+    Route::get('/admin/charmConfig', 'App\Http\Controllers\StationController@charmConfig')->name('charmConfig');
+    Route::post('/admin/charmConfig/update', 'App\Http\Controllers\StationController@charmConfigUpdate')->name('charmConfig.update');
 
     Route::get('/admin/{user}', 'App\Http\Controllers\StationController@userData')->name('userData');
     Route::post('/admin/check', 'App\Http\Controllers\StationController@check')->name('check');
@@ -87,9 +89,6 @@ Route::group(['middleware' => ['admin']], function () {
     Route::post('/tasks/redeem', 'App\Http\Controllers\StationController@redeem')->name('tasks.redeem');
     Route::post('/verify-otp-admin', 'App\Http\Controllers\StationController@verifyAdmin')->name('verifyAdmin');
     Route::get('/admin/users/{date}/{keyword?}', 'App\Http\Controllers\StationController@usersFilter')->name('userFilter');
-
-
-
     Route::get('/dumpUser', 'App\Http\Controllers\StationController@logUser')->name('logUser');
 });
 

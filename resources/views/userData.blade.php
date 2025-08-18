@@ -33,6 +33,10 @@
                                     <div class="h-100">
                                         <h5 class="mb-1">
                                             {{ $user->fname }} {{ $user->lname }}
+
+                                            @if ($isRedeemed && $isOldUser)
+                                                <span class="badge bg-success">Redeemed</span>
+                                            @endif
                                         </h5>
                                         <p class="mb-0 text-sm font-weight-bold">
                                             {{ $user->email }}
@@ -49,12 +53,8 @@
                         <div class="card-body">
                             <div class="header d-flex justify-content-between align-items-center mb-3">
                                 <p class="text-sm text-uppercase">User Information</p>
-                                @if ($isRedeemed)
-                                    <span class="badge bg-success">Redeemed</span>
-                                @else
                                     <button id="editBtn" class="btn btn-secondary btn-sm px-3"><i
                                     class="fa-solid fa-pen-to-square"></i> Edit</button>
-                                @endif
                             </div>
                             <form id="userForm">
                                 <div class="row">
@@ -100,13 +100,13 @@
                                         <div>
                                             <div class="form-check form-check-inline">
                                                 <input id="allianceBankYes" name="allianceBank" class="form-check-input"
-                                                    type="radio" disabled value="1"
+                                                    type="radio" value="1"
                                                     {{ $user->alliance_bank ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="allianceBankYes">Yes</label>
                                             </div>
                                             <div class="form-check form-check-inline">
                                                 <input id="allianceBankNo" name="allianceBank" class="form-check-input"
-                                                    type="radio" disabled value="0"
+                                                    type="radio" value="0"
                                                     {{ !$user->alliance_bank ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="allianceBankNo">No</label>
                                             </div>
@@ -115,7 +115,7 @@
                                 </div>
                                 <div class="d-flex justify-content-end">
                                     <button type="button" id="submitBtn"
-                                        class="btn-success btn ml-auto d-none">Submit</button>
+                                        class="btn btn-success ml-auto d-none">Submit</button>
                                 </div>
                             </form>
                         </div>
@@ -215,11 +215,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <script>
         var permissionName = "{{ $permission }}";
+        console.log('Permission Name:', permissionName); // Debug log
+
         if (permissionName === 'full') {
             $('#editBtn').click(function() {
+                console.log('Edit button clicked'); // Debug log
                 $('#emailInput').prop('disabled', false);
                 $('#dob').prop('disabled', false); // Enable DOB input
                 $('#submitBtn').removeClass('d-none');
+                console.log('Submit button should now be visible'); // Debug log
                 $('input[name="allianceBank"]').prop('disabled', false); // Enable radio buttons
             });
 

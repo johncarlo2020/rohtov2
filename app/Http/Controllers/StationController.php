@@ -92,10 +92,13 @@ class StationController extends Controller
 
         $charmData = $this->isCharmCountFull();
 
+        $userCreatedDate = $user->created_at;
+
+
         if ($claimed) {
             $is2000 = false;
         } else {
-            $is2000 = !$charmData['is_full'];
+            $is2000 = $userCreatedDate < Carbon::create(2025, 8, 18, 17, 30, 0);
         }
 
         $userAppointment = $user->userAppointments()->count();
@@ -261,19 +264,18 @@ class StationController extends Controller
         });
 
 
-
-
-
         $claimed = StationUser::where('user_id', auth()->id())
             ->where('station_id', 7)
             ->exists();
 
         $charmData = $this->isCharmCountFull();
 
+        $userCreatedDate = $user->created_at;
+
         if ($claimed) {
             $is2000 = false;
         } else {
-            $is2000 = !$charmData['is_full'];
+            $is2000 = $userCreatedDate < Carbon::create(2025, 8, 18, 17, 30, 0);
         }
 
 
@@ -316,10 +318,12 @@ class StationController extends Controller
 
         $charmData = $this->isCharmCountFull();
 
+        $userCreatedDate = $user->created_at;
+
         if ($claimed || $user->hasRedeemed) {
             $is2000 = false;
         } else {
-            $is2000 = !$charmData['is_full'];
+            $is2000 = $userCreatedDate < Carbon::create(2025, 8, 18, 17, 30, 0);
         }
 
          $userAppointment = $user->userAppointments()->count();
@@ -1514,7 +1518,8 @@ class StationController extends Controller
         $data = [
             'total_appointment_bookings' => $totalUsersWithAppointments,
             'total_appointment_slots' => $totalAppointmentSlots,
-            'total_available_appointments' => $totalAppointmentSlots - $totalUsersWithAppointments
+            'total_available_appointments' => $totalAppointmentSlots - $totalUsersWithAppointments,
+            'total_station_7' => StationUser::where('station_id', 7)->count()
         ];
 
         // Return the processed data

@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Http;
 use App\Providers\RouteServiceProvider;
 use App\Models\CharmConfig;
+use App\Helpers\GlobalHelper;
 
 class StationController extends Controller
 {
@@ -308,7 +309,33 @@ class StationController extends Controller
     public function regCongrats()
     {
         $user = Auth::user();
-        return view('tempCongrats', compact('user'));
+
+          $claimed = StationUser::where('user_id', auth()->id())
+            ->where('station_id', 7)
+            ->exists();
+
+        $charmData = $this->isCharmCountFull();
+
+        if ($claimed || $user->hasRedeemed) {
+            $is2000 = false;
+        } else {
+            $is2000 = !$charmData['is_full'];
+        }
+
+         $userAppointment = $user->userAppointments()->count();
+        $selectedAppointment = $user->userAppointments()->with('appointment')->first() ?? '';
+        $convertedDate = '';
+        if ($selectedAppointment && isset($selectedAppointment->appointment->name)) {
+            try {
+                $convertedDate = Carbon::createFromFormat('m-d-Y', $selectedAppointment->appointment->name)->format('l');
+            } catch (\Exception $e) {
+                // Handle potential parsing errors, e.g., log or set a default
+                $convertedDate = 'Invalid Date';
+            }
+        }
+
+
+        return view('tempCongrats', compact('user', 'is2000', 'userAppointment', 'selectedAppointment', 'convertedDate'));
     }
 
     public function appointmentSubmit(Request $request)
@@ -464,7 +491,7 @@ class StationController extends Controller
             $user->email_verified_at = Carbon::now();
             $user->save();
 
-             $data = GlobalHelper::createSampleProfile();
+            //  $data = GlobalHelper::createSampleProfile();
             //  dd($data);
 
             return redirect(RouteServiceProvider::HOME);
@@ -492,7 +519,7 @@ class StationController extends Controller
             $user->email_verified_at = Carbon::now();
             $user->save();
 
-             $data = GlobalHelper::createSampleProfile();
+            //  $data = GlobalHelper::createSampleProfile();
               return back()->with('success', 'OTP verified successfully!');
         }
 

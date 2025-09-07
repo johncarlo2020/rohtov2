@@ -4,7 +4,7 @@ $white: #ffffff;
 $gray: #cacacc;
 $gray-light: #f5f5f5;
 $gray-dark: #61646B;
-$black: #000022;
+$black: #000000;
 $secondary: #ffff;
 $green: #40a355;
 
@@ -27,7 +27,7 @@ $letter-spacing: 0.06em;
 // buttons
 $button-height: 40px;
 $button-width: 200px;
-$button-radius: 40px;
+$button-radius: 3px;
 $button-padding: 10px 20px;
 $button-font-size: 14px;
 $button-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
@@ -35,6 +35,7 @@ $button-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 
 //images
 $main-background: url('../images/bg.webp');
+$main-background: #fcd2db;
 
 //content
 $content-padding: 40px 20px;

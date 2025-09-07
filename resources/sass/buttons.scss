@@ -54,11 +54,13 @@
     }
 }
 
+
+
 // Secondary (flat) button - for less prominent actions
 .custom-btn-secondary {
-    background-color: $secondary;
+    background-color: $black;
     border-color: $secondary;
-    color: $primary;
+    color: $white;
 
     &:hover {
         background-color: darken($secondary, 5%);

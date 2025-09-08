@@ -21,48 +21,40 @@ class StationSeeder extends Seeder
     public function run()
     {
         Station::create([
-            'name' => 'Let Your Skin Dream Too',
-            'description' => 'Snap, Share, Tag @kosemy <br> #Sekkisei #SavetheBlue #SustainableBeauty <br> #BlueBottlePower #BeautywithPurpose',
+            'name' => 'Iconic Beginnings',
+            'description' => 'Product Discovery',
         ]);
 
         Station::create([
-            'name' => 'UV Detector Room',
-            'description' => 'Apply & Test',
+            'name' => 'Follow your Instinct',
+            'description' => 'Makeup Stations',
         ]);
 
         Station::create([
-            'name' => 'Save the Blue Gallery',
-            'description' => 'Shine for Hidden Message',
+            'name' => 'Seeing Multiple',
+            'description' => 'Promotion Shoutout',
         ]);
 
         Station::create([
-            'name' => 'Save the Blue Pledge',
-            'description' => 'Sign & Pledge',
+            'name' => 'Shape your Way',
+            'description' => 'Get fee gelatos',
         ]);
 
         Station::create([
-            'name' => 'Holistic Clean Beauty',
-            'description' => 'Match & Correct Your Tone',
-        ]);
-
-        Station::create([
-            'name' => 'Redemption',
-            'description' => 'Redemption Sample',
+            'name' => 'Gift Redemption',
+            'description' => 'Get Free Gelatos',
         ]);
 
 
 
         $role = Role::create(['name' => 'client']);
-
         $role = Role::create(['name' => 'admin']);
-
         $user = User::create([
-            'fname' => 'admin',
-            'find' => 'facebook',
+            'fname' => 'super',
+            'lname' => 'admin',
             'number' => '0123456789',
             'dob' => '10/20/2001',
             'email' => 'admin@gmail.com',
-            'country' => 'Malaysia',
             'password' => Hash::make('WowsomeKose2025'),
         ]);
 

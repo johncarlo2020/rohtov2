@@ -40,6 +40,7 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'fname' => ['required', 'string', 'max:255'],
+            'lname' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
             'country' => [
                 'required',
@@ -70,14 +71,12 @@ class RegisteredUserController extends Controller
 
         $user = User::create([
             'fname' => $request->fname,
-            'race' => $request->race,
+            'lname' => $request->lname,
             'number' => $phoneNumber,
             'email' => $request->email,
             'otp' => $otp,
-            'find' => '',
-            'dob' => '',
-            'country'=> $country->name,
-            'marketing' => $marketing,
+            'dob' => $request->dob,
+            'contact_methods' => $request->contact_methods,
             'last_login_at' => Carbon::now(),
             'password' => Hash::make('password'),
         ]);

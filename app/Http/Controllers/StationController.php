@@ -308,13 +308,13 @@ class StationController extends Controller
         }
 
         // Determine if stations 1-4 are all completed
-        $canAccessStation6 = $stations->filter(fn($s) => $s->id <= 5)->every(fn($s) => $s->status == true);
+        $canAccessStation5 = $stations->filter(fn($s) => $s->id <= 4)->every(fn($s) => $s->status == true);
 
         $nextStation = $stations->firstWhere(function ($station) use ($user) {
             return !$user->stationUser()->where('station_id', $station->id)->exists();
         });
 
-        return view('dashboard', compact('stations', 'stationDone', 'canAccessStation6', 'completedStationIds', 'nextStation'));
+        return view('dashboard', compact('stations', 'stationDone', 'canAccessStation5', 'completedStationIds', 'nextStation'));
 
     }
 

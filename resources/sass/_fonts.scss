@@ -25,3 +25,20 @@
     font-weight: bold;
     font-style: italic;
 }
+
+@font-face {
+    font-family: 'HelveticaNeue';
+    src: url('../fonts/HelveticaNeueLight.otf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'HelveticaNeue';
+    src: url('../fonts/HelveticaNeueRoman.otf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+
+

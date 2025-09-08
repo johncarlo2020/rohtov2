@@ -7,11 +7,11 @@
         <div class="otp-form-container card bg-white px-3 py-4 rounded">
             <form method="POST" action="{{ route('verify.otp') }}">
                 @csrf
-                <div class="text-center mb-4 px-1">
-                    <h2 class="heading text-center mb-2">ENTER YOUR OTP</h2>
-                    <p class="text-center">An OTP (One Time Passcode) has been sent to the number
+                <div class="text-center mb-4 px-1 text-black">
+                    <h2 class="heading text-center  text-black mb-2">ENTER YOUR OTP</h2>
+                    <p class="text-center text-black">An OTP (One Time Passcode) has been sent to the number
                         registered.</p>
-                    <p class="text-center">Please enter the OTP below to verify your contact details.
+                    <p class="text-center text-black">Please enter the OTP below to verify your contact details.
                     </p>
                     @if($errors->has('otp'))
                     <div class="alert alert-danger text-center mb-3">
@@ -21,15 +21,15 @@
 
                 </div>
                 <div class="d-flex justify-content-center otp-inputs mb-4">
-                    @for($i = 0; $i < 6; $i++) <input type="text" name="otp[]" class="form-control otp-input mx-1 text-center"
+                    @for($i = 0; $i < 6; $i++) <input type="text" name="otp[]" class="form-control otp-input mx-1 text-center text-black"
                         maxlength="1" pattern="[0-9]" required>
                         @endfor
                 </div>
                 <div class="text-center mb-4">
-                    <a id="resendOtpLink" href="#" class="no-underline">Resend OTP</a>
-                    <p id="resendTimer" class="d-none">Resend OTP in <span id="timerValue">180</span>s</p>
+                    <a id="resendOtpLink" href="#" class="no-underline text-black">Resend OTP</a>
+                    <p id="resendTimer" class="d-none text-black">Resend OTP in <span id="timerValue">180</span>s</p>
                 </div>
-                <button type="submit" class="btn btn-primary w-100">Verify OTP</button>
+                <button type="submit" class="btn custom-btn-secondary w-100 rounded-1">Verify OTP</button>
             </form>
             <a class="text-center no-underline mt-3 fw-bold" href="{{ route('welcome') }}">Back</a>
         </div>

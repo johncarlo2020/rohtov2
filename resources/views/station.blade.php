@@ -1,21 +1,31 @@
+<style>
+    #start-scanner {
+        border-radius: 50%;
+        width: 50px !important;
+        height: 50px;
+        background-color: transparent;
+        color: black;
+        border-color: black;
+    }
+</style>
 <x-app-layout>
     <div id="stationPage" class="station-page main-content main-background with-scroll">
         <div class="modal fade custom-modal" id="scanCompleteModal" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered w-75 m-auto">
-                <div class="modal-content card">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content card rounded-1">
                     <div class="modal-body">
                         <div class="text-center">
-                            <!-- <img class="check mx-auto mb-4" id="badge" src=""> -->
+                            <img class="check mx-auto mb-4" id="badge" src="">
                             <div class="text-content mt-0">
-                                <p class="sub-heading fw-bold mb-2 station-text">Station #<span class="station_id"></span></p>
-                                <p class="mb-4 message">
+                                <p class="mb-2 text-uppercase text-black"><span class="station_name text-black"></span></p>
+                                <p class="my-4 message text-black">
                                     Check-in Successful
                                 </p>
                             </div>
                             <div class="text-content mt-3">
                                 <a href="{{ route('dashboard') }}" id="routeBtn"
-                                    class="custom-btn w-auto px-5 fw-regular custom-btn-primary text-white">
-                                    Close
+                                    class="custom-btn px-5 fw-regular custom-btn-secondary w-100 text-white">
+                                    BACK
                                 </a>
                             </div>
                         </div>
@@ -28,50 +38,57 @@
                 <i class="fas fa-chevron-left"></i>
             </a>
         </div>
-        <div class="d-flex justify-content-center animate-entry">
-            @include('components.branding')
-        </div>
+        
+            <div class="d-flex justify-content-center animate-entry" @if($station->id == 5) style="margin-top:10vh;" @endif>
+                @if($station->id != 5)
+                    @include('components.branding')
+                @endif
+            </div>
+        
         <div id="mainContent"
             class="mt-1 mb-2 d-flex flex-column align-items-center justify-content-center animate-entry delay-3">
-            <h1 class="heading mb-3 mt-3">STATION {{ $station->id }}</h1>
-                <p class="sub-heading mb-1 fw-thin">
+            @if($station->id != 5)
+                <p class="text-black mb-3"><span class="text-black">MONOCHROME</span>.<span class="text-black">MINIMALIST</span>.<span class="text-black">THE MULTIPLE</span></p>
+            @endif
+                <p class="heading mb-3 fw-thin text-uppercase text-black">
                     {{ isset($station->name) ? $station->name : '' }}
                 </p>
-                <span class="mb-4 fw-thin text-center">
+                <span class="mb-4 fw-thin text-center text-uppercase text-black">
                     {!! $station->description !!}
                 </span>
             <div id="{{ $user ? '' : 'forceQr' }}" class="icon-container">
             </div>
-            <img class="mt-2 station-image w-75" src="{{ asset('images/station/station_' . $station->id . '.webp') }}"
+            <img class="station-image w-100" src="{{ asset('images/station/nars_station_' . $station->id . '.webp') }}"
                 alt="Station Image">
-            @if ($user != true && $station->id != 4)
-                <button id="start-scanner" class="mx-auto mt-5 w-auto px-4 mb-3 custom-btn custom-btn-secondary"
+            @if ($user != true && $station->id != 6)
+                <button id="start-scanner" class="mx-auto my-3 w-auto px-4 custom-btn custom-btn-secondary"
                     style="font-size:20px;">
                     <i class="fa-solid fa-camera"></i>
                 </button>
-                <p class="px-4 mt-3 bottom-text scanner-text text-center">Scan the QR code to check in</p>
-            @elseif ($station->id == 4 && $user != true)
-                <a href="{{ route('pledgeDj') }}" class="custom-btn custom-btn-secondary mt-5">
-                    Start
-                </a>
-            @else
-                <div class="scanner-button">
-                    <p class="my-0 mt-5 text-center mb-3">Checked-in Successful</p>
-                    <a href="{{ route('dashboard') }}" class="custom-btn custom-btn-secondary">
+                <p class="px-4 bottom-text scanner-text text-center text-black">Scan the QR Code at the station to proceed</p>
+                <a href="{{ route('dashboard') }}" class="custom-btn custom-btn-secondary mt-3">
                         Back
                     </a>
-                </div>
+            @endif
+            @if($user)
+            <p class="px-4 bottom-text scanner-text text-center text-black">Checked In</p>
+                <a href="{{ route('dashboard') }}" class="custom-btn custom-btn-secondary mt-3">
+                    Back
+                </a>
             @endif
         </div>
         <div id="scannerContainer" class="scanner-container d-none mt-4">
-            <!-- <button id="close" class="mx-auto mt-4 camera-btn">x</button> -->
+            <!-- <button id="close" class="mx-auto mt-4 camera-btn">x</button>  -->
+            <div class="text-center mb-5">
+                <p class="text-black"><span class="text-black">MONOCHROME</span> . <span class="text-black">MINIMALIST</span> . <span class="text-black">THE MULTIPLE</span></p>
+            </div>
             <div id="reader"></div>
-            <p class="mt-4 scanner-text text-center">Find the QR code & Scan to check in</p>
-            {{-- <div>
-                <a href="{{ route('dashboard') }}" class="button">
+            <p class="mt-4 scanner-text text-center text-black">Find the QR code & Scan to check into the station</p>
+            <div class="text-center">
+                <a href="{{ route('dashboard') }}" class="button custom-btn custom-btn-secondary mt-3">
                     BACK
                 </a>
-            </div> --}}
+            </div> 
         </div>
     </div>
 
@@ -86,10 +103,28 @@
                 },
                 assets: {
                     check_image: '{{ asset('images/check.png') }}',
-                    error_image: '{{ asset('images/error.webp') }}'
+                    error_image: '{{ asset('images/error.png') }}'
                 },
-                station_id: {{ $station->id }}
+                station_id: {{ $station->id }},
+                station_name: '{{ $station->name }}'
             };
+
+            window.gotoStation = function(id,) {
+                    var url = "{{ route('station', ['station' => ':id']) }}".replace(
+                        ":id",
+                        id
+                    );
+
+                    // if (id === 5 && !canAccessStation5) {
+                    //     // Show the not allowed modal if trying to access station 6 without permission
+                    //     var notAllowedModal = new bootstrap.Modal(document.getElementById('notAllowedModal'));
+                    //     notAllowedModal.show();
+                    //     return;
+                    // }
+
+                    // Redirect to the generated URL
+                    window.location.href = url;
+                }
         </script>
         @vite(['resources/js/station.js'])
     @endpush

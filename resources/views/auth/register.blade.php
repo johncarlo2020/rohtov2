@@ -5,20 +5,20 @@
     }
     </style>
     <div class="register-main main-content with-scroll">
-        <div class="justify-content-center w-100">
+        <div class="justify-content-center w-100 px-3">
             <div class="col-12 d-flex justify-content-center animate-entry">
                 @include('components.branding')
             </div>
-            <div class="mt-4 w-100  animate-entry delay-3">
-                <h4 class="mb-4 text-center">SIGN UP</h4>
+            <div class="card mt-4 w-100  animate-entry delay-3 py-5 px-3">
+                <h4 class="mb-4 text-center text-black fw-bold">SIGN UP</h4>
                 <div class="pt-2 pb-4 register-form-parent">
                     <form id="form" method="POST" action="{{ route('register') }}">
                         @csrf
                         <div class="mb-3 row">
                             <div class="col-12">
-                                <label for="">Full Name</label>
-                                <input id="fname" placeholder="Enter your full name" type="text"
-                                    class="input-text form-control @error('fname') is-invalid @enderror" name="fname"
+                                <label for="" class="text-black">Firstname <span class="text-danger">*</span></label>
+                                <input id="fname" placeholder="Enter your firstname" type="text"
+                                    class="input-text form-control form-control-lg rounded-1 @error('fname') is-invalid @enderror" name="fname"
                                     value="{{ old('fname') }}" required autocomplete="fname" autofocus />
                                 @error('fname')
                                 <span class="invalid-feedback" role="alert">
@@ -29,11 +29,55 @@
                         </div>
 
                         <div class="mb-3 row">
+                            <div class="col-12">
+                                <label for="" class="text-black">Lastname <span class="text-danger">*</span></label>
+                                <input id="lname" placeholder="Enter your lastname" type="text"
+                                    class="input-text form-control form-control-lg rounded-1 @error('lname') is-invalid @enderror" name="lname"
+                                    value="{{ old('lname') }}" required autocomplete="lname" autofocus />
+                                @error('lname')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <div class="col-12">
+                                <label for="" class="text-black">Date of Birth</label>
+                                <input id="dob" placeholder="Enter your full name" type="date"
+                                    class="input-text form-control form-control-lg rounded-1 @error('dob') is-invalid @enderror" name="dob"
+                                    value="{{ old('dob') }}" required autocomplete="dob" autofocus />
+                                @error('dob')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <div class="col-12">
+                                <label for="" class="text-black">Email Address <span class="text-danger">*</span></label>
+
+                                <input id="email" placeholder="example@email.com" type="email"
+                                    class="input-text form-control form-control-lg rounded-1 @error('email') is-invalid @enderror" name="email"
+                                    value="{{ old('email') }}" required autocomplete="email" />
+
+                                @error('email')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
                             <div class="col-12 input-group w-100">
-                                <label for="">Phone Number</label>
+                                <label for="" class="text-black">Phone Number <span class="text-danger">*</span></label>
 
                                 <input id="number" type="number"
-                                    class="input-text form-control w-100 @error('number') is-invalid @enderror"
+                                    class="input-text form-control w-100 form-control-lg rounded-1 @error('number') is-invalid @enderror"
                                     name="number" value="{{ old('number') }}" required autocomplete="number"
                                     autofocus />
                                 @error('number')
@@ -48,64 +92,42 @@
                             </div>
                         </div>
 
-                        <div class="mb-3 row">
-                            <div class="col-12">
-                                <label for="race">Race</label>
-                                <select id="race" class="form-select input-text @error('race') is-invalid @enderror" name="race" aria-label="Race select"
-                                    required>
-                                    <option value="" selected disabled>What's your race? </option>
-                                    <option value="Malay">Malay</option>
-                                    <option value="Indian">Indian</option>
-                                    <option value="Chinese">Chinese</option>
-                                    <option value="Others">
-                                        Others
-                                    </option>
-                                </select>
-                                @error('race')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="mb-3 row">
-                            <div class="col-12">
-                                <label for="">Email Address</label>
-
-                                <input id="email" placeholder="example@email.com" type="email"
-                                    class="input-text form-control @error('email') is-invalid @enderror" name="email"
-                                    value="{{ old('email') }}" required autocomplete="email" />
-
-                                @error('email')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <hr style="border-top: 2px dotted; opacity: 0.25;">
+                        <!-- <hr style="border-top: 2px dotted; opacity: 0.25;"> -->
                         <div class="mt-4 mb-2 row">
                             <div class="col-12">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="privacy_policy" value="1"
                                         id="privacyPolicy" required />
-                                    <label class="form-check-label text-white small-text" for="privacyPolicy">
-                                        I have read and agree to the Terms and Conditions and <a href="{{ asset('pdfs/privacy-policy.pdf') }}" target="_blank" class="text-white">Privacy Policy</a> .
+                                    <label class="form-check-label text-black small-text" for="privacyPolicy">
+                                       I agree that the collection and processing of my personal data will be in compliance with the Shiseido <a href="{{ asset('pdfs/privacy-policy.pdf') }}" target="_blank" class="text-primary">Privacy Policy</a> .
                                     </label>
                                 </div>
                             </div>
                         </div>
-                        <div class="mb-4 row">
-                            <div class="col-12">
+                        <div class="col-12">
+                            <p class="text-black small-text mb-3 ">
+                                I would like to receive information on Shiseido and Shiseido Group products and campaigns from Shiseido, 
+                                Shiseido Group and Shiseido's third party business partners via the following channels:
+                            </p>
+                            <div class="mb-3">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="marketing" value="1"
-                                        id="marketing" />
-                                    <label class="form-check-label text-white small-text" for="marketing">
-                                        I agree to receive marketing and promotional
-                                        communications from Sekkisei via e-mail and
-                                        text messages (including SMS/WhatsApp).
+                                    <input class="form-check-input" type="checkbox" name="contact_methods[]" value="email" id="email">
+                                    <label class="form-check-label text-black" for="email" >
+                                    Email
+                                    </label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="contact_methods[]" value="text" id="text">
+                                    <label class="form-check-label text-black" for="text">
+                                    Text Message (including SMS/Whatsapp)
+                                    </label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="contact_methods[]" value="call" id="call">
+                                    <label class="form-check-label text-black" for="call">
+                                    Call
                                     </label>
                                 </div>
                             </div>
@@ -114,22 +136,28 @@
                             <div class="col-12 text-center">
                                 <button id="submitButton" type="submit"
                                     class="w-100 custom-btn custom-btn-secondary animate-entry delay-3">
-                                    {{ __('SUBMIT') }}
+                                    {{ __('REGISTER') }}
                                 </button>
+                            </div>
+                            <div class="col-12 text-center">
+                                <a href="{{ route('welcome') }}" 
+                                class="w-100 custom-btn custom-btn-transparent animate-entry delay-3 text-center d-block">
+                                    {{ __('BACK') }}
+                                </a>
                             </div>
                         </div>
                     </form>
                 </div>
-                <div class="bottom-text text-center">
-                    <p class="already-register">
-                        Already Registered
+            </div>
+                <div class="bottom-text text-center pt-4">
+                    <p class="already-register text-black fw-bold">
+                        Already Registered!
                     </p>
-                    <p class="already-register">
+                    <p class="already-register text-black">
                         Please Login
                         <a href="{{ route('login') }}" class="">here</a>
                     </p>
                 </div>
-            </div>
         </div>
     </div>
 </x-guest-layout>

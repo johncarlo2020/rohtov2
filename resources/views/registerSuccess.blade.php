@@ -1,20 +1,26 @@
 <x-guest-layout>
        <div class="otp-success">
-        <div class="justify-content-center w-100 px-3 main-content with-scroll">
-            <div class="my-5 col-12 d-flex justify-content-center animate-entry ">
+        <div class="justify-content-center w-100 main-content with-scroll">
+            <div class="col-12 d-flex justify-content-center animate-entry ">
                 @include('components.branding')
             </div>
-            <div class="card px-4 py-4 rounded animate-entry delay-3">
-                <div class="text-center mb-4 px-1">
-                    <h2 class="heading text-center mb-2">Hi,
-                      <span class="fw-bold">{{ auth()->check() && isset(auth()->user()->fname) ? auth()->user()->fname : 'Guest' }}!</span></h2>
-                    <p class="text-center">Thank you for your time. Your <br> Registration is
-                        now complete.</p>
+             <div class="col-12 px-0 text-center py-4">
+                <p class="text-black"><span class="text-black">MONOCHROME</span> . <span class="text-black">MINIMALIST</span> . <span class="text-black">THE MULTIPLE</span></p>
+            </div>
+            <div class="col-12 d-flex justify-content-center align-items-center p-0">
+                <img class="welcome_img_store w-100" src="{{ asset('images/brand/nars_landing_page.webp') }}"
+                    alt="" />
+            </div>
+             <div class="col-12 px-0 text-center py-4">
+                <p class="text-black">François Nars iconic multi purpose stick-now
+reimagined in a new, next level formula.</p>
+            </div>
+            <div class="text-center pt-4 col-12 ">
+                <div class="d-block">
+                    <div class="col text-center animate-entry delay-3">
+                        <a href="{{ route('dashboard') }}" class="custom-btn custom-btn-secondary">DISCOVER NOW</a>
+                    </div>
                 </div>
-                <button type="button" class="w-100 custom-btn custom-btn-primary text-transform-normal fw-normal"
-                    onclick="window.location='{{ route('dashboard') }}'">
-                    Start Your Journey Now
-                </button>
             </div>
         </div>
        </div>

@@ -7,12 +7,13 @@ $gray-dark: #61646B;
 $black: #000000;
 $secondary: #ffff;
 $green: #40a355;
+$transparent:transparent;
 
 $card-text: #61646B;
 $text: $white;
 
 // main font
-$font-family: 'Palatino';
+$font-family: 'HelveticaNeue';
 
 //Text size
 
@@ -38,7 +39,7 @@ $main-background: url('../images/bg.webp');
 $main-background: #fcd2db;
 
 //content
-$content-padding: 40px 20px;
+$content-padding: 40px 0px;
 
 
 //modal

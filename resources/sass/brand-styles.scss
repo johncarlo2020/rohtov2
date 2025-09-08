@@ -6,7 +6,7 @@
     img {
         //set the width and height of the logo
         height: auto;
-        min-width: 208px;
+        min-width: 140px;
         max-width: 63vw;
         object-fit: contain;
     }
@@ -30,7 +30,7 @@
 
         .map-pin {
             display: block;
-            width: 13vw;
+            width: 25vw;
             height: 13vw;
             font-weight: 700;
             font-size: 14px;
@@ -39,32 +39,32 @@
             position: absolute;
 
             &.station-1 {
-                bottom: 16vw;
+                bottom: 88vw;
                 left: 4vw;
                 z-index: 999;
             }
 
             &.station-2 {
-                    bottom: 49vw;
-                    left: 56vw;
+                    bottom: 69vw;
+                    left: 4vw;
                 z-index: 999;
             }
 
             &.station-3 {
-                bottom: 48vw;
-                left: 44vw;
+                bottom: 45vw;
+                left: 4vw;
                 z-index: 999;
             }
 
             &.station-4 {
-                bottom: 29vw;
-                left: 68vw;
+                bottom: 23vw;
+                left: 4vw;
                 z-index: 999;
             }
 
             &.station-5 {
-                bottom: 56vw;
-                left: 76vw;
+                bottom: 1vw;
+                left: 4vw;
                 z-index: 999;
             }
 

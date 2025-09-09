@@ -71,7 +71,7 @@
                     </a>
             @endif
             @if($user)
-            <p class="px-4 bottom-text scanner-text text-center text-black">Checked In</p>
+            <p class="mt-4 px-4 bottom-text scanner-text text-center text-black">Checked In</p>
                 <a href="{{ route('dashboard') }}" class="custom-btn custom-btn-secondary mt-3">
                     Back
                 </a>

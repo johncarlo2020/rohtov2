@@ -12,16 +12,16 @@
 </head>
 
 <body class="antialiased main-background welcome-page">
-    <div class="py-3 container-fluid main-content with-scroll">
+    <div class="py-3 container-fluid main-content with-scroll" style="padding-left:13px;padding-right:13px;">
         <div class="row">
             <div class="col-12 d-flex justify-content-center align-items-center animate-entry">
                 @include('components.branding')
             </div>
             <div class="col-12 px-0 text-center py-4">
-                <p><span class="text-black">MONOCHROME</span>.<span class="text-black">MINIMALIST</span>.<span class="text-black">THE MULTIPLE</span></p>
+                <p class="text-black"><span class="text-black">MONOCHROME</span> . <span class="text-black">MINIMALIST</span> . <span class="text-black">THE MULTIPLE</span></p>
             </div>
             <div class="col-12 d-flex justify-content-center align-items-center p-0">
-                <img class="welcome_img_store w-100" src="{{ asset('images/brand/Hero.png') }}"
+                <img class="welcome_img_store w-100" src="{{ asset('images/brand/nars_front_v2.webp') }}"
                     alt="" />
             </div>
             <div class="text-center pt-4 col-12 ">

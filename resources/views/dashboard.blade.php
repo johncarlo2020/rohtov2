@@ -50,7 +50,8 @@
         </div>
         <div class="map mb-5 animate-entry delay-2 mx-10 w-100">
             <div class="my-5">
-                 <p class="text-center text-black"><span class="text-black ">MONOCHROME</span> . <span class="text-black">MINIMALIST</span> . <span class="text-black">THE MULTIPLE</span></p>
+                <p class="text-center text-black"><span class="text-black ">MONOCHROME</span> . <span class="text-black">MINIMALIST</span> . <span class="text-black">THE MULTIPLE</span></p>
+                <p class="text-center text-black mt-5">Kindly complete all stations<br> to proceed to Gift Redemptions.</p>
             </div>
             <img class="map-img" src="{{ asset('images/brand/nars_map.webp') }}" alt="" />
             {{-- loop trough the $stations --}}
@@ -62,7 +63,7 @@
                         data-bs-toggle="modal" data-bs-target="#redemption">
                           @if ($station->status != true && $canAccessStation5 == true)
                              <!-- <img class="map-img" src="{{ asset('images/brand/pin' . $station->id . '.webp') }}" alt="" /> -->
-                              <div class="d-flex align-items-start">
+                               <div class="d-flex align-items-start">
                                     <span class="pe-2">{{ $station->id }}</span>
                                     <span class="text-start text-uppercase">{{ $station->name }}</span>
                                </div>

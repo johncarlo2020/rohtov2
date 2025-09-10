@@ -12,8 +12,9 @@
                     alt="" />
             </div>
              <div class="col-12 px-0 text-center py-4">
-                <p class="text-black">François Nars iconic multi purpose stick-now
-reimagined in a new, next level formula.</p>
+                <p class="text-black">NARS iconic Multiple is reimagined in a new, next-level formula. 
+Discover 12 vibrant, versatile shades designed to be used across cheeks, lips and eyes.
+</p>
             </div>
             <div class="text-center pt-4 col-12 ">
                 <div class="d-block">

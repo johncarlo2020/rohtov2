@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 $('.station_name').html(stationName);
                 $('#routeBtn').text('Next');
 
-                if (lastCharacter == 5) {
+                if (lastCharacter == 4) {
                     document.getElementById('routeBtn').setAttribute('href', congratsUrl);
                 }
                 else 

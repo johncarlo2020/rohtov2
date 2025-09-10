@@ -14,7 +14,7 @@
                         <div class="col-12 text-start">
                             <label class="text-black mb-2" for="">Email Address <span class="text-danger">*</span></label>
                             <input id="email" placeholder="example@email.com" type="email"
-                                class="input-text form-control form-control-lg rounded-1 @error('email') is-invalid @enderror" name="email"
+                                class="input-text form-control rounded-1 @error('email') is-invalid @enderror" name="email"
                                 value="{{ old('email') }}" required autocomplete="email" />
 
                             @error('email')

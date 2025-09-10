@@ -115,13 +115,6 @@
                         id
                     );
 
-                    // if (id === 5 && !canAccessStation5) {
-                    //     // Show the not allowed modal if trying to access station 6 without permission
-                    //     var notAllowedModal = new bootstrap.Modal(document.getElementById('notAllowedModal'));
-                    //     notAllowedModal.show();
-                    //     return;
-                    // }
-
                     // Redirect to the generated URL
                     window.location.href = url;
                 }

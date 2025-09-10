@@ -18,7 +18,7 @@
                             <div class="col-12">
                                 <label for="" class="text-black">Firstname <span class="text-danger">*</span></label>
                                 <input id="fname" placeholder="Enter your firstname" type="text"
-                                    class="input-text form-control form-control-lg rounded-1 @error('fname') is-invalid @enderror" name="fname"
+                                    class="input-text form-control  rounded-1 @error('fname') is-invalid @enderror" name="fname"
                                     value="{{ old('fname') }}" required autocomplete="fname" autofocus />
                                 @error('fname')
                                 <span class="invalid-feedback" role="alert">
@@ -32,7 +32,7 @@
                             <div class="col-12">
                                 <label for="" class="text-black">Lastname <span class="text-danger">*</span></label>
                                 <input id="lname" placeholder="Enter your lastname" type="text"
-                                    class="input-text form-control form-control-lg rounded-1 @error('lname') is-invalid @enderror" name="lname"
+                                    class="input-text form-control  rounded-1 @error('lname') is-invalid @enderror" name="lname"
                                     value="{{ old('lname') }}" required autocomplete="lname" autofocus />
                                 @error('lname')
                                 <span class="invalid-feedback" role="alert">
@@ -46,7 +46,7 @@
                             <div class="col-12">
                                 <label for="" class="text-black">Date of Birth</label>
                                 <input id="dob" placeholder="Enter your full name" type="date"
-                                    class="input-text form-control form-control-lg rounded-1 @error('dob') is-invalid @enderror" name="dob"
+                                    class="input-text form-control  rounded-1 @error('dob') is-invalid @enderror" name="dob"
                                     value="{{ old('dob') }}" required autocomplete="dob" autofocus />
                                 @error('dob')
                                 <span class="invalid-feedback" role="alert">
@@ -61,7 +61,7 @@
                                 <label for="" class="text-black">Email Address <span class="text-danger">*</span></label>
 
                                 <input id="email" placeholder="example@email.com" type="email"
-                                    class="input-text form-control form-control-lg rounded-1 @error('email') is-invalid @enderror" name="email"
+                                    class="input-text form-control  rounded-1 @error('email') is-invalid @enderror" name="email"
                                     value="{{ old('email') }}" required autocomplete="email" />
 
                                 @error('email')
@@ -77,7 +77,7 @@
                                 <label for="" class="text-black">Phone Number <span class="text-danger">*</span></label>
 
                                 <input id="number" type="number"
-                                    class="input-text form-control w-100 form-control-lg rounded-1 @error('number') is-invalid @enderror"
+                                    class="input-text form-control w-100  rounded-1 @error('number') is-invalid @enderror"
                                     name="number" value="{{ old('number') }}" required autocomplete="number"
                                     autofocus />
                                 @error('number')

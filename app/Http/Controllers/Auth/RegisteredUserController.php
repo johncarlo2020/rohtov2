@@ -41,6 +41,7 @@ class RegisteredUserController extends Controller
         $request->validate([
             'fname' => ['required', 'string', 'max:255'],
             'lname' => ['required', 'string', 'max:255'],
+            'number' => ['required'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
             'country' => [
                 'required',
@@ -90,6 +91,7 @@ class RegisteredUserController extends Controller
         Auth::login($user);
 
         // return redirect(RouteServiceProvider::HOME);
-        return redirect()->route('otp')->with('message', 'OTP has been sent to your phone.');
+        return redirect()->route('register.welcome');
+        // return redirect()->route('otp')->with('message', 'OTP has been sent to your phone.');
     }
 }

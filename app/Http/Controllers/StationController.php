@@ -294,9 +294,10 @@ class StationController extends Controller
         $userId = Auth::id();
 
         $user = User::with('stationUser')->where('id', $userId)->first();
-        if($user->otp_verified != 1){
-            return redirect()->route('otp');
-        }
+        // if($user->otp_verified != 1){
+        //     return redirect()->route('otp');
+        // }
+
         $stationDone = $user->stationUser->count();
         $stations = Station::get();
 

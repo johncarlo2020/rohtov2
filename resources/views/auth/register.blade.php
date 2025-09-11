@@ -16,8 +16,8 @@
                         @csrf
                         <div class="mb-3 row">
                             <div class="col-12">
-                                <label for="" class="text-black">Firstname <span class="text-danger">*</span></label>
-                                <input id="fname" placeholder="Enter your firstname" type="text"
+                                <label for="" class="text-black">First Name <span class="text-danger">*</span></label>
+                                <input id="fname" placeholder="Enter your First Name" type="text"
                                     class="input-text form-control  rounded-1 @error('fname') is-invalid @enderror" name="fname"
                                     value="{{ old('fname') }}" required autocomplete="fname" autofocus />
                                 @error('fname')
@@ -30,8 +30,8 @@
 
                         <div class="mb-3 row">
                             <div class="col-12">
-                                <label for="" class="text-black">Lastname <span class="text-danger">*</span></label>
-                                <input id="lname" placeholder="Enter your lastname" type="text"
+                                <label for="" class="text-black">Last Name <span class="text-danger">*</span></label>
+                                <input id="lname" placeholder="Enter your Last Name" type="text"
                                     class="input-text form-control  rounded-1 @error('lname') is-invalid @enderror" name="lname"
                                     value="{{ old('lname') }}" required autocomplete="lname" autofocus />
                                 @error('lname')
@@ -47,7 +47,7 @@
                                 <label for="" class="text-black">Date of Birth</label>
                                 <input id="dob" placeholder="Enter your full name" type="date"
                                     class="input-text form-control  rounded-1 @error('dob') is-invalid @enderror" name="dob"
-                                    value="{{ old('dob') }}" required autocomplete="dob" autofocus />
+                                    value="{{ old('dob') }}" autocomplete="dob" autofocus />
                                 @error('dob')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -79,6 +79,7 @@
                                 <input id="number" type="number"
                                     class="input-text form-control w-100  rounded-1 @error('number') is-invalid @enderror"
                                     name="number" value="{{ old('number') }}" required autocomplete="number"
+                                    min="9"
                                     autofocus />
                                 @error('number')
                                 <span class="invalid-feedback" role="alert">
@@ -177,9 +178,22 @@
         ];
         const submitButton = document.querySelector("#submitButton");
         const iti = window.intlTelInput(input, {
-             initialCountry: "my",
+            initialCountry: "my",
+            onlyCountries: ["my"],
             hiddenInput: "country",
            utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/utils.js"
+        });
+
+        input.addEventListener("blur", function() {
+            const localNumber = iti.getNumber(intlTelInputUtils.numberFormat.NATIONAL);
+            const digits = number.replace(/\D/g, ""); // keep only digits
+
+            if (digits.length < 9 || digits.length > 10) {
+                alert("Phone number must be between 9 and 10 digits.");
+                input.classList.add("is-invalid"); // Bootstrap style (optional)
+            } else {
+                input.classList.remove("is-invalid");
+            }
         });
 
         const reset = () => {

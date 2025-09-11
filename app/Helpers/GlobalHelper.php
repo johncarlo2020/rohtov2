@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class GlobalHelper
 {
@@ -11,7 +12,7 @@ class GlobalHelper
     {
 
         // Compose message
-        $content = "Save the blue: OTP code: $otp. NEVER share this code with others.";
+        $content = "Nars The Multiple: OTP code: $otp. NEVER share this code with others.";
 
         // Build query parameters
         $query = [
@@ -27,6 +28,10 @@ class GlobalHelper
 
         // Send GET request using Laravel HTTP Client
         $response = Http::acceptJson()->get('https://www.etracker.cc/bulksms/mesapi.aspx', $query);
+
+        Log::info('API Response Body:', [
+            'body' => $response->body()
+        ]);
 
         return $response->body(); // Or ->json() if needed
     }

@@ -6,7 +6,7 @@
             </div> -->
                 <div class="product-image mb-3 px-5 text-center ">
                     <span class="text-black">Visit</span>
-                    <a href="/">
+                    <a href="https://www.narscosmetics.com.my/">
 
                         <img class="logo w-50 m-auto py-3"
                             src="{{ asset('images/brand/NARS_logo.webp') }}" alt="nars Logo" />

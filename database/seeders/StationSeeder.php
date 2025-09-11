@@ -37,13 +37,13 @@ class StationSeeder extends Seeder
 
         Station::create([
             'name' => 'Shape your Way',
-            'description' => 'Get fee gelatos',
+            'description' => 'Get Free gelatos',
         ]);
 
-        Station::create([
-            'name' => 'Gift Redemption',
-            'description' => 'Get Free Gelatos',
-        ]);
+        // Station::create([
+        //     'name' => 'Gift Redemption',
+        //     'description' => 'Get Free Gelatos',
+        // ]);
 
 
 

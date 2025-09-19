@@ -535,26 +535,26 @@
 
         (function() {
             // Pie chart for raceChart only
-            var races = @json($data['race']);
-            var raceData = races.map(function(item) {
-                return {
-                    name: item.race || item.name || item.label || '',
-                    y: item.count || 0
-                };
-            });
-            Highcharts.chart(getPieChartConfig({
-                renderTo: 'raceChart',
-                title: 'Race Distribution',
-                data: raceData
-            }));
+        
+            // var raceData = races.map(function(item) {
+            //     return {
+            //         name: item.race || item.name || item.label || '',
+            //         y: item.count || 0
+            //     };
+            // });
+            // Highcharts.chart(getPieChartConfig({
+            //     renderTo: 'raceChart',
+            //     title: 'Race Distribution',
+            //     data: raceData
+            // }));
 
-            var findData = @json($data['where']);
-            var findEventData = findData.map(function(item) {
-                return {
-                    name: item.find || item.name || item.label || '',
-                    y: item.count || 0
-                };
-            });
+            
+            // var findEventData = findData.map(function(item) {
+            //     return {
+            //         name: item.find || item.name || item.label || '',
+            //         y: item.count || 0
+            //     };
+            // });
             // Highcharts.chart(getPieChartConfig({
             //     renderTo: 'findEventChart',
             //     title: 'How did you find this event?',

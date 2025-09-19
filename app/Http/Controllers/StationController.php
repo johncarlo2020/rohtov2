@@ -433,12 +433,12 @@ class StationController extends Controller
             ->count();
         $data['userToday'] = User::whereDate('created_at', $today)->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
             ->count();
-        $data['country'] = User::selectRaw('country , COUNT(*) as count')->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
-            ->groupBy('country')->where('country' ,'!=','admin')->get();
+        // $data['country'] = User::selectRaw('country , COUNT(*) as count')->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
+        //     ->groupBy('country')->where('country' ,'!=','admin')->get();
 
 
-        $data['where'] = User::selectRaw('find , COUNT(*) as count')->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
-            ->groupBy('find')->where('find' ,'!=','admin')->get();
+        // $data['where'] = User::selectRaw('find , COUNT(*) as count')->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
+        //     ->groupBy('find')->where('find' ,'!=','admin')->get();
         //  dd($data['where']);
         $data['age'] = User::selectRaw('dob , COUNT(*) as count')->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
             ->groupBy('dob')->where('dob', '!=', 'admin')->get();

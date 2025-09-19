@@ -177,7 +177,7 @@
                                         <div class="station-icon-wrapper">
                                             @foreach ($user['stations'] as $station)
                                                 <div class="text-center">
-                                                    <img src="{{ asset('images/station/station_blue_' . $station['id'] . '.webp') }}"
+                                                    <img src="{{ asset('images/station/nars_station_' . $station['id'] . '.webp') }}"
                                                         alt="{{ $station['name'] }}"
                                                         title="{{ $station['name'] }}"
                                                         class="station-image table-station-image {{ $station['value'] ? 'border-success' : 'border-secondary' }}"

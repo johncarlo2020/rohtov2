@@ -102,7 +102,7 @@
                     <div class="card-body d-flex justify-content-between rounded  p-3">
                         <div class="d-flex align-items-center w-100">
                             <div class="icon-stations">
-                                <img class="" src="{{ asset("images/station/station_blue_{$station['id']}.webp") }}" alt="Station Image">
+                                <img class="" src="{{ asset("images/station/nars_station_{$station['id']}.webp") }}" alt="Station Image">
                             </div>
                             <div class="d-flex flex-column">
                                 <h6 class="mb-1 text-sm">{{ $station['name'] }}</h6>

@@ -58,15 +58,15 @@
     @push('scripts')
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                let canAccessStation6 = @json($canAccessStation6);
+                let canAccessStation3 = @json($canAccessStation3);
                 window.gotoStation = function(id, ) {
                     var url = "{{ route('station', ['station' => ':id']) }}".replace(
                         ":id",
                         id
                     );
 
-                    if (id === 3) {
-                        // Show the not allowed modal if trying to access station 6 without permission
+                    if (id === 3 && !canAccessStation3) {
+                        // Show the not allowed modal if trying to access station 3 without permission
                         var notAllowedModal = new bootstrap.Modal(document.getElementById('notAllowedModal'));
                         notAllowedModal.show();
                         return;

@@ -22,7 +22,7 @@ class LoginController extends Controller
             $request->session()->regenerate();
             $request->session()->flash('showWelcomeModal', true);
 
-            return redirect()->intended('dashboard');
+            return redirect()->intended('/discover');
         }
 
         return back()->withErrors([

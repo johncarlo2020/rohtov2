@@ -4,35 +4,30 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        <title>Dutch Lady</title>
+        <title>Rytbank</title>
 
         @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
     </head>
 
-    <body class="antialiased home">
-        <div class="container-fluid py-5">
+    <body>
+        <div class="py-5 px-0 map-page main-content main-background">
             <div class="content-wrapper">
-                <div class="branding-container">
+                <div class="d-flex justify-content-center animate-entry mb-4">
                     @include('components.branding')
                 </div>
-                <div class="text-content text-center px-3">
-                    <h1 class="heading">Welcome!</h1>
-                    <p class="mb-5">
-                        Join us today for an adventure packed with exciting and
-                        fun activities at every station. Don’t miss out on the
-                        fun!
-                    </p>
+                <div class="col-12 d-flex justify-content-center align-items-center p-0 animate-entry">
+                    <img class="welcome_img_store w-100" src="{{ asset('images/brand/discover.webp') }}"
+                        alt="" />
+                </div>
+                <div class="text-content text-center px-3 mt-5">
                     <a
-                        href="{{ route('welcome') }}"
-                        class="btn discover-btn rounded-pill"
+                        href="{{ route('dashboard') }}"
+                        class="custom-btn custom-btn-primary animate-entry delay-3"
                         >DISCOVER NOW</a
                     >
                 </div>
             </div>
         </div>
-        <footer>
-            <a href="https://wowsome.com.my/">Powered by WOWSOME®2024</a>
-        </footer>
     </body>
 </html>

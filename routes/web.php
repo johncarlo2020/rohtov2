@@ -111,7 +111,9 @@ Route::group(['middleware' => ['client']], function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/station/{station}', 'App\Http\Controllers\StationController@index')->name('station');
     Route::get('/dashboard', 'App\Http\Controllers\StationController@welcome')->name('dashboard');
+    Route::get('/discover', 'App\Http\Controllers\StationController@discover')->name('discover');
     Route::post('/process_qr_code', 'App\Http\Controllers\StationController@scan')->name('process_qr_code');
+    Route::get('/station/{station}/gift-selection', 'App\Http\Controllers\StationController@giftSelection')->name('station.gift.selection');
 
     Route::get('/station/{station}/extension', 'App\Http\Controllers\StationController@extension')->name('station.extension');
     Route::get('/station/{station}/brand', 'App\Http\Controllers\StationController@brand')->name('station.brand');

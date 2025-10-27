@@ -306,13 +306,13 @@ class StationController extends Controller
         }
 
         // Determine if stations 1-4 are all completed
-        $canAccessStation6 = $stations->filter(fn($s) => $s->id <= 5)->every(fn($s) => $s->status == true);
+        $canAccessStation3 = $stations->filter(fn($s) => $s->id <= 2)->every(fn($s) => $s->status == true);
 
         $nextStation = $stations->firstWhere(function ($station) use ($user) {
             return !$user->stationUser()->where('station_id', $station->id)->exists();
         });
 
-        return view('dashboard', compact('stations', 'stationDone', 'canAccessStation6', 'completedStationIds', 'nextStation'));
+        return view('dashboard', compact('stations', 'stationDone', 'canAccessStation3', 'completedStationIds', 'nextStation'));
 
     }
 
@@ -729,6 +729,16 @@ class StationController extends Controller
         }
 
         return back()->withErrors(['otp' => 'Invalid OTP']);
+    }
+
+    public function giftSelection(Request $request)
+    {
+        return view('giftSelection');
+    }
+
+    public function discover()
+    {
+        return view('discover');
     }
 
 }

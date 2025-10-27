@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const processQrCodeUrl = stationConfig.urls.process_qr_code;
     const congratsUrl = stationConfig.urls.congrats;
     const stationId = stationConfig.station_id;
+    const stationName = stationConfig.station_name;
     const checkImageUrl = stationConfig.assets.check_image;
     const errorImageUrl = stationConfig.assets.error_image;
 
@@ -65,16 +66,25 @@ document.addEventListener('DOMContentLoaded', function () {
                 const lastCharacter = trimmedMessage.charAt(trimmedMessage.length - 1);
 
                 $('.station_id').html(lastCharacter);
+                $('.station_name').html(stationName);
+                $('#routeBtn').text('Next');
 
-                if (lastCharacter == 6) {
+                if (lastCharacter == 3) {
                     document.getElementById('routeBtn').setAttribute('href', congratsUrl);
                 }
+                else 
+                {
+                    const stationParsed = parseInt(lastCharacter);
+                    const nextStation = stationParsed + 1;
+                $('#routeBtn')
+                .removeAttr('href') // remove href if it exists
+                .attr('onclick', `gotoStation(${nextStation})`);}
             },
             error: function (xhr, status, error) {
                 console.error('Error sending QR Code message:', error);
                 $('.modal-icon').addClass('d-none');
-                $('.station-text').html('Failed');
-                $('.message').html('Invalid QR code. Please try again.');
+                // $('.station-text').html('Failed');
+                $('.message').html('INVALID QR CODE');
                 $('.check').attr('src', errorImageUrl);
                 $('#scanCompleteModal').modal('show');
             }

@@ -1,4 +1,47 @@
 <x-app-layout>
+    <style>
+
+    .gift-card {
+      background-color: #a5e5e7;
+      border-radius: 20px;
+      border: none;
+      padding: 10px 60px;
+      cursor: pointer;
+      transition: transform 0.2s, background-color 0.2s;
+    }
+
+    .gift-card:hover {
+      transform: scale(1.05);
+      background-color: #92dadc;
+    }
+
+    .gift-card img {
+      width: 100px;
+      height: 100px;
+      object-fit:contain;
+    }
+
+    .btn-proceed {
+      background-color: #a89efc;
+      color: white;
+      font-weight: 600;
+      border-radius: 30px;
+      padding: 10px;
+      width: 100%;
+      border: none;
+      transition: background-color 0.3s;
+    }
+
+    .btn-proceed:hover {
+      background-color: #0000e6;
+    }
+
+    .gift-card.active {
+      outline: 2px solid #0000e6;
+      background-color: #90d8da;
+    }
+  </style>
+
     <div id="stationPage" class="station-page main-content main-background with-scroll">
         <div class="modal fade custom-modal" id="scanCompleteModal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered w-75 m-auto">
@@ -33,43 +76,35 @@
         </div>
         <div id="mainContent"
             class="mt-1 mb-2 d-flex flex-column align-items-center justify-content-center animate-entry delay-3">
-            <h1 class="heading mb-3 mt-3 text-dark">Station {{ $station->id }}</h1>
+            <h1 class="heading mb-3 mt-3 text-dark">Select your gift </h1>
                 <p class="sub-heading mb-1 fw-thin text-dark">
-                    {{ isset($station->name) ? $station->name : '' }}
-                </p>
-            <div id="{{ $user ? '' : 'forceQr' }}" class="icon-container">
-            </div>
-            <img class="mt-5 station-image w-75" src="{{ asset('images/station/ST' . $station->id . '.webp') }}"
-                alt="Station Image">
-            @if ($station->id != 3)
+                    
+                </p>@php
+      $gifts = [
+          ['id' => 1, 'image' => 'images/brand/gift_1.webp'],
+          ['id' => 2, 'image' => 'images/brand/gift_2.webp'],
+          ['id' => 3, 'image' => 'images/brand/gift_3.webp'],
+      ];
+  @endphp
+
+  <div class="d-flex flex-column gap-4 mb-5">
+      @foreach ($gifts as $gift)
+          <div class="card gift-card mx-auto" data-id="{{ $gift['id'] }}">
+              <div class="card-body d-flex justify-content-center align-items-center">
+                  <img src="{{ asset($gift['image']) }}" class="img-fluid gifts" alt="Gift {{ $gift['id'] }}">
+              </div>
+          </div>
+      @endforeach
+  </div>
                 <button id="start-scanner" 
-                    class="camera-btn mx-auto mt-5 mb-3"
-                    title="Start Scanner">
-                    <i class="fa-solid fa-camera"></i>
+                    class="custom-btn custom-btn-primary mx-auto"
+                    title="Start Scanner"
+                    disabled>
+                    PROCEED
                 </button>
-                <p class="px-4 mt-3 bottom-text scanner-text text-center text-dark">Scan the QR code to check in</p>
-                <div class="text-center my-3">
-                    <a href="{{ route('dashboard') }}" class="custom-btn custom-btn-primary">
-                        BACK
-                    </a>
-                </div>
-            @elseif ($station->id == 3)
-                <a href="{{ route('station.gift.selection', ['station' => $station->id]) }}" class="custom-btn custom-btn-primary mt-5">
-                    REDEEM NOW
-                </a>
-                <div class="text-center my-3">
-                    <a href="{{ route('dashboard') }}" class="custom-btn custom-btn-secondary">
-                        BACK
-                    </a>
-                </div>
-            @else
-                <div class="scanner-button">
-                    <p class="my-0 mt-5 text-center mb-3 text-dark">Checked In</p>
-                    <a href="{{ route('dashboard') }}" class="custom-btn custom-btn-primary">
-                        Back
-                    </a>
-                </div>
-            @endif
+
+            <div id="" class="icon-container">
+            </div>
         </div>
         <div id="scannerContainer" class="scanner-container d-none mt-4">
             <!-- <button id="close" class="mx-auto mt-4 camera-btn">x</button> -->
@@ -86,6 +121,20 @@
     @push('scripts')
         <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
         <script>
+            const cards = document.querySelectorAll('.gift-card');
+            const proceedBtn = document.getElementById('start-scanner');
+            let selectedGiftId = null;
+
+            cards.forEach(card => {
+                card.addEventListener('click', () => {
+                cards.forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+                selectedGiftId = card.dataset.id;
+                proceedBtn.disabled = false;
+                });
+            });
+        </script>
+        <script>
             // Pass data from Blade to JavaScript
             window.stationConfig = {
                 urls: {
@@ -96,20 +145,7 @@
                     check_image: '{{ asset('images/check.png') }}',
                     error_image: '{{ asset('images/error.png') }}'
                 },
-                station_id: {{ $station->id }},
-                station_name: '{{ $station->name }}'
             };
-
-            window.gotoStation = function(id,) {
-                    var url = "{{ route('station', ['station' => ':id']) }}".replace(
-                        ":id",
-                        id
-                    );
-
-                    // Redirect to the generated URL
-                    window.location.href = url;
-                }
-
         </script>
         @vite(['resources/js/station.js'])
     @endpush

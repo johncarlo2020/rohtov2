@@ -34,48 +34,32 @@
                                     Please Complete all <br> the station
                                 </p>
                             </div>
-                            <button type="button" class="w-50 custom-btn custom-btn-primary"
-                                data-bs-dismiss="modal" aria-label="Close">Close</button>
+                            <button type="button" class="w-50 custom-btn custom-btn-primary" data-bs-dismiss="modal"
+                                aria-label="Close">Close</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="map mb-5 animate-entry delay-2">
-            <img class="map-img" src="{{ asset('images/brand/KOSE STB Map.webp') }}" alt="" />
-            {{-- loop trough the $stations --}}
-            {{-- <a class="map-pin start-pin"><span class="start-text">Start</span></a> --}}
+        <div class="station-selection-container mb-5 animate-entry delay-2">
             @foreach ($stations as $station)
-                @if ($station->id == 3)
-                    <a href="javascript:void(0);" onclick="gotoStation({{ $station->id }})"
-                        class="map-pin station-{{ $station->id }} @if ($station->status == true) completed @endif @if ($nextStation && $station->id === $nextStation->id) breathing @endif"
-                        data-bs-toggle="modal" data-bs-target="#redemption">
-                          @if ($station->status != true && $canAccessStation6 == true)
-                             <img class="map-img" src="{{ asset('images/brand/pin' . $station->id . '.webp') }}" alt="" />
-                        @elseif ($canAccessStation6 != true && $station->status != true)
-                            <img class="map-img" src="{{ asset('images/brand/locked pin.webp') }}" alt="" />
-                        @else
-                            <img class="map-img" src="{{ asset('images/brand/checkpin.webp') }}" alt="" />
-                        @endif
-                    </a>
-                @else
-                    <a href="javascript:void(0);" onclick="gotoStation({{ $station->id }})"
-                        class="map-pin station-{{ $station->id }} @if ($station->status == true) completed @endif @if ($nextStation && $station->id === $nextStation->id) breathing @endif">
-                        @if ($station->status != true)
-                             <img class="map-img" src="{{ asset('images/brand/pin' . $station->id . '.webp') }}" alt="" />
-                        @else
-                            <img class="map-img" src="{{ asset('images/brand/checkpin.webp') }}" alt="" />
-                        @endif
-                    </a>
-                @endif
+                <button class="btn btn-transparent station-custom-btn" type="button"
+                    onclick="gotoStation({{ $station->id }})">
+                    <img class="station-icon" src="{{ asset('images/station/S' . $station->id . '.webp') }}" alt="">
+                    <div class="station-details station-{{ $station->id}}">
+                        <h3 class="station-number">Station {{ $station->id }}</h3>
+                        <h5 class="station-name">{{ $station->name }}</h5>
+                    </div>
+                </button>
             @endforeach
+
         </div>
     </div>
     @push('scripts')
         <script>
-            document.addEventListener('DOMContentLoaded', function () {
+            document.addEventListener('DOMContentLoaded', function() {
                 let canAccessStation6 = @json($canAccessStation6);
-                window.gotoStation = function(id,) {
+                window.gotoStation = function(id, ) {
                     var url = "{{ route('station', ['station' => ':id']) }}".replace(
                         ":id",
                         id

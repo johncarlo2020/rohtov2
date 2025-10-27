@@ -76,7 +76,7 @@ class StationController extends Controller
 
             $user->save();
         // Fire the event
-        broadcast(new babyEvent($publicPath, $user->pledge_text,$request->pledge_type,$user->charname))->toOthers();
+        broadcast(new babyEvent($pueblicPath, $user->pledge_text,$request->pledge_type,$user->charname))->toOthers();
 
 
             DB::commit();

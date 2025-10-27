@@ -496,3 +496,59 @@
 }
 
 
+.station-selection-container {
+    .station-custom-btn {
+        color: #000;
+        width: 100%;
+        position: relative;
+        height: 25vh;
+        padding: 0;
+
+        .station-icon {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 1;
+        }
+
+        .station-details {
+            position: absolute;
+            z-index: 2;
+            top: 50%;
+            transform: translateY(-50%);
+
+            .station-name {
+                font-size: 14px;
+                margin: 0;
+                color: #727272;
+            }
+
+            .station-number {
+                font-size: 24px;
+                font-weight: bold;
+                margin: 0 0 5px 0;
+                color: #000;
+            }
+
+            &.station-1 {
+                right: 10%;
+                text-align: left;
+            }
+
+            &.station-2 {
+                left: 10%;
+                text-align: right;
+            }
+
+            &.station-3 {
+                right: 10%;
+                text-align: left;
+            }
+        }
+
+    }
+}
+

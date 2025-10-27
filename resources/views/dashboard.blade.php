@@ -46,7 +46,7 @@
             {{-- loop trough the $stations --}}
             {{-- <a class="map-pin start-pin"><span class="start-text">Start</span></a> --}}
             @foreach ($stations as $station)
-                @if ($station->id == 6)
+                @if ($station->id == 3)
                     <a href="javascript:void(0);" onclick="gotoStation({{ $station->id }})"
                         class="map-pin station-{{ $station->id }} @if ($station->status == true) completed @endif @if ($nextStation && $station->id === $nextStation->id) breathing @endif"
                         data-bs-toggle="modal" data-bs-target="#redemption">

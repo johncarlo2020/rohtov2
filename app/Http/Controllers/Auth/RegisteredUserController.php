@@ -87,6 +87,6 @@ class RegisteredUserController extends Controller
         Auth::login($user);
 
         // return redirect(RouteServiceProvider::HOME);
-        return redirect()->route('otp')->with('message', 'OTP has been sent to your phone.');
+        return redirect()->route('dashboard');
     }
 }

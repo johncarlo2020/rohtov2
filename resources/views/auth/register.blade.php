@@ -28,6 +28,24 @@
                             </div>
                         </div>
 
+
+                        <div class="mb-3 row">
+                            <div class="col-12">
+                                <label for="">Email Address</label>
+
+                                <input id="email" placeholder="example@email.com" type="email"
+                                    class="input-text form-control @error('email') is-invalid @enderror" name="email"
+                                    value="{{ old('email') }}" required autocomplete="email" />
+
+                                @error('email')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+
+
                         <div class="mb-3 row">
                             <div class="col-12 input-group w-100">
                                 <label for="">Phone Number</label>
@@ -47,56 +65,7 @@
                                 <span id="error-msg" class="d-none text-danger"></span>
                             </div>
                         </div>
-
-                        <div class="mb-3 row">
-                            <div class="col-12">
-                                <label for="race">Race</label>
-                                <select id="race" class="form-select input-text @error('race') is-invalid @enderror" name="race" aria-label="Race select"
-                                    required>
-                                    <option value="" selected disabled>What's your race? </option>
-                                    <option value="Malay">Malay</option>
-                                    <option value="Indian">Indian</option>
-                                    <option value="Chinese">Chinese</option>
-                                    <option value="Others">
-                                        Others
-                                    </option>
-                                </select>
-                                @error('race')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="mb-3 row">
-                            <div class="col-12">
-                                <label for="">Email Address</label>
-
-                                <input id="email" placeholder="example@email.com" type="email"
-                                    class="input-text form-control @error('email') is-invalid @enderror" name="email"
-                                    value="{{ old('email') }}" required autocomplete="email" />
-
-                                @error('email')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <hr style="border-top: 2px dotted; opacity: 0.25;">
-                        <div class="mt-4 mb-2 row">
-                            <div class="col-12">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="privacy_policy" value="1"
-                                        id="privacyPolicy" required />
-                                    <label class="form-check-label text-white small-text" for="privacyPolicy">
-                                        I have read and agree to the Terms and Conditions and <a href="{{ asset('pdfs/privacy-policy.pdf') }}" target="_blank" class="text-white">Privacy Policy</a> .
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
+                                          
                         <div class="mb-4 row">
                             <div class="col-12">
                                 <div class="form-check">
@@ -113,7 +82,7 @@
                         <div class="mb-0 row">
                             <div class="col-12 text-center">
                                 <button id="submitButton" type="submit"
-                                    class="w-100 custom-btn custom-btn-secondary animate-entry delay-3">
+                                    class="w-100 custom-btn custom-btn-primary animate-entry delay-3">
                                     {{ __('SUBMIT') }}
                                 </button>
                             </div>
@@ -150,7 +119,8 @@
         const submitButton = document.querySelector("#submitButton");
         const iti = window.intlTelInput(input, {
             hiddenInput: "country",
-           utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/utils.js"
+            onlyCountries: ["my"],
+            utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/utils.js"
         });
 
         const reset = () => {
@@ -184,9 +154,14 @@
 
         // Prevent form submission if not Malaysian number
         form.addEventListener("submit", function (e) {
-            if (!iti.isValidNumber()) {
-                showError("Please enter a valid phone number");
-                e.preventDefault();
+            const countryData = iti.getSelectedCountryData();
+            if (!iti.isValidNumber() || countryData.iso2 !== 'my') {
+                let msg = "Please enter a valid Malaysian phone number";
+                if (countryData.iso2 !== 'my') {
+                    msg = "Only Malaysian phone numbers are allowed.";
+                }
+                showError(msg);
+                 e.preventDefault();
                 submitButton.disabled = true;
             }
         });

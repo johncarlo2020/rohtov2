@@ -88,10 +88,8 @@
 
     @import "variables";
     .main-background {
-        background-image: $main-background;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: cover;
+       
+        background-color: #F6EFEC;
     }
 
     .scanner-container {

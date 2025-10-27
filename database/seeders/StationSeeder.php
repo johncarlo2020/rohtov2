@@ -21,35 +21,19 @@ class StationSeeder extends Seeder
     public function run()
     {
         Station::create([
-            'name' => 'Let Your Skin Dream Too',
+            'name' => 'Head it Ryt',
             'description' => 'Snap, Share, Tag @kosemy <br> #Sekkisei #SavetheBlue #SustainableBeauty <br> #BlueBottlePower #BeautywithPurpose',
         ]);
 
         Station::create([
-            'name' => 'UV Detector Room',
+            'name' => 'Discover and Activate',
             'description' => 'Apply & Test',
         ]);
 
         Station::create([
-            'name' => 'Save the Blue Gallery',
+            'name' => 'Collect your Gift',
             'description' => 'Shine for Hidden Message',
         ]);
-
-        Station::create([
-            'name' => 'Save the Blue Pledge',
-            'description' => 'Sign & Pledge',
-        ]);
-
-        Station::create([
-            'name' => 'Holistic Clean Beauty',
-            'description' => 'Match & Correct Your Tone',
-        ]);
-
-        Station::create([
-            'name' => 'Redemption',
-            'description' => 'Redemption Sample',
-        ]);
-
 
 
         $role = Role::create(['name' => 'client']);
@@ -57,10 +41,8 @@ class StationSeeder extends Seeder
         $role = Role::create(['name' => 'admin']);
 
         $user = User::create([
-            'fname' => 'admin',
-            'find' => 'facebook',
+            'name' => 'admin',
             'number' => '0123456789',
-            'dob' => '10/20/2001',
             'email' => 'admin@gmail.com',
             'country' => 'Malaysia',
             'password' => Hash::make('WowsomeKose2025'),

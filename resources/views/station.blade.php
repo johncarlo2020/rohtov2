@@ -5,9 +5,9 @@
                 <div class="modal-content card">
                     <div class="modal-body">
                         <div class="text-center">
-                            <!-- <img class="check mx-auto mb-4" id="badge" src=""> -->
+                            <img class="check mx-auto mb-4" id="badge" src="">
                             <div class="text-content mt-0">
-                                <p class="sub-heading fw-bold mb-2 station-text">Station #<span class="station_id"></span></p>
+                                <p class="sub-heading fw-bold mb-2 station-text"><span class="station_name"></span></p>
                                 <p class="mb-4 message">
                                     Check-in Successful
                                 </p>
@@ -91,7 +91,8 @@
                     check_image: '{{ asset('images/check.png') }}',
                     error_image: '{{ asset('images/error.webp') }}'
                 },
-                station_id: {{ $station->id }}
+                station_id: {{ $station->id }},
+                station_name: '{{ $station->name }}'
             };
         </script>
         @vite(['resources/js/station.js'])

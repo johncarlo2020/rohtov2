@@ -9,14 +9,14 @@
             <div class="col-12 d-flex justify-content-center animate-entry">
                 @include('components.branding')
             </div>
-            <div class="mt-4 w-100  animate-entry delay-3">
-                <h4 class="mb-4 text-center">SIGN UP</h4>
-                <div class="pt-2 pb-4 register-form-parent">
+            <div class=" mt-4 mb-5 w-100  animate-entry delay-3 bg-white p-3 ">
+                <h4 class="mx-4 text-center text-dark">SIGN UP</h4>
+                <div class="py-3 register-form-parent">
                     <form id="form" method="POST" action="{{ route('register') }}">
                         @csrf
                         <div class="mb-3 row">
                             <div class="col-12">
-                                <label for="">Full Name</label>
+                                <label for="name" class="text-dark">Name <span class="text-danger">*</span></label>
                                 <input id="fname" placeholder="Enter your full name" type="text"
                                     class="input-text form-control @error('fname') is-invalid @enderror" name="fname"
                                     value="{{ old('fname') }}" required autocomplete="fname" autofocus />
@@ -31,7 +31,7 @@
 
                         <div class="mb-3 row">
                             <div class="col-12">
-                                <label for="">Email Address</label>
+                                <label for="email" class="text-dark">Email Address <span class="text-danger">*</span></label>
 
                                 <input id="email" placeholder="example@email.com" type="email"
                                     class="input-text form-control @error('email') is-invalid @enderror" name="email"
@@ -48,7 +48,7 @@
 
                         <div class="mb-3 row">
                             <div class="col-12 input-group w-100">
-                                <label for="">Phone Number</label>
+                                <label for="phone" class="text-dark">Phone Number <span class="text-danger">*</span></label>
 
                                 <input id="number" type="number"
                                     class="input-text form-control w-100 @error('number') is-invalid @enderror"
@@ -70,35 +70,43 @@
                             <div class="col-12">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="marketing" value="1"
-                                        id="marketing" />
-                                    <label class="form-check-label text-white small-text" for="marketing">
-                                        I agree to receive marketing and promotional
-                                        communications from Sekkisei via e-mail and
-                                        text messages (including SMS/WhatsApp).
+                                        id="marketing" required/>
+                                    <label class="form-check-label text-dark small-text" for="marketing">
+                                        By submitting this form, you agree that Ryt Bank may contact you 
+                                        regarding our campaign, including any relevant offers and updates. 
+                                        Your personal data will be collected, 
+                                        handled and processed in accordance with Ryt Bank's Privacy Notice.
                                     </label>
                                 </div>
                             </div>
                         </div>
                         <div class="mb-0 row">
-                            <div class="col-12 text-center">
+                            <div class="col-12 text-center mb-3">
                                 <button id="submitButton" type="submit"
                                     class="w-100 custom-btn custom-btn-primary animate-entry delay-3">
-                                    {{ __('SUBMIT') }}
+                                    {{ __('REGISTER') }}
+                                </button>
+                            </div>
+                            <div class="col-12 text-center">
+                                <button id="submitButton" type="submit"
+                                    class="w-100 custom-btn custom-btn-secondary animate-entry delay-3" onclick="if(document.referrer){ history.back(); } else { window.location.href='{{ url('/') }}'; }">
+                                    {{ __('BACK') }}
                                 </button>
                             </div>
                         </div>
                     </form>
                 </div>
-                <div class="bottom-text text-center">
-                    <p class="already-register">
-                        Already Registered
+            </div>
+
+            <div class="bottom-text text-center">
+                    <p class="already-register text-dark">
+                        <strong>Already Registered</strong>
                     </p>
-                    <p class="already-register">
+                    <p class="already-register text-grey">
                         Please Login
-                        <a href="{{ route('login') }}" class="">here</a>
+                        <a href="{{ route('login') }}" class="text-grey"><strong>here</strong></a>
                     </p>
                 </div>
-            </div>
         </div>
     </div>
 </x-guest-layout>

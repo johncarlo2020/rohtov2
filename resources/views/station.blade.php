@@ -33,23 +33,26 @@
         </div>
         <div id="mainContent"
             class="mt-1 mb-2 d-flex flex-column align-items-center justify-content-center animate-entry delay-3">
-            <h1 class="heading mb-3 mt-3">STATION {{ $station->id }}</h1>
-                <p class="sub-heading mb-1 fw-thin">
+            <h1 class="heading mb-3 mt-3 text-dark">Station {{ $station->id }}</h1>
+                <p class="sub-heading mb-1 fw-thin text-dark">
                     {{ isset($station->name) ? $station->name : '' }}
                 </p>
-                <span class="mb-4 fw-thin text-center">
-                    {!! $station->description !!}
-                </span>
             <div id="{{ $user ? '' : 'forceQr' }}" class="icon-container">
             </div>
-            <img class="mt-2 station-image w-75" src="{{ asset('images/station/station_' . $station->id . '.webp') }}"
+            <img class="mt-5 station-image w-75" src="{{ asset('images/station/ST' . $station->id . '.webp') }}"
                 alt="Station Image">
-            @if ($user != true && $station->id != 4)
-                <button id="start-scanner" class="mx-auto mt-5 w-auto px-4 mb-3 custom-btn custom-btn-secondary"
+            @if ($user != true && $station->id != 3)
+                <!-- <button id="start-scanner" class="mx-auto mt-5 w-auto px-4 mb-3 custom-btn custom-btn-secondary"
                     style="font-size:20px;">
                     <i class="fa-solid fa-camera"></i>
-                </button>
-                <p class="px-4 mt-3 bottom-text scanner-text text-center">Scan the QR code to check in</p>
+                </button> -->
+
+                <button id="start-scanner" 
+  class="camera-btn mx-auto mt-5 mb-3"
+  title="Start Scanner">
+  <i class="fa-solid fa-camera"></i>
+</button>
+                <p class="px-4 mt-3 bottom-text scanner-text text-center text-dark">Scan the QR code to check in</p>
             @elseif ($station->id == 4 && $user != true)
                 <a href="{{ route('pledgeDj') }}" class="custom-btn custom-btn-secondary mt-5">
                     Start
@@ -66,7 +69,7 @@
         <div id="scannerContainer" class="scanner-container d-none mt-4">
             <!-- <button id="close" class="mx-auto mt-4 camera-btn">x</button> -->
             <div id="reader"></div>
-            <p class="mt-4 scanner-text text-center">Find the QR code & Scan to check in</p>
+            <p class="mt-4 scanner-text text-center text-dark">Find the QR code & Scan to check in</p>
             {{-- <div>
                 <a href="{{ route('dashboard') }}" class="button">
                     BACK

@@ -65,7 +65,7 @@
                         id
                     );
 
-                    if (id === 6 && !canAccessStation6) {
+                    if (id === 3) {
                         // Show the not allowed modal if trying to access station 6 without permission
                         var notAllowedModal = new bootstrap.Modal(document.getElementById('notAllowedModal'));
                         notAllowedModal.show();

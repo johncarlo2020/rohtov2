@@ -12,12 +12,15 @@
 </head>
 
 <body class="antialiased main-background welcome-page">
-    <div class="py-3 container-fluid main-content with-scroll">
+    <div class="container-fluid main-content with-scroll">
         <div class="row">
             <div class="col-12 d-flex justify-content-center align-items-center animate-entry">
                 @include('components.branding')
             </div>
-
+            <div class="col-12 d-flex justify-content-center align-items-center p-0 animate-entry">
+                <img class="welcome_img_store w-100" src="{{ asset('images/brand/ryt_front.webp') }}"
+                    alt="" />
+            </div>
             <div class="text-center bottom-text-welcome col-12 ">
                 <div class="d-block">
                     <div class="col mb-3 animate-entry delay-2">
@@ -29,7 +32,6 @@
                 </div>
             </div>
         </div>
-        <x-footer />
     </div>
     <x-scriptPackages />
 </body>

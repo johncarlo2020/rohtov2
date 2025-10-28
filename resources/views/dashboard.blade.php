@@ -41,6 +41,7 @@
                 </div>
             </div>
         </div>
+        <h1 class="sub-heading text-center px-5 py-3 animate-entry delay-1 dashboard-heading">Ready to start your new banking experience</h1>
         <div class="station-selection-container mb-5 animate-entry delay-2">
             @foreach ($stations as $station)
                 <a class="station-custom-btn station-custom-btn-{{ $station->id }}" type="button"

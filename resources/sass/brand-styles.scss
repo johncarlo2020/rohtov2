@@ -497,10 +497,12 @@
 
 
 .station-selection-container {
+    position: relative; /* allow absolute overlay for connectors */
     .station-custom-btn {
         color: #000;
         width: 100%;
         position: relative;
+        z-index: 2; /* ensure above connectors */
         height: 25vh;
         padding: 0;
         text-decoration: none;
@@ -557,5 +559,23 @@
         }
 
     }
+}
+
+/* Overlay that holds the responsive SVG lines connecting stations */
+.station-connectors {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* decorative only */
+    z-index: 1; /* behind the station buttons */
+
+    &__svg { display: block; }
+}
+
+.dashboard-heading {
+    color: #0000E6;
+    font-size: 20px;
 }
 

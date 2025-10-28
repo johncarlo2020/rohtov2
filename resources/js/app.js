@@ -10,6 +10,7 @@ Alpine.start();
 
 import '../sass/app.scss';
 import './slider.js'
+import './station-connectors.js'
 
 // import GIF.js as a global
 import GIF from 'gif.js';

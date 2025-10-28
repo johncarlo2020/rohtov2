@@ -154,16 +154,20 @@
                 const confirmYes = document.getElementById('confirmYes');
                 const confirmNo = document.getElementById('confirmNo');
                 let selectedGiftValue = '';
+                let scannedQrMessage = '';
 
-                if (giftSelect) {
+                // Only apply this logic for station 3
+                if (giftSelect && window.stationConfig.station_id == 3) {
                     giftSelect.addEventListener('change', function() {
                         if (this.value) {
                             // Store selected gift value
                             selectedGiftValue = this.value;
-                            // Update modal text
-                            selectedGiftText.textContent = `Gift ${this.value}`;
-                            // Show confirmation modal
-                            giftConfirmModal.show();
+                            // Enable camera button when gift is selected
+                            if (startScanner) {
+                                startScanner.disabled = false;
+                                startScanner.style.opacity = '1';
+                                startScanner.style.cursor = 'pointer';
+                            }
                         } else {
                             // Reset when no gift selected
                             selectedGiftValue = '';
@@ -175,41 +179,105 @@
                         }
                     });
 
-                    // Handle YES button
+                    // Handle YES button - continue with QR processing
                     confirmYes.addEventListener('click', function() {
                         giftConfirmModal.hide();
-                        if (startScanner) {
-                            // Enable camera button
-                            startScanner.disabled = false;
-                            startScanner.style.opacity = '1';
-                            startScanner.style.cursor = 'pointer';
+                        // Continue with the original AJAX call
+                        if (scannedQrMessage && selectedGiftValue) {
+                            proceedWithQrProcessing(scannedQrMessage, selectedGiftValue);
                         }
                     });
 
-                    // Handle NO button
+                    // Handle NO button - reset and highlight
                     confirmNo.addEventListener('click', function() {
                         giftConfirmModal.hide();
+                        
+                        // Close scanner container and show main container
+                        const mainContent = document.getElementById('mainContent');
+                        const scannerContainer = document.getElementById('scannerContainer');
+                        if (scannerContainer) {
+                            scannerContainer.classList.add('d-none');
+                        }
+                        if (mainContent) {
+                            mainContent.classList.remove('d-none');
+                        }
+                        
                         // Reset select to default option
                         giftSelect.value = '';
+                        selectedGiftValue = '';
+                        
                         // Highlight the select input
                         giftSelect.style.border = '2px solid #dc3545';
                         giftSelect.style.boxShadow = '0 0 5px rgba(220, 53, 69, 0.5)';
-
+                        
                         // Remove highlight after 3 seconds
                         setTimeout(() => {
                             giftSelect.style.border = '';
                             giftSelect.style.boxShadow = '';
                         }, 3000);
-
+                        
                         // Disable camera button
                         if (startScanner) {
                             startScanner.disabled = true;
                             startScanner.style.opacity = '0.5';
                             startScanner.style.cursor = 'not-allowed';
                         }
-
-                        selectedGiftValue = '';
+                        
+                        // Reset scanned message
+                        scannedQrMessage = '';
                     });
+
+                    // Store the QR message when scanned and show confirmation modal (ONLY FOR STATION 3)
+                    window.showGiftConfirmation = function(qrMessage, giftId) {
+                        if (window.stationConfig.station_id == 3) {
+                            scannedQrMessage = qrMessage;
+                            selectedGiftValue = giftId;
+                            selectedGiftText.textContent = `Gift ${giftId}`;
+                            giftConfirmModal.show();
+                        }
+                    };
+
+                    // Function to proceed with QR processing
+                    window.proceedWithQrProcessing = function(qrMessage, giftId) {
+                        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                        
+                        $.ajax({
+                            url: window.stationConfig.urls.process_qr_code,
+                            type: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': csrfToken,
+                            },
+                            data: {
+                                qrCodeMessage: qrMessage,
+                                station: window.stationConfig.station_id,
+                                selected_gift_id: giftId
+                            },
+                            success: function (response) {
+                                $('#badge').attr('src', window.stationConfig.assets.check_image);
+                                $('#scanCompleteModal').modal('show');
+
+                                const trimmedMessage = qrMessage.trim();
+                                const lastCharacter = trimmedMessage.charAt(trimmedMessage.length - 1);
+
+                                $('.station_id').html(lastCharacter);
+                                $('.station_name').html(window.stationConfig.station_name);
+                                $('#routeBtn').text('Back');
+
+                                if (lastCharacter == 3) {
+                                    document.getElementById('routeBtn').setAttribute('href', window.stationConfig.urls.congrats);
+                                } else {
+                                    document.getElementById('routeBtn').setAttribute('href', window.stationConfig.urls.dashboard);
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                console.error('Error sending QR Code message:', error);
+                                $('.modal-icon').addClass('d-none');
+                                $('.message').html('INVALID QR CODE');
+                                $('.check').attr('src', window.stationConfig.assets.error_image);
+                                $('#scanCompleteModal').modal('show');
+                            }
+                        });
+                    };
 
                     if (redeemBtn) {
                         redeemBtn.addEventListener('click', function() {
@@ -221,9 +289,7 @@
                         });
                     }
                 }
-            });
-
-        </script>
+            });        </script>
         @vite(['resources/js/station.js'])
     @endpush
 </x-app-layout>

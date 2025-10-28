@@ -46,19 +46,25 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function sendMessage(message) {
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
         // Get selected gift ID for station 3
         let selectedGiftId = null;
         if (stationId == 3) {
             const giftSelect = document.getElementById('giftSelect');
             if (giftSelect && giftSelect.value) {
                 selectedGiftId = giftSelect.value;
+                // Show confirmation modal instead of directly processing
+                if (window.showGiftConfirmation) {
+                    window.showGiftConfirmation(message, selectedGiftId);
+                }
+                return; // Stop here, let modal handle the rest
             } else {
                 alert('Please select a gift before scanning');
                 return;
             }
         }
+
+        // For other stations (not station 3), proceed normally
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
         $.ajax({
             url: processQrCodeUrl,
@@ -90,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 else
                 {
                    document.getElementById('routeBtn').setAttribute('href', dashboardUrl);
-            }
+                }
             },
             error: function (xhr, status, error) {
                 console.error('Error sending QR Code message:', error);

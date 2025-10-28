@@ -100,15 +100,5 @@
             </div>
         </div>
 
-        <!-- Back to Dashboard -->
-        <div class="row mt-4">
-            <div class="col-12">
-                <div class="d-flex justify-content-start">
-                    <a href="{{ route('admin') }}" class="btn btn-outline-primary">
-                        <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
-                    </a>
-                </div>
-            </div>
-        </div>
     </div>
 @endsection

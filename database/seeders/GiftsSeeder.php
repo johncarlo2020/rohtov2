@@ -15,21 +15,21 @@ class GiftsSeeder extends Seeder
     {
         $gifts = [
             [
-                'name' => 'MFL ticket x100 , Water or Fan',
+                'name' => 'MFL ticket x100',
                 'total' => 100,
                 'enabled' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'name' => 'Koppiku QR card x500, Water or Fan',
+                'name' => 'Koppiku QR card x500',
                 'total' => 500,
                 'enabled' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'name' => 'only play game or existing users - Water or Fan x1000',
+                'name' => 'Water or Fan x1000',
                 'total' => 1000,
                 'enabled' => true,
                 'created_at' => now(),

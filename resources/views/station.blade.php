@@ -23,7 +23,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Gift Confirmation Modal -->
         <div class="modal fade custom-modal" id="giftConfirmModal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered w-75 m-auto">
@@ -194,20 +194,20 @@
                         // Highlight the select input
                         giftSelect.style.border = '2px solid #dc3545';
                         giftSelect.style.boxShadow = '0 0 5px rgba(220, 53, 69, 0.5)';
-                        
+
                         // Remove highlight after 3 seconds
                         setTimeout(() => {
                             giftSelect.style.border = '';
                             giftSelect.style.boxShadow = '';
                         }, 3000);
-                        
+
                         // Disable camera button
                         if (startScanner) {
                             startScanner.disabled = true;
                             startScanner.style.opacity = '0.5';
                             startScanner.style.cursor = 'not-allowed';
                         }
-                        
+
                         selectedGiftValue = '';
                     });
 

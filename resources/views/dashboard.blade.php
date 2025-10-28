@@ -43,9 +43,11 @@
         </div>
         <div class="station-selection-container mb-5 animate-entry delay-2">
             @foreach ($stations as $station)
-                <button class="btn btn-transparent station-custom-btn" type="button"
+                <a class="station-custom-btn station-custom-btn-{{ $station->id }}" type="button"
                     onclick="gotoStation({{ $station->id }})">
-                    <img class="station-icon" src="{{ asset('images/station/S' . $station->id . '.webp') }}" alt="">
+                    <div class="station-image-container">
+                        <img class="station-icon" src="{{ asset('images/station/ST' . $station->id . '.webp') }}" alt="">
+                    </div>
                     <div class="station-details station-{{ $station->id}}">
                         <h3 class="station-number">Station {{ $station->id }}</h3>
                         <h5 class="station-name">{{ $station->name }}</h5>

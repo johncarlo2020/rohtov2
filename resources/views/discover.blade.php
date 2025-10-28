@@ -1,17 +1,5 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-        <title>Rytbank</title>
-
-        @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-
-    </head>
-
-    <body>
-        <div class="py-5 px-0 map-page main-content main-background" style="min-height: 100vh; display: flex; flex-direction: column; justify-content: center; overflow-y: auto;">
+<x-app-layout>
+        <div class="py-5 px-0 map-page main-content main-background with-scroll">
             <div class="content-wrapper d-flex flex-column justify-content-center align-items-center" style="min-height: 100%; flex: 1;">
                 <div class="d-flex justify-content-center animate-entry mb-4">
                     @include('components.branding')
@@ -29,5 +17,4 @@
                 </div>
             </div>
         </div>
-    </body>
-</html>
+</x-app-layout>

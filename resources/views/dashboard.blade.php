@@ -41,19 +41,23 @@
                 </div>
             </div>
         </div>
-        <h1 class="sub-heading text-center px-5 py-3 mb-3 animate-entry delay-1 dashboard-heading">Ready to start your new banking experience</h1>
+        <h1 class="sub-heading text-center px-5 py-3 mb-3 animate-entry delay-1 dashboard-heading">Ready to start your
+            new banking experience</h1>
         <div class="station-selection-container mb-2 animate-entry delay-2">
             <img class="station-bg-map" src="{{ asset('images/station/map-lines.svg') }}" alt="">
             @foreach ($stations as $station)
-                <a class="station-custom-btn station-custom-btn-{{ $station->id }}" type="button"
-                    onclick="gotoStation({{ $station->id }})">
+                <a class="station-custom-btn done station-custom-btn-{{ $station->id }} @if ($station->status) done @endif"
+                    type="button" onclick="gotoStation({{ $station->id }})">
                     <div class="station-image-container">
-                        <img class="station-icon" src="{{ asset('images/station/ST' . $station->id . '.webp') }}" alt="">
+                        <img class="station-icon" src="{{ asset('images/station/ST' . $station->id . '.webp') }}"
+                            alt="">
                     </div>
-                    <div class="station-details station-{{ $station->id}}">
-                        <h3 class="station-number">Station {{ $station->id }}</h3>
+                    <div class="station-details station-{{ $station->id }}">
+                        <h3 class="station-number">Station {{ $station->id }}
+                            <i class="check-icon fa-solid fa-circle-check text-success"></i>
+                        </h3>
                         <h5 class="station-name">{{ $station->name }}</h5>
-                    </div>                
+                    </div>
                 </a>
             @endforeach
 

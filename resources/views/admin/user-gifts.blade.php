@@ -42,17 +42,18 @@
                                             </td>
                                             <td>
                                                 <div class="px-3">
-                                                    <h6 class="mb-0 text-sm">{{ $userGift->user_id ?? 'N/A' }}</h6>
+                                                    <h6 class="mb-0 text-sm"> {{ $userGift->user->name ?? '' }}</h6>
+                                                    <p class="text-xs text-secondary mb-0">ID: {{ $userGift->user_id }}</p>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="px-3">
-                                                    <p class="text-xs font-weight-bold mb-0">{{ $userGift->user_id ?? 'N/A' }}</p>
+                                                    <p class="text-xs font-weight-bold mb-0">{{ $userGift->user->email ?? 'N/A' }}</p>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="px-3">
-                                                    <h6 class="mb-0 text-sm">Gift ID: {{ $userGift->gift_id ?? 'N/A' }}</h6>
+                                                    <h6 class="mb-0 text-sm">{{ $userGift->gift->name ?? 'Gift ID: ' . $userGift->gift_id }}</h6>
                                                 </div>
                                             </td>
                                             <td class="text-center">

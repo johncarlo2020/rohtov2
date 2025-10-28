@@ -431,7 +431,7 @@ class StationController extends Controller
 
         //   dd($data['where']);
 
-        $usersWithSixStationUsers = User::with('stationUser')->whereDate('created_at', '>=', $startDate->toDateString())->has('stationUser', '>=', 5)->count();
+        $usersWithSixStationUsers = User::with('stationUser')->whereDate('created_at', '>=', $startDate->toDateString())->has('stationUser', '>=', 3)->count();
         // dd($usersWithSixStationUsers);
         $data['completedUsers'] = $usersWithSixStationUsers;
         // dd($usersWithSixStationUsers);
@@ -731,7 +731,9 @@ class StationController extends Controller
     public function userGifts()
     {
         try {
-            $userGifts = \App\Models\UserGift::orderBy('created_at', 'desc')->paginate(20);
+            $userGifts = \App\Models\UserGift::with(['user', 'gift'])
+                ->orderBy('created_at', 'desc')
+                ->paginate(20);
 
             return view('admin.user-gifts', compact('userGifts'));
         } catch (\Exception $e) {

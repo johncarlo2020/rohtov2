@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="py-5 map-page main-content main-background with-scroll">
+    <div class="py-5 map-page main-content main-background with-scroll dashbord-page">
         <div class="d-flex justify-content-center align-item-center animate-entry">
             @include('components.branding')
         </div>

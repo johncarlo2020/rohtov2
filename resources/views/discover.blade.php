@@ -11,8 +11,8 @@
     </head>
 
     <body>
-        <div class="py-5 px-0 map-page main-content main-background">
-            <div class="content-wrapper">
+        <div class="py-5 px-0 map-page main-content main-background" style="min-height: 100vh; display: flex; flex-direction: column; justify-content: center; overflow-y: auto;">
+            <div class="content-wrapper d-flex flex-column justify-content-center align-items-center" style="min-height: 100%; flex: 1;">
                 <div class="d-flex justify-content-center animate-entry mb-4">
                     @include('components.branding')
                 </div>

@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\StationUser;
 use App\Models\Brand;
 use App\Models\Vote;
+use App\Models\Gifts;
 use App\Events\babyEvent;
 use DB;
 use Auth;
@@ -139,15 +140,10 @@ class StationController extends Controller
         $user = StationUser::where('user_id', auth()->id())
             ->where('station_id', $station->id)
             ->exists();
-        if ($station->id == 9 && $user == true) {
-            return view('congrats');
-        }
 
-        if($station->id == 2 && $user == true) {
-            return view('station', compact('station', 'user'));
-        }
+        $gifts = \App\Models\Gifts::where('enabled', true)->get();
 
-         return view('station', compact('station', 'user'));
+         return view('station', compact('station', 'user', 'gifts'));
 
     }
 
@@ -294,7 +290,7 @@ class StationController extends Controller
         $userId = Auth::id();
 
         $user = User::with('stationUser')->where('id', $userId)->first();
-    
+
         $stationDone = $user->stationUser->count();
         $stations = Station::get();
 
@@ -339,19 +335,6 @@ class StationController extends Controller
         // Get the last character of the QR code message
         $station_id = substr($qrCodeMessage, -1);
 
-        if ($request->has('brand')) {
-            // Fetch the authenticated user
-            $user = User::with('stationUser')->find(auth()->id());
-
-            if ($user) {
-                // Update the user's brand_id
-                $user->brand_id = $request->brand;
-                $user->save();
-            } else {
-                // Handle case where user is not found (optional)
-                return response()->json(['error' => 'User not found.'], 404);
-            }
-        }
 
         // Assume that `$station_id` is validated before this point
 
@@ -388,6 +371,17 @@ class StationController extends Controller
             $stationUser->station_id = $station_id;
             $stationUser->time_spent = $secondsSpent;
             $stationUser->save();
+
+            // Handle gift selection for station 3
+            if ($station_id == 3 && $request->has('selected_gift_id') && $request->selected_gift_id) {
+                $userGift = new \App\Models\UserGift();
+                $userGift->user_id = auth()->id();
+                $userGift->gift_id = $request->selected_gift_id;
+                $userGift->station_id = $station_id;
+                $userGift->is_redeemed = false;
+                $userGift->save();
+            }
+
             DB::commit();
             // Success response
             return response()->json(['message' => 'Station ID updated successfully'], 200);
@@ -433,13 +427,6 @@ class StationController extends Controller
         $data['country'] = User::selectRaw('country , COUNT(*) as count')->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
             ->groupBy('country')->where('country' ,'!=','admin')->get();
 
-
-        $data['where'] = User::selectRaw('find , COUNT(*) as count')->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
-            ->groupBy('find')->where('find' ,'!=','admin')->get();
-        //  dd($data['where']);
-        $data['age'] = User::selectRaw('dob , COUNT(*) as count')->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
-            ->groupBy('dob')->where('dob', '!=', 'admin')->get();
-          // dd($data['age']);
 
 
         //   dd($data['where']);
@@ -739,6 +726,55 @@ class StationController extends Controller
     public function discover()
     {
         return view('discover');
+    }
+
+    public function userGifts()
+    {
+        try {
+            $userGifts = \App\Models\UserGift::orderBy('created_at', 'desc')->paginate(20);
+            
+            return view('admin.user-gifts', compact('userGifts'));
+        } catch (\Exception $e) {
+            return redirect()->route('admin')->with('error', 'Error loading user gifts: ' . $e->getMessage());
+        }
+    }
+
+    public function adminGifts()
+    {
+        // Debug: Test if method is being called
+        logger('adminGifts method called');
+
+        try {
+            $gifts = \App\Models\Gifts::withCount('userGifts')
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            $totalGifts = $gifts->count();
+            $enabledGifts = $gifts->where('enabled', true)->count();
+            $disabledGifts = $gifts->where('enabled', false)->count();
+            $totalSelectedGifts = \App\Models\UserGift::count();
+
+            $stats = [
+                'total_gifts' => $totalGifts,
+                'enabled_gifts' => $enabledGifts,
+                'disabled_gifts' => $disabledGifts,
+                'total_selected' => $totalSelectedGifts
+            ];
+
+            return view('admin.gifts', compact('gifts', 'stats'));
+        } catch (\Exception $e) {
+            logger('Error in adminGifts: ' . $e->getMessage());
+            return response('Error: ' . $e->getMessage(), 500);
+        }
+    }
+
+    public function toggleGift(\App\Models\Gifts $gift)
+    {
+        $gift->enabled = !$gift->enabled;
+        $gift->save();
+
+        $status = $gift->enabled ? 'enabled' : 'disabled';
+        return redirect()->back()->with('success', "Gift '{$gift->name}' has been {$status} successfully.");
     }
 
 }

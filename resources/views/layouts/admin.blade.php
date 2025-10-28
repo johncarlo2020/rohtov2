@@ -88,6 +88,26 @@
                         <span class="nav-link-text ms-1">Scanner</span>
                     </a>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.gifts*') ? 'active' : '' }}" href="{{ route('admin.gifts') }}">
+                        <div
+                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fa-solid fa-gift text-warning text-sm opacity-10"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Gifts</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.user.gifts') ? 'active' : '' }}" href="{{ route('admin.user.gifts') }}">
+                        <div
+                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fa-solid fa-list-check text-warning text-sm opacity-10"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">User Gifts</span>
+                    </a>
+                </li>
             </ul>
         </div>
     </aside>

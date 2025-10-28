@@ -41,8 +41,15 @@
             </div>
             <img class="mt-5 station-image w-75" src="{{ asset('images/station/ST' . $station->id . '.webp') }}"
                 alt="Station Image">
-            @if ($station->id != 3)
-                <button id="start-scanner" 
+            @if ($user)
+                <div class="scanner-button">
+                    <p class="my-0 mt-5 text-center mb-3 text-dark">Checked in</p>
+                    <a href="{{ route('dashboard') }}" class="custom-btn custom-btn-primary">
+                        Back
+                    </a>
+                </div>
+            @elseif ($station->id != 3)
+                <button id="start-scanner"
                     class="camera-btn mx-auto mt-5 mb-3"
                     title="Start Scanner">
                     <i class="fa-solid fa-camera"></i>
@@ -54,19 +61,22 @@
                     </a>
                 </div>
             @elseif ($station->id == 3)
-                <a href="{{ route('station.gift.selection', ['station' => $station->id]) }}" class="custom-btn custom-btn-primary mt-5">
-                    REDEEM NOW
-                </a>
+                <div class="gift-selection mt-5">
+                    <label for="giftSelect" class="form-label text-dark fw-bold">Select your gift:</label>
+                    <select id="giftSelect" class="form-select mb-3" style="width: 80%; margin: 0 auto;" required>
+                        <option value="">Select a gift</option>
+                        @foreach($gifts as $gift)
+                            <option value="{{ $gift->id }}">{{ $gift->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <button id="start-scanner" class="camera-btn mx-auto mt-5 mb-3" title="Start Scanner">
+                    <i class="fa-solid fa-camera"></i>
+                </button>
+                <p class="px-4 mt-3 bottom-text scanner-text text-center text-dark">Scan the QR code to check in</p>
                 <div class="text-center my-3">
                     <a href="{{ route('dashboard') }}" class="custom-btn custom-btn-secondary">
                         BACK
-                    </a>
-                </div>
-            @else
-                <div class="scanner-button">
-                    <p class="my-0 mt-5 text-center mb-3 text-dark">Checked In</p>
-                    <a href="{{ route('dashboard') }}" class="custom-btn custom-btn-primary">
-                        Back
                     </a>
                 </div>
             @endif
@@ -90,7 +100,8 @@
             window.stationConfig = {
                 urls: {
                     process_qr_code: '{{ route('process_qr_code') }}',
-                    congrats: '{{ route('congrats') }}'
+                    congrats: '{{ route('congrats') }}',
+                    dashboard: '{{ route('dashboard') }}'
                 },
                 assets: {
                     check_image: '{{ asset('images/check.png') }}',
@@ -109,6 +120,31 @@
                     // Redirect to the generated URL
                     window.location.href = url;
                 }
+
+            // Gift selection functionality for station 3
+            document.addEventListener('DOMContentLoaded', function() {
+                const giftSelect = document.getElementById('giftSelect');
+                const redeemBtn = document.getElementById('redeemGiftBtn');
+
+                if (giftSelect && redeemBtn) {
+                    giftSelect.addEventListener('change', function() {
+                        if (this.value) {
+                            redeemBtn.disabled = false;
+                        } else {
+                            redeemBtn.disabled = true;
+                        }
+                    });
+
+                    redeemBtn.addEventListener('click', function() {
+                        const selectedGift = giftSelect.value;
+                        if (selectedGift) {
+                            // Redirect to gift selection page with selected gift
+                            const url = "{{ route('station.gift.selection', ['station' => $station->id]) }}" + "?gift=" + selectedGift;
+                            window.location.href = url;
+                        }
+                    });
+                }
+            });
 
         </script>
         @vite(['resources/js/station.js'])

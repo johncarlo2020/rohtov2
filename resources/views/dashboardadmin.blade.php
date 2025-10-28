@@ -548,13 +548,7 @@
                 data: raceData
             }));
 
-            var findData = @json($data['where']);
-            var findEventData = findData.map(function(item) {
-                return {
-                    name: item.find || item.name || item.label || '',
-                    y: item.count || 0
-                };
-            });
+
             // Highcharts.chart(getPieChartConfig({
             //     renderTo: 'findEventChart',
             //     title: 'How did you find this event?',

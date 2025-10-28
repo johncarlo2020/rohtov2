@@ -95,12 +95,19 @@ Route::group(['middleware' => ['admin']], function () {
 
     Route::post('/admin/logout', 'App\Http\Controllers\LoginController@destroy')->name('admin.logout');
 
+    // Admin Gifts Management Routes
+    Route::get('/admin/gifts', 'App\Http\Controllers\StationController@adminGifts')->name('admin.gifts');
+    Route::post('/admin/gifts/{gift}/toggle', 'App\Http\Controllers\StationController@toggleGift')->name('admin.gifts.toggle');
+    Route::get('/admin/user-gifts', 'App\Http\Controllers\StationController@userGifts')->name('admin.user.gifts');
+
     Route::get('/admin/bookings', [BookingController::class, 'index'])->name('bookings');
     Route::delete('/admin/bookings/{id}', [BookingController::class, 'destroy'])->name('booking.destroy');
     Route::get('/admin/{user}', 'App\Http\Controllers\StationController@userData')->name('userData');
     Route::post('/admin/check', 'App\Http\Controllers\StationController@check')->name('check');
     Route::delete('/admin/users/{id}', 'App\Http\Controllers\StationController@userDelete')->name('users.destroy');
     Route::post('/editUser', 'App\Http\Controllers\StationController@editUser')->name('editUser');
+
+
 
 });
 

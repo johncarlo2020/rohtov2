@@ -15,6 +15,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const stationConfig = window.stationConfig || {};
     const processQrCodeUrl = stationConfig.urls.process_qr_code;
     const congratsUrl = stationConfig.urls.congrats;
+    const dashboardUrl = stationConfig.urls.dashboard;
+
     const stationId = stationConfig.station_id;
     const stationName = stationConfig.station_name;
     const checkImageUrl = stationConfig.assets.check_image;
@@ -46,6 +48,18 @@ document.addEventListener('DOMContentLoaded', function () {
     function sendMessage(message) {
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
+        // Get selected gift ID for station 3
+        let selectedGiftId = null;
+        if (stationId == 3) {
+            const giftSelect = document.getElementById('giftSelect');
+            if (giftSelect && giftSelect.value) {
+                selectedGiftId = giftSelect.value;
+            } else {
+                alert('Please select a gift before scanning');
+                return;
+            }
+        }
+
         $.ajax({
             url: processQrCodeUrl,
             type: 'POST',
@@ -54,7 +68,8 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             data: {
                 qrCodeMessage: message,
-                station: stationId
+                station: stationId,
+                selected_gift_id: selectedGiftId
             },
             success: function (response) {
                 const confettiCanvas = document.createElement('canvas');
@@ -67,18 +82,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 $('.station_id').html(lastCharacter);
                 $('.station_name').html(stationName);
-                $('#routeBtn').text('Next');
+                $('#routeBtn').text('Back');
 
                 if (lastCharacter == 3) {
                     document.getElementById('routeBtn').setAttribute('href', congratsUrl);
                 }
-                else 
+                else
                 {
-                    const stationParsed = parseInt(lastCharacter);
-                    const nextStation = stationParsed + 1;
-                $('#routeBtn')
-                .removeAttr('href') // remove href if it exists
-                .attr('onclick', `gotoStation(${nextStation})`);}
+                   document.getElementById('routeBtn').setAttribute('href', dashboardUrl);
+            }
             },
             error: function (xhr, status, error) {
                 console.error('Error sending QR Code message:', error);

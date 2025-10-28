@@ -46,7 +46,7 @@
         <div class="station-selection-container mb-2 animate-entry delay-2">
             <img class="station-bg-map" src="{{ asset('images/station/map-lines.svg') }}" alt="">
             @foreach ($stations as $station)
-                <a class="station-custom-btn  done station-custom-btn-{{ $station->id }} @if ($station->status) done @endif"
+                <a class="station-custom-btn   station-custom-btn-{{ $station->id }} @if ($station->status) done @endif"
                     type="button" onclick="gotoStation({{ $station->id }})">
                     <div class="station-image-container">
                         <img class="station-icon" src="{{ asset('images/station/ST' . $station->id . '.webp') }}"

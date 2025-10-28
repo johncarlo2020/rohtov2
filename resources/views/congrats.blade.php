@@ -2,7 +2,7 @@
     <di v class="container-fluid congrats start completed-screen main-content main-background with-scroll pt-4">
         <div class="congrats-container">
             <div class="col-12 d-flex justify-content-center align-items-center mt-3">
-                <img class="welcome_img w-75" src="{{ asset('images/dutchlady/thankYouMessage.webp') }}" alt="" />
+                <!-- <img class="welcome_img w-75" src="{{ asset('images/dutchlady/thankYouMessage.webp') }}" alt="" /> -->
             </div>
                 <div class="product-image mb-3 px-5 text-center">
                     <span class="text-dark">Visit</span>

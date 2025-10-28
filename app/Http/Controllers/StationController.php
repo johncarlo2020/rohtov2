@@ -141,7 +141,7 @@ class StationController extends Controller
             ->where('station_id', $station->id)
             ->exists();
 
-        $gifts = \App\Models\Gifts::where('enabled', true)->get();
+        $gifts = \App\Models\Gifts::get();
 
          return view('station', compact('station', 'user', 'gifts'));
 

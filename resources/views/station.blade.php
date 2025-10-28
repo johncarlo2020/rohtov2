@@ -23,6 +23,27 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Gift Confirmation Modal -->
+        <div class="modal fade custom-modal" id="giftConfirmModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered w-75 m-auto">
+                <div class="modal-content card">
+                    <div class="modal-body">
+                        <div class="text-center">
+                            <div class="text-danger mb-3">
+                                <i class="fas fa-exclamation-circle fa-3x"></i>
+                            </div>
+                            <h5 class="text-dark mb-3">Are you sure to redeem?</h5>
+                            <p class="text-dark mb-4" id="selectedGiftText">Gift 1</p>
+                            <div class="d-flex flex-column gap-2">
+                                <button id="confirmYes" class="custom-btn custom-btn-primary w-100">YES</button>
+                                <button id="confirmNo" class="custom-btn custom-btn-secondary w-100" style="background: white; color: #0000e6; border: 2px solid #0000e6;">NO</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="back-btn animate-entry">
             <a href="{{ route('dashboard') }}" class="">
                 <i class="fas fa-chevron-left"></i>
@@ -61,16 +82,18 @@
                     </a>
                 </div>
             @elseif ($station->id == 3)
-                <div class="gift-selection mt-5">
+                <div class="gift-selection mt-2">
                     <label for="giftSelect" class="form-label text-dark fw-bold">Select your gift:</label>
-                    <select id="giftSelect" class="form-select mb-3" style="width: 80%; margin: 0 auto;" required>
+                    <select id="giftSelect" class="form-select " style="width: 50vw; margin: 0 auto;" required>
                         <option value="">Select a gift</option>
                         @foreach($gifts as $gift)
-                            <option value="{{ $gift->id }}">{{ $gift->name }}</option>
+                            <option value="{{ $gift->id }}" {{ !$gift->enabled ? 'disabled' : '' }}>
+                                Gift {{ $gift->id }}{{ !$gift->enabled ? ' (Not Available)' : '' }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
-                <button id="start-scanner" class="camera-btn mx-auto mt-5 mb-3" title="Start Scanner">
+                <button id="start-scanner" class="camera-btn mx-auto mt-5 mb-3" title="Start Scanner" disabled style="opacity: 0.5; cursor: not-allowed;">
                     <i class="fa-solid fa-camera"></i>
                 </button>
                 <p class="px-4 mt-3 bottom-text scanner-text text-center text-dark">Scan the QR code to check in</p>
@@ -125,24 +148,78 @@
             document.addEventListener('DOMContentLoaded', function() {
                 const giftSelect = document.getElementById('giftSelect');
                 const redeemBtn = document.getElementById('redeemGiftBtn');
+                const startScanner = document.getElementById('start-scanner');
+                const giftConfirmModal = new bootstrap.Modal(document.getElementById('giftConfirmModal'));
+                const selectedGiftText = document.getElementById('selectedGiftText');
+                const confirmYes = document.getElementById('confirmYes');
+                const confirmNo = document.getElementById('confirmNo');
+                let selectedGiftValue = '';
 
-                if (giftSelect && redeemBtn) {
+                if (giftSelect) {
                     giftSelect.addEventListener('change', function() {
                         if (this.value) {
-                            redeemBtn.disabled = false;
+                            // Store selected gift value
+                            selectedGiftValue = this.value;
+                            // Update modal text
+                            selectedGiftText.textContent = `Gift ${this.value}`;
+                            // Show confirmation modal
+                            giftConfirmModal.show();
                         } else {
-                            redeemBtn.disabled = true;
+                            // Reset when no gift selected
+                            selectedGiftValue = '';
+                            if (startScanner) {
+                                startScanner.disabled = true;
+                                startScanner.style.opacity = '0.5';
+                                startScanner.style.cursor = 'not-allowed';
+                            }
                         }
                     });
 
-                    redeemBtn.addEventListener('click', function() {
-                        const selectedGift = giftSelect.value;
-                        if (selectedGift) {
-                            // Redirect to gift selection page with selected gift
-                            const url = "{{ route('station.gift.selection', ['station' => $station->id]) }}" + "?gift=" + selectedGift;
-                            window.location.href = url;
+                    // Handle YES button
+                    confirmYes.addEventListener('click', function() {
+                        giftConfirmModal.hide();
+                        if (startScanner) {
+                            // Enable camera button
+                            startScanner.disabled = false;
+                            startScanner.style.opacity = '1';
+                            startScanner.style.cursor = 'pointer';
                         }
                     });
+
+                    // Handle NO button
+                    confirmNo.addEventListener('click', function() {
+                        giftConfirmModal.hide();
+                        // Reset select to default option
+                        giftSelect.value = '';
+                        // Highlight the select input
+                        giftSelect.style.border = '2px solid #dc3545';
+                        giftSelect.style.boxShadow = '0 0 5px rgba(220, 53, 69, 0.5)';
+                        
+                        // Remove highlight after 3 seconds
+                        setTimeout(() => {
+                            giftSelect.style.border = '';
+                            giftSelect.style.boxShadow = '';
+                        }, 3000);
+                        
+                        // Disable camera button
+                        if (startScanner) {
+                            startScanner.disabled = true;
+                            startScanner.style.opacity = '0.5';
+                            startScanner.style.cursor = 'not-allowed';
+                        }
+                        
+                        selectedGiftValue = '';
+                    });
+
+                    if (redeemBtn) {
+                        redeemBtn.addEventListener('click', function() {
+                            if (selectedGiftValue) {
+                                // Redirect to gift selection page with selected gift
+                                const url = "{{ route('station.gift.selection', ['station' => $station->id]) }}" + "?gift=" + selectedGiftValue;
+                                window.location.href = url;
+                            }
+                        });
+                    }
                 }
             });
 

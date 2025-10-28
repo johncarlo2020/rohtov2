@@ -3,6 +3,21 @@
     span.iti__country-name {
         color: #000000 !important;
     }
+
+    /* Apply Poppins font to the register page */
+    .register-main * {
+        font-family: 'Poppins', sans-serif !important;
+    }
+
+    /* Specific styling for form elements */
+    .register-main h4,
+    .register-main label,
+    .register-main input,
+    .register-main button,
+    .register-main p,
+    .register-main span {
+        font-family: 'Poppins', sans-serif !important;
+    }
     </style>
     <div class="register-main main-content with-scroll">
         <div class="justify-content-center w-100">
@@ -65,16 +80,14 @@
                                 <span id="error-msg" class="d-none text-danger"></span>
                             </div>
                         </div>
-                                          
+
                         <div class="mb-4 row">
                             <div class="col-12">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="marketing" value="1"
-                                        id="marketing" required/>
                                     <label class="form-check-label text-dark small-text" for="marketing">
-                                        By submitting this form, you agree that Ryt Bank may contact you 
-                                        regarding our campaign, including any relevant offers and updates. 
-                                        Your personal data will be collected, 
+                                        By submitting this form, you agree that Ryt Bank may contact you
+                                        regarding our campaign, including any relevant offers and updates.
+                                        Your personal data will be collected,
                                         handled and processed in accordance with Ryt Bank's Privacy Notice.
                                     </label>
                                 </div>

@@ -732,7 +732,7 @@ class StationController extends Controller
     {
         try {
             $userGifts = \App\Models\UserGift::orderBy('created_at', 'desc')->paginate(20);
-            
+
             return view('admin.user-gifts', compact('userGifts'));
         } catch (\Exception $e) {
             return redirect()->route('admin')->with('error', 'Error loading user gifts: ' . $e->getMessage());

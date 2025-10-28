@@ -46,7 +46,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-xl-3 col-sm-6 mb-3">
                 <div class="card">
                     <div class="card-body p-3">
@@ -192,13 +192,13 @@
                                                 <form action="{{ route('admin.gifts.toggle', $gift) }}" method="POST" style="display: inline-block;">
                                                     @csrf
                                                     @if($gift->enabled)
-                                                        <button type="submit" class="btn btn-sm btn-outline-warning" 
+                                                        <button type="submit" class="btn btn-sm btn-outline-warning"
                                                                 onclick="return confirm('Are you sure you want to disable this gift?')"
                                                                 data-bs-toggle="tooltip" data-bs-placement="top" title="Disable Gift">
                                                             <i class="fas fa-ban"></i> Disable
                                                         </button>
                                                     @else
-                                                        <button type="submit" class="btn btn-sm btn-outline-success" 
+                                                        <button type="submit" class="btn btn-sm btn-outline-success"
                                                                 onclick="return confirm('Are you sure you want to enable this gift?')"
                                                                 data-bs-toggle="tooltip" data-bs-placement="top" title="Enable Gift">
                                                             <i class="fas fa-check"></i> Enable

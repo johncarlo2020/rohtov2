@@ -90,7 +90,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        
+
                         <div class="mt-4">
                             {{ $userGifts->links() }}
                         </div>
@@ -98,7 +98,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Back to Dashboard -->
         <div class="row mt-4">
             <div class="col-12">

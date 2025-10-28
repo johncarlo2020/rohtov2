@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="py-5 map-page main-content main-background">
+    <div class="py-5 map-page main-content main-background with-scroll">
         <div class="d-flex justify-content-center align-item-center animate-entry">
             @include('components.branding')
         </div>
@@ -41,8 +41,9 @@
                 </div>
             </div>
         </div>
-        <h1 class="sub-heading text-center px-5 py-3 animate-entry delay-1 dashboard-heading">Ready to start your new banking experience</h1>
-        <div class="station-selection-container mb-5 animate-entry delay-2">
+        <h1 class="sub-heading text-center px-5 py-3 mb-3 animate-entry delay-1 dashboard-heading">Ready to start your new banking experience</h1>
+        <div class="station-selection-container mb-2 animate-entry delay-2">
+            <img class="station-bg-map" src="{{ asset('images/station/map-lines.svg') }}" alt="">
             @foreach ($stations as $station)
                 <a class="station-custom-btn station-custom-btn-{{ $station->id }}" type="button"
                     onclick="gotoStation({{ $station->id }})">
@@ -52,8 +53,8 @@
                     <div class="station-details station-{{ $station->id}}">
                         <h3 class="station-number">Station {{ $station->id }}</h3>
                         <h5 class="station-name">{{ $station->name }}</h5>
-                    </div>
-                </button>
+                    </div>                
+                </a>
             @endforeach
 
         </div>

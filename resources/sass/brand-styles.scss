@@ -45,8 +45,8 @@
             }
 
             &.station-2 {
-                    bottom: 49vw;
-                    left: 56vw;
+                bottom: 49vw;
+                left: 56vw;
                 z-index: 999;
             }
 
@@ -235,7 +235,6 @@
         transform: scale(1.4); /* adjust scale for overall size */
         margin: 56px auto;
         margin-bottom: 10vh;
-
     }
 
     .branding img {
@@ -277,13 +276,11 @@
         .custom-btn-secondary {
             border: 1px solid $primary !important;
         }
-
-
     }
 }
 
 .ipad-pledge {
-       .branding img {
+    .branding img {
         height: auto;
         min-width: 155px;
         max-width: 40vw;
@@ -304,19 +301,20 @@
     }
 
     .pledge-selection {
-          p {
-        font-size: 20px;
-    }
+        p {
+            font-size: 20px;
+        }
     }
 
-     .custom-btn {
+    .custom-btn {
         margin-top: 5vh;
         font-size: 32px;
         height: 70px;
         padding: 20px 150px;
     }
 
-    #text , #coral{
+    #text,
+    #coral {
         padding: 0 10vw;
 
         .form-control {
@@ -334,11 +332,10 @@
         //grid of 3 columns
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-         grid-auto-rows: 183px;
+        grid-auto-rows: 183px;
         width: 100%;
         margin: 0 auto;
         padding: 0 20px;
-
 
         .item-container {
             width: 100%;
@@ -366,7 +363,7 @@
 
             // Show 'Selected' label using pseudo-element
             input[type="radio"]:checked + .coral-image-container::after {
-                content: 'Selected';
+                content: "Selected";
                 position: absolute;
                 top: 50%;
                 right: 50%;
@@ -377,7 +374,7 @@
                 padding: 4px 14px;
                 border-radius: 12px;
                 z-index: 10;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
                 letter-spacing: 1px;
             }
         }
@@ -386,7 +383,6 @@
             width: 100%;
             height: 100%;
             position: relative;
-
 
             .bubble {
                 width: 100%;
@@ -416,12 +412,11 @@
         text-align: center;
     }
 
-      .flip-clock-wrapper {
+    .flip-clock-wrapper {
         font-size: 40px !important; /* adjust as needed */
         transform: scale(1); /* adjust scale for overall size */
         margin: 56px auto;
         margin-bottom: 0;
-
     }
 
     .buttons {
@@ -430,7 +425,7 @@
         }
     }
 
-    .bubble-container  {
+    .bubble-container {
         width: 60vw;
         height: 60vw;
     }
@@ -438,7 +433,6 @@
     #pledgeBtn {
         padding: 20px 50px;
     }
-
 }
 
 .ipad-for-client {
@@ -495,34 +489,108 @@
     }
 }
 
-
 .station-selection-container {
-    position: relative; /* allow absolute overlay for connectors */
+    position: relative;
+    height: 70vh; /* allow absolute overlay for connectors */
+    .station-bg-map {
+        width: auto;
+        height: 100%;
+        object-fit: contain;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1; /* behind station buttons */
+        pointer-events: none; /* allow clicks to pass through */
+    }
     .station-custom-btn {
         color: #000;
         width: 100%;
-        position: relative;
+        position: absolute;
         z-index: 2; /* ensure above connectors */
-        height: 25vh;
         padding: 0;
         text-decoration: none;
         display: flex;
         align-items: center;
-        gap: 20px;
+        gap: 30px;
+
+        .line {
+            position: absolute;
+            bottom: 0px;
+            height: auto;
+            object-fit: contain;
+            z-index: -1;
+        }
+
+        &-1 {
+            top: 3%;
+            left: 7%;
+
+                @media (min-width: 360px) {
+                    top: 7%;
+                    left: 8%;
+                }
+
+            @media (min-width: 390px) {
+                      top: 8%;
+                left: 9%;
+            }
+
+            //on 414px width screens, adjust position
+            @media (min-width: 414px) {
+                top: 8%;
+                left: 9%;
+            }
+        }
 
         &-2 {
             flex-direction: row-reverse;
+            top: 36%;
+            right: 8%;
+
+
+            @media (min-width: 360px) {
+                top: 38%;
+                right: 3%;
+            }
+
+            @media (min-width: 390px) {
+                top: 38%;
+                right: 2%;
+            }
+
+            //on 414px width screens, adjust position
+            @media (min-width: 414px) {
+             top: 38%;
+        right: 2%;
+            }
         }
 
+        &-3 {
+            top: 69%;
+            left: 5%;
+
+            @media (min-width: 390px) {
+                top: 68%;
+                left: 7%;
+            }
+
+            //on 414px width screens, adjust position
+            @media (min-width: 414px) {
+                top: 68%;
+                left: 7%;
+
+            }
+        }
 
         .station-image-container {
+            position: relative;
             width: 30vw;
             height: 30vw;
             border-radius: 50%;
-            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
             padding: 25px;
             .station-icon {
-            width: 100%;
+                width: 100%;
                 height: 100%;
                 object-fit: contain;
             }
@@ -557,25 +625,36 @@
                 text-align: left;
             }
         }
-
     }
 }
 
-/* Overlay that holds the responsive SVG lines connecting stations */
-.station-connectors {
+.dashboard-heading {
+    color: #0000e6;
+    font-size: 20px;
+}
+
+.station-selection-container {
+    position: relative;
+}
+
+.station-connectors__svg {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    pointer-events: none; /* decorative only */
-    z-index: 1; /* behind the station buttons */
-
-    &__svg { display: block; }
+    pointer-events: none;
+    overflow: visible;
 }
 
-.dashboard-heading {
-    color: #0000E6;
-    font-size: 20px;
+.station-connector-path {
+    stroke: url(#connectorBlue);
+    stroke-width: 3.5;
+    filter: url(#glow);
 }
 
+.station-connector-shadow {
+    stroke: rgba(0, 20, 184, 0.25);
+    stroke-width: 6;
+    filter: url(#shadow);
+}

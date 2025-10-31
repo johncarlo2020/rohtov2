@@ -129,7 +129,14 @@
                         @foreach ($data['users'] as $user)
                         <tr data-user-id="{{ $user->id }}">
                             <td>{{ $user->id }}</td>
-                            <td class="sticky-action">{{ $user->fname }}</td>
+                            <td class="sticky-action">
+                                {{ $user->fname }}
+                                @if($user->hasRole('admin'))
+                                    <span class="badge bg-warning text-dark ms-1">
+                                        <i class="fa fa-crown"></i> Admin
+                                    </span>
+                                @endif
+                            </td>
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->number }}</td>
                             <td>{{ $user->race }}</td>
@@ -141,8 +148,16 @@
                             @endforeach
 
                             <td class="button-delete">
-                                <button class="btn btn-danger btn-sm delete-user-btn" data-user-id="{{ $user->id }}"
-                                    data-user-name="{{ $user->fname }} {{ $user->lname }}">Delete</button>
+                                @if($user->isProtectedAdmin())
+                                    <button class="btn btn-secondary btn-sm btn-protected" disabled 
+                                            title="This admin user is protected and cannot be deleted"
+                                            data-bs-toggle="tooltip" data-bs-placement="top">
+                                        <i class="fa fa-lock"></i> Protected
+                                    </button>
+                                @else
+                                    <button class="btn btn-danger btn-sm delete-user-btn" data-user-id="{{ $user->id }}"
+                                        data-user-name="{{ $user->fname }} {{ $user->lname }}">Delete</button>
+                                @endif
                             </td>
 
                         </tr>
@@ -217,6 +232,30 @@
     .sticky-action {
         min-width: 120px !important;
     }
+
+    /* Protected admin button styling */
+    .btn-protected {
+        background-color: #6c757d !important;
+        border-color: #6c757d !important;
+        cursor: not-allowed !important;
+        opacity: 0.7 !important;
+    }
+
+    .btn-protected:hover {
+        background-color: #5c636a !important;
+        border-color: #565e64 !important;
+        transform: none !important;
+    }
+
+    /* Admin badge styling */
+    .badge.bg-warning {
+        font-size: 0.65rem !important;
+        padding: 0.25rem 0.4rem !important;
+    }
+
+    .badge .fa-crown {
+        font-size: 0.6rem !important;
+    }
 </style>
 <script src="{{ asset('assets/js/core/bootstrap.min.js') }}"></script>
 <script src="{{ asset('assets/js/plugins/perfect-scrollbar.min.js') }}"></script>
@@ -271,6 +310,12 @@
         initComplete: function (settings, json) {
             $('.loader-container').hide();
             $('#customer-table').show();
+            
+            // Initialize Bootstrap tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
         }
     });
 
@@ -326,6 +371,31 @@
         var toastEl = document.getElementById('successToast');
         if (toastEl) {
             var toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+            toast.show();
+        }
+    });
+</script>
+@endif
+
+@if(session('error'))
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;">
+    <div id="errorToast" class="toast align-items-center bg-danger text-white border-0 fade show" role="alert"
+        aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+        <div class="d-flex">
+            <div class="toast-body d-flex align-items-center">
+                <i class="fa fa-exclamation-circle me-2"></i>
+                {{ session('error') }}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var toastEl = document.getElementById('errorToast');
+        if (toastEl) {
+            var toast = new bootstrap.Toast(toastEl, { delay: 5000 });
             toast.show();
         }
     });

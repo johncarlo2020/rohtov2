@@ -47,4 +47,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(StationUser::class);
     }
+
+    /**
+     * Check if the user is a protected admin user
+     */
+    public function isProtectedAdmin()
+    {
+        $protectedEmails = ['admin@gmail.com', 'superadmin@gmail.com', 'manager@gmail.com', 'support@gmail.com'];
+        
+        return in_array($this->email, $protectedEmails) || $this->hasRole('admin');
+    }
 }

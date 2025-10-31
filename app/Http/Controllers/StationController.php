@@ -396,6 +396,11 @@ class StationController extends Controller
     public function userDelete($id)
     {
         $user = User::findOrFail($id);
+        
+        // Check if user is protected admin
+        if ($user->isProtectedAdmin()) {
+            return redirect()->back()->with('error', 'This admin user is protected and cannot be deleted.');
+        }
 
         // Delete related station user entries
         $user->stationUser()->delete(); // ✅ Correct for hasMany

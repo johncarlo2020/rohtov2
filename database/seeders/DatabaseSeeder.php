@@ -15,7 +15,6 @@ class DatabaseSeeder extends Seeder
         $this->call(StationSeeder::class);
         $this->call(CountriesTableSeeder::class);
         $this->call(GiftsSeeder::class);
-
-
+        $this->call(AdminUserSeeder::class);
     }
 }

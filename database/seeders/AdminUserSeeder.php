@@ -1,0 +1,126 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+use App\Models\User;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Hash;
+
+class AdminUserSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        // Check if admin role exists, if not create it
+        if (!Role::where('name', 'admin')->exists()) {
+            $adminRole = Role::create(['name' => 'admin']);
+        } else {
+            $adminRole = Role::where('name', 'admin')->first();
+        }
+
+        // Check if client role exists, if not create it
+        if (!Role::where('name', 'client')->exists()) {
+            Role::create(['name' => 'client']);
+        }
+
+        // Create permissions if they don't exist
+        if (!Permission::where('name', 'full')->exists()) {
+            Permission::create(['name' => 'full']);
+        }
+        
+        if (!Permission::where('name', 'view')->exists()) {
+            Permission::create(['name' => 'view']);
+        }
+
+        // Create a new admin user
+        $adminUser = User::updateOrCreate(
+            ['email' => 'superadmin@gmail.com'], // Check by email
+            [
+                'name' => 'Super Admin',
+                'number' => '0123456789',
+                'country' => 'Malaysia',
+                'password' => Hash::make('SuperAdmin123!'),
+                'marketing' => false,
+                'otp_verified' => true, // If OTP field exists
+                'email_verified_at' => now(),
+            ]
+        );
+
+        // Assign admin role
+        if (!$adminUser->hasRole('admin')) {
+            $adminUser->assignRole('admin');
+        }
+
+        // Give full permissions
+        if (!$adminUser->hasPermissionTo('full')) {
+            $adminUser->givePermissionTo('full');
+        }
+
+        if (!$adminUser->hasPermissionTo('view')) {
+            $adminUser->givePermissionTo('view');
+        }
+
+        $this->command->info('Super Admin user created successfully!');
+        $this->command->info('Email: superadmin@gmail.com');
+        $this->command->info('Password: SuperAdmin123!');
+
+        // Optionally create additional admin users
+        $this->createAdditionalAdmins();
+    }
+
+    /**
+     * Create additional admin users if needed
+     */
+    private function createAdditionalAdmins(): void
+    {
+        $additionalAdmins = [
+            [
+                'name' => 'Admin Manager',
+                'email' => 'manager@gmail.com',
+                'number' => '0198765432',
+                'country' => 'Malaysia',
+                'password' => Hash::make('Manager123!'),
+            ],
+            [
+                'name' => 'Admin Support',
+                'email' => 'support@gmail.com', 
+                'number' => '0187654321',
+                'country' => 'Malaysia',
+                'password' => Hash::make('Support123!'),
+            ]
+        ];
+
+        foreach ($additionalAdmins as $adminData) {
+            $user = User::updateOrCreate(
+                ['email' => $adminData['email']],
+                array_merge($adminData, [
+                    'marketing' => false,
+                    'otp_verified' => true,
+                    'email_verified_at' => now(),
+                ])
+            );
+
+            if (!$user->hasRole('admin')) {
+                $user->assignRole('admin');
+            }
+
+            if (!$user->hasPermissionTo('full')) {
+                $user->givePermissionTo('full');
+            }
+
+            if (!$user->hasPermissionTo('view')) {
+                $user->givePermissionTo('view');
+            }
+
+            $plainPassword = str_replace(Hash::make(''), '', $adminData['password']);
+            // Extract plain password from the array (it's already in plain text)
+            $originalPassword = $adminData['email'] === 'manager@gmail.com' ? 'Manager123!' : 'Support123!';
+            $this->command->info("Admin user created: {$adminData['email']} / {$originalPassword}");
+        }
+    }
+}

@@ -168,7 +168,7 @@
                                         <div class="">
                                             <div class="ms-4">
                                                 <p class="text-xs font-weight-bold mb-0">Name</p>
-                                                <h6 class="text-sm mb-0">{{ $user->fname }} {{ $user->lname }}
+                                                <h6 class="text-sm mb-0">{{ $user->name }}
                                                 </h6>
                                             </div>
                                         </div>

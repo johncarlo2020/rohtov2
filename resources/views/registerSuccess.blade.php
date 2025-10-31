@@ -7,7 +7,7 @@
             <div class="card px-4 py-4 rounded animate-entry delay-3">
                 <div class="text-center mb-4 px-1">
                     <h2 class="heading text-center mb-2">Hi,
-                      <span class="fw-bold">{{ auth()->check() && isset(auth()->user()->fname) ? auth()->user()->fname : 'Guest' }}!</span></h2>
+                      <span class="fw-bold">{{ auth()->check() && isset(auth()->user()->name) ? auth()->user()->name : 'Guest' }}!</span></h2>
                     <p class="text-center">Thank you for your time. Your <br> Registration is
                         now complete.</p>
                 </div>

@@ -38,7 +38,7 @@
                                 <div class="col-auto my-auto">
                                     <div class="h-100">
                                         <h5 class="mb-1">
-                                            {{ $user->fname }}
+                                            {{ $user->name }}
                                         </h5>
                                         <p class="mb-0 text-sm font-weight-bold">
                                             {{ $user->email }}
@@ -62,8 +62,8 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="example-text-input" class="form-control-label">First Name</label>
-                                            <input class="form-control" type="text" disabled value="{{ $user->fname }}">
+                                            <label for="example-text-input" class="form-control-label">Name</label>
+                                            <input class="form-control" type="text" disabled value="{{ $user->name }}">
                                         </div>
                                     </div>
                                     <div class="col-md-6">

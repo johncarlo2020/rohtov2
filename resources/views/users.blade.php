@@ -130,7 +130,7 @@
                         <tr data-user-id="{{ $user->id }}">
                             <td>{{ $user->id }}</td>
                             <td class="sticky-action">
-                                {{ $user->fname }}
+                                {{ $user->name }}
                                 @if($user->hasRole('admin'))
                                     <span class="badge bg-warning text-dark ms-1">
                                         <i class="fa fa-crown"></i> Admin
@@ -156,7 +156,7 @@
                                     </button>
                                 @else
                                     <button class="btn btn-danger btn-sm delete-user-btn" data-user-id="{{ $user->id }}"
-                                        data-user-name="{{ $user->fname }} {{ $user->lname }}">Delete</button>
+                                        data-user-name="{{ $user->name }}">Delete</button>
                                 @endif
                             </td>
 

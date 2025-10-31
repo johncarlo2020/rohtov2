@@ -107,7 +107,7 @@
                              @foreach($appointments as $appointment)
                              <tr>
                                  <td>{{ $loop->iteration }}</td>
-                                <td>{{ $appointment->user->fname ?? '' }} {{ $appointment->user->lname ?? '' }}</td>
+                                <td>{{ $appointment->user->name ?? '' }}</td>
                                 <td>{{ $appointment->guardian ?? '' }}</td>
                                 <td>{{ $appointment->user->dob ?? '' }}</td>
                                 <td>{{ $appointment->user->number ?? '' }}</td>

@@ -120,7 +120,8 @@ Route::group(['middleware' => ['client']], function () {
     Route::get('/dashboard', 'App\Http\Controllers\StationController@welcome')->name('dashboard');
     Route::get('/discover', 'App\Http\Controllers\StationController@discover')->name('discover');
     Route::post('/process_qr_code', 'App\Http\Controllers\StationController@scan')->name('process_qr_code');
-    Route::get('/station/{station}/gift-selection', 'App\Http\Controllers\StationController@giftSelection')->name('station.gift.selection');
+    Route::get('/station/{station}/stamping', 'App\Http\Controllers\StationController@giftSelection')->name('station.stamping');
+
 
     Route::get('/station/{station}/extension', 'App\Http\Controllers\StationController@extension')->name('station.extension');
     Route::get('/station/{station}/brand', 'App\Http\Controllers\StationController@brand')->name('station.brand');

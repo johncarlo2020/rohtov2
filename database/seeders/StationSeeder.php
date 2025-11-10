@@ -21,19 +21,23 @@ class StationSeeder extends Seeder
     public function run()
     {
         Station::create([
-            'name' => 'Head it Ryt',
-            'description' => 'Snap, Share, Tag @kosemy <br> #Sekkisei #SavetheBlue #SustainableBeauty <br> #BlueBottlePower #BeautywithPurpose',
+            'name' => 'Treasure Spot 1',
+            'question' => 'Which fertilizer practice helps support ESG goals in oil palm farming?',
         ]);
 
         Station::create([
-            'name' => 'Discover and Activate',
-            'description' => 'Apply & Test',
+            'name' => 'Treasure Spot 2',
+            'question' => 'Can Yield Booster Prophycient help control Ganoderma deiseasein oil palm?',
         ]);
 
         Station::create([
-            'name' => 'Collect your Gift',
-            'description' => 'Shine for Hidden Message',
+            'name' => 'Treasure Spot 3',
+            'question' => 'Which of the following services are offered by Agri Analyrics & Services (AAS)',
         ]);
+
+        
+
+       
 
 
         $role = Role::create(['name' => 'client']);

@@ -1,6 +1,23 @@
 <x-app-layout>
+    <style>
+        .answer-btn {
+            background-image: url(http://localhost/sekkisei/rohtov2/public/images/brand/Bubble.webp);
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-color: transparent;
+            box-shadow: none;
+            width:40vw;
+            height:40vw;
+            border-radius:50%;
+        }
+
+        .station-card.col-6.choice-6 {
+            margin-top: 50vw;
+        }
+    </style>
     <div id="stationPage" class="station-page main-content main-background with-scroll">
-        <div class="modal fade custom-modal" id="scanCompleteModal" tabindex="-1">
+        <div class="modal fade custom-modal" id="answerCorrectModal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered w-75 m-auto">
                 <div class="modal-content card">
                     <div class="modal-body">
@@ -9,13 +26,13 @@
                             <div class="text-content mt-0">
                                 <p class="sub-heading fw-bold mb-2 station-text "><span class="station_name text-dark"></span></p>
                                 <p class="mb-4 message text-grey">
-                                    Check-In Successful
+                                    Excellent
                                 </p>
                             </div>
                             <div class="text-content mt-3">
-                                <a href="{{ route('dashboard') }}" id="routeBtn"
+                                <a href="{{ route('station.stamping', $station->id);}}" id="routeBtn"
                                     class="custom-btn w-auto px-5 fw-regular custom-btn-primary text-white">
-                                    Back
+                                    NEXT
                                 </a>
                             </div>
                         </div>
@@ -54,15 +71,28 @@
         </div>
         <div id="mainContent"
             class="mt-1 mb-2 d-flex flex-column align-items-center justify-content-center animate-entry delay-3">
-            <h1 class="heading mb-3 mt-3 text-dark">Station {{ $station->id }}</h1>
-                <p class="sub-heading mb-1 fw-thin text-dark">
-                    {{ isset($station->name) ? $station->name : '' }}
+                <p class="sub-heading mb-1 text-white mb-5 mt-4 text-center">
+                    {{ isset($station->question) ? $station->question : '' }}
                 </p>
-            <div id="{{ $user ? '' : 'forceQr' }}" class="icon-container">
+
+               <div class="answers-wrapper row">
+                 @foreach($choices->answers as $choice)
+                        <div class="station-card col-6 choice-{{$choice->id}}">
+                                <button 
+                                    class="custom-btn answer-btn"
+                                    data-id="{{ $choice->id }}"
+                                    data-idc="{{ $choice->id === $station->answer_id ? 'true' : 'false' }}"
+                                    @if($user) disabled @endif
+                                    style="background-image: url('{{ asset('images/brand/Bubble.webp') }}');">
+                                    {{ $choice->text }}
+                                </button>
+                            </div>
+                    @endforeach
+               </div>
             </div>
-            <img class="mt-5 station-image w-75" src="{{ asset('images/station/ST' . $station->id . '.webp') }}"
-                alt="Station Image">
-            @if ($user)
+            <!-- <img class="mt-5 station-image w-75" src="{{ asset('images/station/ST') }}"
+                alt="Station Image"> -->
+            <!-- @if ($user)
                 <div class="scanner-button">
                     <p class="my-0 mt-5 text-center mb-3 text-dark">Checked in</p>
                     <a href="{{ route('dashboard') }}" class="custom-btn custom-btn-primary">
@@ -102,7 +132,7 @@
                         BACK
                     </a>
                 </div>
-            @endif
+            @endif -->
         </div>
         <div id="scannerContainer" class="scanner-container d-none mt-4">
             <!-- <button id="close" class="mx-auto mt-4 camera-btn">x</button> -->
@@ -110,7 +140,7 @@
             <p class="mt-4 scanner-text text-center text-dark">Find the QR code & Scan to check in</p>
             <div class="text-center my-3">
                 <a href="{{ route('dashboard') }}" class="custom-btn custom-btn-primary">
-                    BACK
+                    NEXT
                 </a>
             </div>
         </div>
@@ -118,6 +148,35 @@
 
     @push('scripts')
         <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const buttons = document.querySelectorAll('.answer-btn');
+
+                buttons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const isCorrect = this.getAttribute('data-idc') === 'true';
+                        console.log(isCorrect);
+                        if (isCorrect) {
+                            this.style.backgroundImage = "url('{{ asset('images/brand/Bubble_right.webp') }}')";
+                            this.classList.add('btn-success');
+                            
+                            // disable all buttons
+                            buttons.forEach(btn => btn.disabled = true);
+
+                            const correctModal = new bootstrap.Modal(document.getElementById('answerCorrectModal'));
+                            correctModal.show();
+                        } else {
+                            // this.classList.remove('btn-outline-primary');
+                            // this.classList.add('btn-secondary');
+                            this.style.backgroundImage = "url('{{ asset('images/brand/Bubble_wrong.webp') }}')";
+                            this.disabled = true;
+                        }
+                    });
+                });
+            });
+
+
+            </script>
         <script>
             // Pass data from Blade to JavaScript
             window.stationConfig = {
@@ -283,7 +342,7 @@
                         redeemBtn.addEventListener('click', function() {
                             if (selectedGiftValue) {
                                 // Redirect to gift selection page with selected gift
-                                const url = "{{ route('station.gift.selection', ['station' => $station->id]) }}" + "?gift=" + selectedGiftValue;
+                                const url = "{{ route('station.stamping', ['station' => $station->id]) }}" + "?gift=" + selectedGiftValue;
                                 window.location.href = url;
                             }
                         });

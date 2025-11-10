@@ -141,9 +141,13 @@ class StationController extends Controller
             ->where('station_id', $station->id)
             ->exists();
 
+        $choices = Station::with('answers', 'correctAnswer')
+            ->where('id', $station->id)
+            ->first();
+
         $gifts = \App\Models\Gifts::get();
 
-         return view('station', compact('station', 'user', 'gifts'));
+         return view('station', compact('station', 'user', 'gifts','choices'));
 
     }
 
@@ -725,7 +729,7 @@ class StationController extends Controller
 
     public function giftSelection(Request $request)
     {
-        return view('giftSelection');
+        return view('stamping');
     }
 
     public function discover()

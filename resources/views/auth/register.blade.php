@@ -19,7 +19,7 @@
         font-family: 'Poppins', sans-serif !important;
     }
     </style>
-    <div class="register-main main-content with-scroll">
+    <div class="register-main main-background main-content with-scroll">
         <div class="justify-content-center w-100">
             <div class="col-12 d-flex justify-content-center animate-entry">
                 @include('components.branding')
@@ -112,15 +112,16 @@
             </div>
 
             <div class="bottom-text text-center">
-                    <p class="already-register text-dark">
+                    <p class="already-register text-white">
                         <strong>Already Registered</strong>
                     </p>
-                    <p class="already-register text-grey">
+                    <p class="already-register text-white">
                         Please Login
-                        <a href="{{ route('login') }}" class="text-grey"><strong>here</strong></a>
+                        <a href="{{ route('login') }}" class="text-white"><strong>here</strong></a>
                     </p>
                 </div>
         </div>
+        <x-footer/>
     </div>
 </x-guest-layout>
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/intlTelInput.min.js"></script>

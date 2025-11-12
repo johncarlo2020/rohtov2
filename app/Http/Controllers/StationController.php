@@ -308,11 +308,15 @@ class StationController extends Controller
         // Determine if stations 1-4 are all completed
         $canAccessStation3 = $stations->filter(fn($s) => $s->id <= 2)->every(fn($s) => $s->status == true);
 
+        $isRedeemed = \App\Models\UserGift::where('user_id', $userId)
+            ->where('is_redeemed', true)
+            ->exists();
+
         $nextStation = $stations->firstWhere(function ($station) use ($user) {
             return !$user->stationUser()->where('station_id', $station->id)->exists();
         });
 
-        return view('dashboard', compact('stations', 'stationDone', 'canAccessStation3', 'completedStationIds', 'nextStation'));
+        return view('dashboard', compact('stations', 'stationDone', 'canAccessStation3', 'completedStationIds', 'nextStation','isRedeemed'));
 
     }
 
@@ -729,8 +733,31 @@ class StationController extends Controller
 
     public function giftSelection(Request $request)
     {
-        return view('stamping');
+        $userId = auth()->id();
+
+    $isRedeemed = \App\Models\UserGift::where('user_id', $userId)
+        ->where('is_redeemed', true)
+        ->exists();
+
+        return view('giftSelection',compact('isRedeemed'));
     }
+
+    public function stamping(Station $station)
+    {
+        $user = StationUser::where('user_id', auth()->id())
+            ->where('station_id', $station->id)
+            ->exists();
+
+        $choices = Station::with('answers', 'correctAnswer')
+            ->where('id', $station->id)
+            ->first();
+
+        $gifts = \App\Models\Gifts::get();
+
+         return view('stamping', compact('station', 'user', 'gifts','choices'));
+
+    }
+
 
     public function discover()
     {
@@ -788,4 +815,97 @@ class StationController extends Controller
         return redirect()->back()->with('success', "Gift '{$gift->name}' has been {$status} successfully.");
     }
 
+    public function stamp(Request $request)
+    {
+       
+        // Get the last character of the QR code message
+        $station_id = $request->station;
+
+
+        // Assume that `$station_id` is validated before this point
+
+        try {
+            DB::beginTransaction();
+
+            $lastStation = StationUser::where('user_id', auth()->id())->orderBy('id', 'desc')->first();
+
+            if (empty($lastStation)) {
+                $lastLoginTime = Auth::user()->last_login_at;
+                $currentDateTime = Carbon::now();
+                $timeSpent = $currentDateTime->diff($lastLoginTime);
+                $minutesSpent = $timeSpent->i; // Minutes spent
+                $secondsDifference = $timeSpent->s; // Seconds
+
+                // Convert minutes to seconds
+                $secondsSpent = $minutesSpent * 60 + $secondsDifference;
+            } else {
+                $lastLoginTime = $lastStation->created_at;
+                $currentDateTime = Carbon::now();
+                $timeSpent = $currentDateTime->diff($lastLoginTime);
+                $minutesSpent = $timeSpent->i; // Minutes spent
+                $secondsDifference = $timeSpent->s; // Seconds
+                // Convert minutes to seconds
+                $secondsSpent = $minutesSpent * 60 + $secondsDifference;
+            }
+
+            $stationUser = new StationUser();
+            $stationUser->user_id = auth()->id();
+            $stationUser->station_id = $station_id;
+            $stationUser->time_spent = $secondsSpent;
+            $stationUser->save();
+
+            // Handle gift selection for station 3
+            // if ($station_id == 3 && $request->has('selected_gift_id') && $request->selected_gift_id) {
+            //     $userGift = new \App\Models\UserGift();
+            //     $userGift->user_id = auth()->id();
+            //     $userGift->gift_id = $request->selected_gift_id;
+            //     $userGift->station_id = $station_id;
+            //     $userGift->is_redeemed = false;
+            //     $userGift->save();
+            // }
+
+            DB::commit();
+            // Success response
+            return response()->json(['message' => 'Station ID updated successfully'], 200);
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            // Handle the error, log it, or return an appropriate response
+            return response()->json(['error' => $e], 500);
+        }
+    }
+
+    public function redeemGift(Request $request)
+    {
+
+        $userId = auth()->id();
+
+        // Check if already redeemed
+        $existingGift = \App\Models\UserGift::where('user_id', $userId)
+            ->where('is_redeemed', true)
+            ->first();
+
+        if ($existingGift) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You have already redeemed your gift.',
+            ], 200);
+        }
+
+        // Create new redeemed gift record
+        $userGift = new \App\Models\UserGift();
+        $userGift->user_id = $userId;
+        $userGift->is_redeemed = true;
+        $userGift->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Gift redeemed successfully! ',
+            'redirect' => route('congrats'),
+        ], 200);
+    }
+
 }
+
+
+

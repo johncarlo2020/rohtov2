@@ -5,33 +5,31 @@
     }
 
     /* Apply Poppins font to the register page */
-    .register-main * {
+    /* .register-main * {
         font-family: 'Poppins', sans-serif !important;
-    }
+    } */
 
     /* Specific styling for form elements */
     .register-main h4,
     .register-main label,
     .register-main input,
-    .register-main button,
-    .register-main p,
     .register-main span {
-        font-family: 'Poppins', sans-serif !important;
+        font-family: 'GothamBold' !important;
     }
     </style>
     <div class="register-main main-background main-content with-scroll">
         <div class="justify-content-center w-100">
-            <div class="col-12 d-flex justify-content-center animate-entry">
+            <div class="col-12 d-flex justify-content-center animate-entry mb-4">
                 @include('components.branding')
             </div>
-            <div class=" mt-4 mb-5 w-100  animate-entry delay-3 bg-white p-3 ">
-                <h4 class="mx-4 text-center text-dark">SIGN UP</h4>
+            <h2 class="mx-4 text-center sub-heading-text animate-entry">SIGN UP</h2>
+            <div class=" mt-4 mb-5 w-100  animate-entry delay-3 bg-white p-3 card-parent">
                 <div class="py-3 register-form-parent">
                     <form id="form" method="POST" action="{{ route('register') }}">
                         @csrf
                         <div class="mb-3 row">
                             <div class="col-12">
-                                <label for="name" class="text-dark">Name <span class="text-danger">*</span></label>
+                                <label for="name" class="text-main">Full Name <span class="text-danger">*</span></label>
                                 <input id="fname" placeholder="Enter your full name" type="text"
                                     class="input-text form-control @error('fname') is-invalid @enderror" name="fname"
                                     value="{{ old('fname') }}" required autocomplete="fname" autofocus />
@@ -44,7 +42,7 @@
                         </div>
 
 
-                        <div class="mb-3 row">
+                        <!-- <div class="mb-3 row">
                             <div class="col-12">
                                 <label for="email" class="text-dark">Email Address <span class="text-danger">*</span></label>
 
@@ -58,12 +56,12 @@
                                 </span>
                                 @enderror
                             </div>
-                        </div>
+                        </div> -->
 
 
                         <div class="mb-3 row">
                             <div class="col-12 input-group w-100">
-                                <label for="phone" class="text-dark">Phone Number <span class="text-danger">*</span></label>
+                                <label for="number" class="text-main">Phone Number <span class="text-danger">*</span></label>
 
                                 <input id="number" type="number"
                                     class="input-text form-control w-100 @error('number') is-invalid @enderror"
@@ -81,29 +79,28 @@
                             </div>
                         </div>
 
-                        <div class="mb-4 row">
+                        <div class="mb-3 row">
                             <div class="col-12">
-                                <div class="form-check">
-                                    <label class="form-check-label text-dark small-text" for="marketing">
-                                        By submitting this form, you agree that Ryt Bank may contact you
-                                        regarding our campaign, including any relevant offers and updates.
-                                        Your personal data will be collected,
-                                        handled and processed in accordance with Ryt Bank's Privacy Notice.
-                                    </label>
-                                </div>
+                                <label for="company" class="text-main">Company Name <span class="text-danger">*</span></label>
+
+                                <input id="company" placeholder="Enter your company name" type="text"
+                                    class="input-text form-control @error('company') is-invalid @enderror" name="company"
+                                    value="{{ old('company') }}" required autocomplete="company" />
+
+                                @error('email')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
                             </div>
                         </div>
+
+            
                         <div class="mb-0 row">
-                            <div class="col-12 text-center mb-3">
-                                <button id="submitButton" type="submit"
-                                    class="w-100 custom-btn custom-btn-primary animate-entry delay-3">
-                                    {{ __('REGISTER') }}
-                                </button>
-                            </div>
                             <div class="col-12 text-center">
                                 <button id="submitButton" type="submit"
-                                    class="w-100 custom-btn custom-btn-secondary animate-entry delay-3" onclick="if(document.referrer){ history.back(); } else { window.location.href='{{ url('/') }}'; }">
-                                    {{ __('BACK') }}
+                                    class="w-75 custom-btn custom-btn-primary animate-entry delay-3">
+                                    {{ __('Submit') }}
                                 </button>
                             </div>
                         </div>
@@ -112,13 +109,14 @@
             </div>
 
             <div class="bottom-text text-center">
-                    <p class="already-register text-white">
+                    <span class="already-register text-white">
                         <strong>Already Registered</strong>
-                    </p>
-                    <p class="already-register text-white">
+                    </span>
+                    <br>
+                    <span class="already-register text-white">
                         Please Login
                         <a href="{{ route('login') }}" class="text-white"><strong>here</strong></a>
-                    </p>
+                    </span>
                 </div>
         </div>
         <x-footer/>

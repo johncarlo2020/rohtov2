@@ -48,6 +48,21 @@
             position: relative;
             z-index: 10;
         }
+
+        .btn-wrapper 
+        {
+            margin-top: -5%;
+        }
+
+        .continue-btn
+        {
+            -webkit-text-stroke: 1px #733412;
+            font-size: 24px;
+            font-weight: 900;
+            text-decoration: none;
+            margin-top: -5%;
+            text-shadow: 0 3px 0 #f7a239;
+        }
     </style>
 </head>
 
@@ -57,8 +72,10 @@
 
         <!-- Branding (top area) -->
         <div class="row flex-grow-1">
-            <div class="col-12 d-flex justify-content-center align-items-center animate-entry">
-                @include('components.branding')
+            <div class="col-12 d-flex justify-content-center align-items-start pt-5 animate-entry">
+                <div>
+                    <img onclick="window.location.href='{{ route('dashboard') }}'" class="logo w-75 m-auto pulse-slow" src="{{ asset('images/brand/logo.webp') }}" alt="Brand Logo" />
+                </div>
             </div>
         </div>
 
@@ -75,8 +92,8 @@
         <div class="row">
             <div class="col-12 text-center">
                 <div class="d-block">
-                    <div class="col mb-3 animate-entry delay-2">
-                        <a href="{{ route('register') }}" class="custom-btn custom-btn-primary">
+                    <div class="col mb-5 animate-entry delay-2 btn-wrapper">
+                        <a href="{{ route('register') }}" class="continue-btn pulse-slow">
                             TAP TO CONTINUE
                         </a>
                     </div>
@@ -86,7 +103,7 @@
 
         <!-- Footer -->
         <div class="footer-welcome mb-4 text-center w-100">
-            <p>Powered by WOWSOME®️ 2025</p>
+            <x-footer/>
         </div>
     </div>
 

@@ -112,6 +112,7 @@ Route::group(['middleware' => ['admin']], function () {
 });
 
 
+
 Route::group(['middleware' => ['client']], function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -119,8 +120,14 @@ Route::group(['middleware' => ['client']], function () {
     Route::get('/station/{station}', 'App\Http\Controllers\StationController@index')->name('station');
     Route::get('/dashboard', 'App\Http\Controllers\StationController@welcome')->name('dashboard');
     Route::get('/discover', 'App\Http\Controllers\StationController@discover')->name('discover');
+    Route::get('/giftselection', 'App\Http\Controllers\StationController@giftSelection')->name('station.giftselection');
+    Route::post('/giftselection/redeem', 'App\Http\Controllers\StationController@redeemGift')->name('giftselection.redeem');
     Route::post('/process_qr_code', 'App\Http\Controllers\StationController@scan')->name('process_qr_code');
-    Route::get('/station/{station}/stamping', 'App\Http\Controllers\StationController@giftSelection')->name('station.stamping');
+    Route::post('/process_stamp', 'App\Http\Controllers\StationController@stamp')->name('process_stamp');
+    Route::get('/station/{station}/stamping', 'App\Http\Controllers\StationController@stamping')->name('station.stamping');
+
+
+   
 
 
     Route::get('/station/{station}/extension', 'App\Http\Controllers\StationController@extension')->name('station.extension');

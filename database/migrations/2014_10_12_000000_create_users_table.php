@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('number');
             $table->string('country');
-            $table->string('email')->unique();
+            $table->string('email')->unique()->nullable();
             $table->string('pledge_image')->nullable();
             $table->text('pledge_text')->nullable();
             $table->timestamp('last_login_at')->nullable();

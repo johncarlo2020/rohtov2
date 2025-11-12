@@ -1,5 +1,26 @@
 <x-app-layout>
-    <div class="py-5 map-page main-content stamping-page">
+    <style>
+        #touchBox {
+        width: 90vw;
+        height: 90vw;
+        padding:10%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+        touch-action: none; /* Important for multi-touch */
+        position: relative;
+    }
+
+    #touchBox img.stamping-image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain; /* or cover if you want it to fill */
+        pointer-events: none; /* ← prevents blocking touch events */
+        user-select: none;
+    }
+    </style>
+    <div class="py-4 map-page main-content stamping-page">
         <div class="d-flex justify-content-center align-item-center animate-entry">
             @include('components.branding')
         </div>
@@ -22,28 +43,42 @@
                 </div>
             </div>
         </div>
-        <div class="text-success text-center mt-2 d-none">
-            <h2>Nicely done!!<br>
+        <div class=" success-text text-center mt-2 d-none">
+            <h2 class="sub-heading-text animate-entry">Nicely done!!<br>
             Stamp Collected!</h2>
         </div>
         <div class="station-selection-container mb-2 animate-entry delay-2">
             <!-- Center image (middle area) -->
             <div class="row">
                 <div class="col-12 d-flex justify-content-center align-items-center p-0 animate-entry">
-                    <img class="stamping-image" 
-                        src="{{ asset('images/brand/STMP' . request()->segment(2) . '.webp') }}"
-                        alt="">
+                    <div id="touchBox">
+                        <img class="stamping-image"
+                            src="{{ asset('images/brand/STMP' . request()->segment(2) . '.webp') }}"
+                            alt="Stamp Image"
+                            data-stamp-id="{{ request()->segment(2) }}">
+                    </div>
                 </div>
             </div>
+   
+            <div id="countDisplay" class="text-center mt-3 d-none">
+                Touches inside count: <span id="countNum">0</span>
+            </div>
+
 
             <!-- Bottom CTA -->
             <div class="row">
                 <div class="col-12 text-center">
                     <div class="d-block">
                         <div class="col mb-3 animate-entry delay-2">
-                            <a href="{{ route('dashboard') }}" class="custom-btn custom-btn-primary">
-                                HOME
-                            </a>
+                            <button type="button" class="custom-btn custom-btn-primary stamp-btn"
+                                @if(request()->segment(2) == 3)
+                                    onclick="window.location.href='{{ route('station.giftselection') }}'"
+                                @else
+                                    onclick="window.location.href='{{ route('dashboard') }}'"
+                                @endif
+                                >
+                                Home
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -51,4 +86,118 @@
         </div>
         <x-footer/>
     </div>
+    <script>
+        
+
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const box = document.getElementById("touchBox");
+            const countDisplay = document.getElementById("countNum");
+            const stampingPage = document.querySelector(".stamping-page");
+            const activeInside = new Map();
+            let hasStamped = false;
+            const user = @json($user);
+            
+            isStamped();
+            
+            function isStamped()
+            {
+                if(user)
+                {
+                    hasStamped = true;
+                    stampingPage.classList.add("active");
+                    const text = document.querySelector(".success-text");
+                        text.classList.remove("d-none");
+                            const button = document.querySelector(".stamp-btn");
+                            if (button) {
+                                button.removeAttribute("disabled");
+                                button.style.pointerEvents = "auto";
+                                console.log('test');
+                            }
+                }
+            }
+
+            function isInside(event, element) {
+                const rect = element.getBoundingClientRect();
+                return (
+                    event.clientX >= rect.left &&
+                    event.clientX <= rect.right &&
+                    event.clientY >= rect.top &&
+                    event.clientY <= rect.bottom
+                );
+            }
+
+            function updateDisplay() {
+                countDisplay.textContent = activeInside.size;
+
+                // Toggle grayscale removal
+                // Only trigger once
+                    if (!hasStamped && activeInside.size == 1) {
+                        hasStamped = true;
+                        stampingPage.classList.add("active");
+
+                        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                        const stampImage = document.querySelector('.stamping-image');
+                        const stampId = stampImage.dataset.stampId;
+
+                            $.ajax({
+                                url: '{{ route('process_stamp') }}',
+                                type: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': csrfToken,
+                                },
+                                data: {
+                                    station: stampId,
+                                },
+                                success: function (response) {
+                                    console.log(response);
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error('Error sending QR Code message:', error);
+                                }
+                            });
+                            const text = document.querySelector(".success-text");
+                            text.classList.remove("d-none");
+                            const button = document.querySelector(".stamp-btn");
+                            if (button) {
+                                button.removeAttribute("disabled");
+                                button.style.pointerEvents = "auto";
+                                console.log('test');
+                            }
+
+                }
+                    
+            }
+
+            document.addEventListener("pointerdown", (event) => {
+                if (event.pointerType === "mouse") return;
+                if (isInside(event, box)) {
+                    activeInside.set(event.pointerId, event);
+                }
+                updateDisplay();
+            });
+
+            document.addEventListener("pointermove", (event) => {
+                if (event.pointerType === "mouse") return;
+
+                if (activeInside.has(event.pointerId) && !isInside(event, box)) {
+                    activeInside.delete(event.pointerId);
+                } else if (!activeInside.has(event.pointerId) && isInside(event, box)) {
+                    activeInside.set(event.pointerId, event);
+                }
+
+                updateDisplay();
+            });
+
+            document.addEventListener("pointerup", (event) => {
+                activeInside.delete(event.pointerId);
+                updateDisplay();
+            });
+
+            document.addEventListener("pointercancel", (event) => {
+                activeInside.delete(event.pointerId);
+                updateDisplay();
+            });
+        });
+        </script>
 </x-app-layout>

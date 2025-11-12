@@ -1,27 +1,10 @@
 <x-app-layout>
-    <div class="py-5 map-page main-content dashbord-page">
+    <div class="py-4 map-page main-content dashbord-page">
         <div class="d-flex justify-content-center align-item-center animate-entry">
             @include('components.branding')
         </div>
 
         <!-- login Modal -->
-        <!-- Welcome Modal -->
-        <div class="modal fade transparent-modal" id="welcomeModal" tabindex="-1" aria-labelledby="welcomeModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content text-center position-relative card">
-
-                    <!-- Close Button (top-right) -->
-                    <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal"
-                        aria-label="Close"></button>
-
-                    <!-- Image -->
-                    <img src="{{ asset('images/dutchlady/dutchLadyWelcomeModal.webp') }}" alt="Welcome"
-                        class="img-fluid">
-
-                </div>
-            </div>
-        </div>
 
         <!-- Modal -->
         <div class="modal fade custom-modal" id="notAllowedModal" tabindex="-1">
@@ -30,7 +13,7 @@
                     <div class="modal-body">
                         <div class="text-center content">
                             <div class="text-content mt-4 mb-4">
-                                <p class="message">
+                                <p class="message text-dark">
                                     Please Complete all <br> the station
                                 </p>
                             </div>
@@ -42,19 +25,37 @@
             </div>
         </div>
         <div class="station-selection-container mb-2 animate-entry delay-2">
-            <!-- <img class="station-bg-map" src="{{ asset('images/station/map-lines.svg') }}" alt=""> -->
             @foreach ($stations as $station)
-                <a class="station-custom-btn   station-custom-btn-{{ $station->id }} @if ($station->status) done @endif"
-                    type="button" onclick="gotoStation({{ $station->id }})">
+
+                <a class="station-custom-btn station-custom-btn-{{ $station->id }}"
+                    type="button"
+                    @if($station->status)
+                        @if($station->id == 3)
+                            @if($isRedeemed)
+                                onclick="window.location.href='{{ route('congrats') }}'"
+                            @else 
+                                onclick="window.location.href='{{ route('station.giftselection') }}'"
+                            @endif
+                        @else
+                             onclick="gotoStamping({{ $station->id }})"
+                        @endif
+                    @else
+                            onclick="gotoStation({{ $station->id }})"
+                    @endif
+                    >
+
                     <div class="station-image-container">
-                        <img class="station-icon station-{{ $station->id}}" data-id="station-{{$station->id}}" src="{{ asset('images/station/STBM' . $station->id . '.webp') }}"
-                            alt="">
+                        <img class="station-icon station-{{ $station->id }} pulse-slow" 
+                            data-id="station-{{ $station->id }}" 
+                            src="@if($station->status)
+                                {{asset('images/station/STBM' . $station->id . 'GLOW.webp');}}
+                            @else
+                                {{asset('images/station/STBM' . $station->id . '.webp');}}
+                            @endif"
+                            alt="Station {{ $station->id }}"
+                            style="@if($station->status) filter: grayscale(0); @endif"> <!-- grayscale only if NOT completed -->
                     </div>
                     <div class="station-details station-{{ $station->id }}">
-                        <!-- <h3 class="station-number">Station {{ $station->id }}
-                            <i class="check-icon fa-solid fa-circle-check text-success"></i>
-                        </h3> -->
-                        <!-- <h5 class="station-name">{{ $station->name }}</h5> -->
                     </div>
                 </a>
             @endforeach
@@ -65,6 +66,13 @@
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 let canAccessStation3 = @json($canAccessStation3);
+                window.gotoStamping = function(id,)
+                {
+                    var url = "{{ route('station.stamping', ['station' => ':id']);}}".replace(
+                        ":id",id
+                    );
+                     window.location.href = url;
+                }
                 window.gotoStation = function(id, ) {
                     var url = "{{ route('station', ['station' => ':id']) }}".replace(
                         ":id",

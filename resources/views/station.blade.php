@@ -16,8 +16,8 @@
             margin-top: 50vw;
         }
     </style>
-    <div id="stationPage" class="station-page main-content main-background with-scroll">
-        <div class="modal fade custom-modal" id="answerCorrectModal" tabindex="-1">
+    <div id="stationPage" class="station-page main-content main-background">
+        <div class="modal fade custom-modal animate-entry" id="answerCorrectModal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered w-75 m-auto">
                 <div class="modal-content card">
                     <div class="modal-body">
@@ -25,8 +25,15 @@
                             <img class="check mx-auto mb-4" id="badge" src="">
                             <div class="text-content mt-0">
                                 <p class="sub-heading fw-bold mb-2 station-text "><span class="station_name text-dark"></span></p>
-                                <p class="mb-4 message text-grey">
-                                    Excellent
+                                <p class="mb-4 message text-dark">
+                                    Excellent!
+                                </p>
+                                <div class="d-flex justify-content-center mb-4">
+                                    <img src="{{ asset('images/check.png') }}" alt="">
+                                </div>
+                                <p class="mb-4 message text-dark">
+                                    Your knowloedge is <br>
+                                    Shining through!
                                 </p>
                             </div>
                             <div class="text-content mt-3">
@@ -77,7 +84,7 @@
 
                <div class="answers-wrapper row">
                  @foreach($choices->answers as $choice)
-                        <div class="station-card col-6 choice-{{$choice->id}}">
+                        <div class="station-card col-6 choice-{{$choice->id}} pulse-slow">
                                 <button 
                                     class="custom-btn answer-btn"
                                     data-id="{{ $choice->id }}"
@@ -145,6 +152,7 @@
             </div>
         </div>
     </div>
+    <x-footer/>
 
     @push('scripts')
         <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
@@ -174,9 +182,7 @@
                     });
                 });
             });
-
-
-            </script>
+        </script>
         <script>
             // Pass data from Blade to JavaScript
             window.stationConfig = {
@@ -192,6 +198,7 @@
                 station_id: {{ $station->id }},
                 station_name: '{{ $station->name }}'
             };
+
 
             window.gotoStation = function(id,) {
                     var url = "{{ route('station', ['station' => ':id']) }}".replace(

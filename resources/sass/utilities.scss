@@ -5,12 +5,22 @@
 .main-background {
 background-image: $main-background;
 background-size: cover;
+height:100vh;
+}
+
+.station-page
+{
+    position: relative; /* make sure parent is relative */
+    background-image: $stamping-background;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .main-content {
     position: relative;
     width: 100%;
-    height: 100%;
+    // height: 100%;
     padding: 0;
     margin: 0;
     padding: $content-padding;
@@ -188,4 +198,9 @@ background-size: cover;
     right: -21px;
     top: 50%;
     transform: translateY(-50%);
+}
+
+.text-main 
+{
+    color:#733412!important;
 }

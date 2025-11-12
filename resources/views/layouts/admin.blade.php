@@ -89,7 +89,7 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('admin.gifts*') ? 'active' : '' }}" href="{{ route('admin.gifts') }}">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -97,7 +97,7 @@
                         </div>
                         <span class="nav-link-text ms-1">Gifts</span>
                     </a>
-                </li>
+                </li> -->
 
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('admin.user.gifts') ? 'active' : '' }}" href="{{ route('admin.user.gifts') }}">

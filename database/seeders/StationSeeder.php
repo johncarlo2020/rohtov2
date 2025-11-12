@@ -49,7 +49,7 @@ class StationSeeder extends Seeder
             'number' => '0123456789',
             'email' => 'admin@gmail.com',
             'country' => 'Malaysia',
-            'password' => Hash::make('WowsomeRyt2025'),
+            'password' => Hash::make('WowsomeBm2025'),
         ]);
 
         $user->assignRole('admin');

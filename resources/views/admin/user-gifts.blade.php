@@ -25,9 +25,6 @@
                                     <tr>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">User</th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Email</th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Gift</th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Station</th>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Status</th>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Selected At</th>
                                     </tr>
@@ -45,19 +42,6 @@
                                                     <h6 class="mb-0 text-sm"> {{ $userGift->user->name ?? '' }}</h6>
                                                     <p class="text-xs text-secondary mb-0">ID: {{ $userGift->user_id }}</p>
                                                 </div>
-                                            </td>
-                                            <td>
-                                                <div class="px-3">
-                                                    <p class="text-xs font-weight-bold mb-0">{{ $userGift->user->email ?? 'N/A' }}</p>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="px-3">
-                                                    <h6 class="mb-0 text-sm">{{ $userGift->gift->name ?? 'Gift ID: ' . $userGift->gift_id }}</h6>
-                                                </div>
-                                            </td>
-                                            <td class="text-center">
-                                                <span class="badge badge-sm bg-gradient-info">Station {{ $userGift->station_id }}</span>
                                             </td>
                                             <td class="text-center">
                                                 @if($userGift->is_redeemed ?? false)

@@ -1,22 +1,67 @@
 <x-app-layout>
     <style>
         .answer-btn {
-            background-image: url(http://localhost/sekkisei/rohtov2/public/images/brand/Bubble.webp);
-            background-position: center;
-            background-size: cover;
+            background-image: url('{{ asset('images/bubble_animation.webp') }}');
+            background-position: 0 0;
+            background-size: 900% 100%;
             background-repeat: no-repeat;
             background-color: transparent;
             box-shadow: none;
             width:40vw;
             height:40vw;
             border-radius:50%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .answer-btn.animating {
+            background-image: none;
+        }
+
+        .station-card {
+            position: relative;
+        }
+
+        .bubble-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('{{ asset('images/bubble_animation.webp') }}');
+            background-repeat: no-repeat;
+            background-size: 900% 100%;
+            background-position: 0 0;
+            pointer-events: none;
+            z-index: 10;
+            display: none;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .bubble-animation.animate {
+            display: block;
+            animation: bubbleSprite 0.9s steps(1) forwards;
+        }
+
+        @keyframes bubbleSprite {
+            0% { background-position: 0% 0; }
+            11.11% { background-position: 12.5% 0; }
+            22.22% { background-position: 25% 0; }
+            33.33% { background-position: 37.5% 0; }
+            44.44% { background-position: 50% 0; }
+            55.55% { background-position: 62.5% 0; }
+            66.66% { background-position: 75% 0; }
+            77.77% { background-position: 87.5% 0; }
+            88.88% { background-position: 100% 0; }
+            100% { background-position: 100% 0; }
         }
 
         .station-card.col-6.choice-6 {
             margin-top: 50vw;
         }
     </style>
-    <div id="stationPage" class="station-page main-content main-background">
+    <div id="stationPage" class="station-page main-content main-background with-scroll">
         <div class="modal fade custom-modal animate-entry" id="answerCorrectModal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered w-75 m-auto">
                 <div class="modal-content card">
@@ -85,12 +130,12 @@
                <div class="answers-wrapper row">
                  @foreach($choices->answers as $choice)
                         <div class="station-card col-6 choice-{{$choice->id}} pulse-slow">
+                                <div class="bubble-animation"></div>
                                 <button 
                                     class="custom-btn answer-btn"
                                     data-id="{{ $choice->id }}"
                                     data-idc="{{ $choice->id === $station->answer_id ? 'true' : 'false' }}"
-                                    @if($user) disabled @endif
-                                    style="background-image: url('{{ asset('images/brand/Bubble.webp') }}');">
+                                    @if($user) disabled @endif>
                                     {{ $choice->text }}
                                 </button>
                             </div>
@@ -163,21 +208,41 @@
                 buttons.forEach(button => {
                     button.addEventListener('click', function() {
                         const isCorrect = this.getAttribute('data-idc') === 'true';
+                        const stationCard = this.closest('.station-card');
+                        const bubbleAnimation = stationCard.querySelector('.bubble-animation');
+                        
+                        // Hide button background and start sprite animation
+                        this.classList.add('animating');
+                        if (bubbleAnimation) {
+                            bubbleAnimation.classList.add('animate');
+                        }
+                        
                         console.log(isCorrect);
                         if (isCorrect) {
-                            this.style.backgroundImage = "url('{{ asset('images/brand/Bubble_right.webp') }}')";
-                            this.classList.add('btn-success');
-                            
                             // disable all buttons
                             buttons.forEach(btn => btn.disabled = true);
 
-                            const correctModal = new bootstrap.Modal(document.getElementById('answerCorrectModal'));
-                            correctModal.show();
+                            // Show modal after animation completes (900ms)
+                            setTimeout(() => {
+                                const correctModal = new bootstrap.Modal(document.getElementById('answerCorrectModal'));
+                                correctModal.show();
+                                
+                                // Reset animation
+                                if (bubbleAnimation) {
+                                    bubbleAnimation.classList.remove('animate');
+                                }
+                                this.classList.remove('animating');
+                            }, 900);
                         } else {
-                            // this.classList.remove('btn-outline-primary');
-                            // this.classList.add('btn-secondary');
-                            this.style.backgroundImage = "url('{{ asset('images/brand/Bubble_wrong.webp') }}')";
                             this.disabled = true;
+                            
+                            // Reset animation after completion
+                            setTimeout(() => {
+                                if (bubbleAnimation) {
+                                    bubbleAnimation.classList.remove('animate');
+                                }
+                                this.classList.remove('animating');
+                            }, 900);
                         }
                     });
                 });

@@ -17,24 +17,28 @@ class AddViewer extends Seeder
      */
     public function run(): void
     {
-        $user = User::create([
-            'fname' => 'viewer',
-            'number' => '0123456789',
-            'email' => 'viewer@gmail.com',
-            'country' => 'Malaysia',
-            'password' => Hash::make('WowsomeKoseViewer'),
-            'find' => 'facebook',
-            'dob' => '10/20/2001',
-        ]);
+        $user = User::firstOrCreate(
+            ['email' => 'viewer@gmail.com'],
+            [
+                'name' => 'viewer',
+                'number' => '0123456789',
+                'country' => 'Malaysia',
+                'password' => Hash::make('WowsomeKoseViewer'),
+                // 'find' => 'facebook',
+                // 'dob' => '10/20/2001',
+            ]
+        );
 
-        $permission = Permission::create(['name' => 'view']);
-        $permission = Permission::create(['name' => 'full']);
+        $permission = Permission::firstOrCreate(['name' => 'view']);
+        $permission = Permission::firstOrCreate(['name' => 'full']);
 
         $user->assignRole('admin');
 
         $user->givePermissionTo('view');
 
         $user2 = User::find(1);
-        $user2->givePermissionTo('full');
+        if ($user2) {
+            $user2->givePermissionTo('full');
+        }
     }
 }

@@ -1,8 +1,8 @@
 <x-app-layout>
     <style>
         #touchBox {
-        width: 90vw;
-        height: 90vw;
+        width: 50vh;
+        height: 50vh;
         padding:10%;
         display: flex;
         align-items: center;

@@ -153,7 +153,7 @@
                 <i class="fas fa-chevron-left"></i>
             </a>
         </div>
-        <div class="d-flex justify-content-center animate-entry">
+        <div class="animate-entry">
             @include('components.branding')
         </div>
         <div id="mainContent"

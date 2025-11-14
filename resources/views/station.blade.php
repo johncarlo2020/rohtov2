@@ -7,8 +7,8 @@
             background-repeat: no-repeat;
             background-color: transparent;
             box-shadow: none;
-            width:40vw;
-            height:40vw;
+            width:35vw;
+            height:35vw;
             border-radius:50%;
             position: relative;
             overflow: hidden;
@@ -77,12 +77,12 @@
         }
 
         .station-card.col-6.choice-6 {
-            margin-top: 50vw;
+            margin-top: 15vh;
         }
-        .station-card.col-6.choice-5
+        /* .station-card.col-6.choice-5
         {
             margin-bottom:50vw;
-        }
+        } */
 
 
         .overlay {
@@ -119,7 +119,7 @@
     </style>
 
     
-    <div id="stationPage" class="station-page main-content main-background with-scroll">
+    <div id="stationPage" class="station-page main-content main-background">
         <div class="overlay station-{{$station->id}}"></div>
         <div class="modal fade custom-modal animate-entry" id="answerCorrectModal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered w-75 m-auto">
@@ -182,7 +182,7 @@
         </div>
         <div id="mainContent"
             class="mt-1 mb-2 d-flex flex-column align-items-center justify-content-center animate-entry delay-3">
-                <p class="sub-heading mb-1 text-white mb-5 mt-4 text-center">
+                <p class="sub-heading mb-1 text-white mb-3 mt-3 text-center">
                     {{ isset($station->question) ? $station->question : '' }}
                 </p>
 

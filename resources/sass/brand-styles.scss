@@ -6,7 +6,7 @@
     img {
         //set the width and height of the logo
         height: auto;
-        min-width: 208px;
+        min-width: 175px;
         max-width: 30vw;
         object-fit: contain;
         margin: auto;
@@ -918,5 +918,17 @@ p.footer {
             left: 0;
             width: 100%;
         }
+    }
+}
+
+.station {
+    height: 100svh !important;
+
+    .footer {
+        text-align: center;
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+        left: 0;
     }
 }

@@ -164,7 +164,7 @@
 
                 // Toggle grayscale removal
                 // Only trigger once
-                    if (!hasStamped && activeInside.size == 1) {
+                    if (!hasStamped && activeInside.size == 4) {
                         hasStamped = true;
                         stampingPage.classList.add("active");
 

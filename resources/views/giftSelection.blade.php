@@ -77,7 +77,7 @@
                 <i class="fas fa-chevron-left"></i>
             </a>
         </div>
-        <div class="d-flex justify-content-center animate-entry">
+        <div class="animate-entry">
             @include('components.branding')
         </div>
         <div id="mainContent"
@@ -100,7 +100,7 @@
                 </p>
                 <div class="text-content mt-3">
                     <button type="button"
-                        class="custom-btn w-auto px-5 fw-regular custom-btn-primary text-white"
+                        class="custom-btn px-5 fw-regular custom-btn-primary text-white"
                         onclick="staffVerificationAction()">
                         Staff Verification
                     </button>

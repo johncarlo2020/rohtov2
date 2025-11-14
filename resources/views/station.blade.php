@@ -44,6 +44,25 @@
             animation: bubbleSprite 0.9s steps(1) forwards;
         }
 
+        .burst-effect {
+            animation: bubbleBurst 0.6s ease forwards;
+        }
+
+        @keyframes bubbleBurst {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            60% {
+                transform: scale(1.25); /* expand like a bubble popping */
+                opacity: 0.9;
+            }
+            100% {
+                transform: scale(0.8); /* quick shrink */
+                opacity: 1;
+            }
+        }
+
         @keyframes bubbleSprite {
             0% { background-position: 0% 0; }
             11.11% { background-position: 12.5% 0; }
@@ -206,13 +225,18 @@
                         const bubbleAnimation = stationCard.querySelector('.bubble-animation');
                         
                         // Hide button background and start sprite animation
-                        // this.classList.add('animating');
+                        
                         // if (bubbleAnimation) {
                         //     bubbleAnimation.classList.add('animate');
                         // }
                         
                         console.log(isCorrect);
                         if (isCorrect) {
+                            this.classList.add('animating');
+                            if (bubbleAnimation) {
+                                bubbleAnimation.classList.add('animate');
+                                this.classList.add('d-none');
+                            }
                             // disable all buttons
                             buttons.forEach(btn => btn.disabled = true);
                             // Show modal after animation completes (900ms)
@@ -233,10 +257,13 @@
                            this.style.backgroundSize = "cover";
                            this.style.backgroundPosition = "center";
 
+                           this.classList.add("burst-effect");
+
                             setTimeout(() => {
                                 this.style.backgroundImage = "";
                                 this.style.backgroundSize = "";
                                 this.style.backgroundPosition = "";
+                                this.classList.remove("burst-effect");
                             }, 2000);
                             
                             

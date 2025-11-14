@@ -100,6 +100,7 @@
                 </p>
                 <div class="text-content mt-3">
                     <button type="button"
+                        style="width:100%;"
                         class="custom-btn px-5 fw-regular custom-btn-primary text-white"
                         onclick="staffVerificationAction()">
                         Staff Verification

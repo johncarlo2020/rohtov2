@@ -929,7 +929,17 @@ input::placeholder,p.footer {
 
 
 .dashboard {
-    height: calc(100vh - env(safe-area-inset-top));
+    /* Fallback for browsers that don't support env() */
+    height: 100vh;
+    
+    /* iOS Safari with safe area support */
+    height: calc(100vh - env(safe-area-inset-top, 0px));
+    
+    /* Alternative: Use 100dvh for dynamic viewport height (newer browsers) */
+    height: 100dvh;
+    
+    /* iOS Safari with safe area + dynamic viewport */
+    height: calc(100dvh - env(safe-area-inset-top, 0px));
 }
 
 

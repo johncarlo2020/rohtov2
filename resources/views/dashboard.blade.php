@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="py-4 map-page main-content dashbord-page with-scroll">
+    <div class="py-4 map-page main-content dashbord-page">
         <div class="animate-entry">
             @include('components.branding')
         </div>

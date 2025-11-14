@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    
 
     <!-- CSRF Token for security -->
     <meta name="csrf-token" content="{{ csrf_token() }}" />
@@ -18,7 +19,7 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 
-<body>
+<body class="{{ str_replace('.', '-', Route::currentRouteName() ?? 'unknown-route') }}">
     <!-- Main content area where page-specific content will be injected -->
      {{ $slot }}
 

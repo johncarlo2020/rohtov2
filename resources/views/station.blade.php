@@ -79,6 +79,10 @@
         .station-card.col-6.choice-6 {
             margin-top: 50vw;
         }
+        .station-card.col-6.choice-5
+        {
+            margin-bottom:50vw;
+        }
 
 
         .overlay {

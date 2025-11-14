@@ -924,119 +924,16 @@ input::placeholder,p.footer {
 }
 
 .pulse-slow {
-animation: slow-pulse 3s infinite; /* slower duration */
+    animation: slow-pulse 3s infinite; /* slower duration */
 }
 
 
-/* iOS Safe Area Handling */
 .dashboard {
-    /* Base fallback */
     height: 100vh;
-    min-height: 100vh;
-    
-    /* Modern browsers - accounts for mobile browser chrome */
-    height: 100dvh;
-    min-height: 100dvh;
-    
-    /* iOS specific - avoid status bar and notch */
-    padding-top: env(safe-area-inset-top, 0);
-    padding-bottom: env(safe-area-inset-bottom, 0);
-    padding-left: env(safe-area-inset-left, 0);
-    padding-right: env(safe-area-inset-right, 0);
-    
-    /* Ensure content doesn't go under iOS status bar */
-    box-sizing: border-box;
-    
-    /* iOS specific height calculation */
-    @supports (height: 100dvh) {
-        height: 100dvh;
-    }
-    
-    /* iOS PWA full screen support */
-    @media (display-mode: standalone) {
-        height: 100vh;
-        padding-top: env(safe-area-inset-top, 0);
-    }
-    
-    /* iPhone X and newer devices */
-    @media screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
-        padding-top: env(safe-area-inset-top, 44px);
-    }
-    
-    /* iPhone Pro Max devices */
-    @media screen and (device-width: 414px) and (device-height: 896px) {
-        padding-top: env(safe-area-inset-top, 44px);
-    }
+    height: -webkit-fill-available;
 }
 
-/* Utility classes for iOS safe area handling */
-.safe-area-top {
-    padding-top: env(safe-area-inset-top, 0);
-}
 
-.safe-area-bottom {
-    padding-bottom: env(safe-area-inset-bottom, 0);
-}
 
-.safe-area-left {
-    padding-left: env(safe-area-inset-left, 0);
-}
 
-.safe-area-right {
-    padding-right: env(safe-area-inset-right, 0);
-}
 
-.safe-area-all {
-    padding-top: env(safe-area-inset-top, 0);
-    padding-bottom: env(safe-area-inset-bottom, 0);
-    padding-left: env(safe-area-inset-left, 0);
-    padding-right: env(safe-area-inset-right, 0);
-}
-
-/* Margin versions for when you need margin instead of padding */
-.safe-margin-top {
-    margin-top: env(safe-area-inset-top, 0);
-}
-
-.safe-margin-bottom {
-    margin-bottom: env(safe-area-inset-bottom, 0);
-}
-
-/* Full height containers that respect safe areas */
-.full-height-safe {
-    min-height: 100vh;
-    min-height: 100dvh;
-    box-sizing: border-box;
-    
-    @supports (height: env(safe-area-inset-top)) {
-        min-height: calc(100vh - env(safe-area-inset-top, 0) - env(safe-area-inset-bottom, 0));
-    }
-    
-    @supports (height: 100dvh) {
-        min-height: 100dvh;
-    }
-}
-
-/* iOS status bar detection */
-@media screen and (-webkit-min-device-pixel-ratio: 2) {
-    .ios-status-bar-offset {
-        padding-top: env(safe-area-inset-top, 20px);
-    }
-}
-
-/* For fixed headers that need to respect the notch */
-.fixed-header-safe {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    padding-top: env(safe-area-inset-top, 0);
-    padding-left: env(safe-area-inset-left, 0);
-    padding-right: env(safe-area-inset-right, 0);
-    z-index: 1000;
-}
-
-/* For content that should start below fixed headers */
-.content-below-header {
-    margin-top: calc(env(safe-area-inset-top, 0) + 60px); /* 60px = typical header height */
-}

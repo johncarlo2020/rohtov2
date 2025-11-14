@@ -931,6 +931,10 @@ input::placeholder,p.footer {
 .dashboard {
     height: 100vh;
     height: -webkit-fill-available;
+
+    .dashbord-page {
+        height: 100% !important;
+    }
 }
 
 

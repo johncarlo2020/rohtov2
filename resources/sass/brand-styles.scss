@@ -924,6 +924,10 @@ p.footer {
 .station {
     height: 100svh !important;
 
+    .main-content {
+        height: 100% !important;
+    } 
+
     .footer {
         text-align: center;
         position: absolute;

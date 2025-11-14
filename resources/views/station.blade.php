@@ -12,14 +12,50 @@
             border-radius:50%;
             position: relative;
             overflow: hidden;
+            z-index: 1;
         }
 
         .answer-btn.animating {
             background-image: none;
         }
 
+        .answer-btn.wrong-animating {
+            background-image: none;
+            animation: wrongButtonScale 1.2s ease-out forwards;
+        }
+
+        @keyframes wrongButtonScale {
+            0% {
+                transform: scale(1);
+            }
+            15% {
+                transform: scale(1.1);
+            }
+            35% {
+                transform: scale(0.98);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            70% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
         .station-card {
             position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .button-wrapper {
+            position: relative;
+            width: 35vw;
+            height: 35vw;
         }
 
         .bubble-animation {
@@ -44,22 +80,30 @@
             animation: bubbleSprite 0.9s steps(1) forwards;
         }
 
-        .burst-effect {
-            animation: bubbleBurst 0.6s ease forwards;
+        .bubble-animation.wrong {
+            display: block;
+            background-image: url('{{ asset('images/brand/Bubble_wrong.webp') }}');
+            background-size: 100% 100%;
+            background-position: center;
+            z-index: 0;
+            animation: wrongFadeScale 1.2s ease-out forwards;
         }
 
-        @keyframes bubbleBurst {
+        @keyframes wrongFadeScale {
             0% {
-                transform: scale(1);
+                opacity: 0;
+            }
+            15% {
                 opacity: 1;
             }
-            60% {
-                transform: scale(1.25); /* expand like a bubble popping */
-                opacity: 0.9;
+            70% {
+                opacity: 1;
+            }
+            85% {
+                opacity: 1;
             }
             100% {
-                transform: scale(0.8); /* quick shrink */
-                opacity: 1;
+                opacity: 0;
             }
         }
 
@@ -189,6 +233,7 @@
                <div class="answers-wrapper row">
                  @foreach($choices->answers as $choice)
                         <div class="station-card col-6 choice-{{$choice->id}} pulse-slow">
+                            <div class="button-wrapper">
                                 <div class="bubble-animation"></div>
                                 <button 
                                     class="custom-btn answer-btn answer-btn-{{$station->id}}"
@@ -198,6 +243,7 @@
                                     {{ $choice->text }}
                                 </button>
                             </div>
+                        </div>
                     @endforeach
                </div>
             </div>
@@ -221,12 +267,14 @@
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 const buttons = document.querySelectorAll('.answer-btn');
+                const correctSound = new Audio('{{ asset('sounds/correct_sound.mp3') }}');
+                const wrongSound = new Audio('{{ asset('sounds/wrong_sound.mp3') }}');
 
                 buttons.forEach(button => {
                     button.addEventListener('click', function() {
                         const isCorrect = this.getAttribute('data-idc') === 'true';
-                        const stationCard = this.closest('.station-card');
-                        const bubbleAnimation = stationCard.querySelector('.bubble-animation');
+                        const buttonWrapper = this.closest('.button-wrapper');
+                        const bubbleAnimation = buttonWrapper.querySelector('.bubble-animation');
                         
                         // Hide button background and start sprite animation
                         
@@ -236,6 +284,7 @@
                         
                         console.log(isCorrect);
                         if (isCorrect) {
+                            correctSound.play();
                             this.classList.add('animating');
                             if (bubbleAnimation) {
                                 bubbleAnimation.classList.add('animate');
@@ -256,28 +305,20 @@
                             }, 900);
 
                         } else {
-                           this.style.backgroundImage = "url('{{ asset('images/brand/Bubble_wrong.webp') }}')";
+                           wrongSound.play();
                            this.disabled = true;
-                           this.style.backgroundSize = "cover";
-                           this.style.backgroundPosition = "center";
-
-                           this.classList.add("burst-effect");
+                           this.classList.add('wrong-animating');
+                           
+                           if (bubbleAnimation) {
+                               bubbleAnimation.classList.add('wrong');
+                           }
 
                             setTimeout(() => {
-                                this.style.backgroundImage = "";
-                                this.style.backgroundSize = "";
-                                this.style.backgroundPosition = "";
-                                this.classList.remove("burst-effect");
-                            }, 2000);
-                            
-                            
-                            // Reset animation after completion
-                            // setTimeout(() => {
-                            //     if (bubbleAnimation) {
-                            //         bubbleAnimation.classList.remove('animate');
-                            //     }
-                            //     this.classList.remove('animating');
-                            // }, 900);
+                                if (bubbleAnimation) {
+                                    bubbleAnimation.classList.remove('wrong');
+                                }
+                                this.classList.remove('wrong-animating');
+                            }, 1200);
                         }
                     });
                 });

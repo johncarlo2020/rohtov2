@@ -60,8 +60,43 @@
         .station-card.col-6.choice-6 {
             margin-top: 50vw;
         }
+
+
+        .overlay {
+            position: fixed;
+            top: env(safe-area-inset-top, 0);
+            left: env(safe-area-inset-left, 0);
+            width: calc(100vw - env(safe-area-inset-left, 0) - env(safe-area-inset-right, 0));
+            height: calc(100vh - env(safe-area-inset-top, 0) - env(safe-area-inset-bottom, 0));
+            pointer-events: none;
+            backdrop-filter: blur(8px);
+        }
+
+        /* Overlay for station 1 */
+        .overlay.station-1 {
+            background: linear-gradient(
+                180deg,
+                rgba(233, 239, 250, 0.3) 0%,
+                rgba(124, 161, 255, 0.3) 48.56%,
+                rgba(9, 84, 181, 0.3) 100%
+            );
+        }
+
+        /* Overlay for station 2 */
+        .overlay.station-2 {
+            background: linear-gradient(
+                180deg,
+                rgba(233, 250, 241, 0.3) 0%,   /* light green with transparency */
+                rgba(124, 255, 194, 0.3) 48.56%, /* mid green with transparency */
+                rgba(9, 181, 95, 0.3) 100%       /* dark green with transparency */
+            );
+        }
+
     </style>
+
+    
     <div id="stationPage" class="station-page main-content main-background with-scroll">
+        <div class="overlay station-{{$station->id}}"></div>
         <div class="modal fade custom-modal animate-entry" id="answerCorrectModal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered w-75 m-auto">
                 <div class="modal-content card">
@@ -77,8 +112,8 @@
                                     <img src="{{ asset('images/check.png') }}" alt="">
                                 </div>
                                 <p class="mb-4 message text-dark">
-                                    Your knowloedge is <br>
-                                    Shining through!
+                                    Your knowledge is <br>
+                                    shining through!
                                 </p>
                             </div>
                             <div class="text-content mt-3">
@@ -132,7 +167,7 @@
                         <div class="station-card col-6 choice-{{$choice->id}} pulse-slow">
                                 <div class="bubble-animation"></div>
                                 <button 
-                                    class="custom-btn answer-btn"
+                                    class="custom-btn answer-btn answer-btn-{{$station->id}}"
                                     data-id="{{ $choice->id }}"
                                     data-idc="{{ $choice->id === $station->answer_id ? 'true' : 'false' }}"
                                     @if($user) disabled @endif>
@@ -142,49 +177,7 @@
                     @endforeach
                </div>
             </div>
-            <!-- <img class="mt-5 station-image w-75" src="{{ asset('images/station/ST') }}"
-                alt="Station Image"> -->
-            <!-- @if ($user)
-                <div class="scanner-button">
-                    <p class="my-0 mt-5 text-center mb-3 text-dark">Checked in</p>
-                    <a href="{{ route('dashboard') }}" class="custom-btn custom-btn-primary">
-                        Back
-                    </a>
-                </div>
-            @elseif ($station->id != 3)
-                <button id="start-scanner"
-                    class="camera-btn mx-auto mt-5 mb-3"
-                    title="Start Scanner">
-                    <i class="fa-solid fa-camera"></i>
-                </button>
-                <p class="px-4 mt-3 bottom-text scanner-text text-center text-dark">Scan the QR code to check in</p>
-                <div class="text-center my-3">
-                    <a href="{{ route('dashboard') }}" class="custom-btn custom-btn-primary">
-                        BACK
-                    </a>
-                </div>
-            @elseif ($station->id == 3)
-                <div class="gift-selection mt-2">
-                    <label for="giftSelect" class="form-label text-dark fw-bold">Select your gift:</label>
-                    <select id="giftSelect" class="form-select " style="width: 50vw; margin: 0 auto;" required>
-                        <option value="">Select a gift</option>
-                        @foreach($gifts as $gift)
-                            <option value="{{ $gift->id }}" {{ !$gift->enabled ? 'disabled' : '' }}>
-                                Gift {{ $gift->id }}{{ !$gift->enabled ? ' (Not Available)' : '' }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-                <button id="start-scanner" class="camera-btn mx-auto mt-5 mb-3" title="Start Scanner" disabled style="opacity: 0.5; cursor: not-allowed;">
-                    <i class="fa-solid fa-camera"></i>
-                </button>
-                <p class="px-4 mt-3 bottom-text scanner-text text-center text-dark">Scan the QR code to check in</p>
-                <div class="text-center my-3">
-                    <a href="{{ route('dashboard') }}" class="custom-btn custom-btn-secondary">
-                        BACK
-                    </a>
-                </div>
-            @endif -->
+            <x-footer/>
         </div>
         <div id="scannerContainer" class="scanner-container d-none mt-4">
             <!-- <button id="close" class="mx-auto mt-4 camera-btn">x</button> -->
@@ -197,7 +190,7 @@
             </div>
         </div>
     </div>
-    <x-footer/>
+    
 
     @push('scripts')
         <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>

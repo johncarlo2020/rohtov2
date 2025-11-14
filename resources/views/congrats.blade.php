@@ -5,10 +5,13 @@
                     <div class="mb-2">
                         <span class="sub-heading-text">Click on the logo</span>
                     </div>
-                    <a href="/" class="mt-5">
-                        <img class="logo "
-                            src="{{ asset('images/brand/logo_congrats.webp') }}" alt="bm Logo" />
-                    </a>
+                    <div class="row">
+                        <a href="https://www.behnmeyer.com/" class="mt-5">
+                            <img class="logo "
+                                src="{{ asset('images/brand/logo_congrats.webp') }}" alt="bm Logo" />
+                        </a>
+                    </div>
+                    
                     <div class="mt-2">
                         <span class="sub-heading-text">for more information</span>
                     </div>

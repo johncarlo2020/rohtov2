@@ -9,6 +9,7 @@
         min-width: 208px;
         max-width: 30vw;
         object-fit: contain;
+        margin:auto;
     }
 }
 
@@ -491,7 +492,7 @@
 
 .station-selection-container {
     position: relative;
-    height: 70vh; /* allow absolute overlay for connectors */
+    // height: 70vh; /* allow absolute overlay for connectors */
     .station-bg-map {
         width: auto;
         height: 100%;
@@ -560,67 +561,72 @@
             left: 7%;
 
             @media (min-width: 360px) {
-                top: 7%;
-                left: 8%;
+                top: -3vw;
+                left: -4vw;
             }
 
             @media (min-width: 375px) {
-                top: 5%;
-                left: 8%;
+                top: -10vw;
+                left: -4vw;
             }
 
             @media (min-width: 390px) {
-                top: 8%;
-                left: 9%;
+                top: 5vw;
+                left: -4vw;
             }
 
             //on 414px width screens, adjust position
             @media (min-width: 414px) {
-                 top: -4%;
-                left: -4%;
+                top: 10vw;
+                left: -4vw;
             }
         }
 
         &-2 {
             flex-direction: row-reverse;
-            top: 36%;
-            right: 8%;
+            // top: 36%;
+            // right: 8%;
 
             @media (min-width: 360px) {
-                top: 38%;
-                right: 3%;
+                top: 60vw;
+                right: -4vw;
             }
 
             @media (min-width: 375px) {
-                top: 37%;
-                right: 8%;
+                top: 40vw;
+                left: -4vw;
             }
 
             @media (min-width: 390px) {
-                top: 38%;
-                right: 2%;
+                top: 75vw;
+                right: 3vw;
             }
 
             //on 414px width screens, adjust position
             @media (min-width: 414px) {
-                top: 40%;
-                right: -7%;
+                top: 75vw;
+                right: 3vw;
             }
         }
 
         &-3 {
-            top: 69%;
-            left: 5%;
+            top: 80vw;
+            left: 28vw;
+
+            @media (min-width: 360px) {
+                top: 100vw;
+                right: -5vw;
+            }
 
             @media (min-width: 390px) {
-                top: 68%;
-                left: 7%;
+                top: 125vw;
+                left: 25vw;
             }
 
             //on 414px width screens, adjust position
             @media (min-width: 414px) {
-               top: 68%;
-                left: 37%;
+                top: 125vw;
+                left: 30vw;
             }
         }
 
@@ -743,33 +749,40 @@
 }
 
 .stamping-page {
-  position: relative;      // required for pseudo-element
-  z-index: 1;              // content stays on top
 
-  // remove background here (don't apply filter directly)
-  background: none;
-  
-
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;              // top:0 right:0 bottom:0 left:0;
     background-image: $stamping-background;
     background-size: cover;
-    background-repeat: no-repeat;
     background-position: center;
-    filter: grayscale(100%);  // grayscale only background
-    z-index: -2;              // behind content
-    transition: filter 0.6s ease;
-  }
+    background-repeat: no-repeat;
+//   position: relative;      // required for pseudo-element
+//   z-index: 1;              // content stays on top
 
-&::after{
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.4); /* overlay tint; adjust opacity/color */
-    z-index: -1; /* sits above background but below content */
-}
+//   // remove background here (don't apply filter directly)
+//   background: none;
+
+
+  
+
+//   &::before {
+//     content: "";
+//     position: absolute;
+//     inset: 0;              // top:0 right:0 bottom:0 left:0;
+//     background-image: $stamping-background;
+//     background-size: cover;
+//     background-repeat: no-repeat;
+//     background-position: center;
+//     filter: grayscale(100%);  // grayscale only background
+//     z-index: -2;              // behind content
+//     transition: filter 0.6s ease;
+//   }
+
+// &::after{
+//     content: "";
+//     position: absolute;
+//     inset: 0;
+//     background: rgba(0, 0, 0, 0.4); /* overlay tint; adjust opacity/color */
+//     z-index: -1; /* sits above background but below content */
+// }
 
 }
 
@@ -784,12 +797,20 @@ img.stamping-image {
 p.sub-heading {
     color: white;
     -webkit-text-stroke: 1px #733412;
-    text-shadow: 0px 3px 0px #edb46d;
+    text-shadow: 0px 2px 0px #edb46d;
+    font-size: 21px;
+    letter-spacing: -2px;
     // font-weight: bold;
 }
 
-button.custom-btn.answer-btn
-{
+button.custom-btn.answer-btn.answer-btn-2 {
+    color: #04652C;
+    font-size: 2rem !important;
+    font-weight: 400;
+}
+
+button.custom-btn.answer-btn.answer-btn-1,
+button.custom-btn.answer-btn.answer-btn-3 {
     color: #0954b5;
     font-weight: 300 !important;
 }
@@ -825,22 +846,23 @@ button.custom-btn.answer-btn
     transform: scale(1.02);
 }
 
-.station-page::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-color: rgba(27, 40, 42, 0.5); /* dark teal-blue semi-transparent */
-    pointer-events: none;
-}
+// .station-page::before {
+//     content: "";
+//     position: absolute;
+//     inset: 0;
+//     background-color: rgba(27, 40, 42, 0.5); /* dark teal-blue semi-transparent */
+//     pointer-events: none;
+// }
 
 .sub-heading-text 
 {
-    -webkit-text-stroke: 1px #733412;
-    font-size: 24px;
-    font-weight: 900;
+    -webkit-text-stroke: 2px #733412;
+    font-size: 2rem;
+    font-weight: 400;
     color:#fff;
     text-decoration: none;
-    text-shadow: 0 3px 0 #f7a239;
+    text-shadow: 0 2px 0 #f7a239;
+    letter-spacing:-2px;
 }
 
 .card-parent
@@ -870,6 +892,13 @@ input::placeholder,p.footer {
 .modal-content
 {
     border-radius: 20px !important;
+}
+
+.logo-welcome
+{
+    width: 100%;
+    max-width: 75vw;
+    margin: auto;
 }
 
 

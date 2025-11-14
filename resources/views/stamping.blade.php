@@ -19,12 +19,44 @@
         pointer-events: none; /* ← prevents blocking touch events */
         user-select: none;
     }
+
+    .overlay {
+            position: fixed;
+            top: env(safe-area-inset-top, 0);
+            left: env(safe-area-inset-left, 0);
+            width: calc(100vw - env(safe-area-inset-left, 0) - env(safe-area-inset-right, 0));
+            height: calc(100vh - env(safe-area-inset-top, 0) - env(safe-area-inset-bottom, 0));
+            pointer-events: none;
+            backdrop-filter: blur(8px);
+        }
+
+        /* Overlay for station 1 */
+        .overlay.station-1 {
+            background: linear-gradient(
+                180deg,
+                rgba(233, 239, 250, 0.3) 0%,
+                rgba(124, 161, 255, 0.3) 48.56%,
+                rgba(9, 84, 181, 0.3) 100%
+            );
+        }
+
+        /* Overlay for station 2 */
+        .overlay.station-2 {
+            background: linear-gradient(
+                180deg,
+                rgba(233, 250, 241, 0.3) 0%,   /* light green with transparency */
+                rgba(124, 255, 194, 0.3) 48.56%, /* mid green with transparency */
+                rgba(9, 181, 95, 0.3) 100%       /* dark green with transparency */
+            );
+        }
+
+    
     </style>
-    <div class="py-4 map-page main-content stamping-page">
+    <div class="py-4 map-page main-content stamping-page with-scroll">
+        <div class="overlay station-{{ request()->segment(2) }}"></div>
         <div class="d-flex justify-content-center align-item-center animate-entry">
             @include('components.branding')
         </div>
-
         <!-- login Modal -->
         <!-- Welcome Modal -->
         <div class="modal fade transparent-modal" id="welcomeModal" tabindex="-1" aria-labelledby="welcomeModalLabel"
@@ -43,7 +75,7 @@
                 </div>
             </div>
         </div>
-        <div class=" success-text text-center mt-2 d-none">
+        <div class=" success-text text-center mt-4 d-none">
             <h2 class="sub-heading-text animate-entry">Nicely done!!<br>
             Stamp Collected!</h2>
         </div>
@@ -132,7 +164,7 @@
 
                 // Toggle grayscale removal
                 // Only trigger once
-                    if (!hasStamped && activeInside.size == 4) {
+                    if (!hasStamped && activeInside.size == 1) {
                         hasStamped = true;
                         stampingPage.classList.add("active");
 

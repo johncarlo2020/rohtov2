@@ -69,41 +69,43 @@
 <body class="antialiased main-background welcome-page">
 
     <div class="container-fluid main-content">
-
-        <!-- Branding (top area) -->
-        <div class="row flex-grow-1">
-            <div class="col-12 d-flex justify-content-center align-items-start pt-5 animate-entry">
-                <div>
-                    <img onclick="window.location.href='{{ route('dashboard') }}'" class="logo w-75 m-auto pulse-slow" src="{{ asset('images/brand/logo.webp') }}" alt="Brand Logo" />
-                </div>
-            </div>
-        </div>
-
-        <!-- Center image (middle area) -->
-        <div class="row">
-            <div class="col-12 d-flex justify-content-center align-items-center p-0 animate-entry">
-                <img class="welcome_img_store w-100" 
-                     src="{{ asset('images/brand/bm_front.webp') }}" 
-                     alt="">
-            </div>
-        </div>
-
-        <!-- Bottom CTA -->
-        <div class="row">
-            <div class="col-12 text-center">
-                <div class="d-block">
-                    <div class="col mb-5 animate-entry delay-2 btn-wrapper">
-                        <a href="{{ route('register') }}" class="continue-btn pulse-slow">
-                            TAP TO CONTINUE
-                        </a>
+        <div class="top-container">
+            <!-- Branding (top area) -->
+            <div class="row flex-grow-1">
+                <div class="col-12 pt-5 animate-entry">
+                    <div>
+                        <img onclick="window.location.href='{{ route('dashboard') }}'" class="logo logo-welcome pulse-slow" src="{{ asset('images/brand/logo.webp') }}" alt="Brand Logo" />
                     </div>
                 </div>
             </div>
         </div>
+        <div class="bottom-container">
+            <!-- Center image (middle area) -->
+            <div class="row">
+                <div class="col-12 d-flex justify-content-center align-items-center p-0 animate-entry">
+                    <img class="welcome_img_store w-100" 
+                        src="{{ asset('images/brand/bm_front.webp') }}" 
+                        alt="">
+                </div>
+            </div>
 
-        <!-- Footer -->
-        <div class="footer-welcome mb-4 text-center w-100">
-            <x-footer/>
+            <!-- Bottom CTA -->
+            <div class="row">
+                <div class="col-12 text-center">
+                    <div class="d-block">
+                        <div class="colanimate-entry delay-2 btn-wrapperx">
+                            <a href="{{ route('register') }}" class="continue-btn pulse-slow">
+                                TAP TO CONTINUE
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="footer-welcome mb-4 text-center w-100">
+                <x-footer/>
+            </div>
         </div>
     </div>
 

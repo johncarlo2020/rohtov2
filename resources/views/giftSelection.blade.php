@@ -92,10 +92,10 @@
                 <p class="sub-heading fw-bold mb-2 station-text "><span class="station_name text-dark"></span></p>
                 <p class="mb-4 text-main text-center ">
                     You've collected<br>
-                    All the stamps!
+                    ALL the stamps!
                 </p>
                 <p class="mb-4 text-center">
-                    Please head over to the reception countr at B06 &
+                    Please head over to the reception counter at B06 &
                     show this page to the staff to claim your reward!
                 </p>
                 <div class="text-content mt-3">

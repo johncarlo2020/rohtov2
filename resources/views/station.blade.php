@@ -73,7 +73,8 @@
         }
 
         /* Overlay for station 1 */
-        .overlay.station-1 {
+        .overlay.station-1,
+        .overlay.station-3 {
             background: linear-gradient(
                 180deg,
                 rgba(233, 239, 250, 0.3) 0%,
@@ -205,16 +206,15 @@
                         const bubbleAnimation = stationCard.querySelector('.bubble-animation');
                         
                         // Hide button background and start sprite animation
-                        this.classList.add('animating');
-                        if (bubbleAnimation) {
-                            bubbleAnimation.classList.add('animate');
-                        }
+                        // this.classList.add('animating');
+                        // if (bubbleAnimation) {
+                        //     bubbleAnimation.classList.add('animate');
+                        // }
                         
                         console.log(isCorrect);
                         if (isCorrect) {
                             // disable all buttons
                             buttons.forEach(btn => btn.disabled = true);
-
                             // Show modal after animation completes (900ms)
                             setTimeout(() => {
                                 const correctModal = new bootstrap.Modal(document.getElementById('answerCorrectModal'));
@@ -226,16 +226,27 @@
                                 }
                                 this.classList.remove('animating');
                             }, 900);
+
                         } else {
-                            this.disabled = true;
+                           this.style.backgroundImage = "url('{{ asset('images/brand/Bubble_wrong.webp') }}')";
+                           this.disabled = true;
+                           this.style.backgroundSize = "cover";
+                           this.style.backgroundPosition = "center";
+
+                            setTimeout(() => {
+                                this.style.backgroundImage = "";
+                                this.style.backgroundSize = "";
+                                this.style.backgroundPosition = "";
+                            }, 2000);
+                            
                             
                             // Reset animation after completion
-                            setTimeout(() => {
-                                if (bubbleAnimation) {
-                                    bubbleAnimation.classList.remove('animate');
-                                }
-                                this.classList.remove('animating');
-                            }, 900);
+                            // setTimeout(() => {
+                            //     if (bubbleAnimation) {
+                            //         bubbleAnimation.classList.remove('animate');
+                            //     }
+                            //     this.classList.remove('animating');
+                            // }, 900);
                         }
                     });
                 });

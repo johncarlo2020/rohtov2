@@ -618,6 +618,11 @@
                 right: -5vw;
             }
 
+            @media (min-width: 375px) {
+                top: 80vw;
+                right: -5vw;
+            }
+
             @media (min-width: 390px) {
                 top: 125vw;
                 left: 25vw;

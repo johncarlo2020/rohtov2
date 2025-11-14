@@ -561,23 +561,23 @@
             left: 7%;
 
             @media (min-width: 360px) {
-                top: calc(-3vw - env(safe-area-inset-bottom));
+                top: calc(-3vh - env(safe-area-inset-bottom));
                 left: -4vw;
             }
 
             @media (min-width: 375px) {
-                top: -10vw;
+                top: -10vh;
                 left: -4vw;
             }
 
             @media (min-width: 390px) {
-                top: calc(5vw - env(safe-area-inset-bottom));
+                top: calc(5vh - env(safe-area-inset-bottom));
                 left: -4vw;
             }
 
             //on 414px width screens, adjust position
             @media (min-width: 414px) {
-                top: calc(10vw - env(safe-area-inset-bottom));
+                top: calc(10vh - env(safe-area-inset-bottom));
                 left: -4vw;
             }
         }
@@ -588,23 +588,23 @@
             // right: 8%;
 
             @media (min-width: 360px) {
-                top: calc(60vw - env(safe-area-inset-bottom));
+                top: calc(60vh - env(safe-area-inset-bottom));
                 right: -4vw;
             }
 
             @media (min-width: 375px) {
-                top: calc(40vw - env(safe-area-inset-bottom));
+                top: calc(40vh - env(safe-area-inset-bottom));
                 left: -4vw;
             }
 
             @media (min-width: 390px) {
-                top: calc(75vw - env(safe-area-inset-bottom));
+                top: calc(75vh - env(safe-area-inset-bottom));
                 right: 3vw;
             }
 
             //on 414px width screens, adjust position
             @media (min-width: 414px) {
-                top: calc(75vw - env(safe-area-inset-bottom));
+                top: calc(75vh - env(safe-area-inset-bottom));
                 right: 3vw;
             }
         }
@@ -614,23 +614,23 @@
             left: 28vw;
 
             @media (min-width: 360px) {
-                top: calc(100vw - env(safe-area-inset-bottom));
+                top: calc(100vh - env(safe-area-inset-bottom));
                 right: -5vw;
             }
 
             @media (min-width: 375px) {
-                top: calc(80vw - env(safe-area-inset-bottom));
+                top: calc(80vh - env(safe-area-inset-bottom));
                 right: -5vw;
             }
 
             @media (min-width: 390px) {
-                top: calc(125vw - env(safe-area-inset-bottom));
+                top: calc(125vh - env(safe-area-inset-bottom));
                 left: 25vw;
             }
 
             //on 414px width screens, adjust position
             @media (min-width: 414px) {
-                top: calc(125vw - env(safe-area-inset-bottom));
+                top: calc(125vh - env(safe-area-inset-bottom));
                 left: 30vw;
             }
         }

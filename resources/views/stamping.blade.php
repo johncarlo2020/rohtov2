@@ -52,7 +52,7 @@
 
     
     </style>
-    <div class="py-4 map-page main-content stamping-page with-scroll">
+    <div class="py-4 map-page main-content stamping-page">
         <div class="overlay station-{{ request()->segment(2) }}"></div>
         <div class="animate-entry">
             @include('components.branding')

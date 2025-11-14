@@ -80,28 +80,93 @@
                     const vw = window.innerWidth;
                     const vh = window.innerHeight;
                     
-                    // Define responsive positioning based on viewport size and device type
-                    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-                    const isSmallScreen = vw < 414;
-                    const safeAreaBottom = isIOS ? 20 : 0; // Account for iOS safe area
+                    // Enhanced browser and platform detection
+                    const userAgent = navigator.userAgent;
+                    const platform = navigator.platform;
                     
-                    // Station positioning configurations
+                    // Detect iOS devices (iPhone, iPad, iPod)
+                    const isIOS = /iPad|iPhone|iPod/.test(userAgent) || 
+                                  (platform === 'MacIntel' && navigator.maxTouchPoints > 1); // Detect iPad with iPadOS 13+
+                    
+                    // Detect Safari browser (including iOS Safari and macOS Safari)
+                    const isSafari = /^((?!chrome|android).)*safari/i.test(userAgent) || 
+                                     /Safari/.test(userAgent) && !/Chrome/.test(userAgent);
+                    
+                    // Detect iPhone specifically
+                    const isIPhone = /iPhone/.test(userAgent);
+                    
+                    // Detect iPad specifically
+                    const isIPad = /iPad/.test(userAgent) || 
+                                   (platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+                    
+                    // Detect mobile Safari specifically
+                    const isMobileSafari = isIOS && isSafari;
+                    
+                    // Screen size detection
+                    const isSmallScreen = vw < 414;
+                    const isMediumScreen = vw >= 414 && vw < 768;
+                    const isLargeScreen = vw >= 768;
+                    
+                    // Calculate safe areas for iOS
+                    const safeAreaTop = isIOS ? (window.screen.height - window.innerHeight) / 2 : 0;
+                    const safeAreaBottom = isIOS ? Math.max(20, safeAreaTop) : 0;
+                    
+                    // Debug logging (you can remove this in production)
+                    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                        console.log('Station Positioning Debug:', {
+                            userAgent: userAgent,
+                            platform: platform,
+                            isIOS: isIOS,
+                            isSafari: isSafari,
+                            isIPhone: isIPhone,
+                            isIPad: isIPad,
+                            isMobileSafari: isMobileSafari,
+                            viewport: { width: vw, height: vh },
+                            safeAreas: { top: safeAreaTop, bottom: safeAreaBottom },
+                            cssEnvSupport: CSS.supports('padding', 'env(safe-area-inset-top)')
+                        });
+                    }
+                    
+                    // Station positioning configurations based on device and browser
                     const stationConfigs = {
                         1: {
-                            // Top left position
-                            top: isSmallScreen ? Math.max(vh * 0.05, 20) : vh * 0.08,
-                            left: isSmallScreen ? vw * 0.05 : vw * 0.08,
+                            // Top left position - adjust for iOS safe area
+                            top: (() => {
+                                if (isIPhone) return Math.max(vh * 0.08, safeAreaTop + 30);
+                                if (isIPad) return vh * 0.06;
+                                if (isMobileSafari) return Math.max(vh * 0.07, safeAreaTop + 25);
+                                if (isSmallScreen) return Math.max(vh * 0.05, 20);
+                                return vh * 0.08;
+                            })(),
+                            left: (() => {
+                                if (isIOS) return vw * 0.06;
+                                if (isSmallScreen) return vw * 0.05;
+                                return vw * 0.08;
+                            })(),
                             transform: 'translate(0, 0)'
                         },
                         2: {
                             // Middle right position
-                            top: vh * 0.4,
-                            right: isSmallScreen ? vw * 0.05 : vw * 0.08,
+                            top: (() => {
+                                if (isIPhone) return vh * 0.45;
+                                if (isIPad) return vh * 0.4;
+                                return vh * 0.4;
+                            })(),
+                            right: (() => {
+                                if (isIOS) return vw * 0.06;
+                                if (isSmallScreen) return vw * 0.05;
+                                return vw * 0.08;
+                            })(),
                             transform: 'translate(0, -50%)'
                         },
                         3: {
-                            // Bottom center position
-                            bottom: Math.max(vh * 0.1, safeAreaBottom + 40),
+                            // Bottom center position - critical for iOS safe area
+                            bottom: (() => {
+                                if (isIPhone) return Math.max(vh * 0.15, safeAreaBottom + 50);
+                                if (isIPad) return Math.max(vh * 0.12, safeAreaBottom + 40);
+                                if (isMobileSafari) return Math.max(vh * 0.12, safeAreaBottom + 45);
+                                return Math.max(vh * 0.1, safeAreaBottom + 40);
+                            })(),
                             left: '50%',
                             transform: 'translate(-50%, 0)'
                         }
@@ -141,6 +206,23 @@
                         // Ensure proper z-index and display
                         station.style.zIndex = '2';
                         station.style.display = 'flex';
+                        
+                        // iOS-specific adjustments
+                        if (isIOS) {
+                            // Use CSS environment variables for safe areas when available
+                            if (CSS.supports('padding-top', 'env(safe-area-inset-top)')) {
+                                if (stationId === '1') {
+                                    station.style.paddingTop = 'env(safe-area-inset-top)';
+                                }
+                                if (stationId === '3') {
+                                    station.style.paddingBottom = 'env(safe-area-inset-bottom)';
+                                }
+                            }
+                            
+                            // Prevent iOS Safari bounce effect interference
+                            station.style.touchAction = 'manipulation';
+                            station.style.webkitTouchCallout = 'none';
+                        }
                     });
                     
                     // Adjust station details positioning based on station position
@@ -148,22 +230,46 @@
                     if (station2) {
                         station2.style.flexDirection = 'row-reverse';
                     }
+                    
+                    // Apply container adjustments for iOS
+                    if (isIOS && container) {
+                        container.style.paddingTop = CSS.supports('padding', 'env(safe-area-inset-top)') 
+                            ? 'env(safe-area-inset-top)' : `${safeAreaTop}px`;
+                        container.style.paddingBottom = CSS.supports('padding', 'env(safe-area-inset-bottom)') 
+                            ? 'env(safe-area-inset-bottom)' : `${safeAreaBottom}px`;
+                    }
                 }
                 
                 // Initial positioning
                 positionStations();
                 
-                // Re-position on resize and orientation change
+                // Enhanced orientation and resize handling
                 let resizeTimeout;
                 function handleResize() {
                     clearTimeout(resizeTimeout);
                     resizeTimeout = setTimeout(positionStations, 150);
                 }
                 
+                function handleOrientationChange() {
+                    // iOS needs more time to properly calculate dimensions after orientation change
+                    const delay = isIOS ? 500 : 300;
+                    setTimeout(positionStations, delay);
+                }
+                
+                // Event listeners
                 window.addEventListener('resize', handleResize);
-                window.addEventListener('orientationchange', function() {
-                    setTimeout(positionStations, 300); // Delay for orientation change
-                });
+                window.addEventListener('orientationchange', handleOrientationChange);
+                
+                // iOS specific: listen for viewport changes
+                if (isIOS) {
+                    // Handle iOS keyboard appearance/disappearance
+                    window.addEventListener('focusin', function() {
+                        setTimeout(positionStations, 200);
+                    });
+                    window.addEventListener('focusout', function() {
+                        setTimeout(positionStations, 200);
+                    });
+                }
                 
                 // Re-position when images load (affects container size)
                 const stationImages = document.querySelectorAll('.station-icon');

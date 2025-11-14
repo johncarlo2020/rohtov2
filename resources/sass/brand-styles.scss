@@ -561,7 +561,7 @@
             left: 7%;
 
             @media (min-width: 360px) {
-                top: -3vw;
+                top: calc(-3vw - env(safe-area-inset-bottom));
                 left: -4vw;
             }
 
@@ -571,13 +571,13 @@
             }
 
             @media (min-width: 390px) {
-                top: 5vw;
+                top: calc(5vw - env(safe-area-inset-bottom));
                 left: -4vw;
             }
 
             //on 414px width screens, adjust position
             @media (min-width: 414px) {
-                top: 10vw;
+                top: calc(10vw - env(safe-area-inset-bottom));
                 left: -4vw;
             }
         }
@@ -588,23 +588,23 @@
             // right: 8%;
 
             @media (min-width: 360px) {
-                top: 60vw;
+                top: calc(60vw - env(safe-area-inset-bottom));
                 right: -4vw;
             }
 
             @media (min-width: 375px) {
-                top: 40vw;
+                top: calc(40vw - env(safe-area-inset-bottom));
                 left: -4vw;
             }
 
             @media (min-width: 390px) {
-                top: 75vw;
+                top: calc(75vw - env(safe-area-inset-bottom));
                 right: 3vw;
             }
 
             //on 414px width screens, adjust position
             @media (min-width: 414px) {
-                top: 75vw;
+                top: calc(75vw - env(safe-area-inset-bottom));
                 right: 3vw;
             }
         }
@@ -614,23 +614,23 @@
             left: 28vw;
 
             @media (min-width: 360px) {
-                top: 100vw;
+                top: calc(100vw - env(safe-area-inset-bottom));
                 right: -5vw;
             }
 
             @media (min-width: 375px) {
-                top: 80vw;
+                top: calc(80vw - env(safe-area-inset-bottom));
                 right: -5vw;
             }
 
             @media (min-width: 390px) {
-                top: 125vw;
+                top: calc(125vw - env(safe-area-inset-bottom));
                 left: 25vw;
             }
 
             //on 414px width screens, adjust position
             @media (min-width: 414px) {
-                top: 125vw;
+                top: calc(125vw - env(safe-area-inset-bottom));
                 left: 30vw;
             }
         }

@@ -103,6 +103,7 @@
                     <div class="d-block">
                         <div class="col mb-3 animate-entry delay-2">
                             <button type="button" class="custom-btn custom-btn-primary stamp-btn"
+                                style="width:100%;"
                                 @if(request()->segment(2) == 3)
                                     onclick="window.location.href='{{ route('station.giftselection') }}'"
                                 @else

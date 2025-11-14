@@ -934,5 +934,9 @@ p.footer {
         width: 100%;
         bottom: 0;
         left: 0;
+
+        p {
+            padding: 0;
+        }  
     }
 }

@@ -9,7 +9,7 @@
         min-width: 208px;
         max-width: 30vw;
         object-fit: contain;
-        margin:auto;
+        margin: auto;
     }
 }
 
@@ -491,8 +491,13 @@
 }
 
 .station-selection-container {
-    position: relative;
     // height: 70vh; /* allow absolute overlay for connectors */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
     .station-bg-map {
         width: auto;
         height: 100%;
@@ -557,28 +562,25 @@
         }
 
         &-1 {
-            top: 3%;
-            left: 7%;
-
             @media (min-width: 360px) {
-                top: -3vw;
-                left: -4vw;
+                top: 28%;
+                left: 6vw;
             }
 
             @media (min-width: 375px) {
-                top: -10vw;
-                left: -4vw;
+                top: 28%;
+                left: 6vw;
             }
 
             @media (min-width: 390px) {
-                top: 5vw;
-                left: -4vw;
+                top: 28%;
+                left: 6vw;
             }
 
             //on 414px width screens, adjust position
             @media (min-width: 414px) {
-                top: 10vw;
-                left: -4vw;
+                top: 28%;
+                left: 6vw;
             }
         }
 
@@ -588,57 +590,53 @@
             // right: 8%;
 
             @media (min-width: 360px) {
-                top: 60vw;
-                right: -4vw;
+                top: 53%;
+                left: -10vw;
             }
 
             @media (min-width: 375px) {
-                top: 40vw;
-                left: -4vw;
+                top: 53%;
+                left: -10vw;
             }
 
             @media (min-width: 390px) {
-                top: 75vw;
-                right: 3vw;
+                top: 53%;
+                left: -10vw;
             }
 
             //on 414px width screens, adjust position
             @media (min-width: 414px) {
-                top: 75vw;
-                right: 3vw;
+                top: 53%;
+                left: -10vw;
             }
         }
 
         &-3 {
-            top: 80vw;
-            left: 28vw;
-
             @media (min-width: 360px) {
-                top: 100vw;
-                right: -5vw;
+                top: 76%;
+                left: 34vw;
             }
 
             @media (min-width: 375px) {
-                top: 80vw;
-                right: -5vw;
+                top: 76%;
+                left: 34vw;
             }
 
             @media (min-width: 390px) {
-                top: 125vw;
-                left: 25vw;
+                top: 76%;
+                left: 34vw;
             }
 
             //on 414px width screens, adjust position
             @media (min-width: 414px) {
-                top: 125vw;
-                left: 30vw;
+                top: 76%;
+                left: 34vw;
             }
         }
 
         .station-image-container {
-            position: relative;
-            width: 40vw;
-            height: 40vw;
+            width: 30vw;
+            height: 30vw;
             // border-radius: 50%;
             // box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
             // padding: 25px;
@@ -698,10 +696,6 @@
     font-size: 20px;
 }
 
-.station-selection-container {
-    position: relative;
-}
-
 .station-connectors__svg {
     position: absolute;
     top: 0;
@@ -725,10 +719,10 @@
 }
 
 .back-btn.animate-entry {
-  display: none;
+    display: none;
 }
 
- @import "variables";
+@import "variables";
 
 .dashbord-page {
     // overflow-x: hidden;
@@ -740,61 +734,55 @@
 }
 
 .station-card.col-6 {
-  &.choice-4,
-  &.choice-2,
-  &.choice-8,
-  &.choice-10 {
-    margin-top: 10vw;
-  }
+    &.choice-4,
+    &.choice-2,
+    &.choice-8,
+    &.choice-10 {
+        margin-top: 10vw;
+    }
 }
 
-.answer-btn
-{
+.answer-btn {
     font-size: 14px !important;
 }
 
 .stamping-page {
-
     background-image: $stamping-background;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-//   position: relative;      // required for pseudo-element
-//   z-index: 1;              // content stays on top
+    //   position: relative;      // required for pseudo-element
+    //   z-index: 1;              // content stays on top
 
-//   // remove background here (don't apply filter directly)
-//   background: none;
+    //   // remove background here (don't apply filter directly)
+    //   background: none;
 
+    //   &::before {
+    //     content: "";
+    //     position: absolute;
+    //     inset: 0;              // top:0 right:0 bottom:0 left:0;
+    //     background-image: $stamping-background;
+    //     background-size: cover;
+    //     background-repeat: no-repeat;
+    //     background-position: center;
+    //     filter: grayscale(100%);  // grayscale only background
+    //     z-index: -2;              // behind content
+    //     transition: filter 0.6s ease;
+    //   }
 
-  
-
-//   &::before {
-//     content: "";
-//     position: absolute;
-//     inset: 0;              // top:0 right:0 bottom:0 left:0;
-//     background-image: $stamping-background;
-//     background-size: cover;
-//     background-repeat: no-repeat;
-//     background-position: center;
-//     filter: grayscale(100%);  // grayscale only background
-//     z-index: -2;              // behind content
-//     transition: filter 0.6s ease;
-//   }
-
-// &::after{
-//     content: "";
-//     position: absolute;
-//     inset: 0;
-//     background: rgba(0, 0, 0, 0.4); /* overlay tint; adjust opacity/color */
-//     z-index: -1; /* sits above background but below content */
-// }
-
+    // &::after{
+    //     content: "";
+    //     position: absolute;
+    //     inset: 0;
+    //     background: rgba(0, 0, 0, 0.4); /* overlay tint; adjust opacity/color */
+    //     z-index: -1; /* sits above background but below content */
+    // }
 }
 
 img.stamping-image {
     width: 50vw;
-    margin-bottom:10vw;
-    margin-top:10vw;
+    margin-bottom: 10vw;
+    margin-top: 10vw;
     filter: grayscale(100%);
     transition: filter 0.4s ease;
 }
@@ -809,7 +797,7 @@ p.sub-heading {
 }
 
 button.custom-btn.answer-btn.answer-btn-2 {
-    color: #04652C;
+    color: #04652c;
     font-size: 2rem !important;
     font-weight: 400;
 }
@@ -827,9 +815,8 @@ button.custom-btn.answer-btn.answer-btn-3 {
     // font-weight: 700;
     opacity: 0.7;
     filter: grayscale(100%);
-    box-shadow: inset 0 2px 3px rgba(255,255,255,0.6),
-                inset 0 -2px 3px rgba(0,0,0,0.1),
-                0 3px 6px rgba(0,0,0,0.15);
+    box-shadow: inset 0 2px 3px rgba(255, 255, 255, 0.6),
+        inset 0 -2px 3px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.15);
     transition: all 0.4s ease;
 
     cursor: not-allowed;
@@ -859,19 +846,17 @@ button.custom-btn.answer-btn.answer-btn-3 {
 //     pointer-events: none;
 // }
 
-.sub-heading-text 
-{
+.sub-heading-text {
     -webkit-text-stroke: 2px #733412;
     font-size: 2rem;
     font-weight: 400;
-    color:#fff;
+    color: #fff;
     text-decoration: none;
     text-shadow: 0 2px 0 #f7a239;
-    letter-spacing:-2px;
+    letter-spacing: -2px;
 }
 
-.card-parent
-{
+.card-parent {
     border-radius: 25px;
     border: solid 6px #f7a239;
     background-color: #f2d29b !important;
@@ -883,30 +868,26 @@ input {
     border: 1px solid #fff !important;
 }
 
-input::placeholder,p.footer {
-    font-family: 'GothamLight';
+input::placeholder,
+p.footer {
+    font-family: "GothamLight";
     color: #888; /* placeholder color */
 }
 
-.footer-wrapper p
-{
-    font-family: 'GothamLight';
-    font-size:10px;
+.footer-wrapper p {
+    font-family: "GothamLight";
+    font-size: 10px;
 }
 
-.modal-content
-{
+.modal-content {
     border-radius: 20px !important;
 }
 
-.logo-welcome
-{
+.logo-welcome {
     width: 100%;
     max-width: 75vw;
     margin: auto;
 }
-
-
 
 @keyframes slow-pulse {
     0% {
@@ -927,7 +908,6 @@ input::placeholder,p.footer {
     animation: slow-pulse 3s infinite; /* slower duration */
 }
 
-
 .dashboard {
     height: 100svh !important;
 
@@ -935,8 +915,3 @@ input::placeholder,p.footer {
         height: 100% !important;
     }
 }
-
-
-
-
-

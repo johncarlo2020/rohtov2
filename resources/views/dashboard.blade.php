@@ -66,6 +66,112 @@
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 let canAccessStation3 = @json($canAccessStation3);
+                
+                // Station positioning function
+                function positionStations() {
+                    const container = document.querySelector('.station-selection-container');
+                    if (!container) return;
+                    
+                    const containerRect = container.getBoundingClientRect();
+                    const containerWidth = containerRect.width;
+                    const containerHeight = containerRect.height || window.innerHeight * 0.8;
+                    
+                    // Get viewport dimensions
+                    const vw = window.innerWidth;
+                    const vh = window.innerHeight;
+                    
+                    // Define responsive positioning based on viewport size and device type
+                    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+                    const isSmallScreen = vw < 414;
+                    const safeAreaBottom = isIOS ? 20 : 0; // Account for iOS safe area
+                    
+                    // Station positioning configurations
+                    const stationConfigs = {
+                        1: {
+                            // Top left position
+                            top: isSmallScreen ? Math.max(vh * 0.05, 20) : vh * 0.08,
+                            left: isSmallScreen ? vw * 0.05 : vw * 0.08,
+                            transform: 'translate(0, 0)'
+                        },
+                        2: {
+                            // Middle right position
+                            top: vh * 0.4,
+                            right: isSmallScreen ? vw * 0.05 : vw * 0.08,
+                            transform: 'translate(0, -50%)'
+                        },
+                        3: {
+                            // Bottom center position
+                            bottom: Math.max(vh * 0.1, safeAreaBottom + 40),
+                            left: '50%',
+                            transform: 'translate(-50%, 0)'
+                        }
+                    };
+                    
+                    // Apply positioning to each station
+                    Object.keys(stationConfigs).forEach(stationId => {
+                        const station = document.querySelector(`.station-custom-btn-${stationId}`);
+                        if (!station) return;
+                        
+                        const config = stationConfigs[stationId];
+                        
+                        // Reset positioning
+                        station.style.position = 'absolute';
+                        station.style.top = 'auto';
+                        station.style.right = 'auto';
+                        station.style.bottom = 'auto';
+                        station.style.left = 'auto';
+                        
+                        // Apply new positioning
+                        if (config.top !== undefined) {
+                            station.style.top = typeof config.top === 'number' ? `${config.top}px` : config.top;
+                        }
+                        if (config.right !== undefined) {
+                            station.style.right = typeof config.right === 'number' ? `${config.right}px` : config.right;
+                        }
+                        if (config.bottom !== undefined) {
+                            station.style.bottom = typeof config.bottom === 'number' ? `${config.bottom}px` : config.bottom;
+                        }
+                        if (config.left !== undefined) {
+                            station.style.left = typeof config.left === 'number' ? `${config.left}px` : config.left;
+                        }
+                        if (config.transform) {
+                            station.style.transform = config.transform;
+                        }
+                        
+                        // Ensure proper z-index and display
+                        station.style.zIndex = '2';
+                        station.style.display = 'flex';
+                    });
+                    
+                    // Adjust station details positioning based on station position
+                    const station2 = document.querySelector('.station-custom-btn-2');
+                    if (station2) {
+                        station2.style.flexDirection = 'row-reverse';
+                    }
+                }
+                
+                // Initial positioning
+                positionStations();
+                
+                // Re-position on resize and orientation change
+                let resizeTimeout;
+                function handleResize() {
+                    clearTimeout(resizeTimeout);
+                    resizeTimeout = setTimeout(positionStations, 150);
+                }
+                
+                window.addEventListener('resize', handleResize);
+                window.addEventListener('orientationchange', function() {
+                    setTimeout(positionStations, 300); // Delay for orientation change
+                });
+                
+                // Re-position when images load (affects container size)
+                const stationImages = document.querySelectorAll('.station-icon');
+                stationImages.forEach(img => {
+                    if (img.complete) return;
+                    img.addEventListener('load', positionStations, { once: true });
+                });
+                
                 window.gotoStamping = function(id,)
                 {
                     var url = "{{ route('station.stamping', ['station' => ':id']);}}".replace(

@@ -492,7 +492,9 @@
 
 .station-selection-container {
     position: relative;
-    // height: 70vh; /* allow absolute overlay for connectors */
+    min-height: 80vh; /* Ensure adequate height for JS positioning */
+    width: 100%;
+    overflow: visible; /* Allow stations to position outside if needed */
     .station-bg-map {
         width: auto;
         height: 100%;
@@ -505,8 +507,8 @@
     }
     .station-custom-btn {
         color: #000;
-        width: 100%;
-        position: absolute;
+        width: auto; /* Changed from 100% to auto for better control */
+        position: absolute; /* Keep absolute positioning, but let JS handle coordinates */
         z-index: 2; /* ensure above connectors */
         padding: 0;
         text-decoration: none;
@@ -556,84 +558,8 @@
             }
         }
 
-        &-1 {
-            top: 3%;
-            left: 7%;
-
-            @media (min-width: 360px) {
-                top: calc(-3vh - env(safe-area-inset-bottom));
-                left: -4vw;
-            }
-
-            @media (min-width: 375px) {
-                top: -10vh;
-                left: -4vw;
-            }
-
-            @media (min-width: 390px) {
-                top: calc(5vh - env(safe-area-inset-bottom));
-                left: -4vw;
-            }
-
-            //on 414px width screens, adjust position
-            @media (min-width: 414px) {
-                top: calc(10vh - env(safe-area-inset-bottom));
-                left: -4vw;
-            }
-        }
-
-        &-2 {
-            flex-direction: row-reverse;
-            // top: 36%;
-            // right: 8%;
-
-            @media (min-width: 360px) {
-                top: calc(60vh - env(safe-area-inset-bottom));
-                right: -4vw;
-            }
-
-            @media (min-width: 375px) {
-                top: calc(40vh - env(safe-area-inset-bottom));
-                left: -4vw;
-            }
-
-            @media (min-width: 390px) {
-                top: calc(75vh - env(safe-area-inset-bottom));
-                right: 3vw;
-            }
-
-            //on 414px width screens, adjust position
-            @media (min-width: 414px) {
-                top: calc(75vh - env(safe-area-inset-bottom));
-                right: 3vw;
-            }
-        }
-
-        &-3 {
-            top: 80vw;
-            left: 28vw;
-
-            @media (min-width: 360px) {
-                top: calc(100vh - env(safe-area-inset-bottom));
-                right: -5vw;
-            }
-
-            @media (min-width: 375px) {
-                top: calc(80vh - env(safe-area-inset-bottom));
-                right: -5vw;
-            }
-
-            @media (min-width: 390px) {
-                top: calc(125vh - env(safe-area-inset-bottom));
-                left: 25vw;
-            }
-
-            //on 414px width screens, adjust position
-            @media (min-width: 414px) {
-                top: calc(125vh - env(safe-area-inset-bottom));
-                left: 30vw;
-            }
-        }
+        // Remove all CSS positioning - let JavaScript handle it
+        // This ensures consistent positioning across all browsers including iOS
 
         .station-image-container {
             position: relative;

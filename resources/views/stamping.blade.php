@@ -54,7 +54,7 @@
     </style>
     <div class="py-4 map-page main-content stamping-page with-scroll">
         <div class="overlay station-{{ request()->segment(2) }}"></div>
-        <div class="d-flex justify-content-center align-item-center animate-entry">
+        <div class="animate-entry">
             @include('components.branding')
         </div>
         <!-- login Modal -->

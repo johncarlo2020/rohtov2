@@ -19,7 +19,7 @@
     </style>
     <div class="register-main main-background main-content with-scroll">
         <div class="justify-content-center w-100">
-            <div class="col-12 d-flex justify-content-center animate-entry mb-4">
+            <div class="col-12 animate-entry mb-4">
                 @include('components.branding')
             </div>
             <h2 class="mx-4 text-center sub-heading-text animate-entry">SIGN UP</h2>

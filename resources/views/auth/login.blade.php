@@ -11,7 +11,7 @@
     </style>
     <div class="login-page vh-100">
         <div class="main-content main-background with-scroll">
-            <div class="col-12 d-flex justify-content-center animate-entry mb-4">
+            <div class="col-12 animate-entry mb-4">
                 @include('components.branding')
             </div>
                 <h2 class="mx-4 text-center sub-heading-text animate-entry">LOGIN</h2>

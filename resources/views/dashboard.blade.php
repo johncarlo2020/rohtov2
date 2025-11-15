@@ -14,7 +14,7 @@
                         <div class="text-center content">
                             <div class="text-content mt-4 mb-4">
                                 <p class="message text-dark">
-                                    Please Complete all <br> the station
+                                    Ready for Treasure Spot 3? <br>First, complete Treasure Spot 1 & Treasure Spot 2 to unlock it!
                                 </p>
                             </div>
                             <button type="button" class="w-50 custom-btn custom-btn-primary" data-bs-dismiss="modal"

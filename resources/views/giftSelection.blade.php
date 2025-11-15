@@ -172,6 +172,34 @@
             });
 
             document.addEventListener('DOMContentLoaded', () => {
+                // Trigger confetti on page load
+                const duration = 3 * 1000;
+                const animationEnd = Date.now() + duration;
+                const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+
+                function randomInRange(min, max) {
+                    return Math.random() * (max - min) + min;
+                }
+
+                const interval = setInterval(function() {
+                    const timeLeft = animationEnd - Date.now();
+
+                    if (timeLeft <= 0) {
+                        clearInterval(interval);
+                        return;
+                    }
+
+                    const particleCount = 50 * (timeLeft / duration);
+                    confetti(Object.assign({}, defaults, { 
+                        particleCount, 
+                        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } 
+                    }));
+                    confetti(Object.assign({}, defaults, { 
+                        particleCount, 
+                        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } 
+                    }));
+                }, 250);
+
                 const redeemBtn = document.getElementById('redeemBtn');
 
                 if (redeemBtn) {
@@ -192,41 +220,12 @@
 
                             const result = await response.json();
                             
-                            // Reset button text after processing
-                            redeemBtn.textContent = 'Yes';
-                            
                             if (result.success) {
-                                // Trigger confetti animation AFTER successful API response
-                                const duration = 3 * 1000;
-                                const animationEnd = Date.now() + duration;
-                                const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
-
-                                function randomInRange(min, max) {
-                                    return Math.random() * (max - min) + min;
-                                }
-
-                                const interval = setInterval(function() {
-                                    const timeLeft = animationEnd - Date.now();
-
-                                    if (timeLeft <= 0) {
-                                        clearInterval(interval);
-                                        window.location.href = result.redirect;
-                                        return;
-                                    }
-
-                                    const particleCount = 50 * (timeLeft / duration);
-                                    confetti(Object.assign({}, defaults, { 
-                                        particleCount, 
-                                        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } 
-                                    }));
-                                    confetti(Object.assign({}, defaults, { 
-                                        particleCount, 
-                                        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } 
-                                    }));
-                                }, 250);
+                                window.location.href = result.redirect;
                             } else {
                                 alert(result.message || 'Failed to redeem gift.');
                                 redeemBtn.style.pointerEvents = 'auto';
+                                redeemBtn.textContent = 'Yes';
                             }
 
                         } catch (error) {

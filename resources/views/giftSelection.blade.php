@@ -94,14 +94,14 @@
                     You've collected<br>
                     ALL the stamps!
                 </p>
-                <p class="mb-4 text-center text-light">
+                <p class="mb-4 text-center">
                     Please head over to the reception counter at <strong class="text-main">B06</strong> &
                     show this page to the staff to <strong class="text-main">claim your reward!</strong>
                 </p>
                 <div class="text-content mt-3">
                     <button type="button"
                         style="width:100%;"
-                        class="custom-btn px-5 fw-regular custom-btn-primary text-white"
+                        class="custom-btn px-5 fw-regular custom-btn-primary text-white gift-redemption-btn"
                         onclick="staffVerificationAction()">
                         Staff Verification
                     </button>
@@ -169,44 +169,74 @@
                 window.staffVerificationAction = function () {
                     staffVerificationModal.show();
                 };
-
-                // Example: Yes button AJAX inside modal
-                document.getElementById('staffVerificationYesBtn').addEventListener('click', function () {
-                    console.log('Perform AJAX here...');
-                    // Close modal after success
-                    staffVerificationModal.hide();
-                });
             });
 
             document.addEventListener('DOMContentLoaded', () => {
                 const redeemBtn = document.getElementById('redeemBtn');
 
-                redeemBtn.addEventListener('click', async () => {
-                    redeemBtn.disabled = true;
-                    redeemBtn.textContent = 'Processing...';
+                if (redeemBtn) {
+                    redeemBtn.addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        
+                        redeemBtn.style.pointerEvents = 'none';
+                        redeemBtn.textContent = 'Processing...';
 
-                    try {
-                        const response = await fetch("{{ route('giftselection.redeem') }}", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                                "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                            },
-                        });
+                        try {
+                            const response = await fetch("{{ route('giftselection.redeem') }}", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                                },
+                            });
 
-                        const result = await response.json();
+                            const result = await response.json();
+                            
+                            // Reset button text after processing
+                            redeemBtn.textContent = 'Yes';
+                            
                             if (result.success) {
-                                window.location.href = result.redirect;
-                            } 
+                                // Trigger confetti animation AFTER successful API response
+                                const duration = 3 * 1000;
+                                const animationEnd = Date.now() + duration;
+                                const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
 
-                    } catch (error) {
-                        console.error(error);
-                        alert('Something went wrong while redeeming your gift.');
-                    } finally {
-                        redeemBtn.disabled = false;
-                        redeemBtn.textContent = 'Yes';
-                    }
-                });
+                                function randomInRange(min, max) {
+                                    return Math.random() * (max - min) + min;
+                                }
+
+                                const interval = setInterval(function() {
+                                    const timeLeft = animationEnd - Date.now();
+
+                                    if (timeLeft <= 0) {
+                                        clearInterval(interval);
+                                        window.location.href = result.redirect;
+                                        return;
+                                    }
+
+                                    const particleCount = 50 * (timeLeft / duration);
+                                    confetti(Object.assign({}, defaults, { 
+                                        particleCount, 
+                                        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } 
+                                    }));
+                                    confetti(Object.assign({}, defaults, { 
+                                        particleCount, 
+                                        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } 
+                                    }));
+                                }, 250);
+                            } else {
+                                alert(result.message || 'Failed to redeem gift.');
+                                redeemBtn.style.pointerEvents = 'auto';
+                            }
+
+                        } catch (error) {
+                            console.error(error);
+                            alert('Something went wrong while redeeming your gift.');
+                            redeemBtn.style.pointerEvents = 'auto';
+                            redeemBtn.textContent = 'Yes';
+                        }
+                    });
+                }
             });
 
 

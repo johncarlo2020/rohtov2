@@ -27,12 +27,12 @@ class StationSeeder extends Seeder
 
         Station::create([
             'name' => 'Treasure Spot 2',
-            'question' => 'Can Yield Booster Prophycient help control Ganoderma deiseasein oil palm?',
+            'question' => 'Can Yield Booster Prophycient help control Ganoderma disease in oil palm?',
         ]);
 
         Station::create([
             'name' => 'Treasure Spot 3',
-            'question' => 'Which of the following services are offered by Agri Analyrics & Services (AAS)',
+            'question' => 'Which of the following services are offered by Agri Analytics & Services (AAS)',
         ]);
 
         

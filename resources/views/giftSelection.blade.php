@@ -90,13 +90,13 @@
       <div class="card card-parent p-4">
             <div class="text-content mt-0">
                 <p class="sub-heading fw-bold mb-2 station-text "><span class="station_name text-dark"></span></p>
-                <p class="mb-4 text-main text-center ">
+                <p class="mb-4 text-main text-center " style="font-size:28px">
                     You've collected<br>
                     ALL the stamps!
                 </p>
-                <p class="mb-4 text-center">
-                    Please head over to the reception counter at B06 &
-                    show this page to the staff to claim your reward!
+                <p class="mb-4 text-center text-light">
+                    Please head over to the reception counter at <strong class="text-main">B06</strong> &
+                    show this page to the staff to <strong class="text-main">claim your reward!</strong>
                 </p>
                 <div class="text-content mt-3">
                     <button type="button"

@@ -52,7 +52,7 @@
 
     
     </style>
-    <div class="py-4 map-page main-content stamping-page">
+    <div class="py-4 map-page main-content stamping-page" data-id="{{ request()->segment(2) }}">
         <div class="overlay station-{{ request()->segment(2) }}"></div>
         <div class="animate-entry">
             @include('components.branding')
@@ -83,7 +83,7 @@
             <!-- Center image (middle area) -->
             <div class="row">
                 <div class="col-12 d-flex justify-content-center align-items-center p-0 animate-entry">
-                    <div id="touchBox">
+                    <div id="touchBox touch-box-{{ request()->segment(2) }}">
                         <img class="stamping-image"
                             src="{{ asset('images/brand/STMP' . request()->segment(2) . '.webp') }}"
                             alt="Stamp Image"
@@ -107,8 +107,7 @@
                                     onclick="window.location.href='{{ route('station.giftselection') }}'"
                                 @else
                                     onclick="window.location.href='{{ route('dashboard') }}'"
-                                @endif
-                                >
+                                @endif>
                                 Home
                             </button>
                         </div>
@@ -127,9 +126,10 @@
             const countDisplay = document.getElementById("countNum");
             const stampingPage = document.querySelector(".stamping-page");
             const activeInside = new Map();
+            const stationid = stampingPage ? parseInt(stampingPage .dataset.id) : null;
             let hasStamped = false;
             const user = @json($user);
-            
+            // console.log(stationid);
             isStamped();
             
             function isStamped()
@@ -161,17 +161,17 @@
 
             function updateDisplay() {
                 countDisplay.textContent = activeInside.size;
-
                 // Toggle grayscale removal
                 // Only trigger once
-                    if (!hasStamped && activeInside.size == 4) {
+                const requiredCount = stationid == 2 ? 4 : 3;
+                console.log(requiredCount);
+                    if (!hasStamped && activeInside.size == requiredCount) {
                         hasStamped = true;
                         stampingPage.classList.add("active");
 
                         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                         const stampImage = document.querySelector('.stamping-image');
-                        const stampId = stampImage.dataset.stampId;
-
+                        
                             $.ajax({
                                 url: '{{ route('process_stamp') }}',
                                 type: 'POST',
@@ -196,8 +196,7 @@
                                 button.style.pointerEvents = "auto";
                                 console.log('test');
                             }
-
-                }
+                        }
                     
             }
 

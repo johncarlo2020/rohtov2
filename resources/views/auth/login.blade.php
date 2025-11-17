@@ -20,11 +20,13 @@
                 <x-auth-session-status class="mb-4" :status="session('status')" />
                 <form method="POST" action="{{ route('login') }}" >
                     @csrf
+                    <input type="hidden" name="dialCode" id="dialCode" ></input>
+                    <input type="hidden" name="countryIso" id="countryIso">
                     <div class="row mb-3">
                         <div class="col-12 input-group w-100">
                                 <label for="number" class="text-main">Contact Number <span class="text-danger">*</span></label>
 
-                                <input id="number" type="number"
+                                <input id="number" type="tel"
                                     class="input-text form-control w-100 @error('number') is-invalid @enderror"
                                     name="number" value="{{ old('number') }}" required autocomplete="number"
                                     autofocus />
@@ -66,12 +68,14 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/intlTelInput.min.js"></script>
-<script>
+    <script>
     document.addEventListener("DOMContentLoaded", function () {
         const form = document.querySelector("#form");
         const input = document.querySelector("#number");
         const errorMsg = document.querySelector("#error-msg");
         const validMsg = document.querySelector("#valid-msg");
+        const dialInput = document.querySelector("#dialCode");
+        const isoInput = document.querySelector("#countryIso");
         const errorMap = [
             "Invalid number",
             "Invalid country code",
@@ -81,8 +85,9 @@
         ];
         const submitButton = document.querySelector("#submitButton");
         const iti = window.intlTelInput(input, {
+            initialCountry: "my",
+            preferredCountries: ["my"],
             hiddenInput: "country",
-            onlyCountries: ["my"],
             utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/utils.js"
         });
 
@@ -115,19 +120,140 @@
             }
         });
 
+        // Function to update dial code in the div
+            function updateCountryData() {
+                const countryData = iti.getSelectedCountryData();
+                dialInput.value = "+" + countryData.dialCode;  // e.g., +1
+                isoInput.value = countryData.iso2;             // e.g., us, my, ca
+                console.log("Dial code:", dialInput.value, "ISO:", isoInput.value);
+                // submitButton.disabled = false;
+            }
+
+            // Set initial default dial code on page load
+            updateCountryData();
+
+            // Update dial code whenever country changes
+            input.addEventListener("countrychange", updateCountryData);
+
+            if (!input) return;
+            
+            input.addEventListener("keypress", function (e) {
+            const char = String.fromCharCode(e.which);
+            if (!/[0-9+]/.test(char)) {
+                e.preventDefault();
+            }
+        });
+
         // Prevent form submission if not Malaysian number
         form.addEventListener("submit", function (e) {
             const countryData = iti.getSelectedCountryData();
-            if (!iti.isValidNumber() || countryData.iso2 !== 'my') {
-                let msg = "Please enter a valid Malaysian phone number";
-                if (countryData.iso2 !== 'my') {
-                    msg = "Only Malaysian phone numbers are allowed.";
-                }
+            console.log(countryData);
+            const number = input.value.trim();
+
+            // Check if number is valid for the selected country
+            if (!iti.isValidNumber()) {
+                const msg = `Please enter a valid phone number for ${countryData.name}`;
                 showError(msg);
-                 e.preventDefault();
+                e.preventDefault();
                 submitButton.disabled = true;
+            } else {
+                submitButton.disabled = false; // enable submit if valid
             }
         });
     });
 </script>
+
+<!-- <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector("#form");
+        const input = document.querySelector("#number");
+        const errorMsg = document.querySelector("#error-msg");
+        const validMsg = document.querySelector("#valid-msg");
+        const dialInput = document.querySelector("#dialCode");
+        const isoInput = document.querySelector("#countryIso");
+
+        const errorMap = [
+            "Invalid number",
+            "Invalid country code",
+            "Too short",
+            "Too long",
+            "Invalid number",
+        ];
+        const submitButton = document.querySelector("#submitButton");
+        const iti = window.intlTelInput(input, {
+            initialCountry: "my",
+            preferredCountries: ["my"],
+            hiddenInput: "country",
+            utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/utils.js"
+        });
+
+        const reset = () => {
+            input.classList.remove("error");
+            errorMsg.innerHTML = "";
+            errorMsg.classList.add("d-none");
+            validMsg.classList.add("d-none");
+        };
+
+        const showError = (msg) => {
+            input.classList.add("error");
+            errorMsg.innerHTML = msg;
+            errorMsg.classList.remove("d-none");
+        };
+
+        input.addEventListener("keyup", function () {
+            reset();
+            if (!input.value.trim()) {
+                showError("Required");
+                submitButton.disabled = true;
+            } else if (iti.isValidNumber()) {
+                validMsg.classList.remove("d-none");
+                submitButton.disabled = false;
+            } else {
+                const errorCode = iti.getValidationError();
+                const msg = errorMap[errorCode] || "Invalid number";
+                showError(msg);
+                submitButton.disabled = true;
+            }
+        });
+
+        // Function to update dial code in the div
+            function updateCountryData() {
+                const countryData = iti.getSelectedCountryData();
+                dialInput.value = "+" + countryData.dialCode;  // e.g., +1
+                isoInput.value = countryData.iso2;             // e.g., us, my, ca
+                console.log("Dial code:", dialInput.value, "ISO:", isoInput.value);
+                submitButton.disabled = false;
+            }
+
+            // Set initial default dial code on page load
+            updateCountryData();
+
+            // Update dial code whenever country changes
+            input.addEventListener("countrychange", updateCountryData);
+
+            input.addEventListener("keypress", function (e) {
+                const char = String.fromCharCode(e.which);
+                if (!/[0-9+]/.test(char)) {
+                    e.preventDefault();
+                }
+            });
+
+        // Prevent form submission if not Malaysian number
+        form.addEventListener("submit", function (e) {
+            const countryData = iti.getSelectedCountryData();
+            console.log(countryData);
+            const number = input.value.trim();
+
+            // Check if number is valid for the selected country
+            if (!iti.isValidNumber()) {
+                const msg = `Please enter a valid phone number for ${countryData.name}`;
+                showError(msg);
+                e.preventDefault();
+                submitButton.disabled = true;
+            } else {
+                submitButton.disabled = false; // enable submit if valid
+            }
+        });
+    });
+</script> -->
 </x-guest-layout>

@@ -163,13 +163,13 @@
                 // Only trigger once
                 const requiredCount = stationid == 2 ? 4 : 3;
                 console.log(requiredCount);
-                    if (!hasStamped && activeInside.size == requiredCount) {
+                    if (!hasStamped && activeInside.size === requiredCount) {
                         hasStamped = true;
                         stampingPage.classList.add("active");
 
                         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                         const stampImage = document.querySelector('.stamping-image');
-                        const stampId = stampImage ? parseInt(stampImage.dataset.id) : null;
+                        const stampId = stampingPage ? parseInt(stampingPage.dataset.id) : null;
                         
                             $.ajax({
                                 url: '{{ route('process_stamp') }}',
@@ -195,7 +195,11 @@
                                 button.style.pointerEvents = "auto";
                                 console.log('test');
                             }
-                        }
+                    }
+                    else 
+                    {
+                        console.log('invalid touchpoint');
+                    }
                     
             }
 

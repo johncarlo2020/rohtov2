@@ -161,7 +161,7 @@
                 countDisplay.textContent = activeInside.size;
                 // Toggle grayscale removal
                 // Only trigger once
-                const requiredCount = stationid == 2 ? 4 : 3;
+                const requiredCount = stationid  ===  2 ? 4 : 3;
                 console.log(requiredCount);
                     if (!hasStamped && activeInside.size === requiredCount) {
                         hasStamped = true;

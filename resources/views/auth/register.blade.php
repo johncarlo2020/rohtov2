@@ -60,7 +60,6 @@
                             </div>
                         </div> -->
 
-
                         <div class="mb-3 row">
                             <div class="col-12 input-group w-100">
                                 <label for="number" class="text-main">Phone Number <span class="text-danger">*</span></label>
@@ -97,7 +96,11 @@
                             </div>
                         </div>
 
-            
+                         @error('country')
+                            <div class="text-danger text-center mb-2">{!! $message !!}</div> 
+                        @enderror
+
+                       
                         <div class="mb-0 row">
                             <div class="col-12 text-center">
                                 <button id="submitButton" type="submit"

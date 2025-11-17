@@ -41,6 +41,7 @@ class RegisteredUserController extends Controller
         $request->validate([
             'fname' => ['required', 'string', 'max:255'],
             'number' => ['required', 'unique:'.User::class],
+            'dialCode' => ['required', 'string'],
             'country' => [
                 'required',
                 'string',
@@ -60,14 +61,19 @@ class RegisteredUserController extends Controller
 
         // After validation, fetch country by phone number
         $phoneNumber = $request->input('country');
+        $dialCode = $request->input('dialCode');
+        $countryIso = $request->input('countryIso');
 
       // Extract the phone prefix
         $phonePrefix = '+' . substr($phoneNumber, 1, 2); // This assumes the prefix is always 2 characters after the '+'
+    
 
         // Query the country based on the phone prefix
-        $country = Countries::where('phone_code', $phonePrefix)->first();
+        $country = Countries::where('phone_code', $dialCode)
+            ->whereRaw('LOWER(code) = ?', [strtolower($countryIso)])
+            ->first();
         $otp = rand(100000, 999999);
-
+        
         $user = User::create([
             'name' => $request->fname,
             'number' => $phoneNumber,

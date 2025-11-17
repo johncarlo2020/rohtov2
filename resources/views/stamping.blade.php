@@ -83,7 +83,7 @@
             <!-- Center image (middle area) -->
             <div class="row">
                 <div class="col-12 d-flex justify-content-center align-items-center p-0 animate-entry">
-                    <div id="touchBox touch-box-{{ request()->segment(2) }}">
+                    <div id="touchBox">
                         <img class="stamping-image"
                             src="{{ asset('images/brand/STMP' . request()->segment(2) . '.webp') }}"
                             alt="Stamp Image"
@@ -125,13 +125,11 @@
             const box = document.getElementById("touchBox");
             const countDisplay = document.getElementById("countNum");
             const stampingPage = document.querySelector(".stamping-page");
+            const stationid = stampingPage ? parseInt(stampingPage.dataset.id) : null;
             const activeInside = new Map();
-            const stationid = stampingPage ? parseInt(stampingPage .dataset.id) : null;
             let hasStamped = false;
             const user = @json($user);
-            // console.log(stationid);
-            isStamped();
-            
+            isStamped();    
             function isStamped()
             {
                 if(user)
@@ -171,6 +169,7 @@
 
                         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                         const stampImage = document.querySelector('.stamping-image');
+                        const stampId = stampImage ? parseInt(stampImage.dataset.id) : null;
                         
                             $.ajax({
                                 url: '{{ route('process_stamp') }}',

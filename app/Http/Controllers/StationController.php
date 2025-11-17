@@ -427,7 +427,7 @@ class StationController extends Controller
         $admin = User::find(auth()->id());
         $permission = $admin->getPermissionNames()->first();
         $today = Carbon::today();
-        $startDate = Carbon::create(2025, 7, 11);
+        $startDate = Carbon::create(2025, 11, 17);
 
         $data['users'] = User::with('stationUser')->take(4)->orderBy('id', 'desc')->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
             ->get();

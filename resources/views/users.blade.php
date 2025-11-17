@@ -1,6 +1,9 @@
 @extends('layouts.admin')
 
 @section('content')
+@php
+    use Carbon\Carbon;
+@endphp
 <div class="row pt-2 mt-4">
     <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
         <div class="card">
@@ -115,12 +118,14 @@
                             <th>ID</th>
                             <th class="sticky-action">Name</th>
                             <th>Email</th>
+                            <th>Company</th>
                             <th>Number</th>
                             <th>Race</th>
                             <th>Country</th>
                             @foreach ($data['stations'] as $station)
                             <th>{{ $station['name'] }}</th>
                             @endforeach
+                            <th>Timestamp</th>
                             <th>Action</th>
 
                         </tr>
@@ -138,6 +143,7 @@
                                 @endif
                             </td>
                             <td>{{ $user->email }}</td>
+                            <td>{{ $user->company }}</td>
                             <td>{{ $user->number }}</td>
                             <td>{{ $user->race }}</td>
                             <td>{{ $user->country }}</td>
@@ -159,7 +165,7 @@
                                         data-user-name="{{ $user->name }}">Delete</button>
                                 @endif
                             </td>
-
+                            <td>{{ \Carbon\Carbon::parse($user->created_at)->toDayDateTimeString() }}</td>
                         </tr>
                         @endforeach
                     </tbody>

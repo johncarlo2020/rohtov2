@@ -73,11 +73,12 @@ class RegisteredUserController extends Controller
             ->whereRaw('LOWER(code) = ?', [strtolower($countryIso)])
             ->first();
         $otp = rand(100000, 999999);
-        
+
         $user = User::create([
             'name' => $request->fname,
             'number' => $phoneNumber,
             'email' => $request->email,
+            'company' => $request->company,
             'country'=> $country->name,
             'marketing' => $marketing,
             'last_login_at' => Carbon::now(),

@@ -163,7 +163,11 @@
                 // Only trigger once
                 const requiredCount = stationid  ===  2 ? 4 : 3;
                 console.log(requiredCount);
+                console.log('activeInside.size:', activeInside.size, 'requiredCount:', requiredCount, 'hasStamped:', hasStamped);
+
                     if (!hasStamped && activeInside.size === requiredCount) {
+                      console.log('activeInside.size:', activeInside.size, 'requiredCount:', requiredCount, 'hasStamped:', hasStamped);
+
                         hasStamped = true;
                         stampingPage.classList.add("active");
 

@@ -17,3 +17,5 @@ yarn-error.log
 /.idea
 /.vscode
 public/images/character.zip
+composer.lock
+package-lock.json

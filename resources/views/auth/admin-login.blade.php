@@ -22,7 +22,7 @@
                         <div class="mb-4 input-group">
                             <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                             <input placeholder="Enter your email" type="email" name="email" class="form-control"
-                                id="exampleInputEmail1" aria-describedby="emailHelp" />
+                                id="exampleInputEmail1" aria-describedby="emailHelp" /> 
                         </div>
                         <div class="mb-3 input-group">
                             <span class="input-group-text"><i class="fas fa-lock"></i></span>

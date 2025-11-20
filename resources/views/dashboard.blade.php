@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="py-4 map-page main-content dashbord-page">
+    <div class="py-4 map-page main-content main-background">
         <div class="animate-entry">
             @include('components.branding')
         </div>
@@ -24,42 +24,47 @@
                 </div>
             </div>
         </div>
-        <div class="station-selection-container mb-2 animate-entry delay-2">
-            @foreach ($stations as $station)
-
-                <a class="station-custom-btn station-custom-btn-{{ $station->id }}"
-                    type="button"
-                    @if($station->status)
-                        @if($station->id == 3)
-                            @if($isRedeemed)
-                                onclick="window.location.href='{{ route('congrats') }}'"
-                            @else 
-                                onclick="window.location.href='{{ route('station.giftselection') }}'"
+        <div class="station-selection-container">
+            <div class="card card-parent mb-2 animate-entry delay-2">
+                @foreach ($stations as $station)
+                    <a class="station-custom-btn-{{ $station->id }}"
+                        type="button"
+                        @if($station->status)
+                            @if($station->id == 3)
+                                @if($isRedeemed)
+                                    onclick="window.location.href='{{ route('congrats') }}'"
+                                @else 
+                                    onclick="window.location.href='{{ route('station.giftselection') }}'"
+                                @endif
+                            @else
+                                onclick="gotoStamping({{ $station->id }})"
                             @endif
                         @else
-                             onclick="gotoStamping({{ $station->id }})"
+                                onclick="gotoStation({{ $station->id }})"
                         @endif
-                    @else
-                            onclick="gotoStation({{ $station->id }})"
-                    @endif
-                    >
+                        >
 
-                    <div class="station-image-container">
-                        <img class="station-icon station-{{ $station->id }} pulse-slow" 
-                            data-id="station-{{ $station->id }}" 
-                            src="@if($station->status)
-                                {{asset('images/station/STBM' . $station->id . 'GLOW.webp');}}
-                            @else
-                                {{asset('images/station/STBM' . $station->id . '.webp');}}
-                            @endif"
-                            alt="Station {{ $station->id }}"
-                            style="@if($station->status) filter: grayscale(0); @endif"> <!-- grayscale only if NOT completed -->
-                    </div>
-                    <div class="station-details station-{{ $station->id }}">
-                    </div>
-                </a>
-            @endforeach
-
+                        <div class="station-image-container">
+                                    @php
+                                        $customStations = [1, 2, 3];
+                                        if (in_array($station->id, $customStations)) {
+                                            $image = asset("images/station/ST{$station->id}.webp");
+                                        } else {
+                                            $image = asset('images/station/ST{{$station->id}}.webp');
+                                        }
+                                    @endphp
+                            <img class="station-icon station-{{ $station->id }} pulse-slow" 
+                                data-id="station-{{ $station->id }}" 
+                                
+                                src="{{ $image }}"
+                                alt="Station {{ $station->id }}"
+                                style="@if($station->status) filter: grayscale(0); @endif"> <!-- grayscale only if NOT completed -->
+                        </div>
+                        <div class="station-details station-{{ $station->id }}">
+                        </div>
+                    </a>
+                @endforeach
+            </div>
         </div>
     </div>
     @push('scripts')

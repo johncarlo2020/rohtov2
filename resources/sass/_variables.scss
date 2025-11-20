@@ -27,7 +27,7 @@ $letter-spacing: 0;
 
 // buttons
 $button-height: 40px;
-$button-width: 200px;
+$button-width: 100%;
 $button-radius: 20px;
 $button-padding: 20px 10px;
 $button-font-size: 24px;
@@ -35,7 +35,7 @@ $button-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 
 
 //images
-$main-background: url('../images/bg.webp');
+$main-background: url('../images/landing_main.webp');
 $dashboard-background: url('../images/map.webp');
 $stamping-background: url('../images/mapstamp.webp');
 //content

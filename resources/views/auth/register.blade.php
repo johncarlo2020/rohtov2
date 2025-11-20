@@ -17,7 +17,7 @@
         font-family: 'GothamBold' !important;
     }
     </style>
-    <div class="register-main main-background main-content with-scroll">
+    <div class="register-main main-content with-scroll">
         <div class="justify-content-center w-100">
             <div class="col-12 animate-entry mb-4">
                 @include('components.branding')

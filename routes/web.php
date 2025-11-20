@@ -117,6 +117,9 @@ Route::group(['middleware' => ['client']], function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/reward/{reward}', 'App\Http\Controllers\RewardController@index')->name('reward.index');
+
     Route::get('/station/{station}', 'App\Http\Controllers\StationController@index')->name('station');
     Route::get('/dashboard', 'App\Http\Controllers\StationController@welcome')->name('dashboard');
     Route::get('/discover', 'App\Http\Controllers\StationController@discover')->name('discover');

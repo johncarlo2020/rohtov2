@@ -21,18 +21,18 @@ class StationSeeder extends Seeder
     public function run()
     {
         Station::create([
-            'name' => 'Treasure Spot 1',
-            'question' => 'Which fertilizer practice helps support ESG goals in oil palm farming?',
+            'name' => 'Weekday',
+            'description' => 'Weekday Exclusive Gifts',
         ]);
 
         Station::create([
-            'name' => 'Treasure Spot 2',
-            'question' => 'Can Yield Booster Prophycient help control Ganoderma disease in oil palm?',
+            'name' => 'Weekend',
+            'description' => 'Weekend Exclusive Gifts',
         ]);
 
         Station::create([
-            'name' => 'Treasure Spot 3',
-            'question' => 'Which of the following services are offered by Agri Analytics & Services (AAS)',
+            'name' => 'Referral',
+            'description' => 'Referral Exclusive Gifts',
         ]);
 
         
@@ -49,7 +49,7 @@ class StationSeeder extends Seeder
             'number' => '0123456789',
             'email' => 'admin@gmail.com',
             'country' => 'Malaysia',
-            'password' => Hash::make('WowsomeBm2025'),
+            'password' => Hash::make('Wowsome4s2025'),
         ]);
 
         $user->assignRole('admin');

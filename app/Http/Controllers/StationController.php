@@ -460,16 +460,21 @@ class StationController extends Controller
         $data['dates'] = User::select(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as date'))->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())->groupBy('date')->get();
 
         $data['registrationsPerHour'] = User::select(
-            DB::raw('DATE(DATE_ADD(created_at, INTERVAL 8 HOUR)) as date'),
-            DB::raw('LOWER(DATE_FORMAT(DATE_ADD(created_at, INTERVAL 8 HOUR), "%l%p")) as hour'),
-            DB::raw('COUNT(*) as registrations')
+            // DB::raw('DATE(DATE_ADD(created_at, INTERVAL 8 HOUR)) as date'),
+            // DB::raw('LOWER(DATE_FORMAT(DATE_ADD(created_at, INTERVAL 8 HOUR), "%l%p")) as hour'),
+            // DB::raw('COUNT(*) as registrations')
+                DB::raw('DATE(created_at) as date'),
+                DB::raw('DATE_FORMAT(created_at, "%l%p") as hour'),
+                DB::raw('COUNT(*) as registrations')
         )
             ->whereNotNull('created_at')
-            ->where(DB::raw('DATE(DATE_ADD(created_at, INTERVAL 8 HOUR))'), '>=', $startDate->toDateString())
+            ->where(DB::raw('DATE(created_at)'), '>=', $startDate->toDateString())
             ->groupBy('date', 'hour')
             ->havingRaw('hour IS NOT NULL AND hour <> \'\'')
             ->get()
             ->groupBy('hour');
+
+        // dd($data['registrationsPerHour']);
 
         foreach ($userCounts as $userCount) {
             if ($userCount['date'] >= $startDate->toDateString()) {

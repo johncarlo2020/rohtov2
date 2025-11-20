@@ -58,16 +58,17 @@
         }
     </style>
 
-    <div class="with-scroll py-4 map-page {{ request()->segment(2) == 1 ? 'weekday-background' : (request()->segment(2) == 2 ? 'weekdend-background' : '') }}" data-id="{{ request()->segment(2) }}">
+    <div class="with-scroll py-4 map-page {{ request()->segment(2) == 1 ? 'weekday-background' : (request()->segment(2) == 2 ? 'weekend-background' : 'main-background') }}" data-id="{{ request()->segment(2) }}">
         <div class="animate-entry">
             @include('components.branding')
         </div>
             @php
                 $type = request()->segment(2) == 1
                     ? 'weekday'
-                    : (request()->segment(2) == 2 ? 'weekend' : '');
+                    : (request()->segment(2) == 2 ? 'weekend' : 'referral');
 
                 $image = "images/brand/{$type}_hero.png";
+
                 $alt   = request()->segment(2) == 1
                     ? 'Weekday Img'
                     : (request()->segment(2) == 2 ? 'Weekend Img' : '');
@@ -81,11 +82,24 @@
                     <!-- Center image (middle area) -->
                     <div class="row">
                         <div class="col-12  text-center my-4 p-0 animate-entry">
-                            <h2>{{ request()->segment(2) == 1 ? 'Weekday' : (request()->segment(2) == 2 ? 'Weekend' : '') }} Exclusive for Elite Circle</h2>
-                            <p>Valid from 1 Dec - 31 Dec 2025</p>
-                            <p>Sign up and enjoy your gifts</p>
+                            @if(request()->segment(2) == 3)
+                                <h2>
+                                    Congratulations
+                                </h2>
+                                <p>You won an exclusive gift</p>
+                                <p>Valid from 1 Dec - 31 Dec 2025</p>
+                            @else 
+                                <h2>
+                                    {{ request()->segment(2) == 1 ? 'Weekday' : (request()->segment(2) == 2 ? 'Weekend' : '') }} Exclusive for Elite Circle
+                                </h2>
+                                <p>Valid from 1 Dec - 31 Dec 2025</p>
+                                <p>Sign up and enjoy your gifts</p>
+                            @endif
+                            
                         </div>
                     </div>
+
+
 
                     <!-- Modal Button -->
                     <!-- QR BUTTON -->

@@ -120,6 +120,9 @@ Route::group(['middleware' => ['client']], function () {
 
     Route::get('/reward/{reward}', 'App\Http\Controllers\RewardController@index')->name('reward.index');
 
+    // Referrals
+    Route::get('/referrals', 'App\Http\Controllers\ReferralsController@index')->name('referrals.index');
+
     Route::get('/station/{station}', 'App\Http\Controllers\StationController@index')->name('station');
     Route::get('/dashboard', 'App\Http\Controllers\StationController@welcome')->name('dashboard');
     Route::get('/discover', 'App\Http\Controllers\StationController@discover')->name('discover');

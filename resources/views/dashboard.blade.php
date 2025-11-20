@@ -29,18 +29,11 @@
                 @foreach ($stations as $station)
                     <a class="station-custom-btn-{{ $station->id }}"
                         type="button"
-                        @if($station->status)
-                            @if($station->id == 3)
-                                @if($isRedeemed)
-                                    onclick="window.location.href='{{ route('congrats') }}'"
-                                @else 
-                                    onclick="window.location.href='{{ route('station.giftselection') }}'"
-                                @endif
-                            @else
-                                onclick="gotoStamping({{ $station->id }})"
-                            @endif
+
+                        @if($station->id == 3)
+                            onclick="window.location.href='{{ route('referrals.index') }}'"
                         @else
-                                onclick="gotoStation({{ $station->id }})"
+                            onclick="gotoStation({{ $station->id }})"
                         @endif
                         >
 
@@ -84,7 +77,7 @@
                         id
                     );
 
-                    if (id === 3 && !canAccessStation3) {
+                    if (id === 4 && !canAccessStation3) {
                         // Show the not allowed modal if trying to access station 3 without permission
                         var notAllowedModal = new bootstrap.Modal(document.getElementById('notAllowedModal'));
                         notAllowedModal.show();

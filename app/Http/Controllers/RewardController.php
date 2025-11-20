@@ -9,7 +9,7 @@ class RewardController extends Controller
     //
     public function index()
     {
-        return view('rewards.index');
+        return view('rewards');
     }
 
     public function store(Request $request)

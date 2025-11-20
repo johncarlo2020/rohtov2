@@ -7,6 +7,16 @@ background-image: $main-background;
 background-size: cover;
 }
 
+.weekday-background {
+background-image: $weekday-background;
+background-size: cover;
+}
+
+.weekdend-background {
+background-image: $weekend-background;
+background-size: cover;
+}
+
 .station-page
 {
     position: relative; /* make sure parent is relative */

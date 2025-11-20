@@ -73,13 +73,13 @@
                 let canAccessStation3 = @json($canAccessStation3);
                 window.gotoStamping = function(id,)
                 {
-                    var url = "{{ route('station.stamping', ['station' => ':id']);}}".replace(
+                    var url = "{{ route('reward.index', ['reward' => ':id']);}}".replace(
                         ":id",id
                     );
                      window.location.href = url;
                 }
                 window.gotoStation = function(id, ) {
-                    var url = "{{ route('station', ['station' => ':id']) }}".replace(
+                    var url = "{{ route('reward.index', ['reward' => ':id']) }}".replace(
                         ":id",
                         id
                     );

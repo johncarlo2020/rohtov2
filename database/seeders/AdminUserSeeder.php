@@ -71,7 +71,34 @@ class AdminUserSeeder extends Seeder
 
         // Optionally create additional admin users
         $this->createAdditionalAdmins();
+        $this->createConciergeUser();
     }
+
+    private function createConciergeUser(): void 
+    {
+               // Check if concierge role exists, if not create it
+        $conciergeRole = Role::firstOrCreate(['name' => 'concierge']);
+
+        $user = User::updateOrCreate(
+            ['email' => 'concierge@gmail.com'],
+            [
+                'name' => 'Concierge User',
+                'number' => '0000000000',
+                'country' => 'Malaysia',
+                'password' => Hash::make('Concierge123!'),
+                'marketing' => false,
+                'otp_verified' => true,
+                'email_verified_at' => now(),
+            ]
+        );
+
+        // Assign role
+        if (!$user->hasRole('concierge')) {
+            $user->assignRole($conciergeRole);
+        }
+    }
+
+
 
     /**
      * Create additional admin users if needed

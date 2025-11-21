@@ -18,6 +18,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/concierge', function () {
+    return redirect('/concierge/login');
+});
+
 Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
@@ -49,6 +53,10 @@ Route::get('/pad', function () {
 
 Route::get('/admin/login', action: function () {
     return view('auth.admin-login');
+});
+
+Route::get('/concierge/login', action: function () {
+    return view('auth.concierge-login');
 });
 
 Route::get('/ipad', [IpadController::class, 'index'])->name('ipad.index');
@@ -107,8 +115,10 @@ Route::group(['middleware' => ['admin']], function () {
     Route::delete('/admin/users/{id}', 'App\Http\Controllers\StationController@userDelete')->name('users.destroy');
     Route::post('/editUser', 'App\Http\Controllers\StationController@editUser')->name('editUser');
 
+});
 
-
+Route::group(['middleware' => ['concierge']],function(){
+    Route::get('/concierge/scanner', 'App\Http\Controllers\ConciergeController@index')->name('concierge.index');
 });
 
 

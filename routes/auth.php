@@ -24,8 +24,8 @@ use Illuminate\Support\Facades\Route;
     Route::post('login', [LoginController::class, 'authenticate']);
 
 
-
     Route::post('/admin/login', [LoginController::class, 'authenticateAdmin'])->name('authenticateAdmin');
+    Route::post('/concierge/login',[LoginController::class,'authenticateConcierge'])->name('authenticateConcierge'); 
 
 
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])

@@ -233,9 +233,9 @@
                         console.error('Error sending QR Code message:', error);
                         $('.station-text').html('Failed');
                         $('.message').html('Invalid QR code. Please try again.');
-                        // $('#scanCompleteModal').modal('show');
+                         $('#scanCompleteModal').modal('show');
                         // go to dashboard
-                        window.location.href = "{{ route('dashboard') }}";
+                        // window.location.href = "{{ route('dashboard') }}";
                     }
                 });
             }

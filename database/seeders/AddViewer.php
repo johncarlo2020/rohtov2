@@ -20,12 +20,11 @@ class AddViewer extends Seeder
         $user = User::create([
             'fname' => 'viewer',
             'lname' => 'viewer',
-            'dob' => 'admin',
-
+            'age_group' => 'admin',
             'number' => '0123456789',
             'email' => 'viewer@gmail.com',
             'country' => 'Malaysia',
-            'password' => Hash::make('WowsomeRohtoViewer'),
+            'password' => Hash::make('WowsomeAddidasViewer'),
         ]);
 
         $permission = Permission::create(['name' => 'view']);

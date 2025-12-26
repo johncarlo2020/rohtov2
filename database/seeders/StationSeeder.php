@@ -21,23 +21,37 @@ class StationSeeder extends Seeder
     public function run()
     {
         Station::create([
-            'name' => 'Weekday',
+            'name' => 'Omega Gallery',
             'description' => 'Weekday Exclusive Gifts',
         ]);
 
         Station::create([
-            'name' => 'Weekend',
+            'name' => 'Curious Kids Corner',
             'description' => 'Weekend Exclusive Gifts',
         ]);
 
         Station::create([
-            'name' => 'Referral',
+            'name' => 'Power Path Maze',
+            'description' => 'Referral Exclusive Gifts',
+        ]);
+
+        Station::create([
+            'name' => 'Omega Power Up',
+            'description' => 'Referral Exclusive Gifts',
+        ]);
+
+        Station::create([
+            'name' => 'Smile & Shine',
+            'description' => 'Referral Exclusive Gifts',
+        ]);
+
+        Station::create([
+            'name' => 'Penebusan Hadiah',
             'description' => 'Referral Exclusive Gifts',
         ]);
 
         
 
-       
 
 
         $role = Role::create(['name' => 'client']);
@@ -45,11 +59,11 @@ class StationSeeder extends Seeder
         $role = Role::create(['name' => 'admin']);
 
         $user = User::create([
-            'name' => 'admin',
+            'fname' => 'admin',
             'number' => '0123456789',
             'email' => 'admin@gmail.com',
             'country' => 'Malaysia',
-            'password' => Hash::make('Wowsome4s2025'),
+            'password' => Hash::make('WowsomeOmega2025'),
         ]);
 
         $user->assignRole('admin');

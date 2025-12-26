@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function sendMessage(message) {
         // Get selected gift ID for station 3
         let selectedGiftId = null;
-        if (stationId == 3) {
+        if (stationId == 7) {
             const giftSelect = document.getElementById('giftSelect');
             if (giftSelect && giftSelect.value) {
                 selectedGiftId = giftSelect.value;
@@ -75,7 +75,6 @@ document.addEventListener('DOMContentLoaded', function () {
             data: {
                 qrCodeMessage: message,
                 station: stationId,
-                selected_gift_id: selectedGiftId
             },
             success: function (response) {
                 const confettiCanvas = document.createElement('canvas');
@@ -87,22 +86,27 @@ document.addEventListener('DOMContentLoaded', function () {
                 const lastCharacter = trimmedMessage.charAt(trimmedMessage.length - 1);
 
                 $('.station_id').html(lastCharacter);
-                $('.station_name').html(stationName);
-                $('#routeBtn').text('Back');
+                $('.station_name').html(lastCharacter);
+                $('#routeBtn').text('TUTUP');
 
-                if (lastCharacter == 3) {
+                if (lastCharacter == 6 ) {
                     document.getElementById('routeBtn').setAttribute('href', congratsUrl);
                 }
-                else
+                else 
                 {
-                   document.getElementById('routeBtn').setAttribute('href', dashboardUrl);
+                    const stationParsed = parseInt(lastCharacter);
+                    const nextStation = stationParsed  + 1;
+                $('#routeBtn')
+                .removeAttr('href') // remove href if it exists
+                .attr('onclick', `gotoStation(${nextStation})`);
                 }
             },
             error: function (xhr, status, error) {
                 console.error('Error sending QR Code message:', error);
                 $('.modal-icon').addClass('d-none');
+                $('.station_name_container').addClass('d-none');
                 // $('.station-text').html('Failed');
-                $('.message').html('INVALID QR CODE');
+                $('.message').html('Kod QR tidak sah');
                 $('.check').attr('src', errorImageUrl);
                 $('#scanCompleteModal').modal('show');
             }

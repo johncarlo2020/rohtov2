@@ -41,7 +41,7 @@ class AdminUserSeeder extends Seeder
         $adminUser = User::updateOrCreate(
             ['email' => 'superadmin@gmail.com'], // Check by email
             [
-                'name' => 'Super Admin',
+                'fname' => 'Super Admin',
                 'number' => '0123456789',
                 'country' => 'Malaysia',
                 'password' => Hash::make('SuperAdmin123!'),
@@ -71,32 +71,8 @@ class AdminUserSeeder extends Seeder
 
         // Optionally create additional admin users
         $this->createAdditionalAdmins();
-        $this->createConciergeUser();
     }
 
-    private function createConciergeUser(): void 
-    {
-               // Check if concierge role exists, if not create it
-        $conciergeRole = Role::firstOrCreate(['name' => 'concierge']);
-
-        $user = User::updateOrCreate(
-            ['email' => 'concierge@gmail.com'],
-            [
-                'name' => 'Concierge User',
-                'number' => '0000000000',
-                'country' => 'Malaysia',
-                'password' => Hash::make('Concierge123!'),
-                'marketing' => false,
-                'otp_verified' => true,
-                'email_verified_at' => now(),
-            ]
-        );
-
-        // Assign role
-        if (!$user->hasRole('concierge')) {
-            $user->assignRole($conciergeRole);
-        }
-    }
 
 
 
@@ -107,14 +83,14 @@ class AdminUserSeeder extends Seeder
     {
         $additionalAdmins = [
             [
-                'name' => 'Admin Manager',
+                'fname' => 'Admin Manager',
                 'email' => 'manager@gmail.com',
                 'number' => '0198765432',
                 'country' => 'Malaysia',
                 'password' => Hash::make('Manager123!'),
             ],
             [
-                'name' => 'Admin Support',
+                'fname' => 'Admin Support',
                 'email' => 'support@gmail.com', 
                 'number' => '0187654321',
                 'country' => 'Malaysia',

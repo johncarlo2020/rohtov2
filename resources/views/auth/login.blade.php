@@ -6,7 +6,7 @@
         .login-page p,
         .login-page a,
         .login-page span {
-            font-family: 'GothamBold' !important;
+            font-family: 'Brevia' !important;
         }
     </style>
     <div class="login-page vh-100">
@@ -14,7 +14,7 @@
             <div class="col-12 animate-entry mb-4">
                 @include('components.branding')
             </div>
-                <h2 class="mx-4 text-center sub-heading-text animate-entry">LOGIN</h2>
+                <h2 class="mx-4 text-center sub-heading-text animate-entry">LOG MASUK</h2>
             <div class="col-12 animate-entry delay-2 bg-white p-3 mt-4 card-parent" style="margin-bottom:20vh;">
                 <!-- Session Status -->
                 <x-auth-session-status class="mb-4" :status="session('status')" />
@@ -24,13 +24,13 @@
                     <input type="hidden" name="countryIso" id="countryIso">
                     <div class="row mb-3">
                         <div class="col-12 input-group w-100">
-                                <label for="number" class="text-main">Contact Number <span class="text-danger">*</span></label>
+                                <label for="email" class="text-white">E-mel <span class="text-danger">*</span></label>
 
-                                <input id="number" type="tel"
-                                    class="input-text form-control w-100 @error('number') is-invalid @enderror"
-                                    name="number" value="{{ old('number') }}" required autocomplete="number"
-                                    autofocus />
-                                @error('number')
+                                <input id="email" type="email"
+                                    class="input-text form-control w-100 rounded @error('email') is-invalid @enderror"
+                                    name="email" value="{{ old('email') }}" required autocomplete="email"
+                                    autofocus placeholder="Alamat e-mel"/>
+                                @error('email')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -50,8 +50,8 @@
                     <x-input-error :messages="$errors->get('password')" class="mt-2" />
 
                     <div class="d-flex justify-center">
-                        <x-primary-button class="custom-btn custom-btn-primary" style="width:95%;margin:auto;">
-                            {{ __('Next') }}
+                        <x-primary-button class="custom-btn custom-btn-primary w-auto m-auto">
+                            {{ __('LOG MASUK') }}
                         </x-primary-button>
                     </div>
                 </form>

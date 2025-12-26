@@ -33,7 +33,7 @@ class CreateSingleAdminSeeder extends Seeder
             if ($this->command->confirm('Do you want to update the existing user?')) {
                 $user = User::where('email', $email)->first();
                 $user->update([
-                    'name' => $name,
+                    'fname' => $name,
                     'number' => $number,
                     'country' => $country,
                     'password' => Hash::make($password),
@@ -45,7 +45,7 @@ class CreateSingleAdminSeeder extends Seeder
         } else {
             // Create new admin user
             $user = User::create([
-                'name' => $name,
+                'fname' => $name,
                 'email' => $email,
                 'number' => $number,
                 'country' => $country,

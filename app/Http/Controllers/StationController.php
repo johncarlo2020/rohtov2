@@ -135,19 +135,36 @@ class StationController extends Controller
         return view('workshopCongrats');
     }
 
+    // public function index(Station $station)
+    // {
+    //     $user = StationUser::where('user_id', auth()->id())
+    //         ->where('station_id', $station->id)
+    //         ->exists();
+
+    //     $choices = Station::with('answers', 'correctAnswer')
+    //         ->where('id', $station->id)
+    //         ->first();
+
+    //     $gifts = \App\Models\Gifts::get();
+
+    //      return view('station', compact('station', 'user', 'gifts','choices'));
+
+    // }
+
     public function index(Station $station)
     {
         $user = StationUser::where('user_id', auth()->id())
             ->where('station_id', $station->id)
             ->exists();
+        if ($station->id == 9 && $user == true) {
+            return view('congrats');
+        }
 
-        $choices = Station::with('answers', 'correctAnswer')
-            ->where('id', $station->id)
-            ->first();
+        if($station->id == 2 && $user == true) {
+            return view('station', compact('station', 'user'));
+        }
 
-        $gifts = \App\Models\Gifts::get();
-
-         return view('station', compact('station', 'user', 'gifts','choices'));
+         return view('station', compact('station', 'user'));
 
     }
 
@@ -306,7 +323,7 @@ class StationController extends Controller
         }
 
         // Determine if stations 1-4 are all completed
-        $canAccessStation3 = $stations->filter(fn($s) => $s->id <= 2)->every(fn($s) => $s->status == true);
+        $canAccessStation6 = $stations->filter(fn($s) => $s->id <= 5)->every(fn($s) => $s->status == true);
 
         $isRedeemed = \App\Models\UserGift::where('user_id', $userId)
             ->where('is_redeemed', true)
@@ -316,7 +333,7 @@ class StationController extends Controller
             return !$user->stationUser()->where('station_id', $station->id)->exists();
         });
 
-        return view('dashboard', compact('stations', 'stationDone', 'canAccessStation3', 'completedStationIds', 'nextStation','isRedeemed'));
+        return view('dashboard', compact('stations', 'stationDone', 'canAccessStation6', 'completedStationIds', 'nextStation','isRedeemed'));
 
     }
 
@@ -341,7 +358,9 @@ class StationController extends Controller
         $qrCodeMessage = trim($request->qrCodeMessage);
 
         // Get the last character of the QR code message
-        $station_id = substr($qrCodeMessage, -1);
+       $station_id = substr($qrCodeMessage, -1);
+
+        // dd($station_id);
 
 
         // Assume that `$station_id` is validated before this point
@@ -381,14 +400,14 @@ class StationController extends Controller
             $stationUser->save();
 
             // Handle gift selection for station 3
-            if ($station_id == 3 && $request->has('selected_gift_id') && $request->selected_gift_id) {
-                $userGift = new \App\Models\UserGift();
-                $userGift->user_id = auth()->id();
-                $userGift->gift_id = $request->selected_gift_id;
-                $userGift->station_id = $station_id;
-                $userGift->is_redeemed = false;
-                $userGift->save();
-            }
+            // if ($station_id == 3 && $request->has('selected_gift_id') && $request->selected_gift_id) {
+            //     $userGift = new \App\Models\UserGift();
+            //     $userGift->user_id = auth()->id();
+            //     $userGift->gift_id = $request->selected_gift_id;
+            //     $userGift->station_id = $station_id;
+            //     $userGift->is_redeemed = false;
+            //     $userGift->save();
+            // }
 
             DB::commit();
             // Success response

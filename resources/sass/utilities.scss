@@ -78,8 +78,6 @@ background-size: cover;
     overflow-y: auto;
     overflow-x:hidden;
     max-height: 100vh;
-    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 100px) !important;
-    padding-bottom: 100px !important;
 }
 
 .congrats-container {
@@ -137,9 +135,9 @@ background-size: cover;
     color: $black;
 }
 
-#stationPage {
-    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 100px) !important;
-}
+// #stationPage {
+//     padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 100px) !important;
+// }
 
 .next-button {
     &:focus {

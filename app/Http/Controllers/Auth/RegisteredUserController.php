@@ -40,6 +40,7 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'fname' => ['required', 'string', 'max:255'],
+            'lname' => ['required', 'string', 'max:255'],
             'number' => ['required', 'unique:'.User::class],
             'dialCode' => ['required', 'string'],
             'country' => [
@@ -75,10 +76,11 @@ class RegisteredUserController extends Controller
         $otp = rand(100000, 999999);
 
         $user = User::create([
-            'name' => $request->fname,
+            'fname' => $request->fname,
+            'lname' => $request->lname,
+            'dob' => $request->dob,
             'number' => $phoneNumber,
             'email' => $request->email,
-            'company' => $request->company,
             'country'=> $country->name,
             'marketing' => $marketing,
             'last_login_at' => Carbon::now(),

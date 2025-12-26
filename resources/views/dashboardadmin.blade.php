@@ -102,7 +102,7 @@
                     <div class="card-body d-flex justify-content-between rounded  p-3">
                         <div class="d-flex align-items-center w-100">
                             <div class="icon-stations">
-                                <img class="" src="{{ asset("images/station/STBM{$station['id']}.webp") }}" alt="Gift Image">
+                                <img class="" src="{{ asset("images/station/ST{$station['id']}.webp") }}" alt="Gift Image">
                             </div>
                             <div class="d-flex flex-column">
                                 <h6 class="mb-1 text-sm">{{ $station['name'] }}</h6>
@@ -177,7 +177,7 @@
                                         <div class="station-icon-wrapper">
                                             @foreach ($user['stations'] as $station)
                                                 <div class="text-center">
-                                                    <img src="{{ asset("images/station/STBM{$station['id']}.webp") }}"
+                                                    <img src="{{ asset("images/station/ST{$station['id']}.webp") }}"
                                                         alt="{{ $station['name'] }}"
                                                         title="{{ $station['name'] }}"
                                                         class="station-image table-station-image {{ $station['value'] ? 'border-success' : 'border-secondary' }}"
@@ -218,7 +218,7 @@
     <!-- Chart.js Datalabels plugin -->
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas2image/0.1.0/canvas2image.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>

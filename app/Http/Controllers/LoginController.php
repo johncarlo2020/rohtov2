@@ -16,7 +16,7 @@ class LoginController extends Controller
     {
         // Validate the input first
         $credentials = $request->validate([
-            'number' => ['required'],
+            'email' => ['required'],
             'password' => ['required'],
         ]);
 
@@ -42,7 +42,7 @@ class LoginController extends Controller
 
         // Attempt login
         if (Auth::attempt([
-            'number' => $number,
+            'email' => $credentials['email'],
             'password' => $credentials['password'],
         ])) {
             $request->session()->regenerate();

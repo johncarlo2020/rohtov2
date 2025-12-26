@@ -14,7 +14,7 @@
     .register-main label,
     .register-main input,
     .register-main span {
-        font-family: 'GothamBold' !important;
+        font-family: 'Brevia' !important;
     }
     </style>
     <div class="register-main main-content with-scroll">
@@ -22,8 +22,8 @@
             <div class="col-12 animate-entry mb-4">
                 @include('components.branding')
             </div>
-            <h2 class="mx-4 text-center sub-heading-text animate-entry">SIGN UP</h2>
-            <div class=" mt-4 mb-5 w-100  animate-entry delay-3 bg-white p-3 card-parent">
+            <h2 class="mx-4 text-center sub-heading-text animate-entry">DAFTAR</h2>
+            <div class=" mt-4 mb-3 w-100  animate-entry delay-3 bg-white p-3 card-parent">
                 <div class="py-3 register-form-parent">
                     <form id="form" method="POST" action="{{ route('register') }}">
                         @csrf
@@ -31,8 +31,8 @@
                         <input type="hidden" name="countryIso" id="countryIso">
                         <div class="mb-3 row">
                             <div class="col-12">
-                                <label for="name" class="text-main">Full Name <span class="text-danger">*</span></label>
-                                <input id="fname" placeholder="Enter your full name" type="text"
+                                <label for="fname" class="text-white">Nama <span class="text-danger">*</span></label>
+                                <input id="fname" placeholder="Masukkan nama anda" type="text"
                                     class="input-text form-control @error('fname') is-invalid @enderror" name="fname"
                                     value="{{ old('fname') }}" required autocomplete="fname" autofocus />
                                 @error('fname')
@@ -43,10 +43,38 @@
                             </div>
                         </div>
 
-
-                        <!-- <div class="mb-3 row">
+                        <div class="mb-3 row">
                             <div class="col-12">
-                                <label for="email" class="text-dark">Email Address <span class="text-danger">*</span></label>
+                                <label for="lname" class="text-white">Nama Keluarga <span class="text-danger">*</span></label>
+                                <input id="lname" placeholder="Masukkan nama keluarga anda" type="text"
+                                    class="input-text form-control @error('lname') is-invalid @enderror" name="lname"
+                                    value="{{ old('lname') }}" required autocomplete="lname" autofocus />
+                                @error('lname')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <div class="col-12">
+                                <label for="dob" class="text-white">Tarikh Lahir <span class="text-danger">*</span></label>
+                                <input id="dob" placeholder="" type="date"
+                                    class="input-text form-control @error('dob') is-invalid @enderror" name="dob"
+                                    value="{{ old('dob') }}" required autocomplete="fname" autofocus />
+                                @error('dob')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+
+
+                        <div class="mb-3 row">
+                            <div class="col-12">
+                                <label for="email" class="text-white">Alamat e-mel <span class="text-danger">*</span></label>
 
                                 <input id="email" placeholder="example@email.com" type="email"
                                     class="input-text form-control @error('email') is-invalid @enderror" name="email"
@@ -58,11 +86,11 @@
                                 </span>
                                 @enderror
                             </div>
-                        </div> -->
+                        </div>
 
                         <div class="mb-3 row">
                             <div class="col-12 input-group w-100">
-                                <label for="number" class="text-main">Phone Number <span class="text-danger">*</span></label>
+                                <label for="number" class="text-white">Nombor telefon <span class="text-danger">*</span></label>
 
                                 <input id="number" type="phone"
                                     class="input-text form-control w-100 @error('number') is-invalid @enderror"
@@ -80,19 +108,48 @@
                             </div>
                         </div>
 
-                        <div class="mb-3 row">
+                         <div class="mb-2 row">
+                            <div class="col-12 input-group">
+                                <!-- <label for="">Where did you find this event?</label> -->
+
+                                <select class="form-select input-text" name="find" aria-label="Default select example"
+                                    required>
+                                    <option value="" selected disabled>Dari mana anda mendapat tahu tentang acara ini? </option>
+
+                                    <option value="Facebook">Facebook</option>
+                                    <option value="TikTok">TikTok</option>
+                                    <option value="Instagram">Instagram</option>
+                                    <option value="XiaoHongShu (小红书)">
+                                        XiaoHongShu (小红书)
+                                    </option>
+                                    <option value="Walk-in">
+                                        Walk-in
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="mt-4 mb-2 row">
                             <div class="col-12">
-                                <label for="company" class="text-main">Company Name <span class="text-danger">*</span></label>
-
-                                <input id="company" placeholder="Enter your company name" type="text"
-                                    class="input-text form-control @error('company') is-invalid @enderror" name="company"
-                                    value="{{ old('company') }}" required autocomplete="company" />
-
-                                @error('email')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="privacy_policy" value="1"
+                                        id="privacyPolicy" required />
+                                    <label class="form-check-label text-white" for="privacyPolicy">
+                                        Saya telah membaca dan bersetuju dengan Terma dan Syarat serta Polisi Privasi.
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-2 row">
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="marketing" value="1"
+                                        id="marketing" />
+                                    <label class="form-check-label text-white" for="marketing">
+                                        Saya bersetuju menerima maklumat pemasaran dan promosi daripada Dutch Lady melalui e-mel dan mesej teks (SMS/WhatsApp).
+                                    </label>
+                                </div>
                             </div>
                         </div>
 
@@ -104,8 +161,8 @@
                         <div class="mb-0 row">
                             <div class="col-12 text-center">
                                 <button id="submitButton" type="submit"
-                                    class="w-75 custom-btn custom-btn-primary animate-entry delay-3">
-                                    {{ __('Submit') }}
+                                    class="custom-btn custom-btn-primary animate-entry delay-3">
+                                    {{ __('HANTAR') }}
                                 </button>
                             </div>
                         </div>
@@ -113,14 +170,14 @@
                 </div>
             </div>
 
-            <div class="bottom-text text-center">
+            <div class="bottom-text text-center mb-3">
                     <span class="already-register text-white">
-                        <strong>Already Registered</strong>
+                        <strong>Sudah Daftar!</strong>
                     </span>
                     <br>
                     <span class="already-register text-white">
-                        Please Login
-                        <a href="{{ route('login') }}" class="text-white"><strong>here</strong></a>
+                        Log Masuk
+                        <a href="{{ route('login') }}" class="text-white"><strong>disini</strong></a>
                     </span>
                 </div>
         </div>

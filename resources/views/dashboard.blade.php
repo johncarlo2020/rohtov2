@@ -33,32 +33,13 @@
 
 
     </style>
-    <div class="py-4 map-page main-content main-background with-scroll">
+    <div class="py-4 map-page main-content main-background">
         <div class="animate-entry">
             @include('components.branding')
         </div>
-
+        
         <div class="text-center animate-entry">
-            <svg viewBox="0 0 600 160" width="100%" height="120" aria-label="Sedia untuk bermain?">
-                <path
-                    id="archPath"
-                    d="M 50 120 Q 300 20 550 120"
-                    fill="transparent"
-                />
-                <text
-                    font-size="48"
-                    font-weight="900"
-                    fill="#ff7a00"
-                    stroke="#ffffff"
-                    stroke-width="8"
-                    paint-order="stroke"
-                    text-anchor="middle"
-                >
-                    <textPath href="#archPath" startOffset="50%">
-                        Sedia untuk bermain?
-                    </textPath>
-                </text>
-            </svg>
+           <img class="dashboard-text" src="{{ asset('images/brand/dashboardtext.png') }}" alt="">
         </div>
         <!-- login Modal -->
 
@@ -82,7 +63,7 @@
         </div>
     
         <div class="container">
-    <div class="row justify-content-center g-4">
+    <div class="tile-grid">
 
         @foreach ($stations as $station)
             @php
@@ -94,26 +75,23 @@
                 }
             @endphp
 
-            <div class="col-6 col-lg-6">
+           
                 <a
                     href="javascript:void(0)"
-                    class="station-card d-block"
+                    class="station-card d-block tile-grid-item"
                     onclick="gotoStation({{ $station->id }})"
                 >
                     <img
                         src="{{ $image }}"
                         alt="Station {{ $station->id }}"
-                        class="img-fluid station-image"
+                        class="tile-grid-image station-image"
                     >
                 </a>
-            </div>
+          
         @endforeach
 
     </div>
 </div>
-
-
-        
 
     </div>
     @push('scripts')

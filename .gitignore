@@ -19,3 +19,4 @@ yarn-error.log
 public/images/character.zip
 composer.lock
 package-lock.json
+.DS_Store

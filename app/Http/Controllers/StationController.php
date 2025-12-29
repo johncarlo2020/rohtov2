@@ -491,19 +491,19 @@ class StationController extends Controller
         })->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())->groupBy('date')->get();
 
         $data['registrationsPerHour'] = User::select(
-            DB::raw('DATE(DATE_ADD(created_at, INTERVAL 8 HOUR)) as date'),
-            DB::raw('LOWER(DATE_FORMAT(DATE_ADD(created_at, INTERVAL 8 HOUR), "%l%p")) as hour'),
+            DB::raw('DATE(created_at) as date'),
+            DB::raw('LOWER(DATE_FORMAT(created_at, "%l%p")) as hour'),
             DB::raw('COUNT(*) as registrations')
         )
         ->whereDoesntHave('roles', function ($q) {
-                $q->where('name', 'admin');
-            })
-            ->whereNotNull('created_at')
-            ->where(DB::raw('DATE(DATE_ADD(created_at, INTERVAL 8 HOUR))'), '>=', $startDate->toDateString())
-            ->groupBy('date', 'hour')
-            ->havingRaw('hour IS NOT NULL AND hour <> \'\'')
-            ->get()
-            ->groupBy('hour');
+            $q->where('name', 'admin');
+        })
+        ->whereNotNull('created_at')
+        ->whereDate('created_at', '>=', $startDate->toDateString())
+        ->groupBy('date', 'hour')
+        ->havingRaw('hour IS NOT NULL AND hour <> ""')
+        ->get()
+        ->groupBy('hour');
 
         foreach ($userCounts as $userCount) {
             if ($userCount['date'] >= $startDate->toDateString()) {

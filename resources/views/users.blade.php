@@ -118,7 +118,6 @@
                             <th>ID</th>
                             <th class="sticky-action">Name</th>
                             <th>Email</th>
-                            <th>Company</th>
                             <th>Number</th>
                             <th>Race</th>
                             <th>Country</th>
@@ -135,7 +134,7 @@
                         <tr data-user-id="{{ $user->id }}">
                             <td>{{ $user->id }}</td>
                             <td class="sticky-action">
-                                {{ $user->name }}
+                                {{ ucfirst($user->fname) }} {{ ucfirst($user->lname) }}
                                 @if($user->hasRole('admin'))
                                     <span class="badge bg-warning text-dark ms-1">
                                         <i class="fa fa-crown"></i> Admin
@@ -143,7 +142,6 @@
                                 @endif
                             </td>
                             <td>{{ $user->email }}</td>
-                            <td>{{ $user->company }}</td>
                             <td>{{ $user->number }}</td>
                             <td>{{ $user->race }}</td>
                             <td>{{ $user->country }}</td>

@@ -452,18 +452,26 @@ class StationController extends Controller
             ->get();
 
 
-        $data['usersCount'] = User::whereDate('created_at', '>=', $startDate->toDateString())->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
-            ->count();
-        $data['userToday'] = User::whereDate('created_at', $today)->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
-            ->count();
-        $data['country'] = User::selectRaw('country , COUNT(*) as count')->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
-            ->groupBy('country')->where('country' ,'!=','admin')->get();
+        $data['usersCount'] = User::whereDate('created_at', '>=', $startDate->toDateString())->whereDoesntHave('roles', function ($q) {
+        $q->where('name', 'admin');
+        })->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
+                ->count();
+            $data['userToday'] = User::whereDate('created_at', $today)->whereDoesntHave('roles', function ($q) {
+            $q->where('name', 'admin');
+        })->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
+                ->count();
+            $data['country'] = User::selectRaw('country , COUNT(*) as count')->whereDoesntHave('roles', function ($q) {
+            $q->where('name', 'admin');
+        })->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
+                ->groupBy('country')->where('country' ,'!=','admin')->get();
 
 
 
         //   dd($data['where']);
 
-        $usersWithSixStationUsers = User::with('stationUser')->whereDate('created_at', '>=', $startDate->toDateString())->has('stationUser', '>=', 3)->count();
+        $usersWithSixStationUsers = User::with('stationUser')->whereDoesntHave('roles', function ($q) {
+        $q->where('name', 'admin');
+    })->whereDate('created_at', '>=', $startDate->toDateString())->has('stationUser', '>=', 3)->count();
         // dd($usersWithSixStationUsers);
         $data['completedUsers'] = $usersWithSixStationUsers;
         // dd($usersWithSixStationUsers);
@@ -473,16 +481,23 @@ class StationController extends Controller
         } else {
             $data['percentage'] = 0; // Avoid division by zero
         }
-        $userCounts = User::selectRaw('DATE(created_at) as date, COUNT(*) as count')->groupBy('date')->orderBy('date')->get()->toArray();
+        $userCounts = User::selectRaw('DATE(created_at) as date, COUNT(*) as count')->whereDoesntHave('roles', function ($q) {
+            $q->where('name', 'admin');
+        })->groupBy('date')->orderBy('date')->get()->toArray();
 
         $userCountsArray = [];
-        $data['dates'] = User::select(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as date'))->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())->groupBy('date')->get();
+        $data['dates'] = User::select(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as date'))->whereDoesntHave('roles', function ($q) {
+            $q->where('name', 'admin');
+        })->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())->groupBy('date')->get();
 
         $data['registrationsPerHour'] = User::select(
             DB::raw('DATE(DATE_ADD(created_at, INTERVAL 8 HOUR)) as date'),
             DB::raw('LOWER(DATE_FORMAT(DATE_ADD(created_at, INTERVAL 8 HOUR), "%l%p")) as hour'),
             DB::raw('COUNT(*) as registrations')
         )
+        ->whereDoesntHave('roles', function ($q) {
+                $q->where('name', 'admin');
+            })
             ->whereNotNull('created_at')
             ->where(DB::raw('DATE(DATE_ADD(created_at, INTERVAL 8 HOUR))'), '>=', $startDate->toDateString())
             ->groupBy('date', 'hour')
@@ -558,7 +573,9 @@ class StationController extends Controller
         $permission = auth()->user()->getPermissionNames()->first();
 
         $startDate = Carbon::create(2025, 6, 17);
-        $data['users'] = User::whereDate('created_at', '>=', $startDate->toDateString())->with('stationUser')->orderBy('id', 'desc')->get();
+        $data['users'] = User::whereDate('created_at', '>=', $startDate->toDateString())->whereDoesntHave('roles', function ($q) {
+            $q->where('name', 'admin');
+        })->with('stationUser')->orderBy('id', 'desc')->get();
 
         $data['usersCount'] = User::whereDate('created_at', '>=', $startDate->toDateString())->count();
         $data['userToday'] = User::whereDate('created_at', $today)->count();

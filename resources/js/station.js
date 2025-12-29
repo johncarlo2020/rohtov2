@@ -96,9 +96,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 {
                     const stationParsed = parseInt(lastCharacter);
                     const nextStation = stationParsed  + 1;
-                $('#routeBtn')
-                .removeAttr('href') // remove href if it exists
-                .attr('onclick', `gotoStation(${nextStation})`);
                 }
             },
             error: function (xhr, status, error) {

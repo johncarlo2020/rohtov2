@@ -64,7 +64,6 @@
                         <a href="{{ route('register') }}" class="text-white"><strong>Sign Up</strong></a>
                     </p>
                 </div>
-            <x-footer/>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/intlTelInput.min.js"></script>

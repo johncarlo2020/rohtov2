@@ -176,9 +176,6 @@
                 </a>
             </div> 
         </div>
-        @if(!$user)
-        <x-footer/>
-        @endif
     </div>
     
     @push('scripts')

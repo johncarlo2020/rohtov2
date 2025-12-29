@@ -87,7 +87,7 @@
         </div>
         <button
             class="back-btn animate-entry"
-            onclick="history.back()"
+            onclick="window.location.href='{{ route('dashboard') }}'"
             aria-label="Go back"
         ></button>
 
@@ -147,10 +147,10 @@
                 <img class="station-image w-25 my-3" src="{{ asset('images/station/STNO' . $station->id . '.webp') }}" alt="Station Image">
             <div id="{{ $user ? '' : 'forceQr' }}" class="icon-container">
             </div>
-            <img class="station-image w-75 m-auto" src="{{ asset('images/station/STNBG' . $station->id . '.webp') }}"
+            <img class="station-image w-50 m-auto" src="{{ asset('images/station/STNBG' . $station->id . '.webp') }}"
                 alt="Station Image">
             @if ($user != true && $station->id != 7)
-                <button id="start-scanner" class="mx-auto mt-5 mb-3 py-4 px-5"
+                <button id="start-scanner" class="mx-auto mt-5 mb-3 py-3 px-4"
                     style="font-size:24px !important;">
                     <i class="fa-solid fa-camera"  style="font-size:24px !important;"></i>
                 </button>

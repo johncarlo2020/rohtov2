@@ -107,8 +107,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 $('.station_name_container').addClass('d-none');
                 // $('.station-text').html('Failed');
                 $('.message').html('Kod QR tidak sah');
-                $('.check').attr('src', errorImageUrl);
                 $('#scanCompleteModal').modal('show');
+                $('#routeBtn')
+                .removeAttr('href') // remove href if it exists
+                .attr('onclick', `gotoStation(${stationId})`);
+                
             }
         });
     }

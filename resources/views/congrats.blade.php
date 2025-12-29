@@ -70,7 +70,7 @@
                     </svg>
                 </div>
                 <div class="row">
-                    <a href="https://www.dutchladyomega.com/" class="my-5 animate-entry">
+                    <a href="https://www.dutchlady.com.my/" class="my-5 animate-entry">
                             <img class="logo w-50 m-auto"
                                 src="{{ asset('images/brand/logo.webp') }}" alt="Dutchlady Omega Logo" />
                         </a>
@@ -82,8 +82,8 @@
                     </a>
                 </div>
             </div>
+             <x-footer />
         </div>
     </div>
     </div>
-    <x-footer />
 </x-app-layout>

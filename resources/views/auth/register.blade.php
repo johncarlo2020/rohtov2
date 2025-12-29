@@ -16,6 +16,11 @@
     .register-main span {
         font-family: 'Brevia' !important;
     }
+    .find-select
+    {
+        font-size:10px;
+        line-height:2.5;
+    }
     </style>
     <div class="register-main main-content with-scroll">
         <div class="justify-content-center w-100">
@@ -112,7 +117,7 @@
                             <div class="col-12 input-group">
                                 <!-- <label for="">Where did you find this event?</label> -->
 
-                                <select class="form-select input-text" name="find" aria-label="Default select example"
+                                <select class="form-select input-text find-select" name="find" aria-label="Default select example"
                                     required>
                                     <option value="" selected disabled>Dari mana anda mendapat tahu tentang acara ini? </option>
 
@@ -135,7 +140,9 @@
                                     <input class="form-check-input" type="checkbox" name="privacy_policy" value="1"
                                         id="privacyPolicy" required />
                                     <label class="form-check-label text-white" for="privacyPolicy">
-                                        Saya telah membaca dan bersetuju dengan Terma dan Syarat serta Polisi Privasi.
+                                        Saya telah membaca dan bersetuju dengan Terma dan Syarat serta <a href="{{ asset('pdf/polisiprivasi.pdf') }}" target="_blank">
+                                        Polisi Privasi
+                                        </a>.
                                     </label>
                                 </div>
                             </div>

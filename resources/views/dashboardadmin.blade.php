@@ -168,7 +168,7 @@
                                         <div class="">
                                             <div class="ms-4">
                                                 <p class="text-xs font-weight-bold mb-0">Name</p>
-                                                <h6 class="text-sm mb-0">{{ $user->name }}
+                                                <h6 class="text-sm mb-0">{{ ucfirst($user->fname) }}
                                                 </h6>
                                             </div>
                                         </div>
@@ -194,13 +194,6 @@
                             @endforeach
                         </tbody>
                     </table>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-6 mb-3">
-            <div class="card h-100 mb-3">
-                <div class="card-body p-3">
-                    <div id="raceChart"></div>
                 </div>
             </div>
         </div>

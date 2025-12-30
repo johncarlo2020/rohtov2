@@ -493,6 +493,7 @@ class StationController extends Controller
 
         $data['registrationsPerHour'] = User::select(
             DB::raw('DATE(created_at) as date'),
+            DB::raw('HOUR(created_at) as hour_24'), // numeric sorting key
             DB::raw('LOWER(DATE_FORMAT(created_at, "%l%p")) as hour'),
             DB::raw('COUNT(*) as registrations')
         )
@@ -501,7 +502,8 @@ class StationController extends Controller
         })
         ->whereNotNull('created_at')
         ->whereDate('created_at', '>=', $startDate->toDateString())
-        ->groupBy('date', 'hour')
+        ->groupBy('date', 'hour_24', 'hour')
+        ->orderBy('hour_24') 
         ->havingRaw('hour IS NOT NULL AND hour <> ""')
         ->get()
         ->groupBy('hour');

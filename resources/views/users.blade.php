@@ -119,7 +119,6 @@
                             <th class="sticky-action">Name</th>
                             <th>Email</th>
                             <th>Number</th>
-                            <th>Race</th>
                             <th>Country</th>
                             @foreach ($data['stations'] as $station)
                             <th>{{ $station['name'] }}</th>
@@ -132,7 +131,7 @@
                     <tbody>
                         @foreach ($data['users'] as $user)
                         <tr data-user-id="{{ $user->id }}">
-                            <td>{{ $user->id }}</td>
+                            <td>{{ $loop->iteration }}</td>
                             <td class="sticky-action">
                                 {{ ucfirst($user->fname) }} {{ ucfirst($user->lname) }}
                                 @if($user->hasRole('admin'))
@@ -143,14 +142,12 @@
                             </td>
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->number }}</td>
-                            <td>{{ $user->race }}</td>
                             <td>{{ $user->country }}</td>
-
                             @foreach ($user['stations'] as $station)
                             <td class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-danger' }}">
                                 {{ $station['value'] ? 'Yes' : 'No' }}</td>
                             @endforeach
-
+                            <td>{{ \Carbon\Carbon::parse($user->created_at)->toDayDateTimeString() }}</td>
                             <td class="button-delete">
                                 @if($user->isProtectedAdmin())
                                     <button class="btn btn-secondary btn-sm btn-protected" disabled 
@@ -163,7 +160,6 @@
                                         data-user-name="{{ $user->name }}">Delete</button>
                                 @endif
                             </td>
-                            <td>{{ \Carbon\Carbon::parse($user->created_at)->toDayDateTimeString() }}</td>
                         </tr>
                         @endforeach
                     </tbody>

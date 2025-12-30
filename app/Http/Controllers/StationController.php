@@ -448,8 +448,9 @@ class StationController extends Controller
         $today = Carbon::today();
         $startDate = Carbon::create(2025, 11, 17);
 
-        $data['users'] = User::with('stationUser')->take(4)->orderBy('id', 'desc')->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())
-            ->get();
+        $data['users'] = User::with('stationUser')->take(4)->orderBy('id', 'desc')->whereDoesntHave('roles', function ($q) {
+            $q->where('name', 'admin');
+        })->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())->get();
 
 
         $data['usersCount'] = User::whereDate('created_at', '>=', $startDate->toDateString())->whereDoesntHave('roles', function ($q) {
@@ -577,8 +578,12 @@ class StationController extends Controller
             $q->where('name', 'admin');
         })->with('stationUser')->orderBy('id', 'desc')->get();
 
-        $data['usersCount'] = User::whereDate('created_at', '>=', $startDate->toDateString())->count();
-        $data['userToday'] = User::whereDate('created_at', $today)->count();
+        $data['usersCount'] = User::whereDate('created_at', '>=', $startDate->toDateString())->whereDoesntHave('roles', function ($q) {
+            $q->where('name', 'admin');
+        })->count();
+        $data['userToday'] = User::whereDate('created_at', $today)->whereDoesntHave('roles', function ($q) {
+            $q->where('name', 'admin');
+        })->count();
 
         $usersWithSixStationUsers = User::whereDate('created_at', '>=', $startDate->toDateString())->has('stationUser', '>=', 5)->count();
         $data['completedUsers'] = $usersWithSixStationUsers;

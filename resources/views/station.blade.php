@@ -1,83 +1,126 @@
+<x-app-layout>
 <style>
     #start-scanner {
-    width: 75px;
-    height: 36px;
-    border-radius: 999px;
-    background-color: #ffffff;
-    border: 2px solid #005eab;
-    padding: 0;
+        width: 50%;
+        border-radius: 5px;
+        background-color: #ffffff;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+        cursor: pointer;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+        /* Subtle elevation */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 
-    cursor: pointer;
-
-    /* Subtle elevation */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-
-    /* Animations */
-    animation: scannerIdle 2.8s ease-in-out infinite;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-/* Hover / Active */
-#start-scanner:hover {
-    animation-play-state: paused;
-    transform: translateY(-2px) scale(1.03);
-    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
-}
-
-#start-scanner:active {
-    transform: translateY(0) scale(0.98);
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
-}
-
-/* Icon image */
-#start-scanner img {
-    width: 18px;
-    height: auto;
-    display: block;
-}
-
-/* Icon font option */
-#start-scanner i {
-    font-size: 16px;
-    color: #f7931e; /* orange accent */
-}
-
-/* Idle animation */
-@keyframes scannerIdle {
-    0%   { transform: translateY(0); }
-    50%  { transform: translateY(-2px); }
-    100% { transform: translateY(0); }
-}
-
-/* Accessibility */
-@media (prefers-reduced-motion: reduce) {
-    #start-scanner {
-        animation: none;
-        transition: none;
+        /* Animations */
+        animation: scannerIdle 2.8s ease-in-out infinite;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
+
+    /* Hover / Active */
+    #start-scanner:hover {
+        animation-play-state: paused;
+        transform: translateY(-2px) scale(1.03);
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+    }
+
+    #start-scanner:active {
+        transform: translateY(0) scale(0.98);
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .main-content
+    {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+    }
+
+   /* Whole screen */
+#mainContainer {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(12px, 3vh, 24px);
+  padding-block: clamp(12px, 3vh, 24px);
 }
+
+/* Main content */
+#mainContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(12px, 3vh, 24px);
+}
+
+/* Title */
+/* #mainContent h2 {
+  font-size: clamp(1rem, 4.5vw, 1.4rem);
+  letter-spacing: clamp(1px, 0.4vw, 2px);
+} */
+/* Text */
+#mainContent p {
+  font-size: clamp(0.8rem, 3.5vw, 1rem);
+  max-width: 38ch;
+  line-height: 1.5;
+}
+
+/* Buttons */
+.custom-btn-secondary {
+  font-size: clamp(0.8rem, 3.5vw, 1rem);
+  padding: clamp(12px, 3vh, 16px) clamp(16px, 6vw, 24px);
+  width: min(90%, 360px);
+}
+
+/* Scanner */
+.scanner-wrapper {
+  width: 100%;
+}
+
+.scanner-container {
+  padding: clamp(16px, 4vh, 32px);
+}
+
+#reader {
+  width: min(90vw, 360px);
+  aspect-ratio: 1 / 1;
+}
+
+    /* Idle animation */
+    @keyframes scannerIdle {
+        0%   { transform: translateY(0); }
+        50%  { transform: translateY(-2px); }
+        100% { transform: translateY(0); }
+    }
+
+    /* Accessibility */
+    @media (prefers-reduced-motion: reduce) {
+        #start-scanner {
+            animation: none;
+            transition: none;
+        }
+    }
 </style>
-<x-app-layout>
-    <div id="stationPage" class="station-page main-content main-background with-scroll">
+    <div id="stationPage" class="station-page main-content main-background with-scroll px-0">
         <div class="modal fade custom-modal" id="scanCompleteModal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content modal-parent rounded-1">
                     <div class="modal-body">
                         <div class="text-center">
+                            <img class="check mx-auto mb-4" id="badge" src="">
                             <div class="text-content mt-0">
-                                <p class="mb-2 text-white station_name_container">Stesen <span class="station_name text-white"></span></p>
-                                <p class="my-4 message text-white">
-                                    Daftar masuk berjaya
+                                <p class="mb-2 message station_name text-dark"></p>
+                                <p class="status-text my-4 text-dark">
                                 </p>
                             </div>
                             <div class="text-content mt-3">
                                 <a href="{{ route('dashboard') }}" id="routeBtn"
                                     class="custom-btn px-5 fw-regular custom-btn-primary w-50">
-                                    KEMBALI
+                                    BACK
                                 </a>
                             </div>
                         </div>
@@ -85,96 +128,65 @@
                 </div>
             </div>
         </div>
-        <button
+        <!-- <button
             class="back-btn animate-entry"
             onclick="window.location.href='{{ route('dashboard') }}'"
             aria-label="Go back"
-        ></button>
-
+        ></button> -->
         
-            <div class="d-flex justify-content-center animate-entry">
+        <div id="mainContainer">
+
+            <!-- Branding -->
+            <div class="branding-container animate-entry px-4">
                 @include('components.branding')
             </div>
-        @if($user)
-        <div class="text-center animate-entry mt-3">
-            <!-- TOP TEXT -->
-            <svg viewBox="0 0 600 80" width="100%" height="60">
-                <path
-                id="archTop"
-                d="M 60 90 Q 300 20 540 90"
-                fill="transparent"
-                />
-                <text
-                font-size="44"
-                font-weight="950"
-                fill="#ff7a00"
-                stroke="#ffffff"
-                stroke-width="7"
-                paint-order="stroke"
-                text-anchor="middle"
-                >
-                <textPath href="#archTop" startOffset="50%">
-                    Daftar masuk
-                </textPath>
-                </text>
-            </svg>
 
-            <!-- BOTTOM TEXT -->
-            <svg viewBox="0 0 600 80" width="100%" height="50" style="margin-top:-10px;">
-                <path
-                id="archBottom"
-                d="M 60 90 Q 300 20 540 90"
-                fill="transparent"
-                />
-                <text
-                font-size="44"
-                font-weight="950"
-                fill="#ff7a00"
-                stroke="#ffffff"
-                stroke-width="7"
-                paint-order="stroke"
-                text-anchor="middle"
-                >
-                <textPath href="#archBottom" startOffset="50%">
-                    Berjaya!
-                </textPath>
-                </text>
-            </svg>
-        </div>
-        @endif
-        <div id="mainContent"
-            class="mt-1 mb-2 d-flex flex-column align-items-center justify-content-center animate-entry delay-3">
-                <img class="station-image w-25 my-3" src="{{ asset('images/station/STNO' . $station->id . '.webp') }}" alt="Station Image">
-            <div id="{{ $user ? '' : 'forceQr' }}" class="icon-container">
+            <!-- Main content -->
+            <div id="mainContent"
+                class="d-flex flex-column align-items-center justify-content-between animate-entry delay-3">
+
+                <!-- station name -->
+                <h2 class="text-center fw-bold">{{ strtoupper($station->name) }}</h2>
+
+                <!-- station image -->
+                <img class="station-image"
+                    src="{{ asset('images/station/ST' . $station->id . '.webp') }}"
+                    alt="Station Image">
+
+                <!-- description -->
+                <p class="text-center px-3">
+                    {{ $station->description }}
+                </p>
+
+                <!-- actions -->
+                @if (!$user && $station->id != 7)
+                    <button id="start-scanner"
+                            class="text-dark custom-btn-secondary px-4 py-2">
+                        SCAN QR CODE TO PROCEED
+                    </button>
+                @endif
+
+                @if ($user)
+                    <div class="checkedInContainer w-50 mx-auto">
+                        <p class="text-center mb-2">Checked In</p>
+                        <a href="{{ route('dashboard') }}"
+                        class="custom-btn custom-btn-secondary w-100">
+                            BACK
+                        </a>
+                    </div>
+                @endif
             </div>
-            <img class="station-image w-50 m-auto" src="{{ asset('images/station/STNBG' . $station->id . '.webp') }}"
-                alt="Station Image">
-            @if ($user != true && $station->id != 7)
-                <button id="start-scanner" class="mx-auto mt-5 mb-3 py-3 px-4"
-                    style="font-size:24px !important;">
-                    <i class="fa-solid fa-camera"  style="font-size:24px !important;"></i>
-                </button>
-                <strong class="px-4 mb-5 text-center text-white">Imbas kod QR untuk daftar masuk</strong>
-            @endif
-            @if($user)
-                <a href="{{ route('dashboard') }}" class="custom-btn custom-btn-primary mt-5">
-                    Selesai 
-                </a>
-            @endif
-        </div>
-        
-        <div id="scannerContainer" class="scanner-container d-none mt-4">
-            <!-- <button id="close" class="mx-auto mt-4 camera-btn">x</button>  -->
-            <div class="d-flex justify-content-center">
-                <img class="station-image w-25 mb-3" src="{{ asset('images/station/STNO' . $station->id . '.webp') }}" alt="Station Image">
+
+            <!-- Scanner -->
+            <!-- scanner-container --> 
+            <div id="{{ $user ? '' : 'forceQr' }}" class="icon-container"></div> 
+                <div id="scannerContainer" class="scanner-container d-none"> 
+                    <!-- <button id="close" class="mx-auto mt-4 camera-btn">x</button> --> 
+                    <h2 class="text-center fw-bold mb-4">YSL BEAUTY LIGHT CLUB</h2> 
+                    <div id="reader"></div> 
+                    <p class="mt-4 scanner-text text-center text-white">Find the QR code &<br> scan to continue your journey</p> 
+                </div> 
             </div>
-            <div id="reader"></div>
-            <p class="mt-4 scanner-text text-center text-white">Imbas kod QR untuk daftar masuk</p>
-            <div class="text-center">
-                <a href="{{ route('dashboard') }}" class="button custom-btn custom-btn-secondary mt-3">
-                    BACK
-                </a>
-            </div> 
         </div>
     </div>
     

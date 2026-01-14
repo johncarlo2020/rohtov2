@@ -86,10 +86,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 const lastCharacter = trimmedMessage.charAt(trimmedMessage.length - 1);
 
                 $('.station_id').html(lastCharacter);
-                $('.station_name').html(lastCharacter);
-                $('#routeBtn').text('TUTUP');
+                $('.station_name').html(stationName);
+                $('.status-text').html('Check-in Successful');
+                $('#routeBtn').text('NEXT');
 
-                if (lastCharacter == 6 ) {
+                if (lastCharacter == 4 ) {
                     document.getElementById('routeBtn').setAttribute('href', congratsUrl);
                 }
                 else 
@@ -103,7 +104,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 $('.modal-icon').addClass('d-none');
                 $('.station_name_container').addClass('d-none');
                 // $('.station-text').html('Failed');
-                $('.message').html('Kod QR tidak sah');
+                $('.message').html('Invalid QR Code');
+                $('.check').attr('src', errorImageUrl);
                 $('#scanCompleteModal').modal('show');
                 $('#routeBtn')
                 .removeAttr('href') // remove href if it exists

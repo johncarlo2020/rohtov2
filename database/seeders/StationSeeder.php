@@ -21,36 +21,25 @@ class StationSeeder extends Seeder
     public function run()
     {
         Station::create([
-            'name' => 'Omega Gallery',
-            'description' => 'Weekday Exclusive Gifts',
+            'name' => 'Ysl the slim Discovery',
+            'description' => 'Discover YSL The Slim, the new couture matte lipstick that elevates your look, your lips and your rules.',
         ]);
 
         Station::create([
-            'name' => 'Curious Kids Corner',
-            'description' => 'Weekend Exclusive Gifts',
+            'name' => 'Fragrance Discovery',
+            'description' => 'Discover the iconic YSL fragrances that leave a lasting, bold impression.',
         ]);
 
         Station::create([
-            'name' => 'Power Path Maze',
-            'description' => 'Referral Exclusive Gifts',
+            'name' => 'Be in the Spotlight',
+            'description' => 'Strike a pose in the DJ photobooth/around the pop-up, post & hashtag #YSLBeautyMY',
         ]);
 
         Station::create([
-            'name' => 'Omega Power Up',
-            'description' => 'Referral Exclusive Gifts',
+            'name' => 'Gift Redemption',
+            'description' => 'Redeem your YSL Discovery Gift at the gift redemption counter.',
         ]);
 
-        Station::create([
-            'name' => 'Smile & Shine',
-            'description' => 'Referral Exclusive Gifts',
-        ]);
-
-        Station::create([
-            'name' => 'Penebusan Hadiah',
-            'description' => 'Referral Exclusive Gifts',
-        ]);
-
-        
 
 
 
@@ -63,7 +52,7 @@ class StationSeeder extends Seeder
             'number' => '0123456789',
             'email' => 'admin@gmail.com',
             'country' => 'Malaysia',
-            'password' => Hash::make('WowsomeOmega2025'),
+            'password' => Hash::make('WowsomeYsl2025'),
         ]);
 
         $user->assignRole('admin');

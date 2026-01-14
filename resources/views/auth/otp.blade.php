@@ -1,5 +1,4 @@
 <x-guest-layout>
-    <body class="antialiased welcome-page">
     <div class="justify-content-center w-100 px-3">
         <div class="my-5 col-12 d-flex justify-content-center">
             @include('components.branding')
@@ -8,10 +7,10 @@
             <form method="POST" action="{{ route('verify.otp') }}">
                 @csrf
                 <div class="text-center mb-4 px-1">
-                    <h2 class="heading text-center mb-2">ENTER YOUR OTP</h2>
-                    <p class="text-center">An OTP (One Time Passcode) has been sent to the number
+                    <h2 class="heading text-dark text-center mb-2">ENTER YOUR OTP</h2>
+                    <p class="text-dark text-center mb-2">An OTP (One Time Passcode) has been sent to the number
                         registered.</p>
-                    <p class="text-center">Please enter the OTP below to verify your contact details.
+                    <p class="text-dark text-center">Please enter the OTP below to verify your contact details.
                     </p>
                     @if($errors->has('otp'))
                     <div class="alert alert-danger text-center mb-3">
@@ -26,10 +25,10 @@
                         @endfor
                 </div>
                 <div class="text-center mb-4">
-                    <a id="resendOtpLink" href="#" class="no-underline">Resend OTP</a>
-                    <p id="resendTimer" class="d-none">Resend OTP in <span id="timerValue">180</span>s</p>
+                    <a id="resendOtpLink" href="#" class="text-dark no-underline">Resend OTP</a>
+                    <p id="resendTimer" class="text-dark d-none">Resend OTP in <span class="text-dark" id="timerValue">180</span>s</p>
                 </div>
-                <button type="submit" class="btn btn-primary w-100">Verify OTP</button>
+                <button type="submit" class="btn custom-btn-primary w-100">Verify OTP</button>
             </form>
             <a class="text-center no-underline mt-3 fw-bold" href="{{ route('welcome') }}">Back</a>
         </div>

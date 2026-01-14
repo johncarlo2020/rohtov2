@@ -33,31 +33,25 @@
 
 // Primary button - for the main call to action
 .custom-btn-primary {
-    background-color: $primary;
-    border-left: 2px solid $white;
-    border-right: 2px solid $white;
-    border-top: 3px solid $white;
-    border-top-style: solid;
-    border-top-color: $white;
-    border-bottom: 3px solid $white;
-    box-shadow: 0 4px #005eab;
+    background-color: $black;
+    border-radius: 7px;
     color: $white;
     letter-spacing: 2px;
-    width: 50%;
+    width: 100%;
 
     &:hover {
-        background-color: darken($primary, 10%);
-        border-color: darken($primary, 10%);
+        background-color: darken($black, 10%);
+        border-color: darken($black, 10%);
     }
 
     &:active {
-        background-color: darken($primary, 15%);
-        border-color: darken($primary, 15%);
+        background-color: darken($black, 15%);
+        border-color: darken($black, 15%);
     }
 
     &:disabled {
-        background-color: lighten($primary, 20%);
-        border-color: lighten($primary, 20%);
+        background-color: darken($black, 5%);
+        border-color: darken($black, 5%);
         cursor: not-allowed;
     }
 }
@@ -65,27 +59,21 @@
 // Secondary (flat) button - for less prominent actions
 .custom-btn-secondary {
     background-color: $white;
-    border-left: 2px solid $primary;
-    border-right: 2px solid $primary;
-    border-top: 3px solid $primary;
-    border-top-style: solid;
-    border-top-color: $primary;
-    border-bottom: 3px solid $primary;
-    color: $primary;
+    border-radius: 7px;
+    color: $black;
     letter-spacing: 2px;
-    box-shadow: 0 4px #005eab;
-    width: 50%;
+    width: 100%;
     
     
     &:hover {
-        background-color: darken($secondary, 5%);
-        border-color: darken($secondary, 5%);
+        background-color: darken($white, 5%);
+        border-color: darken($white, 5%);
     }
 
     &:disabled {
-        background-color: darken($secondary, 30%);
-        border-color: darken($secondary, 30%);
-        color: lighten($primary, 30%);
+        background-color: darken($white, 30%);
+        border-color: darken($white, 30%);
+        color: lighten($white, 30%);
         cursor: not-allowed;
     }
 }

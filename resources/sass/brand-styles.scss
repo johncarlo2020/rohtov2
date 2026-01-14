@@ -5,10 +5,9 @@
 
     img {
         //set the width and height of the logo
-        height: 18svh;
-        width: auto;
-        object-fit: contain;
-        margin: auto;
+        max-width: clamp(140px, 60vw, 240px);
+        height: auto;
+        margin:auto
     }
 }
 
@@ -912,20 +911,19 @@ button.custom-btn.answer-btn.answer-btn-3 {
 }
 
 .card-parent {
-    border-radius: 25px;
-    background-color: $primary !important;
+    border-radius: 7px;
+    background-color: #ffff !important;
 }
 
 .modal-parent {
-    border-radius: 25px;
-    border: 3px solid #ffff;
-    background-color: $primary !important;
-    box-shadow: 0 4px $accent;
+    border-radius: 7px;
+    background-color: $white !important;
 }
 
 input {
     background: $white ;
-    border: 1px solid #fff !important;
+    border: 1px solid #000 !important;
+    border-radius: 2px !important;
 }
 
 input::placeholder,
@@ -941,7 +939,7 @@ p.footer {
 }
 
 .modal-content {
-    border-radius: 20px !important;
+    border-radius: 5px !important;
 }
 
 .logo-welcome {
@@ -1060,18 +1058,57 @@ p.footer {
 }
 
 .tile-grid {
-    // 2grid columns
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(6,17svh);
-    gap: 15px;
+    gap: 16px;
     width: 90%;
     margin: 0 auto;
+}
 
-    //base on height of viewport follow svh rule 1:1 square
-    .tile-grid-item {
-        width: 100%;
-        aspect-ratio: 1 / 1;
-        object-fit: contain;
-    }
+/* Tile */
+.tile-grid-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: #fff;
+}
+
+/* Number on top */
+.tile-number {
+    text-align: center;
+    font-size: 14px;
+    margin-bottom: 6px;
+    opacity: 0.8;
+}
+
+/* Image container = square */
+.tile-image-wrapper {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+}
+
+/* Image fills tile */
+.tile-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Title text */
+.tile-title {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+.form-control:focus{
+    box-shadow: none !important;
+}
+
+img#badge {
+    width: clamp(24px, 10vw, 44px);
 }

@@ -39,23 +39,25 @@
         </div>
         
         <div class="text-center animate-entry">
-           <img class="dashboard-text" src="{{ asset('images/brand/dashboardtext.png') }}" alt="">
+          <h2 class="text-center my-5">YSL BEAUTY LIGHT CLUB</h2>
         </div>
         <!-- login Modal -->
 
         <!-- Modal -->
         <div class="modal fade custom-modal animate-entry" id="notAllowedModal" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered w-75 m-auto">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content card modal-parent">
                     <div class="modal-body">
                         <div class="text-center content">
+                            <img class="check mx-auto mb-4" id="badge" src="{{asset('images/error.png') }}" style="filter:brightness(0);">
                             <div class="text-content mt-4 mb-4">
-                                <p class="message text-white">
-                                   Terokai semua stesen untuk menebus hadiah percuma anda!
+                                <h5 class="text-dark mb-4">YSL BEAUTY LIGHT CLUB</h5>
+                                <p class="text-dark">
+                                    Kindly complete Station 1 - 3 to proceed to <br> Gift Redemption station
                                 </p>
                             </div>
-                            <button type="button" class="w-50 custom-btn custom-btn-primary" data-bs-dismiss="modal"
-                                aria-label="Close">TUTUP</button>
+                            <button type="button" class="w-75 custom-btn custom-btn-primary" data-bs-dismiss="modal"
+                                aria-label="Close">CLOSE</button>
                         </div>
                     </div>
                 </div>
@@ -64,40 +66,41 @@
     
         <div class="container">
     <div class="tile-grid">
+    @foreach ($stations as $station)
+        @php
+            $image = $station->status
+                ? asset("images/station/ST{$station->id}.webp")
+                : asset("images/station/ST{$station->id}.webp");
+        @endphp
 
-        @foreach ($stations as $station)
-            @php
-                // Decide image based on status
-                if ($station->status) {
-                    $image = asset("images/station/ST{$station->id}-checked.webp");
-                } else {
-                    $image = asset("images/station/ST{$station->id}.webp");
-                }
-            @endphp
+        <a
+            href="javascript:void(0)"
+            class="tile-grid-item station-card"
+            onclick="gotoStation({{ $station->id }})"
+        >
+            <p class="tile-number">{{ $station->id }}</p>
 
-           
-                <a
-                    href="javascript:void(0)"
-                    class="station-card d-block tile-grid-item"
-                    onclick="gotoStation({{ $station->id }})"
+            <div class="tile-image-wrapper">
+                <img
+                    src="{{ $image }}"
+                    alt="Station {{ $station->id }}"
+                    style="@if ($station->status) filter: grayscale(100%); @endif"
                 >
-                    <img
-                        src="{{ $image }}"
-                        alt="Station {{ $station->id }}"
-                        class="tile-grid-image station-image"
-                    >
-                </a>
-          
-        @endforeach
+            </div>
 
-    </div>
+            <p class="tile-title">
+                {{ strtoupper($station->name) }}
+            </p>
+        </a>
+    @endforeach
+</div>
 </div>
 
     </div>
     @push('scripts')
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                let canAccessStation6 = @json($canAccessStation6);
+                let canAccessStation4 = @json($canAccessStation4);
                 window.gotoStamping = function(id,)
                 {
                     var url = "{{ route('station', ['station' => ':id']);}}".replace(
@@ -111,7 +114,7 @@
                         id
                     );
 
-                    if (id === 6 && !canAccessStation6) {
+                    if (id === 4 && !canAccessStation4) {
                         // Show the not allowed modal if trying to access station 3 without permission
                         var notAllowedModal = new bootstrap.Modal(document.getElementById('notAllowedModal'));
                         notAllowedModal.show();

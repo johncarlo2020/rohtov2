@@ -323,7 +323,7 @@ class StationController extends Controller
         }
 
         // Determine if stations 1-4 are all completed
-        $canAccessStation6 = $stations->filter(fn($s) => $s->id <= 5)->every(fn($s) => $s->status == true);
+        $canAccessStation4 = $stations->filter(fn($s) => $s->id <= 2)->every(fn($s) => $s->status == true);
 
         $isRedeemed = \App\Models\UserGift::where('user_id', $userId)
             ->where('is_redeemed', true)
@@ -333,7 +333,7 @@ class StationController extends Controller
             return !$user->stationUser()->where('station_id', $station->id)->exists();
         });
 
-        return view('dashboard', compact('stations', 'stationDone', 'canAccessStation6', 'completedStationIds', 'nextStation','isRedeemed'));
+        return view('dashboard', compact('stations', 'stationDone', 'canAccessStation4', 'completedStationIds', 'nextStation','isRedeemed'));
 
     }
 

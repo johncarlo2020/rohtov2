@@ -14,7 +14,7 @@
     .register-main label,
     .register-main input,
     .register-main span {
-        font-family: 'Brevia' !important;
+        font-family: 'Singulier' !important;
     }
     .find-select
     {

@@ -6,7 +6,7 @@
         .login-page p,
         .login-page a,
         .login-page span {
-            font-family: 'Brevia' !important;
+            font-family: 'Singulier' !important;
         }
     </style>
     <div class="login-page vh-100">

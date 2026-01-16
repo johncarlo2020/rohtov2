@@ -143,7 +143,7 @@ Route::group(['middleware' => ['client']], function () {
     Route::get('/station/{station}/stamping', 'App\Http\Controllers\StationController@stamping')->name('station.stamping');
 
 
-   
+   Route::post('/checkExisting', 'App\Http\Controllers\StationController@checkExisting')->name('checkExisting');
 
 
     Route::get('/station/{station}/extension', 'App\Http\Controllers\StationController@extension')->name('station.extension');

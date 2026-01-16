@@ -21,7 +21,7 @@
         <div class="pb-5 px-0 discover-page main-content with-scroll">
             <div class="content-wrapper d-flex flex-column justify-content-between align-items-center" style="min-height: 100%; flex: 1;">
 
-                <div class="col-12 d-flex justify-content-center p-0 animate-entry">
+                <div id="banner" class="col-12 d-flex justify-content-center p-0 animate-entry">
                     <img class="discover_img w-100" src="{{ asset('images/brand/discover.webp') }}"
                         alt="" />
                 </div>
@@ -64,10 +64,14 @@
             </div>
         </div>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const modalEl = document.getElementById('welcomeModal');
-        const modal = new bootstrap.Modal(modalEl);
+document.addEventListener('DOMContentLoaded', function () {
+    const banner = document.getElementById('banner');
+    const modalEl = document.getElementById('welcomeModal');
+    const modal = new bootstrap.Modal(modalEl);
+
+    banner.addEventListener('click', function () {
         modal.show();
     });
+});
 </script>
 </x-app-layout>

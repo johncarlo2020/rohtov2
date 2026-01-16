@@ -39,19 +39,9 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'number' => ['required', 'unique:'.User::class],
-            'dialCode' => ['required', 'string'],
-            'country' => [
-                'required',
-                'string',
-                function ($attribute, $value, $fail) {
-                    if (User::where('number', $value)->exists()) {
-                      $fail('This phone number is already registered. If you’ve signed up for a previous event or pre-registered, please. <a href="' . route('login') . '">Login</a> instead');
-                    }
-                }
-            ],
-
+            'code' => ['required', 'string', 'max:255', 'unique:' . User::class],
         ]);
+
         $marketing = false;
 
         if($request->has('marketing')){
@@ -59,7 +49,7 @@ class RegisteredUserController extends Controller
         }
 
         // After validation, fetch country by phone number
-        $phoneNumber = $request->input('country');
+        $phoneNumber = $request->input('code');
         $dialCode = $request->input('dialCode');
         $countryIso = $request->input('countryIso');
 
@@ -74,6 +64,7 @@ class RegisteredUserController extends Controller
         $otp = rand(100000, 999999);
 
         $user = User::create([
+            'code' => $phoneNumber,
             'number' => $phoneNumber,
             'otp' => $otp,
             'country'=> $country->name,

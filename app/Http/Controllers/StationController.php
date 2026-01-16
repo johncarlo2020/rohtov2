@@ -948,6 +948,12 @@ class StationController extends Controller
         ], 200);
     }
 
+     public function checkExisting(Request $request)
+    {
+        $code = $request->code;
+        $check = User::where('number', $code)->exists();
+        return $check;
+    }
 }
 
 

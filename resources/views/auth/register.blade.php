@@ -30,10 +30,11 @@
 
             <div class=" mt-4 mb-3 w-100  animate-entry delay-3 bg-white p-3 card-parent">
                 <div class="py-3 register-form-parent">
-                    <form id="form" method="POST" action="{{ route('register') }}">
+                    <form id="registerForm" method="POST" action="{{ route('register') }}">
                         @csrf
                         <input type="hidden" name="dialCode" id="dialCode" ></input>
                         <input type="hidden" name="countryIso" id="countryIso">
+                        <input type="hidden" name="code" value="" id="code"></input>
 
                         <div class="mb-3 row">
                                 <h2 class="text-center text-dark mb-3">WELCOME!</h2>
@@ -59,7 +60,7 @@
                          @error('country')
                             <div class="text-danger text-center mb-2">{!! $message !!}</div> 
                         @enderror
-
+                        <input class="d-none" type="hidden" name="password" value="password" />
                        
                         <div class="mb-0 row">
                             <div class="col-12 text-center">
@@ -162,20 +163,73 @@
         });
 
         // Prevent form submission if not Malaysian number
-        form.addEventListener("submit", function (e) {
-            const countryData = iti.getSelectedCountryData();
-            console.log(countryData);
-            const number = input.value.trim();
+        // form.addEventListener("submit", function (e) {
+        //     const countryData = iti.getSelectedCountryData();
+        //     console.log(countryData);
+        //     const number = input.value.trim();
 
-            // Check if number is valid for the selected country
-            if (!iti.isValidNumber()) {
-                const msg = `Please enter a valid phone number for ${countryData.name}`;
-                showError(msg);
-                e.preventDefault();
-                submitButton.disabled = true;
-            } else {
-                submitButton.disabled = false; // enable submit if valid
+        //     // Check if number is valid for the selected country
+        //     if (!iti.isValidNumber()) {
+        //         const msg = `Please enter a valid phone number for ${countryData.name}`;
+        //         showError(msg);
+        //         e.preventDefault();
+        //         submitButton.disabled = true;
+        //     } else {
+        //         submitButton.disabled = false; // enable submit if valid
+        //     }
+        // });
+
+        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+            // Check if there's an 'id' parameter in the URL for backward compatibility
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlId = urlParams.get("id");
+
+            if (urlId) {
+                // If ID is in URL, auto-fill and submit (old behavior)
+                $("#code").val(urlId);
+                processRegistration(urlId);
             }
-        });
+
+            // Handle form submission
+            $("#submitButton").click(function(e) {
+                e.preventDefault();
+
+                if (!iti.isValidNumber()) {
+                    alert("Please enter a valid phone number");
+                    return;
+                }
+
+                const fullNumber = iti.getNumber();
+                $("#code").val(fullNumber);
+
+                processRegistration(fullNumber);
+            });
+
+            function processRegistration(code) {
+                $.ajax({
+                    url: '{{ route('checkExisting') }}',
+                    type: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                    },
+                    data: {
+                        code: code,
+                    },
+                    success: function(response) {
+                        if (response == 1) {
+                            $("#registerForm").attr("action", "{{ route('login') }}");
+                            $("#registerForm").submit();
+                        } else {
+                            $("#registerForm").submit();
+                        }
+                        console.log(response);
+                    },
+                    error: function(xhr, status, error) {
+                        alert("An error occurred. Please try again.");
+                        console.error(error);
+                    }
+                });
+            }
     });
 </script>

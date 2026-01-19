@@ -35,6 +35,40 @@
             font-weight: 700 !important;
         }
 
+        .tile-image-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+.tile-image-wrapper img {
+    width: 100%;
+    display: block;
+}
+
+/* Overlay only when status = true */
+.tile-image-wrapper .overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65); /* black overlay */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    pointer-events: none; /* keep card clickable */
+}
+
+/* Text styling */
+.tile-image-wrapper .overlay span {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    line-height: 1.4;
+    text-transform: uppercase;
+}
+        
+
     </style>
     <div class="py-4 map-page main-content main-background">
         <div class="animate-entry">
@@ -68,36 +102,40 @@
         </div>
     
         <div class="container">
-    <div class="tile-grid">
-    @foreach ($stations as $station)
-        @php
-            $image = $station->status
-                ? asset("images/station/ST{$station->id}.webp")
-                : asset("images/station/ST{$station->id}.webp");
-        @endphp
+            <div class="tile-grid">
+                @foreach ($stations as $station)
+                    @php
+                        $image = $station->status
+                            ? asset("images/station/ST{$station->id}.webp")
+                            : asset("images/station/ST{$station->id}.webp");
+                    @endphp
 
-        <a
-            href="javascript:void(0)"
-            class="tile-grid-item station-card"
-            onclick="gotoStation({{ $station->id }})"
-        >
-            <p class="tile-number">{{ $station->id }}</p>
+                    <a
+                        href="javascript:void(0)"
+                        class="tile-grid-item station-card"
+                        onclick="gotoStation({{ $station->id }})"
+                    >
+                        <p class="tile-number">{{ $station->id }}</p>
 
-            <div class="tile-image-wrapper">
-                <img
-                    src="{{ $image }}"
-                    alt="Station {{ $station->id }}"
-                    style="@if ($station->status) filter: grayscale(100%); @endif"
-                >
+                        <div class="tile-image-wrapper">
+                            <img
+                                src="{{ $image }}"
+                                alt="Station {{ $station->id }}"
+                            >
+                            @if ($station->status)
+                                <div class="overlay">
+                                    <span style="font-weight:300">CHECK-IN<br>SUCCESSFUL</span>
+                                </div>
+                            @endif
+                        </div>
+
+                        <p class="tile-title">
+                            {{ strtoupper($station->name) }}
+                        </p>
+                    </a>
+                @endforeach
             </div>
-
-            <p class="tile-title">
-                {{ strtoupper($station->name) }}
-            </p>
-        </a>
-    @endforeach
-</div>
-</div>
+        </div>
 
     </div>
     @push('scripts')

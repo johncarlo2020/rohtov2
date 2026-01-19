@@ -10,7 +10,7 @@
                 </div>
                 <div class="row text-center">
                     <span>Visit</span>
-                    <a href="https://www.dutchlady.com.my/" class="my-1 animate-entry">
+                    <a href="https://www.yslbeauty.com.my/en_MY/fragrance/" class="my-1 animate-entry">
                             <img class="logo w-50 m-auto"
                                 src="{{ asset('images/brand/logo.webp') }}" alt="Dutchlady Omega Logo" />
                         </a>

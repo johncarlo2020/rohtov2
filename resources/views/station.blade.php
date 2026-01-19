@@ -90,7 +90,7 @@
   aspect-ratio: 1 / 1;
 }
 
-.tile-title {
+.tile-title , .station_name  {
     text-transform: uppercase;
 }
 

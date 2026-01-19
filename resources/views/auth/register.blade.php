@@ -70,7 +70,7 @@
                        
                         <div class="mb-0 row">
                             <div class="col-12 text-center">
-                                <button id="submitButton" type="submit"
+                                <button id="submitButton"
                                     class="custom-btn custom-btn-primary animate-entry delay-3" style="font-weight:300;">
                                     {{ __('Start Your Journey Now') }}
                                 </button>
@@ -92,11 +92,11 @@
                 </div> -->
         </div>
     </div>
-</x-guest-layout>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/intlTelInput.min.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const form = document.querySelector("#form");
+        const form = document.querySelector("#registerForm");
         const input = document.querySelector("#number");
         const errorMsg = document.querySelector("#error-msg");
         const validMsg = document.querySelector("#valid-msg");
@@ -207,8 +207,9 @@
                 }
 
                 const fullNumber = iti.getNumber();
+    
                 $("#code").val(fullNumber);
-
+                console.log(fullNumber);
                 processRegistration(fullNumber);
             });
 
@@ -223,6 +224,7 @@
                         code: code,
                     },
                     success: function(response) {
+                        console.log(response);
                         if (response == 1) {
                             $("#registerForm").attr("action", "{{ route('login') }}");
                             $("#registerForm").submit();
@@ -239,3 +241,4 @@
             }
     });
 </script>
+</x-guest-layout>

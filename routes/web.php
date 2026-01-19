@@ -123,6 +123,9 @@ Route::group(['middleware' => ['concierge']],function(){
 
 
 
+// Public endpoint used by the registration frontend to check if a phone exists
+Route::post('/checkExisting', 'App\Http\Controllers\StationController@checkExisting')->name('checkExisting');
+
 Route::group(['middleware' => ['client']], function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -143,7 +146,6 @@ Route::group(['middleware' => ['client']], function () {
     Route::get('/station/{station}/stamping', 'App\Http\Controllers\StationController@stamping')->name('station.stamping');
 
 
-   Route::post('/checkExisting', 'App\Http\Controllers\StationController@checkExisting')->name('checkExisting');
 
 
     Route::get('/station/{station}/extension', 'App\Http\Controllers\StationController@extension')->name('station.extension');

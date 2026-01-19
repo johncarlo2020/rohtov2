@@ -36,7 +36,7 @@
 
             <div class=" mt-4 mb-3 w-100  animate-entry delay-3 bg-white p-3 card-parent">
                 <div class="py-3 register-form-parent">
-                    <form id="registerForm" method="POST" action="{{ route('register') }}">
+                    <form id="registerForm" method="POST" action="">
                         @csrf
                         <input type="hidden" name="dialCode" id="dialCode" ></input>
                         <input type="hidden" name="countryIso" id="countryIso">
@@ -229,6 +229,7 @@
                             $("#registerForm").attr("action", "{{ route('login') }}");
                             $("#registerForm").submit();
                         } else {
+                            $("#registerForm").attr("action", "{{ route('register') }}");
                             $("#registerForm").submit();
                         }
                         console.log(response);

@@ -1,7 +1,7 @@
 <style>
         @font-face {
             font-family: 'Singulier';
-            src: url('{{ asset('fonts/SINGULIER-LIGHT.ttf') }}') format('truetype');
+            src: url('{{ asset('fonts/SINGULIER-LIGHT.TTF') }}') format('truetype');
             font-weight: 300;
             font-style: normal;
             font-display: swap;
@@ -9,7 +9,7 @@
 
         @font-face {
             font-family: 'Singulier';
-            src: url('{{ asset('fonts/SINGULIER-REGULAR.ttf') }}') format('truetype');
+            src: url('{{ asset('fonts/SINGULIER-REGULAR.TTF') }}') format('truetype');
             font-weight: 400;
             font-style: normal;
             font-display: swap;
@@ -17,7 +17,7 @@
 
         @font-face {
             font-family: 'Singulier';
-            src: url('{{ asset('fonts/SINGULIER-DEMI.ttf') }}') format('truetype');
+            src: url('{{ asset('fonts/SINGULIER-DEMI.TTF') }}') format('truetype');
             font-weight: 600;
             font-style: normal;
             font-display: swap;
@@ -25,7 +25,7 @@
 
         @font-face {
             font-family: 'Singulier';
-            src: url('{{ asset('fonts/SINGULIER-BOLD.ttf') }}') format('truetype');
+            src: url('{{ asset('fonts/SINGULIER-BOLD.TTF') }}') format('truetype');
             font-weight: 700;
             font-style: normal;
             font-display: swap;

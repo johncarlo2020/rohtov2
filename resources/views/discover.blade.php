@@ -33,13 +33,13 @@
                             <div class="modal-body">
                                 <div class="text-center content">
                                     <div class="text-content">
-                                        <h5 class="text-dark mb-3">Your Member ID</h5>
+                                        <h5 class="text-dark mb-3" style="font-size:16px;">Your Member ID</h5>
                                         <p class="message text-dark text-center mb-3">
                                             {{ preg_replace('/^\+?\d{1,2}/', '', auth()->user()->number) }}
                                         </p>
                                     </div>
                                     <button type="button" class="w-100 custom-btn custom-btn-primary" data-bs-dismiss="modal"
-                                        aria-label="Close">DONE</button>
+                                        aria-label="Close" style="font-weight:300;">DONE</button>
                                 </div>
                             </div>
                         </div>
@@ -47,7 +47,7 @@
                 </div>
 
                 <div class="discover-text">
-                    <p class="text-center px-2">
+                    <p class="text-center px-3 py-4" style="font-size:14px;">
                         Get ready to enter the immersive YSL BEAUTY LIGHT CLUB,
                         a unique destination where beauty sounds better with music.
                     </p>

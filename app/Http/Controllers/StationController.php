@@ -333,7 +333,11 @@ class StationController extends Controller
             return !$user->stationUser()->where('station_id', $station->id)->exists();
         });
 
-        return view('dashboard', compact('stations', 'stationDone', 'canAccessStation4', 'completedStationIds', 'nextStation','isRedeemed'));
+        if ($stationDone < 4) {
+             return view('dashboard', compact('stations', 'stationDone', 'canAccessStation4', 'completedStationIds', 'nextStation','isRedeemed'));
+        } else {
+            return redirect()->route('congrats');
+        }
 
     }
 

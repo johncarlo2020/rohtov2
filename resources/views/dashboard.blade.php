@@ -31,6 +31,9 @@
             filter: brightness(1.05);
         }
 
+        h2, .tile-title,.tile-number {
+            font-weight: 700 !important;
+        }
 
     </style>
     <div class="py-4 map-page main-content main-background">
@@ -39,7 +42,7 @@
         </div>
         
         <div class="text-center animate-entry">
-          <h2 class="text-center my-5">YSL BEAUTY LIGHT CLUB</h2>
+          <h2 class="text-center my-5" >YSL BEAUTY LIGHT CLUB</h2>
         </div>
         <!-- login Modal -->
 

@@ -9,10 +9,16 @@
         font-family: 'Poppins', sans-serif !important;
     } */
 
+    input#number::placeholder {
+        font-family: 'Singulier';
+        font-size: 16px;
+    }
+
     /* Specific styling for form elements */
     .register-main h4,
     .register-main label,
     .register-main input,
+    .register-main input::placeholder
     .register-main span {
         font-family: 'Singulier' !important;
     }
@@ -37,8 +43,8 @@
                         <input type="hidden" name="code" value="" id="code"></input>
 
                         <div class="mb-3 row">
-                                <h2 class="text-center text-dark mb-3">WELCOME!</h2>
-                                <p class="text-center text-dark mb-3">
+                                <h2 class="text-center text-dark mb-4" style="font-weight:300">WELCOME!</h2>
+                                <p class="text-center text-dark mb-4" style="font-size:16px;letter-spacing:1.2px;font-weight:300;">
                                     Please fill in your mobile number below.
                                 </p>
                             <div class="col-12 input-group w-100">
@@ -65,7 +71,7 @@
                         <div class="mb-0 row">
                             <div class="col-12 text-center">
                                 <button id="submitButton" type="submit"
-                                    class="custom-btn custom-btn-primary animate-entry delay-3">
+                                    class="custom-btn custom-btn-primary animate-entry delay-3" style="font-weight:300;">
                                     {{ __('Start Your Journey Now') }}
                                 </button>
                             </div>

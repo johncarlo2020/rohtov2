@@ -16,7 +16,6 @@ class LoginController extends Controller
     {
         // Validate the input first
         $credentials = $request->validate([
-            'email' => ['required'],
             'number' => ['required'],
             'password' => ['required'],
         ]);
@@ -43,7 +42,6 @@ class LoginController extends Controller
 
         // Attempt login
         if (Auth::attempt([
-            'email' => $credentials['email'],
             'number' => $number,
             'password' => $credentials['password'],
         ])) {

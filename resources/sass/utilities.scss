@@ -3,7 +3,7 @@
 // import _variables.scss
 @import "variables";
 .main-background {
-background-image: $main-background;
+background-color: $main-background !important;
 background-size: cover;
 background-position: bottom;
 }

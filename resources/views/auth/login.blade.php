@@ -22,27 +22,6 @@
                     @csrf
                     <input type="hidden" name="dialCode" id="dialCode" ></input>
                     <input type="hidden" name="countryIso" id="countryIso">
-                    <div class="row mb-3">
-                        <div class="col-12 input-group w-100">
-                                <label for="email" class="text-primary">E-mail: <span class="text-danger">*</span></label>
-
-                                <input id="email" type="email"
-                                    class="input-text form-control w-100 @error('email') is-invalid @enderror"
-                                    name="email" value="{{ old('email') }}" required autocomplete="email"
-                                    autofocus placeholder="Alamat e-mel"/>
-                                @error('email')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                                @if(session('error'))
-                                <span class="invalid-feedback d-block" role="alert">
-                                    <strong>{{ session('error') }}</strong>
-                                </span>
-                                @endif
-                            </div>
-                    </div>
-                    
                         <div class="mb-3 row">
                                 <div class="col-12 input-group w-100">
                                     <label for="number" class="text-primary">Phone Number: <span class="text-danger">*</span></label>

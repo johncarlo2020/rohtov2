@@ -111,7 +111,7 @@
 </style>
 <x-app-layout>
 
-    <div id="stationPage" class="station-page main-content main-background with-scroll">
+    <div id="stationPage" class="main-content main-background with-scroll">
         <div class="modal fade custom-modal" id="scanCompleteModal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content modal-parent rounded-1">
@@ -134,12 +134,6 @@
                 </div>
             </div>
         </div>
-        <button
-            class="back-btn animate-entry"
-            onclick="window.location.href='{{ route('redemption') }}'"
-            aria-label="Go back"
-        ></button>
-
         
             <div class="d-flex justify-content-center animate-entry">
                 @include('components.branding')
@@ -201,7 +195,7 @@ scan to continue your journey.</p>
                     check_image: '{{ asset('images/check.png') }}',
                     error_image: '{{ asset('images/error.png') }}'
                 },
-                station_id: 2,
+                station_id: 1,
             };
 
         </script>

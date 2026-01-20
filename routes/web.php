@@ -130,11 +130,16 @@ Route::group(['middleware' => ['client']], function () {
 
     Route::get('/reward/{reward}', 'App\Http\Controllers\RewardController@index')->name('reward.index');
 
+    Route::get('/thankyou', function () {
+        return view('thankyou');
+    })->name('thankyou');
+
     // Referrals
     Route::get('/referrals', 'App\Http\Controllers\ReferralsController@index')->name('referrals.index');
 
     Route::get('/station/{station}', 'App\Http\Controllers\StationController@index')->name('station');
     Route::get('/dashboard', 'App\Http\Controllers\StationController@welcome')->name('dashboard');
+    Route::get('/redemption', 'App\Http\Controllers\StationController@redemption')->name('redemption');
     Route::get('/discover', 'App\Http\Controllers\StationController@discover')->name('discover');
     Route::get('/giftselection', 'App\Http\Controllers\StationController@giftSelection')->name('station.giftselection');
     Route::post('/giftselection/redeem', 'App\Http\Controllers\StationController@redeemGift')->name('giftselection.redeem');

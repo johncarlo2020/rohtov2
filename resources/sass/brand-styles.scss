@@ -5,9 +5,8 @@
 
     img {
         //set the width and height of the logo
-        height: 18svh;
-        width: auto;
-        object-fit: contain;
+        max-width: clamp(140px, 60vw, 190px);
+        height: clamp(100px, 30vw, 120px);
         margin: auto;
     }
 }
@@ -902,13 +901,12 @@ button.custom-btn.answer-btn.answer-btn-3 {
 // }
 
 .sub-heading-text {
-    -webkit-text-stroke: 2px $white;
-    font-size: 2.5rem;
-    font-weight: 950;
+
+    font-size: 1.5rem;
+    font-weight: 400;
     color: $primary;
     text-decoration: none;
-    text-shadow: 0 2px 0 $accent;
-    letter-spacing: -2px;
+    letter-spacing: 2px;
 }
 
 .card-parent {
@@ -925,7 +923,8 @@ button.custom-btn.answer-btn.answer-btn-3 {
 
 input {
     background: $white ;
-    border: 1px solid #fff !important;
+    border-radius: 20px !important;
+    border: solid 1px $primary !important;
 }
 
 input::placeholder,
@@ -1073,5 +1072,10 @@ p.footer {
         width: 100%;
         aspect-ratio: 1 / 1;
         object-fit: contain;
+    }
+
+    .text-primary
+    {
+        color: $primary !important;
     }
 }

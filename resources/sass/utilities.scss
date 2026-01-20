@@ -35,6 +35,7 @@ background-size: cover;
     padding: 0;
     margin: 0;
     padding: $content-padding;
+    padding-block: clamp(12px, 3vh, 24px);
 }
 
 .back-btn {

@@ -14,8 +14,8 @@
             <div class="col-12 animate-entry mb-4">
                 @include('components.branding')
             </div>
-                <h2 class="mx-4 text-center sub-heading-text animate-entry">LOG MASUK</h2>
-            <div class="col-12 animate-entry delay-2 bg-white p-3 mt-4 card-parent" style="margin-bottom:20vh;">
+                <h2 class="mx-4 text-center sub-heading-text animate-entry">LOG IN</h2>
+            <div class="col-12 animate-entry delay-2 bg-white p-3 mt-4" style="margin-bottom:20vh;">
                 <!-- Session Status -->
                 <x-auth-session-status class="mb-4" :status="session('status')" />
                 <form method="POST" action="{{ route('login') }}" >
@@ -24,10 +24,10 @@
                     <input type="hidden" name="countryIso" id="countryIso">
                     <div class="row mb-3">
                         <div class="col-12 input-group w-100">
-                                <label for="email" class="text-white">E-mel <span class="text-danger">*</span></label>
+                                <label for="email" class="text-primary">E-mail: <span class="text-danger">*</span></label>
 
                                 <input id="email" type="email"
-                                    class="input-text form-control w-100 rounded @error('email') is-invalid @enderror"
+                                    class="input-text form-control w-100 @error('email') is-invalid @enderror"
                                     name="email" value="{{ old('email') }}" required autocomplete="email"
                                     autofocus placeholder="Alamat e-mel"/>
                                 @error('email')
@@ -42,6 +42,29 @@
                                 @endif
                             </div>
                     </div>
+                    
+                        <div class="mb-3 row">
+                                <div class="col-12 input-group w-100">
+                                    <label for="number" class="text-primary">Phone Number: <span class="text-danger">*</span></label>
+
+                                    <input id="number" type="phone"
+                                        class="input-text form-control w-100 @error('number') is-invalid @enderror"
+                                        name="number" value="{{ old('number') }}" required autocomplete="number"
+                                        autofocus />
+                                    @error('number')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                                <div class="col-12 text-center">
+                                    <span id="valid-msg" class="d-none text-danger"></span>
+                                    <span id="error-msg" class="d-none text-danger"></span>
+                                </div>
+
+
 
                     <!-- Password -->
                     <x-text-input id="password" class="block w-full mt-1" type="hidden" name="password"
@@ -50,8 +73,8 @@
                     <x-input-error :messages="$errors->get('password')" class="mt-2" />
 
                     <div class="d-flex justify-center">
-                        <x-primary-button class="custom-btn custom-btn-primary w-auto m-auto">
-                            {{ __('LOG MASUK') }}
+                        <x-primary-button class="custom-btn custom-btn-primary w-75 m-auto my-5">
+                            {{ __('SUBMIT') }}
                         </x-primary-button>
                     </div>
                 </form>

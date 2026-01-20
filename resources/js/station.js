@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const stationConfig = window.stationConfig || {};
     const processQrCodeUrl = stationConfig.urls.process_qr_code;
     const congratsUrl = stationConfig.urls.congrats;
+    const thankyouUrl = stationConfig.urls.thankyou;
     const dashboardUrl = stationConfig.urls.dashboard;
 
     const stationId = stationConfig.station_id;
@@ -79,17 +80,19 @@ document.addEventListener('DOMContentLoaded', function () {
             success: function (response) {
                 const confettiCanvas = document.createElement('canvas');
                 // ... (confetti logic from original file)
-                $('#badge').attr('src', checkImageUrl);
-                $('#scanCompleteModal').modal('show');
+                // $('#badge').attr('src', checkImageUrl);
+                // $('#scanCompleteModal').modal('show');
 
+                window.location.href = thankyouUrl;
+                
                 const trimmedMessage = message.trim();
                 const lastCharacter = trimmedMessage.charAt(trimmedMessage.length - 1);
 
-                $('.station_id').html(lastCharacter);
-                $('.station_name').html(lastCharacter);
-                $('#routeBtn').text('TUTUP');
+                // $('.station_id').html(lastCharacter);
+                // $('.station_name').html(lastCharacter);
+                // $('#routeBtn').text('TUTUP');
 
-                if (lastCharacter == 6 ) {
+                if (lastCharacter == 1 || lastCharacter == 2 ) {
                     document.getElementById('routeBtn').setAttribute('href', congratsUrl);
                 }
                 else 

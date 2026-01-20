@@ -17,6 +17,7 @@ class LoginController extends Controller
         // Validate the input first
         $credentials = $request->validate([
             'email' => ['required'],
+            'number' => ['required'],
             'password' => ['required'],
         ]);
 
@@ -43,12 +44,11 @@ class LoginController extends Controller
         // Attempt login
         if (Auth::attempt([
             'email' => $credentials['email'],
+            'number' => $number,
             'password' => $credentials['password'],
         ])) {
             $request->session()->regenerate();
-            $request->session()->flash('showWelcomeModal', true);
-
-            return redirect()->intended('/dashboard');
+            return redirect()->intended('/redemption');
         }
 
         $request->session()->flash('error', 'The provided credentials do not match our records.');

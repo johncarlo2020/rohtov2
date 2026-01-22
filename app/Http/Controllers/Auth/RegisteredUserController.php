@@ -40,7 +40,8 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'fname' => ['required', 'string', 'max:255'],
-            'number' => ['required', 'unique:'.User::class],
+            'email' => ['required', 'unique:'.User::class],
+            'age' => ['required', 'int', 'max:255'],
             'dialCode' => ['required', 'string'],
             'country' => [
                 'required',
@@ -76,7 +77,7 @@ class RegisteredUserController extends Controller
 
         $user = User::create([
             'fname' => $request->fname,
-            'dob' => $request->dob,
+            'age' => $request->age,
             'number' => $phoneNumber,
             'email' => $request->email,
             'country'=> $country->name,
@@ -94,6 +95,6 @@ class RegisteredUserController extends Controller
         Auth::login($user);
 
         // return redirect(RouteServiceProvider::HOME);
-        return redirect()->route('redemption');
+        return redirect()->route('thankyou');
     }
 }

@@ -76,7 +76,7 @@
             <div class="row flex-grow-1">
                 <div class="col-12 animate-entry mb-4">
                     <div class="branding pulse-slow">
-                        <img onclick="window.location.href='{{ route('dashboard') }}'" class="logo" src="{{ asset('images/brand/logo_white.webp') }}" alt="Brand Logo" />
+                        <img onclick="window.location.href='{{ route('dashboard') }}'" class="logo" src="{{ asset('images/brand/logo.webp') }}" alt="Brand Logo" />
                     </div>
                 </div>
             </div>

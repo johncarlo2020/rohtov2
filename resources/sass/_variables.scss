@@ -13,7 +13,7 @@ $card-text: #61646B;
 $text: $white;
 
 // main font
-$font-family:'Brevia', sans-serif;
+$font-family:'PlusJakartaSans', sans-serif;
 
 //Text size
 
@@ -36,7 +36,8 @@ $button-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 
 
 //images
-$main-background: #ffffff;
+$main-background:url('../images/landing_bg.webp');
+$card-background:url('../images/card_bg.webp');
 $dashboard-background:url('../images/landing_bg.webp');
 $stamping-background: url('../images/landing_bg.webp');
 $weekday-background: url('../images/landing_bg.webp');

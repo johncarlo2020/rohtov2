@@ -14,24 +14,65 @@
     .register-main label,
     .register-main input,
     .register-main span {
-        font-family: 'Brevia' !important;
+        font-family: 'PlusJakartaSans' !important;
     }
     .find-select
     {
         font-size:10px;
         line-height:2.5;
     }
+
+    .card-container {
+    position: relative;   /* anchor */
+    width: 100%;
+    margin-top:-30px;
+    }
+
+    .bg-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    }
+
+    .content {
+    position: absolute;   /* overlays image */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    /* optional */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    }
+
+    label
+    {
+        font-weight: 900;
+    }
+
+    .brand-container
+    {
+        position: relative;
+        z-index: 99;
+    }
+    
+
     </style>
     <div class="register-main main-content with-scroll">
         <div class="justify-content-center w-100">
-            <div class="col-12 animate-entry mb-5">
+            <div class="col-12 animate-entry position-relative brand-container">
                 @include('components.branding')
             </div>
-            <div class="heading-container">
-                <h2 class="mx-4 text-center sub-heading-text animate-entry">REGISTRATION</h2>
-            </div>
-            <div class=" mt-4 mb-3 w-100  animate-entry delay-3 bg-white p-3 ">
-                <div class="py-3 register-form-parent">
+            <div class="container card-container">
+            <img src="{{ asset('images/brand/card_bg.webp') }}" class="bg-img">
+            <div class="content">
+                <div class="w-100  animate-entry delay-3 mx-2">
+                <div class="mx-4 register-form-parent">
+                    <div class="heading-container">
+                        <h2 class="mx-4 text-center sub-heading-text animate-entry mb-4">REGISTRATION</h2>
+                    </div>
                     <form id="form" method="POST" action="{{ route('register') }}">
                         @csrf
                         <input type="hidden" name="dialCode" id="dialCode" ></input>
@@ -40,7 +81,7 @@
                             <div class="mb-3 row">
                                 <div class="col-12">
                                     <label for="fname" class="text-primary">Full Name: <span class="text-danger">*</span></label>
-                                    <input id="fname" placeholder="Masukkan nama anda" type="text"
+                                    <input id="fname" placeholder="Your name" type="text"
                                         class="input-text form-control @error('fname') is-invalid @enderror" name="fname"
                                         value="{{ old('fname') }}" required autocomplete="fname" autofocus />
                                     @error('fname')
@@ -55,7 +96,7 @@
                                 <div class="col-12">
                                     <label for="email" class="text-primary">E-mail: <span class="text-danger">*</span></label>
 
-                                    <input id="email" placeholder="example@email.com" type="email"
+                                    <input id="email" placeholder="Email Address" type="email"
                                         class="input-text form-control @error('email') is-invalid @enderror" name="email"
                                         value="{{ old('email') }}" required autocomplete="email" />
 
@@ -90,8 +131,8 @@
 
                             <div class="mb-3 row">
                                 <div class="col-12">
-                                    <label for="dob" class="text-primary">Date of Birth <span class="text-danger">*</span></label>
-                                    <input id="dob" placeholder="" type="date" class="input-text form-control " name="dob" value="" required="" autocomplete="fname" autofocus="">
+                                    <label for="age" class="text-primary">Age: <span class="text-danger">*</span></label>
+                                    <input id="age" type="number" class="input-text form-control " name="age" value="" required="" placeholder="18" autofocus="">
                                 </div>
                             </div>
                         
@@ -105,15 +146,22 @@
                             <div class="mb-0 row">
                                 <div class="col-12 text-center">
                                     <button id="submitButton" type="submit"
-                                        class="custom-btn custom-btn-primary animate-entry delay-3">
+                                        class="custom-btn custom-btn-primary animate-entry delay-3 mt-4">
                                         {{ __('SUBMIT') }}
                                     </button>
+                                </div>
+                                <div class="col-12 text-center">
+                                    <a href="{{ route('login') }}" class="sub-heading-text fw-normal fs-5">Login</a>
                                 </div>
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
+            </div>
+            </div>
+
+            
         </div>
     </div>
 </x-guest-layout>

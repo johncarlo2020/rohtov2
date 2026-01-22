@@ -6,66 +6,103 @@
         .login-page p,
         .login-page a,
         .login-page span {
-            font-family: 'Brevia' !important;
+            font-family: 'PlusJakartaSans' !important;
         }
+
+        .card-container {
+    position: relative;   /* anchor */
+    width: 100%;
+    margin-top:-30px;
+    }
+
+    .bg-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    }
+
+    .content {
+    position: absolute;   /* overlays image */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    /* optional */
+    display: flex;
+    align-items: start;
+    justify-content: center;
+    }
+
+    label
+    {
+        font-weight: 900;
+    }
+
+    .brand-container
+    {
+        position: relative;
+        z-index: 99;
+    }
     </style>
     <div class="login-page vh-100">
         <div class="main-content main-background with-scroll">
-            <div class="col-12 animate-entry mb-4">
+            <div class="col-12 animate-entry brand-container">
                 @include('components.branding')
             </div>
-                <h2 class="mx-4 text-center sub-heading-text animate-entry">LOG IN</h2>
-            <div class="col-12 animate-entry delay-2 bg-white p-3 mt-4" style="margin-bottom:20vh;">
+            <div class="col-12 animate-entry delay-2">
                 <!-- Session Status -->
                 <x-auth-session-status class="mb-4" :status="session('status')" />
-                <form method="POST" action="{{ route('login') }}" >
-                    @csrf
-                    <input type="hidden" name="dialCode" id="dialCode" ></input>
-                    <input type="hidden" name="countryIso" id="countryIso">
-                        <div class="mb-3 row">
-                                <div class="col-12 input-group w-100">
-                                    <label for="number" class="text-primary">Phone Number: <span class="text-danger">*</span></label>
+                <div class="container card-container">
+                    <img src="{{ asset('images/brand/card_bg.webp') }}" class="bg-img">
+                    <div class="content px-2">
+                        <div class="form-parent px-4 mt-5">
+                            <div class="heading-container">
+                            <h2 class="mb-4 text-center sub-heading-text animate-entry">LOG IN</h2>
+                        </div>
+                        <form method="POST" action="{{ route('login') }}" >
+                            @csrf
+                            <input type="hidden" name="dialCode" id="dialCode" ></input>
+                            <input type="hidden" name="countryIso" id="countryIso">
+                                <div class="mb-3 row">
+                                        <div class="col-12 input-group w-100">
+                                            <label for="number" class="text-primary">Phone Number: <span class="text-danger">*</span></label>
 
-                                    <input id="number" type="phone"
-                                        class="input-text form-control w-100 @error('number') is-invalid @enderror"
-                                        name="number" value="{{ old('number') }}" required autocomplete="number"
-                                        autofocus />
-                                    @error('number')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
+                                            <input id="number" type="phone"
+                                                class="input-text form-control w-100 @error('number') is-invalid @enderror"
+                                                name="number" value="{{ old('number') }}" required autocomplete="number"
+                                                autofocus />
+                                            @error('number')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                        <div class="col-12 text-center">
+                                            <span id="valid-msg" class="d-none text-danger"></span>
+                                            <span id="error-msg" class="d-none text-danger"></span>
+                                        </div>
+
+
+
+                            <!-- Password -->
+                            <x-text-input id="password" class="block w-full mt-1" type="hidden" name="password"
+                                value="password" required autocomplete="current-password" />
+
+                            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+
+                            <div class="d-flex justify-center">
+                                <x-primary-button class="custom-btn custom-btn-primary w-75 m-auto my-5">
+                                    {{ __('SUBMIT') }}
+                                </x-primary-button>
                             </div>
-
-                                <div class="col-12 text-center">
-                                    <span id="valid-msg" class="d-none text-danger"></span>
-                                    <span id="error-msg" class="d-none text-danger"></span>
-                                </div>
-
-
-
-                    <!-- Password -->
-                    <x-text-input id="password" class="block w-full mt-1" type="hidden" name="password"
-                        value="password" required autocomplete="current-password" />
-
-                    <x-input-error :messages="$errors->get('password')" class="mt-2" />
-
-                    <div class="d-flex justify-center">
-                        <x-primary-button class="custom-btn custom-btn-primary w-75 m-auto my-5">
-                            {{ __('SUBMIT') }}
-                        </x-primary-button>
+                        </form>
+                        </div>
                     </div>
-                </form>
-            </div>
-             <div class="bottom-text text-center">
-                    <p class="already-register text-white">
-                        <strong>Haven't register yet?</strong>
-                    </p>
-                    <p class="already-register text-white">
-                        <a href="{{ route('register') }}" class="text-white"><strong>Sign Up</strong></a>
-                    </p>
                 </div>
+            </div>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/intlTelInput.min.js"></script>

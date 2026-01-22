@@ -903,7 +903,7 @@ button.custom-btn.answer-btn.answer-btn-3 {
 .sub-heading-text {
 
     font-size: 1.5rem;
-    font-weight: 400;
+    font-weight: 900;
     color: $primary;
     text-decoration: none;
     letter-spacing: 2px;
@@ -911,7 +911,7 @@ button.custom-btn.answer-btn.answer-btn-3 {
 
 .card-parent {
     border-radius: 25px;
-    background-color: $primary !important;
+    background-image: $card-background !important;
 }
 
 .modal-parent {
@@ -929,12 +929,12 @@ input {
 
 input::placeholder,
 p.footer {
-    font-family: "Brevia";
+    font-family: "PlusJakartaSans";
     color: black; /* placeholder color */
 }
 
 .footer-wrapper p {
-    font-family: "Brevia";
+    font-family: "PlusJakartaSans";
     font-size: 10px;
     font-weight: 700;
 }
@@ -1078,4 +1078,5 @@ p.footer {
     {
         color: $primary !important;
     }
+
 }

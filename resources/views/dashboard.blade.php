@@ -90,7 +90,7 @@
                             <div class="text-content mt-4 mb-4">
                                 <h5 class="text-dark mb-4">YSL BEAUTY LIGHT CLUB</h5>
                                 <p class="text-dark">
-                                    Kindly complete Station 1 - 3 to proceed to <br> Gift Redemption station
+                                    Kindly complete Station 1-3 to proceed to <br> Gift Redemption station
                                 </p>
                             </div>
                             <button type="button" class="w-75 custom-btn custom-btn-primary" data-bs-dismiss="modal"

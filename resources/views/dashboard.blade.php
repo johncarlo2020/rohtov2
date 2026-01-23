@@ -8,7 +8,6 @@
 
         .station-card {
             display: block;
-            border-radius: 20px;
             overflow: hidden;
             animation: floatIdle 3.5s ease-in-out infinite;
             transition: transform 0.25s ease, box-shadow 0.25s ease;

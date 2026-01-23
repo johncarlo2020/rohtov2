@@ -39,6 +39,7 @@
 
    /* Whole screen */
 #mainContainer {
+  min-height: 100vh;
   min-height: 100svh;
   display: flex;
   flex-direction: column;
@@ -64,14 +65,14 @@
 } */
 /* Text */
 #mainContent p {
-  font-size: clamp(0.8rem, 3.5vw, 1rem);
+  font-size: 16px;
   max-width: 38ch;
   line-height: 1.5;
 }
 
 /* Buttons */
 .custom-btn-secondary {
-  font-size: clamp(0.8rem, 3.5vw, 1rem);
+  font-size: 16px;
   padding: clamp(12px, 3vh, 16px) clamp(16px, 6vw, 24px);
   width: min(90%, 360px);
 }

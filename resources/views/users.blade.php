@@ -100,6 +100,18 @@
     </div>
 </div>
 <div class="mt-4 row">
+    <div class="row mt-4 mb-3 px-3">
+        <div class="col-md-3">
+            <input type="date" id="startDate" class="form-control">
+        </div>
+        <div class="col-md-3">
+            <input type="date" id="endDate" class="form-control">
+        </div>
+        <div class="col-md-3">
+            <button id="filterDate" class="btn btn-primary">Filter</button>
+            <button id="resetDate" class="btn btn-secondary">Reset</button>
+        </div>
+    </div>
     <div class="mb-4 col-lg-12 mb-lg-0">
         <div class="card table-card py-3">
             {{-- <div class="p-3 pb-0 card-header">
@@ -116,9 +128,9 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th class="sticky-action">Name</th>
-                            <th>Email</th>
                             <th>Number</th>
+                            <th>Email</th>
+                            <th>Age</th>
                             <th>Country</th>
                             @foreach ($data['stations'] as $station)
                             <th>{{ $station['name'] }}</th>
@@ -132,20 +144,13 @@
                         @foreach ($data['users'] as $user)
                         <tr data-user-id="{{ $user->id }}">
                             <td>{{ $loop->iteration }}</td>
-                            <td class="sticky-action">
-                                {{ ucfirst($user->fname) }} {{ ucfirst($user->lname) }}
-                                @if($user->hasRole('admin'))
-                                    <span class="badge bg-warning text-dark ms-1">
-                                        <i class="fa fa-crown"></i> Admin
-                                    </span>
-                                @endif
-                            </td>
+                            <td>{{ $user->age }}</td>
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->number }}</td>
                             <td>{{ $user->country }}</td>
                             @foreach ($user['stations'] as $station)
-                            <td class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-danger' }}">
-                                {{ $station['value'] ? 'Yes' : 'No' }}</td>
+                            <td class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-success' }}">
+                                {{ $station['value'] ? 'Yes' : 'Yes' }}</td>
                             @endforeach
                             <td>{{ \Carbon\Carbon::parse($user->created_at)->toDayDateTimeString() }}</td>
                             <td class="button-delete">
@@ -188,6 +193,24 @@
                 </div>
             </div>
         </form>
+    </div>
+</div>
+
+<div class="modal fade" id="exportModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Name Export File</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="exportFileName" class="form-control" placeholder="Enter file name">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button id="confirmExport" class="btn btn-primary">Export</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -281,75 +304,180 @@
     $('#customer-table').hide();
 
     var permissionName = "{{ $permission }}";
+    let exportType = 'export';
+
+    const today = new Date().toISOString().split('T')[0];
+
+    $('#startDate').val(today);
+    $('#endDate').val(today);
+
+    $('#startDate, #endDate').on('change', function () {
+        const startDate = $('#startDate').val();
+        const endDate = $('#endDate').val();
+
+        if (startDate && endDate && endDate < startDate) {
+            alert('"To date" cannot be earlier than "From date".');
+            $('#endDate').val(startDate); // auto-fix
+        }
+    });
+
+    $('#startDate').on('change', function () {
+        const startDate = $(this).val();
+        $('#endDate').attr('min', startDate);
+    });
+
+    /* ===================== DATATABLE INIT ===================== */
     var table = $('#customer-table').DataTable({
         responsive: true,
         dom: "<'row'<'col-sm-12 col-md-6'B><'col-sm-12 col-md-6 d-flex justify-content-end'f>>" +
             "<'row'<'col-sm-12 table-responsive custom-table' tr>>" +
-            "<'row'<'d-flex justify-content-start col-sm-12 col-md-6 mt-3'i><'col-sm-12 col-md-6 mt-3 d-flex justify-content-end'p>>",
-        buttons: [{
-            extend: 'csv',
-            text: '<i class="fa fa-file-csv"></i> CSV',
-            className: 'btn btn-info'
-        }, {
-            extend: 'excel',
-            text: '<i class="fa fa-file-excel"></i> Excel',
-            className: 'btn btn-success'
-        }, {
-            extend: 'pdf',
-            text: '<i class="fa fa-file-pdf"></i> PDF',
-            className: 'btn btn-danger'
-        }],
-        order: [
-            [0, 'desc']
+            "<'row'<'d-flex justify-content-start col-sm-12 col-md-6 mt-3'i>" +
+            "<'col-sm-12 col-md-6 mt-3 d-flex justify-content-end'p>>",
+
+        buttons: [
+            {
+                extend: 'csvHtml5',
+                className: 'd-none btn-export-csv',
+                filename: function () {
+                    return exportFileName; // ✅ ALWAYS correct
+                },
+                exportOptions: {
+                    columns: ':not(:last-child)',
+                    modifier: { search: 'applied' }
+                }
+            },
+            {
+                extend: 'excelHtml5',
+                className: 'd-none btn-export-excel',
+                filename: function () {
+                    return exportFileName; // ✅ ALWAYS correct
+                },
+                exportOptions: {
+                    columns: ':not(:last-child)',
+                    modifier: { search: 'applied' }
+                }
+            },
+            {
+                text: '<i class="fa fa-file-csv"></i> CSV',
+                className: 'btn btn-info',
+                action: function () {
+                    exportType = 'csv';
+                    $('#exportModal').modal('show');
+                }
+            },
+            {
+                text: '<i class="fa fa-file-excel"></i> Excel',
+                className: 'btn btn-success',
+                action: function () {
+                    exportType = 'excel';
+                    $('#exportModal').modal('show');
+                }
+            }
         ],
-        columnDefs: [{
-            orderable: false,
-            targets: -1
-        } // Disable sorting on last column (Action)
+
+        order: [[0, 'desc']],
+
+        columnDefs: [
+            {
+                orderable: false,
+                targets: -1 // Action/Delete column
+            }
         ],
-        initComplete: function (settings, json) {
+
+        initComplete: function () {
             $('.loader-container').hide();
             $('#customer-table').show();
-            
+
             // Initialize Bootstrap tooltips
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl);
-            });
+            var tooltipTriggerList = [].slice.call(
+                document.querySelectorAll('[data-bs-toggle="tooltip"]')
+            );
+            tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
         }
     });
 
+    /* ===================== DATE RANGE FILTER ===================== */
+    $.fn.dataTable.ext.search.push(function (settings, data) {
+    let start = $('#startDate').val();
+    let end = $('#endDate').val();
 
-    // Move the search input to the right side
+    // Timestamp column (second last column)
+    let rowDate = new Date(data[data.length - 2]);
+
+    // Convert row date to YYYY-MM-DD (DATE ONLY)
+    let rowDateOnly = rowDate.getFullYear() + '-' +
+        String(rowDate.getMonth() + 1).padStart(2, '0') + '-' +
+        String(rowDate.getDate()).padStart(2, '0');
+
+    if (!start && !end) return true;
+
+    if (start && rowDateOnly < start) return false;
+    if (end && rowDateOnly > end) return false;
+
+    return true;
+});
+
+    /* ===================== DATE FILTER BUTTONS ===================== */
+    $('#filterDate').on('click', function () {
+        table.draw();
+    });
+
+    $('#resetDate').on('click', function () {
+        $('#startDate').val('');
+        $('#endDate').val('');
+        table.draw();
+    });
+
+    /* ===================== EXPORT CONFIRM ===================== */
+    $('#confirmExport').on('click', function () {
+    // ✅ Store filename BEFORE triggering export
+    exportFileName = $('#exportFileName').val().trim();
+
+    if (!exportFileName) {
+        alert('Please enter a file name');
+        return;
+    }
+
+    if (exportType === 'csv') {
+        table.button('.btn-export-csv').trigger();
+    }
+
+    if (exportType === 'excel') {
+        table.button('.btn-export-excel').trigger();
+    }
+
+    // ✅ Clear AFTER export
+    $('#exportModal').modal('hide');
+    $('#exportFileName').val('');
+});
+
+    /* ===================== SEARCH INPUT POSITION ===================== */
     $('.dataTables_filter').addClass('float-end');
     $('.dataTables_filter label').addClass('w-100');
 
+    /* ===================== ROW CLICK REDIRECT ===================== */
     $('#customer-table tbody').on('click', 'tr', function (e) {
-        // Prevent redirect if the clicked target is inside a delete button
-        console.log('cliked');
-        if ($(e.target).closest('.delete-user-btn').length) {
-            return;
-        }
+        if ($(e.target).closest('.delete-user-btn').length) return;
 
         var userId = $(this).data('user-id');
-
-        window.location.href = "{{ route('userData', ['user' => ':userId']) }}".replace(
-            ':userId', userId);
+        window.location.href = "{{ route('userData', ['user' => ':userId']) }}"
+            .replace(':userId', userId);
     });
 
-    // Use event delegation for delete button
+    /* ===================== DELETE BUTTON ===================== */
     $('#customer-table tbody').on('click', '.delete-user-btn', function (e) {
-        e.stopPropagation(); // Prevent row click
+        e.stopPropagation();
+
         const userId = $(this).data('user-id');
         const userName = $(this).data('user-name');
 
         let deleteUrl = @json(route('users.destroy', ['id' => ':id']));
-    deleteUrl = deleteUrl.replace(':id', userId);
+        deleteUrl = deleteUrl.replace(':id', userId);
 
-    $('#deleteUserForm').attr('action', deleteUrl);
-    $('#deleteUserName').text(userName);
-    $('#deleteUserModal').modal('show');
-            });
+        $('#deleteUserForm').attr('action', deleteUrl);
+        $('#deleteUserName').text(userName);
+        $('#deleteUserModal').modal('show');
+    });
 </script>
 
 @if(session('success'))

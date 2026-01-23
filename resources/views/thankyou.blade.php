@@ -30,7 +30,7 @@
 
     /* optional */
     display: flex;
-    align-items: start;
+    align-items: center;
     justify-content: space-between;
     }
 
@@ -56,7 +56,7 @@
                 <div class="container card-container">
                     <img src="{{ asset('images/brand/card_bg.webp') }}" class="bg-img">
                         <div class="content px-2">
-                            <div class="form-parent px-4 mt-5">
+                            <div class="form-parent px-4">
                                 <div class="heading-container text-center">
                                 <div class="d-flex justify-content-center align-items-center mb-3">
                                     <img class="img-fluid check-img" src="{{asset('images/brand/check.webp')}}" alt="" style="width:50px;">
@@ -66,11 +66,6 @@
                             </div>
                             <div class="thankyou">
                                 <img class="img-fluid thankyou-img" src="{{asset('images/brand/thankyou.webp')}}" alt="">
-                            </div>
-                            <div class="button-container text-center">
-                                <a href="{{ route('congrats') }}" class="custom-btn custom-btn-primary mt-5">
-                                    DONE
-                                </a>
                             </div>
                         </div>
                     </div>

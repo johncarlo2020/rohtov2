@@ -150,9 +150,6 @@
                                         {{ __('SUBMIT') }}
                                     </button>
                                 </div>
-                                <div class="col-12 text-center">
-                                    <a href="{{ route('login') }}" class="sub-heading-text fw-normal fs-5">Login</a>
-                                </div>
                             </div>
                         </div>
                     </form>

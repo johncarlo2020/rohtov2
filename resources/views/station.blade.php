@@ -166,7 +166,7 @@
                 <!-- actions -->
                 @if (!$user && $station->id != 7)
                     <button id="start-scanner"
-                            class="text-dark custom-btn-secondary px-4 py-2">
+                            class="text-dark custom-btn-secondary px-3 py-2">
                         SCAN QR CODE TO PROCEED
                     </button>
                 @endif

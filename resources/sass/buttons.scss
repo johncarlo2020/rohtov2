@@ -10,13 +10,13 @@
     border: 1px solid transparent;
 
     font-family: $font-family;
-    font-size: 16px;
-    padding: $button-padding;
+    font-size: 16px !important;
+    padding: 16px;
     border-radius: $button-radius;
     box-shadow: $button-shadow;
-    height: $button-height;
+    height: 0;
     width: $button-width;
-    font-weight: 300;
+    font-weight: 300 !important;
 
     cursor: pointer;
     text-align: center;

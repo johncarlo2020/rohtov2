@@ -213,6 +213,12 @@
                                         {{ __('SUBMIT') }}
                                     </button>
                                 </div>
+                                <div class="col-12 text-center">
+                                    <a href="{{ route('login') }}" id="login" 
+                                        class="custom-btn custom-btn-secondary animate-entry delay-3 mt-2 w-75">
+                                        {{ __('login') }}
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </form>

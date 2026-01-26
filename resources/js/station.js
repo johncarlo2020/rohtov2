@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // $('#routeBtn').text('TUTUP');
 
                 if (lastCharacter == 1 || lastCharacter == 2 ) {
-                    document.getElementById('routeBtn').setAttribute('href', congratsUrl);
+                    document.getElementById('routeBtn').setAttribute('href', thankyouUrl);
                 }
                 else 
                 {

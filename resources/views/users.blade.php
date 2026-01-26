@@ -128,8 +128,9 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Number</th>
+                            <th>Fullname</th>
                             <th>Email</th>
+                            <th>Number</th>
                             <th>Age</th>
                             <th>Country</th>
                             @foreach ($data['stations'] as $station)
@@ -144,13 +145,14 @@
                         @foreach ($data['users'] as $user)
                         <tr data-user-id="{{ $user->id }}">
                             <td>{{ $loop->iteration }}</td>
-                            <td>{{ $user->age }}</td>
+                            <td>{{ $user->fname }}</td>
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->number }}</td>
+                            <td>{{ $user->age }}</td>
                             <td>{{ $user->country }}</td>
                             @foreach ($user['stations'] as $station)
-                            <td class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-success' }}">
-                                {{ $station['value'] ? 'Yes' : 'Yes' }}</td>
+                            <td class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-danger' }}">
+                                {{ $station['value'] ? 'Yes' : 'No' }}</td>
                             @endforeach
                             <td>{{ \Carbon\Carbon::parse($user->created_at)->toDayDateTimeString() }}</td>
                             <td class="button-delete">

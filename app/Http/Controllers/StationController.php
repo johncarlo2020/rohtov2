@@ -404,13 +404,13 @@ class StationController extends Controller
             $stationUser->save();
 
             // Handle gift selection for station 3
-            if($stationUser)
-            {
-                $userGift = new \App\Models\UserGift();
-                $userGift->user_id = auth()->id();
-                $userGift->is_redeemed = true;
-                $userGift->save();
-            }
+            // if($stationUser)
+            // {
+            //     $userGift = new \App\Models\UserGift();
+            //     $userGift->user_id = auth()->id();
+            //     $userGift->is_redeemed = true;
+            //     $userGift->save();
+            // }
 
             DB::commit();
             // Success response
@@ -475,7 +475,7 @@ class StationController extends Controller
 
         $usersWithSixStationUsers = User::with('stationUser')->whereDoesntHave('roles', function ($q) {
         $q->where('name', 'admin');
-    })->whereDate('created_at', '>=', $startDate->toDateString())->has('stationUser', '>=', 3)->count();
+    })->whereDate('created_at', '>=', $startDate->toDateString())->has('stationUser', '>=', 1)->count();
         // dd($usersWithSixStationUsers);
         $data['completedUsers'] = $usersWithSixStationUsers;
         // dd($usersWithSixStationUsers);
@@ -590,7 +590,7 @@ class StationController extends Controller
             $q->where('name', 'admin');
         })->count();
 
-        $usersWithSixStationUsers = User::whereDate('created_at', '>=', $startDate->toDateString())->has('stationUser', '>=', 5)->count();
+        $usersWithSixStationUsers = User::whereDate('created_at', '>=', $startDate->toDateString())->has('stationUser', '>=', 1)->count();
         $data['completedUsers'] = $usersWithSixStationUsers;
 
         if ($data['usersCount'] > 0) {

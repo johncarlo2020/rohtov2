@@ -57,9 +57,72 @@
         position: relative;
         z-index: 99;
     }
-    
+
+    img.bg-img-modal {
+        height: clamp(400px, 50svh, 520px);
+        margin: auto;
+        width: 85vw;
+    }
+
+    .thankyou-card {
+        position: relative;
+        border: none;
+        background: transparent;
+        max-width: 360px;
+        margin: auto;
+        }
+
+        .card-bg {
+        width: 100%;
+        height: auto;
+        display: block;
+        }
+
+        .card-content {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        padding: 32px 24px;
+        }
+
+        
+
+
 
     </style>
+
+<!-- Success Modal -->
+    <div
+        class="modal fade show"
+        id="successModal"
+        tabindex="-1"
+        aria-hidden="true"
+        >
+        <div class="modal-dialog modal-dialog-centered">
+            <img src="{{ asset('images/brand/card_bg.webp') }}" class="bg-img-modal">
+            <div class="content">
+                <div class="modal-content text-center thankyou-card p-5">
+                <h3 class="mb-5 text-primary">THANK YOU!!</h3>
+                    <img
+                        src="{{ asset('images/brand/thankyou2.webp') }}"
+                        alt="Sucess Image"
+                        class="img-fluid mb-3"
+                    />
+                    <button 
+                        class="btn btn-primary rounded-pill px-4"
+                        id="doneBtn"
+                        data-bs-dismiss="modal"
+                        >
+                        DONE
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="register-main main-content with-scroll">
         <div class="justify-content-center w-100">
             <div class="col-12 animate-entry position-relative brand-container">
@@ -163,6 +226,22 @@
     </div>
 </x-guest-layout>
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/intlTelInput.min.js"></script>
+@if (session('showSuccessModal'))
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const modalEl = document.getElementById('successModal');
+    const modal = new bootstrap.Modal(modalEl);
+
+    // show modal on page load
+    modal.show();
+
+    // redirect when modal is closed
+    modalEl.addEventListener('hidden.bs.modal', function () {
+      window.location.href = "{{ route('redemption') }}";
+    });
+  });
+</script>
+@endif
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const form = document.querySelector("#form");

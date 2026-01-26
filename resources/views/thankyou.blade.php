@@ -31,7 +31,7 @@
     /* optional */
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     }
 
     label
@@ -55,17 +55,17 @@
                 <x-auth-session-status class="mb-4" :status="session('status')" />
                 <div class="container card-container">
                     <img src="{{ asset('images/brand/card_bg.webp') }}" class="bg-img">
-                        <div class="content px-2">
-                            <div class="form-parent px-4">
-                                <div class="heading-container text-center">
-                                <div class="d-flex justify-content-center align-items-center mb-3">
-                                    <img class="img-fluid check-img" src="{{asset('images/brand/check.webp')}}" alt="" style="width:50px;">
+                        <div class="content px-2 flex-column">
+                            <div class="text-container px-4">
+                                <div class="heading-container text-center" style="margin-bottom: 20svh;">
+                                    <div class="d-flex justify-content-center align-items-center mt-5 mb-3">
+                                        <img class="img-fluid check-img" src="{{asset('images/brand/check.webp')}}" alt="" style="width:50px;">
+                                    </div>
+                                    <h2 class="text-center sub-heading-text animate-entry">REDEMPTION DONE !</h2>
+                                    <h4 class="sub-heading-text text-center animate-entry">Thank you</h4>
                                 </div>
-                                <h2 class="text-center sub-heading-text animate-entry">REDEMPTION DONE !</h2>
-                                <h4 class="sub-heading-text text-center animate-entry">Thank you</h4>
-                            </div>
-                            <div class="thankyou">
-                                <img class="img-fluid thankyou-img" src="{{asset('images/brand/thankyou.webp')}}" alt="">
+                            <div class="button">
+                                <a href="{{ route('congrats') }}" id="routeBtn" class="custom-btn btn-primary btn w-100 animate-entry">FINISH</a>
                             </div>
                         </div>
                     </div>

@@ -13,6 +13,18 @@
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.card-container {
+    position: relative;   /* anchor */
+    width: 100%;
+    margin-top:-30px;
+    }
+
+     .brand-container
+    {
+        position: relative;
+        z-index: 99;
+    }
+    
 .scanner-wrapper {
     position: relative;
     width: clamp(220px, 70vw, 320px);
@@ -51,16 +63,12 @@
     pointer-events: none;
 }
 
-.content.px-2 {
+.content {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    flex-direction: column;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 /* Stop animation & interaction when redeemed */
@@ -142,9 +150,9 @@
             <div class="d-flex justify-content-center animate-entry brand-container">
                 @include('components.branding')
             </div>
-             <div class="container card-container">
+             <div class="container card-container position-relative">
                     <img src="{{ asset('images/brand/card_bg.webp') }}" class="bg-img">
-                    <div class="content px-2">
+                    <div class="content px-4">
                          <h2 class="mx-4 mt-4 text-center sub-heading-text animate-entry">REDEMPTION</h2>
         <div id="mainContent"
             class="pt-5 mb-2 d-flex flex-column align-items-center justify-content-center animate-entry delay-3">

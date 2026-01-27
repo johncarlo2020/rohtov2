@@ -131,7 +131,7 @@
                 @include('components.branding')
             </div>
              <div class="container card-container">
-                    <img src="{{ asset('images/brand/card_bg.webp') }}" class="bg-img">
+                    <!-- <img src="{{ asset('images/brand/card_bg.webp') }}" class="bg-img"> -->
                     <div class="content px-2">
                          <h2 class="mx-4 mt-4 text-center sub-heading-text animate-entry">REDEMPTION</h2>
         <div id="mainContent"

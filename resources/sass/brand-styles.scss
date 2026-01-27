@@ -1086,21 +1086,25 @@ p.footer {
                 min-height: 75svh;
                 height: 80svh;
                 max-height: 85svh;
+                width: 100%;
             }
 
             .bg-img-redemption {
                 height: 65svh;
+                width: 100%;
             }
     }
 
         @media (min-width: 376px) and (max-width: 480px) {
             .bg-img {
                 height: 65svh;
+                width: 100%;
             }
 
             .bg-img-redemption {
                 min-height: 40svh;
                 height: 50svh;
+                width: 100%;
             }
         }
 
@@ -1109,5 +1113,6 @@ p.footer {
                 min-height: 55svh;
                 height: clamp(55svh, 60svh, 65svh);
                 max-height: 65svh;
+                width: 100%;
             }
         }

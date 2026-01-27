@@ -1090,7 +1090,7 @@ p.footer {
             }
 
             .bg-img-redemption {
-                height: 65svh;
+                height: auto;
                 width: 100%;
             }
     }
@@ -1102,17 +1102,14 @@ p.footer {
             }
 
             .bg-img-redemption {
-                min-height: 40svh;
-                height: 50svh;
+                height: auto;
                 width: 100%;
             }
         }
 
         @media (min-width: 481px) and (max-width: 768px) {
             .bg-img {
-                min-height: 55svh;
-                height: clamp(55svh, 60svh, 65svh);
-                max-height: 65svh;
+                height: auto;
                 width: 100%;
             }
         }

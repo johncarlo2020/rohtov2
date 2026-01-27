@@ -20,6 +20,8 @@ class LoginController extends Controller
             'password' => ['required'],
         ]);
 
+     
+
         // Get the raw number from input
        $rawNumber = $request->input('number');
        $countryInput = $request->input('country');
@@ -49,10 +51,12 @@ class LoginController extends Controller
             return redirect()->intended('/redemption');
         }
 
-        $request->session()->flash('error', 'The provided credentials do not match our records.');
-
         // Return back with error
-        return redirect()->back()->withInput([
+        return redirect()->back()
+        ->withErrors([
+            'number' => 'The provided credentials do not match our records.'
+        ])
+        ->withInput([
             'number' => $request->input('number'),
         ]);
     }

@@ -67,12 +67,12 @@
                                         <div class="col-12 input-group w-100">
                                             <label for="number" class="text-white">Phone Number: <span class="text-danger">*</span></label>
 
-                                            <input id="number" type="phone"
+                                            <input id="number" type="tel"
                                                 class="input-text form-control w-100 @error('number') is-invalid @enderror"
                                                 name="number" value="{{ old('number') }}" required autocomplete="number"
                                                 autofocus />
                                             @error('number')
-                                            <span class="invalid-feedback" role="alert">
+                                            <span class="invalid-feedback d-block text-center text-white" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
                                             @enderror

@@ -5,8 +5,8 @@
 
     img {
         //set the width and height of the logo
-        max-width: clamp(140px, 60vw, 190px);
-        height: clamp(100px, 30vw, 120px);
+        max-width: 100svh;
+        height: 20svh;
         margin: auto;
     }
 }
@@ -1078,5 +1078,38 @@ p.footer {
     {
         color: $primary !important;
     }
-
+        
 }
+
+ @media (max-width: 375px) {
+            .bg-img {
+                min-height: 75svh;
+                height: 80svh;
+                max-height: 85svh;
+            }
+
+            .bg-img-redemption {
+                height: 65svh;
+            }
+    }
+
+        @media (min-width: 376px) and (max-width: 480px) {
+            .bg-img {
+                min-height: 55svh;
+                height: 60svh;
+                max-height: 75svh;
+            }
+
+            .bg-img-redemption {
+                min-height: 40svh;
+                height: 50svh;
+            }
+        }
+
+        @media (min-width: 481px) and (max-width: 768px) {
+            .bg-img {
+                min-height: 55svh;
+                height: clamp(55svh, 60svh, 65svh);
+                max-height: 65svh;
+            }
+        }

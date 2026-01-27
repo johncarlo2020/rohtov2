@@ -16,7 +16,6 @@
 .card-container {
     position: relative;   /* anchor */
     width: 100%;
-    margin-top:-30px;
     }
 
      .brand-container
@@ -24,7 +23,7 @@
         position: relative;
         z-index: 99;
     }
-    
+
 .scanner-wrapper {
     position: relative;
     width: clamp(220px, 70vw, 320px);
@@ -151,9 +150,9 @@
                 @include('components.branding')
             </div>
              <div class="container card-container position-relative">
-                    <img src="{{ asset('images/brand/card_bg.webp') }}" class="bg-img">
+                    <img src="{{ asset('images/brand/card_bg.webp') }}" class="bg-img-redemption">
                     <div class="content px-4">
-                         <h2 class="mx-4 mt-4 text-center sub-heading-text animate-entry">REDEMPTION</h2>
+                         <h2 id="qrTitle" class="mx-4 mt-4 text-center sub-heading-text text-white animate-entry ">REDEMPTION</h2>
         <div id="mainContent"
             class="pt-5 mb-2 d-flex flex-column align-items-center justify-content-center animate-entry delay-3">
             <div id="{{ isset($user) ? '' : 'forceQr' }}" class="icon-container">
@@ -167,8 +166,8 @@
                     src="{{ asset('images/station/redeem_color.webp') }}"
                     alt="Station Image"
                 >
-                <p class="text-center text-primary font-light m-3" style="font-size: 0.6rem">PLEASE CLICK TO REDEEM</p>
-                <h3 class="mx-4 mt-4 text-center sub-heading-text animate-entry">NEXT STOP, MORE FREEBIES AHEAD !!</h3>
+                <p class="text-center text-white font-light m-3" style="font-size: 0.6rem">PLEASE CLICK TO REDEEM</p>
+                <h3 class="mx-4 mt-4 text-center sub-heading-text text-white animate-entry">NEXT STOP, MORE FREEBIES AHEAD !!</h3>
                 @if($station->status)
                     <div class="scanner-overlay">
                         <span>REDEEM<br>SUCCESSFUL</span>
@@ -188,11 +187,10 @@
         <div id="scannerContainer" class="scanner-container d-none mt-4">
             <!-- <button id="close" class="mx-auto mt-4 camera-btn">x</button>  -->
             <div id="reader"></div>
-            <p class="mt-4 scanner-text text-center text-primary"><small>Find the QR code & <br>
-scan to continue your journey.</small></p>
-
         </div>
     </div>
+    <p id="qrText" class="mt-4 scanner-text text-center text-primary d-none"><small>Find the QR code & <br>
+scan to continue your journey.</small></p>
 </div>
 </div>
     

@@ -12,7 +12,6 @@
         .card-container {
     position: relative;   /* anchor */
     width: 100%;
-    margin-top:-30px;
     }
 
     .bg-img {
@@ -58,7 +57,7 @@
                     <div class="content px-2">
                         <div class="form-parent px-4 mt-5">
                             <div class="heading-container">
-                            <h2 class="mb-4 text-center sub-heading-text animate-entry">LOG IN</h2>
+                            <h2 class="mb-4 text-center sub-heading-text text-white animate-entry">LOG IN</h2>
                         </div>
                         <form method="POST" action="{{ route('login') }}" >
                             @csrf
@@ -66,7 +65,7 @@
                             <input type="hidden" name="countryIso" id="countryIso">
                                 <div class="mb-3 row">
                                         <div class="col-12 input-group w-100">
-                                            <label for="number" class="text-primary">Phone Number: <span class="text-danger">*</span></label>
+                                            <label for="number" class="text-white">Phone Number: <span class="text-danger">*</span></label>
 
                                             <input id="number" type="phone"
                                                 class="input-text form-control w-100 @error('number') is-invalid @enderror"

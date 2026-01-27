@@ -12,7 +12,7 @@
         .card-container {
     position: relative;   /* anchor */
     width: 100%;
-    margin-top:-30px;
+
     }
 
     .bg-img {
@@ -61,8 +61,8 @@
                                     <div class="d-flex justify-content-center align-items-center mt-5 mb-3">
                                         <img class="img-fluid check-img" src="{{asset('images/brand/check.webp')}}" alt="" style="width:50px;">
                                     </div>
-                                    <h2 class="text-center sub-heading-text animate-entry">REDEMPTION DONE !</h2>
-                                    <h4 class="sub-heading-text text-center animate-entry">Thank you</h4>
+                                    <h2 class="text-center sub-heading-text text-white animate-entry">REDEMPTION DONE !</h2>
+                                    <h4 class="sub-heading-text text-center text-white animate-entry">Thank you</h4>
                                 </div>
                             <div class="button">
                                 <a href="{{ route('congrats') }}" id="routeBtn" class="custom-btn btn-primary btn w-100 animate-entry">FINISH</a>

@@ -12,7 +12,6 @@
         .card-container {
     position: relative;   /* anchor */
     width: 100%;
-    margin-top:-30px;
     }
 
     .bg-img {
@@ -61,11 +60,11 @@
                                     <div class="d-flex justify-content-center align-items-center mt-5 mb-3">
                                         <img class="img-fluid check-img" src="{{asset('images/brand/check.webp')}}" alt="" style="width:50px;">
                                     </div>
-                                    <h2 class="text-center sub-heading-text animate-entry mb-3">You've completed the <br> journey</h2>
-                                    <h4 class="sub-heading-text text-center animate-entry">Enjoy the reward!</h4>
+                                    <h2 class="text-center sub-heading-text text-white animate-entry mb-3">You've completed the <br> journey</h2>
+                                    <h4 class="sub-heading-text text-center text-white animate-entry">Enjoy the reward!</h4>
                                 </div>
                             <div class="button">
-                                <img src="{{ asset('images/brand/congrats.webp') }}" class="img-fluid w-75 m-auto" alt="" srcset="">
+                                <img src="{{ asset('images/brand/congrats.webp') }}" class="img-fluid w-50 m-auto mb-5" alt="" srcset="">
                             </div>
                         </div>
                     </div>

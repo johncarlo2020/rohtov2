@@ -25,12 +25,9 @@
     .card-container {
     position: relative;   /* anchor */
     width: 100%;
-    margin-top:-30px;
     }
 
     .bg-img {
-    width: 100%;
-    height: auto;
     display: block;
     }
 
@@ -88,10 +85,6 @@
         padding: 32px 24px;
         }
 
-        
-
-
-
     </style>
 
 <!-- Success Modal -->
@@ -105,7 +98,7 @@
             <img src="{{ asset('images/brand/card_bg.webp') }}" class="bg-img-modal">
             <div class="content">
                 <div class="modal-content text-center thankyou-card p-5">
-                <h3 class="mb-5 text-primary">THANK YOU!!</h3>
+                <h3 class="mb-5 text-white">THANK YOU!!</h3>
                     <img
                         src="{{ asset('images/brand/thankyou2.webp') }}"
                         alt="Sucess Image"
@@ -134,7 +127,7 @@
                 <div class="w-100  animate-entry delay-3 mx-2">
                 <div class="mx-4 register-form-parent">
                     <div class="heading-container">
-                        <h2 class="mx-4 text-center sub-heading-text animate-entry mb-4">REGISTRATION</h2>
+                        <h2 class="mx-4 text-center sub-heading-text text-white animate-entry mb-4">REGISTRATION</h2>
                     </div>
                     <form id="form" method="POST" action="{{ route('register') }}">
                         @csrf
@@ -143,7 +136,7 @@
                         <div class="fields-container">
                             <div class="mb-3 row">
                                 <div class="col-12">
-                                    <label for="fname" class="text-primary">Full Name: <span class="text-danger">*</span></label>
+                                    <label for="fname" class="text-white">Full Name: <span class="text-danger">*</span></label>
                                     <input id="fname" placeholder="Your name" type="text"
                                         class="input-text form-control @error('fname') is-invalid @enderror" name="fname"
                                         value="{{ old('fname') }}" required autocomplete="fname" autofocus />
@@ -157,7 +150,7 @@
 
                             <div class="mb-3 row">
                                 <div class="col-12">
-                                    <label for="email" class="text-primary">E-mail: <span class="text-danger">*</span></label>
+                                    <label for="email" class="text-white">E-mail: <span class="text-danger">*</span></label>
 
                                     <input id="email" placeholder="Email Address" type="email"
                                         class="input-text form-control @error('email') is-invalid @enderror" name="email"
@@ -173,7 +166,7 @@
 
                             <div class="mb-3 row">
                                 <div class="col-12 input-group w-100">
-                                    <label for="number" class="text-primary">Phone Number: <span class="text-danger">*</span></label>
+                                    <label for="number" class="text-white">Phone Number: <span class="text-danger">*</span></label>
 
                                     <input id="number" type="phone"
                                         class="input-text form-control w-100 @error('number') is-invalid @enderror"
@@ -194,7 +187,7 @@
 
                             <div class="mb-3 row">
                                 <div class="col-12">
-                                    <label for="age" class="text-primary">Age: <span class="text-danger">*</span></label>
+                                    <label for="age" class="text-white">Age: <span class="text-danger">*</span></label>
                                     <input id="age" type="number" class="input-text form-control " name="age" value="" required="" placeholder="18" autofocus="">
                                 </div>
                             </div>

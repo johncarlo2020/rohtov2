@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const scannerContainer = document.getElementById('scannerContainer');
     const qrText = document.getElementById('qrText');
     const qrTitle = document.getElementById('qrTitle');
+    const qrBtn = document.getElementById('qrBtn');
     const startScannerBtn = document.getElementById('start-scanner');
     const forceQrElement = document.getElementById('forceQr');
 
@@ -32,6 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
         scannerContainer.classList.remove('d-none');
         qrText.classList.remove('d-none');
         qrTitle.classList.add('d-none');
+        qrBtn.classList.remove('d-none');
 
         const html5QrCode = new Html5Qrcode("reader");
 

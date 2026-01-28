@@ -191,6 +191,12 @@
     </div>
     <p id="qrText" class="mt-4 scanner-text text-center text-primary d-none"><small>Find the QR code & <br>
 scan to continue your journey.</small></p>
+                            <div id="qrBtn" class="text-content mt-3 text-center d-none position-relative">
+                                <a href="{{ route('redemption') }}" id="routeBtn"
+                                    class="custom-btn px-5 fw-regular custom-btn-primary w-50 ">
+                                    BACK
+                                </a>
+                            </div>
 </div>
 </div>
     

@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use App\Rules\InternationalPhoneNumber;
 
@@ -40,7 +41,7 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'fname' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'unique:'.User::class],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique(User::class)],
             'age' => ['required', 'int', 'max:255'],
             'dialCode' => ['required', 'string'],
             'country' => [
@@ -75,16 +76,24 @@ class RegisteredUserController extends Controller
             ->first();
         $otp = rand(100000, 999999);
 
-        $user = User::create([
-            'fname' => $request->fname,
-            'age' => $request->age,
-            'number' => $phoneNumber,
-            'email' => $request->email,
-            'country'=> $country->name,
-            'marketing' => $marketing,
-            'last_login_at' => Carbon::now(),
-            'password' => Hash::make('password'),
-        ]);
+        try {
+            $user = User::create([
+                'fname' => $request->fname,
+                'age' => $request->age,
+                'number' => $phoneNumber,
+                'email' => $request->email,
+                'country'=> $country->name,
+                'marketing' => $marketing,
+                'last_login_at' => Carbon::now(),
+                'password' => Hash::make('password'),
+            ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            $msg = $e->getMessage();
+            if (str_contains($msg, 'Duplicate') || $e->getCode() === '23000') {
+                return redirect()->back()->withErrors(['email' => 'This email is already registered. If it\'s yours, please login instead.']);
+            }
+            throw $e;
+        }
 
         $user->assignRole('client');
         // $request->session()->flash('showWelcomeModal', true);

@@ -590,7 +590,12 @@ class StationController extends Controller
             $q->where('name', 'admin');
         })->count();
 
-        $usersWithSixStationUsers = User::whereDate('created_at', '>=', $startDate->toDateString())->has('stationUser', '>=', 1)->count();
+        $usersWithSixStationUsers = User::whereDate('created_at', '>=', $startDate->toDateString())
+            ->whereDoesntHave('roles', function ($q) {
+                $q->where('name', 'admin');
+            })
+            ->has('stationUser', '>=', 1)
+            ->count();
         $data['completedUsers'] = $usersWithSixStationUsers;
 
         if ($data['usersCount'] > 0) {
@@ -605,10 +610,11 @@ class StationController extends Controller
 
         foreach ($data['users'] as $user) {
             $userStations = $user->stationUser->pluck('station_id')->toArray();
-            $user->stations = $stations->map(function ($name, $id) use ($userStations, $averageTimespentByStation) {
+            $user->stations = $stations->map(function ($name, $id) use ($userStations, $averageTimespentByStation, $user) {
                 return [
                     'name' => $name,
-                    'value' => in_array($id, $userStations),
+                    'value' => $user->stationUser->contains('station_id', $id),
+                    'id' => $id,
                 ];
             });
         }

@@ -578,7 +578,7 @@ class StationController extends Controller
         $today = Carbon::today();
         $permission = auth()->user()->getPermissionNames()->first();
 
-        $startDate = Carbon::create(2025, 6, 17);
+        $startDate = Carbon::create(2026, 01, 29);
         $data['users'] = User::whereDate('created_at', '>=', $startDate->toDateString())->whereDoesntHave('roles', function ($q) {
             $q->where('name', 'admin');
         })->with('stationUser')->orderBy('id', 'desc')->get();

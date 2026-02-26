@@ -126,8 +126,13 @@
     padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 100px) !important;
 
     .station-face-title {
-        font-size: clamp(2rem, 10vw, 2.9rem);
-        letter-spacing: 1px;
+        font-family: 'HelveticaNeueLTStd-UltLt', 'HelveticaNeue', sans-serif;
+        font-size: 50px;
+        font-weight: 100;
+        line-height: 0.8;
+        letter-spacing: 0.04em;
+        text-align: center;
+        vertical-align: middle;
 
         span + span {
             margin-top: -10px;

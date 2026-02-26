@@ -26,9 +26,11 @@
 
         .dashboard-face-title-modal {
             color: rgba(0, 0, 0, 0.6);
-            font-size: clamp(2.05rem, 10vw, 2.5rem);
-            line-height: 0.83;
-            letter-spacing: 1px;
+            font-family: 'HelveticaNeueLTStd-UltLt', 'HelveticaNeue', sans-serif;
+            font-size: 32px;
+            font-weight: 100;
+            line-height: 0.8;
+            letter-spacing: 0.04em;
 
             span + span {
                 margin-top: -8px;
@@ -37,7 +39,8 @@
 
         .dashboard-face-subtitle {
             color: #5f5f5f;
-            font-size: 18px;
+            font-family: 'HelveticaNeueLTStd-UltLt', sans-serif;
+            font-size: 16px;
             line-height: 1.25;
             margin-top: 18px;
             margin-bottom: 10px;
@@ -56,10 +59,14 @@
 
     .dashboard-face-title {
         margin: 0 auto;
-        color: rgba(255, 255, 255, 0.75);
-        font-size: clamp(2.2rem, 11vw, 3rem);
-        letter-spacing: 1px;
-        line-height: 0.85;
+        color: white;
+        font-family: 'HelveticaNeueLTStd-UltLt', 'HelveticaNeue', sans-serif;
+        font-size: 50px;
+        font-weight: 100;
+        letter-spacing: 0.04em;
+        line-height: 0.8;
+        text-align: center;
+        vertical-align: middle;
 
         span {
             color: inherit;
@@ -71,7 +78,7 @@
     }
 
     .dashboard-face-title-modal {
-        font-size: clamp(1.8rem, 8vw, 2.4rem);
+        font-size: 50px;
 
         span + span {
             margin-top: -8px;
@@ -79,11 +86,14 @@
     }
 
     .dashboard-face-subtitle {
-        color: #8f8f8f;
+        color: white;
         text-align: center;
-        font-size: 14px;
-        letter-spacing: 0;
-        line-height: 1.15;
+        vertical-align: middle;
+        font-family: 'HelveticaNeueLTStd-UltLt', 'HelveticaNeue', sans-serif;
+        font-size: 20px;
+        font-weight: 100;
+        letter-spacing: 0.1em;
+        line-height: 20px;
         margin-top: 14px;
         margin-bottom: 0;
     }
@@ -155,15 +165,15 @@
             }
 
             &.station-1 .station-card-right {
-                background: #a74a46;
+                background: #E3B488;
             }
 
             &.station-2 .station-card-right {
-                background: #dd766d;
+                background: #682B18;
             }
 
             &.station-3 .station-card-right {
-                background: #e7a6b4;
+                background: #BF9669;
             }
 
             &.station-4 .station-card-right {

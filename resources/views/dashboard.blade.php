@@ -25,7 +25,7 @@
 
         <!-- Modal -->
         <div class="modal fade custom-modal" id="notAllowedModal" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered m-auto">
+            <div class="modal-dialog modal-dialog-centered w-90 m-auto">
                 <div class="modal-content card rounded-1">
                     <div class="modal-body">
                         <div class="text-center content">

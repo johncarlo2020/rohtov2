@@ -32,7 +32,7 @@
                     <x-input-error :messages="$errors->get('password')" class="mt-2" />
 
                     <div class="d-flex justify-center">
-                        <x-primary-button class="custom-btn custom-btn-secondary w-100 ">
+                        <x-primary-button class="custom-btn custom-btn-transparent w-100 ">
                             {{ __('LOGIN') }}
                         </x-primary-button>
                     </div>

@@ -1,26 +1,19 @@
 <x-app-layout>
     <style>
-        .main-content{
-            padding-top: 0 !important;
-        }
-
-        .discover-page{
-            background: #000;
-        }
-
-        img.discover_img{
-            height: 75vh;
-            object-fit: cover;
-        }
-
         .message 
         {
             letter-spacing: 3px;
         }
     </style>
-        <div class="pb-5 px-0 discover-page main-content with-scroll">
+        <div class="pb-5 px-0 main-background main-content with-scroll">
             <div class="content-wrapper d-flex flex-column justify-content-between align-items-center" style="min-height: 100%; flex: 1;">
-
+                <div class="animate-entry">
+                    @include('components.branding')
+                </div>
+                
+                <div class="animate-entry">
+                <h2 class="text-title text-center fw-bold py-3" >LIBRE BERRY CRUSH <br>FREEDOM HAS TASTE</h2>
+                </div>
                 <div id="banner" class="col-12 d-flex justify-content-center p-0 animate-entry">
                     <img class="discover_img w-100" src="{{ asset('images/brand/discover.webp') }}"
                         alt="" />
@@ -48,8 +41,8 @@
 
                 <div class="discover-text">
                     <p class="text-center px-3 py-4" style="font-size:14px;">
-                        Get ready to enter the immersive YSL BEAUTY LIGHT CLUB,
-                        a unique destination where beauty sounds better with music.
+                        Discover the latest twist on the iconic LIBRE fragrance.<br>
+Infused with juicy raspberry accord, creamy coconut accord, and the signature orange blossom-lavender heart.
                     </p>
                 </div>
 
@@ -57,8 +50,8 @@
 
                     <a
                         href="{{ route('dashboard') }}"
-                        class="custom-btn custom-btn-secondary animate-entry delay-3 px-4"
-                        ><strong>CLICK TO START JOURNEY<strong></a
+                        class="custom-btn custom-btn-primary animate-entry delay-3 px-4"
+                        ><strong>READY TO CRAVE?<strong></a
                     >
                 </div>
             </div>

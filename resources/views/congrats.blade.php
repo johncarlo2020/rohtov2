@@ -6,7 +6,7 @@
                     <div class="animate-entry">
                         @include('components.branding')
                     </div>
-                    <h2 class="text-center fw-bold my-5">YSL BEAUTY LIGHT CLUB</h2>
+                    <h2 class="text-center fw-bold my-5">FREEDOM HAS TASTE</h2>
                 </div>
                 <div class="row text-center">
                     <span>Visit</span>

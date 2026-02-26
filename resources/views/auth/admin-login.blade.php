@@ -35,7 +35,7 @@
                             <input type="checkbox" id="remember" name="remember" />
                             <label for="remember">Remember me</label>
                         </div>
-                        <button type="submit" class="btn login-button w-100 shadow-sm">Login</button>
+                        <button type="submit" class="custom-btn custom-btn-primary w-100 shadow-sm">Login</button>
                         <p class="small-text text-center mt-4">Powered by WOWSOME®️ 2025</p>
                     </form>
                 </div>

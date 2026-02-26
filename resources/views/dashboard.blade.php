@@ -75,7 +75,7 @@
         </div>
         
         <div class="text-center animate-entry">
-          <h2 class="text-center my-5" >YSL BEAUTY LIGHT CLUB</h2>
+          <h2 class="text-center my-5" >FREEDOM HAS TASTE</h2>
         </div>
         <!-- login Modal -->
 
@@ -87,7 +87,7 @@
                         <div class="text-center content">
                             <img class="check mx-auto mb-4" id="badge" src="{{asset('images/error.png') }}" style="filter:brightness(0);">
                             <div class="text-content mt-4 mb-4">
-                                <h5 class="text-dark mb-4">YSL BEAUTY LIGHT CLUB</h5>
+                                <h5 class="text-dark mb-4">FREEDOM HAS TASTE</h5>
                                 <p class="text-dark">
                                     Kindly complete Station 1-3 to proceed to <br> Gift Redemption station
                                 </p>
@@ -141,6 +141,7 @@
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 let canAccessStation4 = @json($canAccessStation4);
+                console.log(canAccessStation4);
                 window.gotoStamping = function(id,)
                 {
                     var url = "{{ route('station', ['station' => ':id']);}}".replace(
@@ -154,7 +155,7 @@
                         id
                     );
 
-                    if (id === 4 && !canAccessStation4) {
+                    if (id == 4 && !canAccessStation4) {
                         // Show the not allowed modal if trying to access station 3 without permission
                         var notAllowedModal = new bootstrap.Modal(document.getElementById('notAllowedModal'));
                         notAllowedModal.show();

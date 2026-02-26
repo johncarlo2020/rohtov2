@@ -2,6 +2,7 @@
 <style>
     #start-scanner {
         width: 50%;
+        border-color: #ffffff;
         border-radius: 5px;
         background-color: #ffffff;
         padding: 0;
@@ -187,7 +188,7 @@
             <div id="{{ $user ? '' : 'forceQr' }}" class="icon-container"></div> 
                 <div id="scannerContainer" class="scanner-container d-none"> 
                     <!-- <button id="close" class="mx-auto mt-4 camera-btn">x</button> --> 
-                    <h2 class="text-center fw-bold mb-4">YSL BEAUTY LIGHT CLUB</h2> 
+                    <h2 class="text-center fw-bold mb-4">FREEDOM HAS TASTE</h2> 
                     <div id="reader"></div> 
                     <p class="mt-4 scanner-text text-center text-white">Find the QR code &<br> scan to continue your journey</p> 
                 </div> 

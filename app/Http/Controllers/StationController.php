@@ -323,7 +323,8 @@ class StationController extends Controller
         }
 
         // Determine if stations 1-4 are all completed
-        $canAccessStation4 = $stations->filter(fn($s) => $s->id <= 2)->every(fn($s) => $s->status == true);
+
+        $canAccessStation4 = $stations->filter(fn($s) => $s->id <= 3)->every(fn($s) => $s->status == true);
 
         $isRedeemed = \App\Models\UserGift::where('user_id', $userId)
             ->where('is_redeemed', true)
@@ -339,13 +340,6 @@ class StationController extends Controller
             return redirect()->route('congrats');
         }
 
-    }
-
-    public function pledgeDj()
-    {
-        // get details of station 4
-        $station = Station::find(4);
-        return view('pledgeDj', compact('station'));
     }
 
     public function scanner()

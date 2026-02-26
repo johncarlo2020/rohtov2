@@ -21,18 +21,19 @@ class StationSeeder extends Seeder
     public function run()
     {
         Station::create([
-            'name' => 'Ysl the slim Discovery',
-            'description' => 'Discover YSL The Slim, the new couture matte lipstick that elevates your look, your lips and your rules.',
+            'name' => 'Your Libre, Your Freedom',
+            'description' => 'Strike a pose, post & hashtag #YSLBeautySG',
         ]);
 
         Station::create([
-            'name' => 'Fragrance Discovery',
-            'description' => 'Discover the iconic YSL fragrances that leave a lasting, bold impression.',
+            'name' => 'New Icons, Now in Berry Crush',
+            'description' => 'From the floral fruity of LIBRE Berry Crush to juicy shine of YSL LOVESHINE Berry Crush, indulge in a double hit of freedom and 
+desire.',
         ]);
 
         Station::create([
-            'name' => 'Be in the Spotlight',
-            'description' => 'Strike a pose in the DJ photobooth/around the pop-up, post & hashtag #YSLBeautyMY',
+            'name' => 'Refill your icons',
+            'description' => 'Refill you iconic LIBRE fragrance with the power of forever freedom.',
         ]);
 
         Station::create([

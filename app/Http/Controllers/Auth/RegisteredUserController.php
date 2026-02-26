@@ -40,7 +40,6 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'fname' => ['required', 'string', 'max:255'],
-            'lname' => ['required', 'string', 'max:255'],
             'number' => ['required'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
             'country' => [
@@ -72,7 +71,7 @@ class RegisteredUserController extends Controller
 
         $user = User::create([
             'fname' => $request->fname,
-            'lname' => $request->lname,
+            'lname' => '',
             'number' => $phoneNumber,
             'email' => $request->email,
             'otp' => $otp,
@@ -86,7 +85,7 @@ class RegisteredUserController extends Controller
         // $request->session()->flash('showWelcomeModal', true);
         // Use the insert method to insert multiple records in one query
         event(new Registered($user));
-        GlobalHelper::sendOtpSms($phoneNumber, $otp);
+        // GlobalHelper::sendOtpSms($phoneNumber, $otp);
 
         Auth::login($user);
 

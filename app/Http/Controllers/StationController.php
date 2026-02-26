@@ -299,6 +299,9 @@ class StationController extends Controller
         // }
 
         $stationDone = $user->stationUser->count();
+        if($stationDone = 3){
+            return redirect()->route('congrats');
+        }
         $stations = Station::get();
 
         $completedStationIds = $user->stationUser->pluck('id')->toArray();
@@ -308,14 +311,14 @@ class StationController extends Controller
             $station->status = $user->stationUser->contains('station_id', $station->id);
         }
 
-        // Determine if stations 1-4 are all completed
-        $canAccessStation5 = $stations->filter(fn($s) => $s->id <= 4)->every(fn($s) => $s->status == true);
+        // Determine if stations 1-2 are all completed (required before station 3)
+        $canAccessStation3 = $stations->filter(fn($s) => $s->id <= 2)->every(fn($s) => $s->status == true);
 
         $nextStation = $stations->firstWhere(function ($station) use ($user) {
             return !$user->stationUser()->where('station_id', $station->id)->exists();
         });
 
-        return view('dashboard', compact('stations', 'stationDone', 'canAccessStation5', 'completedStationIds', 'nextStation'));
+        return view('dashboard', compact('stations', 'stationDone', 'canAccessStation3', 'completedStationIds', 'nextStation'));
 
     }
 

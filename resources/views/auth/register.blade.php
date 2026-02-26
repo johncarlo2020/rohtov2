@@ -16,8 +16,8 @@
                         @csrf
                         <div class="mb-3 row">
                             <div class="col-12">
-                                <label for="" class="text-black">First Name <span class="text-danger">*</span></label>
-                                <input id="fname" placeholder="Enter your First Name" type="text"
+                                <label for="" class="text-black">Full Name <span class="text-danger">*</span></label>
+                                <input id="fname" placeholder="Enter your Full Name" type="text"
                                     class="input-text form-control  rounded-1 @error('fname') is-invalid @enderror" name="fname"
                                     value="{{ old('fname') }}" required autocomplete="fname" autofocus />
                                 @error('fname')
@@ -28,19 +28,6 @@
                             </div>
                         </div>
 
-                        <div class="mb-3 row">
-                            <div class="col-12">
-                                <label for="" class="text-black">Last Name <span class="text-danger">*</span></label>
-                                <input id="lname" placeholder="Enter your Last Name" type="text"
-                                    class="input-text form-control  rounded-1 @error('lname') is-invalid @enderror" name="lname"
-                                    value="{{ old('lname') }}" required autocomplete="lname" autofocus />
-                                @error('lname')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
 
                         <div class="mb-3 row">
                             <div class="col-12">
@@ -100,14 +87,14 @@
                                     <input class="form-check-input" type="checkbox" name="privacy_policy" value="1"
                                         id="privacyPolicy" required />
                                     <label class="form-check-label text-black small-text" for="privacyPolicy">
-                                       I agree that the collection and processing of my personal data will be in compliance with the Shiseido <a href="{{ asset('pdfs/privacy-policy.pdf') }}" target="_blank" class="text-primary">Privacy Policy</a> .
+                                       I agree that the collection and processing of my personal data will be in compliance with the Shiseido <a href="https://www.narscosmetics.com.my/privacy.html" target="_blank" class="text-primary">Privacy Policy</a> and <a href="https://www.narscosmetics.com.my/terms.html" target="_blank" class="text-primary">Terms</a>.
                                     </label>
                                 </div>
                             </div>
                         </div>
                         <div class="col-12">
                             <p class="text-black small-text mb-3 ">
-                                I would like to receive information on Shiseido and Shiseido Group products and campaigns from Shiseido, 
+                                I would like to receive information on Shiseido and Shiseido Group products and campaigns from Shiseido,
                                 Shiseido Group and Shiseido's third party business partners via the following channels:
                             </p>
                             <div class="mb-3">
@@ -136,13 +123,13 @@
                         <div class="mb-0 row">
                             <div class="col-12 text-center">
                                 <button id="submitButton" type="submit"
-                                    class="w-100 custom-btn custom-btn-secondary animate-entry delay-3">
+                                    class="w-100 custom-btn custom-btn-transparent animate-entry delay-3">
                                     {{ __('REGISTER') }}
                                 </button>
                             </div>
                             <div class="col-12 text-center">
-                                <a href="{{ route('welcome') }}" 
-                                class="w-100 custom-btn custom-btn-transparent animate-entry delay-3 text-center d-block">
+                                <a href="{{ route('welcome') }}"
+                                class="w-100 custom-btn custom-btn-secondary animate-entry delay-3 text-center d-block">
                                     {{ __('BACK') }}
                                 </a>
                             </div>
@@ -151,10 +138,10 @@
                 </div>
             </div>
                 <div class="bottom-text text-center pt-4">
-                    <p class="already-register text-black fw-bold">
+                    <p class="already-register text-white">
                         Already Registered!
                     </p>
-                    <p class="already-register text-black">
+                    <p class="already-register text-white">
                         Please Login
                         <a href="{{ route('login') }}" class="">here</a>
                     </p>

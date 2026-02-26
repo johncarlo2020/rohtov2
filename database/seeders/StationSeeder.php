@@ -21,24 +21,20 @@ class StationSeeder extends Seeder
     public function run()
     {
         Station::create([
-            'name' => 'Iconic Beginnings',
+            'name' => 'Find the perfect match',
             'description' => 'Product Discovery',
         ]);
 
         Station::create([
-            'name' => 'Follow your Instinct',
+            'name' => 'Meet your match',
             'description' => 'Makeup Stations',
         ]);
 
         Station::create([
-            'name' => 'Seeing Multiple',
+            'name' => 'Indulge in a cold brew',
             'description' => 'Promotion Shoutout',
         ]);
 
-        Station::create([
-            'name' => 'Shape your Way',
-            'description' => 'Get Free gelatos',
-        ]);
 
         // Station::create([
         //     'name' => 'Gift Redemption',

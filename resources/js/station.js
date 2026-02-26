@@ -14,11 +14,13 @@ document.addEventListener('DOMContentLoaded', function () {
     // Access config passed from Blade
     const stationConfig = window.stationConfig || {};
     const processQrCodeUrl = stationConfig.urls.process_qr_code;
-    const congratsUrl = stationConfig.urls.congrats;
     const stationId = stationConfig.station_id;
     const stationName = stationConfig.station_name;
     const checkImageUrl = stationConfig.assets.check_image;
     const errorImageUrl = stationConfig.assets.error_image;
+    const routeBtn = document.getElementById('routeBtn');
+    const defaultBackUrl = routeBtn ? routeBtn.getAttribute('href') : null;
+    const modalContent = document.getElementById('scanCompleteModalContent');
 
     startScannerBtn.addEventListener('click', function (event) {
         event.preventDefault();
@@ -59,36 +61,32 @@ document.addEventListener('DOMContentLoaded', function () {
             success: function (response) {
                 const confettiCanvas = document.createElement('canvas');
                 // ... (confetti logic from original file)
-                $('#badge').attr('src', checkImageUrl);
-                $('#scanCompleteModal').modal('show');
-
-                
-
-                const trimmedMessage = message.trim();
-                const lastCharacter = trimmedMessage.charAt(trimmedMessage.length - 1);
-                console.log(lastCharacter);
-                $('.station_id').html(lastCharacter);
-                $('.station_name').html(stationName);
-                $('#routeBtn').text('Next');
-
-                if (lastCharacter == 4) {
-                    document.getElementById('routeBtn').setAttribute('href', congratsUrl);
+                if (modalContent) {
+                    modalContent.classList.remove('failed-qr');
                 }
-                else 
-                {
-                    const stationParsed = parseInt(lastCharacter);
-                    const nextStation = stationParsed + 1;
-                $('#routeBtn')
-                .removeAttr('href') // remove href if it exists
-                .attr('onclick', `gotoStation(${nextStation})`);
-                    }
+                $('#badge').attr('src', checkImageUrl);
+                $('.station_name').html(String(stationName || '').toUpperCase());
+                $('.message').html('Check-in Successful');
+                const routeBtnElement = $('#routeBtn');
+                routeBtnElement.text('BACK').removeAttr('onclick');
+                if (defaultBackUrl) {
+                    routeBtnElement.attr('href', defaultBackUrl);
+                }
+                $('#scanCompleteModal').modal('show');
             },
             error: function (xhr, status, error) {
                 console.error('Error sending QR Code message:', error);
-                $('.modal-icon').addClass('d-none');
-                $('.station-text').html('Failed');
-                $('.message').html('Invalid QR code');
-                $('.check').attr('src', errorImageUrl);
+                if (modalContent) {
+                    modalContent.classList.add('failed-qr');
+                }
+                $('.message').html('Invalid QR Code');
+                $('.station_name').html('');
+                $('#badge').attr('src', errorImageUrl);
+                const routeBtnElement = $('#routeBtn');
+                routeBtnElement.text('BACK').removeAttr('onclick');
+                if (defaultBackUrl) {
+                    routeBtnElement.attr('href', defaultBackUrl);
+                }
                 $('#scanCompleteModal').modal('show');
             }
         });

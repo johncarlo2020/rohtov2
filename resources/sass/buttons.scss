@@ -58,9 +58,8 @@
 
 // Secondary (flat) button - for less prominent actions
 .custom-btn-secondary {
-    background-color: $black;
-    border-color: $secondary;
-    color: $white;
+    background-color: $white;
+    color: $black;
 
     &:hover {
         background-color: darken($secondary, 5%);
@@ -119,9 +118,8 @@
 }
 
 .custom-btn-transparent {
-    background-color: $transparent;
-    border-color: $transparent;
-    color: $black;
+    background-color: $black;
+    color: $white;
     box-shadow: none !important;
 
     &:hover {

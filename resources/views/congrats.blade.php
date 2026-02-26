@@ -5,14 +5,14 @@
                 <img class="welcome_img w-75" src="{{ asset('images/dutchlady/thankYouMessage.webp') }}" alt="" />
             </div> -->
                 <div class="product-image mb-3 px-5 text-center ">
-                    <span class="text-black">Visit</span>
+                    <span class="text-white">Visit</span>
                     <a href="https://www.narscosmetics.my/">
 
                         <img class="logo w-50 m-auto py-3"
                             src="{{ asset('images/brand/NARS_logo.webp') }}" alt="nars Logo" />
 
                     </a>
-                    <span class="text-black">for more information</span>
+                    <span class="text-white">for more information</span>
                 </div>
                 <!-- <div class="next-button-container text-center mt-5">
                     <button onclick="window.location.href='{{ route('dashboard') }}'" class="custom-btn custom-btn-secondary"><strong class="text-dark">BACK</strong></button>

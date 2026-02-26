@@ -299,7 +299,7 @@ class StationController extends Controller
         // }
 
         $stationDone = $user->stationUser->count();
-        if($stationDone = 3){
+        if($stationDone == 3){
             return redirect()->route('congrats');
         }
         $stations = Station::get();

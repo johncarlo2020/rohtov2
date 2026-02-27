@@ -112,7 +112,7 @@
                 </span>
             <div id="{{ $user ? '' : 'forceQr' }}" class="icon-container">
             </div>
-            <img class="station-image w-90" src="{{ asset('images/brand/pin' . $station->id . '.webp') }}"
+            <img class="station-image w-90" src="{{ asset('images/brand/station-' . $station->id . '.webp') }}"
                 alt="Station Image">
             @if ($user != true )
             <button id="start-scanner" class="mx-auto my-3 w-auto px-4 custom-btn custom-btn-transparent" style="font-size:20px;">

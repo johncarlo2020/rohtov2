@@ -152,7 +152,7 @@
                 class="d-flex flex-column align-items-center justify-content-between animate-entry delay-3">
 
                 <!-- station name -->
-                <h2 class="text-title text-center fw-bold">{{ strtoupper($station->name) }}</h2>
+                <h2 class="text-title text-center fw-bold">{!! strtoupper($station->name) !!}</h2>
 
                 <!-- station image -->
                 <img class="station-image"

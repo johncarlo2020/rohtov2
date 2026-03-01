@@ -16,7 +16,6 @@
         .station-card:hover {
             animation-play-state: paused; /* pause idle float */
             transform: translateY(-10px) scale(1.03);
-            box-shadow: 0 22px 45px rgba(0, 0, 0, 0.18);
         }
 
         .station-image {
@@ -129,7 +128,7 @@
                         </div>
 
                         <p class="tile-title">
-                            {{ strtoupper($station->name) }}
+                            {!! strtoupper($station->name) !!}
                         </p>
                     </a>
                 @endforeach

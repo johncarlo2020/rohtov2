@@ -111,8 +111,8 @@
         ];
         const submitButton = document.querySelector("#submitButton");
         const iti = window.intlTelInput(input, {
-            initialCountry: "my",
-            preferredCountries: ["my"],
+            initialCountry: "sg",
+            preferredCountries: ["sg"],
             hiddenInput: "country",
             utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/utils.js"
         });

@@ -21,12 +21,12 @@ class StationSeeder extends Seeder
     public function run()
     {
         Station::create([
-            'name' => 'Your Libre, Your Freedom',
+            'name' => 'Your Libre, <br/>Your Freedom',
             'description' => 'Strike a pose, post & hashtag #YSLBeautySG',
         ]);
 
         Station::create([
-            'name' => 'New Icons, Now in Berry Crush',
+            'name' => 'New Icons, <br> Now in Berry Crush',
             'description' => 'From the floral fruity of LIBRE Berry Crush to juicy shine of YSL LOVESHINE Berry Crush, indulge in a double hit of freedom and 
 desire.',
         ]);

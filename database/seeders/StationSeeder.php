@@ -26,7 +26,7 @@ class StationSeeder extends Seeder
         ]);
 
         Station::create([
-            'name' => 'New Icons, <br> Now in Berry Crush',
+            'name' => 'Two Icons, <br> Now in Berry Crush',
             'description' => 'From the floral fruity of LIBRE Berry Crush to juicy shine of YSL LOVESHINE Berry Crush, indulge in a double hit of freedom and 
 desire.',
         ]);

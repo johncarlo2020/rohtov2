@@ -69,7 +69,7 @@
 
 <body class="antialiased welcome-page" style="background-image:url('{{ asset('images/brand/landing_bg.webp') }}');">
 
-    <div class="container-fluid main-content with-scroll px-5 py-4">
+    <div class="container-fluid main-content with-scroll py-4 px-0">
         <div class="top-container">
             <!-- Branding (top area) -->
             <div class="row flex-grow-1">
@@ -78,12 +78,16 @@
                 </div>
             </div>
         </div>
+                <div id="banner" class="col-12 d-flex justify-content-center p-0 animate-entry">
+                    <img class="discover_img w-100" src="{{ asset('images/brand/discover.webp') }}"
+                        alt="" />
+                </div>
         <div class="bottom-container">
             <!-- Bottom CTA -->
             <div class="row mb-5">
                 <div class="col-12 text-center">
                     <div class="d-block  mb-2">
-                        <div class="colanimate-entry delay-2 btn-wrapperx">
+                        <div class="colanimate-entry delay-2 btn-wrapperx px-5 mt-4">
                             <a href="{{ route('register') }}" class="custom-btn custom-btn-primary pulse-slow">
                                 JOIN NOW
                             </a>

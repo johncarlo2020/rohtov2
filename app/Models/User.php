@@ -13,6 +13,8 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
+    public const PROTECTED_ADMIN_EMAIL = 'admin@gmail.com';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -47,5 +49,10 @@ class User extends Authenticatable
     public function stationUser()
     {
         return $this->hasMany(StationUser::class);
+    }
+
+    public function isProtectedAdmin(): bool
+    {
+        return $this->email === self::PROTECTED_ADMIN_EMAIL;
     }
 }

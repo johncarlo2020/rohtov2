@@ -141,8 +141,10 @@
                             @endforeach
 
                             <td class="button-delete">
+                                @if (! $user->isProtectedAdmin())
                                 <button class="btn btn-danger btn-sm delete-user-btn" data-user-id="{{ $user->id }}"
                                     data-user-name="{{ $user->fname }} {{ $user->lname }}">Delete</button>
+                                @endif
                             </td>
 
                         </tr>
@@ -324,6 +326,31 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var toastEl = document.getElementById('successToast');
+        if (toastEl) {
+            var toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+            toast.show();
+        }
+    });
+</script>
+@endif
+
+@if(session('error'))
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;">
+    <div id="errorToast" class="toast align-items-center bg-danger text-white border-0 fade show" role="alert"
+        aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+        <div class="d-flex">
+            <div class="toast-body d-flex align-items-center">
+                <i class="fa fa-exclamation-circle me-2"></i>
+                {{ session('error') }}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var toastEl = document.getElementById('errorToast');
         if (toastEl) {
             var toast = new bootstrap.Toast(toastEl, { delay: 3000 });
             toast.show();

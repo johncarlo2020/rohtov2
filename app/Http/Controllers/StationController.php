@@ -409,6 +409,10 @@ class StationController extends Controller
     {
         $user = User::findOrFail($id);
 
+        if ($user->isProtectedAdmin()) {
+            return redirect()->back()->with('error', 'This user cannot be deleted.');
+        }
+
         // Delete related station user entries
         $user->stationUser()->delete(); // ✅ Correct for hasMany
 

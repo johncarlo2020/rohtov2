@@ -58,7 +58,7 @@ desire.',
             'number' => '0123456789',
             'email' => 'admin@gmail.com',
             'country' => 'Malaysia',
-            'password' => Hash::make('WowsomeYsl2025'),
+            'password' => Hash::make('WowsomeYsl2026'),
         ]);
 
         $user->assignRole('admin');

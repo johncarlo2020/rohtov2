@@ -131,7 +131,7 @@
                             <th>Number</th>
                             <th>Country</th>
                             @foreach ($data['stations'] as $station)
-                            <th>{{ $station['name'] }}</th>
+                            <th>{!! strtoupper($station['name']) !!}</th>
                             @endforeach
                             <th>Timestamp</th>
                             <th>Action</th>

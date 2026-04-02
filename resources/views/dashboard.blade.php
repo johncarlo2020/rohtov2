@@ -13,11 +13,6 @@
             transition: transform 0.25s ease, box-shadow 0.25s ease;
         }
 
-        .station-card:hover {
-            animation-play-state: paused; /* pause idle float */
-            transform: translateY(-10px) scale(1.03);
-        }
-
         .station-image {
             width: 100%;
             display: block;

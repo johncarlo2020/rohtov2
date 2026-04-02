@@ -210,7 +210,7 @@
                     error_image: '{{ asset('images/error.png') }}'
                 },
                 station_id: {{ $station->id }},
-                station_name: '{{ $station->name }}'
+                station_name: `{!! strtoupper($station->name) !!}`
             };
 
             window.gotoStation = function(id,) {

@@ -1,6 +1,27 @@
 <x-app-layout>
 <style>
-    #start-scanner {
+    .option-btn
+    {   
+        width: 100%;
+        border-color: #ffffff;
+        border-radius: 5px;
+        background-color: #ffffff;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+        cursor: pointer;
+
+        /* Subtle elevation */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+
+        /* Animations */
+        animation: scannerIdle 2.8s ease-in-out infinite;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    #start-scanner,#start-quiz,#perfume-next-btn {
         width: 50%;
         border-color: #ffffff;
         border-radius: 5px;
@@ -165,14 +186,9 @@
                 </p>
 
                 <!-- actions -->
-                @if (!$user && $station->id != 7)
-                    <button id="start-scanner"
-                            class="text-dark custom-btn-secondary px-3 py-2">
-                        SCAN QR CODE TO PROCEED
-                    </button>
-                @endif
-
                 @if ($user)
+
+                    <!-- ✅ Already checked in -->
                     <div class="checkedInContainer w-50 mx-auto">
                         <p class="text-center mb-2">Checked In</p>
                         <a href="{{ route('dashboard') }}"
@@ -180,7 +196,32 @@
                             BACK
                         </a>
                     </div>
+
+                @elseif ($station->id == 1)
+
+                    <!-- ✅ Station 1 → Quiz -->
+                    <button id="start-quiz"
+                            class="text-dark custom-btn-secondary px-3 py-2">
+                        START THE QUIZ
+                    </button>
+
+                @else
+
+                    <!-- ✅ Other stations → Scanner -->
+                    <button id="start-scanner"
+                            class="text-dark custom-btn-secondary px-3 py-2">
+                        SCAN QR CODE TO PROCEED
+                    </button>
+
                 @endif
+            </div>
+
+            <div id="quizContainer" class="d-none">
+                <!-- Quiz content will be injected here by JavaScript -->
+                <div id="quiz-container" style="display:none; width:100%; max-width:360px;">
+                    <h3 id="question-text" class="text-center mb-3"></h3>
+                    <div id="options"></div>
+                </div>
             </div>
 
             <!-- Scanner -->
@@ -203,6 +244,7 @@
             window.stationConfig = {
                 urls: {
                     process_qr_code: '{{ route('process_qr_code') }}',
+                    submit_quiz: '{{ route('submit.quiz') }}',
                     congrats: '{{ route('congrats') }}'
                 },
                 assets: {
@@ -210,7 +252,9 @@
                     error_image: '{{ asset('images/error.png') }}'
                 },
                 station_id: {{ $station->id }},
-                station_name: `{!! strtoupper($station->name) !!}`
+                station_name: `{!! strtoupper($station->name) !!}`,
+                perfumes: @json($perfumes),
+                asset_base: "{{ asset('') }}"
             };
 
             window.gotoStation = function(id,) {

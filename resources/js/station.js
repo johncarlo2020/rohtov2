@@ -2,16 +2,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const mainContent = document.getElementById('mainContent');
     const scannerContainer = document.getElementById('scannerContainer');
     const startScannerBtn = document.getElementById('start-scanner');
+    const startQuizBtn = document.getElementById('start-quiz');
+    const quizContainer = document.getElementById('quizContainer');
     const forceQrElement = document.getElementById('forceQr');
 
-    // $('#scanCompleteModal').modal('show'); for testing purposes don't remove
-
-    if (!startScannerBtn) return; // Guard against running on pages without the button
-
-    let count = 0;
-    let lastClick = 0;
-
-    // Access config passed from Blade
+        // Access config passed from Blade
     const stationConfig = window.stationConfig || {};
     const processQrCodeUrl = stationConfig.urls.process_qr_code;
     const congratsUrl = stationConfig.urls.congrats;
@@ -21,30 +16,259 @@ document.addEventListener('DOMContentLoaded', function () {
     const stationName = stationConfig.station_name;
     const checkImageUrl = stationConfig.assets.check_image;
     const errorImageUrl = stationConfig.assets.error_image;
+    
+    const perfumes = window.stationConfig.perfumes;
+    const assetBase = window.stationConfig.asset_base;
+    const processQuizUrl = stationConfig.urls.submit_quiz;
 
-    startScannerBtn.addEventListener('click', function (event) {
-        event.preventDefault();
+    let quizStartTime = null;
 
+    // $('#scanCompleteModal').modal('show'); for testing purposes don't remove
+
+    let currentQuestion = 0;
+    let answers = [];
+
+    const quizData = [
+        {
+            question: "Which word best describes your personal style?",
+            options: [
+                "Bold & sophisticated",
+                "Vibrant & playful",
+                "Romantic & intense",
+                "Natural & radiant",
+                "Edgy & fearless"
+            ]
+        },
+        {
+            question: "What's your ideal summer escape?",
+            options: [
+                "Rooftop bar in the city",
+                "Tropical beach club",
+                "Flower-filled countryside",
+                "Beach getaway",
+                "Music festival"
+            ]
+        },
+        {
+            question: "What's your favourite summer accessory?",
+            options: [
+                "Statement jewelry",
+                "Flower hair clip",
+                "Floral scarf",
+                "Minimalist jewelry",
+                "Sunglasses"
+            ]
+        },
+        {
+            question: "What's your favourite summer activity?",
+            options: [
+                "Dancing the night away",
+                "Rooftop sunset date",
+                "Picnics in the park",
+                "Sunbathing on the beach",
+                "Exploring new places"
+            ]
+        },
+        {
+            question: "Which scent family do you gravitate towards?",
+            options: [
+                "Floral & warm",
+                "Fruity & floral",
+                "Floral & sweet",
+                "Citrus & floral",
+                "Floral & gourmand"
+            ]
+        }
+    ];
+
+    if(startQuizBtn)
+    {
+        startQuizBtn.addEventListener('click', startQuiz);
+    }
+
+    
+
+    function startQuiz() {
         mainContent.classList.add('d-none');
-        scannerContainer.classList.remove('d-none');
+        quizContainer.classList.remove('d-none');
+        document.getElementById("quiz-container").style.display = "block";
+        startQuizBtn.style.display = "none"; // hide button
+        quizStartTime = Date.now();
+        showQuestion();
+    }
 
-        const html5QrCode = new Html5Qrcode("reader");
+    function showQuestion() {
+        const q = quizData[currentQuestion];
 
-        html5QrCode.start(
-            { facingMode: "environment" },
-            { fps: 10, qrbox: 200, aspectRatio: 1.0 },
-            (qrCodeMessage) => {
-                sendMessage(qrCodeMessage);
-                html5QrCode.stop();
-            },
-            (errorMessage) => {
-                // console.log(`QR Code no longer in front of camera.`);
-            }
-        ).catch((err) => {
-            console.log(`Unable to start scanning, error: ${err}`);
+        document.getElementById("question-text").innerText =
+            `Q${currentQuestion + 1}. ${q.question}`;
+
+        const optionsContainer = document.getElementById("options");
+        optionsContainer.innerHTML = "";
+
+        q.options.forEach((option, index) => {
+        const btn = document.createElement("button");
+        btn.innerText = option;
+
+        btn.classList.add("option-btn","p-3","mb-3");
+
+
+        btn.addEventListener('click', () => {
+            selectAnswer(index + 1, option);
+            });
+
+            optionsContainer.appendChild(btn);
         });
+    }
+
+    function selectAnswer(value, text) {
+        answers[currentQuestion] = {
+            value: value, // ✅ number (1–5)
+            text: text    // ✅ display text
+        };
+
+        currentQuestion++;
+
+        if (currentQuestion < quizData.length) {
+            showQuestion();
+        } else {
+            finishQuiz();
+        }
+    }
+
+    // 🔥 Majority logic (your rule)
+    function getPerfumeFromAnswers(answers) {
+        const count = {};
+
+        // count occurrences
+        answers.forEach(ans => {
+            count[ans.value] = (count[ans.value] || 0) + 1;
+        });
+
+        let maxCount = 0;
+        let candidates = [];
+
+        // find max + candidates
+        for (const val in count) {
+            if (count[val] > maxCount) {
+                maxCount = count[val];
+                candidates = [Number(val)];
+            } else if (count[val] === maxCount) {
+                candidates.push(Number(val));
+            }
+        }
+
+        // ✅ no tie → return winner
+        if (candidates.length === 1) {
+            return candidates[0];
+        }
+
+        // 🔥 tie → ALWAYS pick last answer
+        return answers[answers.length - 1].value;
+    }
+
+    function finishQuiz() {
+        const perfumeNumber = getPerfumeFromAnswers(answers);
+        const endTime = Date.now();
+
+        // ✅ time in seconds
+        const timeSpent = Math.floor((endTime - quizStartTime) / 1000);
+
+        console.log("Time Spent:", timeSpent, "seconds");
+
+        const perfumes = window.stationConfig.perfumes;
+        const selectedPerfume = perfumes.find(p => p.id == perfumeNumber);
+        const stationId = window.stationConfig.station_id;
+
+        if (!selectedPerfume) {
+            console.error("Perfume not found");
+            return;
+        }
+
+        console.log("Perfume:", selectedPerfume);
+
+        // ✅ SHOW RESULT UI
+        document.getElementById("quiz-container").innerHTML = `
+            <div class="text-center">
+
+                <h3 class="mb-3 text-title text-center fw-bold">FIND YOUR LIBRE</h3>
+                <p class="mb-4">Your suitable fragrances</p>
+
+                <!-- ✅ YOUR IMAGE FORMAT -->
+                <img class="station-image mb-4"
+                    src="${assetBase}images/perfumes/A${selectedPerfume.id}.webp"
+                    alt="${selectedPerfume.title}">
+
+                <h4 class="mb-4 text-uppercase">${selectedPerfume.title}</h4>
+
+                <button id="perfume-next-btn" class="text-dark custom-btn-secondary px-3 py-2 m-auto">
+                    NEXT
+                </button>
+
+            </div>
+        `;
+        
+
+        // ✅ HANDLE NEXT CLICK (AJAX SAVE)
+        document.getElementById("perfume-next-btn").addEventListener("click", function () {
+
+            $.ajax({
+                url: processQuizUrl,
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                data: {
+                    perfume_id: selectedPerfume.id,
+                    station_id: stationId,
+                    time_spent: timeSpent
+                },
+                success: function () {
+                    console.log("Saved!");
+
+                    // ✅ reload current page
+                    window.location.reload();
+                },
+                error: function (err) {
+                    console.error("Save failed", err);
+                }
+            });
+
+        });
+    }
+
+
+    let count = 0;
+    let lastClick = 0;
+
+
+    if(startScannerBtn) {
+        startScannerBtn.addEventListener('click', function (event) {
+            event.preventDefault();
+
+            mainContent.classList.add('d-none');
+            scannerContainer.classList.remove('d-none');
+
+            const html5QrCode = new Html5Qrcode("reader");
+
+            html5QrCode.start(
+                { facingMode: "environment" },
+                { fps: 10, qrbox: 200, aspectRatio: 1.0 },
+                (qrCodeMessage) => {
+                    sendMessage(qrCodeMessage);
+                    html5QrCode.stop();
+                },
+                (errorMessage) => {
+                    // console.log(`QR Code no longer in front of camera.`);
+                }
+            ).catch((err) => {
+                console.log(`Unable to start scanning, error: ${err}`);
+            });
     });
 
+    }
+
+    
     function sendMessage(message) {
         // Get selected gift ID for station 3
         let selectedGiftId = null;
@@ -90,7 +314,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 $('.status-text').html('Check-in Successful');
                 $('#routeBtn').text('NEXT');
 
-                if (lastCharacter == 4 ) {
+                if (lastCharacter == 5 ) {
                     document.getElementById('routeBtn').setAttribute('href', congratsUrl);
                 }
                 else 
@@ -130,4 +354,5 @@ document.addEventListener('DOMContentLoaded', function () {
             lastClick = now;
         });
     }
+
 });

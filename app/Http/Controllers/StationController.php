@@ -2,21 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Station;
-use App\Models\User;
-use App\Models\StationUser;
-use App\Models\Brand;
-use App\Models\Vote;
-use App\Models\Gifts;
 use App\Events\babyEvent;
-use DB;
+use App\Helpers\GlobalHelper;
+use App\Models\Brand;
+use App\Models\Gifts;
+use App\Models\Perfume;
+use App\Models\Station;
+use App\Models\StationUser;
+use App\Models\User;
+use App\Models\UserPerfume;
+use App\Models\Vote;
+use App\Providers\RouteServiceProvider;
 use Auth;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Storage;
+use DB;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-use App\Providers\RouteServiceProvider;
-use App\Helpers\GlobalHelper;
+use Illuminate\Support\Facades\Storage;
 
 class StationController extends Controller
 {
@@ -156,6 +158,9 @@ class StationController extends Controller
         $user = StationUser::where('user_id', auth()->id())
             ->where('station_id', $station->id)
             ->exists();
+
+        $perfumes = Perfume::select('id', 'title')->get();
+        
         if ($station->id == 9 && $user == true) {
             return view('congrats');
         }
@@ -164,7 +169,7 @@ class StationController extends Controller
             return view('station', compact('station', 'user'));
         }
 
-         return view('station', compact('station', 'user'));
+         return view('station', compact('station', 'user', 'perfumes'));
 
     }
 
@@ -324,7 +329,7 @@ class StationController extends Controller
 
         // Determine if stations 1-4 are all completed
 
-        $canAccessStation4 = $stations->filter(fn($s) => $s->id <= 3)->every(fn($s) => $s->status == true);
+        $canAccessStation5 = $stations->filter(fn($s) => $s->id <= 5)->every(fn($s) => $s->status == true);
 
         $isRedeemed = \App\Models\UserGift::where('user_id', $userId)
             ->where('is_redeemed', true)
@@ -335,7 +340,7 @@ class StationController extends Controller
         });
 
         if ($stationDone < 4) {
-             return view('dashboard', compact('stations', 'stationDone', 'canAccessStation4', 'completedStationIds', 'nextStation','isRedeemed'));
+             return view('dashboard', compact('stations', 'stationDone', 'canAccessStation5', 'completedStationIds', 'nextStation','isRedeemed'));
         } else {
             return redirect()->route('congrats');
         }
@@ -951,6 +956,48 @@ class StationController extends Controller
         $code = $request->code;
         $check = User::where('number', $code)->exists();
         return $check;
+    }
+
+    public function submitQuiz(Request $request)
+    {
+
+        $user = auth()->user();
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+    
+        $request->validate([
+            'perfume_id' => 'required|exists:perfumes,id',
+            'station_id' => 'required|exists:stations,id',
+            'time_spent' => 'required|integer|min:0'    
+        ]);
+
+        // ✅ Save user perfume (only 1 per user)
+        UserPerfume::updateOrCreate(
+            ['user_id' => $user->id],
+            ['perfume_id' => $request->perfume_id]
+        );
+
+        // ✅ Mark station as completed
+        StationUser::updateOrCreate(
+            [
+                'user_id' => $user->id,
+                'station_id' => $request->station_id,
+                'time_spent' => $request->time_spent,
+            ],
+            [
+                'status' => true
+            ]
+        );
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Quiz submitted successfully'
+        ]);
     }
 }
 

@@ -10,7 +10,7 @@ class StationUser extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'station_id'
+        'user_id', 'station_id','time_spent'
     ];
 
     public function station()

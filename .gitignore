@@ -20,3 +20,4 @@ public/images/character.zip
 composer.lock
 package-lock.json
 .DS_Store
+.env.example

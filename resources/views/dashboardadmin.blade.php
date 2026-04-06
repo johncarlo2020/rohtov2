@@ -275,7 +275,7 @@
         var labels = [];
         var data = [];
         var permissionName = "{{ $permission }}";
-        var data = @json($data['perfumeStats']);
+        var datax = @json($data['perfumeStats']);
 
         var chart = @json($data['usersDaily']);
         console.log(chart);
@@ -414,7 +414,7 @@
             },
             series: [{
                 name: 'Perfumes',
-                data: data
+                data: datax
             }]
         });
 

@@ -12,6 +12,7 @@
         justify-content: center;
         font-weight: 600;
         cursor: pointer;
+        color: #000000;
 
         /* Subtle elevation */
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
@@ -219,8 +220,8 @@
             <div id="quizContainer" class="d-none">
                 <!-- Quiz content will be injected here by JavaScript -->
                 <div id="quiz-container" style="display:none; width:100%; max-width:360px;">
-                    <h3 id="question-title" class="mt-4 mb-2 text-center"></h3>
-                    <h3 id="question-text" class="mb-5 text-uppercase text-center"></h3>
+                    <h3 id="question-title" class="mt-4 mb-2 text-center fw-bold"></h3>
+                    <h3 id="question-text" class="mb-5 text-uppercase text-center fw-bold"></h3>
                     <div id="options"></div>
                 </div>
             </div>

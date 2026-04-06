@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     src="${assetBase}images/perfumes/A${selectedPerfume.id}.webp"
                     alt="${selectedPerfume.title}">
 
-                <h4 class="mb-4 text-uppercase">${selectedPerfume.title}</h4>
+                <h4 class="mb-4 text-uppercase ">${selectedPerfume.title}</h4>
 
                 <button id="perfume-next-btn" class="text-dark custom-btn-secondary px-3 py-2 m-auto">
                     NEXT

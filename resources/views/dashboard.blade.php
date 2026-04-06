@@ -151,8 +151,8 @@
 
                 <!-- Text -->
                 <div class="station-text">
-                    <span class="station-number">{{ $station->id }}.</span>
-                    <span class="station-title">
+                    <span class="station-number fw-bold">{{ $station->id }}.</span>
+                    <span class="station-title fw-bold">
                         {!! strtoupper($station->name) !!}
                     </span>
                 </div>

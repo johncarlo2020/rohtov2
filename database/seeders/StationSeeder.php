@@ -39,7 +39,7 @@ desire.',
 
         Station::create([
             'name' => 'Your Libre, <br>Your Freedom',
-            'description' => 'Strike a pose, post & hashtag #YSLBeautySG',
+            'description' => 'Strike a pose, post & hashtag #YSLBeautyMY',
         ]);
 
         Station::create([

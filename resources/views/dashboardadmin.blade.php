@@ -136,6 +136,17 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-lg-6 mb-lg-3 mb-3">
+            <div class="card z-index-2 h-100">
+                <div class="card-body card-with-filter p-3">
+                    <figure class="highcharts-figure">
+                        <div id="container3"></div>
+                    </figure>
+                </div>
+            </div>
+        </div>
+
     </div>
     <div class="row mt-1">
         <div class="col-lg-6 mb-lg-3 mb-4">
@@ -215,12 +226,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas2image/0.1.0/canvas2image.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/modules/series-label.js"></script>
-    <script src="https://code.highcharts.com/modules/exporting.js"></script>
-    <script src="https://code.highcharts.com/modules/export-data.js"></script>
-    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    {{-- <script src="https://code.highcharts.com/highcharts.js" crossorigin="anonymous"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js" crossorigin="anonymous"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js" crossorigin="anonymous"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js" crossorigin="anonymous"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script> --}}
 
+    <script src="https://cdn.jsdelivr.net/npm/highcharts@11/highcharts.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/highcharts@11/modules/exporting.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/highcharts@11/modules/export-data.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/highcharts@11/modules/series-label.js"></script>
     <style>
         .highcharts-data-table table {
             border-collapse: collapse;
@@ -260,6 +275,7 @@
         var labels = [];
         var data = [];
         var permissionName = "{{ $permission }}";
+        var data = @json($data['perfumeStats']);
 
         var chart = @json($data['usersDaily']);
         console.log(chart);
@@ -366,6 +382,40 @@
                     }
                 }]
             }
+        });
+
+        var high3 = Highcharts.chart('container3', {
+            chart: {
+                type: 'column',
+                height: 400
+            },
+            title: {
+                text: 'Perfume Data',
+                align: 'left'
+            },
+            xAxis: {
+                type: 'category',
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Number of Users'
+                }
+            },
+            tooltip: {
+                pointFormat: '<b>{point.y} users</b>'
+            },
+            plotOptions: {
+                column: {
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            series: [{
+                name: 'Perfumes',
+                data: data
+            }]
         });
 
         var high2 = Highcharts.chart('container2', {

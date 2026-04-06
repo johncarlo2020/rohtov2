@@ -15,9 +15,9 @@ class PerfumeSeeder extends Seeder
     public function run()
     {
         $perfumes = [
-            ['title' => 'Libre EDP'],
+            ['title' => 'Libre Eau de Parfum'],
             ['title' => 'Libre Berry Crush'],
-            ['title' => 'Libre F&F'],
+            ['title' => 'Libre Flower & Flames'],
             ['title' => "Libre L'eau Nu"],
             ['title' => 'Libre EDP Intense'],
         ];

@@ -100,8 +100,8 @@ document.addEventListener('DOMContentLoaded', function () {
     function showQuestion() {
         const q = quizData[currentQuestion];
 
-        document.getElementById("question-text").innerText =
-            `Q${currentQuestion + 1}. ${q.question}`;
+        document.getElementById("question-title").innerText = `Q${currentQuestion + 1}`;
+        document.getElementById("question-text").innerText = q.question;
 
         const optionsContainer = document.getElementById("options");
         optionsContainer.innerHTML = "";
@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const btn = document.createElement("button");
         btn.innerText = option;
 
-        btn.classList.add("option-btn","p-3","mb-3");
+        btn.classList.add("option-btn","p-3","mb-4","text-uppercase");
 
 
         btn.addEventListener('click', () => {
@@ -189,10 +189,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // ✅ SHOW RESULT UI
         document.getElementById("quiz-container").innerHTML = `
-            <div class="text-center">
+            <div class="text-center mt-4">
 
                 <h3 class="mb-3 text-title text-center fw-bold">FIND YOUR LIBRE</h3>
-                <p class="mb-4">Your suitable fragrances</p>
 
                 <!-- ✅ YOUR IMAGE FORMAT -->
                 <img class="station-image mb-4"

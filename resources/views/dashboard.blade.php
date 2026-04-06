@@ -70,7 +70,6 @@
 
     .station-number {
         font-weight: 700;
-        margin-right: 6px;
         font-size: 14px;
     }
 
@@ -110,9 +109,9 @@
                              style="filter:brightness(0);">
 
                         <div class="text-content mt-4 mb-4">
-                            <h5 class="text-dark mb-4">FREEDOM HAS A TASTE</h5>
+                            <h5 class="text-dark mb-4 fw-bold">FREEDOM HAS A TASTE</h5>
                             <p class="text-dark">
-                                Kindly complete Station 1-4 to proceed to <br>
+                                Kindly complete Station 1 - 4 to proceed to <br>
                                 Gift Redemption station
                             </p>
                         </div>

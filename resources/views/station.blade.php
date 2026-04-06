@@ -10,7 +10,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-weight: 900;
+        font-weight: 600;
         cursor: pointer;
 
         /* Subtle elevation */
@@ -182,7 +182,7 @@
 
                 <!-- description -->
                 <p class="text-center px-3">
-                    {{ $station->description }}
+                    {!! $station->description !!}
                 </p>
 
                 <!-- actions -->
@@ -219,7 +219,8 @@
             <div id="quizContainer" class="d-none">
                 <!-- Quiz content will be injected here by JavaScript -->
                 <div id="quiz-container" style="display:none; width:100%; max-width:360px;">
-                    <h3 id="question-text" class="text-center mb-3"></h3>
+                    <h3 id="question-title" class="mt-4 mb-2 text-center"></h3>
+                    <h3 id="question-text" class="mb-5 text-uppercase text-center"></h3>
                     <div id="options"></div>
                 </div>
             </div>

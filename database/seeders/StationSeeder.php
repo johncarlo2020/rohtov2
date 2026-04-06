@@ -22,7 +22,8 @@ class StationSeeder extends Seeder
     {
         Station::create([
             'name' => 'Find your Libre',
-            'description' => 'Strike a pose, post & hashtag #YSLBeautySG',
+            'description' => 'Discover the LIBRE fragrance that perfectly embodies your unique personality and style.​ </br></br>
+            Complete this quiz to unlock your signature scent and embrace the freedom to be you.',
         ]);
 
         Station::create([
@@ -37,7 +38,7 @@ desire.',
         ]);
 
         Station::create([
-            'name' => 'Your Libre, <br/>Your Freedom',
+            'name' => 'Your Libre, <br>Your Freedom',
             'description' => 'Strike a pose, post & hashtag #YSLBeautySG',
         ]);
 

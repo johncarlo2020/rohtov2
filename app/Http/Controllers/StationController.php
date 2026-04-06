@@ -519,6 +519,16 @@ class StationController extends Controller
         $data['usersDaily'] = $userCountsArray;
         // $completed = StationUser::w
 
+        $data['perfumeStats'] = Perfume::withCount('userPerfumes')
+            ->get()
+            ->map(function ($perfume) {
+                return [
+                    'name' => $perfume->title,
+                    'y' => $perfume->user_perfumes_count,
+                ];
+            });
+
+
         $averageTimespentByStation = StationUser::select('station_id', \DB::raw('AVG(time_spent) as average_timespent'))->groupBy('station_id')->get()->keyBy('station_id');
 
         $stations = Station::pluck('name', 'id');

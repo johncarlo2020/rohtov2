@@ -107,14 +107,28 @@ document.addEventListener('DOMContentLoaded', function () {
         optionsContainer.innerHTML = "";
 
         q.options.forEach((option, index) => {
-        const btn = document.createElement("button");
-        btn.innerText = option;
+            const btn = document.createElement("button");
+            btn.innerText = option;
 
-        btn.classList.add("option-btn","p-3","mb-4","text-uppercase");
+            btn.classList.add("option-btn", "p-3", "mb-4", "text-uppercase");
 
+            btn.addEventListener('click', () => {
 
-        btn.addEventListener('click', () => {
-            selectAnswer(index + 1, option);
+                // disable + dim all buttons
+                document.querySelectorAll('.option-btn').forEach(b => {
+                    b.disabled = true;
+                    b.classList.remove('selected');
+                    b.classList.add('dimmed');
+                });
+
+                // highlight selected
+                btn.classList.remove('dimmed');
+                btn.classList.add('selected', 'animate');
+
+                // delay before next question
+                setTimeout(() => {
+                    selectAnswer(index + 1, option);
+                }, 200);
             });
 
             optionsContainer.appendChild(btn);
@@ -187,13 +201,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
         console.log("Perfume:", selectedPerfume);
 
-        // ✅ SHOW RESULT UI
         document.getElementById("quiz-container").innerHTML = `
             <div class="text-center mt-4">
 
                 <h3 class="mb-3 text-title text-center fw-bold">FIND YOUR LIBRE</h3>
 
-                <!-- ✅ YOUR IMAGE FORMAT -->
                 <img class="station-image mb-4"
                     src="${assetBase}images/perfumes/A${selectedPerfume.id}.webp"
                     alt="${selectedPerfume.title}">
@@ -208,7 +220,6 @@ document.addEventListener('DOMContentLoaded', function () {
         `;
         
 
-        // ✅ HANDLE NEXT CLICK (AJAX SAVE)
         document.getElementById("perfume-next-btn").addEventListener("click", function () {
 
             $.ajax({
@@ -224,9 +235,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 success: function () {
                     console.log("Saved!");
-
-                    // ✅ reload current page
-                    window.location.reload();
+                    window.location.href = dashboardUrl;
                 },
                 error: function (err) {
                     console.error("Save failed", err);

@@ -22,6 +22,37 @@
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
+    /* hover */
+.option-btn:hover {
+    background: #f5f5f5;
+}
+
+/* selected (pink highlight) */
+.option-btn.selected {
+    background: linear-gradient(135deg, #deb4b4, #deb4b4);
+    border: #000000;
+    color: white;
+    transform: scale(1.05);
+}
+
+/* dimmed (other options) */
+.option-btn.dimmed {
+    opacity: 0.4;
+    filter: grayscale(40%);
+    transform: scale(0.98);
+}
+
+/* animation */
+@keyframes pinkFlash {
+    0% { background-color: #deb4b4; }
+    50% { background-color: #deb4b4; }
+    100% { background-color: #deb4b4; }
+}
+
+.option-btn.animate {
+    animation: pinkFlash 0.4s ease;
+}
+
     #start-scanner,#start-quiz,#perfume-next-btn {
         width: 50%;
         border-color: #ffffff;
@@ -247,7 +278,8 @@
                 urls: {
                     process_qr_code: '{{ route('process_qr_code') }}',
                     submit_quiz: '{{ route('submit.quiz') }}',
-                    congrats: '{{ route('congrats') }}'
+                    congrats: '{{ route('congrats') }}',
+                    dashboard: '{{ route('dashboard') }}'
                 },
                 assets: {
                     check_image: '{{ asset('images/check.png') }}',

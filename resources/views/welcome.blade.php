@@ -74,12 +74,16 @@
             <!-- Branding (top area) -->
             <div class="row flex-grow-1">
                 <div class="col-12 animate-entry mb-4">
-                    @include('components.branding')
+                    <div>
+                        <div class="branding pulse-slow">
+                            <img onclick="window.location.href='{{ route('dashboard') }}'" class="logo" src="{{ asset('images/brand/logo_white.webp') }}" alt="Brand Logo" />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-                <div id="banner" class="col-12 d-flex justify-content-center p-0 animate-entry">
-                    <img class="discover_img w-100" src="{{ asset('images/brand/discover.webp') }}"
+                <div id="banner" class="col-10 mx-auto d-flex justify-content-center animate-entry">
+                    <img class="discover_img w-100" src="{{ asset('images/brand/masthead.webp') }}"
                         alt="" />
                 </div>
         <div class="bottom-container">

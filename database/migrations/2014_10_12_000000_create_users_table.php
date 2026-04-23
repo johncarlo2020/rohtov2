@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('code')->unique()->nullable();
             $table->string('password');
             $table->string('dob')->nullable();
-            $table->string('number');
-            $table->string('country');
+            $table->string('number')->nullable();
+            $table->string('country')->nullable();
             $table->string('email')->unique()->nullable();
             $table->timestamp('last_login_at')->nullable();
             $table->timestamp('email_verified_at')->nullable();

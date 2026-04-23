@@ -7,6 +7,7 @@ use App\Helpers\GlobalHelper;
 use App\Models\Brand;
 use App\Models\Gifts;
 use App\Models\Perfume;
+use App\Models\Question;
 use App\Models\Station;
 use App\Models\StationUser;
 use App\Models\User;
@@ -23,135 +24,10 @@ use Illuminate\Support\Facades\Storage;
 class StationController extends Controller
 {
 
-    public function uploadBaby(Request $request)
-    {
-        $request->validate([
-            'pledge_image' => 'required|image|max:2048', // max 2MB
-            'pledge_text' => 'string|max:255',
-            'charname' => 'string|max:255',
-            'pledge_type' => 'required|string|in:text,coral',
-        ]);
-
-        $user = Auth::user();
-
-        // Store the uploaded image in `public/babies`
-        $path = $request->file('pledge_image')->store('public/babies');
-
-        // Convert path to URL or relative path for saving
-        $publicPath = Storage::url($path); // returns `/storage/babies/filename.gif`
-
-        try {
-            DB::beginTransaction();
 
 
-            $lastStation = StationUser::where('user_id', auth()->id())->orderBy('id', 'desc')->first();
-
-            if (empty($lastStation)) {
-                $lastLoginTime = Auth::user()->last_login_at;
-                $currentDateTime = Carbon::now();
-                $timeSpent = $currentDateTime->diff($lastLoginTime);
-                $minutesSpent = $timeSpent->i; // Minutes spent
-                $secondsDifference = $timeSpent->s; // Seconds
-
-                // Convert minutes to seconds
-                $secondsSpent = $minutesSpent * 60 + $secondsDifference;
-            } else {
-                $lastLoginTime = $lastStation->created_at;
-                $currentDateTime = Carbon::now();
-                $timeSpent = $currentDateTime->diff($lastLoginTime);
-                $minutesSpent = $timeSpent->i; // Minutes spent
-                $secondsDifference = $timeSpent->s; // Seconds
-                // Convert minutes to seconds
-                $secondsSpent = $minutesSpent * 60 + $secondsDifference;
-            }
-
-            $stationUser = new StationUser();
-            $stationUser->user_id = auth()->id();
-            $stationUser->station_id = 4;
-            $stationUser->time_spent = $secondsSpent;
-            $stationUser->save();
-
-            $user->pledge_image = $publicPath;
-            $user->pledge_text = $request->pledge_text;
-            if ($request->has('charname')) {
-                $user->charname = $request->input('charname');
-            }
-
-            $user->save();
-        // Fire the event
-        broadcast(new babyEvent($pueblicPath, $user->pledge_text,$request->pledge_type,$user->charname))->toOthers();
 
 
-            DB::commit();
-            // Success response
-            return response()->json(['message' => 'Station ID updated successfully'], 200);
-        } catch (\Exception $e) {
-            DB::rollback();
-
-            // Handle the error, log it, or return an appropriate response
-            return response()->json(['error' => $e], 500);
-        }
-
-        // Save to user
-
-
-    }
-
-    public function uploadBabyIpad(Request $request)
-    {
-        $request->validate([
-            'pledge_image' => 'required|image|max:2048', // max 2MB
-            'pledge_text' => 'string|max:255',
-            'charname' => 'string|max:255',
-            'pledge_type' => 'required|string|in:text,coral',
-        ]);
-
-
-        // Store the uploaded image in `public/babies`
-        $path = $request->file('pledge_image')->store('public/babies');
-
-        // Convert path to URL or relative path for saving
-        $publicPath = Storage::url($path); // returns `/storage/babies/filename.gif`
-
-        //check if image is uploaded
-        if (!$publicPath) {
-            return response()->json(['error' => 'Image upload failed.'], 500);
-        }
-
-        // Get charname from request or use default
-        $charName = $request->charname ?? 'Baby';
-
-        // Fire the event (use correct fields)
-        broadcast(new babyEvent($publicPath, $request->pledge_text, $request->pledge_type, $charName))->toOthers();
-
-        // Return success response
-        return response()->json([
-            'success' => true,
-            'message' => 'Baby uploaded successfully',
-            'imgPath' => $publicPath,
-            'name' => $charName
-        ]);
-    }
-
-    function workshopCongrats() {
-        return view('workshopCongrats');
-    }
-
-    // public function index(Station $station)
-    // {
-    //     $user = StationUser::where('user_id', auth()->id())
-    //         ->where('station_id', $station->id)
-    //         ->exists();
-
-    //     $choices = Station::with('answers', 'correctAnswer')
-    //         ->where('id', $station->id)
-    //         ->first();
-
-    //     $gifts = \App\Models\Gifts::get();
-
-    //      return view('station', compact('station', 'user', 'gifts','choices'));
-
-    // }
 
     public function index(Station $station)
     {
@@ -173,149 +49,78 @@ class StationController extends Controller
 
     }
 
-
-    public function extension(Station $station)
+    public function developer(Request $request)
     {
-        return view('extension');
+        $user = StationUser::where('user_id', auth()->id())
+            ->where('station_id', $request->id)
+            ->exists();
+        $station = Station::findOrFail($request->developer);
+        $developer = auth()->user()->developers->firstWhere('id', request()->route('developer'));
+        return view('developer', compact('station', 'user','developer'));
     }
 
-    public function congratsVote()
+    public function quiz(Request $request)
     {
-        return view('congratsVote');
-    }
+        
 
-    public function brand(Station $station)
-    {
-        $brands = Brand::get();
-        return view('brand', compact('brands'));
-    }
-    public function puzzle(Station $station)
-    {
-        $user = User::with('stationUser')->where('id', auth()->id())->first();
-        // dd($user->stationUser->count());
+        $user = StationUser::where('user_id', auth()->id())
+            ->where('station_id', $request->id)
+            ->exists();
+        $station = Station::findOrFail($request->developer);
+        
+        // ✅ developer from route (clean)
+        $developer = auth()->user()->developers->firstWhere('id', request()->route('developer'));
+        $question = Question::where('questions.developer_id', $developer->id)
 
-        $stationDone = $user->stationUser->count();
-        $stations = Station::get();
+        // ❌ exclude already answered by THIS user
+        ->whereNotIn('questions.id', function ($q) use ($user) {
+            $q->select('user_question.question_id')
+            ->from('user_question')
+            ->where('user_question.user_id', auth()->id());
+        })
 
-        // Loop through each station and append a flag indicating if the user has it
-        foreach ($stations as $station) {
-            $userHasStation = $user
-                ->StationUser()
-                ->where('station_id', $station->id)
-                ->exists();
-            $station->status = $userHasStation;
+        // 🧠 join for usage count
+        ->leftJoin('user_question', 'questions.id', '=', 'user_question.question_id')
+
+        // 📊 select + count
+        ->select('questions.*', DB::raw('COUNT(user_question.id) as usage_count'))
+
+        // ⚠️ group properly (important for MySQL strict mode)
+        ->groupBy(
+            'questions.id',
+            'questions.developer_id',
+            'questions.question',
+            'questions.created_at',
+            'questions.updated_at'
+        )
+
+        // 🎯 least used first
+        ->orderBy('usage_count', 'asc')
+
+        ->first();
+
+        // ⚠️ fallback if all answered
+        if (!$question) {
+            $question = Question::where('developer_id', $developer->id)
+                ->inRandomOrder()
+                ->first();
         }
 
-        $userId = Auth::id();
-
-        $required = DB::table('stations')
-            ->leftJoin('station_users', function ($join) use ($userId) {
-                $join->on('stations.id', '=', 'station_users.station_id')->where('station_users.user_id', '=', $userId);
-            })
-            ->select('stations.id as station_id', 'stations.name as station_name', DB::raw('IF(station_users.station_id IS NULL, false, true) as is_gotten'))
-            ->distinct()
-            ->orderByRaw('is_gotten DESC')
-            ->where('required', 1)
-            ->get();
-        $puzzleRequired = DB::table('stations')
-            ->leftJoin('station_users', function ($join) use ($userId) {
-                $join->on('stations.id', '=', 'station_users.station_id')->where('station_users.user_id', '=', $userId);
-            })
-            ->select('stations.id as station_id', 'stations.name as station_name', DB::raw('IF(station_users.station_id IS NULL, false, true) as is_gotten'))
-            ->distinct()
-            ->where('required', 1)
-            ->orderBy('station_id', 'asc')
-            ->get();
-        // dd($required);
-        $notRequired = DB::table('stations')
-            ->leftJoin('station_users', function ($join) use ($userId) {
-                $join->on('stations.id', '=', 'station_users.station_id')->where('station_users.user_id', '=', $userId);
-            })
-            ->select('stations.id as station_id', 'stations.name as station_name', DB::raw('IF(station_users.station_id IS NULL, false, true) as is_gotten'))
-            ->where('stations.required', 0) // Prioritize is_gotten=true, then order by station_id
-            ->orderByRaw('is_gotten DESC')
-            ->limit(2)
-            ->get();
-        $puzzleNotRequired = DB::table('stations')
-            ->leftJoin('station_users', function ($join) use ($userId) {
-                $join->on('stations.id', '=', 'station_users.station_id')->where('station_users.user_id', '=', $userId);
-            })
-            ->select('stations.id as station_id', 'stations.name as station_name', DB::raw('IF(station_users.station_id IS NULL, false, true) as is_gotten'))
-            ->where('stations.required', 0)
-            ->orderByRaw('is_gotten DESC, station_id ASC') // Prioritize is_gotten=true, then order by station_id
-            ->limit(2)
-            ->get();
-
-        $giftRequired = DB::table('stations')
-            ->leftJoin('station_users', function ($join) use ($userId) {
-                $join->on('stations.id', '=', 'station_users.station_id')->where('station_users.user_id', '=', $userId);
-            })
-            ->select('stations.id as station_id', 'stations.name as station_name', DB::raw('IF(station_users.station_id IS NULL, false, true) as is_gotten'))
-            ->distinct()
-            ->orderByRaw('is_gotten DESC')
-            ->where('required', 1)
-            ->having('is_gotten', true)
-            ->get();
-        $giftNotRequired = DB::table('stations')
-            ->leftJoin('station_users', function ($join) use ($userId) {
-                $join->on('stations.id', '=', 'station_users.station_id')->where('station_users.user_id', '=', $userId);
-            })
-            ->select('stations.id as station_id', 'stations.name as station_name', DB::raw('IF(station_users.station_id IS NULL, false, true) as is_gotten'))
-            ->distinct()
-            ->orderByRaw('is_gotten DESC')
-            ->where('required', 0)
-            ->limit(2)
-            ->having('is_gotten', true)
-            ->get();
-        $claim = count($giftRequired) + count($giftNotRequired);
-
-        $nurse = DB::table('stations')
-            ->leftJoin('station_users', function ($join) use ($userId) {
-                $join->on('stations.id', '=', 'station_users.station_id')->where('station_users.user_id', '=', $userId);
-            })
-            ->select('stations.id as station_id', 'stations.name as station_name', 'stations.nurse as station_nurse', DB::raw('IF(station_users.station_id IS NULL, false, true) as is_gotten'))
-            ->distinct()
-            ->orderBy('stations.id', 'asc')
-            ->get();
-
-        return view('puzzle', compact('stations', 'stationDone', 'required', 'notRequired', 'puzzleRequired', 'puzzleNotRequired', 'nurse', 'claim'));
-    }
-
-    public function castVote(Request $request)
-    {
-        $vote = new Vote();
-        $vote->brand_id = $request->brand_id;
-        $vote->save();
-
-        return $vote;
-    }
-
-    public function brands()
-    {
-        $brands = DB::table('brands')->leftJoin('users', 'brands.id', '=', 'users.brand_id')->select('brands.id as brand_id', 'brands.name as brand_name', DB::raw('COUNT(users.id) as count'))->groupBy('brands.id', 'brands.name')->get();
-        // dd($brands);
-        return view('brands', compact('brands'));
-    }
-
-    public function vote()
-    {
-        $brands = Brand::get();
-        // dd($brands);
-        return view('vote', compact('brands'));
-    }
-
-    public function voteData()
-    {
-        $brands = DB::table('brands')->leftJoin('votes', 'brands.id', '=', 'votes.brand_id')->select('brands.id as brand_id', 'brands.name as brand_name', DB::raw('COUNT(votes.id) as count'))->groupBy('brands.id', 'brands.name')->get();
-        //dd($brands);
-        return view('votes', compact('brands'));
+        // 🔀 load + shuffle answers
+        $question->load('answers');
+        $question->answers = $question->answers->shuffle()->values();
+        
+        return view('quiz', compact('station', 'user', 'developer', 'question'));
     }
 
     public function welcome()
     {
         $userId = Auth::id();
 
-        $user = User::with('stationUser')->where('id', $userId)->first();
+        // $user = User::with('stationUser')->where('id', $userId)->first();
+        $user = User::with(['stationUser', 'developers'])
+            ->where('id', $userId)
+            ->first();
 
         $stationDone = $user->stationUser->count();
         $stations = Station::get();
@@ -339,8 +144,12 @@ class StationController extends Controller
             return !$user->stationUser()->where('station_id', $station->id)->exists();
         });
 
+        $canAccessStation3 = auth()->user()->developers->every(function ($developer) {
+            return $developer->pivot->isCompleted == 1;
+        });
+
         if ($stationDone < 4) {
-             return view('dashboard', compact('stations', 'stationDone', 'canAccessStation5', 'completedStationIds', 'nextStation','isRedeemed'));
+             return view('dashboard', compact('stations', 'stationDone', 'canAccessStation5', 'completedStationIds', 'nextStation','isRedeemed', 'canAccessStation3'));
         } else {
             return redirect()->route('congrats');
         }
@@ -794,13 +603,13 @@ class StationController extends Controller
             ->where('station_id', $station->id)
             ->exists();
 
-        $choices = Station::with('answers', 'correctAnswer')
-            ->where('id', $station->id)
-            ->first();
+        // $choices = Station::with('answers', 'correctAnswer')
+        //     ->where('id', $station->id)
+        //     ->first();
 
-        $gifts = \App\Models\Gifts::get();
+        // $gifts = \App\Models\Gifts::get();
 
-         return view('stamping', compact('station', 'user', 'gifts','choices'));
+         return view('stamping', compact('station', 'user'));
 
     }
 

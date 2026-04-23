@@ -137,6 +137,9 @@ Route::group(['middleware' => ['client']], function () {
     Route::get('/referrals', 'App\Http\Controllers\ReferralsController@index')->name('referrals.index');
 
     Route::get('/station/{station}', 'App\Http\Controllers\StationController@index')->name('station');
+    Route::get('/developer/{developer}', 'App\Http\Controllers\StationController@developer')->name('developer');
+    Route::get('/developer/{developer}/quiz', 'App\Http\Controllers\StationController@quiz')->name('developer.quiz');
+
     Route::get('/dashboard', 'App\Http\Controllers\StationController@welcome')->name('dashboard');
     Route::get('/discover', 'App\Http\Controllers\StationController@discover')->name('discover');
     Route::get('/giftselection', 'App\Http\Controllers\StationController@giftSelection')->name('station.giftselection');

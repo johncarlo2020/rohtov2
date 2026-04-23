@@ -155,11 +155,12 @@
                 </div>
             </div>
         </div>
-        <!-- <button
+
+        <button
             class="back-btn animate-entry"
             onclick="window.location.href='{{ route('dashboard') }}'"
             aria-label="Go back"
-        ></button> -->
+        ></button>
         
         <div id="mainContainer">
 
@@ -175,7 +176,7 @@
                 <div class="img-container text-center">
                     <!-- station image -->
                     <img class="station-image w-50 mx-auto my-4"
-                        src="{{ asset('images/station/ST' . $station->id . '.webp') }}"
+                       src="{{ asset('images/developer/DEV' . $station->id . '.webp') }}"   
                         alt="Station Image">
 
                     <!-- description -->
@@ -185,8 +186,7 @@
                 </div>
                 
                 <!-- actions -->
-                @if ($user)
-
+                @if ($developer->pivot->isCompleted)
                     <!-- ✅ Already checked in -->
                     <div class="checkedInContainer w-50 mx-auto">
                         <p class="text-center mb-2">Checked In</p>
@@ -195,31 +195,20 @@
                             BACK
                         </a>
                     </div>
-
-                  
-
-                @elseif ($station->id == 10)
-
-                    <!-- ✅ Station 1 → Quiz -->
-                    <button id="goto-stamping"
-                            class="text-dark custom-btn-secondary px-3 py-2">
-                        I'M THERE
-                    </button>
-
                 @else
 
                     <!-- ✅ Other stations → Scanner -->
-                    {{-- <button id="start-scanner"
+                    <button id="start-scanner"
                             class="text-dark custom-btn-secondary px-3 py-2">
                         SCAN QR CODE TO PROCEED
-                    </button> --}}
+                    </button>
 
-                      <div class="text-content mt-3">
+                      {{-- <div class="text-content mt-3">
                                 <a href="{{ route('station.stamping', $station->id);}}" id="routeBtn"
                                     class="custom-btn w-auto px-5 fw-regular custom-btn-primary text-white">
                                     I'M THERE
                                 </a>
-                            </div>
+                            </div> --}}
 
                 @endif
             </div>

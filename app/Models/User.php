@@ -3,12 +3,14 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Developer;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
-use Carbon\Carbon;
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
@@ -42,7 +44,8 @@ class User extends Authenticatable
         'baby_img',
         'baby_name',
         'charname',
-        'marketing'
+        'marketing',
+        'property_budget'
     ];
     /**
      * The attributes that should be hidden for serialization.
@@ -69,6 +72,20 @@ class User extends Authenticatable
     public function stationUser()
     {
         return $this->hasMany(StationUser::class);
+    }
+
+    public function developers()
+    {
+        return $this->belongsToMany(Developer::class)
+            ->withPivot('isCompleted')
+            ->withTimestamps();
+    }
+
+    public function questions()
+    {
+        return $this->belongsToMany(Question::class)
+            ->withPivot('is_correct')
+            ->withTimestamps();
     }
 
     /**

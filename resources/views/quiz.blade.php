@@ -155,11 +155,12 @@
                 </div>
             </div>
         </div>
-        <!-- <button
+
+        <button
             class="back-btn animate-entry"
             onclick="window.location.href='{{ route('dashboard') }}'"
             aria-label="Go back"
-        ></button> -->
+        ></button>
         
         <div id="mainContainer">
 
@@ -167,7 +168,6 @@
             <div class="branding-container animate-entry px-4">
                 @include('components.branding')
             </div>
-
             <!-- Main content -->
             <div id="mainContent"
                 class="d-flex flex-column align-items-center justify-content-between animate-entry delay-3">
@@ -175,7 +175,7 @@
                 <div class="img-container text-center">
                     <!-- station image -->
                     <img class="station-image w-50 mx-auto my-4"
-                        src="{{ asset('images/station/ST' . $station->id . '.webp') }}"
+                       src="{{ asset('images/developer/DEV' . $station->id . '.webp') }}"   
                         alt="Station Image">
 
                     <!-- description -->
@@ -183,10 +183,20 @@
                         {{ $station->description }}
                     </p>
                 </div>
+
+                @foreach($question->answers as $answer)
+    <button 
+        class="btn btn-outline-primary w-100 mb-2 answer-btn"
+        data-id="{{ $answer->id }}"
+        data-correct="{{ $answer->is_correct }}"
+        data-question="{{ $question->id }}"
+    >
+        {{ $answer->answer }}
+    </button>
+@endforeach
                 
                 <!-- actions -->
-                @if ($user)
-
+                @if ($developer->pivot->isCompleted)
                     <!-- ✅ Already checked in -->
                     <div class="checkedInContainer w-50 mx-auto">
                         <p class="text-center mb-2">Checked In</p>
@@ -195,31 +205,20 @@
                             BACK
                         </a>
                     </div>
-
-                  
-
-                @elseif ($station->id == 10)
-
-                    <!-- ✅ Station 1 → Quiz -->
-                    <button id="goto-stamping"
-                            class="text-dark custom-btn-secondary px-3 py-2">
-                        I'M THERE
-                    </button>
-
                 @else
 
                     <!-- ✅ Other stations → Scanner -->
-                    {{-- <button id="start-scanner"
+                    <button id="start-scanner"
                             class="text-dark custom-btn-secondary px-3 py-2">
                         SCAN QR CODE TO PROCEED
-                    </button> --}}
+                    </button>
 
-                      <div class="text-content mt-3">
+                      {{-- <div class="text-content mt-3">
                                 <a href="{{ route('station.stamping', $station->id);}}" id="routeBtn"
                                     class="custom-btn w-auto px-5 fw-regular custom-btn-primary text-white">
                                     I'M THERE
                                 </a>
-                            </div>
+                            </div> --}}
 
                 @endif
             </div>
@@ -246,6 +245,57 @@
     </div>
     
     @push('scripts')
+    <script>
+let answeredCorrectly = false;
+
+document.querySelectorAll('.answer-btn').forEach(btn => {
+
+    btn.addEventListener('click', function () {
+
+        // 🚫 stop if already correct
+        if (answeredCorrectly) return;
+
+        let isCorrect = this.dataset.correct == "1";
+
+        if (isCorrect) {
+            // ✅ mark correct
+            this.classList.remove('btn-outline-primary');
+            this.classList.add('btn-success');
+
+            // 🎯 highlight correct (optional for all)
+            document.querySelectorAll('.answer-btn').forEach(b => {
+                if (b.dataset.correct == "1") {
+                    b.classList.remove('btn-outline-primary');
+                    b.classList.add('btn-success');
+                }
+                b.disabled = true;
+            });
+
+            answeredCorrectly = true;
+
+            // 🚀 send to backend
+            submitAnswer(this.dataset.question, this.dataset.id, true);
+
+            // ⏱️ go next
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+
+        } else {
+            // ❌ wrong answer → only mark this button
+            this.classList.remove('btn-outline-primary');
+            this.classList.add('btn-danger');
+
+            this.disabled = true; // prevent clicking same wrong again
+
+            // 🚀 send attempt (optional)
+            submitAnswer(this.dataset.question, this.dataset.id, false);
+        }
+
+    });
+
+});
+</script>
         <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
         <script>
             // Pass data from Blade to JavaScript

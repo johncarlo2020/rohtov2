@@ -43,21 +43,23 @@
                             <label for="preferredLocation">Preferred Property Location</label>
                             <div class="col-12 input-group">
                                 
-                                <select id="preferredLocation" class="form-select input-text" multiple name="find" aria-label="Default select example"
-                                    required>
-                                    <option value="" selected disabled>Select 3 preferred property location </option>
+                                <select 
+                                    id="preferredLocation" 
+                                    class="form-select input-text" 
+                                    multiple 
+                                    name="locations[]" 
+                                    required
+                                >
+                                    <option disabled>Select up to 3 locations</option>
 
-                                    <option value="Facebook">Facebook</option>
-                                    <option value="TikTok">TikTok</option>
-                                    <option value="Instagram">Instagram</option>
-                                    <option value="XiaoHongShu (小红书)">
-                                        XiaoHongShu (小红书)
-                                    </option>
-                                    <option value="Walk-in">
-                                        Walk-in
-                                    </option>
+                                    @foreach($locations as $location)
+                                        <option value="{{ $location }}"
+                                            {{ collect(old('locations'))->contains($location) ? 'selected' : '' }}>
+                                            {{ $location }}
+                                        </option>
+                                    @endforeach
+
                                 </select>
-                            </div>
                             <small id="errorMsg" class="text-danger"></small>
                         </div>
 
@@ -65,14 +67,26 @@
                              <label for="">Property Budget</label>
                             <div class="col-12 input-group">
                               
-                                <select class="form-select input-text" name="find" aria-label="Default example"
-                                    required>
-                                    <option value="" selected disabled>Select 1 of property budget </option>
+                                @php
+                                $budgets = [
+                                    'RM1 million and above',
+                                    'RM700K - RM999K',
+                                    'RM500K - RM699K',
+                                    'Below RM500K'
+                                ];
+                                @endphp
 
-                                    <option value="Facebook">RM1 million and above</option>
-                                    <option value="TikTok">RM700K - RM999K</option>
-                                    <option value="Instagram">RM500K - RM699K</option>
-                                    <option value="XiaoHongShu (小红书)">Below RM500K</option>
+                                <select class="form-select input-text" name="property_budget" required>
+                                    <option value="" disabled {{ old('property_budget') ? '' : 'selected' }}>
+                                        Select 1 property budget
+                                    </option>
+
+                                    @foreach($budgets as $budget)
+                                        <option value="{{ $budget }}" 
+                                            {{ old('property_budget') == $budget ? 'selected' : '' }}>
+                                            {{ $budget }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -90,7 +104,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="mb-0 row">
                             <div class="col-12 text-center">
                                 <button id="submitButton" type="submit"
@@ -117,57 +131,55 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const form = document.querySelector("#form");
-        const input = document.querySelector("#number");
+    //     const form = document.querySelector("#form");
+    //     const input = document.querySelector("#number");
 
-        const errorMsg = document.querySelector("#error-msg");
-        const validMsg = document.querySelector("#valid-msg");
+    //     const errorMsg = document.querySelector("#error-msg");
+    //     const validMsg = document.querySelector("#valid-msg");
 
-        // here, the index maps to the error code returned from getValidationError - see readme
-        const errorMap = [
-            "Invalid number",
-            "Invalid country code",
-            "Too short",
-            "Too long",
-            "Invalid number",
-        ];
-        const submitButton = document.querySelector("#submitButton");
-        const iti = window.intlTelInput(input, {
-            initialCountry: "my",
-            hiddenInput: "country",
-            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js", // just for formatting/placeholders etc
-        });
+    //     // here, the index maps to the error code returned from getValidationError - see readme
+    //     const errorMap = [
+    //         "Invalid number",
+    //         "Invalid country code",
+    //         "Too short",
+    //         "Too long",
+    //         "Invalid number",
+    //     ];
+    //     const submitButton = document.querySelector("#submitButton");
+    //     const iti = window.intlTelInput(input, {
+    //         initialCountry: "my",
+    //         hiddenInput: "country",
+    //         utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js", // just for formatting/placeholders etc
+    //     });
 
-        const reset = () => {
-            input.classList.remove("error");
-            errorMsg.innerHTML = "";
-            errorMsg.classList.add("d-none");
-            validMsg.classList.add("d-none");
-        };
+    //     const reset = () => {
+    //         input.classList.remove("error");
+    //         errorMsg.innerHTML = "";
+    //         errorMsg.classList.add("d-none");
+    //         validMsg.classList.add("d-none");
+    //     };
 
-        const showError = (msg) => {
-            input.classList.add("error");
-            errorMsg.innerHTML = msg;
-            errorMsg.classList.remove("d-none");
-        };
+    //     const showError = (msg) => {
+    //         input.classList.add("error");
+    //         errorMsg.innerHTML = msg;
+    //         errorMsg.classList.remove("d-none");
+    //     };
 
-        input.addEventListener("keyup", function () {
-            reset();
-            if (!input.value.trim()) {
-                showError("Required");
-                submitButton.disabled = true;
-            } else if (iti.isValidNumber()) {
-                validMsg.classList.remove("d-none");
-                submitButton.disabled = false;
-            } else {
-                const errorCode = iti.getValidationError();
-                const msg = errorMap[errorCode] || "Invalid number";
-                showError(msg);
-                submitButton.disabled = true;
-            }
-        });
-
-    });
+    //     input.addEventListener("keyup", function () {
+    //         reset();
+    //         if (!input.value.trim()) {
+    //             showError("Required");
+    //             submitButton.disabled = true;
+    //         } else if (iti.isValidNumber()) {
+    //             validMsg.classList.remove("d-none");
+    //             submitButton.disabled = false;
+    //         } else {
+    //             const errorCode = iti.getValidationError();
+    //             const msg = errorMap[errorCode] || "Invalid number";
+    //             showError(msg);
+    //             submitButton.disabled = true;
+    //         }
+    //     });
 
     const select = document.getElementById('preferredLocation');
     const max = 3;
@@ -184,4 +196,8 @@
             errorMsg.textContent = "";
         }
     });
+
+    });
+
+    
 </script>

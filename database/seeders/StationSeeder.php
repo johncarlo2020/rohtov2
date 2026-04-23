@@ -21,31 +21,24 @@ class StationSeeder extends Seeder
     public function run()
     {
         Station::create([
-            'name' => 'Find your Libre',
-            'description' => 'Strike a pose, post & hashtag #YSLBeautySG',
+            'name' => 'Game',
+            'description' => 'Visit our game booth <br> to join the fun',
         ]);
 
         Station::create([
-            'name' => 'Refill your icons',
-            'description' => 'Refill you iconic LIBRE fragrance with the power of forever freedom.',
+            'name' => 'Video Booth',
+            'description' => 'Visit our video booth to <br> capture the moment',
         ]);
 
         Station::create([
-            'name' => 'Two Icons, <br> Now in Berry Crush',
-            'description' => 'From the floral fruity of LIBRE Berry Crush to juicy shine of YSL LOVESHINE Berry Crush, indulge in a double hit of freedom and 
-desire.',
+            'name' => 'Lucky Draw',
+            'description' => 'Visit our lucky draw  <br> to claim your prizes',
         ]);
 
         Station::create([
-            'name' => 'Your Libre, <br/>Your Freedom',
-            'description' => 'Strike a pose, post & hashtag #YSLBeautySG',
+            'name' => 'Early Bird',
+            'description' => 'Redeem your <br> pre-registration gift!',
         ]);
-
-        Station::create([
-            'name' => 'Gift Redemption',
-            'description' => 'Redeem your YSL Discovery Gift at the gift redemption counter.',
-        ]);
-
 
 
 

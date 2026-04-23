@@ -16,7 +16,7 @@ class LoginController extends Controller
     {
       
         $credentials = $request->validate([
-            'code' => ['required', 'string'],
+            'email' => ['required', 'string'],
             'password' => ['required'],
         ]);
 
@@ -28,9 +28,9 @@ class LoginController extends Controller
 
         return back()
             ->withErrors([
-                'code' => 'The provided credentials do not match our records.',
+                'email' => 'The provided credentials do not match our records.',
             ])
-            ->onlyInput('code');
+            ->onlyInput('email');
     }
 
     public function authenticateAdmin(Request $request): RedirectResponse

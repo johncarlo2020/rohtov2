@@ -76,23 +76,23 @@
             </div>
         </div>
         <div class=" success-text text-center mt-4 d-none">
-            <h2 class="sub-heading-text animate-entry">Nicely done!!<br>
+            <h2 class="sub-heading-text animate-entry">Contratulations<br>
             Stamp Collected!</h2>
         </div>
         <div class="station-selection-container mb-2 animate-entry delay-2">
             <!-- Center image (middle area) -->
             <div class="row">
-                <div class="col-12 d-flex justify-content-center align-items-center p-0 animate-entry">
+                <div class="col-10 m-auto d-flex justify-content-center align-items-center p-0 animate-entry card">
                     <div id="touchBox">
                         <img class="stamping-image"
-                            src="{{ asset('images/brand/STMP' . request()->segment(2) . '.webp') }}"
+                            src="{{ asset('images/station/ST' . request()->segment(2) . '.webp') }}"
                             alt="Stamp Image"
                             data-stamp-id="{{ request()->segment(2) }}">
                     </div>
                 </div>
             </div>
    
-            <div id="countDisplay" class="text-center mt-3 d-none">
+            <div id="countDisplay" class="text-center mt-3">
                 Touches inside count: <span id="countNum">0</span>
             </div>
 
@@ -161,7 +161,7 @@
                 countDisplay.textContent = activeInside.size;
                 // Toggle grayscale removal
                 // Only trigger once
-                const requiredCount = 3;
+                const requiredCount = 1;
                 console.log(requiredCount);
                 console.log('activeInside.size:', activeInside.size, 'requiredCount:', requiredCount, 'hasStamped:', hasStamped);
 

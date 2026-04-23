@@ -2,24 +2,25 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Helpers\GlobalHelper;
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use App\Models\Countries;
+use App\Models\Developer;
+use App\Models\Project;
 use App\Models\Regime;
 use App\Models\RegimeUser;
-
-use Carbon\Carbon;
-use App\Helpers\GlobalHelper;
-
+use App\Models\User;
 use App\Providers\RouteServiceProvider;
+use App\Rules\InternationalPhoneNumber;
+use Carbon\Carbon;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
-use App\Rules\InternationalPhoneNumber;
 
 class RegisteredUserController extends Controller
 {
@@ -28,7 +29,8 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        return view('auth.register');
+        $locations = Project::select('address')->distinct()->pluck('address');
+        return view('auth.register', compact('locations'));
     }
 
     /**
@@ -38,50 +40,125 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
-            'code' => ['required', 'string', 'max:255', 'unique:' . User::class],
+        $validated = $request->validate([
+            'fname' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+            'locations' => ['required', 'array', 'max:3'],
+            'property_budget' => ['required', 'string'],
         ]);
 
-        $marketing = false;
-
-        if($request->has('marketing')){
-            $marketing = true;
-        }
-
-        // After validation, fetch country by phone number
-        $phoneNumber = $request->input('code');
-        $dialCode = $request->input('dialCode');
-        $countryIso = $request->input('countryIso');
-
-      // Extract the phone prefix
-        $phonePrefix = '+' . substr($phoneNumber, 1, 2); // This assumes the prefix is always 2 characters after the '+'
     
-
-        // Query the country based on the phone prefix
-        $country = Countries::where('phone_code', $dialCode)
-            ->whereRaw('LOWER(code) = ?', [strtolower($countryIso)])
-            ->first();
-        $otp = rand(100000, 999999);
-
         $user = User::create([
-            'code' => $phoneNumber,
-            'number' => $phoneNumber,
-            'otp' => $otp,
-            'country'=> $country->name,
-            'marketing' => $marketing,
-            'last_login_at' => Carbon::now(),
+            'fname' => $validated['fname'],
+            'email' => $validated['email'],
+            'property_budget' => $validated['property_budget'],
             'password' => Hash::make('password'),
         ]);
 
-        $user->assignRole('client');
-        // $request->session()->flash('showWelcomeModal', true);
-        // Use the insert method to insert multiple records in one query
-        event(new Registered($user));
-        // GlobalHelper::sendOtpSms($phoneNumber, $otp);
+        $locations = $validated['locations'];
 
+        $assignedDevelopers = collect();
+
+        foreach ($locations as $location) {
+
+            // 🎯 Developers for this location
+            $developerIds = Developer::whereHas('projects', function ($q) use ($location) {
+                    $q->where('address', $location);
+                })
+                ->pluck('id')
+                ->toArray();
+
+            if (empty($developerIds)) continue;
+
+            // 🧠 Already used developers
+            $usedDeveloperIds = DB::table('developer_user')
+                ->whereIn('developer_id', $developerIds)
+                ->pluck('developer_id')
+                ->toArray();
+
+            // 🔍 Available developers
+            $available = array_diff($developerIds, $usedDeveloperIds);
+
+            // 🎲 Pick developer
+            $selected = !empty($available)
+                ? collect($available)->random()
+                : collect($developerIds)->random();
+
+            $assignedDevelopers->push($selected);
+        }
+
+
+        // ✅ Ensure unique + max 3
+        $finalDevelopers = $assignedDevelopers
+            ->unique()
+            ->take(3)
+            ->values()
+            ->toArray();
+
+
+        // ⚠️ Fill if less than 3
+        if (count($finalDevelopers) < 3) {
+
+            $extra = Developer::whereNotIn('id', $finalDevelopers)
+                ->inRandomOrder()
+                ->take(3 - count($finalDevelopers))
+                ->pluck('id')
+                ->toArray();
+
+            $finalDevelopers = array_merge($finalDevelopers, $extra);
+        }
+
+
+        // 💾 Save
+        $user->developers()->sync($finalDevelopers);
+
+        $user->assignRole('client');
         Auth::login($user);
 
-        // return redirect(RouteServiceProvider::HOME);
-        return redirect()->route('discover');
+        return redirect()->route('dashboard');
+
+        // ✅ Auto login (optional but standard)
+        // auth()->login($user);
+
+        // // ✅ Redirect to dashboard
+        // return redirect()->route('dashboard')
+        //     ->with('success', 'Registration successful!');
+
+        // $marketing = false;
+
+        // if($request->has('marketing')){
+        //     $marketing = true;
+        // }
+
+        // After validation, fetch country by phone number
+        // $phoneNumber = $request->input('code');
+        // $dialCode = $request->input('dialCode');
+        // $countryIso = $request->input('countryIso');
+
+      // Extract the phone prefix
+        // $phonePrefix = '+' . substr($phoneNumber, 1, 2); // This assumes the prefix is always 2 characters after the '+'
+    
+
+        // Query the country based on the phone prefix
+        // $country = Countries::where('phone_code', $dialCode)
+        //     ->whereRaw('LOWER(code) = ?', [strtolower($countryIso)])
+        //     ->first();
+        // $otp = rand(100000, 999999);
+
+        // $user = User::create([
+        //     'number' => $phoneNumber,
+        //     'country'=> $country->name,
+        //     'marketing' => $marketing,
+        //     'last_login_at' => Carbon::now(),
+        //     'password' => Hash::make('password'),
+        // ]);
+
+       
+        // $request->session()->flash('showWelcomeModal', true);
+        // Use the insert method to insert multiple records in one query
+       
+        // GlobalHelper::sendOtpSms($phoneNumber, $otp);
+
+        
     }
 }

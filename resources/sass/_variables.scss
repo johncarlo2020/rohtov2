@@ -1,5 +1,5 @@
 //colors
-$primary: #f27222;
+$primary: #285CA9;
 $accent:#005eab;
 $white: #ffffff;
 $gray: #cacacc;
@@ -10,10 +10,10 @@ $secondary: #ffff;
 $green: #40a355;
 
 $card-text: #61646B;
-$text: $white;
+$text: $primary;
 
 // main font
-$font-family:'Singulier', sans-serif;
+$font-family:'Mulish', sans-serif;
 
 //Text size
 
@@ -37,13 +37,13 @@ $button-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 
 //images
 $main-background: url('../images/landing_bg.webp');
-$dashboard-background:url('../images/landing_bg.webp');
+$dashboard-background:url('../images/landing_bg2.webp');
 $stamping-background: url('../images/landing_bg.webp');
 $weekday-background: url('../images/landing_bg.webp');
 $weekend-background: url('../images/landing_bg.webp');
 $referral-background: url('../images/landing_bg.webp');
 
-$back-btn-img: url('../images/landing_bg.webp');
+$back-btn-img: url('../images/backbtn.webp');
 //content
 $content-padding: 40px 20px;
 

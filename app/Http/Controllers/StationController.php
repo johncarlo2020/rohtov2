@@ -49,14 +49,21 @@ class StationController extends Controller
 
     }
 
-    public function developer(Request $request)
+    public function developer(Request $request, $developerId)
     {
         $user = StationUser::where('user_id', auth()->id())
             ->where('station_id', $request->id)
             ->exists();
-        $station = Station::findOrFail($request->developer);
-        $developer = auth()->user()->developers->firstWhere('id', request()->route('developer'));
-        return view('developer', compact('station', 'user','developer'));
+
+        // ❗ REMOVE or FIX this if not needed
+        // $station = Station::findOrFail($request->developer);
+
+        $developer = auth()->user()
+            ->developers()
+            ->where('developers.id', $developerId)
+            ->firstOrFail();
+
+        return view('developer', compact('user', 'developer'));
     }
 
     public function quiz(Request $request)
@@ -66,8 +73,7 @@ class StationController extends Controller
         $user = StationUser::where('user_id', auth()->id())
             ->where('station_id', $request->id)
             ->exists();
-        $station = Station::findOrFail($request->developer);
-        
+    
         // ✅ developer from route (clean)
         $developer = auth()->user()->developers->firstWhere('id', request()->route('developer'));
         $question = Question::where('questions.developer_id', $developer->id)
@@ -110,7 +116,7 @@ class StationController extends Controller
         $question->load('answers');
         $question->answers = $question->answers->shuffle()->values();
         
-        return view('quiz', compact('station', 'user', 'developer', 'question'));
+        return view('quiz', compact('user', 'developer', 'question'));
     }
 
     public function welcome()

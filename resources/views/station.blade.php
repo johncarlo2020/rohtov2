@@ -174,14 +174,14 @@
 
                 <div class="img-container text-center">
                     <!-- station image -->
-                    <img class="station-image w-50 mx-auto my-4"
+                    <img class="station-image w-50 mx-auto my-5"
                         src="{{ asset('images/station/ST' . $station->id . '.webp') }}"
                         alt="Station Image">
 
                     <!-- description -->
-                    <p class="text-center px-3">
-                        {{ $station->description }}
-                    </p>
+                    <h2 class="text-center px-3 fw-bold">
+                        {!! $station->description !!}
+                    </h2>
                 </div>
                 
                 <!-- actions -->

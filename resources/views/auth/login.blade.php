@@ -1,5 +1,5 @@
 <x-guest-layout>
-    <style>
+    {{-- <style>
         .login-page h4,
         .login-page label,
         .login-page input,
@@ -8,14 +8,26 @@
         .login-page span {
             font-family: 'GothamBold' !important;
         }
+    </style> --}}
+    <style>
+        label {
+            font-weight: 700;
+            letter-spacing: 1.4px;
+        }
+
+        .bottom-text p {
+            letter-spacing: 1.3px;
+            font-weight: 300;
+            text-align: center
+        }
     </style>
     <div class="login-page vh-100">
         <div class="main-content main-background with-scroll">
             <div class="col-12 animate-entry mb-4">
                 @include('components.branding')
             </div>
-                <h2 class="mx-4 text-center sub-heading-text animate-entry">LOGIN</h2>
-            <div class="col-12 animate-entry delay-2 bg-white p-3 mt-4 card-parent" style="margin-bottom:20vh;">
+                <h2 class="mx-4 text-center animate-entry">LOGIN</h2>
+            <div class="col-12 animate-entry delay-2 p-3 mt-4" style="margin-bottom:20vh;">
                 <!-- Session Status -->
                 <x-auth-session-status class="mb-4" :status="session('status')" />
                 <form method="POST" action="{{ route('login') }}" >
@@ -24,12 +36,11 @@
                     <input type="hidden" name="countryIso" id="countryIso">
                     <div class="row mb-3">
                         <div class="col-12 input-group w-100">
-                                <label for="number" class="text-main">Email <span class="text-danger">*</span></label>
+                                <label for="number" class="">Email <span class="text-danger">*</span></label>
 
                                 <input id="email" type="email"
-                                    class="input-text form-control w-100 @error('email') is-invalid @enderror"
-                                    name="email" value="{{ old('email') }}" required autocomplete="email" autofocus />
-                                    autofocus />
+                                    class="input-text form-control w-100 rounded @error('email') is-invalid @enderror"
+                                    name="email" value="{{ old('email') }}" required autocomplete="email" placeholder="Enter your email"/>
                                 @error('email')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -50,21 +61,21 @@
                     <x-input-error :messages="$errors->get('password')" class="mt-2" />
 
                     <div class="d-flex justify-center">
-                        <x-primary-button class="custom-btn custom-btn-primary" style="width:95%;margin:auto;">
-                            {{ __('Next') }}
+                        <x-primary-button class="custom-btn custom-btn-primary" >
+                            {{ __('LOGIN') }}
                         </x-primary-button>
                     </div>
                 </form>
             </div>
              <div class="bottom-text text-center">
-                    <p class="already-register text-white">
-                        <strong>Haven't register yet?</strong>
+                    <p class="already-register">
+                        Haven't Registered?
                     </p>
-                    <p class="already-register text-white">
-                        <a href="{{ route('register') }}" class="text-white"><strong>Sign Up</strong></a>
+                    <p class="already-register">
+                        Click <a href="{{ route('register') }}">here</a> to register 
                     </p>
                 </div>
-            <x-footer/>
+            {{-- <x-footer/> --}}
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/intlTelInput.min.js"></script>

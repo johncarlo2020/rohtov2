@@ -20,34 +20,10 @@
         user-select: none;
     }
 
-    .overlay {
-            position: fixed;
-            top: env(safe-area-inset-top, 0);
-            left: env(safe-area-inset-left, 0);
-            width: calc(100vw - env(safe-area-inset-left, 0) - env(safe-area-inset-right, 0));
-            height: calc(100vh - env(safe-area-inset-top, 0) - env(safe-area-inset-bottom, 0));
-            pointer-events: none;
-            backdrop-filter: blur(8px);
-        }
-
-        /* Overlay for station 1 */
-        .overlay.station-1 {
-            background: linear-gradient(
-                180deg,
-                rgba(233, 239, 250, 0.3) 0%,
-                rgba(124, 161, 255, 0.3) 48.56%,
-                rgba(9, 84, 181, 0.3) 100%
-            );
-        }
-
-        /* Overlay for station 2 */
-        .overlay.station-2 {
-            background: linear-gradient(
-                180deg,
-                rgba(233, 250, 241, 0.3) 0%,   /* light green with transparency */
-                rgba(124, 255, 194, 0.3) 48.56%, /* mid green with transparency */
-                rgba(9, 181, 95, 0.3) 100%       /* dark green with transparency */
-            );
+        .touchBox-container 
+        {
+            border-radius: 30px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.18), 0 10px 20px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.7);
         }
 
     
@@ -62,7 +38,7 @@
         <div class="modal fade transparent-modal" id="welcomeModal" tabindex="-1" aria-labelledby="welcomeModalLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content text-center position-relative card">
+                <div class="modal-content text-center position-relative">
 
                     <!-- Close Button (top-right) -->
                     <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal"
@@ -76,23 +52,24 @@
             </div>
         </div>
         <div class=" success-text text-center mt-4 d-none">
-            <h2 class="sub-heading-text animate-entry">Contratulations<br>
-            Stamp Collected!</h2>
+            {{-- <h2 class="sub-heading-text animate-entry">Contratulations<br>
+            Stamp Collected!</h2> --}}
         </div>
         <div class="station-selection-container mb-2 animate-entry delay-2">
+            <h3 class="text-center mb-3 mt-5 booth-description">Win the game and get a stamp <br> to unlock a prize</h3>
             <!-- Center image (middle area) -->
             <div class="row">
-                <div class="col-10 m-auto d-flex justify-content-center align-items-center p-0 animate-entry card">
+                <div class="touchBox-container col-11 m-auto d-flex justify-content-center align-items-center p-0 animate-entry">
                     <div id="touchBox">
-                        <img class="stamping-image"
+                        <img class="stamping-image "
                             src="{{ asset('images/station/ST' . request()->segment(2) . '.webp') }}"
                             alt="Stamp Image"
                             data-stamp-id="{{ request()->segment(2) }}">
                     </div>
                 </div>
             </div>
-   
-            <div id="countDisplay" class="text-center mt-3">
+            <p class="text-center mt-4 mb-5">Please get the stamp from our crew</p>
+            <div id="countDisplay" class="text-center mt-3 d-none">
                 Touches inside count: <span id="countNum">0</span>
             </div>
 
@@ -102,20 +79,19 @@
                 <div class="col-12 text-center">
                     <div class="d-block">
                         <div class="col mb-3 animate-entry delay-2">
-                            <button type="button" class="custom-btn custom-btn-primary stamp-btn"
-                                @if(request()->segment(2) == 3)
+                            <button type="button" class="custom-btn custom-btn-primary d-none nextBtn"
+                                @if(request()->segment(2) == 13)
                                     onclick="window.location.href='{{ route('station.giftselection') }}'"
                                 @else
                                     onclick="window.location.href='{{ route('dashboard') }}'"
                                 @endif>
-                                Home
+                                NEXT
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <x-footer/>
     </div>
     <script>
         
@@ -136,11 +112,12 @@
                 {
                     hasStamped = true;
                     stampingPage.classList.add("active");
-                    const text = document.querySelector(".success-text");
-                        text.classList.remove("d-none");
-                            const button = document.querySelector(".stamp-btn");
+                    const text = document.querySelector(".booth-description");
+                        text.textContent = "Stamp Collected!";  
+                        // text.classList.remove("d-none");
+                            const button = document.querySelector(".nextBtn");
                             if (button) {
-                                button.removeAttribute("disabled");
+                                button.classList.remove("d-none");
                                 button.style.pointerEvents = "auto";
                                 console.log('test');
                             }
@@ -191,11 +168,21 @@
                                     console.error('Error sending QR Code message:', error);
                                 }
                             });
-                            const text = document.querySelector(".success-text");
-                            text.classList.remove("d-none");
-                            const button = document.querySelector(".stamp-btn");
+                            const text = document.querySelector(".booth-description");
+
+                            if(stationid == 1)
+                            {
+                                text.textContent = "Conratulations! You've collected the stamp. Please proceed to the next station.";  
+                            }
+                            else
+                            {   
+
+                            }
+
+                            text.textContent = "Stamp Collected!";  
+                            const button = document.querySelector(".nextBtn");
                             if (button) {
-                                button.removeAttribute("disabled");
+                                button.classList.remove("d-none");
                                 button.style.pointerEvents = "auto";
                                 console.log('test');
                             }

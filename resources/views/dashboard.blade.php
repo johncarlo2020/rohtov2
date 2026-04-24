@@ -21,8 +21,7 @@
     .station-row {
         display: flex;
         align-items: center;
-        gap: 16px;
-        margin-bottom: 22px;
+        gap: 8px;
         cursor: pointer;
     }
 
@@ -78,9 +77,9 @@
     }
 
     .station-title {
-        letter-spacing: 1px;
         font-size: 9px;
         text-align: center;
+        color: #fff;
     }
 
     h2 {
@@ -163,7 +162,7 @@
     </div>
 
 
-    <div class="container py-3">
+    <div class="container px-0 py-3">
 
 
 
@@ -180,7 +179,7 @@
 
                     @if ($developer->pivot->isCompleted)
                         <div class="overlay">
-                            <span>COMPLETED</span>
+                            <span class="text-white">COMPLETED</span>
                         </div>
                     @endif
             </div>
@@ -190,7 +189,7 @@
     </div>
 
     <!-- Stations -->
-    <div class="container" style="max-width: 420px;">
+    <div class="container px-0" style="max-width: 420px;">
 
         <div class="d-flex justify-content-between station-row animate-entry">
             @foreach ($stations as $station)
@@ -201,21 +200,21 @@
                     onclick="gotoStation({{ $station->id }})">
 
                     <!-- Image -->
-                    <div class=" text-center p-2">
+                    <div class=" text-center text-white p-2">
                         <img src="{{ $image }}" alt="Station {{ $station->id }}">
-                        <span class="station-title">
+                        <span class="station-title small">
                             {{($station->name)}}
                         </span>
 
                             @if($station->id == 3 && !$canAccessStation3)
                                 <div class="overlay">
-                                    <span class="small">LOCKED</span>
+                                    <span class="small text-white">LOCKED</span>
                                 </div>
                             @endif
 
                             @if($station->status)
                                 <div class="overlay">
-                                    <span class="small">REDEEMED</span>
+                                    <span class="text-white" style="font-size:10px;">REDEEMED</span>
                                 </div>
                             @endif
                     </div>

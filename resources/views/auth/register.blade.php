@@ -1,4 +1,16 @@
 <x-guest-layout>
+    <style>
+        label {
+            font-weight: 700;
+            letter-spacing: 1.4px;
+        }
+
+        .bottom-text p {
+            letter-spacing: 1.3px;
+            font-weight: 300;
+            text-align: center
+        }
+    </style>
     <div class="register-main with-scroll">
         <div class="justify-content-center w-100">
             <div class="mt-5 col-12 d-flex justify-content-center">
@@ -38,7 +50,6 @@
                                 @enderror
                             </div>
                         </div>
-
                         <div class="mb-2 row">
                             <label for="preferredLocation">Preferred Property Location</label>
                             <div class="col-12 input-group">
@@ -61,7 +72,9 @@
 
                                 </select>
                             <small id="errorMsg" class="text-danger"></small>
+                            </div>
                         </div>
+                        
 
                         <div class="mb-2 row">
                              <label for="">Property Budget</label>
@@ -97,10 +110,10 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="privacy_policy" value="1"
                                         id="privacyPolicy" required />
-                                    <label class="form-check-label text-dark" for="privacyPolicy">
+                                    <small class="form-check-label text-dark" for="privacyPolicy" style="color:#285ca9 !important;">
                                         I have read and agree to the <a href="https://www.iproperty.com.my/privacy-policy/" class="text-primary">Terms and
                                             Conditions</a>. and <a href="https://www.iproperty.com.my/terms-and-conditions/" class="text-primary">Privacy Policy</a>.
-                                    </label>
+                                    </small>
                                 </div>
                             </div>
                         </div>
@@ -108,7 +121,7 @@
                         <div class="mb-0 row">
                             <div class="col-12 text-center">
                                 <button id="submitButton" type="submit"
-                                    class="w-auto main-btn button-dutch button-dutch-primary">
+                                    class="custom-btn custom-btn-primary pulse-slow mt-4">
                                     {{ __('SUBMIT') }}
                                 </button>
                             </div>

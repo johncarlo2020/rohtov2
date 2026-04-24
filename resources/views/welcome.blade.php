@@ -34,7 +34,7 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: start;
             padding-top: env(safe-area-inset-top);
             padding-bottom: env(safe-area-inset-bottom);
             height:100svh;
@@ -64,10 +64,14 @@
             margin-top: -5%;
             text-shadow: 0 3px 0 #f7a239;
         }
+
+        #banner .top{
+            margin: 25% 0%;
+        }
     </style>
 </head>
 
-<body class="antialiased welcome-page" style="background-image:url('{{ asset('images/brand/landing_bg.webp') }}');">
+<body class="antialiased welcome-page" style="background-image:url('{{ asset('images/brand/landing_bg2.webp') }}');">
 
     <div class="container-fluid main-content with-scroll py-4 px-0">
         <div class="top-container">
@@ -82,17 +86,38 @@
                 </div>
             </div>
         </div>
-                <div id="banner" class="col-10 mx-auto d-flex justify-content-center animate-entry">
-                    <img class="discover_img w-100" src="{{ asset('images/brand/masthead.webp') }}"
+                <div id="banner" class="col-10 mx-auto d-flex flex-column justify-content-center animate-entry">
+                <div class="top">
+                    <div class="row">
+                        <div class="col-12">
+                            <h3 class="text-center text-white mb-3">Welcome to the journey of</h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <img class="discover_img w-100" src="{{ asset('images/brand/masthead.webp') }}"
                         alt="" />
+                    </div>
+                </div>
+                        <!-- Bottom CTA -->
+                <div class="row mb-5">
+                    <div class="col-12 text-center">
+                        <div class="d-block  mb-2">
+                            <div class="colanimate-entry delay-2 btn-wrapperx px-5 mt-4">
+                                <a href="{{ route('register') }}" class="custom-btn custom-btn-secondary pulse-slow">
+                                    JOIN NOW
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 </div>
         <div class="bottom-container">
             <!-- Bottom CTA -->
             <div class="row mb-5">
                 <div class="col-12 text-center">
                     <div class="d-block  mb-2">
-                        <div class="colanimate-entry delay-2 btn-wrapperx px-5 mt-4">
-                            <a href="{{ route('register') }}" class="custom-btn custom-btn-primary pulse-slow">
+                        <div class="colanimate-entry delay-2 btn-wrapperx px-5 mt-4 d-none">
+                            <a href="{{ route('register') }}" class="custom-btn custom-btn-seconday pulse-slow">
                                 JOIN NOW
                             </a>
                         </div>

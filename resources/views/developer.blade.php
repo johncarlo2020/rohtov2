@@ -23,8 +23,9 @@
 
     #start-scanner,#start-quiz,#perfume-next-btn {
         width: 50%;
-        border-color: #ffffff;
-        border-radius: 5px;
+        margin:auto;
+        border-color: transparent;
+        border-radius: 30px;
         background-color: #ffffff;
         padding: 0;
         display: flex;
@@ -117,6 +118,54 @@
     text-transform: uppercase;
 }
 
+.scan-btn {
+    background: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+/* pill icon */
+.scan-icon {
+    width: 80px;
+    height: 40px;
+
+    background: rgba(255,255,255,0.6);
+    border-radius: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+
+    transition: 0.25s ease;
+}
+
+/* icon */
+.scan-icon i {
+    font-size: 18px;
+    color: #2f5ea8;
+}
+
+/* text */
+.scan-label {
+    color: #2f5ea8;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* hover effect */
+.scan-btn:hover .scan-icon {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+}
+
     /* Idle animation */
     @keyframes scannerIdle {
         0%   { transform: translateY(0); }
@@ -132,7 +181,7 @@
         }
     }
 </style>
-    <div id="stationPage" class="station-page main-content main-background with-scroll px-0">
+    <div id="stationPage" class="station-page main-content main-background px-0">
         <div class="modal fade custom-modal" id="scanCompleteModal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content modal-parent rounded-1">
@@ -176,13 +225,15 @@
                 <div class="img-container text-center">
                     <!-- station image -->
                     <img class="station-image w-50 mx-auto my-4"
-                       src="{{ asset('images/developer/DEV' . $station->id . '.webp') }}"   
+                       src="{{ asset('images/developer/DEV' . $developer->id . '.webp') }}"   
                         alt="Station Image">
 
                     <!-- description -->
-                    <p class="text-center px-3">
-                        {{ $station->description }}
-                    </p>
+                    <h2 class="text-center px-3">
+                        Proceed to {{ strtoupper($developer->name) }} booth 
+                        to scan QR code 
+                        & begin the journey.
+                    </h2>
                 </div>
                 
                 <!-- actions -->
@@ -198,10 +249,19 @@
                 @else
 
                     <!-- ✅ Other stations → Scanner -->
-                    <button id="start-scanner"
-                            class="text-dark custom-btn-secondary px-3 py-2">
-                        SCAN QR CODE TO PROCEED
-                    </button>
+ 
+
+                    <div class="scan-container mb-5">
+                        <button id="start-scanner" class="scan-btn mb-4">
+                            <span class="scan-icon">
+                                <i class="fa-solid fa-camera"></i>
+                            </span>
+                        </button>
+                        <span class="scan-label">
+                            Scan the QR code to proceed
+                        </span>
+                    </div>
+
 
                       {{-- <div class="text-content mt-3">
                                 <a href="{{ route('station.stamping', $station->id);}}" id="routeBtn"
@@ -226,9 +286,9 @@
             <div id="{{ $user ? '' : 'forceQr' }}" class="icon-container"></div> 
                 <div id="scannerContainer" class="scanner-container d-none"> 
                     <!-- <button id="close" class="mx-auto mt-4 camera-btn">x</button> --> 
-                    <h2 class="text-center fw-bold mb-4">FREEDOM HAS TASTE</h2> 
+                    <h2 class="text-center fw-bold mb-4">{{ strtoupper($developer->name) }} booth</h2> 
                     <div id="reader"></div> 
-                    <p class="mt-4 scanner-text text-center text-white">Find the QR code &<br> scan to continue your journey</p> 
+                    <p class="mt-4 scanner-text text-center">Find the QR code & scan to proceed</p> 
                 </div> 
             </div>
         </div>
@@ -249,13 +309,13 @@
                     check_image: '{{ asset('images/check.png') }}',
                     error_image: '{{ asset('images/error.png') }}'
                 },
-                station_id: {{ $station->id }},
-                station_name: `{!! strtoupper($station->name) !!}`,
+                station_id: {{ $developer->id }},
+                station_name: `{!! strtoupper($developer->name) !!}`,
                 asset_base: "{{ asset('') }}"
             };
 
             window.gotoStation = function(id,) {
-                    var url = "{{ route('station', ['station' => ':id']) }}".replace(
+                    var url = "{{ route('developer', ['developer' => ':id']) }}".replace(
                         ":id",
                         id
                     );

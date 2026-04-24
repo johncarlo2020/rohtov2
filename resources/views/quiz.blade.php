@@ -76,7 +76,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
   gap: clamp(12px, 3vh, 24px);
 }
 
@@ -116,6 +115,46 @@
 .tile-title , .station_name  {
     text-transform: uppercase;
 }
+
+.answer-tile {
+    height: 120px;
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,0.5);
+    background: linear-gradient(145deg, #e9eef5, #dfe6ee);
+
+    color: #2f5ea8;
+    font-weight: 600;
+    font-size: 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 10px;
+
+    transition: all 0.25s ease;
+}
+
+/* Hover */
+.answer-tile:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+}
+
+/* ❌ WRONG */
+.answer-tile.wrong {
+    border: 2px solid #ff4d4f;
+    color: #ff4d4f;
+    box-shadow: 0 0 10px rgba(255, 77, 79, 0.4);
+}
+
+/* ✅ CORRECT */
+.answer-tile.correct {
+    border: 2px solid #28a745;
+    color: #28a745;
+    box-shadow: 0 0 12px rgba(40, 167, 69, 0.4);
+}
+
 
     /* Idle animation */
     @keyframes scannerIdle {
@@ -170,39 +209,40 @@
             </div>
             <!-- Main content -->
             <div id="mainContent"
-                class="d-flex flex-column align-items-center justify-content-between animate-entry delay-3">
+                class="d-flex flex-column align-items-center animate-entry delay-3">
 
                 <div class="img-container text-center">
                     <!-- station image -->
-                    <img class="station-image w-50 mx-auto my-4"
-                       src="{{ asset('images/developer/DEV' . $station->id . '.webp') }}"   
+                    <img class="station-image w-25 mx-auto my-4"
+                       src="{{ asset('images/developer/DEV' . $developer->id . '.webp') }}"   
                         alt="Station Image">
-
-                    <!-- description -->
-                    <p class="text-center px-3">
-                        {{ $station->description }}
-                    </p>
                 </div>
 
-                <div class="quiz-card mb-4">
+                <div class="container quiz-card mb-4">
 
                     <!-- 🧠 Question -->
-                    <h5 class="fw-bold mb-3">
+                    <h5 class="fw-bold mb-3 text-center">
                         {{ $question->question }}
                     </h5>
 
-                    <!-- 🎯 Answers -->
-                    @foreach($question->answers as $answer)
-                        <button 
-                            class="btn btn-outline-primary w-100 mb-2 answer-btn"
-                            data-id="{{ $answer->id }}"
-                            data-correct="{{ $answer->is_correct }}"
-                            data-question="{{ $question->id }}"
-                        >
-                            {{ $answer->answer }}
-                        </button>
-                    @endforeach
+                    <div class="container py-4">
+                        <div class="row g-3">
 
+                            @foreach($question->answers as $answer)
+                                <div class="col-6">
+                                    <button 
+                                        class="answer-tile w-100"
+                                        data-id="{{ $answer->id }}"
+                                        data-correct="{{ $answer->is_correct }}"
+                                        data-question="{{ $question->id }}"
+                                    >
+                                        {{ $answer->answer }}
+                                    </button>
+                                </div>
+                            @endforeach
+
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- actions -->
@@ -240,17 +280,6 @@
                     <div id="options"></div>
                 </div>
             </div>
-
-            <!-- Scanner -->
-            <!-- scanner-container --> 
-            <div id="{{ $user ? '' : 'forceQr' }}" class="icon-container"></div> 
-                <div id="scannerContainer" class="scanner-container d-none"> 
-                    <!-- <button id="close" class="mx-auto mt-4 camera-btn">x</button> --> 
-                    <h2 class="text-center fw-bold mb-4">FREEDOM HAS TASTE</h2> 
-                    <div id="reader"></div> 
-                    <p class="mt-4 scanner-text text-center text-white">Find the QR code &<br> scan to continue your journey</p> 
-                </div> 
-            </div>
         </div>
     </div>
 
@@ -267,11 +296,11 @@
                     </div>
                 </div>
 
-                <p class="text-primary small">
-                    Your knowledge is shining through!
+                <p class="text-primary fw-bold">
+                    Your knowledge is <br> shining through!
                 </p>
 
-                <button class="btn btn-primary w-100 mt-3" onclick="goNext()">
+                <button class="custom-btn custom-btn-primary w-100 mt-3" onclick="goNext()">
                     NEXT
                 </button>
 
@@ -283,56 +312,52 @@
     <script>
         let answeredCorrectly = false;
 
-        document.querySelectorAll('.answer-btn').forEach(btn => {
+        document.querySelectorAll('.answer-tile').forEach(btn => {
 
-            btn.addEventListener('click', function () {
+    btn.addEventListener('click', function () {
 
-                // 🚫 stop if already correct
-                if (answeredCorrectly) return;
+        // 🚫 stop after correct
+        if (answeredCorrectly) return;
 
-                let isCorrect = this.dataset.correct == "1";
+        let isCorrect = this.dataset.correct == "1";
 
-                if (isCorrect) {
-                    // ✅ mark correct
-                    this.classList.remove('btn-outline-primary');
-                    this.classList.add('btn-success');
+        if (isCorrect) {
 
-                    // 🎯 highlight correct (optional for all)
-                    document.querySelectorAll('.answer-btn').forEach(b => {
-                        if (b.dataset.correct == "1") {
-                            b.classList.remove('btn-outline-primary');
-                            b.classList.add('btn-success');
-                        }
-                        b.disabled = true;
-                    });
+            // ✅ mark correct
+            this.classList.add('correct');
 
-                    answeredCorrectly = true;
-
-                    // 🚀 send to backend
-                    submitAnswer(this.dataset.question, this.dataset.id, true);
-
-                    let modal = new bootstrap.Modal(document.getElementById('successModal'));
-                    modal.show();
-
-                    // ⏱️ go next
-                    // setTimeout(() => {
-                    //     location.reload();
-                    // }, 1500);
-
-                } else {
-                    // ❌ wrong answer → only mark this button
-                    this.classList.remove('btn-outline-primary');
-                    this.classList.add('btn-danger');
-
-                    this.disabled = true; // prevent clicking same wrong again
-
-                    // 🚀 send attempt (optional)
-                    submitAnswer(this.dataset.question, this.dataset.id, false);
+            // highlight correct + lock all
+            document.querySelectorAll('.answer-tile').forEach(b => {
+                if (b.dataset.correct == "1") {
+                    b.classList.add('correct');
                 }
-
+                b.disabled = true;
             });
 
-        });
+            answeredCorrectly = true;
+
+            // 🚀 send to backend
+            submitAnswer(this.dataset.question, this.dataset.id, true);
+
+            // 🎉 show modal
+            let modal = new bootstrap.Modal(document.getElementById('successModal'));
+            modal.show();
+
+        } else {
+
+            // ❌ mark wrong (only clicked one)
+            this.classList.add('wrong');
+
+            // prevent clicking same wrong again
+            this.disabled = true;
+
+            // 🚀 send attempt
+            submitAnswer(this.dataset.question, this.dataset.id, false);
+        }
+
+    });
+
+});
 
         function goNext() {
             window.location.href = "{{ route('dashboard') }}";
@@ -374,13 +399,13 @@
                     check_image: '{{ asset('images/check.png') }}',
                     error_image: '{{ asset('images/error.png') }}'
                 },
-                station_id: {{ $station->id }},
-                station_name: `{!! strtoupper($station->name) !!}`,
+                station_id: {{ $developer->id }},
+                station_name: `{!! strtoupper($developer->name) !!}`,
                 asset_base: "{{ asset('') }}"
             };
 
             window.gotoStation = function(id,) {
-                    var url = "{{ route('station', ['station' => ':id']) }}".replace(
+                    var url = "{{ route('developer', ['developer' => ':id']) }}".replace(
                         ":id",
                         id
                     );

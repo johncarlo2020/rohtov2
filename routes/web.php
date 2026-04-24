@@ -148,7 +148,7 @@ Route::group(['middleware' => ['client']], function () {
     Route::post('/process_stamp', 'App\Http\Controllers\StationController@stamp')->name('process_stamp');
     Route::get('/station/{station}/stamping', 'App\Http\Controllers\StationController@stamping')->name('station.stamping');
 
-    Route::post('/submit-quiz', [StationController::class, 'submitQuiz'])->name('submit.quiz');
+    Route::post('/quiz/answer', [StationController::class, 'submitAnswer'])->name('submit.answer');
 
 
 

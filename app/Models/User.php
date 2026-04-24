@@ -83,7 +83,7 @@ class User extends Authenticatable
 
     public function questions()
     {
-        return $this->belongsToMany(Question::class)
+        return $this->belongsToMany(Question::class,'user_question')
             ->withPivot('is_correct')
             ->withTimestamps();
     }

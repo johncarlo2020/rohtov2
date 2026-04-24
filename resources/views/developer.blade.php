@@ -233,6 +233,7 @@
             </div>
         </div>
     </div>
+
     
     @push('scripts')
         <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
@@ -241,7 +242,7 @@
             window.stationConfig = {
                 urls: {
                     process_qr_code: '{{ route('process_qr_code') }}',
-                    submit_quiz: '{{ route('submit.quiz') }}',
+                    submit_quiz: '{{ route('submit.answer') }}',
                     congrats: '{{ route('congrats') }}'
                 },
                 assets: {

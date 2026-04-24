@@ -767,6 +767,38 @@ class StationController extends Controller
         return $check;
     }
 
+    public function submitAnswer(Request $request)
+    {
+        $user = auth()->user();
+
+        $question = Question::with('answers')->findOrFail($request->question_id);
+
+        $isCorrect = $question->answers
+            ->where('id', $request->answer_id)
+            ->where('is_correct', 1)
+            ->isNotEmpty();
+
+        $user->questions()->syncWithoutDetaching([
+            $question->id => [
+                'is_correct' => $isCorrect
+            ]
+        ]);
+
+        if ($isCorrect) {
+            $user->developers()->updateExistingPivot(
+                $question->developer_id,
+                ['isCompleted' => 1]
+            );
+        }
+
+        return response()->json([
+            'success' => true,
+            'correct' => $isCorrect
+        ]);
+
+    }
+
+
     public function submitQuiz(Request $request)
     {
 

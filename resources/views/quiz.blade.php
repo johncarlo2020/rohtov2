@@ -184,16 +184,26 @@
                     </p>
                 </div>
 
-                @foreach($question->answers as $answer)
-    <button 
-        class="btn btn-outline-primary w-100 mb-2 answer-btn"
-        data-id="{{ $answer->id }}"
-        data-correct="{{ $answer->is_correct }}"
-        data-question="{{ $question->id }}"
-    >
-        {{ $answer->answer }}
-    </button>
-@endforeach
+                <div class="quiz-card mb-4">
+
+                    <!-- 🧠 Question -->
+                    <h5 class="fw-bold mb-3">
+                        {{ $question->question }}
+                    </h5>
+
+                    <!-- 🎯 Answers -->
+                    @foreach($question->answers as $answer)
+                        <button 
+                            class="btn btn-outline-primary w-100 mb-2 answer-btn"
+                            data-id="{{ $answer->id }}"
+                            data-correct="{{ $answer->is_correct }}"
+                            data-question="{{ $question->id }}"
+                        >
+                            {{ $answer->answer }}
+                        </button>
+                    @endforeach
+
+                </div>
                 
                 <!-- actions -->
                 @if ($developer->pivot->isCompleted)
@@ -208,10 +218,10 @@
                 @else
 
                     <!-- ✅ Other stations → Scanner -->
-                    <button id="start-scanner"
+                    {{-- <button id="start-scanner"
                             class="text-dark custom-btn-secondary px-3 py-2">
                         SCAN QR CODE TO PROCEED
-                    </button>
+                    </button> --}}
 
                       {{-- <div class="text-content mt-3">
                                 <a href="{{ route('station.stamping', $station->id);}}" id="routeBtn"
@@ -243,66 +253,121 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="successModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content text-center p-4 rounded-4">
+
+                <h5 class="fw-bold text-primary">Excellent!</h5>
+
+                <div class="my-3">
+                    <div style="width:60px;height:60px;border-radius:50%;border:3px solid #28a745;
+                                display:flex;align-items:center;justify-content:center;margin:auto;">
+                        <span style="font-size:28px;color:#28a745;">✓</span>
+                    </div>
+                </div>
+
+                <p class="text-primary small">
+                    Your knowledge is shining through!
+                </p>
+
+                <button class="btn btn-primary w-100 mt-3" onclick="goNext()">
+                    NEXT
+                </button>
+
+            </div>
+        </div>
+    </div>
     
     @push('scripts')
     <script>
-let answeredCorrectly = false;
+        let answeredCorrectly = false;
 
-document.querySelectorAll('.answer-btn').forEach(btn => {
+        document.querySelectorAll('.answer-btn').forEach(btn => {
 
-    btn.addEventListener('click', function () {
+            btn.addEventListener('click', function () {
 
-        // 🚫 stop if already correct
-        if (answeredCorrectly) return;
+                // 🚫 stop if already correct
+                if (answeredCorrectly) return;
 
-        let isCorrect = this.dataset.correct == "1";
+                let isCorrect = this.dataset.correct == "1";
 
-        if (isCorrect) {
-            // ✅ mark correct
-            this.classList.remove('btn-outline-primary');
-            this.classList.add('btn-success');
+                if (isCorrect) {
+                    // ✅ mark correct
+                    this.classList.remove('btn-outline-primary');
+                    this.classList.add('btn-success');
 
-            // 🎯 highlight correct (optional for all)
-            document.querySelectorAll('.answer-btn').forEach(b => {
-                if (b.dataset.correct == "1") {
-                    b.classList.remove('btn-outline-primary');
-                    b.classList.add('btn-success');
+                    // 🎯 highlight correct (optional for all)
+                    document.querySelectorAll('.answer-btn').forEach(b => {
+                        if (b.dataset.correct == "1") {
+                            b.classList.remove('btn-outline-primary');
+                            b.classList.add('btn-success');
+                        }
+                        b.disabled = true;
+                    });
+
+                    answeredCorrectly = true;
+
+                    // 🚀 send to backend
+                    submitAnswer(this.dataset.question, this.dataset.id, true);
+
+                    let modal = new bootstrap.Modal(document.getElementById('successModal'));
+                    modal.show();
+
+                    // ⏱️ go next
+                    // setTimeout(() => {
+                    //     location.reload();
+                    // }, 1500);
+
+                } else {
+                    // ❌ wrong answer → only mark this button
+                    this.classList.remove('btn-outline-primary');
+                    this.classList.add('btn-danger');
+
+                    this.disabled = true; // prevent clicking same wrong again
+
+                    // 🚀 send attempt (optional)
+                    submitAnswer(this.dataset.question, this.dataset.id, false);
                 }
-                b.disabled = true;
+
             });
 
-            answeredCorrectly = true;
+        });
 
-            // 🚀 send to backend
-            submitAnswer(this.dataset.question, this.dataset.id, true);
-
-            // ⏱️ go next
-            setTimeout(() => {
-                location.reload();
-            }, 1500);
-
-        } else {
-            // ❌ wrong answer → only mark this button
-            this.classList.remove('btn-outline-primary');
-            this.classList.add('btn-danger');
-
-            this.disabled = true; // prevent clicking same wrong again
-
-            // 🚀 send attempt (optional)
-            submitAnswer(this.dataset.question, this.dataset.id, false);
+        function goNext() {
+            window.location.href = "{{ route('dashboard') }}";
         }
 
-    });
+        function submitAnswer(questionId, answerId, isCorrect) {
 
-});
-</script>
+                fetch("{{ route('submit.answer') }}",{
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        question_id: questionId,
+                        answer_id: answerId,
+                        is_correct: isCorrect
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    console.log('Saved:', data);
+                })
+                .catch(err => {
+                    console.error('Error:', err);
+                });
+            }
+        </script>
         <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
         <script>
             // Pass data from Blade to JavaScript
             window.stationConfig = {
                 urls: {
                     process_qr_code: '{{ route('process_qr_code') }}',
-                    submit_quiz: '{{ route('submit.quiz') }}',
+                    submit_quiz: '{{ route('submit.answer') }}',
                     congrats: '{{ route('congrats') }}'
                 },
                 assets: {

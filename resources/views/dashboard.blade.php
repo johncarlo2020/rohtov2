@@ -192,49 +192,88 @@
     <div class="container px-0" style="max-width: 420px;">
 
         <div class="d-flex justify-content-between station-row animate-entry">
-            @foreach ($stations as $station)
+           @foreach ($stations as $station)
+
                 @php
                     $image = asset("images/station/ST{$station->id}.webp");
                 @endphp
-                <div class="station-row station-card bg-primary "
+
+                {{-- 🚫 HIDE station 4 if NOT early bird --}}
+                @if($station->id == 4 && !auth()->user()->is_early_bird)
+                    @continue
+                @endif
+
+                <div class="station-row station-card bg-primary"
                     onclick="gotoStation({{ $station->id }})">
 
-                    <!-- Image -->
-                    <div class=" text-center text-white p-2">
+                    <div class="text-center text-white p-2 position-relative">
+
+                        <!-- Image -->
                         <img src="{{ $image }}" alt="Station {{ $station->id }}">
+
+                        <!-- Title -->
                         <span class="station-title small">
-                            {{($station->name)}}
+                            {{ $station->name }}
                         </span>
 
-                            @if($station->id == 3 && !$canAccessStation3)
-                                <div class="overlay">
-                                    <span class="small text-white">LOCKED</span>
-                                </div>
-                            @endif
+                        {{-- 🔒 LOCK Station 3 --}}
+                        @if($station->id == 3 && !$canAccessStation3)
+                            <div class="overlay">
+                                <span class="small text-white">LOCKED</span>
+                            </div>
+                        @endif
 
-                            @if($station->status)
-                                <div class="overlay">
-                                    <span class="text-white" style="font-size:10px;">REDEEMED</span>
-                                </div>
-                            @endif
+                        {{-- ✅ Redeemed --}}
+                        @if($station->status)
+                            <div class="overlay">
+                                <span class="text-white" style="font-size:10px;">REDEEMED</span>
+                            </div>
+                        @endif
+
                     </div>
-
-                    <!-- Text -->
-                    {{-- <div class="station-text">
-                        <span class="station-number">{{ $station->id }}.</span>
-                        <span class="station-title">
-                            {!! strtoupper($station->name) !!}
-                        </span>
-                    </div> --}}
-
                 </div>
 
             @endforeach
         </div>
     </div>
 
+    @php
+        $earlyBird = auth()->user()->is_early_bird;
+        $completedStation4 = auth()->user()->stationUser()->where('station_id', 4)->exists();
+        $showEarlyBirdModal = $earlyBird;
+    @endphp
+
+    <div class="modal fade" id="earlyBirdModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center p-4">
+
+                <h5>Hello!</h5>
+
+                <p class="mb-4">
+                    We see you've pre-registered!<br>
+                    <br>
+                    Tap the <b>'Early Bird'</b> button below<br>
+                    and grab your special reward!
+                </p>
+
+                <button class="custom-btn custom-btn-primary w-75 m-auto" data-bs-dismiss="modal">
+                    CLOSE
+                </button>
+
+            </div>
+        </div>
+    </div>
+
 </div>
     @push('scripts')
+    @if($showEarlyBirdModal && !$completedStation4)
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                let modal = new bootstrap.Modal(document.getElementById('earlyBirdModal'));
+                modal.show();
+            });
+        </script>
+        @endif
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 let canAccessStation5 = @json($canAccessStation5);

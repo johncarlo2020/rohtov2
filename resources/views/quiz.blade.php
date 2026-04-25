@@ -141,18 +141,14 @@
     box-shadow: 0 8px 18px rgba(0,0,0,0.15);
 }
 
-/* ❌ WRONG */
 .answer-tile.wrong {
-    border: 2px solid #ff4d4f;
     color: #ff4d4f;
-    box-shadow: 0 0 10px rgba(255, 77, 79, 0.4);
+    box-shadow: 0 0 10px rgba(255, 77, 79, 0.8);
 }
 
-/* ✅ CORRECT */
 .answer-tile.correct {
-    border: 2px solid #28a745;
     color: #28a745;
-    box-shadow: 0 0 12px rgba(40, 167, 69, 0.4);
+    box-shadow: 0 0 12px rgba(40, 167, 69, 0.8);
 }
 
 

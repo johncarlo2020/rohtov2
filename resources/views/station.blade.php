@@ -23,8 +23,9 @@
 
     #start-scanner,#start-quiz,#perfume-next-btn {
         width: 50%;
+        margin: auto;
         border-color: #ffffff;
-        border-radius: 5px;
+        border-radius: 30px;
         background-color: #ffffff;
         padding: 0;
         display: flex;
@@ -80,18 +81,6 @@
   gap: clamp(12px, 3vh, 24px);
 }
 
-/* Title */
-/* #mainContent h2 {
-  font-size: clamp(1rem, 4.5vw, 1.4rem);
-  letter-spacing: clamp(1px, 0.4vw, 2px);
-} */
-/* Text */
-/* #mainContent p {
-  font-size: 16px;
-  max-width: 38ch;
-  line-height: 1.5;
-} */
-
 /* Buttons */
 .custom-btn-secondary {
   font-size: 16px;
@@ -115,6 +104,54 @@
 
 .tile-title , .station_name  {
     text-transform: uppercase;
+}
+
+.scan-btn {
+    background: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+/* pill icon */
+.scan-icon {
+    width: 80px;
+    height: 40px;
+
+    background: rgba(255,255,255,0.6);
+    border-radius: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+
+    transition: 0.25s ease;
+}
+
+/* icon */
+.scan-icon i {
+    font-size: 18px;
+    color: #2f5ea8;
+}
+
+/* text */
+.scan-label {
+    color: #2f5ea8;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* hover effect */
+.scan-btn:hover .scan-icon {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.15);
 }
 
     /* Idle animation */
@@ -198,29 +235,25 @@
 
                   
 
-                @elseif ($station->id == 10)
-
+                @elseif ($station->id == 4)
                     <!-- ✅ Station 1 → Quiz -->
-                    <button id="goto-stamping"
-                            class="text-dark custom-btn-secondary px-3 py-2">
-                        I'M THERE
-                    </button>
-
+                    <div class="scan-container mb-5">
+                        <button id="start-scanner" class="scan-btn mb-4">
+                            <span class="scan-icon">
+                                <i class="fa-solid fa-camera"></i>
+                            </span>
+                        </button>
+                        <span class="scan-label">
+                            Scan the QR code to proceed
+                        </span>
+                    </div>
                 @else
-
-                    <!-- ✅ Other stations → Scanner -->
-                    {{-- <button id="start-scanner"
-                            class="text-dark custom-btn-secondary px-3 py-2">
-                        SCAN QR CODE TO PROCEED
-                    </button> --}}
-
-                      <div class="text-content mt-3">
-                                <a href="{{ route('station.stamping', $station->id);}}" id="routeBtn"
-                                    class="custom-btn w-auto px-5 fw-regular custom-btn-primary text-white">
-                                    I'M THERE
-                                </a>
-                            </div>
-
+                    <div class="text-content mt-3">
+                        <a href="{{ route('station.stamping', $station->id);}}" id="routeBtn"
+                            class="custom-btn w-auto px-5 fw-regular custom-btn-primary text-white">
+                            I'M THERE
+                        </a>
+                    </div>
                 @endif
             </div>
 
@@ -237,9 +270,14 @@
             <div id="{{ $user ? '' : 'forceQr' }}" class="icon-container"></div> 
                 <div id="scannerContainer" class="scanner-container d-none"> 
                     <!-- <button id="close" class="mx-auto mt-4 camera-btn">x</button> --> 
-                    <h2 class="text-center fw-bold mb-4">FREEDOM HAS TASTE</h2> 
+                    <div class="img-container">
+                        <img class="station-image w-25 mx-auto"
+                            src="{{ asset('images/station/ST' . $station->id . '.webp') }}"
+                        alt="Station Image">
+                    </div>
+                    <h2 class="text-center fw-bold mb-4">{!! $station->description !!}</h2> 
                     <div id="reader"></div> 
-                    <p class="mt-4 scanner-text text-center text-white">Find the QR code &<br> scan to continue your journey</p> 
+                    <p class="mt-4 scanner-text text-center">Find the QR code &<br> scan to continue your journey</p> 
                 </div> 
             </div>
         </div>
@@ -253,7 +291,7 @@
                 urls: {
                     process_qr_code: '{{ route('process_qr_code') }}',
                     submit_quiz: '{{ route('submit.answer') }}',
-                    congrats: '{{ route('congrats') }}'
+                    congrats: '{{ route('congrats.redeemed') }}'
                 },
                 assets: {
                     check_image: '{{ asset('images/check.png') }}',

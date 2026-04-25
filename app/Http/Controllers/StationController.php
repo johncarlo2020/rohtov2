@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Events\babyEvent;
 use App\Helpers\GlobalHelper;
+use App\Imports\EarlyBirdImport;
 use App\Models\Brand;
+use App\Models\EarlyBird;
 use App\Models\Gifts;
 use App\Models\Perfume;
 use App\Models\Question;
@@ -20,14 +22,10 @@ use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 class StationController extends Controller
 {
-
-
-
-
-
 
     public function index(Station $station)
     {
@@ -154,18 +152,30 @@ class StationController extends Controller
             return $developer->pivot->isCompleted == 1;
         });
 
-        if ($stationDone < 4) {
-             return view('dashboard', compact('stations', 'stationDone', 'canAccessStation5', 'completedStationIds', 'nextStation','isRedeemed', 'canAccessStation3'));
-        } else {
-            return redirect()->route('congrats');
-        }
-
+        return view('dashboard', compact('stations', 'stationDone', 'canAccessStation5', 'completedStationIds', 'nextStation','isRedeemed', 'canAccessStation3'));
+        
     }
 
     public function scanner()
     {
         // dd('asdasd');
         return view('scanner');
+    }
+
+    public function scanDeveloper(Request $request)
+    {
+        $qrCodeMessage = trim($request->qrCodeMessage);
+        $developer_id = substr($qrCodeMessage, -1);
+
+        if ($developer_id != $request->developer) {
+                return response()->json(['message' => 'Invalid Qr', 'status' => 'error'], 400);
+            }
+
+        return response()->json([
+            'success' => true,
+            'type' => 'developer',
+            'redirect_url' => route('developer.quiz', $developer_id)
+        ]);
     }
 
 
@@ -175,10 +185,15 @@ class StationController extends Controller
 
         $qrCodeMessage = trim($request->qrCodeMessage);
 
-        // Get the last character of the QR code message
-       $station_id = substr($qrCodeMessage, -1);
+        if (!str_contains($qrCodeMessage, 'earlybird=')) {
+            return response()->json([
+                'message' => 'Invalid QR (Not Early Bird)',
+                'status' => 'error'
+            ], 400);
+        }
 
-        // dd($station_id);
+        // Get the last character of the QR code message
+       $station_id = $request->station;
 
 
         // Assume that `$station_id` is validated before this point
@@ -186,9 +201,9 @@ class StationController extends Controller
         try {
             DB::beginTransaction();
 
-            if ($station_id != $request->station) {
-                return response()->json(['message' => 'Invalid Qr', 'status' => 'error'], 400);
-            }
+            // if ($station_id != $request->station) {
+            //     return response()->json(['message' => 'Invalid Qr', 'status' => 'error'], 400);
+            // }
 
             $lastStation = StationUser::where('user_id', auth()->id())->orderBy('id', 'desc')->first();
 
@@ -216,20 +231,12 @@ class StationController extends Controller
             $stationUser->station_id = $station_id;
             $stationUser->time_spent = $secondsSpent;
             $stationUser->save();
-
-            // Handle gift selection for station 3
-            // if ($station_id == 3 && $request->has('selected_gift_id') && $request->selected_gift_id) {
-            //     $userGift = new \App\Models\UserGift();
-            //     $userGift->user_id = auth()->id();
-            //     $userGift->gift_id = $request->selected_gift_id;
-            //     $userGift->station_id = $station_id;
-            //     $userGift->is_redeemed = false;
-            //     $userGift->save();
-            // }
-
             DB::commit();
             // Success response
-            return response()->json(['message' => 'Station ID updated successfully'], 200);
+            return response()->json(
+                ['message' => 'Station ID updated successfully',
+                'type' => 'station']
+                , 200);
         } catch (\Exception $e) {
             DB::rollback();
 
@@ -388,6 +395,27 @@ class StationController extends Controller
         return view('dashboardadmin', compact('data', 'permission'));
     }
 
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'csv_file' => 'required|mimes:csv,xlsx,txt'
+        ]);
+
+        $import = new EarlyBirdImport();
+
+        Excel::import($import, $request->file('csv_file'));
+
+        return back()->with('success', [
+            'imported' => $import->imported,
+            'skipped' => $import->skipped,
+            'errors' => $import->errors,
+        ]);
+    }
+
+
+
+
     public function users()
     {
         $today = Carbon::today();
@@ -436,6 +464,13 @@ class StationController extends Controller
         });
 
         return view('users', compact('data', 'permission'));
+    }
+
+    public function earlybird()
+    {
+        $earlyBirds = EarlyBird::all();
+
+        return view('earlybird', compact('earlyBirds'));
     }
 
     public function userData(User $user)
@@ -715,19 +750,32 @@ class StationController extends Controller
             $stationUser->time_spent = $secondsSpent;
             $stationUser->save();
 
-            // Handle gift selection for station 3
-            // if ($station_id == 3 && $request->has('selected_gift_id') && $request->selected_gift_id) {
-            //     $userGift = new \App\Models\UserGift();
-            //     $userGift->user_id = auth()->id();
-            //     $userGift->gift_id = $request->selected_gift_id;
-            //     $userGift->station_id = $station_id;
-            //     $userGift->is_redeemed = false;
-            //     $userGift->save();
-            // }
+            $user = auth()->user();
+
+            // count completed
+            $completed = $user->stationUser()
+                ->distinct('station_id')
+                ->count();
+
+            // required stations
+            $totalRequired = $user->is_early_bird ? 4 : 3;
 
             DB::commit();
-            // Success response
-            return response()->json(['message' => 'Station ID updated successfully'], 200);
+            // 🎉 CHECK IF FINISHED
+
+            if ($completed >= $totalRequired) {
+                return response()->json([
+                    'redirect_url' => route(
+                        $user->is_early_bird ? 'congrats' : 'dashboard'
+                    )
+                ]);
+            }
+
+            // otherwise go dashboard
+            return response()->json([
+                'redirect_url' => route('dashboard')
+            ]);
+
         } catch (\Exception $e) {
             DB::rollback();
 

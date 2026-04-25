@@ -11,8 +11,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const processQrCodeUrl = stationConfig.urls.process_qr_code;
     const congratsUrl = stationConfig.urls.congrats;
     const dashboardUrl = stationConfig.urls.dashboard;
+    const quizUrl = stationConfig.urls.quiz;
 
     const stationId = stationConfig.station_id;
+    const developerId = stationConfig.developer_id;
     const stationName = stationConfig.station_name;
     const checkImageUrl = stationConfig.assets.check_image;
     const errorImageUrl = stationConfig.assets.error_image;
@@ -299,12 +301,26 @@ document.addEventListener('DOMContentLoaded', function () {
             data: {
                 qrCodeMessage: message,
                 station: stationId,
+                developer: developerId,
             },
             success: function (response) {
                 const confettiCanvas = document.createElement('canvas');
                 // ... (confetti logic from original file)
-                $('#badge').attr('src', checkImageUrl);
-                $('#scanCompleteModal').modal('show');
+                
+                if(response.type == 'station') 
+                {
+                    window.location.href = congratsUrl;
+                }
+                else 
+                {
+                    window.location.href = response.redirect_url;
+                }
+                
+
+                // window.location.href = response.quiz_url;
+
+                // $('#badge').attr('src', checkImageUrl);
+                // $('#scanCompleteModal').modal('show');
 
                 const trimmedMessage = message.trim();
                 const lastCharacter = trimmedMessage.charAt(trimmedMessage.length - 1);
@@ -333,7 +349,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 $('#scanCompleteModal').modal('show');
                 $('#routeBtn')
                 .removeAttr('href') // remove href if it exists
-                .attr('onclick', `gotoStation(${stationId})`);
+                .attr('onclick', `gotoStation(${stationId || developerId})`);
                 
             }
         });

@@ -45,7 +45,8 @@ class User extends Authenticatable
         'baby_name',
         'charname',
         'marketing',
-        'property_budget'
+        'property_budget',
+        'is_early_bird',
     ];
     /**
      * The attributes that should be hidden for serialization.

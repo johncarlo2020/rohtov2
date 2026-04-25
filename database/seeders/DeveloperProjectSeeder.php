@@ -36,6 +36,10 @@ class DeveloperProjectSeeder extends Seeder
                 ["D'Tiara", 'Teluk Kumbar, Penang'],
             ],
 
+            'Penang Null' => [
+                ["Penang", 'Null, Penang']
+            ],
+
             'Malton Berhad' => [
                 ['River Park Bangsar South', 'Bangsar South, Kuala Lumpur'],
                 ['Park Green Pavilion Bukit Jalil', 'Bukit Jalil, Kuala Lumpur'],

@@ -80,9 +80,7 @@ Route::get('/ipad-select-message-type-duplicate',function(){
         return view('ipad.message-type-duplicate');
     })->name('ipad.message.type.duplicate');
 
-Route::get('/congrats', function () {
-    return view('congrats');
-})->name('congrats');
+
 
 Route::get('/voteyourfav', function () {
     return view('welcomeVote');
@@ -94,7 +92,10 @@ Route::get('/congratsVote', 'App\Http\Controllers\StationController@congratsVote
 
 Route::group(['middleware' => ['admin']], function () {
     Route::get('/admin', 'App\Http\Controllers\StationController@admin')->name('admin');
+
     Route::get('/admin/users', 'App\Http\Controllers\StationController@users')->name('users');
+    Route::get('/admin/earlybird', 'App\Http\Controllers\StationController@earlybird')->name('earlybird');
+
     Route::get('/admin/scanner', 'App\Http\Controllers\StationController@scanner')->name('scanner');
 
     Route::post('verify-otp-admin', 'App\Http\Controllers\StationController@verifyAdmin')->name('verifyAdmin');
@@ -114,6 +115,8 @@ Route::group(['middleware' => ['admin']], function () {
     Route::post('/admin/check', 'App\Http\Controllers\StationController@check')->name('check');
     Route::delete('/admin/users/{id}', 'App\Http\Controllers\StationController@userDelete')->name('users.destroy');
     Route::post('/editUser', 'App\Http\Controllers\StationController@editUser')->name('editUser');
+
+    Route::post('/earlybird/import', [StationController::class, 'import'])->name('earlybird.import');
 
 });
 
@@ -144,11 +147,23 @@ Route::group(['middleware' => ['client']], function () {
     Route::get('/discover', 'App\Http\Controllers\StationController@discover')->name('discover');
     Route::get('/giftselection', 'App\Http\Controllers\StationController@giftSelection')->name('station.giftselection');
     Route::post('/giftselection/redeem', 'App\Http\Controllers\StationController@redeemGift')->name('giftselection.redeem');
+    
     Route::post('/process_qr_code', 'App\Http\Controllers\StationController@scan')->name('process_qr_code');
+
+     Route::post('/process_qr_code_developer', 'App\Http\Controllers\StationController@scanDeveloper')->name('process_qr_code.developer');
+
     Route::post('/process_stamp', 'App\Http\Controllers\StationController@stamp')->name('process_stamp');
     Route::get('/station/{station}/stamping', 'App\Http\Controllers\StationController@stamping')->name('station.stamping');
 
     Route::post('/quiz/answer', [StationController::class, 'submitAnswer'])->name('submit.answer');
+
+    Route::get('/redeemed-congrats', function () {
+        return view('pre-registration-success');
+    })->name('congrats.redeemed');
+
+    Route::get('/congrats', function () {
+        return view('congrats');
+    })->name('congrats');
 
 
 

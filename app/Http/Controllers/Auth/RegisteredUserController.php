@@ -6,6 +6,7 @@ use App\Helpers\GlobalHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Countries;
 use App\Models\Developer;
+use App\Models\EarlyBird;
 use App\Models\Project;
 use App\Models\Regime;
 use App\Models\RegimeUser;
@@ -47,13 +48,21 @@ class RegisteredUserController extends Controller
             'property_budget' => ['required', 'string'],
         ]);
 
+        //check if user is an early bird
+        $earlyBird = EarlyBird::where('email', strtolower($validated['email']))->first();
+
     
         $user = User::create([
             'fname' => $validated['fname'],
             'email' => $validated['email'],
             'property_budget' => $validated['property_budget'],
             'password' => Hash::make('password'),
+            'is_early_bird' => !!$earlyBird,
         ]);
+
+        if ($earlyBird) {
+            $earlyBird->update(['claimed' => true]);
+        }
 
         $locations = $validated['locations'];
 
@@ -63,10 +72,11 @@ class RegisteredUserController extends Controller
 
             // 🎯 Developers for this location
             $developerIds = Developer::whereHas('projects', function ($q) use ($location) {
-                    $q->where('address', $location);
-                })
-                ->pluck('id')
-                ->toArray();
+                $q->where('address', $location);
+            })
+            ->where('id', '!=', 5) // 👈 exclude
+            ->pluck('id')
+            ->toArray();
 
             if (empty($developerIds)) continue;
 

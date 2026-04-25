@@ -128,22 +128,21 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Number</th>
-                            <th>Country</th>
+                            <th>Fullname</th>
+                            <th>Email</th>
                             @foreach ($data['stations'] as $station)
                             <th>{!! strtoupper($station['name']) !!}</th>
                             @endforeach
                             <th>Timestamp</th>
                             <th>Action</th>
-
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($data['users'] as $user)
                         <tr data-user-id="{{ $user->id }}">
                             <td>{{ $loop->iteration }}</td>
-                            <td>{{ $user->number }}</td>
-                            <td>{{ $user->country }}</td>
+                            <td>{{ $user->fname }}</td>
+                            <td>{{ $user->email }}</td>
                             @foreach ($user['stations'] as $station)
                             <td class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-danger' }}">
                                 {{ $station['value'] ? 'Yes' : 'No' }}</td>

@@ -25,9 +25,8 @@
             border-radius: 30px;
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.18), 0 10px 20px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.7);
         }
-
-    
     </style>
+    
     <div class="py-4 map-page main-content stamping-page" data-id="{{ request()->segment(2) }}">
         <div class="overlay station-{{ request()->segment(2) }}"></div>
         <div class="animate-entry">
@@ -56,7 +55,11 @@
             Stamp Collected!</h2> --}}
         </div>
         <div class="station-selection-container mb-2 animate-entry delay-2">
-            <h3 class="text-center mb-3 mt-5 booth-description">Win the game and get a stamp <br> to unlock a prize</h3>
+            @if(request()->segment(2) == 1)
+                <h2 class="text-center mb-3 mt-5 booth-description">Win the game and get a stamp <br> to unlock a prize</h2>
+            @else
+                <h2 class="text-center mb-3 mt-5 booth-description">Leave your best wishes <br> in our video! </h2>  
+            @endif
             <!-- Center image (middle area) -->
             <div class="row">
                 <div class="touchBox-container col-11 m-auto d-flex justify-content-center align-items-center p-0 animate-entry">
@@ -79,12 +82,7 @@
                 <div class="col-12 text-center">
                     <div class="d-block">
                         <div class="col mb-3 animate-entry delay-2">
-                            <button type="button" class="custom-btn custom-btn-primary d-none nextBtn"
-                                @if(request()->segment(2) == 13)
-                                    onclick="window.location.href='{{ route('station.giftselection') }}'"
-                                @else
-                                    onclick="window.location.href='{{ route('dashboard') }}'"
-                                @endif>
+                            <button type="button" class="custom-btn custom-btn-primary d-none nextBtn">
                                 NEXT
                             </button>
                         </div>
@@ -105,7 +103,8 @@
             const activeInside = new Map();
             let hasStamped = false;
             const user = @json($user);
-            isStamped();    
+            isStamped();  
+
             function isStamped()
             {
                 if(user)
@@ -113,7 +112,15 @@
                     hasStamped = true;
                     stampingPage.classList.add("active");
                     const text = document.querySelector(".booth-description");
-                        text.textContent = "Stamp Collected!";  
+                        if(stationid == 1)
+                        {
+                            text.innerHTML = "Conratulations!<br>You've won the game.";
+                        }
+                        else
+                        {   
+                            text.innerHTML = "The video is fantastic, well<br>done!";
+                        }
+                        
                         // text.classList.remove("d-none");
                             const button = document.querySelector(".nextBtn");
                             if (button) {
@@ -163,6 +170,13 @@
                                 },
                                 success: function (response) {
                                     console.log(response);
+
+                                    $('.nextBtn').removeClass('d-none');
+
+                                    // ✅ attach redirect dynamically
+                                    $('.nextBtn').on('click', function () {
+                                        window.location.href = response.redirect_url;
+                                    });
                                 },
                                 error: function (xhr, status, error) {
                                     console.error('Error sending QR Code message:', error);
@@ -172,14 +186,14 @@
 
                             if(stationid == 1)
                             {
-                                text.textContent = "Conratulations! You've collected the stamp. Please proceed to the next station.";  
+                                text.innerHTML = "Conratulations!<br>You've won the game.";
                             }
                             else
                             {   
-
+                                text.innerHTML = "The video is fantastic, well<br>done!";
                             }
 
-                            text.textContent = "Stamp Collected!";  
+                            // text.textContent = "Stamp Collected!";  
                             const button = document.querySelector(".nextBtn");
                             if (button) {
                                 button.classList.remove("d-none");

@@ -19,7 +19,7 @@
 
     <!-- Common CDN packages (CSS, etc.) -->
     <x-appCdnPackages />
-    @include('components.fonts')
+    {{-- @include('components.fonts') --}}
     @stack('styles')
     <!-- Vite assets (compiled CSS and JS) -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])

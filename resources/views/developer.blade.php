@@ -301,15 +301,15 @@
             // Pass data from Blade to JavaScript
             window.stationConfig = {
                 urls: {
-                    process_qr_code: '{{ route('process_qr_code') }}',
+                    process_qr_code: '{{ route('process_qr_code.developer') }}',
                     submit_quiz: '{{ route('submit.answer') }}',
-                    congrats: '{{ route('congrats') }}'
+                    congrats: '{{ route('congrats.redeemed') }}'
                 },
                 assets: {
                     check_image: '{{ asset('images/check.png') }}',
                     error_image: '{{ asset('images/error.png') }}'
                 },
-                station_id: {{ $developer->id }},
+                developer_id: {{ $developer->id }},
                 station_name: `{!! strtoupper($developer->name) !!}`,
                 asset_base: "{{ asset('') }}"
             };

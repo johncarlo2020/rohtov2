@@ -766,7 +766,7 @@ class StationController extends Controller
             if ($completed >= $totalRequired) {
                 return response()->json([
                     'redirect_url' => route(
-                        $user->is_early_bird ? 'congrats' : 'dashboard'
+                        $user->is_early_bird ? 'congrats' : 'congrats'
                     )
                 ]);
             }

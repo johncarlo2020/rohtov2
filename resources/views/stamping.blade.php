@@ -26,7 +26,7 @@
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.18), 0 10px 20px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.7);
         }
     </style>
-    
+
     <div class="py-4 map-page main-content stamping-page" data-id="{{ request()->segment(2) }}">
         <div class="overlay station-{{ request()->segment(2) }}"></div>
         <div class="animate-entry">
@@ -57,8 +57,10 @@
         <div class="station-selection-container mb-2 animate-entry delay-2">
             @if(request()->segment(2) == 1)
                 <h2 class="text-center mb-3 mt-5 booth-description">Win the game and get a stamp <br> to unlock a prize</h2>
-            @else
+            @elseif(request()->segment(2) == 2)
                 <h2 class="text-center mb-3 mt-5 booth-description">Leave your best wishes <br> in our video! </h2>  
+            @else
+                <h2 class="text-center mb-3 mt-5 booth-description">Lucky Draw Booth</h2>  
             @endif
             <!-- Center image (middle area) -->
             <div class="row">
@@ -116,9 +118,13 @@
                         {
                             text.innerHTML = "Conratulations!<br>You've won the game.";
                         }
-                        else
+                        else if(stationid == 2)
                         {   
                             text.innerHTML = "The video is fantastic, well<br>done!";
+                        }
+                        else 
+                        {
+                            text.innerHTML = "Congratulations";
                         }
                         
                         // text.classList.remove("d-none");
@@ -188,9 +194,13 @@
                             {
                                 text.innerHTML = "Conratulations!<br>You've won the game.";
                             }
-                            else
+                            else if(stationid == 2)
                             {   
                                 text.innerHTML = "The video is fantastic, well<br>done!";
+                            }
+                            else 
+                            {
+                                text.innerHTML = "Congratulations";
                             }
 
                             // text.textContent = "Stamp Collected!";  

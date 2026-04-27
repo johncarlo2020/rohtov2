@@ -18,5 +18,6 @@ class DatabaseSeeder extends Seeder
         $this->call(PerfumeSeeder::class);
         $this->call(DeveloperProjectSeeder::class);
         $this->call(QuestionSeeder::class);
+        $this->call(GiftsSeeder::class);
     }
 }

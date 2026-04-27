@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('user_gifts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('gift_id')->constrained()->onDelete('cascade');
             $table->boolean('is_redeemed')->default(false);
             $table->timestamp('redeemed_at')->nullable();
             $table->timestamps();

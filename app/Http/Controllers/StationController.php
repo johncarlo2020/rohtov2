@@ -204,24 +204,39 @@ class StationController extends Controller
 
   public function scan(Request $request)
   {
-    // Parse the URL to get the query string
+        $qrCodeMessage = trim($request->qrCodeMessage);
 
-    $qrCodeMessage = trim($request->qrCodeMessage);
+        // Parse URL
+        $path = parse_url($qrCodeMessage, PHP_URL_PATH);
+        $query = parse_url($qrCodeMessage, PHP_URL_QUERY);
 
-    if (!str_contains($qrCodeMessage, "earlybird=")) {
-      return response()->json(
-        [
-          "message" => "Invalid QR (Not Early Bird)",
-          "status" => "error",
-        ],
-        400
-      );
-    }
+        $segments = explode('/', trim($path, '/'));
+        $route = $segments[0] ?? null;
+        $prize_id = $segments[1] ?? null;  // "5"
 
-    // Get the last character of the QR code message
-    $station_id = $request->station;
+        // Parse query params properly
+        parse_str($query, $queryParams);
 
-    // Assume that `$station_id` is validated before this point
+        // Detect types
+        $isEarlyBird = isset($queryParams['earlybird']) || $route === 'earlybird';
+        $isPrize = $route === 'prize';
+
+        if (!$isEarlyBird && !$isPrize) {
+            return response()->json([
+                "message" => "Invalid QR",
+                "status" => "error",
+            ], 400);
+        }
+
+        // ✅ Station check (only skip for prize maybe — your logic choice)
+        $station_id = $request->station;
+
+        if ((int) $station_id === 3 && $isEarlyBird) {
+            return response()->json([
+                "message" => "Station 3 skipped",
+                "status" => "success",
+            ], 200);
+        }
 
     try {
       DB::beginTransaction();
@@ -259,9 +274,19 @@ class StationController extends Controller
       $stationUser->time_spent = $secondsSpent;
       $stationUser->save();
       DB::commit();
+
+        // Handle gift selection for station 3
+        if ($station_id == 3 && $route == 'prize') {
+            $userGift = new \App\Models\UserGift();
+            $userGift->user_id = auth()->id();
+            $userGift->gift_id = $prize_id;
+            $userGift->is_redeemed = true;
+            $userGift->save();
+        }
+
       // Success response
       return response()->json(
-        ["message" => "Station ID updated successfully", "type" => "station"],
+        ["message" => "Station ID updated successfully", "type" => "station", "prizeId" => $prize_id],
         200
       );
     } catch (\Exception $e) {
@@ -1039,4 +1064,10 @@ class StationController extends Controller
       "message" => "Quiz submitted successfully",
     ]);
   }
+
+  public function prize(Request $request)
+  {
+    return view('prize');
+  }
+
 }

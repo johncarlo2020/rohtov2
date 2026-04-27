@@ -309,6 +309,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 
                 if(response.type == 'station') 
                 {
+                    if(response.station_id == 3) 
+                    {
+
+                    }
                     window.location.href = congratsUrl;
                 }
                 else 

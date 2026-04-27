@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::create('gifts', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('total')->nullable();
-            $table->boolean('enabled')->default(true);
+            $table->text('stock_level')->nullable();
             $table->timestamps();
         });
     }

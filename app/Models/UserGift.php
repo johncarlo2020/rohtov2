@@ -11,7 +11,7 @@ class UserGift extends Model
 
     protected $fillable = [
         'user_id',
-        'is_redeemed',
+        'gift_id',
         'redeemed_at',
         'is_redeemed'
     ];

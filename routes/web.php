@@ -136,6 +136,7 @@ Route::group(['middleware' => ['client']], function () {
 
     Route::get('/reward/{reward}', 'App\Http\Controllers\RewardController@index')->name('reward.index');
 
+    Route::get('/prize/{prize_id}', 'App\Http\Controllers\StationController@prize')->name('prize.id');
     // Referrals
     Route::get('/referrals', 'App\Http\Controllers\ReferralsController@index')->name('referrals.index');
 
@@ -154,6 +155,8 @@ Route::group(['middleware' => ['client']], function () {
 
     Route::post('/process_stamp', 'App\Http\Controllers\StationController@stamp')->name('process_stamp');
     Route::get('/station/{station}/stamping', 'App\Http\Controllers\StationController@stamping')->name('station.stamping');
+
+  
 
     Route::post('/quiz/answer', [StationController::class, 'submitAnswer'])->name('submit.answer');
 

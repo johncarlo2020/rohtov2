@@ -134,7 +134,8 @@
         }
 
         .developer-logo {
-            max-height: 11vh;
+            height: 86px;
+            width: 80vw;
             object-fit: contain;
             display: block;
             margin: 0 auto;

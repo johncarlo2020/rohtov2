@@ -16,7 +16,8 @@
 @import "variables";
 
 // Establish base body styles for typography and background.
-body , html{
+body,
+html {
     // Use the font family variable defined in _variables.scss
     font-family: $font-family;
     // Use the paragraph size for the default font size
@@ -75,8 +76,7 @@ span,
 label,
 input,
 textarea,
-select,
-input::placeholder {
+select {
     font-family: $font-family;
     color: $text;
     line-height: $line-height;
@@ -110,6 +110,7 @@ input::placeholder,
 textarea::placeholder,
 option,
 .form-select {
+    font-family: $font-family;
     color: $gray-dark;
     opacity: 1;
     font-size: $small-text;
@@ -118,7 +119,7 @@ option,
 input[type="checkbox"],
 input[type="radio"] {
     font-size: $paragraph;
-    color:$white !important;
+    color: $white !important;
     cursor: pointer;
 }
 
@@ -156,7 +157,15 @@ input[type="radio"] {
 }
 
 .card {
-    p,h1,h2,h3,h4,h5,h6,span {
+
+    p,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    span {
         color: $primary;
     }
 

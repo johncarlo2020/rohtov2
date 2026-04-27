@@ -1,216 +1,191 @@
 <x-guest-layout>
-    <style>
-        label {
-            font-weight: 700;
-            letter-spacing: 1.4px;
-        }
-
-        .bottom-text p {
-            letter-spacing: 1.3px;
-            font-weight: 300;
-            text-align: center
-        }
-    </style>
     <div class="register-main with-scroll">
         <div class="justify-content-center w-100">
-            <div class="mt-5 col-12 d-flex justify-content-center">
+            <div class="d-flex justify-content-center mt-5 col-12">
                 @include('components.branding')
             </div>
-            <div class="mt-3 w-100 px-2">
+            <div class="mt-3 px-2 w-100">
                 <h1 class="mb-4 text-center heading-dutch">SIGN UP</h1>
-                <div class="py-5 px-4 register-form-parent">
+                <div class="px-4 py-5 register-form-parent">
                     <form id="form" method="POST" action="{{ route('register') }}">
                         @csrf
-                        <div class="mb-2 row">
-                            <div class="col-12">
-                                <label for="">Full Name</label>
-                                <input id="fname" placeholder="Enter your full name" type="text"
-                                    class="input-text form-control @error('fname') is-invalid @enderror" name="fname"
-                                    value="{{ old('fname') }}" required autocomplete="fname" autofocus />
-                                @error('fname')
+
+                        {{-- Full Name --}}
+                        <div class="mb-3">
+                            <label for="fname">Full Name</label>
+                            <input id="fname" placeholder="Enter your full name" type="text"
+                                class="form-control input-text @error('fname') is-invalid @enderror" name="fname"
+                                value="{{ old('fname') }}" required autocomplete="fname" autofocus />
+                            @error('fname')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
-                                @enderror
-                            </div>
+                            @enderror
                         </div>
 
-                        <div class="mb-2 row">
-                            <div class="col-12">
-                                <label for="">Email Address</label>
-
-                                <input id="email" placeholder="example@email.com" type="email"
-                                    class="input-text form-control @error('email') is-invalid @enderror" name="email"
-                                    value="{{ old('email') }}" required autocomplete="email" />
-
-                                @error('email')
+                        {{-- Email --}}
+                        <div class="mb-3">
+                            <label for="email">Email Address</label>
+                            <input id="email" placeholder="example@email.com" type="email"
+                                class="form-control input-text @error('email') is-invalid @enderror" name="email"
+                                value="{{ old('email') }}" required autocomplete="email" />
+                            @error('email')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
-                                @enderror
-                            </div>
+                            @enderror
                         </div>
-                        <div class="mb-2 row">
-                            <label for="preferredLocation">Preferred Property Location</label>
-                            <div class="col-12 input-group">
-                                
-                                <select 
-                                    id="preferredLocation" 
-                                    class="form-select input-text" 
-                                    multiple 
-                                    name="locations[]" 
-                                    required
-                                >
-                                    <option disabled>Select up to 3 locations</option>
 
-                                    @foreach($locations as $location)
-                                        <option value="{{ $location }}"
-                                            {{ collect(old('locations'))->contains($location) ? 'selected' : '' }}>
-                                            {{ $location }}
-                                        </option>
-                                    @endforeach
+                        {{-- Preferred Location (multi-select, max 3) --}}
+                        <div class="mb-3">
+                            <label>Preferred Property Location</label>
+                            <div x-data="{
+                                open: false,
+                                selected: {{ json_encode(old('locations', [])) }},
+                                max: 3,
+                                options: {{ json_encode($locations) }},
+                                toggle(option) {
+                                    if (this.selected.includes(option)) {
+                                        this.selected = this.selected.filter(i => i !== option);
+                                    } else if (this.selected.length < this.max) {
+                                        this.selected.push(option);
+                                    }
+                                },
+                                get label() {
+                                    return this.selected.length ? this.selected.join(', ') : null;
+                                }
+                            }" @click.outside="open = false" class="custom-select-wrapper">
 
-                                </select>
-                            <small id="errorMsg" class="text-danger"></small>
+                                {{-- Hidden inputs for form submission --}}
+                                <template x-for="loc in selected" :key="loc">
+                                    <input type="hidden" name="locations[]" :value="loc">
+                                </template>
+
+                                <button type="button" @click="open = !open" class="custom-select-trigger"
+                                    :class="{ 'active': open }">
+                                    <span x-show="!label" class="select-placeholder">Select up to 3 locations</span>
+                                    <span x-show="label" class="select-value" x-text="label"></span>
+                                    <svg class="chevron" :class="{ 'rotate': open }" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+
+                                <div x-show="open" x-transition:enter="transition ease-out duration-100"
+                                    x-transition:enter-start="opacity-0 scale-95"
+                                    x-transition:enter-end="opacity-100 scale-100"
+                                    x-transition:leave="transition ease-in duration-75"
+                                    x-transition:leave-start="opacity-100 scale-100"
+                                    x-transition:leave-end="opacity-0 scale-95" class="custom-select-dropdown">
+                                    <template x-for="option in options" :key="option">
+                                        <label class="custom-select-option"
+                                            :class="{
+                                                'is-selected': selected.includes(option),
+                                                'is-disabled': !selected.includes(option) && selected.length >= max
+                                            }"
+                                            @click.prevent="toggle(option)">
+                                            <input type="checkbox" :checked="selected.includes(option)"
+                                                :disabled="!selected.includes(option) && selected.length >= max"
+                                                tabindex="-1">
+                                            <span x-text="option"></span>
+                                        </label>
+                                    </template>
+                                </div>
+
+                                <span class="select-hint" x-text="selected.length + ' / ' + max + ' selected'"></span>
                             </div>
+                            @error('locations')
+                                <span class="text-danger small">{{ $message }}</span>
+                            @enderror
                         </div>
-                        
 
-                        <div class="mb-2 row">
-                             <label for="">Property Budget</label>
-                            <div class="col-12 input-group">
-                              
-                                @php
+                        {{-- Property Budget --}}
+                        <div class="mb-3">
+                            <label>Property Budget</label>
+                            @php
                                 $budgets = [
                                     'RM1 million and above',
                                     'RM700K - RM999K',
                                     'RM500K - RM699K',
-                                    'Below RM500K'
+                                    'Below RM500K',
                                 ];
-                                @endphp
+                            @endphp
+                            <div x-data="{
+                                open: false,
+                                selected: '{{ old('property_budget', '') }}',
+                                options: {{ json_encode($budgets) }}
+                            }" @click.outside="open = false" class="custom-select-wrapper">
 
-                                <select class="form-select input-text" name="property_budget" required>
-                                    <option value="" disabled {{ old('property_budget') ? '' : 'selected' }}>
-                                        Select 1 property budget
-                                    </option>
+                                <input type="hidden" name="property_budget" :value="selected" required>
 
-                                    @foreach($budgets as $budget)
-                                        <option value="{{ $budget }}" 
-                                            {{ old('property_budget') == $budget ? 'selected' : '' }}>
-                                            {{ $budget }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                <button type="button" @click="open = !open" class="custom-select-trigger"
+                                    :class="{ 'active': open }">
+                                    <span x-show="!selected" class="select-placeholder">Select 1 property budget</span>
+                                    <span x-show="selected" class="select-value" x-text="selected"></span>
+                                    <svg class="chevron" :class="{ 'rotate': open }" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+
+                                <div x-show="open" x-transition:enter="transition ease-out duration-100"
+                                    x-transition:enter-start="opacity-0 scale-95"
+                                    x-transition:enter-end="opacity-100 scale-100"
+                                    x-transition:leave="transition ease-in duration-75"
+                                    x-transition:leave-start="opacity-100 scale-100"
+                                    x-transition:leave-end="opacity-0 scale-95" class="custom-select-dropdown">
+                                    <template x-for="option in options" :key="option">
+                                        <div class="custom-select-option"
+                                            :class="{ 'is-selected': selected === option }"
+                                            @click="selected = option; open = false">
+                                            <span x-text="option"></span>
+                                        </div>
+                                    </template>
+                                </div>
                             </div>
+                            @error('property_budget')
+                                <span class="text-danger small">{{ $message }}</span>
+                            @enderror
                         </div>
 
                         <hr>
-                        <div class="mt-4 mb-2 row">
-                            <div class="col-12">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="privacy_policy" value="1"
-                                        id="privacyPolicy" required />
-                                    <small class="form-check-label text-dark" for="privacyPolicy" style="color:#285ca9 !important;">
-                                        I have read and agree to the <a href="https://www.iproperty.com.my/privacy-policy/" class="text-primary">Terms and
-                                            Conditions</a>. and <a href="https://www.iproperty.com.my/terms-and-conditions/" class="text-primary">Privacy Policy</a>.
-                                    </small>
-                                </div>
+
+                        {{-- Privacy Policy --}}
+                        <div class="mt-4 mb-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="privacy_policy" value="1"
+                                    id="privacyPolicy" required />
+                                <small class="text-dark form-check-label" for="privacyPolicy">
+                                    I have read and agree to the
+                                    <a href="https://www.iproperty.com.my/privacy-policy/" class="text-primary">Terms
+                                        and Conditions</a>
+                                    and
+                                    <a href="https://www.iproperty.com.my/terms-and-conditions/"
+                                        class="text-primary">Privacy Policy</a>.
+                                </small>
                             </div>
                         </div>
 
-                        <div class="mb-0 row">
-                            <div class="col-12 text-center">
-                                <button id="submitButton" type="submit"
-                                    class="custom-btn custom-btn-primary pulse-slow mt-4">
-                                    {{ __('SUBMIT') }}
-                                </button>
-                            </div>
+                        <div class="mb-0 text-center">
+                            <button id="submitButton" type="submit"
+                                class="mt-4 custom-btn custom-btn-primary pulse-slow">
+                                {{ __('SUBMIT') }}
+                            </button>
                         </div>
                     </form>
                 </div>
+
                 <div class="bottom-text">
+                    <p class="already-register">Already Registered</p>
                     <p class="already-register">
-                        Already Registered
-                    </p>
-                    <p class="already-register">
-                        Please Login
-                        <a href="{{ route('login') }}" class="">here</a>
+                        Please Login <a href="{{ route('login') }}">here</a>
                     </p>
                 </div>
             </div>
         </div>
     </div>
 </x-guest-layout>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-    //     const form = document.querySelector("#form");
-    //     const input = document.querySelector("#number");
-
-    //     const errorMsg = document.querySelector("#error-msg");
-    //     const validMsg = document.querySelector("#valid-msg");
-
-    //     // here, the index maps to the error code returned from getValidationError - see readme
-    //     const errorMap = [
-    //         "Invalid number",
-    //         "Invalid country code",
-    //         "Too short",
-    //         "Too long",
-    //         "Invalid number",
-    //     ];
-    //     const submitButton = document.querySelector("#submitButton");
-    //     const iti = window.intlTelInput(input, {
-    //         initialCountry: "my",
-    //         hiddenInput: "country",
-    //         utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js", // just for formatting/placeholders etc
-    //     });
-
-    //     const reset = () => {
-    //         input.classList.remove("error");
-    //         errorMsg.innerHTML = "";
-    //         errorMsg.classList.add("d-none");
-    //         validMsg.classList.add("d-none");
-    //     };
-
-    //     const showError = (msg) => {
-    //         input.classList.add("error");
-    //         errorMsg.innerHTML = msg;
-    //         errorMsg.classList.remove("d-none");
-    //     };
-
-    //     input.addEventListener("keyup", function () {
-    //         reset();
-    //         if (!input.value.trim()) {
-    //             showError("Required");
-    //             submitButton.disabled = true;
-    //         } else if (iti.isValidNumber()) {
-    //             validMsg.classList.remove("d-none");
-    //             submitButton.disabled = false;
-    //         } else {
-    //             const errorCode = iti.getValidationError();
-    //             const msg = errorMap[errorCode] || "Invalid number";
-    //             showError(msg);
-    //             submitButton.disabled = true;
-    //         }
-    //     });
-
-    const select = document.getElementById('preferredLocation');
-    const max = 3;
-    const errorMsg = document.getElementById('errorMsg');
-
-    select.addEventListener('change', function () {
-        const selected = Array.from(this.selectedOptions);
-
-        if (selected.length > max) {
-            // remove last selected
-            selected[selected.length - 1].selected = false;
-            errorMsg.textContent = "You can only select up to 3 options.";
-        } else {
-            errorMsg.textContent = "";
-        }
-    });
-
-    });
-
-    
-</script>

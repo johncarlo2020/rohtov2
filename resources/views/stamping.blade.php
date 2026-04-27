@@ -151,7 +151,7 @@
                 countDisplay.textContent = activeInside.size;
                 // Toggle grayscale removal
                 // Only trigger once
-                const requiredCount = 1;
+                const requiredCount = 3;
                 console.log(requiredCount);
                 console.log('activeInside.size:', activeInside.size, 'requiredCount:', requiredCount, 'hasStamped:', hasStamped);
 
@@ -175,8 +175,6 @@
                                     station: stampId,
                                 },
                                 success: function (response) {
-                                    console.log(response);
-
                                     $('.nextBtn').removeClass('d-none');
 
                                     // ✅ attach redirect dynamically

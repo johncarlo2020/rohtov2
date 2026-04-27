@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
@@ -63,15 +64,23 @@ class RegisteredUserController extends Controller
    */
   public function store(Request $request): RedirectResponse
   {
+    $allowedLocations = [
+      "George Town, Penang",
+      "Bayan Lepas, Penang",
+      "Perai, Penang",
+      "Farlim, Penang",
+      "Teluk Kumbar, Penang",
+      "Jelutong, George Town",
+      "Bandar Cassia Batu Kawan",
+      "Bertam Kepala Batas",
+      "Bandar Tanjung Tokong, Pulau Pinang",
+    ];
+
     $validated = $request->validate([
       "fname" => ["required", "string", "max:255"],
       "email" => ["required", "email", "max:255", "unique:users,email"],
       "locations" => ["required", "array", "max:3"],
-      "locations.*" => [
-        "required",
-        "string",
-        "in:George Town, Penang,Bayan Lepas, Penang,Perai, Penang,Farlim, Penang,Teluk Kumbar, Penang,Jelutong, George Town,Bandar Cassia Batu Kawan,Bertam Kepala Batas,Bandar Tanjung Tokong, Pulau Pinang",
-      ],
+      "locations.*" => ["required", "string", Rule::in($allowedLocations)],
       "property_budget" => ["required", "string"],
     ]);
 

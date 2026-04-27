@@ -294,7 +294,7 @@
             <div id="{{ $user ? '' : 'forceQr' }}" class="icon-container"></div>
             <div id="scannerContainer" class="scanner-container d-none">
                 <!-- <button id="close" class="mx-auto mt-4 camera-btn">x</button> -->
-                <h2 class="mb-4 text-center fw-bold">{{ strtoupper($developer->name) }} booth</h2>
+                <h2 class="mb-4 text-center fw-bold">{{ strtoupper($developer->name) }}</h2>
                 <div id="reader"></div>
                 <p class="mt-4 text-center scanner-text">Find the QR code & scan to proceed</p>
             </div>

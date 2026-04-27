@@ -306,26 +306,9 @@ document.addEventListener('DOMContentLoaded', function () {
             success: function (response) {
                 const confettiCanvas = document.createElement('canvas');
                 // ... (confetti logic from original file)
+
+                window.location.href = response.redirect_url;
                 
-                if(response.type == 'station') 
-                {
-                    if(response.station_id == 3) 
-                    {
-
-                    }
-                    window.location.href = congratsUrl;
-                }
-                else 
-                {
-                    window.location.href = response.redirect_url;
-                }
-                
-
-                // window.location.href = response.quiz_url;
-
-                // $('#badge').attr('src', checkImageUrl);
-                // $('#scanCompleteModal').modal('show');
-
                 const trimmedMessage = message.trim();
                 const lastCharacter = trimmedMessage.charAt(trimmedMessage.length - 1);
 

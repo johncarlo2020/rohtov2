@@ -275,6 +275,14 @@ class StationController extends Controller
       $stationUser->save();
       DB::commit();
 
+       $response = [
+          "type" => "station",
+          "message" => "Station ID updated successfully",
+          "station_id" => $station_id,
+          "prizeId" => $prize_id,
+          "redirect_url" => null,
+      ];
+
         // Handle gift selection for station 3
         if ($station_id == 3 && $route == 'prize') {
             $userGift = new \App\Models\UserGift();
@@ -284,11 +292,14 @@ class StationController extends Controller
             $userGift->save();
         }
 
-      // Success response
-      return response()->json(
-        ["message" => "Station ID updated successfully", "type" => "station", "prizeId" => $prize_id],
-        200
-      );
+     
+      // Special case: station 3
+      if ($station_id == 3) {
+          $response["type"] = "prize";
+          $response["redirect_url"] = route('prize.id', ['prize_id' => $prize_id]);
+      }
+
+      return response()->json($response, 200);
     } catch (\Exception $e) {
       DB::rollback();
 
@@ -1065,9 +1076,28 @@ class StationController extends Controller
     ]);
   }
 
-  public function prize(Request $request)
+  public function prize($prize_id)
   {
-    return view('prize');
+      // Example: get prize info (optional, if you have a Prize model)
+      $prize = \App\Models\Gifts::find($prize_id);
+
+      return view('prize', [
+          'prize_id' => $prize_id,
+          'prize' => $prize
+      ]);
+  }
+  public function prizeDone()
+  {
+      $user = auth()->user();
+
+      $completed = $user->stationUser()->distinct("station_id")->count();
+      $totalRequired = $user->is_early_bird ? 3 : 2;
+
+      if ($completed >= $totalRequired) {
+          return redirect()->route('congrats');
+      }
+
+      return redirect()->route('dashboard');
   }
 
 }

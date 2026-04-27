@@ -137,6 +137,7 @@ Route::group(['middleware' => ['client']], function () {
     Route::get('/reward/{reward}', 'App\Http\Controllers\RewardController@index')->name('reward.index');
 
     Route::get('/prize/{prize_id}', 'App\Http\Controllers\StationController@prize')->name('prize.id');
+    Route::post('/prize/done', 'App\Http\Controllers\StationController@prizeDone')->name('prize.done');
     // Referrals
     Route::get('/referrals', 'App\Http\Controllers\ReferralsController@index')->name('referrals.index');
 

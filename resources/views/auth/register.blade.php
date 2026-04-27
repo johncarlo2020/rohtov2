@@ -162,11 +162,11 @@
                                         value="1" id="privacyPolicy" x-model="agreed" required />
                                     <small class="text-dark form-check-label" for="privacyPolicy">
                                         I have read and agree to the
-                                        <a href="https://www.iproperty.com.my/privacy-policy/"
+                                        <a href="https://www.iproperty.com.my/terms-and-conditions/"
                                             class="text-primary">Terms
                                             and Conditions</a>
                                         and
-                                        <a href="https://www.iproperty.com.my/terms-and-conditions/"
+                                        <a href="https://www.iproperty.com.my/privacy-policy/"
                                             class="text-primary">Privacy Policy</a>.
                                     </small>
                                 </div>

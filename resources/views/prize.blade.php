@@ -1,67 +1,108 @@
 <x-app-layout>
     <style>
+
+        img.stamping-imagex {
+        height: 86px;
+        width: 80vw;
+        object-fit: contain;
+        display: block;
+        margin: 0 auto;
+        filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.08));
+    }
+        .flex-page {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* TOP */
+        .flex-top {
+            flex: 0 0 auto;
+        }
+
+        /* CENTER */
+        .flex-center {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* BOTTOM */
+        .flex-bottom {
+            flex: 0 0 auto;
+        }
+
         #touchBox {
-        width: 40svh;
-        height: 40svh;
-        padding:10%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        user-select: none;
-        touch-action: none; /* Important for multi-touch */
-        position: relative;
-    }
+            padding: 10%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            touch-action: none;
+            position: relative;
+        }
 
-    #touchBox img.stamping-image {
-        width: 100%;
-        height: 100%;
-        object-fit: contain; /* or cover if you want it to fill */
-        pointer-events: none; /* ← prevents blocking touch events */
-        user-select: none;
-    }
+        #touchBox img.stamping-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            pointer-events: none;
+            user-select: none;
+        }
 
-        .touchBox-container 
-        {
+        .touchBox-container {
             border-radius: 30px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.18), 0 10px 20px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.18),
+                        0 10px 20px rgba(0,0,0,0.08),
+                        0 2px 4px rgba(0,0,0,0.05),
+                        inset 0 1px 0 rgba(255,255,255,0.7);
         }
     </style>
 
-    <div class="py-4 map-page main-content stamping-page" data-id="{{ request()->segment(2) }}">
+    <div class="map-page main-content stamping-page flex-page" data-id="{{ request()->segment(2) }}">
         <div class="overlay station-{{ request()->segment(2) }}"></div>
-        
-        {{-- head --}}
-        <div class="animate-entry">
+
+        {{-- TOP --}}
+        <div class="flex-top animate-entry">
             @include('components.branding')
         </div>
 
-        {{-- middle --}}
-        <div class="mb-2 animate-entry delay-2">
-            <!-- Center image (middle area) -->
-            <div class="row">
-                <div class="touchBox-container col-11 m-auto d-flex justify-content-center align-items-center p-0 animate-entry">
-                    <div id="touchBox" class="d-block">
-                        <p class="text-center mb-3 booth-description">Lucky Draw Booth</p>  
+        {{-- CENTER --}}
+        <div class="flex-center animate-entry delay-2">
+            <div class="row w-100">
+                <div class="touchBox-container col-11 m-auto d-flex justify-content-center align-items-center p-0">
+
+                    <div id="touchBox" class="d-block text-center">
+
+                        <h2 class="mb-3 booth-description">You Win</h2>
+
                         <img class="stamping-imagex"
-                            src="{{ asset('images/gifts/GF' . request()->segment(2) . '.webp') }}"
+                            src="{{ asset('images/gifts/GF' . $prize_id . '.webp') }}"
                             alt="Stamp Image"
-                            data-stamp-id="{{ request()->segment(2) }}">
-                        <p class="text-center mb-3 booth-description">Lucky Draw Booth</p>  
+                            data-stamp-id="{{ $prize_id }}">
+
+                        <h4 class="mt-3 booth-description">
+                            {{ $prize->name ?? 'Lucky Draw Booth' }}
+                        </h4>
+
                     </div>
+
                 </div>
             </div>
         </div>
-        <!-- Bottom CTA -->
-            <div class="row">
-                <div class="col-12 text-center">
-                    <div class="d-block">
-                        <div class="col mb-3 animate-entry delay-2">
-                            <button type="button" class="custom-btn custom-btn-primary">
-                                DONE
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
+        {{-- BOTTOM --}}
+        <div class="flex-bottom text-center mb-3 animate-entry delay-2">
+
+            <form method="POST" action="{{ route('prize.done') }}">
+                @csrf
+                <button type="submit" class="custom-btn custom-btn-primary">
+                    DONE
+                </button>
+            </form>
+
+        </div>
+
     </div>
 </x-app-layout>

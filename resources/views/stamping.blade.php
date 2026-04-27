@@ -73,7 +73,7 @@
                     </div>
                 </div>
             </div>
-            <p class="text-center mt-4 mb-5">Please get the stamp from our crew</p>
+            <p class="text-center mt-4 mb-5">Please redeem the prize from our crew</p>
             <div id="countDisplay" class="text-center mt-3 d-none">
                 Touches inside count: <span id="countNum">0</span>
             </div>
@@ -151,7 +151,7 @@
                 countDisplay.textContent = activeInside.size;
                 // Toggle grayscale removal
                 // Only trigger once
-                const requiredCount = 3;
+                const requiredCount = 1;
                 console.log(requiredCount);
                 console.log('activeInside.size:', activeInside.size, 'requiredCount:', requiredCount, 'hasStamped:', hasStamped);
 
@@ -190,7 +190,7 @@
 
                             if(stationid == 1)
                             {
-                                text.innerHTML = "Conratulations!<br>You've won the game.";
+                                text.innerHTML = "Congratulations!<br>You've won the game.";
                             }
                             else if(stationid == 2)
                             {   

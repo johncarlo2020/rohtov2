@@ -215,7 +215,7 @@
 
                     @if ($developer->pivot->isCompleted)
                         <div class="overlay">
-                            <span class="text-white">COMPLETED</span>
+                            <h2 class="text-white">COMPLETED</h2>
                         </div>
                     @endif
                 </div>

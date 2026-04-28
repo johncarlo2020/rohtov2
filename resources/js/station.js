@@ -328,10 +328,22 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             error: function (xhr, status, error) {
                 console.error('Error sending QR Code message:', error);
+
                 $('.modal-icon').addClass('d-none');
                 $('.station_name_container').addClass('d-none');
                 // $('.station-text').html('Failed');
-                $('.message').html('Invalid QR Code');
+                
+                let message = 'Something went wrong';
+
+                // ✅ safest handling
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    message = xhr.responseJSON.message;
+                } else if (xhr.responseText) {
+                    message = xhr.responseText;
+                }
+
+                $('.message').html(message);
+
                 $('.check').attr('src', errorImageUrl);
                 $('#scanCompleteModal').modal('show');
                 $('#routeBtn')

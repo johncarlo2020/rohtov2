@@ -13,6 +13,7 @@ use App\Models\Question;
 use App\Models\Station;
 use App\Models\StationUser;
 use App\Models\User;
+use App\Models\UserGift;
 use App\Models\UserPerfume;
 use App\Models\Vote;
 use App\Providers\RouteServiceProvider;
@@ -241,9 +242,17 @@ class StationController extends Controller
     try {
       DB::beginTransaction();
 
-      // if ($station_id != $request->station) {
-      //     return response()->json(['message' => 'Invalid Qr', 'status' => 'error'], 400);
-      // }
+        // ✅ CHECK: already redeemed
+        $alreadyRedeemed = UserGift::where('user_id', auth()->id())
+              ->where('gift_id', $prize_id)
+              ->exists();
+
+        if ($alreadyRedeemed) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'You have already redeemed this gift'
+            ], 400);
+        }
 
       $lastStation = StationUser::where("user_id", auth()->id())
         ->orderBy("id", "desc")

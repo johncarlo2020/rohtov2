@@ -7,6 +7,17 @@ use App\Models\Gifts;
 
 class GiftController extends Controller
 {
+
+    public function stocks()
+    {
+        $gifts = Gifts::select('id', 'name', 'stock_level')->get();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $gifts
+        ]);
+    }
+
     public function stock($id)
     {
         $gift = Gifts::select('id', 'name', 'stock_level')->find($id);

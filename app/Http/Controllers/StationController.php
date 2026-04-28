@@ -517,9 +517,16 @@ class StationController extends Controller
       $user->completed_count = $numStations;
     }
 
+    $stationCounts = collect($data['users'])
+    ->flatMap(function ($user) {
+        return $user->stationUser->pluck('station_id');
+    })
+    ->countBy();
+
     $data["stations"] = $stations->map(function ($name, $id) use (
       $userStations,
-      $averageTimespentByStation
+      $averageTimespentByStation,
+      $stationCounts
     ) {
       return [
         "name" => $name,
@@ -528,6 +535,7 @@ class StationController extends Controller
           2
         ),
         "id" => $id,
+         "total_users" => $stationCounts->get($id, 0),
       ];
     });
 
@@ -590,7 +598,7 @@ class StationController extends Controller
       ->whereDoesntHave("roles", function ($q) {
         $q->where("name", "admin");
       })
-      ->with("stationUser","developers","gift")
+      ->with("stationUser","developers","userGift.gift","developers.projects")
       ->orderBy("id", "desc")
       ->get();
 
@@ -651,19 +659,29 @@ class StationController extends Controller
         $averageTimespentByStation
       ) {
         return [
+          "id" => $id,
           "name" => $name,
           "value" => in_array($id, $userStations),
         ];
       });
 
-          $userDevelopers = $user->developers->pluck("id")->toArray();
+      $userDevelopers = $user->developers->pluck("id")->toArray();
 
-    $user->developers_list = $developers->map(function ($name, $id) use ($userDevelopers) {
-        return [
-            "name" => $name,
-            "value" => in_array($id, $userDevelopers),
-        ];
-    });
+      $user->developers_list = $developers->map(function ($name, $id) use ($userDevelopers) {
+          return [
+              "name" => $name,
+              "value" => in_array($id, $userDevelopers),
+          ];
+      });
+
+ $user->locations = $user->developers
+        ->map(function ($dev) {
+            return optional($dev->projects->first())->address;
+        })
+        ->filter()   // remove null
+        ->unique()   // remove duplicates
+        ->values();
+
     }
     
 

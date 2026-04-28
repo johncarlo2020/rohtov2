@@ -75,9 +75,9 @@ class User extends Authenticatable
         return $this->hasMany(StationUser::class);
     }
 
-    public function gift()
+    public function userGift()
     {
-        return $this->belongsTo(Gifts::class);
+        return $this->hasOne(UserGift::class);
     }
 
     public function developers()

@@ -106,9 +106,7 @@
                             </div>
                             <div class="d-flex flex-column">
                                 <h6 class="mb-1 text-sm">{!! strtoupper($station['name']) !!}</h6>
-                                <span class="text-xs ">Average Time : <span
-                                        class="font-weight-bold">{{ $station['average_timespent'] }}
-                                        minutes</span></span>
+                                <span class="text-xs "><span class="font-weight-bold">{{ $station['total_users'] }} Users Completed</span>
                             </div>
                         </div>
                     </div>

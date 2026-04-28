@@ -28,7 +28,7 @@ class UserGift extends Model
 
     public function gift()
     {
-        return $this->belongsTo(Gifts::class);
+        return $this->belongsTo(Gifts::class, 'gift_id');
     }
 
     public function station()

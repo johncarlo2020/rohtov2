@@ -130,13 +130,15 @@
                             <th>ID</th>
                             <th>Fullname</th>
                             <th>Email</th>
+                            <th>Preferred Location</th>
+                            <th>Property Budget</th>
+                            <th>Registration Timestamp</th>
                             @foreach ($data['stations'] as $station)
                             <th>{!! strtoupper($station['name']) !!}</th>
                             @endforeach
                             @foreach ($data['developers'] as $developer)
                                 <th>{{ strtoupper($developer['name']) }}</th>
                             @endforeach
-                            <th>Timestamp</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -148,9 +150,37 @@
                                 {{ $user->fname }}
                             </td>
                             <td>{{ $user->email }}</td>
-                            @foreach ($user['stations'] as $station)
-                            <td class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-danger' }}">
-                                {{ $station['value'] ? 'Yes' : 'No' }}</td>
+                            <td>
+                                @foreach ($user->locations as $location)
+                                    <div>{{ $location }}</div>
+                                @endforeach
+                            </td>
+                            <td>{{ $user->property_budget }}</td>
+                            <td>{{ \Carbon\Carbon::parse($user->created_at)->toDayDateTimeString() }}</td>
+                           @foreach ($user['stations'] as $station)
+                                <td class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-danger' }}">
+
+                                    @if($station['id'] == 3 && $station['value'])
+
+                                        {{-- Gift name --}}
+                                        {{ optional($user->userGift->gift)->name ?? 'No Gift' }}
+
+                                        <br>
+
+                                        {{-- Gift created_at --}}
+                                        <small class="text-muted">
+                                            {{ optional($user->userGift)->created_at 
+                                                ? \Carbon\Carbon::parse($user->userGift->created_at)->toDayDateTimeString()
+                                                : '-' }}
+                                        </small>
+
+                                    @else
+
+                                        {{ $station['value'] ? 'Yes' : 'No' }}
+
+                                    @endif
+
+                                </td>
                             @endforeach
 
                             @foreach ($user['developers_list'] ?? [] as $developer)
@@ -158,8 +188,6 @@
                                     {{ $developer['value'] ? 'Yes' : 'No' }}
                                 </td>
                             @endforeach
-
-                            <td>{{ \Carbon\Carbon::parse($user->created_at)->toDayDateTimeString() }}</td>
                             <td class="button-delete">
                                 @if($user->isProtectedAdmin())
                                     <button class="btn btn-secondary btn-sm btn-protected" disabled 

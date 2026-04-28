@@ -141,7 +141,13 @@
                         @foreach ($data['users'] as $user)
                         <tr data-user-id="{{ $user->id }}">
                             <td>{{ $loop->iteration }}</td>
-                            <td>{{ $user->fname }}</td>
+                            <td>
+                                {{ $user->fname }}
+
+                                {{-- @if($user->is_early_bird)
+                                    <small class="badge bg-success">Early Bird</small>
+                                @endif --}}
+                            </td>
                             <td>{{ $user->email }}</td>
                             @foreach ($user['stations'] as $station)
                             <td class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-danger' }}">

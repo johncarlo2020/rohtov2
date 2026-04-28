@@ -622,7 +622,8 @@ class StationController extends Controller
       ->get()
       ->keyBy("station_id");
 
-    $stations = Station::pluck("name", "id");
+    $stations = Station::where('id', '!=', 2)
+                   ->pluck('name', 'id');
 
     foreach ($data["users"] as $user) {
       $userStations = $user->stationUser->pluck("station_id")->toArray();

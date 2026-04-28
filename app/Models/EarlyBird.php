@@ -8,8 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class EarlyBird extends Model
 {
     protected $fillable = [
-        'email',
         'name',
+        'email',
+        'mobile',
         'claimed',
     ];
 

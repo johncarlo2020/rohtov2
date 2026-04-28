@@ -145,9 +145,15 @@ class RegisteredUserController extends Controller
       ->values()
       ->toArray();
 
+    $finalDevelopers = collect($finalDevelopers)
+      ->reject(fn($id) => $id == 5)
+      ->values()
+      ->toArray();
+
+
     // ⚠️ Fill if less than 3
     if (count($finalDevelopers) < 3) {
-      $extra = Developer::whereNotIn("id", $finalDevelopers)
+      $extra = Developer::whereNotIn("id", array_merge($finalDevelopers, [5]))
         ->inRandomOrder()
         ->take(3 - count($finalDevelopers))
         ->pluck("id")

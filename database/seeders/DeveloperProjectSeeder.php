@@ -47,11 +47,11 @@ class DeveloperProjectSeeder extends Seeder
 
             'S P Setia Berhad' => [
                 ['Setia SV2', 'Jelutong, George Town'],
-                ['Cassia Cempaka Phase 2', 'Bandar Cassia Batu Kawan'],
             ],
 
             'PDC Properties Sdn Bhd' => [
-                ['Damai Lestari', 'Bertam Kepala Batas'],
+                ['Cassia Cempaka Phase 2', 'Bandar Cassia Batu Kawan'],
+                ['Damai Lestari', 'Bertam Kepala Batas']
             ],
 
             'UDA Land (North) Sdn Bhd' => [

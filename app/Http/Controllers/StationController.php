@@ -285,6 +285,25 @@ class StationController extends Controller
 
         // Handle gift selection for station 3
         if ($station_id == 3 && $route == 'prize') {
+
+          $gift = \App\Models\Gifts::find($prize_id);
+
+          if (!$gift) {
+              return response()->json([
+                  'status' => 'error',
+                  'message' => 'Gift not found'
+              ], 404);
+          }
+
+          if ($gift->stock_level <= 0) {
+              return response()->json([
+                  'status' => 'error',
+                  'message' => 'Out of stock'
+              ], 400);
+          }
+
+        $gift->decrement('stock_level');
+
             $userGift = new \App\Models\UserGift();
             $userGift->user_id = auth()->id();
             $userGift->gift_id = $prize_id;
@@ -631,6 +650,12 @@ class StationController extends Controller
     });
 
     return view("users", compact("data", "permission"));
+  }
+
+  public function gifts(Request $request)
+  {
+    $gifts = Gifts::get();
+    return view("gifts",compact("gifts"));
   }
 
   public function earlybird()
@@ -1098,6 +1123,46 @@ class StationController extends Controller
       }
 
       return redirect()->route('dashboard');
+  }
+
+  public function updateStock(Request $request, $id)
+  {
+      $request->validate([
+          'stock_level' => 'required|integer|min:1',
+          'action' => 'required|in:add,deduct'
+      ]);
+
+      $gift = Gifts::find($id);
+
+      if (!$gift) {
+          return response()->json([
+              'status' => 'error',
+              'message' => 'Gift not found'
+          ], 404);
+      }
+
+      if ($request->action === 'add') {
+          $gift->increment('stock_level', $request->stock_level);
+      }
+
+      if ($request->action === 'deduct') {
+          if ($gift->stock_level < $request->stock_level) {
+              return response()->json([
+                  'status' => 'error',
+                  'message' => 'Not enough stock to deduct'
+              ], 400);
+          }
+
+          $gift->decrement('stock_level', $request->stock_level);
+      }
+
+      return response()->json([
+          'status' => 'success',
+          'data' => [
+              'name' => $gift->name,
+              'current_stock' => $gift->stock_level
+          ]
+      ]);
   }
 
 }

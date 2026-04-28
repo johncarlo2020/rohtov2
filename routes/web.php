@@ -94,6 +94,10 @@ Route::group(['middleware' => ['admin']], function () {
     Route::get('/admin', 'App\Http\Controllers\StationController@admin')->name('admin');
 
     Route::get('/admin/users', 'App\Http\Controllers\StationController@users')->name('users');
+
+    Route::get('/admin/gifts', 'App\Http\Controllers\StationController@gifts')->name('gifts');
+    Route::put('/admin/gifts/{id}', 'App\Http\Controllers\StationController@updateStock')->name('gifts.update');
+
     Route::get('/admin/earlybird', 'App\Http\Controllers\StationController@earlybird')->name('earlybird');
 
     Route::get('/admin/scanner', 'App\Http\Controllers\StationController@scanner')->name('scanner');
@@ -105,9 +109,9 @@ Route::group(['middleware' => ['admin']], function () {
     Route::post('/admin/logout', 'App\Http\Controllers\LoginController@destroy')->name('admin.logout');
 
     // Admin Gifts Management Routes
-    Route::get('/admin/gifts', 'App\Http\Controllers\StationController@adminGifts')->name('admin.gifts');
-    Route::post('/admin/gifts/{gift}/toggle', 'App\Http\Controllers\StationController@toggleGift')->name('admin.gifts.toggle');
-    Route::get('/admin/user-gifts', 'App\Http\Controllers\StationController@userGifts')->name('admin.user.gifts');
+    // Route::get('/admin/gifts', 'App\Http\Controllers\StationController@adminGifts')->name('admin.gifts');
+    // Route::post('/admin/gifts/{gift}/toggle', 'App\Http\Controllers\StationController@toggleGift')->name('admin.gifts.toggle');
+    // Route::get('/admin/user-gifts', 'App\Http\Controllers\StationController@userGifts')->name('admin.user.gifts');
 
     Route::get('/admin/bookings', [BookingController::class, 'index'])->name('bookings');
     Route::delete('/admin/bookings/{id}', [BookingController::class, 'destroy'])->name('booking.destroy');

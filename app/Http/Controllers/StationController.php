@@ -212,6 +212,7 @@ class StationController extends Controller
         $path = parse_url($qrCodeMessage, PHP_URL_PATH);
         $query = parse_url($qrCodeMessage, PHP_URL_QUERY);
 
+
         $segments = explode('/', trim($path, '/'));
         $route = $segments[0] ?? null;
         $prize_id = $segments[1] ?? null;  // "5"
@@ -220,7 +221,7 @@ class StationController extends Controller
         parse_str($query, $queryParams);
 
         // Detect types
-        $isEarlyBird = isset($queryParams['earlybird']) || $route === 'earlybird';
+        $isEarlyBird = isset($queryParams['earlybird=1']) || $route === 'earlybird=1';
         $isPrize = $route === 'prize';
 
         if (!$isEarlyBird && !$isPrize) {
@@ -290,7 +291,7 @@ class StationController extends Controller
           "message" => "Station ID updated successfully",
           "station_id" => $station_id,
           "prizeId" => $prize_id,
-          "redirect_url" => null,
+          "redirect_url" => route('congrats.redeemed'),
       ];
 
         // Handle gift selection for station 3
@@ -589,9 +590,12 @@ class StationController extends Controller
       ->whereDoesntHave("roles", function ($q) {
         $q->where("name", "admin");
       })
-      ->with("stationUser","developers")
+      ->with("stationUser","developers","gift")
       ->orderBy("id", "desc")
       ->get();
+
+
+    // dd($data["users"]);
 
     $data["usersCount"] = User::whereDate(
       "created_at",

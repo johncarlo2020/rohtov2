@@ -146,10 +146,6 @@
                             <td>{{ $loop->iteration }}</td>
                             <td>
                                 {{ $user->fname }}
-
-                                {{-- @if($user->is_early_bird)
-                                    <small class="badge bg-success">Early Bird</small>
-                                @endif --}}
                             </td>
                             <td>{{ $user->email }}</td>
                             @foreach ($user['stations'] as $station)
@@ -157,11 +153,11 @@
                                 {{ $station['value'] ? 'Yes' : 'No' }}</td>
                             @endforeach
 
-                           @foreach ($user['developers_list'] ?? [] as $developer)
-    <td class="{{ $developer['value'] ? 'text-success' : 'text-danger' }}">
-        {{ $developer['value'] ? 'Yes' : 'No' }}
-    </td>
-@endforeach
+                            @foreach ($user['developers_list'] ?? [] as $developer)
+                                <td class="{{ $developer['value'] ? 'text-success' : 'text-danger' }}">
+                                    {{ $developer['value'] ? 'Yes' : 'No' }}
+                                </td>
+                            @endforeach
 
                             <td>{{ \Carbon\Carbon::parse($user->created_at)->toDayDateTimeString() }}</td>
                             <td class="button-delete">

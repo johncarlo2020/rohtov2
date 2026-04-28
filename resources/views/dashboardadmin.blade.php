@@ -135,7 +135,7 @@
             </div>
         </div>
     </div>
-    <div class="row mt-1">
+    <div class="row mt-1 d-none">
         <div class="col-lg-6 mb-lg-3 mb-4">
             <div class="card h-100 p-3 mb-3">
                 <div class="card-header pb-0 px-3 pt-0">

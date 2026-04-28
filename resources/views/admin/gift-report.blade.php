@@ -1,97 +1,81 @@
 @extends('layouts.admin')
 
 @section('content')
-    <div class="mb-4 col-lg-12 mb-lg-0">
-        <div class="card table-card py-3">
-            {{-- <div class="p-3 pb-0 card-header">
-                <div class="d-flex justify-content-between">
-                    <h6 class="mb-2">Customer</h6>
-                </div>
-            </div> --}}
-            <div class="p-3 px-4">
-                <div class="loader-container">
-                    <div class="loader"></div>
-                    <p class="mt-2">Loading...</p>
-                </div>
-            <div id="alert-box"></div>
-            <table id="gifts-table" class="display nowrap border" style="display: none; width: 100%;">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Gift Name</th>
-                            <th>Stock Level</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
+<h2>{{ $gift->name }} Report</h2>
 
-                    <tbody>
-                        @foreach ($gifts as $gift)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
+<p><strong>Current Stock:</strong> {{ $gift->stock_level }}</p>
 
-                            <td>{{ $gift->name }}</td>
-
-                            <td>
-                                <span class="
-                                    {{ $gift->stock_level == 0 ? 'text-danger' : 
-                                    ($gift->stock_level < 5 ? 'text-warning' : 'text-success') }}">
-                                    {{ $gift->stock_level }}
-                                </span>
-                            </td>
-
-                            <td>
-                                @if ($gift->stock_level == 0)
-                                    <span class="badge bg-danger">Out of Stock</span>
-                                @elseif ($gift->stock_level < 5)
-                                    <span class="badge bg-warning text-dark">Low Stock</span>
-                                @else
-                                    <span class="badge bg-success">Available</span>
-                                @endif
-                            </td>
-
-                            <td>
-                                <button class="btn btn-success btn-sm add-stock-btn"
-                                    data-id="{{ $gift->id }}">
-                                    + Add
-                                </button>
-
-                                <button class="btn btn-danger btn-sm deduct-stock-btn"
-                                    data-id="{{ $gift->id }}">
-                                    - Deduct
-                                </button>
-                                <a href="{{ route('gifts.report', $gift->id) }}" class="btn btn-info">
-                                    View Report
-                                </a>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-<!-- ADD STOCK MODAL -->
-<div class="modal fade" id="addStockModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 id="modalTitle">Add Stock</h5>
-                <button class="btn-close" data-bs-dismiss="modal"></button>
+<div class="mb-4 col-lg-12 mb-lg-0">
+    <div class="card table-card py-3">
+        <div class="p-3 px-4">
+            <div class="loader-container" style="display: none;">
+                <div class="loader"></div>
+                <p class="mt-2">Loading...</p>
             </div>
 
-            <div class="modal-body">
-                <input type="number" id="stockAmount" class="form-control" placeholder="Enter amount">
-                <input type="hidden" id="giftId">
-            </div>
+            <table id="stocks-table" class="display nowrap border" style="display: none; width: 100%;">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Action</th>
+                        <th>Qty</th>
+                        <th>Before</th>
+                        <th>After</th>
+                        <th>User</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
 
-            <div class="modal-footer">
-                <button class="btn btn-primary" id="confirmAddStock">Add</button>
-            </div>
+                <tbody>
+                    @foreach($logs as $log)
+                    <tr>
+                        <td>{{ $loop->iteration }}</td>
+                        <td>
+                            <span class="badge 
+                                {{ $log->action == 'add' ? 'bg-success' : '' }}
+                                {{ $log->action == 'deduct' ? 'bg-danger' : '' }}
+                                {{ $log->action == 'redeem' ? 'bg-warning' : '' }}">
+                                {{ strtoupper($log->action) }}
+                            </span>
+                        </td>
+                        <td>{{ $log->quantity }}</td>
+                        <td>{{ $log->stock_before }}</td>
+                        <td>{{ $log->stock_after }}</td>
+                        <td>{{ $log->user->name ?? 'System' }}</td>
+                        <td>{{ $log->created_at }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+
+            {{ $logs->links() }}
         </div>
     </div>
 </div>
+
+<hr>
+
+{{-- <h4>🎁 Redeemed Users</h4>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>User</th>
+            <th>Redeemed At</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach($redeemedUsers as $ug)
+        <tr>
+            <td>{{ $ug->user->fname }}</td>
+            <td>{{ $ug->created_at }}</td>
+        </tr>
+        @endforeach
+    </tbody>
+</table> --}}
+
+
 
 <div class="modal fade" id="exportModal" tabindex="-1">
     <div class="modal-dialog">
@@ -193,13 +177,12 @@
 <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.print.min.js"></script>
 
-
 <!-- Include DataTables Buttons JS -->
 
 <script>
     // Show the loader
     $('.loader-container').show();
-    $('#gifts-table').hide();
+    $('#stocks-table').hide();
 
     let exportType = 'export';
 
@@ -224,7 +207,7 @@
     });
 
     /* ===================== DATATABLE INIT ===================== */
-    var table = $('#gifts-table').DataTable({
+    var table = $('#stocks-table').DataTable({
         responsive: true,
         dom: "<'row'<'col-sm-12 col-md-6'B><'col-sm-12 col-md-6 d-flex justify-content-end'f>>" +
             "<'row'<'col-sm-12 table-responsive custom-table' tr>>" +
@@ -283,7 +266,7 @@
 
         initComplete: function () {
             $('.loader-container').hide();
-            $('#gifts-table').show();
+            $('#stocks-table').show();
 
             // Initialize Bootstrap tooltips
             var tooltipTriggerList = [].slice.call(
@@ -355,7 +338,7 @@
     /* ===================== ROW CLICK REDIRECT ===================== */
 
     /* ===================== DELETE BUTTON ===================== */
-    $('#gifts-table tbody').on('click', '.delete-user-btn', function (e) {
+    $('#stocks-table tbody').on('click', '.delete-user-btn', function (e) {
         e.stopPropagation();
 
         const userId = $(this).data('user-id');
@@ -369,118 +352,4 @@
         $('#deleteUserModal').modal('show');
     });
 </script>
-
-<script>
-    let actionType = 'add';
-
-    // ➕ ADD
-    $(document).on('click', '.add-stock-btn', function () {
-        actionType = 'add';
-
-        let id = $(this).data('id');
-
-        $('#giftId').val(id);
-        $('#stockAmount').val('');
-
-        // 🔥 Dynamic UI
-        $('#modalTitle').text('Add Stock');
-        $('#confirmAddStock')
-            .text('Add')
-            .removeClass('btn-danger')
-            .addClass('btn-primary');
-
-        $('#addStockModal').modal('show');
-    });
-
-    // ➖ DEDUCT
-    $(document).on('click', '.deduct-stock-btn', function () {
-        actionType = 'deduct';
-
-        let id = $(this).data('id');
-
-        $('#giftId').val(id);
-        $('#stockAmount').val('');
-
-        // 🔥 Dynamic UI
-        $('#modalTitle').text('Deduct Stock');
-        $('#confirmAddStock')
-            .text('Deduct')
-            .removeClass('btn-primary')
-            .addClass('btn-danger');
-
-        $('#addStockModal').modal('show');
-    });
-    
-
-    $('#confirmAddStock').on('click', function () {
-        let id = $('#giftId').val();
-        let amount = $('#stockAmount').val();
-
-        if (!amount || amount <= 0) {
-            showAlert('Invalid amount', 'danger');
-            return;
-        }
-
-        $.ajax({
-            url: `{{ route('gifts.update', ':id') }}`.replace(':id', id),
-            type: 'POST',
-            data: {
-                _method: 'PUT',
-                stock_level: amount,
-                action: actionType,
-                _token: '{{ csrf_token() }}'
-            },
-            success: function (res) {
-                let name = res.data.name;
-                let total = res.data.current_stock;
-
-                let message = actionType === 'add'
-                    ? `Added ${amount} to "${name}" (Total: ${total})`
-                    : `Deducted ${amount} from "${name}" (Total: ${total})`;
-
-                showAlert(message, 'success');
-
-                $('#addStockModal').modal('hide');
-
-                let row = $(`button[data-id="${id}"]`).closest('tr');
-
-                // Update stock
-                row.find('td:nth-child(3)').text(total);
-
-                // Update status
-                let statusHtml = '';
-                if (total == 0) {
-                    statusHtml = `<span class="badge bg-danger">Out of Stock</span>`;
-                } else if (total < 5) {
-                    statusHtml = `<span class="badge bg-warning text-dark">Low Stock</span>`;
-                } else {
-                    statusHtml = `<span class="badge bg-success">Available</span>`;
-                }
-
-                row.find('td:nth-child(4)').html(statusHtml);
-            },
-            error: function (xhr) {
-                let message = xhr.responseJSON?.message || 'Error';
-                showAlert(message, 'danger');
-            }
-        });
-    });
-
-    function showAlert(message, type = 'success') {
-        let alertHtml = `
-            <div class="alert alert-${type} alert-dismissible fade show" role="alert">
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        `;
-
-        $('#alert-box').html(alertHtml);
-
-        // auto close after 3 seconds
-        setTimeout(() => {
-            $('.alert').alert('close');
-        }, 3000);
-    }
-    </script>
-
 @endsection

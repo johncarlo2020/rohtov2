@@ -9,6 +9,7 @@ use App\Models\Brand;
 use App\Models\Developer;
 use App\Models\EarlyBird;
 use App\Models\Gifts;
+use App\Models\GiftStockLog;
 use App\Models\Perfume;
 use App\Models\Question;
 use App\Models\Station;
@@ -313,6 +314,8 @@ class StationController extends Controller
               ], 400);
           }
 
+          $beforeStock = $gift->stock_level;
+
         $gift->decrement('stock_level');
 
             $userGift = new \App\Models\UserGift();
@@ -320,6 +323,15 @@ class StationController extends Controller
             $userGift->gift_id = $prize_id;
             $userGift->is_redeemed = true;
             $userGift->save();
+
+          GiftStockLog::create([
+              'gift_id' => $gift->id,
+              'user_id' => auth()->id(),
+              'action' => 'redeem',
+              'quantity' => 1,
+              'stock_before' => $beforeStock,
+              'stock_after' => $gift->stock_level,
+          ]);
         }
 
      
@@ -366,7 +378,6 @@ class StationController extends Controller
     $startDate = Carbon::create(2025, 11, 17);
 
     $data["users"] = User::with("stationUser")
-      ->take(4)
       ->orderBy("id", "desc")
       ->whereDoesntHave("roles", function ($q) {
         $q->where("name", "admin");
@@ -1195,28 +1206,90 @@ class StationController extends Controller
           ], 404);
       }
 
-      if ($request->action === 'add') {
-          $gift->increment('stock_level', $request->stock_level);
-      }
+      try {
+          DB::beginTransaction();
 
-      if ($request->action === 'deduct') {
-          if ($gift->stock_level < $request->stock_level) {
-              return response()->json([
-                  'status' => 'error',
-                  'message' => 'Not enough stock to deduct'
-              ], 400);
+          $beforeStock = $gift->stock_level;
+
+          // 🔥 ADD STOCK
+          if ($request->action === 'add') {
+              $gift->increment('stock_level', $request->stock_level);
           }
 
-          $gift->decrement('stock_level', $request->stock_level);
-      }
+          // 🔥 DEDUCT STOCK
+          if ($request->action === 'deduct') {
+              if ($gift->stock_level < $request->stock_level) {
+                  return response()->json([
+                      'status' => 'error',
+                      'message' => 'Not enough stock to deduct'
+                  ], 400);
+              }
 
-      return response()->json([
-          'status' => 'success',
-          'data' => [
-              'name' => $gift->name,
-              'current_stock' => $gift->stock_level
-          ]
-      ]);
+              $gift->decrement('stock_level', $request->stock_level);
+          }
+
+          // 🔥 REFRESH to get latest value
+          $gift->refresh();
+
+          // 🔥 LOG STOCK CHANGE
+          GiftStockLog::create([
+              'gift_id' => $gift->id,
+              'user_id' => Auth::id(),
+              'action' => $request->action,
+              'quantity' => $request->stock_level,
+              'stock_before' => $beforeStock,
+              'stock_after' => $gift->stock_level,
+          ]);
+
+          DB::commit();
+
+          return response()->json([
+              'status' => 'success',
+              'data' => [
+                  'name' => $gift->name,
+                  'current_stock' => $gift->stock_level
+              ]
+          ]);
+
+      } catch (\Exception $e) {
+
+          DB::rollback();
+
+          return response()->json([
+              'status' => 'error',
+              'message' => $e->getMessage()
+          ], 500);
+      }
+  }
+
+  public function giftReport(Request $request,$id)
+  {
+    $gift = Gifts::findOrFail($id);
+
+    // 🔥 Stock Logs
+    $logs = GiftStockLog::with('user')
+        ->where('gift_id', $id)
+        ->when($request->action, fn($q) => $q->where('action', $request->action))
+        ->when($request->date_from, fn($q) =>
+            $q->whereDate('created_at', '>=', $request->date_from)
+        )
+        ->when($request->date_to, fn($q) =>
+            $q->whereDate('created_at', '<=', $request->date_to)
+        )
+        ->latest()
+        ->paginate(10);
+
+    // 🔥 Redeemed users
+    $redeemedUsers = UserGift::with('user')
+        ->where('gift_id', $id)
+        ->latest()
+        ->get();
+        
+    return view('admin.gift-report', compact(
+        'gift',
+        'logs',
+        'redeemedUsers'
+    ));
   }
 
 }

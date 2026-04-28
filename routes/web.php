@@ -97,6 +97,7 @@ Route::group(['middleware' => ['admin']], function () {
 
     Route::get('/admin/gifts', 'App\Http\Controllers\StationController@gifts')->name('gifts');
     Route::put('/admin/gifts/{id}', 'App\Http\Controllers\StationController@updateStock')->name('gifts.update');
+    Route::get('/admin/gifts/{id}/report', 'App\Http\Controllers\StationController@giftReport')->name('gifts.report');
 
     Route::get('/admin/earlybird', 'App\Http\Controllers\StationController@earlybird')->name('earlybird');
 

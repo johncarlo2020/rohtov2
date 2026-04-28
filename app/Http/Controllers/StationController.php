@@ -491,7 +491,8 @@ class StationController extends Controller
       ->get()
       ->keyBy("station_id");
 
-    $stations = Station::pluck("name", "id");
+    $stations = Station::where('id', '!=', 2)
+    ->pluck('name', 'id');
 
     $count = 0;
 

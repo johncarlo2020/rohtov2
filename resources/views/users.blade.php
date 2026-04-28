@@ -133,6 +133,9 @@
                             @foreach ($data['stations'] as $station)
                             <th>{!! strtoupper($station['name']) !!}</th>
                             @endforeach
+                            @foreach ($data['developers'] as $developer)
+                                <th>{{ strtoupper($developer['name']) }}</th>
+                            @endforeach
                             <th>Timestamp</th>
                             <th>Action</th>
                         </tr>
@@ -153,6 +156,13 @@
                             <td class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-danger' }}">
                                 {{ $station['value'] ? 'Yes' : 'No' }}</td>
                             @endforeach
+
+                           @foreach ($user['developers_list'] ?? [] as $developer)
+    <td class="{{ $developer['value'] ? 'text-success' : 'text-danger' }}">
+        {{ $developer['value'] ? 'Yes' : 'No' }}
+    </td>
+@endforeach
+
                             <td>{{ \Carbon\Carbon::parse($user->created_at)->toDayDateTimeString() }}</td>
                             <td class="button-delete">
                                 @if($user->isProtectedAdmin())

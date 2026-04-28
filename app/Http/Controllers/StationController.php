@@ -6,6 +6,7 @@ use App\Events\babyEvent;
 use App\Helpers\GlobalHelper;
 use App\Imports\EarlyBirdImport;
 use App\Models\Brand;
+use App\Models\Developer;
 use App\Models\EarlyBird;
 use App\Models\Gifts;
 use App\Models\Perfume;
@@ -575,6 +576,7 @@ class StationController extends Controller
 
   public function users()
   {
+  
     $today = Carbon::today();
     $permission = auth()->user()->getPermissionNames()->first();
 
@@ -587,7 +589,7 @@ class StationController extends Controller
       ->whereDoesntHave("roles", function ($q) {
         $q->where("name", "admin");
       })
-      ->with("stationUser")
+      ->with("stationUser","developers")
       ->orderBy("id", "desc")
       ->get();
 
@@ -635,6 +637,9 @@ class StationController extends Controller
     $stations = Station::where('id', '!=', 2)
                    ->pluck('name', 'id');
 
+    $developers = Developer::where('id', '!=', 5)->pluck('name', 'id');
+    
+
     foreach ($data["users"] as $user) {
       $userStations = $user->stationUser->pluck("station_id")->toArray();
       $user->stations = $stations->map(function ($name, $id) use (
@@ -646,7 +651,23 @@ class StationController extends Controller
           "value" => in_array($id, $userStations),
         ];
       });
+
+          $userDevelopers = $user->developers->pluck("id")->toArray();
+
+    $user->developers_list = $developers->map(function ($name, $id) use ($userDevelopers) {
+        return [
+            "name" => $name,
+            "value" => in_array($id, $userDevelopers),
+        ];
+    });
     }
+    
+
+    $data["developers"] = $developers->map(function ($name, $id) {
+        return [
+            "name" => $name,
+        ];
+    });
 
     $data["stations"] = $stations->map(function ($name, $id) use (
       $averageTimespentByStation

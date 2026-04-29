@@ -226,7 +226,10 @@ class RegisteredUserController extends Controller
 
     // ⚠️ Fill if less than 3
     if (count($finalDevelopers) < 3) {
-      $extra = Developer::whereNotIn("id", array_merge($finalDevelopers, [5]))
+      $extra = Developer::whereHas("projects", function ($q) use ($allowedLocations) {
+            $q->whereIn("address", $allowedLocations);
+        })
+        ->whereNotIn("id", array_merge($finalDevelopers, [5]))
         ->inRandomOrder()
         ->take(3 - count($finalDevelopers))
         ->pluck("id")

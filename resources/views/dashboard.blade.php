@@ -210,7 +210,7 @@
                                     This booth is only open on May 1st for Labour Day, and May 9th - 10th for Mother's Day.<br>
                                 </p>
                                 <br>
-                                <p>If you're visiting onthese dates, <br> please drop by!</p>
+                                <p>If you're visiting on these dates, <br> please drop by!</p>
                             </div>
 
                             <button type="button" class="w-75 custom-btn custom-btn-primary" data-bs-dismiss="modal">

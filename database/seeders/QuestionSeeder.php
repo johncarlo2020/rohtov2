@@ -10,20 +10,19 @@ use Illuminate\Database\Seeder;
 
 class QuestionSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        //
-        $this->berjaya();
-        $this->mahSing();
-        $this->belleview();
-        $this->gsd();
+        $this->jrk();
+        $this->mTerra();
+        $this->mAspira();
+        $this->landGeneral();
         $this->malton();
-        $this->setia();
-        $this->pdc();
-        $this->uda();
+        $this->windsor();
+        $this->selangorDredging();
+        $this->lbs();
+        $this->matrix();
+        $this->saujana();
+        $this->eo();
     }
 
     private function createQuestion($developer, $questionText, $answers)
@@ -42,307 +41,289 @@ class QuestionSeeder extends Seeder
         }
     }
 
-    // =========================
-    // BERJAYA
-    // =========================
-    private function berjaya()
+    private function jrk()
     {
-        $dev = Developer::where('name', 'Berjaya Property Berhad')->first();
+        $dev = Developer::where('name', 'JRK Group')->first();
 
-        $this->createQuestion($dev,
-            'What is a key feature of Jesselton Courtyard at Jesselton Selatan?',
-            [
-                ['text'=>'High-density skyscraper living', 'correct'=>0],
-                ['text'=>'Industrial warehouse concept', 'correct'=>0],
-                ['text'=>'Low-Density, Low-Rise, Gated & Guarded', 'correct'=>1],
-                ['text'=>'Open public housing', 'correct'=>0],
-            ]
-        );
+        $this->createQuestion($dev,'Which of the following best describes JRK Celestia in Puchong?',[
+            ['text'=>'Industrial warehouse development','correct'=>0],
+            ['text'=>'Agricultural land project','correct'=>0],
+            ['text'=>'High-rise condominium for modern living','correct'=>1],
+            ['text'=>'Landed gated housing','correct'=>0],
+        ]);
 
-        $this->createQuestion($dev,
-            'Which of the following is NOT a feature of OAKA Residences?',
-            [
-                ['text'=>'4–6 Doorfront Carparks', 'correct'=>1],
-                ['text'=>'Freehold Low-Density Residential Development', 'correct'=>0],
-                ['text'=>'All Units Come with Balcony/Lanai & Utility Room', 'correct'=>0],
-                ['text'=>'Pet-Friendly', 'correct'=>0],
-            ]
-        );
+        $this->createQuestion($dev,'Which of the following is a key feature of JRK Celestia?',[
+            ['text'=>'Beachfront sea view living','correct'=>0],
+            ['text'=>'Gated & guarded with security surveillance','correct'=>1],
+            ['text'=>'Factory production facilities','correct'=>0],
+            ['text'=>'No lifestyle amenities','correct'=>0],
+        ]);
 
-        $this->createQuestion($dev,
-            'Which of the following is a key feature of Times Square 2?',
-            [
-                ['text'=>'Leasehold landed homes with garden space', 'correct'=>0],
-                ['text'=>'Freehold Serviced Residence in Bukit Bintang, Kuala Lumpur', 'correct'=>1],
-                ['text'=>'Industrial warehouse units', 'correct'=>0],
-                ['text'=>'Agricultural land investment', 'correct'=>0],
-            ]
-        );
+        $this->createQuestion($dev,'Which award did JRK Group receive at the PropertyGuru Asia Awards Malaysia 2025?',[
+            ['text'=>'Best Luxury Condo Development','correct'=>0],
+            ['text'=>'Best Township Development','correct'=>0],
+            ['text'=>'Best Commercial Project','correct'=>0],
+            ['text'=>'Rising Star Award','correct'=>1],
+        ]);
     }
 
-    // =========================
-    // MAH SING
-    // =========================
-    private function mahSing()
+    private function mTerra()
     {
-        $dev = Developer::where('name', 'Mah Sing Group Berhad')->first();
+        $dev = Developer::where('name', 'Mah Sing Group Berhad M Terra')->first();
 
-        $this->createQuestion($dev,
-            'What is the price range of M Zenni?',
-            [
-                ['text'=>'RM8xxK onwards', 'correct'=>0],
-                ['text'=>'RM4xxK onwards', 'correct'=>1],
-                ['text'=>'RM7xxK onwards', 'correct'=>0],
-                ['text'=>'RM2xxK onwards', 'correct'=>0],
-            ]
-        );
+        $this->createQuestion($dev,'Which of the following best describes M Terra, Puchong?',[
+            ['text'=>'Industrial warehouse development','correct'=>0],
+            ['text'=>'Luxury beachfront resort','correct'=>0],
+            ['text'=>'Affordable lakeside high-rise living','correct'=>1],
+            ['text'=>'Agricultural land investment','correct'=>0],
+        ]);
 
-        $this->createQuestion($dev,
-            'What is a key advantage of M Zenni?',
-            [
-                ['text'=>'Located in a remote rural area with limited access', 'correct'=>0],
-                ['text'=>'Designed mainly for agricultural use', 'correct'=>0],
-                ['text'=>'No nearby highways or commercial hubs', 'correct'=>0],
-                ['text'=>'Prime location near Tun Dr Lim Chong Eu Highway, Queensbay Mall, Penang Silicon Island, Bayan Lepas FIZ & Penang Second Bridge', 'correct'=>1],
-            ]
-        );
+        $this->createQuestion($dev,'Which of the following is a key feature of M Terra?',[
+            ['text'=>'Located 5km away from nearest public transport','correct'=>0],
+            ['text'=>'No nearby amenities','correct'=>0],
+            ['text'=>'Approximately 500m to Puchong Perdana LRT Station','correct'=>1],
+            ['text'=>'Landed bungalow development','correct'=>0],
+        ]);
 
-        $this->createQuestion($dev,
-            'What type of development is M Zenni?',
-            [
-                ['text'=>'Shopping mall', 'correct'=>0],
-                ['text'=>'Serviced Residence', 'correct'=>1],
-                ['text'=>'Office tower', 'correct'=>0],
-                ['text'=>'Hotel', 'correct'=>0],
-            ]
-        );
+        $this->createQuestion($dev,'Which award has M Terra / its developer received?',[
+            ['text'=>'Best Commercial Tower Development','correct'=>0],
+            ['text'=>'Best Township Masterplan','correct'=>0],
+            ['text'=>'Best Luxury Landed Development','correct'=>0],
+            ['text'=>'Best Value for Money High-Rise Development','correct'=>1],
+        ]);
     }
 
-    // =========================
-    // BELLEVIEW
-    // =========================
-    private function belleview()
+    private function mAspira()
     {
-        $dev = Developer::where('name', 'Belleview Group')->first();
+        $dev = Developer::where('name', 'Mah Sing Group Berhad M Aspira')->first();
 
-        $this->createQuestion($dev,
-            'Below are the projects featured by Belleview Group Berhad, except?',
-            [
-                ['text'=>'GEM Residences', 'correct'=>0],
-                ['text'=>'M Aspira', 'correct'=>1],
-                ['text'=>'Moulmein Rise', 'correct'=>0],
-                ['text'=>'Amansuri Residences', 'correct'=>0],
-            ]
-        );
+        $this->createQuestion($dev,'Where is M Aspira located?',[
+            ['text'=>'Johor Bahru','correct'=>0],
+            ['text'=>'Penang','correct'=>0],
+            ['text'=>'Taman Desa, Kuala Lumpur','correct'=>1],
+            ['text'=>'Cyberjaya','correct'=>0],
+        ]);
 
-        $this->createQuestion($dev,
-            'Which of the following is a key feature of Gem Residences?',
-            [
-                ['text'=>'Leasehold industrial warehouse project', 'correct'=>0],
-                ['text'=>'Agricultural land development in rural area', 'correct'=>0],
-                ['text'=>'Office-only commercial building with no residential units', 'correct'=>0],
-                ['text'=>'Freehold mixed development with studio to 3-bedroom units suitable for family living', 'correct'=>1],
-            ]
-        );
+        $this->createQuestion($dev,'Which of the following is a key feature of M Aspira?',[
+            ['text'=>'Beachfront sea view','correct'=>0],
+            ['text'=>'FREE shuttle service to Kuchai MRT Station','correct'=>1],
+            ['text'=>'No nearby public transport','correct'=>0],
+            ['text'=>'Industrial warehouse concept','correct'=>0],
+        ]);
 
-        $this->createQuestion($dev,
-            'What type of development is Gem Residences?',
-            [
-                ['text'=>'Serviced Residence / Condominium', 'correct'=>1],
-                ['text'=>'Office', 'correct'=>0],
-                ['text'=>'Landed', 'correct'=>0],
-                ['text'=>'Hotel', 'correct'=>0],
-            ]
-        );
+        $this->createQuestion($dev,'Which award has the developer received in 2025?',[
+            ['text'=>'Best Luxury Condo Development','correct'=>0],
+            ['text'=>'Best Township Development','correct'=>0],
+            ['text'=>'People’s Choice Award – Top 10 Developer of the Year','correct'=>1],
+            ['text'=>'Best Commercial Project','correct'=>0],
+        ]);
     }
 
-    // =========================
-    // GSD
-    // =========================
-    private function gsd()
+    private function landGeneral()
     {
-        $dev = Developer::where('name', 'GSD Group')->first();
+        $dev = Developer::where('name', 'Land & General Berhad')->first();
 
-        $this->createQuestion($dev,
-            'What makes G\'Vinton unique as a development?',
-            [
-                ['text'=>'It is a fully industrial warehouse hub', 'correct'=>0],
-                ['text'=>'It offers guest-ready furnished units and is a landmark at Millionaire Row', 'correct'=>1],
-                ['text'=>'It consists only of landed terrace houses', 'correct'=>0],
-                ['text'=>'It is a government office complex', 'correct'=>0],
-            ]
-        );
+        $this->createQuestion($dev,'Which of the following best describes The WYN Residences?',[
+            ['text'=>'Industrial warehouse development','correct'=>0],
+            ['text'=>'Agricultural land project','correct'=>0],
+            ['text'=>'Luxury beachfront resort','correct'=>0],
+            ['text'=>'Move-in ready high-rise home in a prime Puchong location','correct'=>1],
+        ]);
 
-        $this->createQuestion($dev,
-            'What are the key features of D\'Hazelton?',
-            [
-                ['text'=>'Affordable living with 67 facilities and built-up size from 900 sqft', 'correct'=>1],
-                ['text'=>'Industrial warehouse development with no facilities', 'correct'=>0],
-                ['text'=>'Luxury bungalow estate starting from 5,000 sqft', 'correct'=>0],
-                ['text'=>'Office tower with retail mall only', 'correct'=>0],
-            ]
-        );
+        $this->createQuestion($dev,'Which of the following is a key feature of The WYN Residences?',[
+            ['text'=>'Bare unit without furnishings','correct'=>0],
+            ['text'=>'Located far from public transport','correct'=>0],
+            ['text'=>'Fully furnished and ready to move in','correct'=>1],
+            ['text'=>'Only studio units available','correct'=>0],
+        ]);
 
-        $this->createQuestion($dev,
-            'What is the tenure of D\'Tiara?',
-            [
-                ['text'=>'Leasehold', 'correct'=>0],
-                ['text'=>'Freehold', 'correct'=>1],
-                ['text'=>'Government leasehold', 'correct'=>0],
-                ['text'=>'30-year lease', 'correct'=>0],
-            ]
-        );
+        $this->createQuestion($dev,'Which of the following is NOT a benefit offered by The WYN Residences?',[
+            ['text'=>'Zero downpayment scheme','correct'=>0],
+            ['text'=>'MOT subsidy','correct'=>0],
+            ['text'=>'Near LRT Puchong Jaya','correct'=>0],
+            ['text'=>'Freehold landed bungalow','correct'=>1],
+        ]);
     }
 
-    // =========================
-    // MALTON
-    // =========================
     private function malton()
     {
         $dev = Developer::where('name', 'Malton Berhad')->first();
 
-        $this->createQuestion($dev,
-            'What is a key nearby transportation access point for River Park Bangsar South?',
-            [
-                ['text'=>'MRT Kajang Station', 'correct'=>0],
-                ['text'=>'KLIA Express Station', 'correct'=>0],
-                ['text'=>'Angkasapuri KTM Station', 'correct'=>1],
-                ['text'=>'Wangsa Maju LRT Station', 'correct'=>0],
-            ]
-        );
+        $this->createQuestion($dev,'What is the key highlight of Park Green Pavilion?',[
+            ['text'=>'5km away from shopping mall','correct'=>0],
+            ['text'=>'30 meters to Pavilion Bukit Jalil','correct'=>1],
+            ['text'=>'Located in rural area','correct'=>0],
+            ['text'=>'Industrial development','correct'=>0],
+        ]);
 
-        $this->createQuestion($dev,
-            'What convenience feature is offered at Park Green Pavilion Bukit Jalil?',
-            [
-                ['text'=>'Free ferry service to Penang Island', 'correct'=>0],
-                ['text'=>'Private helicopter service to KLCC', 'correct'=>0],
-                ['text'=>'Direct monorail connection within the development', 'correct'=>0],
-                ['text'=>'Free shuttle service to Awan Besar MRT Station', 'correct'=>1],
-            ]
-        );
+        $this->createQuestion($dev,'Which of the following is a key feature of Mutiara Lake Puchong?',[
+            ['text'=>'High-density 2,000 units','correct'=>0],
+            ['text'=>'No facilities','correct'=>0],
+            ['text'=>'Low-density with only 526 units','correct'=>1],
+            ['text'=>'Commercial office tower','correct'=>0],
+        ]);
 
-        $this->createQuestion($dev,
-            'What is the target completion year for River Park Bangsar South?',
-            [
-                ['text'=>'2024', 'correct'=>0],
-                ['text'=>'2025', 'correct'=>0],
-                ['text'=>'2026', 'correct'=>1],
-                ['text'=>'2027', 'correct'=>0],
-            ]
-        );
+        $this->createQuestion($dev,'What is the expected completion timeline for River Park?',[
+            ['text'=>'2024','correct'=>0],
+            ['text'=>'2025','correct'=>0],
+            ['text'=>'2026','correct'=>1],
+            ['text'=>'2030','correct'=>0],
+        ]);
     }
 
-    // =========================
-    // SETIA
-    // =========================
-    private function setia()
+    private function windsor()
     {
-        $dev = Developer::where('name', 'S P Setia Berhad')->first();
+        $dev = Developer::where('name', 'Windsor Land')->first();
 
-        $this->createQuestion($dev,
-            'What is a key feature of Setia SV2?',
-            [
-                ['text'=>'Fully landed development with no high-rise units', 'correct'=>0],
-                ['text'=>'Industrial warehouse project with no residential component', 'correct'=>0],
-                ['text'=>'Located in rural Kedah with agricultural zoning', 'correct'=>0],
-                ['text'=>'Located in the heart of Georgetown with flexible layouts from 1,087 sqft to 1,647 sqft', 'correct'=>1],
-            ]
-        );
+        $this->createQuestion($dev,'Which of the following is a key feature of ALAIA @ Titiwangsa?',[
+            ['text'=>'No facilities provided','correct'=>0],
+            ['text'=>'Sky facilities with KL skyline views','correct'=>1],
+            ['text'=>'Located in rural area','correct'=>0],
+            ['text'=>'Factory production space','correct'=>0],
+        ]);
 
-        $this->createQuestion($dev,
-            'What is the expected completion year of Setia SV2?',
-            [
-                ['text'=>'2029', 'correct'=>1],
-                ['text'=>'2028', 'correct'=>0],
-                ['text'=>'2027', 'correct'=>0],
-                ['text'=>'2026', 'correct'=>0],
-            ]
-        );
+        $this->createQuestion($dev,'Which of the following best describes Windsor Villa @ Cyberjaya?',[
+            ['text'=>'High-rise serviced apartment','correct'=>0],
+            ['text'=>'Studio-only units','correct'=>0],
+            ['text'=>'Freehold 3-storey link villas','correct'=>1],
+            ['text'=>'Commercial office tower','correct'=>0],
+        ]);
 
-        $this->createQuestion($dev,
-            'What is the tenure of Setia SV2?',
-            [
-                ['text'=>'Leasehold', 'correct'=>0],
-                ['text'=>'Freehold', 'correct'=>1],
-                ['text'=>'Government leasehold', 'correct'=>0],
-                ['text'=>'30-year lease', 'correct'=>0],
-            ]
-        );
+        $this->createQuestion($dev,'Which project features sky facilities with KL skyline views?',[
+            ['text'=>'Windsor Villa @ Cyberjaya','correct'=>0],
+            ['text'=>'Both projects','correct'=>0],
+            ['text'=>'ALAIA @ Titiwangsa','correct'=>1],
+            ['text'=>'None of the above','correct'=>0],
+        ]);
     }
 
-    // =========================
-    // PDC
-    // =========================
-    private function pdc()
+    private function selangorDredging()
     {
-        $dev = Developer::where('name', 'PDC Properties Sdn Bhd')->first();
+        $dev = Developer::where('name', 'Selangor Dredging Berhad')->first();
 
-        $this->createQuestion($dev,
-            'What is the tenure of Cassia Cempaka Phase 2?',
-            [
-                ['text'=>'Leasehold residence', 'correct'=>0],
-                ['text'=>'Freehold residence', 'correct'=>1],
-                ['text'=>'Industrial leasehold development', 'correct'=>0],
-                ['text'=>'Short-term rental property only', 'correct'=>0],
-            ]
-        );
+        $this->createQuestion($dev,'Which project is known for lakeside resort-style living?',[
+            ['text'=>'DaMai Residence','correct'=>0],
+            ['text'=>'Both projects','correct'=>0],
+            ['text'=>'Elina Senai','correct'=>1],
+            ['text'=>'None of the above','correct'=>0],
+        ]);
 
-        $this->createQuestion($dev,
-            'What is the project type of Cassia Cempaka Phase 2?',
-            [
-                ['text'=>'Commercial Office', 'correct'=>0],
-                ['text'=>'Industrial Warehouse', 'correct'=>0],
-                ['text'=>'Residential', 'correct'=>1],
-                ['text'=>'Retail Mall', 'correct'=>0],
-            ]
-        );
+        $this->createQuestion($dev,'Which of the following is a key feature of DaMai?',[
+            ['text'=>'Located in Johor','correct'=>0],
+            ['text'=>'Leasehold development','correct'=>0],
+            ['text'=>'Freehold luxury high-rise in Taman Melawati','correct'=>1],
+            ['text'=>'Industrial warehouse concept','correct'=>0],
+        ]);
 
-        $this->createQuestion($dev,
-            'Where is Damai Lestari located?',
-            [
-                ['text'=>'In the heart of Kuala Lumpur city center', 'correct'=>0],
-                ['text'=>'In Penang Island beachfront area', 'correct'=>0],
-                ['text'=>'In Johor industrial zone', 'correct'=>0],
-                ['text'=>'In the highly strategic heart of Bertam town', 'correct'=>1],
-            ]
-        );
+        $this->createQuestion($dev,'Which of the following best describes Elina Senai?',[
+            ['text'=>'High-rise luxury in KL city centre','correct'=>0],
+            ['text'=>'Industrial commercial development','correct'=>0],
+            ['text'=>'Resort-inspired residential in Puchong','correct'=>1],
+            ['text'=>'Office tower','correct'=>0],
+        ]);
     }
 
-    // =========================
-    // UDA
-    // =========================
-    private function uda()
+    private function lbs()
     {
-        $dev = Developer::where('name', 'UDA Land (North) Sdn Bhd')->first();
+        $dev = Developer::where('name', 'LBS Bina Group Berhad')->first();
 
-        $this->createQuestion($dev,
-            'What is the starting price of Eight & Eight Condominium?',
-            [
-                ['text'=>'From RM6xxK onwards', 'correct'=>1],
-                ['text'=>'From RM2xxK onwards', 'correct'=>0],
-                ['text'=>'From RM1 Million onwards', 'correct'=>0],
-                ['text'=>'From RM2 Million onwards', 'correct'=>0],
-            ]
-        );
+        $this->createQuestion($dev,'What is the starting price of KITA Sejati @ KITA Cybersouth?',[
+            ['text'=>'RM299,800','correct'=>0],
+            ['text'=>'RM399,800','correct'=>1],
+            ['text'=>'RM499,800','correct'=>0],
+            ['text'=>'RM599,800','correct'=>0],
+        ]);
 
-        $this->createQuestion($dev,
-            'What is the expected completion year of Eight & Eight Condominium?',
-            [
-                ['text'=>'2026', 'correct'=>0],
-                ['text'=>'2027', 'correct'=>0],
-                ['text'=>'2028', 'correct'=>0],
-                ['text'=>'2029', 'correct'=>1],
-            ]
-        );
+        $this->createQuestion($dev,'Which of the following best describes AULICA, Puchong?',[
+            ['text'=>'High-rise serviced apartment','correct'=>0],
+            ['text'=>'Industrial warehouse development','correct'=>0],
+            ['text'=>'Double-storey terrace house','correct'=>1],
+            ['text'=>'Agricultural land project','correct'=>0],
+        ]);
 
-        $this->createQuestion($dev,
-            'What type of development is Eight & Eight?',
-            [
-                ['text'=>'Shopping mall', 'correct'=>0],
-                ['text'=>'Condominium', 'correct'=>1],
-                ['text'=>'Office tower', 'correct'=>0],
-                ['text'=>'Hotel', 'correct'=>0],
-            ]
-        );
+        $this->createQuestion($dev,'Which of the following is a key feature of KITA Sejati?',[
+            ['text'=>'Located in rural area with no access','correct'=>0],
+            ['text'=>'Fully furnished and move-in ready','correct'=>1],
+            ['text'=>'Beachfront living','correct'=>0],
+            ['text'=>'Office tower development','correct'=>0],
+        ]);
+    }
+
+    private function matrix()
+    {
+        $dev = Developer::where('name', 'Matrix Concepts Holdings Berhad')->first();
+
+        $this->createQuestion($dev,'Where is Levia Residence located?',[
+            ['text'=>'Johor Bahru','correct'=>0],
+            ['text'=>'Persiaran Wawasan, Puchong','correct'=>1],
+            ['text'=>'Cyberjaya','correct'=>0],
+            ['text'=>'Penang','correct'=>0],
+        ]);
+
+        $this->createQuestion($dev,'Which of the following is a key feature of Levia Residence?',[
+            ['text'=>'Located far from public transport','correct'=>0],
+            ['text'=>'Walking distance / near to LRT Pusat Bandar Puchong','correct'=>1],
+            ['text'=>'Beachfront living','correct'=>0],
+            ['text'=>'Industrial warehouse concept','correct'=>0],
+        ]);
+
+        $this->createQuestion($dev,'Which of the following best describes Levia Residence?',[
+            ['text'=>'Landed bungalow development','correct'=>0],
+            ['text'=>'Agricultural land project','correct'=>0],
+            ['text'=>'Modern high-rise residential living','correct'=>1],
+            ['text'=>'Commercial office tower','correct'=>0],
+        ]);
+    }
+
+    private function saujana()
+    {
+        $dev = Developer::where('name', 'Saujana Development Sdn Bhd')->first();
+
+        $this->createQuestion($dev,'Which of the following is a key feature of Residensi Rimbun Saujana?',[
+            ['text'=>'Leasehold development','correct'=>0],
+            ['text'=>'Freehold low-density living','correct'=>1],
+            ['text'=>'Industrial warehouse concept','correct'=>0],
+            ['text'=>'Commercial office tower','correct'=>0],
+        ]);
+
+        $this->createQuestion($dev,'Which of the following unit features is available?',[
+            ['text'=>'Studio-only units','correct'=>0],
+            ['text'=>'No outdoor space','correct'=>0],
+            ['text'=>'Balcony or lanai layouts','correct'=>1],
+            ['text'=>'Office suites','correct'=>0],
+        ]);
+
+        $this->createQuestion($dev,'Which of the following is an exclusive privilege offered?',[
+            ['text'=>'Free car for every purchase','correct'=>0],
+            ['text'=>'7% Bumiputera discount','correct'=>1],
+            ['text'=>'Free international travel package','correct'=>0],
+            ['text'=>'Lifetime zero maintenance fees','correct'=>0],
+        ]);
+    }
+
+    private function eo()
+    {
+        $dev = Developer::where('name', 'Eastern & Oriental Berhad')->first();
+
+        $this->createQuestion($dev,'Which project is located within a waterfront township in Andaman Island, Penang?',[
+            ['text'=>'Avéa @ Andaman Island','correct'=>0],
+            ['text'=>'Maris @ Andaman Island','correct'=>0],
+            ['text'=>'The Lume @ Andaman Island','correct'=>0],
+            ['text'=>'All of the above','correct'=>1],
+        ]);
+
+        $this->createQuestion($dev,'Which project offers fully furnished homes?',[
+            ['text'=>'Avéa @ Andaman Island','correct'=>0],
+            ['text'=>'Maris @ Andaman Island','correct'=>1],
+            ['text'=>'The Lume @ Andaman Island','correct'=>0],
+            ['text'=>'None of the above','correct'=>0],
+        ]);
+
+        $this->createQuestion($dev,'Which project is move-in ready?',[
+            ['text'=>'Avéa @ Andaman Island','correct'=>1],
+            ['text'=>'Maris @ Andaman Island','correct'=>0],
+            ['text'=>'The Lume @ Andaman Island','correct'=>0],
+            ['text'=>'None of the above','correct'=>0],
+        ]);
     }
 }

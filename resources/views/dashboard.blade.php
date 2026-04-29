@@ -199,6 +199,29 @@
             </div>
         </div>
 
+        <!-- not allowed video -->
+        <div class="animate-entry modal fade custom-modal" id="notAllowedModalVideo" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered modal-sm">
+                <div class="modal-content card modal-parent">
+                    <div class="modal-body">
+                        <div class="text-center content">
+                            <div class="mt-4 mb-4 text-content">
+                                <p>
+                                    This booth is only open on May 1st for Labour Day, and May 9th - 10th for Mother's Day.<br>
+                                    your visits to 3 developer stations.
+                                </p>
+                                <br>
+                                <p>If you're visiting onthese dates, <br> please drop by!</p>
+                            </div>
+
+                            <button type="button" class="w-75 custom-btn custom-btn-primary" data-bs-dismiss="modal">
+                                CLOSE
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="px-0 py-3 container">
 
@@ -226,10 +249,20 @@
         <!-- Stations -->
         <div class="px-0 container" style="max-width: 420px;">
 
+            @php
+                $today = now()->format('m-d');
+                $videoBoothDates = ['05-01', '05-09', '05-10'];
+                $canAccessVideoBooth = in_array($today, $videoBoothDates);
+            @endphp
+
             <div class="d-flex justify-content-center animate-entry station-row">
                 @foreach ($stations as $station)
                     @php
                         $image = asset("images/station/ST{$station->id}.webp");
+
+                        $isLocked =
+                            ($station->id == 3 && !$canAccessStation3) ||
+                            ($station->id == 2 && !$canAccessVideoBooth);
                     @endphp
 
                     {{-- 🚫 HIDE station 4 if NOT early bird --}}
@@ -237,12 +270,13 @@
                         @continue
                     @endif
 
-                    {{-- 🚫 HIDE Video Booth --}}
-                    @if ($station->id == 2)
-                        @continue
-                    @endif
-
-                    <div class="station-card" onclick="gotoStation({{ $station->id }})">
+                    <div class="station-card"
+                        @if ($isLocked)
+                            onclick="gotoStation({{ $station->id }})"
+                        @else
+                            onclick="gotoStation({{ $station->id }})"
+                        @endif
+                    >
 
                         <!-- Image -->
                         <img src="{{ $image }}" alt="Station {{ $station->id }}">
@@ -252,21 +286,20 @@
                             {{ $station->name }}
                         </div>
 
-                        {{-- 🔒 LOCK Station 3 --}}
-                        @if ($station->id == 3 && !$canAccessStation3)
+                        {{-- ✅ Redeemed (priority) --}}
+                        @if ($station->status)
+                            <div class="overlay">
+                                <span class="text-white" style="font-size:10px;">REDEEMED</span>
+                            </div>
+
+                        {{-- 🔒 LOCK (Station 3 or Video Booth) --}}
+                        @elseif ($isLocked)
                             <div class="overlay">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
                                     viewBox="0 0 24 24" fill="white">
                                     <path
                                         d="M12 1C9.243 1 7 3.243 7 6v2H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2h-2V6c0-2.757-2.243-5-5-5zm0 2c1.654 0 3 1.346 3 3v2H9V6c0-1.654 1.346-3 3-3zm0 9a2 2 0 1 1 0 4 2 2 0 0 1 0-4z" />
                                 </svg>
-                            </div>
-                        @endif
-
-                        {{-- ✅ Redeemed --}}
-                        @if ($station->status)
-                            <div class="overlay">
-                                <span class="text-white" style="font-size:10px;">REDEEMED</span>
                             </div>
                         @endif
 
@@ -316,7 +349,9 @@
             document.addEventListener('DOMContentLoaded', function() {
                 let canAccessStation5 = @json($canAccessStation5);
                 let canAccessStation3 = @json($canAccessStation3);
-                console.log(canAccessStation5);
+                let canAccessVideoBooth = @json($canAccessVideoBooth);
+                
+
                 window.gotoStamping = function(id, ) {
                     var url = "{{ route('station', ['station' => ':id']) }}".replace(
                         ":id", id
@@ -342,6 +377,13 @@
                         // Show the not allowed modal if trying to access station 3 without permission
                         var notAllowedModal = new bootstrap.Modal(document.getElementById('notAllowedModal'));
                         notAllowedModal.show();
+                        return;
+                    }
+
+                    if (id == 2 && !canAccessVideoBooth) {
+                        // Show the not allowed modal if trying to access station 3 without permission
+                        var notAllowedModalVideo = new bootstrap.Modal(document.getElementById('notAllowedModalVideo'));
+                        notAllowedModalVideo.show();
                         return;
                     }
 

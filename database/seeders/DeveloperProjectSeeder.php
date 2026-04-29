@@ -16,56 +16,101 @@ class DeveloperProjectSeeder extends Seeder
     {
         $developers = [
 
-            'Berjaya Property Berhad' => [
-                ['Jesselton Courtyard at Jesselton Selatan', 'George Town, Penang'],
-                ['OAKA Residences', 'Bukit Jalil, Kuala Lumpur'],
-                ['Times Square 2', 'Bukit Bintang, Kuala Lumpur'],
+            1 => [
+                'name' => 'JRK Group',
+                'projects' => [
+                    ['JRK CELESTIA', 'Kinrara Puchong'],
+                ],
             ],
 
-            'Mah Sing Group Berhad' => [
-                ['M Zenni', 'Bayan Lepas, Penang'],
+            2 => [
+                'name' => 'Mah Sing Group Berhad M Terra',
+                'projects' => [
+                    ['M Terra', 'Puchong'],
+                    ['M Aspira', 'Taman Desa, Kuala Lumpur'],
+                ],
             ],
 
-            'Belleview Group' => [
-                ['Gem Residences', 'Perai, Penang'],
+            3 => [
+                'name' => 'Land & General Berhad',
+                'projects' => [
+                    ['The WYN Residences', 'Puchong Jaya'],
+                ],
             ],
 
-            'GSD Group' => [
-                ["G' Vinton", 'George Town, Penang'],
-                ["D'Hazelton", 'Farlim, Penang'],
-                ["D'Tiara", 'Teluk Kumbar, Penang'],
+            4 => [
+                'name' => 'Mah Sing Group Berhad M Aspira',
+                'projects' => [
+                    ['M Aspira', 'Taman Desa, Kuala Lumpur'],
+                ],
             ],
 
-            'Penang Null' => [
-                ["Penang", 'Null, Penang']
+            6 => [
+                'name' => 'Malton Berhad',
+                'projects' => [
+                    ['River Park Bangsar South', 'Bangsar South, Kuala Lumpur'],
+                    ['Park Green Pavilion Bukit Jalil', 'Bukit Jalil, Kuala Lumpur'],
+                    ['Mutiara Lake', 'Puchong, Selangor'],
+                ],
             ],
 
-            'Malton Berhad' => [
-                ['River Park Bangsar South', 'Bangsar South, Kuala Lumpur'],
-                ['Park Green Pavilion Bukit Jalil', 'Bukit Jalil, Kuala Lumpur'],
+            11 => [
+                'name' => 'Windsor Land',
+                'projects' => [
+                    ['Windsor Villa @ Cyberjaya', 'Sepang, Cyberjaya'],
+                    ['ALAIA Titiwangsa', 'Titiwangsa'],
+                ],
             ],
 
-            'S P Setia Berhad' => [
-                ['Setia SV2', 'Jelutong, George Town'],
+            12 => [
+                'name' => 'Selangor Dredging Berhad',
+                'projects' => [
+                    ['DaMai', 'Ampang Jaya, Selangor'],
+                    ['Elina Senai', 'Taman Putra Perdana, Puchong, Selangor'],
+                ],
             ],
 
-            'PDC Properties Sdn Bhd' => [
-                ['Cassia Cempaka Phase 2', 'Bandar Cassia Batu Kawan'],
-                ['Damai Lestari', 'Bertam Kepala Batas']
+            13 => [
+                'name' => 'LBS Bina Group Berhad',
+                'projects' => [
+                    ['KITA Sejati', 'KITA Cybersouth'],
+                    ['AULICA', "D'Island Residence Puchong"],
+                ],
             ],
 
-            'UDA Land (North) Sdn Bhd' => [
-                ['Eight & Eight Condominium', 'Bandar Tanjung Tokong, Pulau Pinang'],
+            14 => [
+                'name' => 'Matrix Concepts Holdings Berhad',
+                'projects' => [
+                    ['Levia Residence Puchong', 'Persiaran Wawasan Puchong'],
+                ],
             ],
+
+            15 => [
+                'name' => 'Saujana Development Sdn Bhd',
+                'projects' => [
+                    ['RESIDENSI RIMBUN SAUJANA', 'Shah Alam, Selangor'],
+                ],
+            ],
+
+            16 => [
+                'name' => 'Eastern & Oriental Berhad',
+                'projects' => [
+                    ['The Lume', 'Andaman Island, Penang'],
+                    ['Maris', 'Andaman Island, Penang'],
+                    ['Avéa', 'Andaman Island, Penang'],
+                ],
+            ],
+
         ];
 
-        foreach ($developers as $devName => $projects) {
+        foreach ($developers as $id => $data) {
 
             $developer = Developer::create([
-                'name' => $devName
+                'id' => $id, // 👈 fixed custom ID
+                'name' => $data['name'],
             ]);
 
-            foreach ($projects as $project) {
+            foreach ($data['projects'] as $project) {
                 Project::create([
                     'developer_id' => $developer->id,
                     'name' => $project[0],

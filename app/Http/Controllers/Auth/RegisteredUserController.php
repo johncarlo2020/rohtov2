@@ -31,20 +31,54 @@ class RegisteredUserController extends Controller
    */
   public function create(): View
   {
-    $allowedLocations = [
-      "George Town, Penang",
-      "Bukit Jalil, Kuala Lumpur",
-      "Bukit Bintang, Kuala Lumpur",
-      "Bayan Lepas, Penang",
-      "Perai, Penang",
-      "Farlim, Penang",
-      "Teluk Kumbar, Penang",
-      "Bangsar South, Kuala Lumpur",
-      "Jelutong, George Town",
-      "Bandar Cassia Batu Kawan",
-      "Bertam Kepala Batas",
-      "Bandar Tanjung Tokong, Pulau Pinang",
+    
+    $today = Carbon::today();
+
+    // April 30 - May 5
+    $batchA = [
+      "Kinrara Puchong",
+      "Ampang Jaya, Selangor",
+      "Taman Putra Perdana, Puchong, Selangor",
     ];
+
+    // May 6 - May 11
+    $batchB = [
+      "KITA Cybersouth",
+      "D'Island Residence Puchong",
+      "Persiaran Wawasan Puchong",
+      "Shah Alam, Selangor",
+      "Andaman Island, Penang",
+    ];
+    
+
+    //April 30 - May 11
+    $default = [
+      "Puchong",
+      "Taman Desa, Kuala Lumpur",
+      "Puchong Jaya",
+      "Bangsar South, Kuala Lumpur",
+      "Bukit Jalil, Kuala Lumpur",
+      "Puchong, Selangor",
+      "Sepang, Cyberjaya",
+      "Titiwangsa",
+    ];
+
+    // Define date ranges
+    $batchAStart = Carbon::create($today->year, 4, 29);
+    $batchAEnd   = Carbon::create($today->year, 5, 5);
+
+    $batchBStart = Carbon::create($today->year, 5, 6);
+    $batchBEnd   = Carbon::create($today->year, 5, 12);
+
+    // Logic
+    if ($today->between($batchAStart, $batchAEnd)) {
+        $allowedLocations = array_merge($batchA, $default);
+      
+    } elseif ($today->between($batchBStart, $batchBEnd)) {
+        $allowedLocations = array_merge($batchB, $default);
+    } else {
+        $allowedLocations = $default;
+    }
 
     $locations = Project::select("address")
       ->distinct()
@@ -67,20 +101,53 @@ class RegisteredUserController extends Controller
    */
   public function store(Request $request): RedirectResponse
   {
-    $allowedLocations = [
-      "George Town, Penang",
-      "Bukit Jalil, Kuala Lumpur",
-      "Bukit Bintang, Kuala Lumpur",
-      "Bayan Lepas, Penang",
-      "Perai, Penang",
-      "Farlim, Penang",
-      "Teluk Kumbar, Penang",
-      "Bangsar South, Kuala Lumpur",
-      "Jelutong, George Town",
-      "Bandar Cassia Batu Kawan",
-      "Bertam Kepala Batas",
-      "Bandar Tanjung Tokong, Pulau Pinang",
-    ];
+     $today = Carbon::today();
+
+      // April 30 - May 5
+      $batchA = [
+        "Kinrara Puchong",
+        "Ampang Jaya, Selangor",
+        "Taman Putra Perdana, Puchong, Selangor",
+      ];
+
+      // May 6 - May 11
+      $batchB = [
+        "KITA Cybersouth",
+        "D'Island Residence Puchong",
+        "Persiaran Wawasan Puchong",
+        "Shah Alam, Selangor",
+        "Andaman Island, Penang",
+      ];
+      
+
+      //April 30 - May 11
+      $default = [
+        "Puchong",
+        "Taman Desa, Kuala Lumpur",
+        "Puchong Jaya",
+        "Bangsar South, Kuala Lumpur",
+        "Bukit Jalil, Kuala Lumpur",
+        "Puchong, Selangor",
+        "Sepang, Cyberjaya",
+        "Titiwangsa",
+      ];
+
+      // Define date ranges
+      $batchAStart = Carbon::create($today->year, 4, 29);
+      $batchAEnd   = Carbon::create($today->year, 5, 5);
+
+      $batchBStart = Carbon::create($today->year, 5, 6);
+      $batchBEnd   = Carbon::create($today->year, 5, 12);
+
+      // Logic
+      if ($today->between($batchAStart, $batchAEnd)) {
+          $allowedLocations = array_merge($batchA, $default);
+        
+      } elseif ($today->between($batchBStart, $batchBEnd)) {
+          $allowedLocations = array_merge($batchB, $default);
+      } else {
+          $allowedLocations = $default;
+      }
 
     $validated = $request->validate([
       "fname" => ["required", "string", "max:255"],

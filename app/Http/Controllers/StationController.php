@@ -1044,17 +1044,23 @@ class StationController extends Controller
       // count completed
       $completed = $user->stationUser()->distinct("station_id")->count();
 
-      // required stations
-      $totalRequired = $user->is_early_bird ? 3 : 2;
+      $today = now()->format('m-d');
+      $videoBoothDates = ['05-01', '05-09', '05-10'];
+
+      $isVideoBoothDay = in_array($today, $videoBoothDates);
+
+      $totalRequired = match (true) {
+          $user->is_early_bird && $isVideoBoothDay => 4,
+          $user->is_early_bird || $isVideoBoothDay => 3,
+          default => 2,
+      };
 
       DB::commit();
       // 🎉 CHECK IF FINISHED
 
       if ($completed >= $totalRequired) {
         return response()->json([
-          "redirect_url" => route(
-            $user->is_early_bird ? "congrats" : "congrats"
-          ),
+            "redirect_url" => route("congrats"),
         ]);
       }
 
@@ -1062,6 +1068,7 @@ class StationController extends Controller
       return response()->json([
         "redirect_url" => route("dashboard"),
       ]);
+
     } catch (\Exception $e) {
       DB::rollback();
 

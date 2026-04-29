@@ -116,7 +116,7 @@
     </div>
     <div class="row mt-4">
         @foreach ($data['developers'] as $developer)
-            <div class="col">
+            <div class="col-3">
                 <div class="card mb-3">
                     <div class="card-body d-flex justify-content-between rounded  p-3">
                         <div class="d-flex align-items-center w-100">
@@ -125,7 +125,7 @@
                             </div>
                             <div class="d-flex flex-column">
                                 <h6 class="mb-1 text-sm">{!! strtoupper($developer['name']) !!}</h6>
-                                <span class="text-xs "><span class="font-weight-bold">{{ $developer['total_users'] }} Users Completed</span>
+                                <span class="text-xs "><span class="font-weight-bold">{{ $developer['total_users'] }} Users Selected</span>
                             </div>
                         </div>
                     </div>

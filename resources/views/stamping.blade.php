@@ -73,7 +73,8 @@
                     </div>
                 </div>
             </div>
-            <p class="text-center mt-4 mb-5">Please redeem the prize from our crew</p>
+            
+            <p class="text-center mt-4 mb-5 done-booth">Please redeem the prize from our crew</p>
             <div id="countDisplay" class="text-center mt-3 d-none">
                 Touches inside count: <span id="countNum">0</span>
             </div>
@@ -114,6 +115,7 @@
                     hasStamped = true;
                     stampingPage.classList.add("active");
                     const text = document.querySelector(".booth-description");
+                    const doneBooth = document.querySelector(".done-booth");
                         if(stationid == 1)
                         {
                             text.innerHTML = "Conratulations!<br>You've won the game.";
@@ -121,6 +123,7 @@
                         else if(stationid == 2)
                         {   
                             text.innerHTML = "The video is fantastic, well<br>done!";
+                            doneBooth.textContent = "Don't forget to download your video";
                         }
                         else 
                         {
@@ -198,6 +201,7 @@
                                 }
                             });
                             const text = document.querySelector(".booth-description");
+                            const doneBooth = document.querySelector(".done-booth");
 
                             if(stationid == 1)
                             {
@@ -206,6 +210,7 @@
                             else if(stationid == 2)
                             {   
                                 text.innerHTML = "The video is fantastic, well<br>done!";
+                                doneBooth.textContent = "Don't forget to download your video";
                             }
                             else 
                             {

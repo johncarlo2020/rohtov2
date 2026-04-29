@@ -250,7 +250,7 @@
 
             @php
                 $today = now()->format('m-d');
-                $videoBoothDates = ['05-01', '05-09', '05-10','04-30'];
+                $videoBoothDates = ['05-01', '05-09', '05-10'];
                 $canAccessVideoBooth = in_array($today, $videoBoothDates);
             @endphp
 

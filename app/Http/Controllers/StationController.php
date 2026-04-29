@@ -235,8 +235,6 @@ class StationController extends Controller
         // ✅ Station check (only skip for prize maybe — your logic choice)
         $station_id = $request->station;
 
-        dd($station_id);
-
         if ((int) $station_id === 3 && $isEarlyBird) {
             return response()->json([
                 "message" => "Station 3 skipped",

@@ -189,7 +189,7 @@ class StationController extends Controller
   public function scanDeveloper(Request $request)
   {
     $qrCodeMessage = trim($request->qrCodeMessage);
-    $developer_id = substr($qrCodeMessage, -1);
+    $developer_id = (int) basename($qrCodeMessage);
 
     if ($developer_id != $request->developer) {
       return response()->json(
@@ -234,6 +234,8 @@ class StationController extends Controller
 
         // ✅ Station check (only skip for prize maybe — your logic choice)
         $station_id = $request->station;
+
+        dd($station_id);
 
         if ((int) $station_id === 3 && $isEarlyBird) {
             return response()->json([

@@ -208,7 +208,6 @@
                             <div class="mt-4 mb-4 text-content">
                                 <p>
                                     This booth is only open on May 1st for Labour Day, and May 9th - 10th for Mother's Day.<br>
-                                    your visits to 3 developer stations.
                                 </p>
                                 <br>
                                 <p>If you're visiting onthese dates, <br> please drop by!</p>

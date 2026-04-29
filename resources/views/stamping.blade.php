@@ -154,10 +154,12 @@
 
                 let requiredCount;
 
-                if (stationid == 1) {
+                if (stationid == 1) 
+                {
                     requiredCount = 3;
                 }
                 else
+                {
                     requiredCount = 4;
                 }
                 

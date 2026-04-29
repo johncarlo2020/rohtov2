@@ -33,10 +33,13 @@ class RegisteredUserController extends Controller
   {
     $allowedLocations = [
       "George Town, Penang",
+      "Bukit Jalil, Kuala Lumpur",
+      "Bukit Bintang, Kuala Lumpur",
       "Bayan Lepas, Penang",
       "Perai, Penang",
       "Farlim, Penang",
       "Teluk Kumbar, Penang",
+      "Bangsar South, Kuala Lumpur",
       "Jelutong, George Town",
       "Bandar Cassia Batu Kawan",
       "Bertam Kepala Batas",
@@ -66,10 +69,13 @@ class RegisteredUserController extends Controller
   {
     $allowedLocations = [
       "George Town, Penang",
+      "Bukit Jalil, Kuala Lumpur",
+      "Bukit Bintang, Kuala Lumpur",
       "Bayan Lepas, Penang",
       "Perai, Penang",
       "Farlim, Penang",
       "Teluk Kumbar, Penang",
+      "Bangsar South, Kuala Lumpur",
       "Jelutong, George Town",
       "Bandar Cassia Batu Kawan",
       "Bertam Kepala Batas",

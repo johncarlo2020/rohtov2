@@ -433,24 +433,26 @@
 
     /* ===================== DATE RANGE FILTER ===================== */
     $.fn.dataTable.ext.search.push(function (settings, data) {
-    let start = $('#startDate').val();
-    let end = $('#endDate').val();
+        let start = $('#startDate').val();
+        let end = $('#endDate').val();
 
-    // Timestamp column (second last column)
-    let rowDate = new Date(data[data.length - 2]);
+        // Timestamp column (second last column)
+        let rowDate = new Date(data[data.length - 13]);
 
-    // Convert row date to YYYY-MM-DD (DATE ONLY)
-    let rowDateOnly = rowDate.getFullYear() + '-' +
-        String(rowDate.getMonth() + 1).padStart(2, '0') + '-' +
-        String(rowDate.getDate()).padStart(2, '0');
+        console.log(rowDate);
 
-    if (!start && !end) return true;
+        // Convert row date to YYYY-MM-DD (DATE ONLY)
+        let rowDateOnly = rowDate.getFullYear() + '-' +
+            String(rowDate.getMonth() + 1).padStart(2, '0') + '-' +
+            String(rowDate.getDate()).padStart(2, '0');
 
-    if (start && rowDateOnly < start) return false;
-    if (end && rowDateOnly > end) return false;
+        if (!start && !end) return true;
 
-    return true;
-});
+        if (start && rowDateOnly < start) return false;
+        if (end && rowDateOnly > end) return false;
+
+        return true;
+    });
 
     /* ===================== DATE FILTER BUTTONS ===================== */
     $('#filterDate').on('click', function () {

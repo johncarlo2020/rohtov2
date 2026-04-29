@@ -550,6 +550,25 @@ class StationController extends Controller
       ];
     });
 
+    $developerCounts = collect($data['users'])
+        ->flatMap(function ($user) {
+            return $user->developers->pluck('id');
+        })
+        ->reject(fn($id) => $id == 5) // 🔥 exclude here
+        ->countBy();
+
+    $developers = \App\Models\Developer::where('id', '!=', 5) // 🔥 exclude here
+        ->pluck('name', 'id');
+
+    $data["developers"] = $developers->map(function ($name, $id) use ($developerCounts) {
+        return [
+            "id" => $id,
+            "name" => $name,
+            "total_users" => $developerCounts->get($id, 0),
+        ];
+    });
+
+
     $averagePlaytimeByUser = StationUser::select(
       "user_id",
       DB::raw("SUM(time_spent) / 60 as total_playtime")

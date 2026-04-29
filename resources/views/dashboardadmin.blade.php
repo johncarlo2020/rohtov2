@@ -114,6 +114,25 @@
             </div>
         @endforeach
     </div>
+    <div class="row mt-4">
+        @foreach ($data['developers'] as $developer)
+            <div class="col">
+                <div class="card mb-3">
+                    <div class="card-body d-flex justify-content-between rounded  p-3">
+                        <div class="d-flex align-items-center w-100">
+                            <div class="icon-stations">
+                                <img class="" src="{{ asset("images/developer/DEV{$developer['id']}.webp") }}" alt="Gift Image">
+                            </div>
+                            <div class="d-flex flex-column">
+                                <h6 class="mb-1 text-sm">{!! strtoupper($developer['name']) !!}</h6>
+                                <span class="text-xs "><span class="font-weight-bold">{{ $developer['total_users'] }} Users Completed</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
     <div class="row mt-1">
         <div class="col-lg-6 mb-lg-3 mb-3">
             <div class="card z-index-2 h-100">

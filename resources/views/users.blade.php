@@ -100,18 +100,6 @@
     </div>
 </div>
 <div class="mt-4 row">
-    <div class="row mt-4 mb-3 px-3">
-        <div class="col-md-3">
-            <input type="date" id="startDate" class="form-control">
-        </div>
-        <div class="col-md-3">
-            <input type="date" id="endDate" class="form-control">
-        </div>
-        <div class="col-md-3">
-            <button id="filterDate" class="btn btn-primary">Filter</button>
-            <button id="resetDate" class="btn btn-secondary">Reset</button>
-        </div>
-    </div>
     <div class="mb-4 col-lg-12 mb-lg-0">
         <div class="card table-card py-3">
             {{-- <div class="p-3 pb-0 card-header">
@@ -314,6 +302,93 @@
     .badge .fa-crown {
         font-size: 0.6rem !important;
     }
+
+    /* ===== DATE FILTER DROPDOWN ===== */
+    #date-filter-wrapper {
+        position: relative;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    #date-filter-btn {
+        height: 30px;
+        line-height: 1;
+        padding: 0 10px;
+        border-radius: 4px;
+        font-size: 13px;
+        border: 1px solid #dee2e6;
+        background: #fff;
+        color: #344767;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        box-shadow: 0 1px 2px rgba(0,0,0,.08);
+        transition: background .15s;
+    }
+
+    #date-filter-btn:hover { background: #f1f3f5; }
+
+    #date-filter-btn.active {
+        background: #e8f4ff;
+        border-color: #5e72e4;
+        color: #5e72e4;
+    }
+
+    #date-filter-dropdown {
+        display: none;
+        position: absolute;
+        top: calc(100% + 6px);
+        left: 0;
+        z-index: 9999;
+        background: #fff;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        box-shadow: 0 8px 24px rgba(0,0,0,.12);
+        padding: 16px;
+        min-width: 300px;
+    }
+
+    #date-filter-dropdown.show { display: block; }
+
+    #date-filter-dropdown label {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: #8392a5;
+        margin-bottom: 4px;
+        display: block;
+    }
+
+    #date-filter-dropdown input[type=date] {
+        font-size: 13px;
+        border-radius: 5px;
+        border: 1px solid #dee2e6;
+        padding: 5px 8px;
+        width: 100%;
+        color: #344767;
+    }
+
+    .date-filter-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 14px;
+    }
+
+    .date-filter-actions button {
+        flex: 1;
+        font-size: 12px;
+        padding: 6px 0;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    #applyDateFilter  { background: #5e72e4; color: #fff; }
+    #applyDateFilter:hover  { background: #4a5fd4; }
+    #resetDateFilter  { background: #f1f3f5; color: #344767; }
+    #resetDateFilter:hover  { background: #e2e6ea; }
 </style>
 <script src="{{ asset('assets/js/core/bootstrap.min.js') }}"></script>
 <script src="{{ asset('assets/js/plugins/perfect-scrollbar.min.js') }}"></script>
@@ -342,24 +417,6 @@
     let exportType = 'export';
 
     const today = new Date().toISOString().split('T')[0];
-
-    $('#startDate').val(today);
-    $('#endDate').val(today);
-
-    $('#startDate, #endDate').on('change', function () {
-        const startDate = $('#startDate').val();
-        const endDate = $('#endDate').val();
-
-        if (startDate && endDate && endDate < startDate) {
-            alert('"To date" cannot be earlier than "From date".');
-            $('#endDate').val(startDate); // auto-fix
-        }
-    });
-
-    $('#startDate').on('change', function () {
-        const startDate = $(this).val();
-        $('#endDate').attr('min', startDate);
-    });
 
     /* ===================== DATATABLE INIT ===================== */
     var table = $('#customer-table').DataTable({
@@ -420,8 +477,88 @@
         ],
 
         initComplete: function () {
+            var api = this.api();
             $('.loader-container').hide();
             $('#customer-table').show();
+
+            // Inject calendar icon button + dropdown beside export buttons
+            $('.dt-buttons').append(`
+                <div id="date-filter-wrapper">
+                    <button id="date-filter-btn" title="Filter by date">
+                        <i class="fa fa-calendar-alt"></i>
+                        <span id="date-filter-label">Today</span>
+                        <i class="fa fa-chevron-down" style="font-size:10px;opacity:.6;"></i>
+                    </button>
+                    <div id="date-filter-dropdown">
+                        <div class="mb-2">
+                            <label>From</label>
+                            <input type="date" id="startDate">
+                        </div>
+                        <div>
+                            <label>To</label>
+                            <input type="date" id="endDate">
+                        </div>
+                        <div class="date-filter-actions">
+                            <button id="applyDateFilter"><i class="fa fa-check me-1"></i> Apply</button>
+                            <button id="resetDateFilter"><i class="fa fa-times me-1"></i> Reset</button>
+                        </div>
+                    </div>
+                </div>
+            `);
+
+            // Set today as default and apply initial filter
+            $('#startDate').val(today);
+            $('#endDate').val(today);
+            api.draw();
+
+            // Toggle dropdown
+            $(document).on('click', '#date-filter-btn', function (e) {
+                e.stopPropagation();
+                $('#date-filter-dropdown').toggleClass('show');
+                $(this).toggleClass('active');
+            });
+
+            // Close on outside click
+            $(document).on('click', function (e) {
+                if (!$(e.target).closest('#date-filter-wrapper').length) {
+                    $('#date-filter-dropdown').removeClass('show');
+                    $('#date-filter-btn').removeClass('active');
+                }
+            });
+
+            function updateFilterLabel() {
+                const s = $('#startDate').val();
+                const e = $('#endDate').val();
+                if (!s && !e) { $('#date-filter-label').text('All dates'); return; }
+                const fmt = d => d ? new Date(d + 'T00:00:00').toLocaleDateString('en-GB', {day:'2-digit',month:'short',year:'numeric'}) : '—';
+                $('#date-filter-label').text(s === e ? fmt(s) : fmt(s) + ' – ' + fmt(e));
+            }
+
+            // Apply
+            $(document).on('click', '#applyDateFilter', function () {
+                const start = $('#startDate').val();
+                const end   = $('#endDate').val();
+                if (start && end && end < start) {
+                    alert('"To date" cannot be earlier than "From date".');
+                    return;
+                }
+                table.draw();
+                updateFilterLabel();
+                $('#date-filter-dropdown').removeClass('show');
+                $('#date-filter-btn').removeClass('active');
+            });
+
+            // Reset
+            $(document).on('click', '#resetDateFilter', function () {
+                $('#startDate').val('');
+                $('#endDate').val('');
+                table.draw();
+                updateFilterLabel();
+                $('#date-filter-dropdown').removeClass('show');
+                $('#date-filter-btn').removeClass('active');
+            });
+
+            updateFilterLabel();
 
             // Initialize Bootstrap tooltips
             var tooltipTriggerList = [].slice.call(
@@ -436,10 +573,8 @@
         let start = $('#startDate').val();
         let end = $('#endDate').val();
 
-        // Timestamp column (second last column)
-        let rowDate = new Date(data[data.length - 13]);
-
-        console.log(rowDate);
+        // Registration Timestamp is always at column index 5
+        let rowDate = new Date(data[5]);
 
         // Convert row date to YYYY-MM-DD (DATE ONLY)
         let rowDateOnly = rowDate.getFullYear() + '-' +
@@ -452,17 +587,6 @@
         if (end && rowDateOnly > end) return false;
 
         return true;
-    });
-
-    /* ===================== DATE FILTER BUTTONS ===================== */
-    $('#filterDate').on('click', function () {
-        table.draw();
-    });
-
-    $('#resetDate').on('click', function () {
-        $('#startDate').val('');
-        $('#endDate').val('');
-        table.draw();
     });
 
     /* ===================== EXPORT CONFIRM ===================== */

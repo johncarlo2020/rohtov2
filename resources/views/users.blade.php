@@ -303,6 +303,66 @@
         font-size: 0.6rem !important;
     }
 
+    /* ===== DATATABLE TOOLBAR ALIGNMENT ===== */
+
+    /* Toolbar row: flex-wrap so it wraps on mobile, mb-3 gap from table */
+    .dt-layout-row:first-child,
+    div.dataTables_wrapper div.dt-buttons {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        gap: 6px !important;
+        margin-bottom: 12px !important;
+    }
+
+    /* Preferred Location column — wider with wrapping */
+    #customer-table .preferred-location-col {
+        min-width: 220px !important;
+        white-space: normal !important;
+        word-break: break-word !important;
+    }
+
+    /* Increase table body font size */
+    #customer-table td {
+        font-size: 14px !important;
+    }
+
+    #customer-table th {
+        font-size: 13px !important;
+    }
+
+    /* Uniform style for all toolbar buttons (export + date filter) */
+    .dt-buttons .dt-button:not(.d-none),
+    .dt-buttons .btn:not(.d-none) {
+        height: 30px !important;
+        line-height: 1 !important;
+        padding: 0 12px !important;
+        font-size: 13px !important;
+        font-weight: 500 !important;
+        border-radius: 4px !important;
+        border: 1px solid #dee2e6 !important;
+        background: #fff !important;
+        color: #344767 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 5px !important;
+        white-space: nowrap !important;
+        box-shadow: 0 1px 2px rgba(0,0,0,.08) !important;
+        transition: background .15s !important;
+        margin-right: 6px !important;
+        margin-bottom: 0 !important;
+        cursor: pointer !important;
+    }
+
+    .dt-buttons .dt-button:not(.d-none):hover,
+    .dt-buttons .btn:not(.d-none):hover { background: #f1f3f5 !important; }
+
+    /* CSV icon color */
+    .dt-buttons .btn-info i { color: #17a2b8; }
+
+    /* Excel icon color */
+    .dt-buttons .btn-success i { color: #28a745; }
+
     /* ===== DATE FILTER DROPDOWN ===== */
     #date-filter-wrapper {
         position: relative;
@@ -313,9 +373,10 @@
     #date-filter-btn {
         height: 30px;
         line-height: 1;
-        padding: 0 10px;
+        padding: 0 12px;
         border-radius: 4px;
         font-size: 13px;
+        font-weight: 500;
         border: 1px solid #dee2e6;
         background: #fff;
         color: #344767;
@@ -421,7 +482,7 @@
     /* ===================== DATATABLE INIT ===================== */
     var table = $('#customer-table').DataTable({
         responsive: true,
-        dom: "<'row'<'col-sm-12 col-md-6'B><'col-sm-12 col-md-6 d-flex justify-content-end'f>>" +
+        dom: "<'row'<'col-12'B>>" +
             "<'row'<'col-sm-12 table-responsive custom-table' tr>>" +
             "<'row'<'d-flex justify-content-start col-sm-12 col-md-6 mt-3'i>" +
             "<'col-sm-12 col-md-6 mt-3 d-flex justify-content-end'p>>",
@@ -473,6 +534,11 @@
             {
                 orderable: false,
                 targets: -1 // Action/Delete column
+            },
+            {
+                targets: 3, // Preferred Location
+                width: '220px',
+                className: 'preferred-location-col'
             }
         ],
 
@@ -560,6 +626,82 @@
 
             updateFilterLabel();
 
+            // Inject custom search input aligned with the buttons
+            $('.dt-buttons').append(`
+                <div id="custom-search-wrapper" style="
+                    display:inline-flex;
+                    align-items:center;
+                    height:30px;
+                    border:1px solid #dee2e6;
+                    border-radius:4px;
+                    background:#fff;
+                    box-shadow:0 1px 2px rgba(0,0,0,.08);
+                    overflow:hidden;
+                    margin-left:6px;
+                ">
+                    <span style="padding:0 8px;color:#8392a5;font-size:12px;display:flex;align-items:center;">
+                        <i class="fa fa-search"></i>
+                    </span>
+                    <input id="custom-dt-search" type="text" placeholder="Search..."
+                        style="
+                            border:none;
+                            outline:none;
+                            height:100%;
+                            font-size:13px;
+                            color:#344767;
+                            background:transparent;
+                            min-width:200px;
+                            padding:0 10px 0 0;
+                        ">
+                </div>
+            `);
+
+            // Wire custom search input to DataTable
+            $('#custom-dt-search').on('input', function () {
+                api.search(this.value).draw();
+            });
+
+            // Apply mobile layout via inline styles (overrides all CSS specificity)
+            function applyToolbarLayout() {
+                var isMobile = window.innerWidth <= 768;
+                var $buttons = $('.dt-buttons');
+                var $csvBtn  = $buttons.find('.btn-info');
+                var $xlsBtn  = $buttons.find('.btn-success');
+                var $dateW   = $('#date-filter-wrapper');
+                var $dateBtn = $('#date-filter-btn');
+                var $searchW = $('#custom-search-wrapper');
+                var $searchI = $('#custom-dt-search');
+
+                if (isMobile) {
+                    $buttons.css({ display:'flex', flexWrap:'wrap', width:'100%', gap:'0', rowGap:'8px', marginBottom:'12px' });
+                    $csvBtn.css({ flex:'0 0 50%', width:'50%', margin:'0', paddingRight:'4px', boxSizing:'border-box', justifyContent:'center' });
+                    $xlsBtn.css({ flex:'0 0 50%', width:'50%', margin:'0', paddingLeft:'4px', boxSizing:'border-box', justifyContent:'center' });
+                    $dateW.css({ flex:'0 0 100%', width:'100%', margin:'0' });
+                    $dateBtn.css({ width:'100%', justifyContent:'space-between', boxSizing:'border-box' });
+                    $searchW.css({ flex:'0 0 100%', width:'100%', marginLeft:'0', boxSizing:'border-box', display:'flex' });
+                    $searchI.css({ minWidth:'0', width:'100%' });
+                } else {
+                    $buttons.css({ display:'flex', flexWrap:'', width:'', gap:'', rowGap:'', marginBottom:'12px' });
+                    $csvBtn.css({ flex:'', width:'', margin:'', paddingRight:'', boxSizing:'', justifyContent:'' });
+                    $xlsBtn.css({ flex:'', width:'', margin:'', paddingLeft:'', boxSizing:'', justifyContent:'' });
+                    $dateW.css({ flex:'', width:'', margin:'' });
+                    $dateBtn.css({ width:'', justifyContent:'', boxSizing:'' });
+                    $searchW.css({ flex:'', width:'', marginLeft:'6px', boxSizing:'', display:'inline-flex' });
+                    $searchI.css({ minWidth:'200px', width:'' });
+                }
+            }
+
+            applyToolbarLayout();
+            $(window).on('resize', applyToolbarLayout);
+
+            // Fix pagination & info font size directly
+            setTimeout(function () {
+                // DataTables info (e.g. "Showing 1 to 10 of 50 entries")
+                $('[class*="dataTables_info"], [class*="dt-info"]').css('font-size', '13px');
+                // Pagination buttons
+                $('[class*="paginate_button"], [class*="dt-paging-button"], [class*="dataTables_paginate"] a, [class*="dataTables_paginate"] span').css('font-size', '13px');
+            }, 100);
+
             // Initialize Bootstrap tooltips
             var tooltipTriggerList = [].slice.call(
                 document.querySelectorAll('[data-bs-toggle="tooltip"]')
@@ -611,10 +753,6 @@
     $('#exportModal').modal('hide');
     $('#exportFileName').val('');
 });
-
-    /* ===================== SEARCH INPUT POSITION ===================== */
-    $('.dataTables_filter').addClass('float-end');
-    $('.dataTables_filter label').addClass('w-100');
 
     /* ===================== ROW CLICK REDIRECT ===================== */
     $('#customer-table tbody').on('click', 'tr', function (e) {
@@ -700,10 +838,6 @@
         return (!start || rowDate >= start) && (!end || rowDate <= end);
     });
 
-
-    // Move the search input to the right side
-    $('.dataTables_filter').addClass('float-end');
-    $('.dataTables_filter label').addClass('w-100');
 
     $('#customer-table tbody').on('click', 'tr', function (e) {
         // Prevent redirect if the clicked target is inside a delete button

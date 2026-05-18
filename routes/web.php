@@ -129,6 +129,8 @@ Route::group(['middleware' => ['concierge']],function(){
     Route::get('/concierge/scanner', 'App\Http\Controllers\ConciergeController@index')->name('concierge.index');
 });
 
+Route::get('/quiz', 'App\Http\Controllers\StationController@quiz')->name('quiz');
+Route::get('/review', 'App\Http\Controllers\StationController@review')->name('review');
 
 
 // Public endpoint used by the registration frontend to check if a phone exists
@@ -148,7 +150,7 @@ Route::group(['middleware' => ['client']], function () {
 
     Route::get('/station/{station}', 'App\Http\Controllers\StationController@index')->name('station');
     Route::get('/developer/{developer}', 'App\Http\Controllers\StationController@developer')->name('developer');
-    Route::get('/developer/{developer}/quiz', 'App\Http\Controllers\StationController@quiz')->name('developer.quiz');
+   
 
     Route::get('/dashboard', 'App\Http\Controllers\StationController@welcome')->name('dashboard');
     Route::get('/discover', 'App\Http\Controllers\StationController@discover')->name('discover');

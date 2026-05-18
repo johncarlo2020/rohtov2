@@ -1,5 +1,12 @@
 <x-app-layout>
 <style>
+    .answer-text
+    {
+        font-family: Grifa-Regular, sans-serif !important;
+        width: 75%;
+        margin: auto;
+        text-align: center;
+    }
     .option-btn
     {   
         width: 100%;
@@ -65,9 +72,10 @@
   min-height: 100svh;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  /* align-items: center; */
   gap: clamp(12px, 3vh, 24px);
   padding-block: clamp(12px, 3vh, 24px);
+  padding: 20px;
 }
 
 /* Main content */
@@ -75,21 +83,8 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: clamp(12px, 3vh, 24px);
 }
-
-/* Title */
-/* #mainContent h2 {
-  font-size: clamp(1rem, 4.5vw, 1.4rem);
-  letter-spacing: clamp(1px, 0.4vw, 2px);
-} */
-/* Text */
-/* #mainContent p {
-  font-size: 16px;
-  max-width: 38ch;
-  line-height: 1.5;
-} */
 
 /* Buttons */
 .custom-btn-secondary {
@@ -166,6 +161,62 @@
             transition: none;
         }
     }
+
+    .q-box
+    {
+        background-size: contain;
+        height: 70vw;
+        background-repeat: no-repeat;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transform: scale(1);
+        cursor: pointer;
+        transition: all 0.35s ease;
+    }
+
+    /* BEFORE selection happens */
+    .q-box.default-state{
+        filter: brightness(1);
+        opacity: 1;
+    }
+
+    /* selected box */
+    .q-box.selected{
+        filter: brightness(1);
+        opacity: 1;
+
+        transform: scale(1.08);
+
+        /* box-shadow:
+            0 0 15px #fff7a8,
+            0 0 30px #ffee58,
+            0 0 45px rgba(255, 235, 59, 0.8);
+
+        border-radius: 12px; */
+        z-index: 2;
+    }
+
+    /* non-selected AFTER click */
+    .q-box.dimmed{
+        filter: brightness(0.4);
+        opacity: 0.7;
+        transform: scale(0.95);
+    }
+
+    .number-image
+    {
+        width:20%;
+        margin:auto;
+    }
+
+    .question-image
+    {
+        width:80%;
+        margin:auto;
+    }
+
+
 </style>
     <div id="stationPage" class="station-page main-content main-background with-scroll px-0">
         <div class="modal fade custom-modal" id="scanCompleteModal" tabindex="-1">
@@ -191,11 +242,11 @@
             </div>
         </div>
 
-        <button
+        {{-- <button
             class="back-btn animate-entry"
             onclick="window.location.href='{{ route('dashboard') }}'"
             aria-label="Go back"
-        ></button>
+        ></button> --}}
         
         <div id="mainContainer">
 
@@ -204,69 +255,42 @@
                 @include('components.branding')
             </div>
             <!-- Main content -->
-            <div id="mainContent"
-                class="d-flex flex-column align-items-center animate-entry delay-3">
+            <div id="mainContent" class="mt-5">
 
-                <div class="img-container text-center">
-                    <!-- station image -->
-                    <img class="station-image w-25 mx-auto my-4"
-                       src="{{ asset('images/developer/DEV' . $developer->id . '.webp') }}"   
-                        alt="Station Image">
+                <div class="number-container">
+                    <img class="number-image" src="" alt="">
                 </div>
 
-                <div class="container quiz-card mb-4">
+                <div class="question-container">
+                    <img class="question-image" src="" alt="">
+                </div>
 
-                    <!-- 🧠 Question -->
-                    <h5 class="fw-bold mb-3 text-center">
-                        {{ $question->question }}
-                    </h5>
+                <div class="row">
+                    
+                    <div class="col-6">
+                        <div class="q-box blue-box default-state"
+                            data-answer="A"
+                            style="background-image:url('{{ asset('images/brand/blue.webp') }}');">
 
-                    <div class="container py-4">
-                        <div class="row g-3">
-
-                            @foreach($question->answers as $answer)
-                                <div class="col-6">
-                                    <button 
-                                        class="answer-tile w-100"
-                                        data-id="{{ $answer->id }}"
-                                        data-correct="{{ $answer->is_correct }}"
-                                        data-question="{{ $question->id }}"
-                                    >
-                                        {{ $answer->answer }}
-                                    </button>
-                                </div>
-                            @endforeach
-
+                            <p class="text-white answer-text answer-a">
+                                I'm a GIRL
+                            </p>
                         </div>
                     </div>
-                </div>
-                
-                <!-- actions -->
-                @if ($developer->pivot->isCompleted)
-                    <!-- ✅ Already checked in -->
-                    <div class="checkedInContainer w-50 mx-auto">
-                        <p class="text-center mb-2">Checked In</p>
-                        <a href="{{ route('dashboard') }}"
-                        class="custom-btn custom-btn-secondary w-100">
-                            BACK
-                        </a>
+
+                    <div class="col-6">
+                        <div class="q-box purple-box default-state"
+                            data-answer="B"
+                            style="background-image:url('{{ asset('images/brand/purple.webp') }}');">
+
+                            <p class="text-white answer-text answer-b">
+                                I'm a BOY
+                            </p>
+                        </div>
                     </div>
-                @else
 
-                    <!-- ✅ Other stations → Scanner -->
-                    {{-- <button id="start-scanner"
-                            class="text-dark custom-btn-secondary px-3 py-2">
-                        SCAN QR CODE TO PROCEED
-                    </button> --}}
+                </div>
 
-                      {{-- <div class="text-content mt-3">
-                                <a href="{{ route('station.stamping', $station->id);}}" id="routeBtn"
-                                    class="custom-btn w-auto px-5 fw-regular custom-btn-primary text-white">
-                                    I'M THERE
-                                </a>
-                            </div> --}}
-
-                @endif
             </div>
 
             <div id="quizContainer" class="d-none">
@@ -306,110 +330,187 @@
     
     @push('scripts')
     <script>
-        let answeredCorrectly = false;
 
-        document.querySelectorAll('.answer-tile').forEach(btn => {
+    const questions = [
 
-    btn.addEventListener('click', function () {
+        {
+            number: "01",
+            question: "It’s Saturday afternoon. Where are you?",
+            answerA: "Chilling at the mall, shopping, catching up with friends",
+            answerB: "At a cute cafe, journaling, reading, or people-watching"
+        },
 
-        // 🚫 stop after correct
-        if (answeredCorrectly) return;
+        {
+            number: "02",
+            question: "Your vibe in the group chat is?",
+            answerA: "Loud, funny, always sending memes, planner of last-minute hangouts",
+            answerB: "Calm, witty, selectyive replies, secretly the wise one"
+        },
 
-        let isCorrect = this.dataset.correct == "1";
+        {
+            number: "03",
+            question: "What is your ideal snack combo",
+            answerA: "Fries, fried chicken, sweet treats, indulgent combo",
+            answerB: "Croissant, fruit toast, light desserts, aesthetic bites"
+        }
 
-        if (isCorrect) {
+        ,
 
-            // ✅ mark correct
-            this.classList.add('correct');
+        {
+            number: "04",
+            question: "Choose a weekend fit",
+            answerA: "Trendy, comfy, effortless cool, sneakers ready",
+            answerB: "Clean, minimalist neutral tones, stylish but subtle"
+        }
 
-            // highlight correct + lock all
-            document.querySelectorAll('.answer-tile').forEach(b => {
-                if (b.dataset.correct == "1") {
-                    b.classList.add('correct');
-                }
-                b.disabled = true;
+    ];
+
+    let currentQuestion = 0;
+
+    let scoreA = 0;
+    let scoreB = 0;
+
+    // const numberText = document.querySelector('.number-text');
+    // const questionText = document.querySelector('.question-text');
+    const numberImage = document.querySelector('.number-image');
+    const questionImage = document.querySelector('.question-image');
+
+    const answerA = document.querySelector('.answer-a');
+    const answerB = document.querySelector('.answer-b');
+
+    const qBoxes = document.querySelectorAll('.q-box');
+
+
+    // load question
+    function loadQuestion(index){
+
+        const current = questions[index];
+
+        // Default image paths
+        numberImage.src = `images/brand/number-${current.number}.webp`;
+
+        // Example:
+        // images/brand/question-01.png
+        questionImage.src = `images/brand/question-${current.number}.webp`;
+
+        answerA.innerText = questions[index].answerA;
+        answerB.innerText = questions[index].answerB;
+
+        // reset styles
+        qBoxes.forEach(box => {
+            box.classList.remove('selected','dimmed');
+            box.classList.add('default-state');
+        });
+
+    }
+
+
+    // click event
+    qBoxes.forEach(box => {
+
+        box.addEventListener('click', function(){
+
+            const selectedAnswer = this.dataset.answer;
+
+            // score
+            if(selectedAnswer === 'A'){
+                scoreA++;
+            }else{
+                scoreB++;
+            }
+
+            // remove old
+            qBoxes.forEach(item => {
+                item.classList.remove(
+                    'selected',
+                    'dimmed',
+                    'default-state'
+                );
             });
 
-            answeredCorrectly = true;
+            // selected style
+            this.classList.add('selected');
 
-            // 🚀 send to backend
-            submitAnswer(this.dataset.question, this.dataset.id, true);
+            // darken other
+            qBoxes.forEach(item => {
+                if(item !== this){
+                    item.classList.add('dimmed');
+                }
+            });
 
-            // 🎉 show modal
-            let modal = new bootstrap.Modal(document.getElementById('successModal'));
-            modal.show();
+            // next question
+            setTimeout(() => {
 
-        } else {
+                currentQuestion++;
+                const reviewRoute = "{{ route('review') }}";
 
-            // ❌ mark wrong (only clicked one)
-            this.classList.add('wrong');
+                if(currentQuestion < questions.length){
 
-            // prevent clicking same wrong again
-            this.disabled = true;
+                    loadQuestion(currentQuestion);
 
-            // 🚀 send attempt
-            submitAnswer(this.dataset.question, this.dataset.id, false);
-        }
+                }else{
+                    // final result
+                    if (scoreA > scoreB) {
+
+                        window.location.href = `${reviewRoute}?review=milktea`;
+
+                    } else if (scoreB > scoreA) {
+
+                        window.location.href = `${reviewRoute}?review=mootea`;
+
+                    } else {
+
+                        // Randomize if tied
+                        const randomReview = Math.random() < 0.5 ? 'milktea' : 'mootea';
+                        window.location.href = `${reviewRoute}?review=${randomReview}`;
+
+                    }
+
+                }
+
+            }, 600);
+
+        });
 
     });
 
-});
 
-        function goNext() {
-            window.location.href = "{{ route('dashboard') }}";
-        }
+    // first load
+    loadQuestion(currentQuestion);
 
-        function submitAnswer(questionId, answerId, isCorrect) {
+    </script>
+    <script>
+    const boxes = document.querySelectorAll('.q-box');
 
-                fetch("{{ route('submit.answer') }}",{
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({
-                        question_id: questionId,
-                        answer_id: answerId,
-                        is_correct: isCorrect
-                    })
-                })
-                .then(res => res.json())
-                .then(data => {
-                    console.log('Saved:', data);
-                })
-                .catch(err => {
-                    console.error('Error:', err);
-                });
-            }
-        </script>
-        <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-        <script>
-            // Pass data from Blade to JavaScript
-            window.stationConfig = {
-                urls: {
-                    process_qr_code: '{{ route('process_qr_code') }}',
-                    submit_quiz: '{{ route('submit.answer') }}',
-                    congrats: '{{ route('congrats') }}'
-                },
-                assets: {
-                    check_image: '{{ asset('images/check.png') }}',
-                    error_image: '{{ asset('images/error.png') }}'
-                },
-                station_id: {{ $developer->id }},
-                station_name: `{!! strtoupper($developer->name) !!}`,
-                asset_base: "{{ asset('') }}"
-            };
+    boxes.forEach(box => {
 
-            window.gotoStation = function(id,) {
-                    var url = "{{ route('developer', ['developer' => ':id']) }}".replace(
-                        ":id",
-                        id
-                    );
+        box.addEventListener('click', function () {
 
-                    // Redirect to the generated URL
-                    window.location.href = url;
+            // remove all states first
+            boxes.forEach(item => {
+                item.classList.remove(
+                    'selected',
+                    'dimmed',
+                    'default-state'
+                );
+            });
+
+            // selected item
+            this.classList.add('selected');
+
+            // darken others
+            boxes.forEach(item => {
+                if(item !== this){
+                    item.classList.add('dimmed');
                 }
-        </script>
+            });
+
+        });
+
+    });
+</script>
+    
+        
         @vite(['resources/js/station.js'])
     @endpush
 </x-app-layout>

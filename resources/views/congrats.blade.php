@@ -71,7 +71,7 @@
     </style>
 </head>
 
-<body class="antialiased welcome-page" style="background-image:url('{{ asset('images/brand/landing_bg2.webp') }}');">
+<body class="antialiased welcome-page" style="background-image:url('{{ asset('images/brand/landing_bg.webp') }}');">
 
     <div class="container-fluid main-content with-scroll py-4 px-0">
         <div class="top-container">

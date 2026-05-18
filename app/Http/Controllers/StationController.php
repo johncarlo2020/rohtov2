@@ -68,60 +68,7 @@ class StationController extends Controller
 
   public function quiz(Request $request)
   {
-    $user = StationUser::where("user_id", auth()->id())
-      ->where("station_id", $request->id)
-      ->exists();
-
-    // ✅ developer from route (clean)
-    $developer = auth()
-      ->user()
-      ->developers->firstWhere("id", request()->route("developer"));
-    $question = Question::where("questions.developer_id", $developer->id)
-
-      // ❌ exclude already answered by THIS user
-      ->whereNotIn("questions.id", function ($q) use ($user) {
-        $q->select("user_question.question_id")
-          ->from("user_question")
-          ->where("user_question.user_id", auth()->id());
-      })
-
-      // 🧠 join for usage count
-      ->leftJoin(
-        "user_question",
-        "questions.id",
-        "=",
-        "user_question.question_id"
-      )
-
-      // 📊 select + count
-      ->select("questions.*", DB::raw("COUNT(user_question.id) as usage_count"))
-
-      // ⚠️ group properly (important for MySQL strict mode)
-      ->groupBy(
-        "questions.id",
-        "questions.developer_id",
-        "questions.question",
-        "questions.created_at",
-        "questions.updated_at"
-      )
-
-      // 🎯 least used first
-      ->orderBy("usage_count", "asc")
-
-      ->first();
-
-    // ⚠️ fallback if all answered
-    if (!$question) {
-      $question = Question::where("developer_id", $developer->id)
-        ->inRandomOrder()
-        ->first();
-    }
-
-    // 🔀 load + shuffle answers
-    $question->load("answers");
-    $question->answers = $question->answers->shuffle()->values();
-
-    return view("quiz", compact("user", "developer", "question"));
+    return view("quiz");
   }
 
   public function welcome()
@@ -1316,6 +1263,13 @@ class StationController extends Controller
         'logs',
         'redeemedUsers'
     ));
+  }
+
+  public function review(Request $request)
+  {
+      $review = $request->review;
+
+      return view('review', compact('review'));
   }
 
 }

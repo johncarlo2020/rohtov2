@@ -7,13 +7,13 @@
 // Base button styles - used for resetting and creating a common foundation
 .custom-btn {
     appearance: none;
-    border: 1px solid transparent;
+    // border: 1px solid transparent;
 
     font-family: $font-family;
     font-size: $button-font-size;
     padding: $button-padding;
-    border-radius: $button-radius;
-    box-shadow: $button-shadow;
+    // border-radius: $button-radius;
+    // box-shadow: $button-shadow;
     height: $button-height;
     width: $button-width;
     font-weight: $button-font-weight;
@@ -33,28 +33,32 @@
 
 // Primary button - for the main call to action
 .custom-btn-primary {
-    background-color: $primary;
-    border-radius: 12px;
+    //  background-color: $primary;
+    background-image:$btn-img;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    // border-radius: 12px;
     color: $white;
     letter-spacing: 1.4px;
     width: 100%;
 
     &:hover {
-        background-color: darken($primary, 1%);
-        color: $white;
-        border-color: darken($primary, 1%);
+        background-color: transparent;
+        color: inherit;
+        border-color: transparent;
     }
 
     &:active {
-        background-color: darken($primary, 1%);
-        color: $white;
-        border-color: darken($primary, 1%);
+        background-color: transparent;
+        color: inherit;
+        border-color: transparent;
     }
 
     &:disabled {
-        background-color: darken($primary, 1%);
-        color: $white;
-        border-color: darken($primary, 1%);
+        background-color: transparent;
+        color: inherit;
+        border-color: transparent;
         cursor: not-allowed;
     }
 }

@@ -34,7 +34,7 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            justify-content: start;
+            justify-content: space-between;
             padding-top: env(safe-area-inset-top);
             padding-bottom: env(safe-area-inset-bottom);
             height:100svh;
@@ -65,69 +65,95 @@
             text-shadow: 0 3px 0 #f7a239;
         }
 
-        #banner .top{
-            margin: 25% 0%;
+        /* #banner .top{
+            margin: 15% 0%;
+        } */
+
+        .instructions-box
+        {
+            background-size: contain;
+            margin-bottom: -5vw;
+            background-repeat: no-repeat;
         }
+
     </style>
 </head>
 
-<body class="antialiased welcome-page" style="background-image:url('{{ asset('images/brand/landing_bg2.webp') }}');">
+<body class="antialiased welcome-page" style="background-image:url('{{ asset('images/brand/landing_bg.webp') }}');">
 
-    <div class="container-fluid main-content with-scroll py-4 px-0">
+    <div class="container-fluid main-content with-scroll pt-4 px-0">
         <div class="top-container">
             <!-- Branding (top area) -->
             <div class="row flex-grow-1">
                 <div class="col-12 animate-entry mb-4">
                     <div>
                         <div class="branding pulse-slow">
-                            <img onclick="window.location.href='{{ route('dashboard') }}'" class="logo" src="{{ asset('images/brand/logo_white.webp') }}" alt="Brand Logo" />
+                            <img onclick="window.location.href='{{ route('dashboard') }}'" class="logo" src="{{ asset('images/brand/logo.webp') }}" alt="Brand Logo" />
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-                <div id="banner" class="col-10 mx-auto d-flex flex-column justify-content-center animate-entry">
+            <div id="banner" class="col-10 mx-auto d-flex flex-column justify-content-center animate-entry">
                 <div class="top">
                     <div class="row">
                         <div class="col-12">
-                            <h3 class="text-center text-white mb-3">Welcome to the journey of</h3>
+                            <h3 class="text-center text-white">Gandingan Mantap,<br>Berkhasiat dan Sedap!</h3>
                         </div>
                     </div>
                     <div class="row">
-                        <img class="discover_img w-100" src="{{ asset('images/brand/masthead.webp') }}"
+                        <img class="w-100 p-0" src="{{ asset('images/brand/masthead.webp') }}"
                         alt="" />
                     </div>
                 </div>
-                        <!-- Bottom CTA -->
-                <div class="row mb-5">
+
+                {{-- instructions --}}
+
+                <div id="instructionsParent" class="instructions-parent animate-entry d-none w-100">
+                    <p class="text-center">Instructions</p>
+                    <div class="instructions-box">
+                        <img src="{{ asset('images/brand/instructions.webp') }}" alt="" srcset="">
+                    </div>
+                    <a href="{{ route('quiz') }}" class="custom-btn custom-btn-primary pulse-slow" style="background-image:url('{{ asset('images/brand/btn.png') }}');">
+                        Let's Go
+                    </a>
+                </div>
+
+                    
+                    
+
+                <!-- Bottom CTA -->
+                <div id="startWrapper" class="row mb-5">
                     <div class="col-12 text-center">
                         <div class="d-block  mb-2">
                             <div class="colanimate-entry delay-2 btn-wrapperx px-5 mt-4">
-                                <a href="{{ route('register') }}" class="custom-btn custom-btn-secondary pulse-slow">
-                                    JOIN NOW
+                                <a href="javascript:void(0)" id="startBtn" class="custom-btn custom-btn-primary pulse-slow" style="background-image:url('{{ asset('images/brand/btn.png') }}');">
+                                    Start
                                 </a>
                             </div>
                         </div>
                     </div>
                 </div>
-                </div>
+            </div>
         <div class="bottom-container">
             <!-- Bottom CTA -->
-            <div class="row mb-5">
-                <div class="col-12 text-center">
-                    <div class="d-block  mb-2">
-                        <div class="colanimate-entry delay-2 btn-wrapperx px-5 mt-4 d-none">
-                            <a href="{{ route('register') }}" class="custom-btn custom-btn-seconday pulse-slow">
-                                JOIN NOW
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <img class="p-0" src="{{ asset('images/brand/masthead2.webp') }}"alt="" />
         </div>
     </div>
 
     <x-scriptPackages />
+    <script>
+        document.getElementById('startBtn').addEventListener('click', function () {
+
+            // show instructions
+            document.getElementById('instructionsParent')
+                    .classList.remove('d-none');
+
+            // hide start button
+            document.getElementById('startWrapper')
+                    .style.display = 'none';
+        });
+    </script>
 
 </body>
 </html>

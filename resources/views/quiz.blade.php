@@ -3,9 +3,10 @@
     .answer-text
     {
         font-family: Grifa-Regular, sans-serif !important;
-        width: 75%;
-        margin: auto;
+        width: 65%;
         text-align: center;
+        font-size: 50px;
+        margin-left: -5vw;
     }
     .option-btn
     {   

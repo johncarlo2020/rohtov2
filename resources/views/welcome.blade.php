@@ -72,8 +72,14 @@
         .instructions-box
         {
             background-size: contain;
-            margin-bottom: -5vw;
+            margin-bottom: -4vw;
             background-repeat: no-repeat;
+        }
+
+        .welcome-text
+        {
+            font-size:50px;
+            margin-bottom: -8vw;
         }
 
     </style>
@@ -98,7 +104,7 @@
                 <div class="top">
                     <div class="row">
                         <div class="col-12">
-                            <h3 class="text-center text-white">Gandingan Mantap,<br>Berkhasiat dan Sedap!</h3>
+                            <h3 class="text-center text-white welcome-text">Gandingan Mantap,<br>Berkhasiat dan Sedap!</h3>
                         </div>
                     </div>
                     <div class="row">

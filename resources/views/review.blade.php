@@ -66,19 +66,20 @@
         }
 
         #banner .top{
-            margin-top: 25%;
+            margin-top: 5%;
         }
 
         .cat {
             position: absolute;
             bottom: 0px;
-            width: 200px !important;
+            width: 400px !important;
             z-index: -2;
             right: 0;
         }
 
         .review-box-desc {
             margin-bottom: -8vw;
+            margin-top: -4vw;
         }
     </style>
 </head>
@@ -107,7 +108,7 @@
         <div id="banner" class="col-10 mx-auto d-flex flex-column justify-content-center animate-entry">
                 <div class="top">
                     <div class="row">
-                        <img class="w-100 p-0" src="{{ asset('images/brand/'.$bg) }}" alt="" />
+                        <img class="w-100 p-0 pulse-slow" src="{{ asset('images/brand/'.$bg) }}" alt="" />
                     </div>
                 </div>
 
@@ -116,7 +117,7 @@
                 <div id="instructionsParent" class="instructions-parent animate-entry w-100">
 
                     <div class="review-box-desc">
-                        <img src="{{ asset('images/brand/'.$desc) }}" alt="" srcset="">
+                        <img class="w-100" src="{{ asset('images/brand/'.$desc) }}" alt="" srcset="">
                     </div>
                     <a href="{{ route('quiz') }}" class="custom-btn custom-btn-primary pulse-slow" style="background-image:url('{{ asset('images/brand/btn.png') }}');">
                         Play Again

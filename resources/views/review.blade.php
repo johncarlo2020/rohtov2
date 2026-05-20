@@ -131,6 +131,15 @@
     </div>
 
     <x-scriptPackages />
+    <script>
+    document.addEventListener('contextmenu', function (e) {
+        e.preventDefault();
+    });
+
+    document.addEventListener('dblclick', function (e) {
+        e.preventDefault();
+    });
+    </script>
 
 </body>
 </html>

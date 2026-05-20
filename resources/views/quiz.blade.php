@@ -217,7 +217,7 @@
         margin:auto;
     }
 
-    .cat {
+    .cat{
             position: absolute;
             bottom: 0px;
             width: 90% !important;
@@ -306,14 +306,6 @@
 
                 <div class="row">
                     <img class="w-75 m-auto p-0 cat" src="{{ asset('images/brand/cat_quiz.webp') }}" alt="" />
-                </div>
-            </div>
-
-            <div id="quizContainer" class="d-none">
-                <!-- Quiz content will be injected here by JavaScript -->
-                <div id="quiz-container" style="display:none; width:100%; max-width:360px;">
-                    <h3 id="question-text" class="text-center mb-3"></h3>
-                    <div id="options"></div>
                 </div>
             </div>
         </div>

@@ -151,7 +151,7 @@
                                     @if($station['id'] == 3 && $station['value'])
 
                                         {{-- Gift name --}}
-                                        {{ $user->userGift?->gift?->name ?? 'No Gift' }}
+                                        {{ optional($user->userGift->gift)->name ?? 'No Gift' }}
 
                                         <br>
 

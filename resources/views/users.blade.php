@@ -145,7 +145,7 @@
                             </td>
                             <td>{{ $user->property_budget }}</td>
                             <td>{{ \Carbon\Carbon::parse($user->created_at)->toDayDateTimeString() }}</td>
-                           @foreach ($user['stations'] as $station)
+                            @foreach ($user['stations'] as $station)
                                 <td class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-danger' }}">
 
                                     @if($station['id'] == 3 && $station['value'])

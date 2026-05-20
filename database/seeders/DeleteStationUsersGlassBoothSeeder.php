@@ -16,4 +16,4 @@ class DeleteStationUsersGlassBoothSeeder extends Seeder
             ->where('station_id', 2)
             ->delete();
     }
-}
+} 

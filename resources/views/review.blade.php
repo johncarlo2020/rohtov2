@@ -78,7 +78,7 @@
         }
 
         .review-box-desc {
-            margin-bottom: -5vw;
+            margin-bottom: -8vw;
         }
     </style>
 </head>

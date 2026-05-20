@@ -217,6 +217,14 @@
         margin:auto;
     }
 
+    .cat {
+            position: absolute;
+            bottom: 0px;
+            width: 90% !important;
+            right: 0;
+            left: 0;
+        }
+
 
 </style>
     <div id="stationPage" class="station-page main-content main-background with-scroll px-0">
@@ -296,6 +304,9 @@
 
                 </div>
 
+                <div class="row">
+                    <img class="w-75 m-auto p-0 cat" src="{{ asset('images/brand/cat_quiz.webp') }}" alt="" />
+                </div>
             </div>
 
             <div id="quizContainer" class="d-none">

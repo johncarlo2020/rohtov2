@@ -132,7 +132,7 @@
 
     .number-image
     {
-        width:20%;
+        max-width:20%;
         margin:auto;
     }
 
@@ -184,7 +184,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <img class="w-100 p-0" src="{{ asset('images/brand/masthead.webp') }}"
+                        <img class="w-100 p-0 pulse-slow" src="{{ asset('images/brand/masthead.webp') }}"
                         alt="" />
                     </div>
                 </div>
@@ -232,19 +232,19 @@
             <!-- Main content -->
             <div id="mainContent" class="mt-5">
 
-                <div class="number-container">
-                    <img class="number-image animate-entry" src="" alt="">
+                <div class="number-container animate-entry">
+                    <img class="number-image pulse-slow" src="" alt="">
                 </div>
 
-                <div class="question-container">
-                    <img class="question-image animate-entry" src="" alt="">
+                <div class="question-container animate-entry">
+                    <img class="question-image pulse-slow" src="" alt="">
                 </div>
 
                 <div class="row">
                     <audio id="clickSound">
                     <source src="{{ asset('audio/clicksoundeffect.mp3') }}" type="audio/mpeg">
                 </audio>
-                    <div class="col-6">
+                    <div class="col-6 animate-entry delay-2">
                         <div class="q-box blue-box default-state"
                             data-answer="A"
                             style="background-image:url('{{ asset('images/brand/blue.webp') }}');">
@@ -255,7 +255,7 @@
                         </div>
                     </div>
 
-                    <div class="col-6">
+                    <div class="col-6 animate-entry delay-2">
                         <div class="q-box purple-box default-state"
                             data-answer="B"
                             style="background-image:url('{{ asset('images/brand/purple.webp') }}');">

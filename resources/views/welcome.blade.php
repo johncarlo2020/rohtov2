@@ -82,6 +82,11 @@
             margin-bottom: -8vw;
         }
 
+        .instructions-text
+        {
+            font-size:45px;
+        }
+
     </style>
 </head>
 
@@ -116,7 +121,7 @@
                 {{-- instructions --}}
 
                 <div id="instructionsParent" class="instructions-parent animate-entry d-none w-100">
-                    <p class="text-center">Instructions</p>
+                    <p class="text-center instructions-text text-white text-center">INSTRUCTIONS</p>
                     <div class="instructions-box">
                         <img src="{{ asset('images/brand/instructions.webp') }}" alt="" srcset="">
                     </div>

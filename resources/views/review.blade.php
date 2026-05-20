@@ -119,7 +119,7 @@
                     <div class="review-box-desc">
                         <img class="w-100" src="{{ asset('images/brand/'.$desc) }}" alt="" srcset="">
                     </div>
-                    <a href="{{ route('quiz') }}" class="custom-btn custom-btn-primary pulse-slow" style="background-image:url('{{ asset('images/brand/btn.png') }}');">
+                    <a href="{{ route('dashboard') }}" class="custom-btn custom-btn-primary pulse-slow" style="background-image:url('{{ asset('images/brand/btn.png') }}');">
                         Play Again
                     </a>
                 </div>

@@ -250,7 +250,9 @@
         ></button> --}}
         
         <div id="mainContainer">
-
+            <audio id="bgMusic" loop>
+                <source src="{{ asset('audio/bg_music.mp3') }}" type="audio/mpeg">
+            </audio>
             <!-- Branding -->
             <div class="branding-container animate-entry px-4">
                 @include('components.branding')
@@ -267,7 +269,9 @@
                 </div>
 
                 <div class="row">
-                    
+                    <audio id="clickSound">
+                    <source src="{{ asset('audio/clicksoundeffect.mp3') }}" type="audio/mpeg">
+                </audio>
                     <div class="col-6">
                         <div class="q-box blue-box default-state"
                             data-answer="A"
@@ -330,6 +334,29 @@
     </div>
     
     @push('scripts')
+    <script>
+        document.addEventListener('click', function initMusic() {
+            const music = document.getElementById('bgMusic');
+
+            music.volume = 0.2;
+            music.play();
+
+            document.removeEventListener('click', initMusic);
+        });
+
+        document.querySelectorAll('.q-box').forEach(box => {
+            box.addEventListener('click', () => {
+                const sound = document.getElementById('clickSound');
+
+                sound.currentTime = 0;
+                sound.volume = 0.5;
+
+                sound.play().catch(err => {
+                    console.log(err);
+                });
+            });
+        });
+        </script>
     <script>
 
     const questions = [

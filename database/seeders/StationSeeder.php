@@ -26,8 +26,8 @@ class StationSeeder extends Seeder
         ]);
 
         Station::create([
-            'name' => 'Video Booth',
-            'description' => 'Visit our video booth to <br> capture the moment',
+            'name' => 'Voting',
+            'description' => 'Visit our voting station to<br>get stamp',
         ]);
 
         Station::create([

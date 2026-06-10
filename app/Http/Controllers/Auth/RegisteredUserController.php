@@ -34,51 +34,31 @@ class RegisteredUserController extends Controller
     
     $today = Carbon::today();
 
-    // April 30 - May 5
-    $batchA = [
-      "Kinrara Puchong",
-      "Ampang Jaya, Selangor",
-      "Taman Putra Perdana, Puchong, Selangor",
-    ];
-
-    // May 6 - May 11
-    $batchB = [
-      "KITA Cybersouth",
-      "D'Island Residence Puchong",
-      "Persiaran Wawasan Puchong",
-      "Shah Alam, Selangor",
-      "Andaman Island, Penang",
-    ];
-    
-
     //April 30 - May 11
-    $default = [
-      "Puchong",
-      "Taman Desa, Kuala Lumpur",
-      "Puchong Jaya",
-      "Bangsar South, Kuala Lumpur",
-      "Bukit Jalil, Kuala Lumpur",
-      "Puchong, Selangor",
-      "Sepang, Cyberjaya",
-      "Titiwangsa",
+      $default = [
+        "Gelugor, The Light Waterfront",
+        "Bukit Jambul",
+        "Jawi, Seberang Perai Selatan",
+        "Andaman Island",
+        "Batu Kawan",
+        "Bukit Mertajam",
+        "Tasek Gelugor",
+        "Daerah Seberang Perai Utara",
+        "Daerah Seberang Perai Tengah",
+        "Parit Buntar, Perak",
+        "Nibong Tebal",
+        "Kulim, Kedah",
+        "Ara Kuda, Tasek Gelugor",
+        "Sungai Petani",
+        "Tanjong Tokong, Daerah Timur Laut",
+        "Persiaran Bayan Indah",
+        "Taman Cassia Cempaka, Bandar Cassia Batu Kawan",
+        "Bertam Kepala Batas",
+        "Lunas, Kulim, Kedah",
     ];
 
-    // Define date ranges
-    $batchAStart = Carbon::create($today->year, 4, 29);
-    $batchAEnd   = Carbon::create($today->year, 5, 5);
-
-    $batchBStart = Carbon::create($today->year, 5, 6);
-    $batchBEnd   = Carbon::create($today->year, 5, 12);
-
-    // Logic
-    if ($today->between($batchAStart, $batchAEnd)) {
-        $allowedLocations = array_merge($batchA, $default);
-      
-    } elseif ($today->between($batchBStart, $batchBEnd)) {
-        $allowedLocations = array_merge($batchB, $default);
-    } else {
-        $allowedLocations = $default;
-    }
+  
+      $allowedLocations = $default;
 
     $locations = Project::select("address")
       ->distinct()
@@ -103,51 +83,31 @@ class RegisteredUserController extends Controller
   {
      $today = Carbon::today();
 
-      // April 30 - May 5
-      $batchA = [
-        "Kinrara Puchong",
-        "Ampang Jaya, Selangor",
-        "Taman Putra Perdana, Puchong, Selangor",
-      ];
-
-      // May 6 - May 11
-      $batchB = [
-        "KITA Cybersouth",
-        "D'Island Residence Puchong",
-        "Persiaran Wawasan Puchong",
-        "Shah Alam, Selangor",
-        "Andaman Island, Penang",
-      ];
-      
-
       //April 30 - May 11
       $default = [
-        "Puchong",
-        "Taman Desa, Kuala Lumpur",
-        "Puchong Jaya",
-        "Bangsar South, Kuala Lumpur",
-        "Bukit Jalil, Kuala Lumpur",
-        "Puchong, Selangor",
-        "Sepang, Cyberjaya",
-        "Titiwangsa",
-      ];
+        "Gelugor, The Light Waterfront",
+        "Bukit Jambul",
+        "Jawi, Seberang Perai Selatan",
+        "Andaman Island",
+        "Batu Kawan",
+        "Bukit Mertajam",
+        "Tasek Gelugor",
+        "Daerah Seberang Perai Utara",
+        "Daerah Seberang Perai Tengah",
+        "Parit Buntar, Perak",
+        "Nibong Tebal",
+        "Kulim, Kedah",
+        "Ara Kuda, Tasek Gelugor",
+        "Sungai Petani",
+        "Tanjong Tokong, Daerah Timur Laut",
+        "Persiaran Bayan Indah",
+        "Taman Cassia Cempaka, Bandar Cassia Batu Kawan",
+        "Bertam Kepala Batas",
+        "Lunas, Kulim, Kedah",
+    ];
 
-      // Define date ranges
-      $batchAStart = Carbon::create($today->year, 4, 29);
-      $batchAEnd   = Carbon::create($today->year, 5, 5);
-
-      $batchBStart = Carbon::create($today->year, 5, 6);
-      $batchBEnd   = Carbon::create($today->year, 5, 12);
-
-      // Logic
-      if ($today->between($batchAStart, $batchAEnd)) {
-          $allowedLocations = array_merge($batchA, $default);
-        
-      } elseif ($today->between($batchBStart, $batchBEnd)) {
-          $allowedLocations = array_merge($batchB, $default);
-      } else {
-          $allowedLocations = $default;
-      }
+  
+      $allowedLocations = $default;
 
     $validated = $request->validate([
       "fname" => ["required", "string", "max:255"],
@@ -155,6 +115,7 @@ class RegisteredUserController extends Controller
       "locations" => ["required", "array", "max:3"],
       "locations.*" => ["required", "string", Rule::in($allowedLocations)],
       "property_budget" => ["required", "string"],
+      "marketing" => ["required", "string"],
     ]);
 
     //check if user is an early bird
@@ -167,6 +128,7 @@ class RegisteredUserController extends Controller
       "fname" => $validated["fname"],
       "email" => $validated["email"],
       "property_budget" => $validated["property_budget"],
+      "marketing" => $validated["marketing"],
       "password" => Hash::make("password"),
       "is_early_bird" => !!$earlyBird,
     ]);

@@ -17,87 +17,84 @@ class DeveloperProjectSeeder extends Seeder
         $developers = [
 
             1 => [
-                'name' => 'JRK Group',
+                'name' => 'IJM Land Berhad',
                 'projects' => [
-                    ['JRK CELESTIA', 'Kinrara Puchong'],
+                    ['Merione Grand', 'Gelugor, The Light Waterfront'],
+                    ['Terraces Condominium', 'Bukit Jambul'],
+                    ['Ayra Terraces', 'Jawi, Seberang Perai Selatan'],
                 ],
             ],
 
             2 => [
-                'name' => 'Mah Sing Group Berhad M Terra',
+                'name' => 'Eastern & Oriental Berhad',
                 'projects' => [
-                    ['M Terra', 'Puchong'],
-                    ['M Aspira', 'Taman Desa, Kuala Lumpur'],
+                    ['The Lume', 'Andaman Island'],
+                    ['Maris', 'Andaman Island'],
+                    ['Avéa', 'Andaman Island'],
                 ],
             ],
 
             3 => [
-                'name' => 'Land & General Berhad',
+                'name' => 'Paramount Property',
                 'projects' => [
-                    ['The WYN Residences', 'Puchong Jaya'],
+                    ['Seiras Residences', 'Batu Kawan'],
+                    ['Embun Hills', 'Bukit Mertajam'],
                 ],
             ],
 
             4 => [
-                'name' => 'Mah Sing Group Berhad M Aspira',
+                'name' => 'Scientex Berhad',
                 'projects' => [
-                    ['M Aspira', 'Taman Desa, Kuala Lumpur'],
+                    ['Scientex Sungai Dua - Tulip', 'Tasek Gelugor'],
+                ],
+            ],
+
+            5 => [
+                'name' => 'Jayamas Property',
+                'projects' => [
+                    ['Urban Rize', 'Daerah Seberang Perai Utara'],
+                    ['Tri Blighton', 'Daerah Seberang Perai Tengah'],
                 ],
             ],
 
             6 => [
-                'name' => 'Malton Berhad',
+                'name' => 'Oriental Kedah Realty',
                 'projects' => [
-                    ['River Park Bangsar South', 'Bangsar South, Kuala Lumpur'],
-                    ['Park Green Pavilion Bukit Jalil', 'Bukit Jalil, Kuala Lumpur'],
-                    ['Mutiara Lake', 'Puchong, Selangor'],
+                    ['Taman Kerian Putra', 'Parit Buntar, Perak'],
+                    ['Taman Sinar Putra', 'Nibong Tebal'],
+                    ['Taman Seri Aman', 'Kulim, Kedah'],
+                    ['Taman Ara Damai (Phase 6)', 'Ara Kuda, Tasek Gelugor'],
+                    ['SP Saujana Permai (Phase 6)', 'Sungai Petani'],
                 ],
             ],
 
-            11 => [
-                'name' => 'Windsor Land',
+            7 => [
+                'name' => 'UDA Land (North) Sdn Bhd',
                 'projects' => [
-                    ['Windsor Villa @ Cyberjaya', 'Sepang, Cyberjaya'],
-                    ['ALAIA Titiwangsa', 'Titiwangsa'],
+                    ['Eight & Eight Condominium', 'Tanjong Tokong, Daerah Timur Laut'],
                 ],
             ],
 
-            12 => [
-                'name' => 'Selangor Dredging Berhad',
+            8 => [
+                'name' => 'Ideal Property Group',
                 'projects' => [
-                    ['DaMai', 'Ampang Jaya, Selangor'],
-                    ['Elina Senai', 'Taman Putra Perdana, Puchong, Selangor'],
+                    ['Queens Residences Q3', 'Persiaran Bayan Indah'],
                 ],
             ],
 
-            13 => [
-                'name' => 'LBS Bina Group Berhad',
+            9 => [
+                'name' => 'PDC Properties',
                 'projects' => [
-                    ['KITA Sejati', 'KITA Cybersouth'],
-                    ['AULICA', "D'Island Residence Puchong"],
+                    ['Cassia Cempaka Phase 2', 'Taman Cassia Cempaka, Bandar Cassia Batu Kawan'],
+                    ['Damai Lestari', 'Bertam Kepala Batas'],
                 ],
             ],
 
-            14 => [
-                'name' => 'Matrix Concepts Holdings Berhad',
+            10 => [
+                'name' => 'SPB Property',
                 'projects' => [
-                    ['Levia Residence Puchong', 'Persiaran Wawasan Puchong'],
-                ],
-            ],
-
-            15 => [
-                'name' => 'Saujana Development Sdn Bhd',
-                'projects' => [
-                    ['RESIDENSI RIMBUN SAUJANA', 'Shah Alam, Selangor'],
-                ],
-            ],
-
-            16 => [
-                'name' => 'Eastern & Oriental Berhad',
-                'projects' => [
-                    ['The Lume', 'Andaman Island, Penang'],
-                    ['Maris', 'Andaman Island, Penang'],
-                    ['Avéa', 'Andaman Island, Penang'],
+                    ['La Casa Ara', 'Ara Kuda, Tasek Gelugor'],
+                    ['La Casa Lunas', 'Lunas, Kulim, Kedah'],
                 ],
             ],
 

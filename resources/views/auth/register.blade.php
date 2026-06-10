@@ -152,6 +152,62 @@
                             @enderror
                         </div>
 
+                        {{-- Socials --}}
+                        <div class="mb-3">
+                            <label>How did you find out about the iProperty New homes Expo at Sunway Carnival Mall?</label>
+                            @php
+                                $socials = [
+                                    'iProperty Facebook Ads',
+                                    'Google Ads',
+                                    'Facebook - Penang Holiao',
+                                    'Outdoor Digital Panel',
+                                    'iProperty Channels (EDM, Website)',
+                                    'Sunway Carnival Facebook Post',
+                                    'Event Brite',
+                                    'Developers Facebook Ads',
+                                    'Walk-in',
+                                ];
+                            @endphp
+                            <div x-data="{
+                                open: false,
+                                selected: '{{ old('marketing', '') }}',
+                                options: {{ json_encode($socials) }}
+                            }" @click.outside="open = false" class="custom-select-wrapper">
+
+                                <input type="hidden" name="marketing" :value="selected" required>
+
+                                <button type="button" @click="open = !open" class="custom-select-trigger"
+                                    :class="{ 'active': open }">
+                                    <span x-show="!selected" class="select-placeholder">Select below</span>
+                                    <span x-show="selected" class="select-value" x-text="selected"></span>
+                                    <svg class="chevron" :class="{ 'rotate': open }" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+
+                                <div x-show="open" x-transition:enter="transition ease-out duration-100"
+                                    x-transition:enter-start="opacity-0 scale-95"
+                                    x-transition:enter-end="opacity-100 scale-100"
+                                    x-transition:leave="transition ease-in duration-75"
+                                    x-transition:leave-start="opacity-100 scale-100"
+                                    x-transition:leave-end="opacity-0 scale-95" class="custom-select-dropdown">
+                                    <template x-for="option in options" :key="option">
+                                        <div class="custom-select-option"
+                                            :class="{ 'is-selected': selected === option }"
+                                            @click="selected = option; open = false">
+                                            <span x-text="option"></span>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                            @error('property_socials')
+                                <span class="text-danger small">{{ $message }}</span>
+                            @enderror
+                        </div>
+
                         <hr>
 
                         {{-- Privacy Policy --}}

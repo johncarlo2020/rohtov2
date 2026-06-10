@@ -26,38 +26,6 @@ class DeveloperProjectSeeder extends Seeder
             ],
 
             2 => [
-                'name' => 'Eastern & Oriental Berhad',
-                'projects' => [
-                    ['The Lume', 'Andaman Island'],
-                    ['Maris', 'Andaman Island'],
-                    ['Avéa', 'Andaman Island'],
-                ],
-            ],
-
-            3 => [
-                'name' => 'Paramount Property',
-                'projects' => [
-                    ['Seiras Residences', 'Batu Kawan'],
-                    ['Embun Hills', 'Bukit Mertajam'],
-                ],
-            ],
-
-            4 => [
-                'name' => 'Scientex Berhad',
-                'projects' => [
-                    ['Scientex Sungai Dua - Tulip', 'Tasek Gelugor'],
-                ],
-            ],
-
-            5 => [
-                'name' => 'Jayamas Property',
-                'projects' => [
-                    ['Urban Rize', 'Daerah Seberang Perai Utara'],
-                    ['Tri Blighton', 'Daerah Seberang Perai Tengah'],
-                ],
-            ],
-
-            6 => [
                 'name' => 'Oriental Kedah Realty',
                 'projects' => [
                     ['Taman Kerian Putra', 'Parit Buntar, Perak'],
@@ -68,21 +36,31 @@ class DeveloperProjectSeeder extends Seeder
                 ],
             ],
 
-            7 => [
-                'name' => 'UDA Land (North) Sdn Bhd',
+            6 => [
+                'name' => 'Eastern & Oriental Berhad',
                 'projects' => [
-                    ['Eight & Eight Condominium', 'Tanjong Tokong, Daerah Timur Laut'],
+                    ['The Lume', 'Andaman Island'],
+                    ['Maris', 'Andaman Island'],
+                    ['Avéa', 'Andaman Island'],
                 ],
             ],
 
-            8 => [
+            7 => [
+                'name' => 'SPB Property',
+                'projects' => [
+                    ['La Casa Ara', 'Ara Kuda, Tasek Gelugor'],
+                    ['La Casa Lunas', 'Lunas, Kulim, Kedah'],
+                ],
+            ],
+
+            9 => [
                 'name' => 'Ideal Property Group',
                 'projects' => [
                     ['Queens Residences Q3', 'Persiaran Bayan Indah'],
                 ],
             ],
 
-            9 => [
+            10 => [
                 'name' => 'PDC Properties',
                 'projects' => [
                     ['Cassia Cempaka Phase 2', 'Taman Cassia Cempaka, Bandar Cassia Batu Kawan'],
@@ -90,11 +68,33 @@ class DeveloperProjectSeeder extends Seeder
                 ],
             ],
 
-            10 => [
-                'name' => 'SPB Property',
+            11 => [
+                'name' => 'Jayamas Property',
                 'projects' => [
-                    ['La Casa Ara', 'Ara Kuda, Tasek Gelugor'],
-                    ['La Casa Lunas', 'Lunas, Kulim, Kedah'],
+                    ['Urban Rize', 'Daerah Seberang Perai Utara'],
+                    ['Tri Blighton', 'Daerah Seberang Perai Tengah'],
+                ],
+            ],
+
+            12 => [
+                'name' => 'UDA Land (North) Sdn Bhd',
+                'projects' => [
+                    ['Eight & Eight Condominium', 'Tanjong Tokong, Daerah Timur Laut'],
+                ],
+            ],
+
+            13 => [
+                'name' => 'Paramount Property',
+                'projects' => [
+                    ['Seiras Residences', 'Batu Kawan'],
+                    ['Embun Hills', 'Bukit Mertajam'],
+                ],
+            ],
+
+            14 => [
+                'name' => 'Scientex Berhad',
+                'projects' => [
+                    ['Scientex Sungai Dua - Tulip', 'Tasek Gelugor'],
                 ],
             ],
 

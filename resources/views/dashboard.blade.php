@@ -160,6 +160,37 @@
             transform: translateY(-6px);
             box-shadow: 0 20px 40px rgba(9, 30, 66, 0.13);
         }
+
+         /* Floating voucher button */
+        .voucher-trigger {
+            position: fixed;
+            right: -25px;
+            bottom: -15px;
+            width: 130px;
+            height: 55px;
+            background: #2d67c8;
+            color: white;
+            border-radius: 30px 0 0 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+
+        .voucher-trigger img {
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .voucher-text {
+            font-size: 11px;
+            text-align: center;
+            line-height: 1.2;
+        }
+
     </style>
 
     <div class="py-4 map-page main-content main-background with-scroll">
@@ -172,7 +203,46 @@
         <!-- Title -->
         <div class="text-center animate-entry">
             <h2 class="my-5 text-center">Explore</h2>
+
+            <div
+                class="voucher-trigger"
+                id="voucherModal"
+                data-can-access="{{ $canAccessStation ? 1 : 0 }}"
+            >
+                <div class="voucher-text">
+                    CHAGEE<br>
+                    Drink <br>Voucher
+                </div>
+
+                <img src="{{ asset('images/brand/chagee.webp') }}" alt="Voucher">
+            </div>
         </div>
+
+        <!-- Modal -->
+        <div class="animate-entry modal fade custom-modal" id="lockedStationModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered modal-sm">
+                <div class="modal-content card modal-parent">
+                    <div class="modal-body">
+                        <div class="text-center content">
+                            <img class="mx-auto mb-4 check" id="badge" src="{{ asset('images/error.png') }}"
+                                style="filter:brightness(0);">
+
+                            <div class="mt-4 mb-4 text-content">
+                                <p class="text-dark">
+                                    Free Chagee Drink.<br>
+                                    Limited to 50 people.
+                                </p>
+                            </div>
+
+                            <button type="button" class="w-75 custom-btn custom-btn-primary" data-bs-dismiss="modal">
+                                CLOSE
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <!-- Modal -->
         <div class="animate-entry modal fade custom-modal" id="notAllowedModal" tabindex="-1">
@@ -248,24 +318,16 @@
         <!-- Stations -->
         <div class="px-0 container" style="max-width: 420px;">
 
-            @php
-                $today = now()->format('m-d');
-                $videoBoothDates = ['05-01', '05-09', '05-10']; 
-                $canAccessVideoBooth = in_array($today, $videoBoothDates);
-            @endphp
-
             <div class="d-flex justify-content-center animate-entry station-row">
                 @foreach ($stations as $station)
                     @php
                         $image = asset("images/station/ST{$station->id}.webp");
 
-                        $isLocked =
-                            ($station->id == 3 && !$canAccessStation3) ||
-                            ($station->id == 2 && !$canAccessVideoBooth);
+                        $isLocked = ($station->id == 1 && !$canAccessStation) || ($station->id == 2 && !$canAccessStation);
                     @endphp
 
-                    {{-- 🚫 HIDE station 4 if NOT early bird --}}
-                    @if ($station->id == 4 && !auth()->user()->is_early_bird)
+                    {{-- 🚫 HIDE station 3 if NOT early bird --}}
+                    @if ($station->id == 3 && !auth()->user()->is_early_bird)
                         @continue
                     @endif
 
@@ -309,7 +371,7 @@
 
         @php
             $earlyBird = auth()->user()->is_early_bird;
-            $completedStation4 = auth()->user()->stationUser()->where('station_id', 4)->exists();
+            $completedStation4 = auth()->user()->stationUser()->where('station_id', 3)->exists();
             $showEarlyBirdModal = $earlyBird;
         @endphp
 
@@ -344,11 +406,13 @@
                 });
             </script>
         @endif
+
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 let canAccessStation5 = @json($canAccessStation5);
-                let canAccessStation3 = @json($canAccessStation3);
-                let canAccessVideoBooth = @json($canAccessVideoBooth);
+                let canAccessStation = @json($canAccessStation);
+
+            
                 
 
                 window.gotoStamping = function(id, ) {
@@ -372,17 +436,17 @@
                         id
                     );
 
-                    if (id == 3 && !canAccessStation3) {
+                    if (id == 1 && !canAccessStation) {
                         // Show the not allowed modal if trying to access station 3 without permission
                         var notAllowedModal = new bootstrap.Modal(document.getElementById('notAllowedModal'));
                         notAllowedModal.show();
                         return;
                     }
 
-                    if (id == 2 && !canAccessVideoBooth) {
+                    if (id == 2 && !canAccessStation) {
                         // Show the not allowed modal if trying to access station 3 without permission
-                        var notAllowedModalVideo = new bootstrap.Modal(document.getElementById('notAllowedModalVideo'));
-                        notAllowedModalVideo.show();
+                        var notAllowedModal = new bootstrap.Modal(document.getElementById('notAllowedModal'));
+                        notAllowedModal.show();
                         return;
                     }
 
@@ -391,5 +455,22 @@
                 }
             });
         </script>
+        <script>
+            document.getElementById('voucherModal').addEventListener('click', function () {
+
+                let canAccessStation = @json($canAccessStation);
+
+                if (!canAccessStation) {
+                    bootstrap.Modal
+                        .getOrCreateInstance(document.getElementById('lockedStationModal'))
+                        .show();
+
+                    return;
+                }
+
+                // User can access voucher
+               
+            });
+            </script>
     @endpush
 </x-app-layout>

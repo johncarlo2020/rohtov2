@@ -160,11 +160,12 @@ class StationController extends Controller
       return !$user->stationUser()->where("station_id", $station->id)->exists();
     });
 
-    $canAccessStation3 = auth()
+    $canAccessStation = auth()
       ->user()
       ->developers->every(function ($developer) {
         return $developer->pivot->isCompleted == 1;
       });
+    
 
     return view(
       "dashboard",
@@ -175,7 +176,7 @@ class StationController extends Controller
         "completedStationIds",
         "nextStation",
         "isRedeemed",
-        "canAccessStation3"
+        "canAccessStation",
       )
     );
   }

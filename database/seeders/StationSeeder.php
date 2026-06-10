@@ -20,10 +20,6 @@ class StationSeeder extends Seeder
      */
     public function run()
     {
-        Station::create([
-            'name' => 'Game',
-            'description' => 'Visit our game booth <br> to join the fun',
-        ]);
 
         Station::create([
             'name' => 'Voting',
@@ -40,7 +36,12 @@ class StationSeeder extends Seeder
             'description' => 'Redeem your <br> pre-registration gift!',
         ]);
 
+        Station::create([
+            'name' => 'Game',
+            'description' => 'Visit our game booth <br> to join the fun',
+        ]);
 
+        
 
         $role = Role::create(['name' => 'client']);
 

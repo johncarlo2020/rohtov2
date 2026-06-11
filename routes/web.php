@@ -5,6 +5,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\IpadController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\Api\GiftController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,6 +32,8 @@ Route::get('/', function () {
 Route::get('/upload-baby', function () {
     return view('upload-baby');
 })->name('upload.baby.form');
+
+Route::get('/draw', [GiftController::class, 'draw'])->name('draw');
 
 Route::post('/uploadBabyIpad', 'App\Http\Controllers\StationController@uploadBabyIpad')->name('upload.babyIpad');
 

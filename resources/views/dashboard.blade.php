@@ -269,8 +269,6 @@
                 <div class="modal-content card modal-parent">
                     <div class="modal-body">
                         <div class="text-center content">
-                            {{-- <img class="mx-auto mb-4 check" id="badge" src="{{ asset('images/error.png') }}"
-                                style="filter:brightness(0);"> --}}
 
                             <div class="mt-4 mb-4 text-content">
                                 <p>

@@ -47,6 +47,7 @@ class User extends Authenticatable
         'marketing',
         'property_budget',
         'is_early_bird',
+        'chagee_redeemed',
     ];
     /**
      * The attributes that should be hidden for serialization.

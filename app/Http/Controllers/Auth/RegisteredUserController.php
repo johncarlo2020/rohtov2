@@ -58,7 +58,9 @@ class RegisteredUserController extends Controller
     ];
 
   
-      $allowedLocations = $default;
+     $allowedLocations = collect($default)
+    ->shuffle()
+    ->all();
 
     $locations = Project::select("address")
       ->distinct()

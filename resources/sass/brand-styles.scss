@@ -877,6 +877,10 @@ button.custom-btn.answer-btn.answer-btn-3 {
     pointer-events: none; /* prevent clicking */
 }
 
+.stamping-image.active {
+    filter: grayscale(0%);
+}
+
 .stamping-page.active #touchBox img.stamping-image {
     filter: grayscale(0%);
 }
@@ -940,7 +944,7 @@ p.footer {
 
 .modal-content {
     border-radius: 30px !important;
-    width: 80%;
+    width: 90%;
     margin:auto;
 }
 

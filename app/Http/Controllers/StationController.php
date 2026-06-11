@@ -166,6 +166,13 @@ class StationController extends Controller
         return $developer->pivot->isCompleted == 1;
       });
     
+    $first50UserIds = User::orderBy('created_at')
+        ->skip(4)
+        ->take(50)
+        ->pluck('id');
+
+    $canSeeVoucher = $first50UserIds->contains(auth()->id());
+    $voucherRedemeed = auth()->user()->chagee_redeemed;
 
     return view(
       "dashboard",
@@ -177,6 +184,8 @@ class StationController extends Controller
         "nextStation",
         "isRedeemed",
         "canAccessStation",
+        "canSeeVoucher",
+        "voucherRedemeed",
       )
     );
   }
@@ -1001,11 +1010,23 @@ class StationController extends Controller
       );
   }
 
+
+
   public function stamp(Request $request)
   {
     // Get the last character of the QR code message
     $station_id = $request->station;
 
+    if ($station_id == 5) {
+        auth()->user()->update([
+            'chagee_redeemed' => 1,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'CHAGEE voucher redeemed.',
+        ]);
+    }
     // Assume that `$station_id` is validated before this point
 
     try {

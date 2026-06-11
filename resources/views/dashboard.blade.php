@@ -162,34 +162,66 @@
         }
 
          /* Floating voucher button */
-        .voucher-trigger {
-            position: fixed;
-            right: -25px;
-            bottom: -15px;
-            width: 130px;
-            height: 55px;
-            background: #2d67c8;
-            color: white;
-            border-radius: 30px 0 0 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            z-index: 1000;
-        }
+        /* Voucher */
+            .voucher-trigger {
+                position: fixed;
+                right: -25px;
+                bottom: -15px;
+                width: 130px;
+                height: 55px;
+                background: #2d67c8;
+                color: #fff;
+                border-radius: 30px 0 0 30px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                cursor: pointer;
+                box-shadow: 0 4px 12px rgba(0,0,0,.2);
+                z-index: 1000;
+            }
 
-        .voucher-trigger img {
-            height: 40px;
-            object-fit: contain;
-        }
+            .voucher-trigger img {
+                height: 40px;
+                object-fit: contain;
+            }
 
-        .voucher-text {
-            font-size: 11px;
-            text-align: center;
-            line-height: 1.2;
-        }
+            .voucher-text {
+                font-size: 11px;
+                text-align: center;
+                line-height: 1.2;
+            }
+
+            /* Overlay */
+            .voucher-overlay {
+                position: fixed;
+                right: -25px;      /* same as voucher */
+                bottom: -15px;     /* same as voucher */
+                width: 130px;      /* same as voucher */
+                height: 55px;      /* same as voucher */
+
+                background: rgba(0, 0, 0, 0.7);
+                border-radius: 30px 0 0 30px;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                z-index: 1001;     /* higher than voucher */
+                pointer-events: none;
+            }
+
+            .voucher-overlay small {
+                color: #fff;
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 1px;
+            }
+
+            .voucher-trigger.disabled {
+                pointer-events: none;
+                cursor: not-allowed;
+            }
 
     </style>
 
@@ -203,19 +235,32 @@
         <!-- Title -->
         <div class="text-center animate-entry">
             <h2 class="my-5 text-center">Explore</h2>
+            @if($canSeeVoucher)
+                <div class="voucher-wrapper">
 
-            <div
-                class="voucher-trigger"
-                id="voucherModal"
-                data-can-access="{{ $canAccessStation ? 1 : 0 }}"
-            >
-                <div class="voucher-text">
-                    CHAGEE<br>
-                    Drink <br>Voucher
+                    <div
+                        class="voucher-trigger {{ $voucherRedemeed ? 'disabled' : '' }}"
+                        @if(!$voucherRedemeed)
+                            id="voucherModal"
+                            data-can-access="{{ $canAccessStation ? 1 : 0 }}"
+                        @endif
+                    >
+                        <div class="voucher-text">
+                            CHAGEE<br>
+                            Drink <br>Voucher
+                        </div>
+
+                        <img src="{{ asset('images/brand/chagee.webp') }}" alt="Voucher">
+                    </div>
+
+                    @if($voucherRedemeed)
+                        <div class="voucher-overlay">
+                            <small>REDEEMED</small>
+                        </div>
+                    @endif
+
                 </div>
-
-                <img src="{{ asset('images/brand/chagee.webp') }}" alt="Voucher">
-            </div>
+            @endif
         </div>
 
         <!-- Modal -->
@@ -224,13 +269,58 @@
                 <div class="modal-content card modal-parent">
                     <div class="modal-body">
                         <div class="text-center content">
-                            <img class="mx-auto mb-4 check" id="badge" src="{{ asset('images/error.png') }}"
-                                style="filter:brightness(0);">
+                            {{-- <img class="mx-auto mb-4 check" id="badge" src="{{ asset('images/error.png') }}"
+                                style="filter:brightness(0);"> --}}
 
                             <div class="mt-4 mb-4 text-content">
-                                <p class="text-dark">
+                                <p>
+                                    Unlock this by completing<br>
+                                    your visits to 3 developer stations,<br>
+                                    voting and lucky draw station.<br>
+                                </p>
+                                <br>
+                                <p>
                                     Free Chagee Drink.<br>
                                     Limited to 50 people.
+                                </p>
+                            </div>
+
+                            <button type="button" class="w-75 custom-btn custom-btn-primary" data-bs-dismiss="modal">
+                                CLOSE
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal2 -->
+        <div class="animate-entry modal fade custom-modal" id="unlockedStationModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered modal-sm">
+                <div class="modal-content card modal-parent">
+                    <div class="modal-body">
+                        <div class="text-center content">
+                            <div class="row">
+                                <div class="touchBox-container col-11 m-auto d-flex justify-content-center align-items-center p-0 animate-entry">
+                                    <div id="touchBox">
+                                        <img class="stamping-image {{ $voucherRedemeed ? 'active' : '' }}"
+                                            src="{{ asset('images/brand/chagee_stamp.webp') }}"
+                                            alt="Stamp Image"
+                                            data-id="5">
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="countDisplay" class="text-center mt-3 d-none">
+                                Touches inside count: <span id="countNum">0</span>
+                            </div>
+                            {{-- <img class="mx-auto mb-4 w-50"  src="{{ asset('images/brand/chagee_stamp.webp') }}"
+                                style="filter:grayscale(100);"> --}}
+
+                            <div class="mb-4 text-content">
+                                <p>
+                                   Congratulations! You’ve complete
+                                    the journey. Here’re our compliment
+                                    drink for you. Head to the counter
                                 </p>
                             </div>
 
@@ -250,11 +340,11 @@
                 <div class="modal-content card modal-parent">
                     <div class="modal-body">
                         <div class="text-center content">
-                            <img class="mx-auto mb-4 check" id="badge" src="{{ asset('images/error.png') }}"
-                                style="filter:brightness(0);">
+                            {{-- <img class="mx-auto mb-4 check" id="badge" src="{{ asset('images/error.png') }}"
+                                style="filter:brightness(0);"> --}}
 
                             <div class="mt-4 mb-4 text-content">
-                                <p class="text-dark">
+                                <p>
                                     Unlock this by completing<br>
                                     your visits to 3 developer stations.
                                 </p>
@@ -467,10 +557,126 @@
 
                     return;
                 }
+                else{
+                    bootstrap.Modal
+                        .getOrCreateInstance(document.getElementById('unlockedStationModal'))
+                        .show();
+                }
 
                 // User can access voucher
                
             });
             </script>
+            <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const box = document.getElementById("touchBox");
+            const countDisplay = document.getElementById("countNum");
+            const stampingImage = document.querySelector(".stamping-image");
+            const stationid = stampingImage ? parseInt(stampingImage.dataset.id) : null;
+            const activeInside = new Map();
+            let hasStamped = false;
+         
+            // isStamped();  
+
+            // function isStamped()
+            // {
+            //     hasStamped = false;
+            // }
+
+            function isInside(event, element) {
+                const rect = element.getBoundingClientRect();
+                return (
+                    event.clientX >= rect.left &&
+                    event.clientX <= rect.right &&
+                    event.clientY >= rect.top &&
+                    event.clientY <= rect.bottom
+                );
+            }
+
+            function updateDisplay() {
+                countDisplay.textContent = activeInside.size;
+                // Toggle grayscale removal
+                // Only trigger once
+
+                let requiredCount;
+
+                if (stationid == 1) 
+                {
+                    requiredCount = 3;
+                }
+                else
+                {
+                    requiredCount = 1;
+                }
+                
+                console.log(requiredCount);
+                console.log('activeInside.size:', activeInside.size, 'requiredCount:', requiredCount, 'hasStamped:', hasStamped);
+
+                    if (!hasStamped && activeInside.size === requiredCount ) {
+                      console.log('activeInside.size:', activeInside.size, 'requiredCount:', requiredCount, 'hasStamped:', hasStamped);
+
+                        hasStamped = true;
+                        stampingImage.classList.add("active");
+
+                        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                        const stampImage = document.querySelector('.stamping-image');
+                        const stampId = stampingImage ? parseInt(stampingImage.dataset.id) : null;
+                        
+                            $.ajax({
+                                url: '{{ route('process_stamp') }}',
+                                type: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': csrfToken,
+                                },
+                                data: {
+                                    station: stampId,
+                                },
+                                success: function (response) {
+                                    console.log(response);
+                                    location.reload();
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error('Error sending QR Code message:', error);
+                                }
+                            });
+                    }
+                    else 
+                    {
+                        console.log('invalid touchpoint');
+                    }
+                    
+            }
+
+            document.addEventListener("pointerdown", (event) => {
+                if (event.pointerType === "mouse") return;
+                if (isInside(event, box)) {
+                    activeInside.set(event.pointerId, event);
+                }
+                updateDisplay();
+            });
+
+            document.addEventListener("pointermove", (event) => {
+                if (event.pointerType === "mouse") return;
+
+                if (activeInside.has(event.pointerId) && !isInside(event, box)) {
+                    activeInside.delete(event.pointerId);
+                } else if (!activeInside.has(event.pointerId) && isInside(event, box)) {
+                    activeInside.set(event.pointerId, event);
+                }
+
+                updateDisplay();
+            });
+
+            document.addEventListener("pointerup", (event) => {
+                activeInside.delete(event.pointerId);
+                updateDisplay();
+            });
+
+            document.addEventListener("pointercancel", (event) => {
+                activeInside.delete(event.pointerId);
+                updateDisplay();
+            });
+        });
+    </script>
     @endpush
 </x-app-layout>

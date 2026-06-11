@@ -235,7 +235,7 @@
 
                   
 
-                @elseif ($station->id == 4 || $station->id == 3)
+                @elseif ($station->id == 2 || $station->id == 3)
                     <!-- ✅ Station 1 → Quiz -->
                     <div class="scan-container mb-5">
                         <button id="start-scanner" class="scan-btn mb-4">

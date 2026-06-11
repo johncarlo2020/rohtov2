@@ -606,7 +606,7 @@
                 }
                 else
                 {
-                    requiredCount = 1;
+                    requiredCount = 4;
                 }
                 
                 console.log(requiredCount);

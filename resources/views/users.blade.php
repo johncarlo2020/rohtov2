@@ -120,6 +120,7 @@
                             <th>Email</th>
                             <th>Preferred Location</th>
                             <th>Property Budget</th>
+                            <th>Marketing</th>
                             <th>Registration Timestamp</th>
                             @foreach ($data['stations'] as $station)
                             <th>{!! strtoupper($station['name']) !!}</th>
@@ -144,6 +145,7 @@
                                 @endforeach
                             </td>
                             <td>{{ $user->property_budget }}</td>
+                            <td>{{ $user->marketing }}</td>
                             <td>{{ \Carbon\Carbon::parse($user->created_at)->toDayDateTimeString() }}</td>
                             @foreach ($user['stations'] as $station)
                                 <td class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-danger' }}">

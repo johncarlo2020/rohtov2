@@ -271,18 +271,14 @@
                         <div class="text-center content">
 
                             <div class="mt-4 mb-4 text-content">
+                                <h3>CHAGEE Happy Hour!</h3>
                                 <p>
-                                    Unlock this by completing<br>
-                                    your visits to 3 developer stations,<br>
-                                    voting and lucky draw station.<br>
+                                   Complete 3 Developers' Booth Quizzes + 
+                                    Vote + Lucky Draw Check-in to CLAIM FREE
+                                    CHAGEE! 
                                 </p>
-                                <br>
-                                <p>
-                                    Free Chagee Drink.<br>
-                                    Limited to 50 people.
-                                </p>
+                                <p>50 cups at 12pm | 50 cups at 6pm <br>*First-come-first-served</p>
                             </div>
-
                             <button type="button" class="w-75 custom-btn custom-btn-primary" data-bs-dismiss="modal">
                                 CLOSE
                             </button>
@@ -313,13 +309,10 @@
                             </div>
 
                             <div class="mb-4 text-content">
-                                <h3>CHAGEE Happy Hour!</h3>
                                 <p>
-                                   Complete 3 Developers' Booth Quizzes + 
-                                    Vote + Lucky Draw Check-in to CLAIM FREE
-                                    CHAGEE! 
+                                   Congratulations! You've complete the journey. Here're our compliment
+                                   drink for you. Head to the counter to get stamp.
                                 </p>
-                                <p>50 cups at 12pm | 50 cups at 6pm <br>*First-come-first-served</p>
                             </div>
 
                             <button type="button" class="w-75 custom-btn custom-btn-primary" data-bs-dismiss="modal">

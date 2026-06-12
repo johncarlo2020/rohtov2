@@ -311,15 +311,15 @@
                             <div id="countDisplay" class="text-center mt-3 d-none">
                                 Touches inside count: <span id="countNum">0</span>
                             </div>
-                            {{-- <img class="mx-auto mb-4 w-50"  src="{{ asset('images/brand/chagee_stamp.webp') }}"
-                                style="filter:grayscale(100);"> --}}
 
                             <div class="mb-4 text-content">
+                                <h3>CHAGEE Happy Hour!</h3>
                                 <p>
-                                   Congratulations! You’ve complete
-                                    the journey. Here’re our compliment
-                                    drink for you. Head to the counter
+                                   Complete 3 Developers' Booth Quizzes + 
+                                    Vote + Lucky Draw Check-in to CLAIM FREE
+                                    CHAGEE! 
                                 </p>
+                                <p>50 cups at 12pm | 50 cups at 6pm <br>*First-come-first-served</p>
                             </div>
 
                             <button type="button" class="w-75 custom-btn custom-btn-primary" data-bs-dismiss="modal">
@@ -598,14 +598,7 @@
 
                 let requiredCount;
 
-                if (stationid == 1) 
-                {
-                    requiredCount = 3;
-                }
-                else
-                {
-                    requiredCount = 4;
-                }
+                requiredCount = 3;
                 
                 console.log(requiredCount);
                 console.log('activeInside.size:', activeInside.size, 'requiredCount:', requiredCount, 'hasStamped:', hasStamped);

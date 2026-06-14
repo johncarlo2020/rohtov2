@@ -669,9 +669,19 @@ const INITIAL_STOCKS = @json($stocks ?? []);
 const CONFIG = {
   shuffleIntervalMs:  80,    // speed of slot-machine highlight
   shuffleDuration:   3000,   // how long auto-shuffle runs before waiting for tap
+  countdownStepMs:   1000,
+  countdownGoHoldMs:  700,
   confettiCount:      60,
   qrBaseUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=170x170&data=',
   qrClaimUrl: "{{ url('/prize/') }}",
+  bgmSrc: "{{ asset('sounds/Lucky Draw BGM.mp3') }}",
+  bgmVolume: 0.5,
+  buttonSfxSrc: "{{ asset('sounds/Lucky Draw Button.mp3') }}",
+  countdownSfxSrc: "{{ asset('sounds/Lucky Draw Countdown.mp3') }}",
+  revealSfxSrc: "{{ asset('sounds/Lucky Draw Prize Reveal.mp3') }}",
+  buttonSfxVolume: 0.9,
+  countdownSfxVolume: 0.9,
+  revealSfxVolume: 0.95,
 };
 
 /**
@@ -729,8 +739,8 @@ const prizes = [
   {
     id: 'kopi',
     dbId: 5,
-    name: 'Oriental Kopi RM10 Cash Voucher',
-    image: `${GIFT_IMAGE_BASE}/Oriental Kopi  RM 10 Cash Voucher_2x.webp`,
+    name: 'Towel',
+    image: `${GIFT_IMAGE_BASE}/Towel 1_2x.webp`,
     emoji: '☕',
     color: '#FFF8E1',
     weight: 13,
@@ -750,6 +760,14 @@ const prizes = [
     name: 'Watsons RM10 Gift Voucher',
     image: `${GIFT_IMAGE_BASE}/Watsons RM 10 Gift Voucher _2x.webp`,
     emoji: '🧴',
+    color: '#E8F5E9',
+    weight: 13,
+  },{
+    id: 'duffel',
+    dbId: 9,
+    name: 'Mini Duffel Bag',
+    image: `${GIFT_IMAGE_BASE}/Mini Duffel Bag 1_2x.webp`,
+    emoji: '🎒',
     color: '#E8F5E9',
     weight: 13,
   },
@@ -794,12 +812,90 @@ const $  = (id) => document.getElementById(id);
 const $$ = (sel) => document.querySelectorAll(sel);
 
 // ─────────────────────────────────────────────
+// AUDIO (GLOBAL BGM)
+// ─────────────────────────────────────────────
+const bgmAudio = new Audio(CONFIG.bgmSrc);
+bgmAudio.loop = true;
+bgmAudio.preload = 'auto';
+bgmAudio.volume = CONFIG.bgmVolume;
+
+const buttonSfxAudio = new Audio(CONFIG.buttonSfxSrc);
+buttonSfxAudio.preload = 'auto';
+buttonSfxAudio.volume = CONFIG.buttonSfxVolume;
+
+const countdownSfxAudio = new Audio(CONFIG.countdownSfxSrc);
+countdownSfxAudio.preload = 'auto';
+countdownSfxAudio.volume = CONFIG.countdownSfxVolume;
+
+const revealSfxAudio = new Audio(CONFIG.revealSfxSrc);
+revealSfxAudio.preload = 'auto';
+revealSfxAudio.volume = CONFIG.revealSfxVolume;
+
+let audioUnlocked = false;
+
+function ensureBgmPlaying() {
+  if (bgmAudio.paused) {
+    bgmAudio.play().catch(() => {
+      // Browser autoplay policy may still block until user gesture.
+    });
+  }
+}
+
+function playSfx(audio) {
+  audio.currentTime = 0;
+  audio.play().catch(() => {
+    // Ignore blocked plays; next user gesture will unlock audio.
+  });
+}
+
+function playButtonSfx() {
+  playSfx(buttonSfxAudio);
+}
+
+function playCountdownSfx() {
+  playSfx(countdownSfxAudio);
+}
+
+function playRevealSfx() {
+  playSfx(revealSfxAudio);
+}
+
+function unlockAudioAndPlay() {
+  if (audioUnlocked) return;
+  audioUnlocked = true;
+
+  // Prime SFX assets for more reliable immediate playback later.
+  buttonSfxAudio.load();
+  countdownSfxAudio.load();
+  revealSfxAudio.load();
+
+  ensureBgmPlaying();
+}
+
+function initGlobalAudio() {
+  // First interaction unlocks and starts BGM; after that it stays across screens.
+  document.addEventListener('pointerdown', unlockAudioAndPlay, { once: true });
+  document.addEventListener('keydown', unlockAudioAndPlay, { once: true });
+
+  // Try once on load for permissive browsers.
+  ensureBgmPlaying();
+
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && audioUnlocked) {
+      ensureBgmPlaying();
+    }
+  });
+}
+
+// ─────────────────────────────────────────────
 // SCREEN TRANSITIONS
 // ─────────────────────────────────────────────
 function showScreen(id) {
   const current = document.querySelector('.screen.active');
   const next    = $(`screen-${id}`);
   if (!next || current === next) return;
+
+  ensureBgmPlaying();
 
   if (current) {
     current.classList.add('exit');
@@ -951,6 +1047,8 @@ function pickWeightedRandom(items) {
 // RESULT SCREEN
 // ─────────────────────────────────────────────
 function showResult(prize) {
+  playRevealSfx();
+
   const img = $('result-img');
   img.src = prize.image;
   img.alt = prize.name;
@@ -1105,17 +1203,18 @@ function startCountdown(seconds, onDone) {
 
     i++;
     if (i < steps.length) {
-      setTimeout(showStep, 900);
+      setTimeout(showStep, CONFIG.countdownStepMs);
     } else {
       // 'GO!' shown — wait briefly then finish
       setTimeout(() => {
         overlay.classList.add('hidden');
         setTimeout(onDone, 250);
-      }, 600);
+      }, CONFIG.countdownGoHoldMs);
     }
   }
 
   overlay.classList.remove('hidden');
+  playCountdownSfx();
   showStep();
 }
 
@@ -1124,10 +1223,12 @@ function startCountdown(seconds, onDone) {
 // ─────────────────────────────────────────────
 function initEventListeners() {
   $('btn-start').addEventListener('click', () => {
+    playButtonSfx();
     showScreen('guide');
   });
 
   $('btn-ready').addEventListener('click', () => {
+    playButtonSfx();
     startCountdown(3, () => {
       showScreen('shuffle');
       setTimeout(startShuffle, 300);
@@ -1138,16 +1239,19 @@ function initEventListeners() {
   $('screen-shuffle').addEventListener('click', onCardTap);
 
   $('btn-continue').addEventListener('click', () => {
+    playButtonSfx();
     showQR(state.winnerPrize);
   });
 
   $('btn-redraw').addEventListener('click', () => {
+    playButtonSfx();
     applyInitialStocks();
     showScreen('shuffle');
     setTimeout(startShuffle, 300);
   });
 
   $('btn-finish').addEventListener('click', () => {
+    playButtonSfx();
     resetGame();
   });
 }
@@ -1173,6 +1277,7 @@ window.logoFallback = function () {
 // ─────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   applyInitialStocks();
+  initGlobalAudio();
   initEventListeners();
 });
   </script>

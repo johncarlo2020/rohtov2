@@ -39,7 +39,13 @@ class GiftsSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'name' => 'Oriental Kopi RM 10 Cash Voucher',
+                'name' => 'Towel',
+                'stock_level' => 10,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Mini Duffel Bag',
                 'stock_level' => 10,
                 'created_at' => now(),
                 'updated_at' => now(),

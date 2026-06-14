@@ -272,11 +272,13 @@
 
                             <div class="mt-4 mb-4 text-content">
                                 <h3>CHAGEE Happy Hour!</h3>
+                                <br>
                                 <p>
                                    Complete 3 Developers' Booth Quizzes + 
                                     Vote + Lucky Draw Check-in to CLAIM FREE
                                     CHAGEE! 
                                 </p>
+                                <br>
                                 <p>50 cups at 12pm | 50 cups at 6pm <br>*First-come-first-served</p>
                             </div>
                             <button type="button" class="w-75 custom-btn custom-btn-primary" data-bs-dismiss="modal">

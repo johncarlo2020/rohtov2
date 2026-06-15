@@ -788,9 +788,30 @@ function applyInitialStocks() {
     stockMap[item.id] = parseInt(item.stock_level, 10) || 0;
   }
 
-  const filtered = prizes.filter(p => (stockMap[p.dbId] ?? 0) > 0);
+  const filtered = prizes
+    .filter(p => (stockMap[p.dbId] ?? 0) > 0)
+    .map(p => ({ ...p, weight: stockMap[p.dbId] }));
   activePrizes  = filtered.length > 0 ? filtered : [...prizes];
   displayPrizes = [...prizes];
+
+  // ── Debug: log all stocks and current draw probabilities ──
+  const totalStock = activePrizes.reduce((s, p) => s + p.weight, 0);
+  console.group('%c🎁 Lucky Draw – All Stocks & Probabilities', 'font-weight:bold;color:#4D96FF');
+  console.table(
+    prizes.map(p => {
+      const stock = stockMap[p.dbId] ?? 0;
+      const active = stock > 0;
+      return {
+        id:          p.dbId,
+        name:        p.name,
+        stock:       stock,
+        status:      active ? '✅ active' : '❌ out of stock',
+        probability: active ? ((stock / totalStock) * 100).toFixed(2) + '%' : '0.00%',
+      };
+    })
+  );
+  console.log(`Total active stock: ${totalStock} across ${activePrizes.length} / ${prizes.length} gift(s)`);
+  console.groupEnd();
 }
 
 // ─────────────────────────────────────────────

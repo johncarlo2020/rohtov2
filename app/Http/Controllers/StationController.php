@@ -346,7 +346,7 @@ class StationController extends Controller
 
      
       // Special case: station 3
-      if ($station_id == 3) {
+      if ($station_id == 2) {
           $response["type"] = "prize";
           $response["redirect_url"] = route('prize.id', ['prize_id' => $prize_id]);
       }

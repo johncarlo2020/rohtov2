@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\babyEvent;
 use App\Helpers\GlobalHelper;
+use App\Http\Controllers\Controller;
 use App\Imports\EarlyBirdImport;
 use App\Models\Brand;
 use App\Models\Developer;
@@ -18,6 +19,8 @@ use App\Models\User;
 use App\Models\UserGift;
 use App\Models\UserPerfume;
 use App\Models\Vote;
+use App\Models\Voucher;
+use App\Models\VoucherClaim;
 use App\Providers\RouteServiceProvider;
 use Auth;
 use Carbon\Carbon;
@@ -166,13 +169,98 @@ class StationController extends Controller
         return $developer->pivot->isCompleted == 1;
       });
     
-    $first50UserIds = User::orderBy('created_at')
-        ->skip(4)
-        ->take(50)
-        ->pluck('id');
+    // $first50UserIds = User::orderBy('created_at')
+    //     ->skip(4)
+    //     ->take(50)
+    //     ->pluck('id');
 
-    $canSeeVoucher = $first50UserIds->contains(auth()->id());
-    $voucherRedemeed = auth()->user()->chagee_redeemed;
+    // $canSeeVoucher = $first50UserIds->contains(auth()->id());
+    // $voucherRedemeed = auth()->user()->chagee_redeemed;
+
+$user = auth()->user();
+
+$requiredStations = [2];
+
+$completedJourney = $user->stationUser()
+    ->whereIn('station_id', $requiredStations)
+    ->distinct()
+    ->count('station_id') >= count($requiredStations);
+
+$voucherRedeemed = VoucherClaim::where(
+    'user_id',
+    $user->id
+)->exists();
+
+$activeVoucher = Voucher::where('name', 'CHAGEE')
+    ->where('starts_at', '<=', now())
+    ->where(function ($q) {
+        $q->whereNull('ends_at')
+            ->orWhere('ends_at', '>=', now());
+    })
+    ->first();
+
+$canSeeVoucher = false;
+
+$voucherStatus = 'Not Available';
+$voucherMessage = 'Voucher redemption is not available yet.';
+
+if ($activeVoucher) {
+
+    $claimedCount = VoucherClaim::where(
+        'voucher_id',
+        $activeVoucher->id
+    )->count();
+
+    $remaining = max(
+        0,
+        $activeVoucher->quota - $claimedCount
+    );
+
+    if ($claimedCount >= $activeVoucher->quota) {
+
+            if ($activeVoucher->session == 1) {
+                $voucherStatus = "Session 1 Full";
+                $voucherMessage = "Session 1 quota has been reached. Please come back at 6:00 PM for Session 2.";
+            } else {
+                $voucherStatus = "Fully Redeemed";
+                $voucherMessage = "All CHAGEE vouchers have been claimed.";
+            }
+
+        } else {
+
+            $remaining = $activeVoucher->quota - $claimedCount;
+
+            $voucherStatus = "Session {$activeVoucher->session}";
+            $voucherMessage = "{$remaining} voucher(s) remaining.";
+        }
+
+    if ($claimedCount >= $activeVoucher->quota) {
+
+        if ($activeVoucher->session == 1) {
+
+            $voucherMessage =
+                'Session 1 quota reached. Please wait for Session 2.';
+
+        } else {
+
+            $voucherMessage =
+                'All CHAGEE vouchers have been fully redeemed.';
+        }
+
+    } else {
+
+        $voucherMessage =
+            "{$remaining} voucher(s) remaining.";
+    }
+
+    if (
+        !$voucherRedeemed &&
+        $completedJourney &&
+        $claimedCount < $activeVoucher->quota
+    ) {
+        $canSeeVoucher = true;
+    }
+}
 
     return view(
       "dashboard",
@@ -185,7 +273,10 @@ class StationController extends Controller
         "isRedeemed",
         "canAccessStation",
         "canSeeVoucher",
-        "voucherRedemeed",
+        "voucherRedeemed",
+        "voucherStatus",
+        "voucherMessage",
+        "activeVoucher"
       )
     );
   }
@@ -514,8 +605,7 @@ class StationController extends Controller
       ->get()
       ->keyBy("station_id");
 
-    $stations = Station::where('id', '!=', 2)
-    ->pluck('name', 'id');
+    $stations = Station::pluck('name', 'id');
 
     $count = 0;
 
@@ -603,7 +693,65 @@ class StationController extends Controller
       ->values()
       ->toArray();
 
-    return view("dashboardadmin", compact("data", "permission"));
+    $session1 = Voucher::where('name', 'CHAGEE')
+    ->where('session', 1)
+    ->first();
+
+    $session1Claimed = VoucherClaim::where(
+        'voucher_id',
+        $session1->id
+    )->count();
+
+    $voucherSessions = Voucher::where('name', 'CHAGEE')
+        ->orderBy('session')
+        ->get()
+        ->map(function ($voucher) use ($session1, $session1Claimed) {
+
+            $claimedCount = VoucherClaim::where(
+                'voucher_id',
+                $voucher->id
+            )->count();
+
+            // Dynamic Session 2 quota
+            $displayQuota = $voucher->quota;
+
+            if ($voucher->session == 2) {
+
+                $carryOver = max(
+                    0,
+                    $session1->quota - $session1Claimed
+                );
+
+                $displayQuota =
+                    $voucher->quota + $carryOver;
+            }
+
+            if (now()->lt($voucher->starts_at)) {
+
+                $status = 'Upcoming';
+
+            } elseif (
+                $voucher->ends_at &&
+                now()->gt($voucher->ends_at)
+            ) {
+
+                $status = 'Ended';
+
+            } else {
+
+                $status = 'Active';
+            }
+
+            return [
+                'session' => $voucher->session,
+                'status' => $status,
+                'claimed' => "{$claimedCount}/{$displayQuota}",
+                'starts_at' => $voucher->starts_at,
+                'ends_at' => $voucher->ends_at,
+            ];
+    });
+
+    return view("dashboardadmin", compact("data", "permission","voucherSessions"));
   }
 
   public function import(Request $request)
@@ -1017,16 +1165,101 @@ class StationController extends Controller
     // Get the last character of the QR code message
     $station_id = $request->station;
 
-    if ($station_id == 5) {
-        auth()->user()->update([
-            'chagee_redeemed' => 1,
-        ]);
+    // if ($station_id == 5) {
+    //     auth()->user()->update([
+    //         'chagee_redeemed' => 1,
+    //     ]);
 
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'CHAGEE voucher redeemed.',
+    //     ]);
+    // }
+    if ($station_id == 5) {
+
+    $activeVoucher = Voucher::where('name', 'CHAGEE')
+        ->where('starts_at', '<=', now())
+        ->where(function ($q) {
+            $q->whereNull('ends_at')
+                ->orWhere('ends_at', '>=', now());
+        })
+        ->first();
+
+    if (!$activeVoucher) {
         return response()->json([
-            'success' => true,
-            'message' => 'CHAGEE voucher redeemed.',
+            'success' => false,
+            'message' => 'Voucher redemption is not available yet.',
         ]);
     }
+
+    $alreadyClaimed = VoucherClaim::where(
+        'user_id',
+        auth()->id()
+    )->exists();
+
+    if ($alreadyClaimed) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Voucher already redeemed.',
+        ]);
+    }
+
+    $claimedCount = VoucherClaim::where(
+        'voucher_id',
+        $activeVoucher->id
+    )->count();
+
+    if ($claimedCount >= $activeVoucher->quota) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Voucher quota exhausted.',
+        ]);
+    }
+
+    VoucherClaim::create([
+        'voucher_id' => $activeVoucher->id,
+        'user_id' => auth()->id(),
+        'claimed_at' => now(),
+    ]);
+
+    /*
+    |--------------------------------------------------------------------------
+    | TESTING ONLY
+    | Session 1 quota = 1
+    | Session 2 quota = remaining + 1
+    |--------------------------------------------------------------------------
+    */
+
+    $session1 = Voucher::where('name', 'CHAGEE')
+        ->where('session', 1)
+        ->first();
+
+    $session2 = Voucher::where('name', 'CHAGEE')
+        ->where('session', 2)
+        ->first();
+
+    if ($session1 && $session2) {
+
+        $session1Claimed = VoucherClaim::where(
+            'voucher_id',
+            $session1->id
+        )->count();
+
+        $remaining = max(
+            0,
+            $session1->quota - $session1Claimed
+        );
+
+        $session2->update([
+            'quota' => $remaining + 1 // TESTING
+        ]);
+    }
+
+    return response()->json([
+        'success' => true,
+        'message' => 'CHAGEE voucher redeemed.',
+    ]);
+}
     // Assume that `$station_id` is validated before this point
 
     try {

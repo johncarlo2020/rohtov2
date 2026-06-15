@@ -218,10 +218,10 @@
                 letter-spacing: 1px;
             }
 
-            .voucher-trigger.disabled {
+            /* .voucher-trigger.disabled {
                 pointer-events: none;
                 cursor: not-allowed;
-            }
+            } */
 
     </style>
 
@@ -235,15 +235,13 @@
         <!-- Title -->
         <div class="text-center animate-entry">
             <h2 class="my-5 text-center">Explore</h2>
-            @if($canSeeVoucher)
+            
                 <div class="voucher-wrapper">
 
                     <div
-                        class="voucher-trigger {{ $voucherRedemeed ? 'disabled' : '' }}"
-                        @if(!$voucherRedemeed)
+                        class="voucher-trigger"
                             id="voucherModal"
-                            data-can-access="{{ $canAccessStation ? 1 : 0 }}"
-                        @endif
+                            data-can-access="{{ $canSeeVoucher ? 1 : 0 }}"
                     >
                         <div class="voucher-text">
                             CHAGEE<br>
@@ -253,14 +251,14 @@
                         <img src="{{ asset('images/brand/chagee.webp') }}" alt="Voucher">
                     </div>
 
-                    @if($voucherRedemeed)
+                    @if($voucherRedeemed)
                         <div class="voucher-overlay">
                             <small>REDEEMED</small>
                         </div>
                     @endif
 
                 </div>
-            @endif
+           
         </div>
 
         <!-- Modal -->
@@ -269,18 +267,40 @@
                 <div class="modal-content card modal-parent">
                     <div class="modal-body">
                         <div class="text-center content">
-
-                            <div class="mt-4 mb-4 text-content">
-                                <h3>CHAGEE Happy Hour!</h3>
+                            <h3>CHAGEE Happy Hour!</h3>
                                 <br>
+                                
+                            @if(!$voucherRedeemed)
                                 <p>
-                                   Complete 3 Developers' Booth Quizzes + 
-                                    Vote + Lucky Draw Check-in to CLAIM FREE
-                                    CHAGEE! 
+                                    Complete 3 Developers' Booth Quizzes + 
+                                    Vote + Lucky Draw Check-in to CLAIM FREE CHAGEE! 
                                 </p>
-                                <br>
-                                <p>50 cups at 12pm | 50 cups at 6pm <br>*First-come-first-served</p>
-                            </div>
+                                <div class="mt-4 mb-4 text-content">
+                                    @if($activeVoucher)
+                                        <p>
+                                            <strong>{{ $voucherStatus }}</strong>
+                                        </p>
+                                        <p>
+                                            {{ $voucherMessage }}
+                                        </p>
+                                    @else
+                                        <p>
+                                            50 cups at 12PM | 50 cups at 6PM
+                                        </p>
+                                        <p>
+                                            *First-come-first-served
+                                        </p>
+                                    @endif
+                                </div>
+                                @else
+                                <img class="stamping-image m-auto {{ $voucherRedeemed ? 'active' : '' }}"
+                                            src="{{ asset('images/brand/chagee_stamp.webp') }}"
+                                            alt="Stamp Image"
+                                            data-id="5">
+                                    <br>
+                                    <p>Voucher Fully Redeemed</p><br>
+                                @endif
+                                
                             <button type="button" class="w-75 custom-btn custom-btn-primary" data-bs-dismiss="modal">
                                 CLOSE
                             </button>
@@ -299,7 +319,7 @@
                             <div class="row">
                                 <div class="touchBox-container col-11 m-auto d-flex justify-content-center align-items-center p-0 animate-entry">
                                     <div id="touchBox">
-                                        <img class="stamping-image {{ $voucherRedemeed ? 'active' : '' }}"
+                                        <img class="stamping-image {{ $voucherRedeemed ? 'active' : '' }}"
                                             src="{{ asset('images/brand/chagee_stamp.webp') }}"
                                             alt="Stamp Image"
                                             data-id="5">
@@ -541,7 +561,7 @@
         <script>
             document.getElementById('voucherModal').addEventListener('click', function () {
 
-                let canAccessStation = @json($canAccessStation);
+                let canAccessStation = @json($canSeeVoucher);
 
                 if (!canAccessStation) {
                     bootstrap.Modal
@@ -593,7 +613,7 @@
 
                 let requiredCount;
 
-                requiredCount = 3;
+                requiredCount = 1; //3
                 
                 console.log(requiredCount);
                 console.log('activeInside.size:', activeInside.size, 'requiredCount:', requiredCount, 'hasStamped:', hasStamped);

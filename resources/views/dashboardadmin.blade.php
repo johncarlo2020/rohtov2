@@ -95,7 +95,63 @@
             </div>
         </div>
     </div>
+
+    {{-- CHAGEE Voucher Sessions --}}
     <div class="row mt-4">
+        <p>CHAGEE Voucher</p>
+        @foreach ($voucherSessions as $session)
+            <div class="col-6">
+                <div class="card mb-3">
+                    <div class="card-body d-flex justify-content-between rounded p-3">
+
+                        <div class="d-flex align-items-center w-100">
+
+                            <div class="icon-stations">
+                                <img
+                                    src="{{ asset('images/brand/chagee.webp') }}"
+                                    alt="CHAGEE"
+                                    onerror="this.onerror=null;this.src='{{ asset('images/brand/chagee.webp') }}';">
+                            </div>
+                            
+
+                            <div class="d-flex flex-column ms-2">
+
+                                <h6 class="mb-1 text-sm">
+                                    SESSION {{ $session['session'] }}
+                                </h6>
+
+                                <span class="text-xs">
+                                    <strong>Starts:</strong>
+                                    {{ \Carbon\Carbon::parse($session['starts_at'])->format('M d, Y h:i A') }}
+                                </span>
+
+                                <span class="text-xs">
+                                    <strong>Ends:</strong>
+                                    {{ $session['ends_at']
+                                        ? \Carbon\Carbon::parse($session['ends_at'])->format('M d, Y h:i A')
+                                        : 'No End Time' }}
+                                </span>
+
+                                <span class="text-xs">
+                                    <strong>Status:</strong>
+                                    {{ strtoupper($session['status']) }}
+                                </span>
+
+                                <span class="text-xs">
+                                    <strong>Claims:</strong>
+                                    {{ $session['claimed'] }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+
+
+    <div class="row mt-4">
+        <p>Stations</p>
         @foreach ($data['stations'] as $station)
             <div class="col">
                 <div class="card mb-3">
@@ -115,6 +171,7 @@
         @endforeach
     </div>
     <div class="row mt-4">
+        <p>Developers</p>
         @foreach ($data['developers'] as $developer)
             <div class="col-3">
                 <div class="card mb-3">

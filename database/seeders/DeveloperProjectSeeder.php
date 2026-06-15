@@ -15,16 +15,7 @@ class DeveloperProjectSeeder extends Seeder
     public function run()
     {
         $developers = [
-
-            1 => [
-                'name' => 'IJM Land Berhad',
-                'projects' => [
-                    ['Merione Grand', 'Gelugor, The Light Waterfront'],
-                    ['Terraces Condominium', 'Bukit Jambul'],
-                    ['Ayra Terraces', 'Jawi, Seberang Perai Selatan'],
-                ],
-            ],
-
+            
             2 => [
                 'name' => 'Oriental Kedah Realty',
                 'projects' => [

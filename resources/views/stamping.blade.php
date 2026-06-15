@@ -160,7 +160,7 @@
                 }
                 else
                 {
-                    requiredCount = 3;
+                    requiredCount = 1;
                 }
                 
                 console.log(requiredCount);

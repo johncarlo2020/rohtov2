@@ -12,7 +12,6 @@ class QuestionSeeder extends Seeder
 {
     public function run(): void
     {
-        $this->ijm();
         $this->orientalKedahRealty();
         $this->easternAndOriental();
         $this->spb();
@@ -22,7 +21,6 @@ class QuestionSeeder extends Seeder
         $this->uda();
         $this->paramount();
         $this->scientex();
-        // $this->jrk();
     }
 
     private function createQuestion($developer, $questionText, $answers)
@@ -39,32 +37,6 @@ class QuestionSeeder extends Seeder
                 'is_correct' => $ans['correct'],
             ]);
         }
-    }
-
-    private function ijm()
-    {
-        $dev = Developer::where('name', 'IJM Land Berhad')->first();
-
-        $this->createQuestion($dev,'What is a key feature of Merione Residences?',[
-            ['text'=>'Private yacht marina for every unit','correct'=>0],
-            ['text'=>'Direct access to a private beach club','correct'=>0],
-            ['text'=>'Smart facial recognition security access','correct'=>1],
-            ['text'=>'Helicopter landing pad for residents','correct'=>0],
-        ]);
-
-        $this->createQuestion($dev,'Which of the following is NOT a feature of Terraces Condominium?',[
-            ['text'=>'Private beach access and marina facilities','correct'=>1],
-            ['text'=>'Walking distance to Bukit Jambul Hiking Trail','correct'=>0],
-            ['text'=>'Full condominium facilities','correct'=>0],
-            ['text'=>'Prime address close to the Millionaire Row of Bukit Jambul','correct'=>0],
-        ]);
-
-        $this->createQuestion($dev,'How many units are available at Ayra Terraces?',[
-            ['text'=>'90 units only','correct'=>0],
-            ['text'=>'100 units only','correct'=>1],
-            ['text'=>'200 units only','correct'=>0],
-            ['text'=>'300 units only','correct'=>0],
-        ]);
     }
 
     private function orientalKedahRealty()

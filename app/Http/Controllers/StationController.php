@@ -245,9 +245,9 @@ class StationController extends Controller
         // ✅ Station check (only skip for prize maybe — your logic choice)
         $station_id = $request->station;
 
-        if ((int) $station_id === 3 && $isEarlyBird) {
+        if ((int) $station_id === 2 && $isEarlyBird) {
             return response()->json([
-                "message" => "Station 3 skipped",
+                "message" => "Station 2 skipped",
                 "status" => "success",
             ], 200);
         }
@@ -305,8 +305,8 @@ class StationController extends Controller
           "redirect_url" => route('congrats.redeemed'),
       ];
 
-        // Handle gift selection for station 3
-        if ($station_id == 3 && $route == 'prize') {
+        // Handle gift selection for station 2
+        if ($station_id == 2 && $route == 'prize') {
 
           $gift = \App\Models\Gifts::find($prize_id);
 
@@ -1072,9 +1072,8 @@ class StationController extends Controller
       $isVideoBoothDay = in_array($today, $videoBoothDates);
 
       $totalRequired = match (true) {
-          $user->is_early_bird && $isVideoBoothDay => 4,
-          $user->is_early_bird || $isVideoBoothDay => 3,
-          default => 2,
+          $user->is_early_bird => 4,
+          default => 3,
       };
 
       DB::commit();

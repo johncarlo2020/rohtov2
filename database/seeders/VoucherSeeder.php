@@ -18,8 +18,8 @@ class VoucherSeeder extends Seeder
             ],
             [
                 'quota' => 50,
-                'starts_at' => Carbon::create(2026, 6, 16, 10, 0, 0),
-                'ends_at'   => Carbon::create(2026, 6, 16, 13, 59, 59),
+                'starts_at' => Carbon::create(2026, 6, 16, 12, 0, 0),
+                'ends_at'   => Carbon::create(2026, 6, 16, 17, 59, 59),
             ]
         );
 
@@ -30,7 +30,7 @@ class VoucherSeeder extends Seeder
             ],
             [
                 'quota' => 50,
-                'starts_at' => Carbon::create(2026, 6, 16, 14, 0, 0),
+                'starts_at' => Carbon::create(2026, 6, 16, 18, 0, 0),
                 'ends_at'   => null,
             ]
         );

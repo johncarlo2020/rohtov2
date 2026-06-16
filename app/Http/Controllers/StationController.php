@@ -1230,14 +1230,6 @@ if ($activeVoucher) {
         'claimed_at' => now(),
     ]);
 
-    /*
-    |--------------------------------------------------------------------------
-    | TESTING ONLY
-    | Session 1 quota = 1
-    | Session 2 quota = remaining + 1
-    |--------------------------------------------------------------------------
-    */
-
     $session1 = Voucher::where('name', 'CHAGEE')
         ->where('session', 1)
         ->first();
@@ -1312,10 +1304,7 @@ if ($activeVoucher) {
 
       $isVideoBoothDay = in_array($today, $videoBoothDates);
 
-      $totalRequired = match (true) {
-          $user->is_early_bird => 4,
-          default => 3,
-      };
+      $totalRequired = $user->is_early_bird ? 4 : 3;
 
       DB::commit();
       // 🎉 CHECK IF FINISHED
@@ -1469,7 +1458,7 @@ if ($activeVoucher) {
       $user = auth()->user();
 
       $completed = $user->stationUser()->distinct("station_id")->count();
-      $totalRequired = $user->is_early_bird ? 3 : 2;
+      $totalRequired = $user->is_early_bird ? 4 : 3;
 
       if ($completed >= $totalRequired) {
           return redirect()->route('congrats');

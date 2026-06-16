@@ -156,11 +156,11 @@
 
                 if (stationid == 1) 
                 {
-                    requiredCount = 4;
+                    requiredCount = 4;//4
                 }
                 else
                 {
-                    requiredCount = 1;
+                    requiredCount = 3;//3
                 }
                 
                 console.log(requiredCount);

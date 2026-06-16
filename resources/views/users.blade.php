@@ -149,17 +149,25 @@
                             <td>{{ \Carbon\Carbon::parse($user->created_at)->toDayDateTimeString() }}</td>
                             @foreach ($user['stations'] as $station)
                                 <td class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-danger' }}">
+                                    @if($station['id'] == 3)
 
-                                    @if($station['id'] == 3 && $station['value'])
+                                        {{ $station['value'] ? 'Yes' : 'No' }}
 
-                                        {{-- Gift name --}}
+                                        @if($user->is_early_bird && $user->source_of_channel)
+                                            <br>
+                                            <small class="text-muted">
+                                                Channel:{{ $user->source_of_channel }}
+                                            </small>
+                                        @endif
+
+                                    @elseif($station['id'] == 2 && $station['value'])
+
                                         {{ optional($user->userGift->gift)->name ?? 'No Gift' }}
 
                                         <br>
 
-                                        {{-- Gift created_at --}}
                                         <small class="text-muted">
-                                            {{ optional($user->userGift)->created_at 
+                                            {{ optional($user->userGift)->created_at
                                                 ? \Carbon\Carbon::parse($user->userGift->created_at)->toDayDateTimeString()
                                                 : '-' }}
                                         </small>

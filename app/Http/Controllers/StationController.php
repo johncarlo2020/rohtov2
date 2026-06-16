@@ -206,6 +206,29 @@ $voucherMessage = 'Voucher redemption is not available yet.';
 
 if ($activeVoucher) {
 
+    $effectiveQuota = $activeVoucher->quota;
+
+    // Add Session 1 carry-over to Session 2
+    if ($activeVoucher->session == 2) {
+
+        $session1 = Voucher::where('session', 1)->first();
+
+        if ($session1) {
+
+            $session1Claimed = VoucherClaim::where(
+                'voucher_id',
+                $session1->id
+            )->count();
+
+            $carryOver = max(
+                0,
+                $session1->quota - $session1Claimed
+            );
+
+            $effectiveQuota += $carryOver;
+        }
+    }
+
     $claimedCount = VoucherClaim::where(
         'voucher_id',
         $activeVoucher->id
@@ -213,44 +236,26 @@ if ($activeVoucher) {
 
     $remaining = max(
         0,
-        $activeVoucher->quota - $claimedCount
+        $effectiveQuota - $claimedCount
     );
 
-    if ($claimedCount >= $activeVoucher->quota) {
-
-            if ($activeVoucher->session == 1) {
-                $voucherStatus = "Session 1 Full";
-                $voucherMessage = "Session 1 quota has been reached. Please come back at 6:00 PM for Session 2.";
-            } else {
-                $voucherStatus = "Fully Redeemed";
-                $voucherMessage = "All CHAGEE vouchers have been claimed.";
-            }
-
-        } else {
-
-            $remaining = $activeVoucher->quota - $claimedCount;
-
-            $voucherStatus = "Session {$activeVoucher->session}";
-            $voucherMessage = "{$remaining} voucher(s) remaining.";
-        }
-
-    if ($claimedCount >= $activeVoucher->quota) {
+    if ($remaining <= 0) {
 
         if ($activeVoucher->session == 1) {
 
-            $voucherMessage =
-                'Session 1 quota reached. Please wait for Session 2.';
+            $voucherStatus = 'Session 1 Full';
+            $voucherMessage = 'Session 1 quota has been reached. Please come back at 6:00 PM for Session 2.';
 
         } else {
 
-            $voucherMessage =
-                'All CHAGEE vouchers have been fully redeemed.';
+            $voucherStatus = 'Fully Redeemed';
+            $voucherMessage = 'All CHAGEE vouchers have been claimed.';
         }
 
     } else {
 
-        $voucherMessage =
-            "{$remaining} voucher(s) remaining.";
+        $voucherStatus = "Session {$activeVoucher->session}";
+        $voucherMessage = "{$remaining} voucher(s) remaining.";
     }
 
     if (
@@ -838,8 +843,7 @@ if ($activeVoucher) {
       ->get()
       ->keyBy("station_id");
 
-    $stations = Station::where('id', '!=', 2)
-                   ->pluck('name', 'id');
+    $stations = Station::pluck('name', 'id');
 
     $developers = Developer::where('id', '!=', 5)->pluck('name', 'id');
     

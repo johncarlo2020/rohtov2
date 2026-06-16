@@ -715,16 +715,20 @@ if ($activeVoucher) {
             // Dynamic Session 2 quota
             $displayQuota = $voucher->quota;
 
-            if ($voucher->session == 2) {
+            if (
+                  $voucher->session == 2 &&
+                  $session1->ends_at &&
+                  now()->gt($session1->ends_at)
+              ) {
 
-                $carryOver = max(
-                    0,
-                    $session1->quota - $session1Claimed
-                );
+                  $carryOver = max(
+                      0,
+                      $session1->quota - $session1Claimed
+                  );
 
-                $displayQuota =
-                    $voucher->quota + $carryOver;
-            }
+                  $displayQuota =
+                      $voucher->quota + $carryOver;
+              }
 
             if (now()->lt($voucher->starts_at)) {
 

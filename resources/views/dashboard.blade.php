@@ -284,6 +284,8 @@
                                             {{ $voucherMessage }}
                                         </p>
                                     @else
+                                        <strong>
+                                            20 June 2026, Saturday
                                         <p>
                                             50 cups at 12PM | 50 cups at 6PM
                                         </p>
@@ -613,7 +615,7 @@
 
                 let requiredCount;
 
-                requiredCount = 1; //3
+                requiredCount = 3; //3
                 
                 console.log(requiredCount);
                 console.log('activeInside.size:', activeInside.size, 'requiredCount:', requiredCount, 'hasStamped:', hasStamped);

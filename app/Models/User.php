@@ -45,6 +45,7 @@ class User extends Authenticatable
         'baby_name',
         'charname',
         'marketing',
+        'source_of_channel',
         'property_budget',
         'is_early_bird',
         'chagee_redeemed',

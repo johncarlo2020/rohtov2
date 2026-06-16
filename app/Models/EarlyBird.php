@@ -10,6 +10,7 @@ class EarlyBird extends Model
     protected $fillable = [
         'name',
         'email',
+        'source_of_channel',
         'mobile',
         'claimed',
     ];

@@ -133,6 +133,7 @@ class RegisteredUserController extends Controller
       "marketing" => $validated["marketing"],
       "password" => Hash::make("password"),
       "is_early_bird" => !!$earlyBird,
+      "source_of_channel" => $earlyBird?->source_of_channel,
     ]);
 
     if ($earlyBird) {

@@ -12,6 +12,7 @@ class Gifts extends Model
     protected $fillable = [
         'name',
         'total',
+        'stock_level',
         'enabled'
     ];
 

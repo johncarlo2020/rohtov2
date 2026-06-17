@@ -790,6 +790,15 @@ const prizes = [
     emoji: '🎒',
     color: '#E8F5E9',
     weight: 13,
+  },{
+    id: 'orientalkopi',
+    dbId: 10,
+    dbName: 'Oriental Kopi RM 10 Voucher',
+    name: 'Oriental Kopi RM 10 Cash Voucher',
+    image: `${GIFT_IMAGE_BASE}/Oriental Kopi  RM 10 Cash Voucher_2x.webp`,
+    emoji: '☕',
+    color: '#FFF8E1',
+    weight: 13,
   },
 ].map((prize) => ({
   ...prize,

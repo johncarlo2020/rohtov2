@@ -160,16 +160,14 @@
                                             </small>
                                         @endif
 
-                                    @elseif($station['id'] == 2 && $station['value'])
+                                   @elseif($station['id'] == 2 && $station['value'])
 
-                                        {{ optional($user->userGift->gift)->name ?? 'No Gift' }}
+                                        {{ $user->userGift?->gift?->name ?? 'No Gift' }}
 
                                         <br>
 
                                         <small class="text-muted">
-                                            {{ optional($user->userGift)->created_at
-                                                ? \Carbon\Carbon::parse($user->userGift->created_at)->toDayDateTimeString()
-                                                : '-' }}
+                                            {{ $user->userGift?->created_at?->toDayDateTimeString() ?? '-' }}
                                         </small>
 
                                     @else

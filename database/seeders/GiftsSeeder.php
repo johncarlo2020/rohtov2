@@ -68,12 +68,6 @@ class GiftsSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            [
-                'name' => 'Mini Duffel Bag',
-                'stock_level' => 10,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
         ];
 
         DB::table('gifts')->insert($gifts);

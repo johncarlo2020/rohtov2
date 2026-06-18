@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('email')->unique(); // or phone / IC
             $table->string('name')->nullable();
+            $table->string('source_of_channel')->nullable();
             $table->boolean('claimed')->default(false);
             $table->timestamps();
         });

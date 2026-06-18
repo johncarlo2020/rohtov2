@@ -663,6 +663,17 @@ html, body {
 const GIFT_IMAGE_BASE = "{{ asset('images/gift') }}";
 const INITIAL_STOCKS = @json($stocks ?? []);
 
+function normalizeGiftName(value) {
+  return String(value ?? '')
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, ' ');
+}
+
+const STOCKS_BY_NAME = new Map(
+  INITIAL_STOCKS.map((item) => [normalizeGiftName(item.name), item])
+);
+
 // ─────────────────────────────────────────────
 // CONFIG  (edit this to change prizes / weights)
 // ─────────────────────────────────────────────
@@ -694,6 +705,7 @@ const prizes = [
   {
     id: 'aeon',
     dbId: 1,
+    dbName: 'AEON RM 10 Gift Voucher',
     name: 'AEON RM10 Gift Voucher',
     image: `${GIFT_IMAGE_BASE}/AEON RM 10 Gift Voucher_2x.webp`,
     emoji: '🛒',
@@ -703,6 +715,7 @@ const prizes = [
   {
     id: 'br',
     dbId: 2,
+    dbName: 'Baskin Robbins Voucher',
     name: 'Baskin Robbins Voucher',
     image: `${GIFT_IMAGE_BASE}/Baskin Robbins Voucher_2x.webp`,
     emoji: '🍦',
@@ -711,7 +724,8 @@ const prizes = [
   },
   {
     id: 'lanyard',
-    dbId: 8,
+    dbId: 9,
+    dbName: 'iProperty Phone Lanyard',
     name: 'iProperty Phone Lanyard',
     image: `${GIFT_IMAGE_BASE}/iProperty  Phone Lanyard_2x.webp`,
     emoji: '📱',
@@ -721,6 +735,7 @@ const prizes = [
   {
     id: 'notebook',
     dbId: 4,
+    dbName: 'iProperty Notebook',
     name: 'iProperty Notebook',
     image: `${GIFT_IMAGE_BASE}/iProperty Notebook_2x.webp`,
     emoji: '📓',
@@ -730,6 +745,7 @@ const prizes = [
   {
     id: 'fan',
     dbId: 3,
+    dbName: 'Neck Fan',
     name: 'Neck Fan',
     image: `${GIFT_IMAGE_BASE}/Neck Fan_2x.webp`,
     emoji: '💨',
@@ -739,6 +755,7 @@ const prizes = [
   {
     id: 'kopi',
     dbId: 5,
+    dbName: 'Towel',
     name: 'Towel',
     image: `${GIFT_IMAGE_BASE}/Towel 1_2x.webp`,
     emoji: '☕',
@@ -747,7 +764,8 @@ const prizes = [
   },
   {
     id: 'texas',
-    dbId: 6,
+    dbId: 7,
+    dbName: 'Texas Chicken RM 5 Cash Voucher',
     name: 'Texas Chicken RM5 Cash Voucher',
     image: `${GIFT_IMAGE_BASE}/Texas Chicken RM 5 Cash Voucher_2x.webp`,
     emoji: '🍗',
@@ -756,7 +774,8 @@ const prizes = [
   },
   {
     id: 'watsons',
-    dbId: 7,
+    dbId: 8,
+    dbName: 'Watsons RM 10 Gift Voucher',
     name: 'Watsons RM10 Gift Voucher',
     image: `${GIFT_IMAGE_BASE}/Watsons RM 10 Gift Voucher _2x.webp`,
     emoji: '🧴',
@@ -764,14 +783,27 @@ const prizes = [
     weight: 13,
   },{
     id: 'duffel',
-    dbId: 9,
+    dbId: 6,
+    dbName: 'Mini Duffel Bag',
     name: 'Mini Duffel Bag',
     image: `${GIFT_IMAGE_BASE}/Mini Duffel Bag 1_2x.webp`,
     emoji: '🎒',
     color: '#E8F5E9',
     weight: 13,
+  },{
+    id: 'orientalkopi',
+    dbId: 10,
+    dbName: 'Oriental Kopi RM 10 Voucher',
+    name: 'Oriental Kopi RM 10 Cash Voucher',
+    image: `${GIFT_IMAGE_BASE}/Oriental Kopi  RM 10 Cash Voucher_2x.webp`,
+    emoji: '☕',
+    color: '#FFF8E1',
+    weight: 13,
   },
-];
+].map((prize) => ({
+  ...prize,
+  dbId: STOCKS_BY_NAME.get(normalizeGiftName(prize.dbName ?? prize.name))?.id ?? prize.dbId,
+}));
 
 // ─────────────────────────────────────────────
 // ACTIVE PRIZES  (populated from API before each draw)

@@ -206,29 +206,6 @@ $voucherMessage = 'Voucher redemption is not available yet.';
 
 if ($activeVoucher) {
 
-    $effectiveQuota = $activeVoucher->quota;
-
-    // Add Session 1 carry-over to Session 2
-    if ($activeVoucher->session == 2) {
-
-        $session1 = Voucher::where('session', 1)->first();
-
-        if ($session1) {
-
-            $session1Claimed = VoucherClaim::where(
-                'voucher_id',
-                $session1->id
-            )->count();
-
-            $carryOver = max(
-                0,
-                $session1->quota - $session1Claimed
-            );
-
-            $effectiveQuota += $carryOver;
-        }
-    }
-
     $claimedCount = VoucherClaim::where(
         'voucher_id',
         $activeVoucher->id
@@ -236,7 +213,7 @@ if ($activeVoucher) {
 
     $remaining = max(
         0,
-        $effectiveQuota - $claimedCount
+        $activeVoucher->quota - $claimedCount
     );
 
     if ($remaining <= 0) {
@@ -246,7 +223,14 @@ if ($activeVoucher) {
             $voucherStatus = 'Session 1 Full';
             $voucherMessage = 'Session 1 quota has been reached. Please come back at 6:00 PM for Session 2.';
 
-        } else {
+        } 
+        elseif($activeVoucher->session == 2) {
+
+            $voucherStatus = 'Session 2 Full';
+            $voucherMessage = 'Session 2 quota has been reached. Please come back at 6:00 PM for Session 3.';
+
+        } 
+        else {
 
             $voucherStatus = 'Fully Redeemed';
             $voucherMessage = 'All CHAGEE vouchers have been claimed.';
@@ -261,7 +245,7 @@ if ($activeVoucher) {
     if (
         !$voucherRedeemed &&
         $completedJourney &&
-        $claimedCount < $activeVoucher->quota
+        $remaining > 0
     ) {
         $canSeeVoucher = true;
     }

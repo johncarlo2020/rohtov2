@@ -273,6 +273,31 @@
         </div>
     </div>
 
+    
+        @php
+    $session1 = \App\Models\Voucher::where('name', 'CHAGEE')
+        ->where('session', 1)
+        ->first();
+
+    $session2 = \App\Models\Voucher::where('name', 'CHAGEE')
+        ->where('session', 2)
+        ->first();
+
+    $session1Available = $session1
+        ? max(0, $session1->quota - \App\Models\VoucherClaim::where('voucher_id', $session1->id)->count())
+        : 0;
+
+    $session2Available = $session2
+        ? max(0, $session2->quota - \App\Models\VoucherClaim::where('voucher_id', $session2->id)->count())
+        : 0;
+@endphp
+
+
+<div>Session 1 Available: {{ $session1Available }}</div>
+<div>Session 2 Available: {{ $session2Available }}</div>
+
+
+
     <script src="{{ asset('assets/js/core/bootstrap.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/perfect-scrollbar.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/smooth-scrollbar.min.js') }}"></script>

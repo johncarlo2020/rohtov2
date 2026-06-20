@@ -206,6 +206,29 @@ $voucherMessage = 'Voucher redemption is not available yet.';
 
 if ($activeVoucher) {
 
+    $effectiveQuota = $activeVoucher->quota;
+
+    // Add Session 1 carry-over to Session 2
+    if ($activeVoucher->session == 2) {
+
+        $session1 = Voucher::where('session', 1)->first();
+
+        if ($session1) {
+
+            $session1Claimed = VoucherClaim::where(
+                'voucher_id',
+                $session1->id
+            )->count();
+
+            $carryOver = max(
+                0,
+                $session1->quota - $session1Claimed
+            );
+
+            $effectiveQuota += $carryOver;
+        }
+    }
+
     $claimedCount = VoucherClaim::where(
         'voucher_id',
         $activeVoucher->id
@@ -213,7 +236,7 @@ if ($activeVoucher) {
 
     $remaining = max(
         0,
-        $activeVoucher->quota - $claimedCount
+        $effectiveQuota - $claimedCount
     );
 
     if ($remaining <= 0) {
@@ -238,7 +261,7 @@ if ($activeVoucher) {
     if (
         !$voucherRedeemed &&
         $completedJourney &&
-        $remaining > 0
+        $claimedCount < $activeVoucher->quota
     ) {
         $canSeeVoucher = true;
     }

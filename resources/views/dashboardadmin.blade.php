@@ -283,18 +283,50 @@
         ->where('session', 2)
         ->first();
 
+    $session1Claimed = $session1
+        ? \App\Models\VoucherClaim::where('voucher_id', $session1->id)->count()
+        : 0;
+
+    $session2Claimed = $session2
+        ? \App\Models\VoucherClaim::where('voucher_id', $session2->id)->count()
+        : 0;
+
     $session1Available = $session1
-        ? max(0, $session1->quota - \App\Models\VoucherClaim::where('voucher_id', $session1->id)->count())
+        ? max(0, $session1->quota - $session1Claimed)
         : 0;
 
     $session2Available = $session2
-        ? max(0, $session2->quota - \App\Models\VoucherClaim::where('voucher_id', $session2->id)->count())
+        ? max(0, $session2->quota - $session2Claimed)
         : 0;
+
+    $activeSession = \App\Models\Voucher::where('name', 'CHAGEE')
+        ->where('starts_at', '<=', now())
+        ->where(function ($q) {
+            $q->whereNull('ends_at')
+                ->orWhere('ends_at', '>=', now());
+        })
+        ->first();
 @endphp
 
 
-<div>Session 1 Available: {{ $session1Available }}</div>
-<div>Session 2 Available: {{ $session2Available }}</div>
+<div class="mb-2">
+    <strong>Active Session:</strong>
+    {{ $activeSession ? 'Session '.$activeSession->session : 'None' }}
+</div>
+
+<div>
+    Session 1:
+    Claimed {{ $session1Claimed }}/{{ $session1?->quota ?? 0 }}
+    |
+    Available {{ $session1Available }}
+</div>
+
+<div>
+    Session 2:
+    Claimed {{ $session2Claimed }}/{{ $session2?->quota ?? 0 }}
+    |
+    Available {{ $session2Available }}
+</div>
 
 
 

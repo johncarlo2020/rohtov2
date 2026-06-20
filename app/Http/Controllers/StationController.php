@@ -207,9 +207,10 @@ $voucherMessage = 'Voucher redemption is not available yet.';
 if ($activeVoucher) {
 
     $claimedCount = VoucherClaim::where(
-        'voucher_id',
-        $activeVoucher->id
-    )->count();
+    'voucher_id',
+    $activeVoucher->id
+)->count();
+    
 
     $remaining = max(
         0,
@@ -222,12 +223,6 @@ if ($activeVoucher) {
 
             $voucherStatus = 'Session 1 Full';
             $voucherMessage = 'Session 1 quota has been reached. Please come back at 6:00 PM for Session 2.';
-
-        } 
-        elseif($activeVoucher->session == 2) {
-
-            $voucherStatus = 'Session 2 Full';
-            $voucherMessage = 'Session 2 quota has been reached. Please come back at 6:00 PM for Session 3.';
 
         } 
         else {

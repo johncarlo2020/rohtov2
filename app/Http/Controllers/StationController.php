@@ -1224,14 +1224,19 @@ if ($activeVoucher) {
             $session1->id
         )->count();
 
+        $session2Claimed = VoucherClaim::where(
+            'voucher_id',
+            $session2->id
+        )->count();
+
         $remaining = max(
             0,
             $session1->quota - $session1Claimed
         );
 
-        $session2->update([
-            'quota' => $remaining + 1 // TESTING
-        ]);
+        // $session2->update([
+        //     'quota' => $remaining + 1 // TESTING
+        // ]);
     }
 
     return response()->json([

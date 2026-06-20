@@ -55,6 +55,10 @@ class RegisteredUserController extends Controller
         "Taman Cassia Cempaka, Bandar Cassia Batu Kawan",
         "Bertam Kepala Batas",
         "Lunas, Kulim, Kedah",
+        "Jalan Telaga Air",
+        "Jalan Residensi Harmoni",
+        "Jalan Tan Sai Gin, Butterworth",
+        "Butterworth",
     ];
 
   
@@ -106,6 +110,11 @@ class RegisteredUserController extends Controller
         "Taman Cassia Cempaka, Bandar Cassia Batu Kawan",
         "Bertam Kepala Batas",
         "Lunas, Kulim, Kedah",
+        "Jalan Telaga Air",
+        "Jalan Residensi Harmoni",
+        "Jalan Tan Sai Gin, Butterworth",
+        "Butterworth",
+        
     ];
 
   

@@ -11,6 +11,8 @@ class Question extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['developer_id', 'question'];
+
     public function answers()
     {
         return $this->hasMany(Answer::class);

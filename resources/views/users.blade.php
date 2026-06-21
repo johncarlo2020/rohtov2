@@ -122,6 +122,7 @@
                             <th>Property Budget</th>
                             <th>Marketing</th>
                             <th>Registration Timestamp</th>
+                            <th>Chagee Voucher</th>
                             @foreach ($data['stations'] as $station)
                             <th>{!! strtoupper($station['name']) !!}</th>
                             @endforeach
@@ -133,6 +134,9 @@
                     </thead>
                     <tbody>
                         @foreach ($data['users'] as $user)
+                        @php
+                        $user->has_claimed_chagee = $user->voucherClaims->isNotEmpty();
+                        @endphp
                         <tr data-user-id="{{ $user->id }}">
                             <td>{{ $loop->iteration }}</td>
                             <td>
@@ -147,6 +151,14 @@
                             <td>{{ $user->property_budget }}</td>
                             <td>{{ $user->marketing }}</td>
                             <td>{{ \Carbon\Carbon::parse($user->created_at)->toDayDateTimeString() }}</td>
+                            <td>
+                                @if($user->has_claimed_chagee)
+                                    <span class="badge bg-success">Claimed</span>
+                                @else
+                                    <span class="badge bg-danger">Not Claimed</span>
+                                @endif
+                            </td>
+                           
                             @foreach ($user['stations'] as $station)
                                 <td class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-danger' }}">
                                     @if($station['id'] == 3)

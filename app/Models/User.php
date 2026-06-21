@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Developer;
+use App\Models\VoucherClaim;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -93,6 +94,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Question::class,'user_question')
             ->withPivot('is_correct')
             ->withTimestamps();
+    }
+
+    public function voucherClaims()
+    {
+        return $this->hasMany(VoucherClaim::class);
     }
 
     /**

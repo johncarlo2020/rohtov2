@@ -774,7 +774,7 @@ if ($activeVoucher) {
       ->whereDoesntHave("roles", function ($q) {
         $q->where("name", "admin");
       })
-      ->with("stationUser","developers","userGift.gift","developers.projects")
+      ->with("stationUser","developers","userGift.gift","developers.projects","voucherClaims.voucher")
       ->orderBy("id", "desc")
       ->get();
 

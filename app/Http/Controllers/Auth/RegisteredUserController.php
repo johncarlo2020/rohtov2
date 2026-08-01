@@ -36,35 +36,43 @@ class RegisteredUserController extends Controller
 
     //April 30 - May 11
       $default = [
-        "Gelugor, The Light Waterfront",
-        "Bukit Jambul",
-        "Jawi, Seberang Perai Selatan",
-        "Andaman Island",
-        "Batu Kawan",
-        "Bukit Mertajam",
-        "Tasek Gelugor",
-        "Daerah Seberang Perai Utara",
-        "Daerah Seberang Perai Tengah",
-        "Parit Buntar, Perak",
-        "Nibong Tebal",
-        "Kulim, Kedah",
-        "Ara Kuda, Tasek Gelugor",
-        "Sungai Petani",
-        "Tanjong Tokong, Daerah Timur Laut",
-        "Persiaran Bayan Indah",
-        "Taman Cassia Cempaka, Bandar Cassia Batu Kawan",
-        "Bertam Kepala Batas",
-        "Lunas, Kulim, Kedah",
-        "Jalan Telaga Air",
-        "Jalan Residensi Harmoni",
-        "Jalan Tan Sai Gin, Butterworth",
-        "Butterworth",
-    ];
+      "Bandar Dato' Onn",
+      "Bandar Tiram",
+      "Jalan Tun Abdul Razak",
+      "Danga Bay",
+      "Seri Austin",
+      "Taman Pelangi",
+      "Pasir Gudang",
+      "Skudai",
+      "Plaza Sentosa, Jalan Sutera, Taman Sentosa",
+      "Bandar UDA Utama",
+      "Taman Sedili, Kota Tinggi",
+      "Puteri Harbour, Iskandar Puteri",
+      "Taman Impian Emas, Skudai",
+      "Terra Heights @ Bukit Amber, Johor Bahru",
+      "R&F Tanjung Puteri",
+      "Taman Daya (TD)",
+      "Bandar Baru Kangkar Pulai (BBKP)",
+      "Tanjong Puteri Resort (TPR), Pasir Gudang",
+      "Bangsar South, Kuala Lumpur",
+      "Bukit Jalil, Kuala Lumpur",
+      "Bandar Johor Bahru",
+      "Taman Molek",
+      "Iskandar Puteri",
+      "Bandar Sunway Iskandar Puteri",
+      "Horizon Hills, Iskandar Puteri",
+      "Taman Sutera Utama, Skudai",
+      "Genting Indahputra, Kulai",
+      "Taman Bayu Damai, Pengerang, Johor",
+      "Bayu Puteri, Johor Bahru",
+      "Kota Syahbandar, Melaka",
+  ];
+    
 
   
      $allowedLocations = collect($default)
-    ->shuffle()
-    ->all();
+      ->shuffle()
+      ->all();
 
     $locations = Project::select("address")
       ->distinct()
@@ -76,7 +84,6 @@ class RegisteredUserController extends Controller
         $allowedLocations
       )
       ->pluck("address");
-
     return view("auth.register", compact("locations"));
   }
 
@@ -91,31 +98,37 @@ class RegisteredUserController extends Controller
 
       //April 30 - May 11
       $default = [
-        "Gelugor, The Light Waterfront",
-        "Bukit Jambul",
-        "Jawi, Seberang Perai Selatan",
-        "Andaman Island",
-        "Batu Kawan",
-        "Bukit Mertajam",
-        "Tasek Gelugor",
-        "Daerah Seberang Perai Utara",
-        "Daerah Seberang Perai Tengah",
-        "Parit Buntar, Perak",
-        "Nibong Tebal",
-        "Kulim, Kedah",
-        "Ara Kuda, Tasek Gelugor",
-        "Sungai Petani",
-        "Tanjong Tokong, Daerah Timur Laut",
-        "Persiaran Bayan Indah",
-        "Taman Cassia Cempaka, Bandar Cassia Batu Kawan",
-        "Bertam Kepala Batas",
-        "Lunas, Kulim, Kedah",
-        "Jalan Telaga Air",
-        "Jalan Residensi Harmoni",
-        "Jalan Tan Sai Gin, Butterworth",
-        "Butterworth",
-        
-    ];
+      "Bandar Dato' Onn",
+      "Bandar Tiram",
+      "Jalan Tun Abdul Razak",
+      "Danga Bay",
+      "Seri Austin",
+      "Taman Pelangi",
+      "Pasir Gudang",
+      "Skudai",
+      "Plaza Sentosa, Jalan Sutera, Taman Sentosa",
+      "Bandar UDA Utama",
+      "Taman Sedili, Kota Tinggi",
+      "Puteri Harbour, Iskandar Puteri",
+      "Taman Impian Emas, Skudai",
+      "Terra Heights @ Bukit Amber, Johor Bahru",
+      "R&F Tanjung Puteri",
+      "Taman Daya (TD)",
+      "Bandar Baru Kangkar Pulai (BBKP)",
+      "Tanjong Puteri Resort (TPR), Pasir Gudang",
+      "Bangsar South, Kuala Lumpur",
+      "Bukit Jalil, Kuala Lumpur",
+      "Bandar Johor Bahru",
+      "Taman Molek",
+      "Iskandar Puteri",
+      "Bandar Sunway Iskandar Puteri",
+      "Horizon Hills, Iskandar Puteri",
+      "Taman Sutera Utama, Skudai",
+      "Genting Indahputra, Kulai",
+      "Taman Bayu Damai, Pengerang, Johor",
+      "Bayu Puteri, Johor Bahru",
+      "Kota Syahbandar, Melaka",
+  ];
 
   
       $allowedLocations = $default;

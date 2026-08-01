@@ -21,10 +21,6 @@ class StationSeeder extends Seeder
     public function run()
     {
 
-        Station::create([
-            'name' => 'Voting',
-            'description' => 'Visit our voting station to<br>get stamp',
-        ]);
 
         Station::create([
             'name' => 'Lucky Draw',

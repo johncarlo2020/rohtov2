@@ -154,15 +154,17 @@
 
                         {{-- Socials --}}
                         <div class="mb-3">
-                            <label>How did you find out about the iProperty New homes Expo at Sunway Carnival Mall?</label>
+                            <label>How did you find out about the iProperty New homes Expo at paradigm mall johor bahru?</label>
                             @php
                                 $socials = [
                                     'iProperty Facebook Ads',
                                     'Google Ads',
-                                    'Facebook - Penang Holiao',
-                                    'Outdoor Digital Panel',
-                                    'iProperty Channels (EDM, Website)',
-                                    'Sunway Carnival Facebook Post',
+                                    'Facebook - Johor Now',
+                                    'Outdoor Street Bunting',
+                                    'Outdoor Temp Board',
+                                    'iProperty Channels (EDM,Website)',
+                                    "Paradigm mall JB's Facebook / instagram Post",
+                                    'Mall Advertising (Outdoor lamp post, Pillar Wrap, Digital Screen)',
                                     'Event Brite',
                                     'Developers Facebook Ads',
                                     'Walk-in',
@@ -218,12 +220,12 @@
                                         value="1" id="privacyPolicy" x-model="agreed" required />
                                     <small class="text-dark form-check-label" for="privacyPolicy">
                                         I have read and agree to the
+                                        <a href="https://www.iproperty.com.my/privacy-policy/"
+                                            class="text-primary">Privacy Policy</a>.
+                                        and
                                         <a href="https://www.iproperty.com.my/terms-and-conditions/"
                                             class="text-primary">Terms
                                             and Conditions</a>
-                                        and
-                                        <a href="https://www.iproperty.com.my/privacy-policy/"
-                                            class="text-primary">Privacy Policy</a>.
                                     </small>
                                 </div>
                             </div>

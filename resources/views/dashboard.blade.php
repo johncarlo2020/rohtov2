@@ -284,8 +284,8 @@
                                             {{ $voucherMessage }}
                                         </p>
                                     @else
-                                        <strong>
-                                            20 June 2026, Saturday
+                                    
+                                        <p> 8 August 2026, (Saturday) </p>
                                         <p>
                                             50 cups at 12PM | 50 cups at 6PM
                                         </p>

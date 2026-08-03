@@ -25,21 +25,21 @@ class DeveloperProjectSeeder extends Seeder
                 ],
             ],
             
-            3 => [
+            2 => [
                 'name' => 'WCT',
                 'projects' => [
                     ['Adison @ W City Larkinton', 'Jalan Tun Abdul Razak'],
                 ],
             ],
 
-            4 => [
+            3 => [
                 'name' => 'PGB',
                 'projects' => [
                     ['Calia Residences by PGB', 'Danga Bay'],
                 ],
             ],
 
-            5 => [
+            4 => [
                 'name' => 'Mah Sing',
                 'projects' => [
                     ['M Minori', 'Seri Austin'],
@@ -49,14 +49,14 @@ class DeveloperProjectSeeder extends Seeder
                 ],
             ],
 
-            6 => [
+            5 => [
                 'name' => 'TSLaw',
                 'projects' => [
                     ['Skyline (Eastside) @ OneSentosa', 'Plaza Sentosa, Jalan Sutera, Taman Sentosa'],
                 ],
             ],
 
-            7 => [
+            6 => [
                 'name' => 'UDA',
                 'projects' => [
                     ['UDA Heights', 'Bandar UDA Utama'],
@@ -65,21 +65,21 @@ class DeveloperProjectSeeder extends Seeder
                 ],
             ],
 
-            8 => [
+            7 => [
                 'name' => 'Southern Marina',
                 'projects' => [
                     ['Southern Marina Residences', 'Puteri Harbour, Iskandar Puteri'],
                 ],
             ],
 
-            9 => [
+            8 => [
                 'name' => 'Maxim',
                 'projects' => [
                     ['Maxim The Address JB', 'Taman Pelangi'],
                 ],
             ],
 
-            10 => [
+            9 => [
                 'name' => 'Gunung Impian',
                 'projects' => [
                     ['Iconia Garden Residence 2-Storey Terrace', 'Taman Impian Emas, Skudai'],
@@ -87,7 +87,7 @@ class DeveloperProjectSeeder extends Seeder
                 ],
             ],
 
-            11 => [
+            10 => [
                 'name' => 'Tong Tor',
                 'projects' => [
                     ['Rosewood II (Double Storey Terrace House)', 'Terra Heights @ Bukit Amber, Johor Bahru'],
@@ -95,14 +95,14 @@ class DeveloperProjectSeeder extends Seeder
                 ],
             ],
 
-            12 => [
+            11 => [
                 'name' => 'R&F',
                 'projects' => [
                     ['R&F Princess Cove', 'R&F Tanjung Puteri'],
                 ],
             ],
 
-            13 => [
+            12 => [
                 'name' => 'Keck Seng',
                 'projects' => [
                     ['Daya 1 Residences - Serviced Apartments', 'Taman Daya (TD)'],
@@ -116,7 +116,7 @@ class DeveloperProjectSeeder extends Seeder
                 ],
             ],
 
-            14 => [
+            13 => [
                 'name' => 'Malton',
                 'projects' => [
                     ['River Park Bangsar South', 'Bangsar South, Kuala Lumpur'],
@@ -124,7 +124,7 @@ class DeveloperProjectSeeder extends Seeder
                 ],
             ],
 
-            15 => [
+            14 => [
                 'name' => 'Sunway',
                 'projects' => [
                     ['Sunway Majestic', 'Bandar Johor Bahru'],
@@ -134,14 +134,14 @@ class DeveloperProjectSeeder extends Seeder
                 ],
             ],
 
-            16 => [
+            15 => [
                 'name' => 'Horizon Hills',
                 'projects' => [
                     ['Pavilion 2', 'Horizon Hills, Iskandar Puteri'],
                 ],
             ],
 
-            17 => [
+            16 => [
                 'name' => 'Tanah Sutera',
                 'projects' => [
                     ['The Seed', 'Taman Sutera Utama, Skudai'],
@@ -149,21 +149,21 @@ class DeveloperProjectSeeder extends Seeder
                 ],
             ],
 
-            18 => [
+            17 => [
                 'name' => 'Genting',
                 'projects' => [
                     ['Bayu Idaman', 'Genting Indahputra, Kulai'],
                 ],
             ],
 
-            23 => [
+            18 => [
                 'name' => 'KPRJ',
                 'projects' => [
                     ['Jauhar Bayu Damai', 'Taman Bayu Damai, Pengerang, Johor'],
                 ],
             ],
 
-            24 => [
+            19 => [
                 'name' => 'Webest',
                 'projects' => [
                     ['Southbay', 'Bayu Puteri, Johor Bahru'],

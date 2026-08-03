@@ -638,11 +638,9 @@ if ($activeVoucher) {
         ->flatMap(function ($user) {
             return $user->developers->pluck('id');
         })
-        ->reject(fn($id) => $id == 5) // 🔥 exclude here
         ->countBy();
 
-    $developers = \App\Models\Developer::where('id', '!=', 5) // 🔥 exclude here
-        ->pluck('name', 'id');
+    $developers = \App\Models\Developer::pluck('name', 'id');
 
     $data["developers"] = $developers->map(function ($name, $id) use ($developerCounts) {
         return [
@@ -1288,7 +1286,7 @@ if ($activeVoucher) {
 
       $isVideoBoothDay = in_array($today, $videoBoothDates);
 
-      $totalRequired = $user->is_early_bird ? 4 : 3;
+      $totalRequired = $user->is_early_bird ? 3 : 2;
 
       DB::commit();
       // 🎉 CHECK IF FINISHED
@@ -1442,7 +1440,7 @@ if ($activeVoucher) {
       $user = auth()->user();
 
       $completed = $user->stationUser()->distinct("station_id")->count();
-      $totalRequired = $user->is_early_bird ? 4 : 3;
+      $totalRequired = $user->is_early_bird ? 3 : 2;
 
       if ($completed >= $totalRequired) {
           return redirect()->route('congrats');

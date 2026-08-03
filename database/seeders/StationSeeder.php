@@ -28,13 +28,13 @@ class StationSeeder extends Seeder
         ]);
 
         Station::create([
-            'name' => 'Early Bird',
-            'description' => 'Redeem your <br> pre-registration gift!',
+            'name' => 'Game',
+            'description' => 'Visit our game booth <br> to join the fun',
         ]);
 
         Station::create([
-            'name' => 'Game',
-            'description' => 'Visit our game booth <br> to join the fun',
+            'name' => 'Early Bird',
+            'description' => 'Redeem your <br> pre-registration gift!',
         ]);
 
         

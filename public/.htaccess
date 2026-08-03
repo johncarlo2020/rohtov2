@@ -21,6 +21,10 @@
 </IfModule>
 
 <IfModule mod_headers.c>
+    # Override any inherited policy that disables camera.
+    Header always unset Permissions-Policy
+    Header always set Permissions-Policy "camera=(self), geolocation=(), microphone=()"
+
     SetEnvIf Origin "^https://(luckydrawkl\.ipropertyevents\.com|luckydrawpng\.ipropertyevents\.com)$" CORS_ORIGIN=$0
     Header always unset Access-Control-Allow-Origin
     Header always set Access-Control-Allow-Origin "%{CORS_ORIGIN}e" env=CORS_ORIGIN

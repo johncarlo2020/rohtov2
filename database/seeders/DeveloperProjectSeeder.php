@@ -163,14 +163,6 @@ class DeveloperProjectSeeder extends Seeder
                 ],
             ],
 
-            19 => [
-                'name' => 'Webest',
-                'projects' => [
-                    ['Southbay', 'Bayu Puteri, Johor Bahru'],
-                    ['29 Reserve', 'Kota Syahbandar, Melaka'],
-                ],
-            ],
-
         ];
 
         foreach ($developers as $id => $data) {

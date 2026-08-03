@@ -90,8 +90,7 @@ html, body {
 #screen-start {
   padding: 0;
   align-items: center;
-  justify-content: flex-end;
-  padding-bottom: clamp(360px, calc(63vh + 160px), 1330px);
+  justify-content: flex-start;
   background: url('{{ asset('images/images/start.webp') }}') center center / cover no-repeat;
 }
 
@@ -163,9 +162,11 @@ html, body {
 }
 
 #btn-ready {
-  position: static;
-  transform: none;
-  margin-top: clamp(120px, 22vh, 440px);
+  position: absolute;
+  left: 50%;
+  top: calc(15.4% + 5vh);
+  transform: translateX(-50%);
+  margin-top: 0;
 }
 
 #screen-guide .hand-icon {
@@ -217,12 +218,14 @@ html, body {
 ============================================================ */
 .btn {
   display: inline-block;
-  padding: 20px 146px;
+  width: clamp(220px, 39.5vw, 430px);
+  height: clamp(44px, 5.1vh, 98px);
+  padding: 0 20px;
   border: none;
-  border-radius: 50px;
-  font-size: 18px;
+  border-radius: 25px;
+  font-size: clamp(16px, 1.95vh, 38px);
   font-weight: 700;
-  letter-spacing: 1.5px;
+  letter-spacing: 0;
   cursor: pointer;
   text-transform: uppercase;
   transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
@@ -248,14 +251,42 @@ html, body {
 
 /* full-width action button sitting below a card */
 .btn--wide {
-  width: calc(100% - 48px);
-  max-width: 480px;
+  width: clamp(220px, 39.5vw, 430px);
+  max-width: 430px;
   margin: 0;
-  padding: 18px 0;
-  font-size: 17px;
+  padding: 0 20px;
+  font-size: clamp(16px, 1.95vh, 38px);
 }
 
-.btn--sm { padding: 12px 32px; font-size: 14px; margin-top: 16px; }
+.btn--sm {
+  width: clamp(132px, 18.7vw, 202px);
+  height: clamp(34px, 3.7vh, 70px);
+  padding: 0 16px;
+  font-size: clamp(13px, 1.35vh, 26px);
+  margin-top: 10px;
+}
+
+#btn-start,
+#btn-continue,
+#btn-finish {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+#btn-start {
+  top: calc(15.4% + 5vh);
+}
+
+#btn-continue {
+  top: calc(15.4% + 5vh);
+  z-index: 3;
+}
+
+#btn-finish {
+  top: calc(15.4% + 5vh);
+  z-index: 3;
+}
 
 /* ============================================================
    SCREEN TITLE  (shared by shuffle / result)
@@ -277,8 +308,8 @@ html, body {
 ============================================================ */
 #screen-shuffle {
   justify-content: center;
-  gap: 28px;
-  padding: 40px 32px;
+  gap: 24px;
+  padding: 36px 20px;
   background: url('{{ asset('images/images/draw.webp') }}') center center / cover no-repeat;
 }
 
@@ -300,9 +331,9 @@ html, body {
   background: var(--white);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  width: 100%;
-  max-width: 340px;
-  padding: 28px 24px 32px;
+  width: clamp(320px, 86vw, 520px);
+  max-width: 520px;
+  padding: clamp(30px, 3.4vh, 54px) clamp(24px, 2.8vw, 40px) clamp(34px, 3.8vh, 58px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -323,7 +354,7 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: clamp(14px, 1.8vh, 24px);
   cursor: pointer;
   user-select: none;
   will-change: transform, opacity;
@@ -331,7 +362,7 @@ html, body {
 
 .carousel-img-wrap {
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 1 / 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -348,7 +379,7 @@ html, body {
 }
 
 .carousel-name {
-  font-size: clamp(16px, 4.5vw, 20px);
+  font-size: clamp(20px, 2.4vh, 36px);
   font-weight: 700;
   text-align: center;
   color: var(--blue);
@@ -390,7 +421,7 @@ html, body {
 
 .shuffle-hint {
   flex-shrink: 0;
-  font-size: clamp(14px, 3.5vw, 18px);
+  font-size: clamp(16px, 1.8vh, 28px);
   color: var(--text-mid);
   letter-spacing: 0.5px;
   animation: hintPulse 1.4s ease-in-out infinite;
@@ -400,14 +431,17 @@ html, body {
 
 /* Logo header — outside card, top of screen */
 .screen-header-logo {
-  height: 36px;
+  position: absolute;
+  left: 50%;
+  top: 9.6%;
+  transform: translateX(-50%);
+  height: clamp(42px, 4.8vh, 92px);
   width: auto;
-  max-width: 160px;
+  max-width: clamp(190px, 26vw, 282px);
   object-fit: contain;
   display: block;
   flex-shrink: 0;
-  z-index: 2;
-  position: relative;
+  z-index: 3;
 }
 
 /* ============================================================
@@ -417,7 +451,7 @@ html, body {
   justify-content: flex-start;
   align-items: center;
   gap: 24px;
-  padding-top: clamp(340px, 46vh, 410px);
+  padding-top: clamp(290px, 30.5vh, 586px);
   padding-left: 32px;
   padding-right: 32px;
   padding-bottom: 40px;
@@ -492,42 +526,63 @@ html, body {
    SCREEN 5 – QR
 ============================================================ */
 #screen-qr {
-  justify-content: center;
-  gap: 24px;
-  padding: 48px 32px 40px;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0;
+  padding: 0;
+  position: relative;
   background: #C8D3E8;
+  background: radial-gradient(circle at 50% -20%, #abc8ee 0%, #d5e8fb 58%, #e3f2ff 100%);
+}
+
+#screen-qr #btn-finish {
+  top: calc(clamp(168px, 23vh, 442px) + 5vh);
+  z-index: 4;
 }
 
 .qr-card {
-  background: var(--white);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  position: absolute;
+  left: 50%;
+  top: clamp(286px, 41vh, 788px);
+  transform: translateX(-50%);
+  background: rgba(208, 226, 246, 0.58);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.52);
+  box-shadow: 0 20px 48px rgba(77, 118, 167, 0.24);
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 28px 24px 32px;
-  width: 100%;
-  max-width: 380px;
-  gap: 16px;
+  justify-content: flex-start;
+  padding: clamp(36px, 4vh, 72px) clamp(22px, 2.7vw, 46px) clamp(24px, 2.6vh, 50px);
+  width: clamp(320px, 83vw, 860px);
+  height: clamp(330px, 44vh, 845px);
+  gap: clamp(12px, 1.5vh, 24px);
 }
 
 .qr-instruction {
-  font-size: clamp(16px, 4.2vw, 22px);
-  font-weight: 600;
-  color: var(--text-dark);
+  font-size: clamp(28px, 2.9vh, 54px);
+  font-weight: 700;
+  color: #2f62af;
   text-align: center;
-  line-height: 1.5;
+  line-height: 1.1;
 }
 
 .qr-box {
-  width: min(200px, 54vw);
-  height: min(200px, 54vw);
-  border-radius: 12px;
+  width: clamp(152px, 43vw, 430px);
+  height: clamp(152px, 43vw, 430px);
+  border-radius: 10px;
   overflow: hidden;
-  background: #f0f0f0;
+  background: #ffffff;
+  padding: clamp(7px, 0.8vh, 14px);
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+#screen-qr #btn-redraw {
+  margin-top: calc(clamp(6px, 0.8vh, 14px) + 5vh);
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(47, 98, 175, 0.25);
 }
 
 .qr-box img,
@@ -542,7 +597,7 @@ html, body {
 ============================================================ */
 
 @media (min-width: 700px) {
-  .carousel-viewport { max-width: 420px; }
+  .carousel-viewport { max-width: 560px; }
 }
 
 /* Very small phones */
@@ -559,12 +614,20 @@ html, body {
 .countdown-overlay {
   position: fixed;
   inset: 0;
-  z-index: 100;
+  z-index: 120;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(10, 30, 80, 0.82);
+  background: rgba(20, 30, 48, 0.58);
   transition: opacity 0.25s ease;
+}
+
+/* During countdown, hide shuffle layer details behind the overlay. */
+body.countdown-active #screen-shuffle .screen-logo,
+body.countdown-active #screen-shuffle .carousel-viewport,
+body.countdown-active #screen-shuffle .carousel-name,
+body.countdown-active #screen-shuffle .shuffle-hint {
+  visibility: hidden;
 }
 
 .countdown-overlay.hidden {
@@ -572,13 +635,58 @@ html, body {
   pointer-events: none;
 }
 
-.countdown-number {
-  font-size: clamp(120px, 30vw, 200px);
-  font-weight: 900;
-  color: var(--white);
+.countdown-panel {
+  width: clamp(300px, 82vw, 760px);
+  height: clamp(360px, 52vh, 980px);
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(78, 90, 108, 0.62);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: clamp(28px, 3.2vh, 56px) clamp(22px, 2.6vw, 42px) clamp(26px, 3vh, 54px);
+  gap: clamp(12px, 1.5vh, 22px);
+}
+
+.countdown-title {
+  font-size: clamp(28px, 5.1vw, 74px);
   line-height: 1;
-  text-shadow: 0 6px 32px rgba(0,0,0,0.5);
+  font-weight: 800;
+  color: #ffffff;
+  text-align: center;
+}
+
+.countdown-number-box {
+  width: clamp(140px, 41vw, 330px);
+  height: clamp(140px, 41vw, 330px);
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.countdown-number {
+  font-size: clamp(84px, 24vw, 186px);
+  font-weight: 900;
+  color: #2f62af;
+  line-height: 1;
+  text-shadow: none;
   animation: countPop 0.4s cubic-bezier(.4,0,.2,1) both;
+}
+
+.countdown-prize-name {
+  font-size: clamp(18px, 3.9vw, 48px);
+  line-height: 1.1;
+  font-weight: 800;
+  color: #17376c;
+  text-align: center;
+  max-width: 90%;
+  word-break: break-word;
 }
 
 @keyframes countPop {
@@ -650,7 +758,13 @@ html, body {
 
   <!-- ░░ COUNTDOWN OVERLAY ░░ -->
   <div id="countdown-overlay" class="countdown-overlay hidden">
-    <span class="countdown-number" id="countdown-number">3</span>
+    <div class="countdown-panel">
+      <p class="countdown-title">Ready</p>
+      <div class="countdown-number-box">
+        <span class="countdown-number" id="countdown-number">3</span>
+      </div>
+      <p class="countdown-prize-name" id="countdown-prize-name"></p>
+    </div>
   </div>
 
   <script>
@@ -753,16 +867,6 @@ const prizes = [
     weight: 13,
   },
   {
-    id: 'kopi',
-    dbId: 5,
-    dbName: 'Towel',
-    name: 'Towel',
-    image: `${GIFT_IMAGE_BASE}/Towel 1_2x.webp`,
-    emoji: '☕',
-    color: '#FFF8E1',
-    weight: 13,
-  },
-  {
     id: 'texas',
     dbId: 7,
     dbName: 'Texas Chicken RM 5 Cash Voucher',
@@ -780,24 +884,6 @@ const prizes = [
     image: `${GIFT_IMAGE_BASE}/Watsons RM 10 Gift Voucher _2x.webp`,
     emoji: '🧴',
     color: '#E8F5E9',
-    weight: 13,
-  },{
-    id: 'duffel',
-    dbId: 6,
-    dbName: 'Mini Duffel Bag',
-    name: 'Mini Duffel Bag',
-    image: `${GIFT_IMAGE_BASE}/Mini Duffel Bag 1_2x.webp`,
-    emoji: '🎒',
-    color: '#E8F5E9',
-    weight: 13,
-  },{
-    id: 'orientalkopi',
-    dbId: 10,
-    dbName: 'Oriental Kopi RM 10 Voucher',
-    name: 'Oriental Kopi RM 10 Cash Voucher',
-    image: `${GIFT_IMAGE_BASE}/Oriental Kopi  RM 10 Cash Voucher_2x.webp`,
-    emoji: '☕',
-    color: '#FFF8E1',
     weight: 13,
   },
 ].map((prize) => ({
@@ -1117,6 +1203,14 @@ function showResult(prize) {
   showScreen('result');
 }
 
+function setCountdownPreview(prize) {
+  const name = $('countdown-prize-name');
+  if (!name || !prize) return;
+
+  // Keep label only; no prize artwork in countdown panel.
+  name.textContent = prize.name.replace(' Voucher', '-Voucher');
+}
+
 // ─────────────────────────────────────────────
 // CONFETTI
 // ─────────────────────────────────────────────
@@ -1241,6 +1335,8 @@ function resetGame() {
 function startCountdown(seconds, onDone) {
   const overlay = $('countdown-overlay');
   const numEl   = $('countdown-number');
+  document.body.classList.add('countdown-active');
+  setCountdownPreview(activePrizes[0] ?? displayPrizes[0] ?? prizes[0]);
   const steps   = [];
   for (let i = seconds; i >= 1; i--) steps.push(String(i));
   steps.push('GO!');
@@ -1261,6 +1357,7 @@ function startCountdown(seconds, onDone) {
       // 'GO!' shown — wait briefly then finish
       setTimeout(() => {
         overlay.classList.add('hidden');
+        document.body.classList.remove('countdown-active');
         setTimeout(onDone, 250);
       }, CONFIG.countdownGoHoldMs);
     }
@@ -1282,10 +1379,13 @@ function initEventListeners() {
 
   $('btn-ready').addEventListener('click', () => {
     playButtonSfx();
-    startCountdown(3, () => {
-      showScreen('shuffle');
-      setTimeout(startShuffle, 300);
-    });
+    showScreen('shuffle');
+    setCarouselCard(displayPrizes[0] ?? prizes[0]);
+    setTimeout(() => {
+      startCountdown(3, () => {
+        setTimeout(startShuffle, 150);
+      });
+    }, 260);
   });
 
   // Tap the carousel card to stop the shuffle

@@ -152,16 +152,16 @@
                 // Toggle grayscale removal
                 // Only trigger once
 
-                let requiredCount;
+                let requiredCount = 3;
 
-                if (stationid == 1) 
-                {
-                    requiredCount = 4;//4
-                }
-                else
-                {
-                    requiredCount = 3;//3
-                }
+                // if (stationid == 2) 
+                // {
+                //     requiredCount = 3;//4
+                // }
+                // else
+                // {
+                //     requiredCount = 3;//3
+                // }
                 
                 console.log(requiredCount);
                 console.log('activeInside.size:', activeInside.size, 'requiredCount:', requiredCount, 'hasStamped:', hasStamped);

@@ -273,7 +273,7 @@
                             @if(!$voucherRedeemed)
                                 <p>
                                     Complete 3 Developers' Booth Quizzes + 
-                                    Vote + Lucky Draw Check-in to CLAIM FREE CHAGEE! 
+                                    Lucky Draw Check-in to CLAIM FREE CHAGEE! 
                                 </p>
                                 <div class="mt-4 mb-4 text-content">
                                     @if($activeVoucher)

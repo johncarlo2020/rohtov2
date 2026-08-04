@@ -153,7 +153,7 @@ class QuestionSeeder extends Seeder
 
     private function mahSing()
     {
-        $dev = Developer::where('name', 'Mah Sing')->first();
+        $dev = Developer::where('name', 'MahSing')->first();
 
         $this->createQuestion($dev, 'What is the tenure of M Minori?', [
             ['text' => 'Leasehold', 'correct' => 0],

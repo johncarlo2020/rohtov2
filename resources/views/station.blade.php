@@ -232,10 +232,7 @@
                             BACK
                         </a>
                     </div>
-
-                  
-
-                @elseif ($station->id == 3)
+                @elseif ($station->id == 3 || $station->id == 1)
                     <!-- ✅ Station 1 → Quiz -->
                     <div class="scan-container mb-5">
                         <button id="start-scanner" class="scan-btn mb-4">

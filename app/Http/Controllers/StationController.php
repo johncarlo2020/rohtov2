@@ -421,7 +421,7 @@ if ($activeVoucher) {
 
      
       // Special case: station 3
-      if ($station_id == 2) {
+      if ($station_id == 1) {
           $response["type"] = "prize";
           $response["redirect_url"] = route('prize.id', ['prize_id' => $prize_id]);
       }

@@ -40,7 +40,7 @@ class DeveloperProjectSeeder extends Seeder
             ],
 
             4 => [
-                'name' => 'Mah Sing',
+                'name' => 'MahSing',
                 'projects' => [
                     ['M Minori', 'Seri Austin'],
                     ['M Grand Minori', 'Taman Pelangi'],
@@ -163,7 +163,7 @@ class DeveloperProjectSeeder extends Seeder
                 ],
             ],
 
-            19 => [
+            20 => [
                 'name' => 'Webest',
                 'projects' => [
                     ['Southbay', 'Bayu Puteri, Johor Bahru'],

@@ -69,7 +69,7 @@
         </div>
 
         {{-- CENTER --}}
-        <div class="flex-center animate-entry delay-2">
+        <div class="animate-entry delay-2 my-5 py-5">
             <div class="row w-100">
                 <div class="touchBox-container col-11 m-auto d-flex justify-content-center align-items-center p-0">
 

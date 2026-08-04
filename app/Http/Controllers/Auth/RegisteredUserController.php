@@ -70,20 +70,21 @@ class RegisteredUserController extends Controller
     
 
   
-     $allowedLocations = collect($default)
+    $allowedLocations = collect($default)
       ->shuffle()
       ->all();
 
-    $locations = Project::select("address")
-      ->distinct()
-      ->whereIn("address", $allowedLocations)
-      ->orderByRaw(
-        "FIELD(address, " .
-          implode(",", array_fill(0, count($allowedLocations), "?")) .
-          ")",
+    $locations = Project::query()
+    ->whereIn('address', $allowedLocations)
+    ->whereHas('developer')
+    ->select('address')
+    ->distinct()
+    ->orderByRaw(
+        'FIELD(address,' . implode(',', array_fill(0, count($allowedLocations), '?')) . ')',
         $allowedLocations
-      )
-      ->pluck("address");
+    )
+    ->pluck('address');
+
     return view("auth.register", compact("locations"));
   }
 
@@ -164,69 +165,136 @@ class RegisteredUserController extends Controller
 
     $locations = $validated["locations"];
 
+    // $assignedDevelopers = collect();
+
+    // foreach ($locations as $location) {
+    //   // 🎯 Developers for this location
+    //   $developerIds = Developer::whereHas("projects", function ($q) use (
+    //     $location
+    //   ) {
+    //     $q->where("address", $location);
+    //   })->pluck("id")
+    //     ->toArray();
+
+    //   if (empty($developerIds)) {
+    //     continue;
+    //   }
+
+    //   // 🧠 Already used developers
+    //   $usedDeveloperIds = DB::table("developer_user")
+    //     ->whereIn("developer_id", $developerIds)
+    //     ->pluck("developer_id")
+    //     ->toArray();
+
+    //   // 🔍 Available developers
+    //   $available = array_diff($developerIds, $usedDeveloperIds);
+
+    //   // 🎲 Pick developer
+    //   $selected = !empty($available)
+    //     ? collect($available)->random()
+    //     : collect($developerIds)->random();
+
+    //   $assignedDevelopers->push($selected);
+    // }
+
+    // // ✅ Ensure unique + max 3
+    // $finalDevelopers = $assignedDevelopers
+    //   ->unique()
+    //   ->take(3)
+    //   ->values()
+    //   ->toArray();
+
+    // $finalDevelopers = collect($finalDevelopers)
+    //   ->values()
+    //   ->toArray();
+
+
+    // // ⚠️ Fill if less than 3
+    // if (count($finalDevelopers) < 3) {
+    //   $extra = Developer::whereHas("projects", function ($q) use ($allowedLocations) {
+    //         $q->whereIn("address", $allowedLocations);
+    //     })
+    //     ->whereNotIn("id", array_merge($finalDevelopers, [5]))
+    //     ->inRandomOrder()
+    //     ->take(3 - count($finalDevelopers))
+    //     ->pluck("id")
+    //     ->toArray();
+
+    //   $finalDevelopers = array_merge($finalDevelopers, $extra);
+    // }
+
+    // // 💾 Save
+    // $user->developers()->sync($finalDevelopers);
+
     $assignedDevelopers = collect();
 
-    foreach ($locations as $location) {
-      // 🎯 Developers for this location
-      $developerIds = Developer::whereHas("projects", function ($q) use (
-        $location
-      ) {
-        $q->where("address", $location);
-      })
-        ->where("id", "!=", 5) // 👈 exclude
-        ->pluck("id")
-        ->toArray();
+foreach ($locations as $location) {
 
-      if (empty($developerIds)) {
-        continue;
-      }
-
-      // 🧠 Already used developers
-      $usedDeveloperIds = DB::table("developer_user")
-        ->whereIn("developer_id", $developerIds)
-        ->pluck("developer_id")
-        ->toArray();
-
-      // 🔍 Available developers
-      $available = array_diff($developerIds, $usedDeveloperIds);
-
-      // 🎲 Pick developer
-      $selected = !empty($available)
-        ? collect($available)->random()
-        : collect($developerIds)->random();
-
-      $assignedDevelopers->push($selected);
-    }
-
-    // ✅ Ensure unique + max 3
-    $finalDevelopers = $assignedDevelopers
-      ->unique()
-      ->take(3)
-      ->values()
-      ->toArray();
-
-    $finalDevelopers = collect($finalDevelopers)
-      ->reject(fn($id) => $id == 5)
-      ->values()
-      ->toArray();
-
-
-    // ⚠️ Fill if less than 3
-    if (count($finalDevelopers) < 3) {
-      $extra = Developer::whereHas("projects", function ($q) use ($allowedLocations) {
-            $q->whereIn("address", $allowedLocations);
+    // Unique developers that have projects in this address
+    $developers = Developer::whereIn('id', function ($q) use ($location) {
+            $q->select('developer_id')
+                ->from('projects')
+                ->where('address', $location)
+                ->distinct();
         })
-        ->whereNotIn("id", array_merge($finalDevelopers, [5]))
-        ->inRandomOrder()
-        ->take(3 - count($finalDevelopers))
-        ->pluck("id")
-        ->toArray();
+        ->withCount('users')
+        ->get();
 
-      $finalDevelopers = array_merge($finalDevelopers, $extra);
+    if ($developers->isEmpty()) {
+        continue;
     }
 
-    // 💾 Save
-    $user->developers()->sync($finalDevelopers);
+    // Don't reuse a developer already selected in this registration
+    $available = $developers->whereNotIn('id', $assignedDevelopers);
+
+    // If every developer has already been used, allow reuse
+    if ($available->isEmpty()) {
+        $available = $developers;
+    }
+
+    // Least assigned developers
+    $min = $available->min('users_count');
+
+    // Random tie breaker
+    $selected = $available
+        ->where('users_count', $min)
+        ->shuffle()
+        ->first();
+
+    $assignedDevelopers->push($selected->id);
+}
+
+// Remove duplicates
+$assignedDevelopers = $assignedDevelopers->unique()->values();
+
+// Fill until exactly 3 developers
+while ($assignedDevelopers->count() < 3) {
+
+    $extra = Developer::whereIn('id', function ($q) use ($allowedLocations) {
+            $q->select('developer_id')
+                ->from('projects')
+                ->whereIn('address', $allowedLocations)
+                ->distinct();
+        })
+        ->whereNotIn('id', $assignedDevelopers)
+        ->withCount('users')
+        ->get();
+
+    if ($extra->isEmpty()) {
+        break;
+    }
+
+    $min = $extra->min('users_count');
+
+    $selected = $extra
+        ->where('users_count', $min)
+        ->shuffle()
+        ->first();
+
+    $assignedDevelopers->push($selected->id);
+}
+
+$user->developers()->sync($assignedDevelopers->take(3)->toArray());
 
     $user->assignRole("client");
     Auth::login($user);

@@ -428,7 +428,7 @@
                     @php
                         $image = asset("images/station/ST{$station->id}.webp");
 
-                        $isLocked = ($station->id == 1 && !$canAccessStation) || ($station->id == 2 && !$canAccessStation);
+                        $isLocked = ($station->id == 1 && !$canAccessStation);
                     @endphp
 
                     {{-- 🚫 HIDE station 3 if NOT early bird --}}
@@ -542,13 +542,6 @@
                     );
 
                     if (id == 1 && !canAccessStation) {
-                        // Show the not allowed modal if trying to access station 3 without permission
-                        var notAllowedModal = new bootstrap.Modal(document.getElementById('notAllowedModal'));
-                        notAllowedModal.show();
-                        return;
-                    }
-
-                    if (id == 2 && !canAccessStation) {
                         // Show the not allowed modal if trying to access station 3 without permission
                         var notAllowedModal = new bootstrap.Modal(document.getElementById('notAllowedModal'));
                         notAllowedModal.show();

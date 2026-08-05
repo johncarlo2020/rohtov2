@@ -111,14 +111,9 @@
                     stampingPage.classList.add("active");
                     const text = document.querySelector(".booth-description");
                     const doneBooth = document.querySelector(".done-booth");
-                        if(stationid == 1)
+                        if(stationid == 2)
                         {
                             text.innerHTML = "Conratulations!<br>You've won the game.";
-                        }
-                        else if(stationid == 2)
-                        {   
-                            text.innerHTML = "The video is fantastic, well<br>done!";
-                            doneBooth.textContent = "Don't forget to download your video";
                         }
                         else 
                         {
@@ -131,6 +126,9 @@
                                 button.classList.remove("d-none");
                                 button.style.pointerEvents = "auto";
                                 console.log('test');
+                                $('.nextBtn').on('click', function () {
+                                        window.location.href = '{{ route('dashboard') }}';
+                                    });
                             }
                 }
             }
@@ -185,7 +183,7 @@
                                 },
                                 success: function (response) {
                                     $('.nextBtn').removeClass('d-none');
-
+                                    console.log('response.redirect_url:', response.redirect_url); // ✅ log the redirect URL
                                     // ✅ attach redirect dynamically
                                     $('.nextBtn').on('click', function () {
                                         window.location.href = response.redirect_url;
@@ -202,11 +200,6 @@
                             {
                                 text.innerHTML = "Congratulations!<br>You've won the game.";
                             }
-                            // else if(stationid == )
-                            // {   
-                            //     text.innerHTML = "The video is fantastic, well<br>done!";
-                            //     doneBooth.textContent = "Don't forget to download your video";
-                            // }
                             else 
                             {
                                 text.innerHTML = "Congratulations";

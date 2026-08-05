@@ -57,8 +57,6 @@
         <div class="station-selection-container mb-2 animate-entry delay-2">
             @if(request()->segment(2) == 2)
                 <h2 class="text-center mb-3 mt-5 booth-description">Win the game and get a stamp <br> to unlock a prize</h2>
-            @elseif(request()->segment(2) == 4)
-                <h2 class="text-center mb-3 mt-5 booth-description">Vote your best <br>developer preferred! </h2>  
             @else
                 <h2 class="text-center mb-3 mt-5 booth-description">Lucky Draw Booth</h2>  
             @endif
@@ -200,15 +198,15 @@
                             const text = document.querySelector(".booth-description");
                             const doneBooth = document.querySelector(".done-booth");
 
-                            if(stationid == 1)
+                            if(stationid == 2)
                             {
                                 text.innerHTML = "Congratulations!<br>You've won the game.";
                             }
-                            else if(stationid == 2)
-                            {   
-                                text.innerHTML = "The video is fantastic, well<br>done!";
-                                doneBooth.textContent = "Don't forget to download your video";
-                            }
+                            // else if(stationid == )
+                            // {   
+                            //     text.innerHTML = "The video is fantastic, well<br>done!";
+                            //     doneBooth.textContent = "Don't forget to download your video";
+                            // }
                             else 
                             {
                                 text.innerHTML = "Congratulations";

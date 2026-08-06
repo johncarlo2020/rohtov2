@@ -72,7 +72,7 @@
                 </div>
             </div>
             
-            <p class="text-center mt-4 mb-5 done-booth">Please redeem the prize from our crew</p>
+            <p class="text-center mt-4 mb-5 done-booth">Please get the stamp from our crew</p> 
             <div id="countDisplay" class="text-center mt-3 d-none">
                 Touches inside count: <span id="countNum">0</span>
             </div>
@@ -114,6 +114,9 @@
                         if(stationid == 2)
                         {
                             text.innerHTML = "Conratulations!<br>You've won the game.";
+                            doneBooth.innerHTML = "Please redeem the prize from our crew";
+
+                            console.log(doneBooth);
                         }
                         else 
                         {
@@ -199,6 +202,7 @@
                             if(stationid == 2)
                             {
                                 text.innerHTML = "Congratulations!<br>You've won the game.";
+                                doneBooth.innerHTML = "Please redeem the prize from our crew";
                             }
                             else 
                             {

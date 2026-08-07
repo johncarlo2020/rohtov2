@@ -172,7 +172,7 @@
                                             </small>
                                         @endif
 
-                                   @elseif($station['id'] == 2 && $station['value'])
+                                   @elseif($station['id'] == 1 && $station['value'])
 
                                         {{ $user->userGift?->gift?->name ?? 'No Gift' }}
 

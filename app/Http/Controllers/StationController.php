@@ -380,8 +380,8 @@ if ($activeVoucher) {
           "redirect_url" => route('congrats.redeemed'),
       ];
 
-        // Handle gift selection for station 2
-        if ($station_id == 2 && $route == 'prize') {
+        // Handle gift selection for station 1
+        if ($station_id == 1 && $route == 'prize') {
 
           $gift = \App\Models\Gifts::find($prize_id);
 

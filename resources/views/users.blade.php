@@ -628,6 +628,7 @@
                     alert('"To date" cannot be earlier than "From date".');
                     return;
                 }
+                console.log(table);
                 table.draw();
                 updateFilterLabel();
                 $('#date-filter-dropdown').removeClass('show');
@@ -736,7 +737,7 @@
         let end = $('#endDate').val();
 
         // Registration Timestamp is always at column index 5
-        let rowDate = new Date(data[5]);
+        let rowDate = new Date(data[6]);
 
         // Convert row date to YYYY-MM-DD (DATE ONLY)
         let rowDateOnly = rowDate.getFullYear() + '-' +

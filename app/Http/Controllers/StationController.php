@@ -594,7 +594,7 @@ if ($activeVoucher) {
     $count = 0;
 
     foreach ($data["users"] as $user) {
-      $userStations = $user->stationUser->pluck("station_id")->toArray();
+      $userStations = $user->stationUser->pluck("station_id")->toArray() ?? [];
       $numStations = count($userStations);
 
       $user->stations = $stations->map(function ($name, $id) use (
@@ -619,7 +619,6 @@ if ($activeVoucher) {
     ->countBy();
 
     $data["stations"] = $stations->map(function ($name, $id) use (
-      $userStations,
       $averageTimespentByStation,
       $stationCounts
     ) {

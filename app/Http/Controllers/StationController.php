@@ -179,7 +179,7 @@ class StationController extends Controller
 
 $user = auth()->user();
 
-$requiredStations = [2];
+$requiredStations = [1];
 
 $completedJourney = $user->stationUser()
     ->whereIn('station_id', $requiredStations)

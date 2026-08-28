@@ -246,23 +246,38 @@ if ($activeVoucher) {
     }
 }
 
-    return view(
-      "dashboard",
-      compact(
-        "stations",
-        "stationDone",
-        "canAccessStation5",
-        "completedStationIds",
-        "nextStation",
-        "isRedeemed",
-        "canAccessStation",
-        "canSeeVoucher",
-        "voucherRedeemed",
-        "voucherStatus",
-        "voucherMessage",
-        "activeVoucher"
-      )
-    );
+        $userBooking = null;
+        if (auth()->check()) {
+            $userBooking = \App\Models\Booking::with(['bookingDate', 'bookingSlot'])
+                ->where('customer_email', auth()->user()->email)
+                ->where('status', 'confirmed')
+                ->latest()
+                ->first();
+        }
+
+        // If user does not have any confirmed booking, redirect to reservation-create page
+        if (!$userBooking) {
+            return redirect()->route('reservation.create');
+        }
+
+        return view(
+          "dashboard",
+          compact(
+            "stations",
+            "stationDone",
+            "canAccessStation5",
+            "completedStationIds",
+            "nextStation",
+            "isRedeemed",
+            "canAccessStation",
+            "canSeeVoucher",
+            "voucherRedeemed",
+            "voucherStatus",
+            "voucherMessage",
+            "activeVoucher",
+            "userBooking"
+          )
+        );
   }
 
   public function scanner()
@@ -992,8 +1007,7 @@ if ($activeVoucher) {
       // $data = GlobalHelper::createSampleProfile();
       //  dd($data);
 
-      // return redirect(RouteServiceProvider::HOME);
-      return redirect()->route("reservation.create");
+      return redirect()->route("dashboard");
     }
 
     return back()->withErrors(["otp" => "Invalid OTP"]);

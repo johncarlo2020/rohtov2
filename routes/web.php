@@ -6,6 +6,7 @@ use App\Http\Controllers\IpadController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\Api\GiftController;
+use App\Http\Controllers\BookingViewController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -206,13 +207,18 @@ Route::group(['middleware' => ['client']], function () {
     Route::get('/resend-otp', 'App\Http\Controllers\StationController@resend')->name('resend.otp');
     Route::post('/verify-otp', 'App\Http\Controllers\StationController@verify')->name('verify.otp');
 
-     Route::get('/reservation-create', function () {
-        return view('reservationCreate');
-    })->name('reservation.create');
+    Route::get('/reservation-create', [BookingViewController::class, 'index'])->name('reservation.create');
+    Route::post('/reservation-create', [BookingViewController::class, 'store'])->name('reservation.store');
+    Route::post('/reservation-create/modify', [BookingViewController::class, 'modify'])->name('reservation.modify');
 
 });
 
-
-
+// Public Booking System UI Flow
+Route::get('/booking', [BookingViewController::class, 'index'])->name('booking.flow');
+Route::post('/booking', [BookingViewController::class, 'store']);
+Route::post('/booking/modify', [BookingViewController::class, 'modify']);
 
 require __DIR__ . '/auth.php';
+
+
+

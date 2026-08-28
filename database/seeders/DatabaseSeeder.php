@@ -21,5 +21,6 @@ class DatabaseSeeder extends Seeder
         $this->call(QuestionSeeder::class);
         $this->call(GiftsSeeder::class);
         $this->call(VoucherSeeder::class);
+        $this->call(OperatingHoursSeeder::class);
     }
 }

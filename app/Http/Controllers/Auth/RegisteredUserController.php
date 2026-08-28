@@ -24,6 +24,8 @@ use Illuminate\Validation\Rules;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
+use Spatie\Permission\Models\Role;
+
 class RegisteredUserController extends Controller
 {
   /**
@@ -77,6 +79,7 @@ class RegisteredUserController extends Controller
           'email' => $request->input('email'),
           'otp' => $otp,
           'marketing' => $marketing,
+          'created_at' => Carbon::now(),
           'last_login_at' => Carbon::now(),
           'password' => Hash::make('password'),
       ]);
@@ -92,7 +95,8 @@ class RegisteredUserController extends Controller
       GlobalHelper::sendOtpEmail(
           $user->email,
           $otp,
-          $user->name
+          $user->name,
+          $otpType = 'Registration'
       );
 
       // Optional SMS OTP

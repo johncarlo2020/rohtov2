@@ -206,11 +206,12 @@ Route::group(['middleware' => ['client']], function () {
     Route::get('/resend-otp', 'App\Http\Controllers\StationController@resend')->name('resend.otp');
     Route::post('/verify-otp', 'App\Http\Controllers\StationController@verify')->name('verify.otp');
 
-     Route::get('/register-welcome', function () {
-        return view('registerSuccess');
-    })->name('register.welcome');
+     Route::get('/reservation-create', function () {
+        return view('reservationCreate');
+    })->name('reservation.create');
 
 });
+
 
 
 

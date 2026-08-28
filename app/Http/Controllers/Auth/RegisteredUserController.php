@@ -31,61 +31,8 @@ class RegisteredUserController extends Controller
    */
   public function create(): View
   {
-    
     $today = Carbon::today();
-
-    //April 30 - May 11
-      $default = [
-      "Bandar Dato' Onn",
-      "Bandar Tiram",
-      "Jalan Tun Abdul Razak",
-      "Danga Bay",
-      "Seri Austin",
-      "Taman Pelangi",
-      "Pasir Gudang",
-      "Skudai",
-      "Plaza Sentosa, Jalan Sutera, Taman Sentosa",
-      "Bandar UDA Utama",
-      "Taman Sedili, Kota Tinggi",
-      "Puteri Harbour, Iskandar Puteri",
-      "Taman Impian Emas, Skudai",
-      "Terra Heights @ Bukit Amber, Johor Bahru",
-      "R&F Tanjung Puteri",
-      "Taman Daya (TD)",
-      "Bandar Baru Kangkar Pulai (BBKP)",
-      "Tanjong Puteri Resort (TPR), Pasir Gudang",
-      "Bangsar South, Kuala Lumpur",
-      "Bukit Jalil, Kuala Lumpur",
-      "Bandar Johor Bahru",
-      "Taman Molek",
-      "Iskandar Puteri",
-      "Bandar Sunway Iskandar Puteri",
-      "Horizon Hills, Iskandar Puteri",
-      "Taman Sutera Utama, Skudai",
-      "Genting Indahputra, Kulai",
-      "Taman Bayu Damai, Pengerang, Johor",
-      "Bayu Puteri, Johor Bahru",
-      "Kota Syahbandar, Melaka",
-  ];
-    
-
-  
-    $allowedLocations = collect($default)
-      ->shuffle()
-      ->all();
-
-    $locations = Project::query()
-    ->whereIn('address', $allowedLocations)
-    ->whereHas('developer')
-    ->select('address')
-    ->distinct()
-    ->orderByRaw(
-        'FIELD(address,' . implode(',', array_fill(0, count($allowedLocations), '?')) . ')',
-        $allowedLocations
-    )
-    ->pluck('address');
-
-    return view("auth.register", compact("locations"));
+    return view("auth.register");
   }
 
   /**
@@ -95,250 +42,64 @@ class RegisteredUserController extends Controller
    */
   public function store(Request $request): RedirectResponse
   {
-     $today = Carbon::today();
+      $request->validate([
+          'fname' => ['required', 'string', 'max:255'],
+          'email' => ['required', 'email', 'unique:users,email'],
+          'privacy_policy' => ['required'],
+      ]);
 
-      //April 30 - May 11
-      $default = [
-      "Bandar Dato' Onn",
-      "Bandar Tiram",
-      "Jalan Tun Abdul Razak",
-      "Danga Bay",
-      "Seri Austin",
-      "Taman Pelangi",
-      "Pasir Gudang",
-      "Skudai",
-      "Plaza Sentosa, Jalan Sutera, Taman Sentosa",
-      "Bandar UDA Utama",
-      "Taman Sedili, Kota Tinggi",
-      "Puteri Harbour, Iskandar Puteri",
-      "Taman Impian Emas, Skudai",
-      "Terra Heights @ Bukit Amber, Johor Bahru",
-      "R&F Tanjung Puteri",
-      "Taman Daya (TD)",
-      "Bandar Baru Kangkar Pulai (BBKP)",
-      "Tanjong Puteri Resort (TPR), Pasir Gudang",
-      "Bangsar South, Kuala Lumpur",
-      "Bukit Jalil, Kuala Lumpur",
-      "Bandar Johor Bahru",
-      "Taman Molek",
-      "Iskandar Puteri",
-      "Bandar Sunway Iskandar Puteri",
-      "Horizon Hills, Iskandar Puteri",
-      "Taman Sutera Utama, Skudai",
-      "Genting Indahputra, Kulai",
-      "Taman Bayu Damai, Pengerang, Johor",
-      "Bayu Puteri, Johor Bahru",
-      "Kota Syahbandar, Melaka",
-  ];
+      $marketing = $request->has('marketing');
 
-  
-      $allowedLocations = $default;
+      // Get phone/country information
+      // $phoneNumber = $request->input('code');
+      // $dialCode = $request->input('dialCode');
+      // $countryIso = $request->input('countryIso');
 
-    $validated = $request->validate([
-      "fname" => ["required", "string", "max:255"],
-      "email" => ["required", "email", "max:255", "unique:users,email"],
-      "locations" => ["required", "array", "max:3"],
-      "locations.*" => ["required", "string", Rule::in($allowedLocations)],
-      "property_budget" => ["required", "string"],
-      "marketing" => ["required", "string"],
-    ]);
+      // Find country
+      // $country = Countries::where('phone_code', $dialCode)
+      //     ->whereRaw('LOWER(code) = ?', [strtolower($countryIso)])
+      //     ->first();
 
-    //check if user is an early bird
-    $earlyBird = EarlyBird::where(
-      "email",
-      strtolower($validated["email"])
-    )->first();
+      // if (!$country) {
+      //     return back()
+      //         ->withInput()
+      //         ->withErrors([
+      //             'countryIso' => 'Country not found.',
+      //         ]);
+      // }
 
-    $user = User::create([
-      "fname" => $validated["fname"],
-      "email" => $validated["email"],
-      "property_budget" => $validated["property_budget"],
-      "marketing" => $validated["marketing"],
-      "password" => Hash::make("password"),
-      "is_early_bird" => !!$earlyBird,
-      "source_of_channel" => $earlyBird?->source_of_channel,
-    ]);
+      // Generate OTP
+      $otp = random_int(100000, 999999);
 
-    if ($earlyBird) {
-      $earlyBird->update(["claimed" => true]);
-    }
+      // Create user FIRST
+      $user = User::create([
+          'fname' => $request->input('fname'),
+          'email' => $request->input('email'),
+          'otp' => $otp,
+          'marketing' => $marketing,
+          'last_login_at' => Carbon::now(),
+          'password' => Hash::make('password'),
+      ]);
 
-    $locations = $validated["locations"];
+      // Assign role AFTER user is created
+      $user->assignRole('client');
 
-    // $assignedDevelopers = collect();
-
-    // foreach ($locations as $location) {
-    //   // 🎯 Developers for this location
-    //   $developerIds = Developer::whereHas("projects", function ($q) use (
-    //     $location
-    //   ) {
-    //     $q->where("address", $location);
-    //   })->pluck("id")
-    //     ->toArray();
-
-    //   if (empty($developerIds)) {
-    //     continue;
-    //   }
-
-    //   // 🧠 Already used developers
-    //   $usedDeveloperIds = DB::table("developer_user")
-    //     ->whereIn("developer_id", $developerIds)
-    //     ->pluck("developer_id")
-    //     ->toArray();
-
-    //   // 🔍 Available developers
-    //   $available = array_diff($developerIds, $usedDeveloperIds);
-
-    //   // 🎲 Pick developer
-    //   $selected = !empty($available)
-    //     ? collect($available)->random()
-    //     : collect($developerIds)->random();
-
-    //   $assignedDevelopers->push($selected);
-    // }
-
-    // // ✅ Ensure unique + max 3
-    // $finalDevelopers = $assignedDevelopers
-    //   ->unique()
-    //   ->take(3)
-    //   ->values()
-    //   ->toArray();
-
-    // $finalDevelopers = collect($finalDevelopers)
-    //   ->values()
-    //   ->toArray();
+      // Log the user in
+      Auth::login($user);
 
 
-    // // ⚠️ Fill if less than 3
-    // if (count($finalDevelopers) < 3) {
-    //   $extra = Developer::whereHas("projects", function ($q) use ($allowedLocations) {
-    //         $q->whereIn("address", $allowedLocations);
-    //     })
-    //     ->whereNotIn("id", array_merge($finalDevelopers, [5]))
-    //     ->inRandomOrder()
-    //     ->take(3 - count($finalDevelopers))
-    //     ->pluck("id")
-    //     ->toArray();
+      // Send OTP via Brevo/Mailtrap
+      GlobalHelper::sendOtpEmail(
+          $user->email,
+          $otp,
+          $user->name
+      );
 
-    //   $finalDevelopers = array_merge($finalDevelopers, $extra);
-    // }
+      // Optional SMS OTP
+      // GlobalHelper::sendOtpSms($phoneNumber, $otp);
 
-    // // 💾 Save
-    // $user->developers()->sync($finalDevelopers);
-
-    $assignedDevelopers = collect();
-
-foreach ($locations as $location) {
-
-    // Unique developers that have projects in this address
-    $developers = Developer::whereIn('id', function ($q) use ($location) {
-            $q->select('developer_id')
-                ->from('projects')
-                ->where('address', $location)
-                ->distinct();
-        })
-        ->withCount('users')
-        ->get();
-
-    if ($developers->isEmpty()) {
-        continue;
-    }
-
-    // Don't reuse a developer already selected in this registration
-    $available = $developers->whereNotIn('id', $assignedDevelopers);
-
-    // If every developer has already been used, allow reuse
-    if ($available->isEmpty()) {
-        $available = $developers;
-    }
-
-    // Least assigned developers
-    $min = $available->min('users_count');
-
-    // Random tie breaker
-    $selected = $available
-        ->where('users_count', $min)
-        ->shuffle()
-        ->first();
-
-    $assignedDevelopers->push($selected->id);
-}
-
-// Remove duplicates
-$assignedDevelopers = $assignedDevelopers->unique()->values();
-
-// Fill until exactly 3 developers
-while ($assignedDevelopers->count() < 3) {
-
-    $extra = Developer::whereIn('id', function ($q) use ($allowedLocations) {
-            $q->select('developer_id')
-                ->from('projects')
-                ->whereIn('address', $allowedLocations)
-                ->distinct();
-        })
-        ->whereNotIn('id', $assignedDevelopers)
-        ->withCount('users')
-        ->get();
-
-    if ($extra->isEmpty()) {
-        break;
-    }
-
-    $min = $extra->min('users_count');
-
-    $selected = $extra
-        ->where('users_count', $min)
-        ->shuffle()
-        ->first();
-
-    $assignedDevelopers->push($selected->id);
-}
-
-$user->developers()->sync($assignedDevelopers->take(3)->toArray());
-
-    $user->assignRole("client");
-    Auth::login($user);
-
-    return redirect()->route("dashboard");
-
-    // ✅ Auto login (optional but standard)
-    // auth()->login($user);
-
-    // // ✅ Redirect to dashboard
-    // return redirect()->route('dashboard')
-    //     ->with('success', 'Registration successful!');
-
-    // $marketing = false;
-
-    // if($request->has('marketing')){
-    //     $marketing = true;
-    // }
-
-    // After validation, fetch country by phone number
-    // $phoneNumber = $request->input('code');
-    // $dialCode = $request->input('dialCode');
-    // $countryIso = $request->input('countryIso');
-
-    // Extract the phone prefix
-    // $phonePrefix = '+' . substr($phoneNumber, 1, 2); // This assumes the prefix is always 2 characters after the '+'
-
-    // Query the country based on the phone prefix
-    // $country = Countries::where('phone_code', $dialCode)
-    //     ->whereRaw('LOWER(code) = ?', [strtolower($countryIso)])
-    //     ->first();
-    // $otp = rand(100000, 999999);
-
-    // $user = User::create([
-    //     'number' => $phoneNumber,
-    //     'country'=> $country->name,
-    //     'marketing' => $marketing,
-    //     'last_login_at' => Carbon::now(),
-    //     'password' => Hash::make('password'),
-    // ]);
-
-    // $request->session()->flash('showWelcomeModal', true);
-    // Use the insert method to insert multiple records in one query
-
-    // GlobalHelper::sendOtpSms($phoneNumber, $otp);
+      return redirect()
+          ->route('otp', ['user' => $user->id])
+          ->with('success', 'A verification code has been sent to your email.');
   }
 }

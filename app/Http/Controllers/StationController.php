@@ -976,6 +976,7 @@ if ($activeVoucher) {
     return $check;
   }
 
+  //verify otp
   public function verify(Request $request)
   {
     $otp = implode("", $request->input("otp"));
@@ -992,7 +993,7 @@ if ($activeVoucher) {
       //  dd($data);
 
       // return redirect(RouteServiceProvider::HOME);
-      return redirect()->route("register.welcome");
+      return redirect()->route("reservation.create");
     }
 
     return back()->withErrors(["otp" => "Invalid OTP"]);

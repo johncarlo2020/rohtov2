@@ -6,6 +6,7 @@ use App\Http\Controllers\IpadController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\BookingController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,14 +19,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/concierge', function () {
-    return redirect('/concierge/login');
-});
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('welcome');
+// Route::get('/', function () {
+//     return view('login');
+// })->name('welcome');
 
+Route::get('/', [AuthenticatedSessionController::class, 'create'])->name('login');
 
 
 Route::get('/upload-baby', function () {
@@ -45,40 +44,9 @@ Route::get('/listen-babyV2', function () {
 })->name('liveFeedVip');
 
 
-
-Route::get('/pad', function () {
-    return view('error');
-});
-
-
 Route::get('/admin/login', action: function () {
     return view('auth.admin-login');
 });
-
-Route::get('/concierge/login', action: function () {
-    return view('auth.concierge-login');
-});
-
-Route::get('/ipad', [IpadController::class, 'index'])->name('ipad.index');
-Route::get('/ipad-2', [IpadController::class, 'index2'])->name('ipad.index2');
-
-Route::get('/counter-value', 'App\Http\Controllers\StationController@getValue')->name('pledge.counter');
-Route::get('/ipad-pledge-info',action: function(){
-        return view('ipad.info');
-    })->name('ipad.info');
-
-Route::get('/ipad-pledge-info-2',function(){
-        return view('ipad.info2');
-    })->name('ipad.info2');
-
-
-Route::get('/ipad-select-message-type',function(){
-        return view('ipad.message-type');
-    })->name('ipad.message.type');
-
-Route::get('/ipad-select-message-type-duplicate',function(){
-        return view('ipad.message-type-duplicate');
-    })->name('ipad.message.type.duplicate');
 
 
 

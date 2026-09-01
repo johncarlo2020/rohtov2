@@ -84,38 +84,97 @@ class WorkshopController extends Controller
 
     public function scan(Request $request)
     {
-        $qrCodeMessage = $request->input('qrCodeMessage');
+        $qrCodeMessage = trim($request->input('qrCodeMessage', ''));
 
         if (!$qrCodeMessage) {
-            return response()->json(['status' => 'invalid', 'message' => 'Missing QR code message'], 400);
+            return response()->json(['status' => 'invalid', 'message' => 'Missing QR code value.'], 400);
         }
 
-        // Extract user ID from the QR code message URL
-        $parsedUrl = parse_url($qrCodeMessage);
-        parse_str($parsedUrl['query'] ?? '', $queryParams);
-
-        $userId = $queryParams['id'] ?? null;
-
-        if (!$userId) {
-            return response()->json(['status' => 'invalid', 'message' => 'User ID not found in QR code'], 400);
+        // Handle URL inputs or raw reference codes
+        $refNo = $qrCodeMessage;
+        if (filter_var($qrCodeMessage, FILTER_VALIDATE_URL)) {
+            $parsedUrl = parse_url($qrCodeMessage);
+            parse_str($parsedUrl['query'] ?? '', $queryParams);
+            if (!empty($queryParams['ref'])) {
+                $refNo = $queryParams['ref'];
+            } elseif (!empty($queryParams['id'])) {
+                $refNo = $queryParams['id'];
+            }
         }
 
-        // Find the appointment
-        $appointment = Appointment::where('user_id', $userId)->first();
+        // 1. Search by Booking reference_no, customer_email, or customer_phone
+        $booking = \App\Models\Booking::with(['bookingDate', 'bookingSlot'])
+            ->where('reference_no', $refNo)
+            ->orWhere('customer_email', $qrCodeMessage)
+            ->orWhere('customer_phone', $qrCodeMessage)
+            ->first();
 
-        if (!$appointment) {
-            return response()->json(['status' => 'invalid', 'message' => 'Appointment not found'], 404);
+        // 2. If not found directly, check if user exists by ID/email/phone
+        if (!$booking) {
+            $user = \App\Models\User::where('id', $refNo)
+                ->orWhere('email', $qrCodeMessage)
+                ->orWhere('number', $qrCodeMessage)
+                ->first();
+
+            if ($user) {
+                $booking = \App\Models\Booking::with(['bookingDate', 'bookingSlot'])
+                    ->where('customer_email', $user->email)
+                    ->orWhere('customer_phone', $user->number)
+                    ->latest()
+                    ->first();
+            }
         }
 
-        if ($appointment->status === 'confirmed') {
-            return response()->json(['status' => 'already_redeemed', 'message' => 'Appointment already confirmed']);
+        if (!$booking) {
+            return response()->json([
+                'status' => 'invalid',
+                'message' => '❌ Invalid QR Code or Booking Reference ("' . $refNo . '") not found.'
+            ]);
         }
 
-        // Confirm the appointment
-        $appointment->status = 'confirmed';
-        $appointment->save();
+        // Check if already attended
+        if ($booking->status === 'attended' || $booking->status === 'completed' || !is_null($booking->attended_at)) {
+            $attendedTime = $booking->attended_at 
+                ? \Carbon\Carbon::parse($booking->attended_at)->format('M d, Y h:i A')
+                : 'earlier';
 
-        return response()->json(['status' => 'success', 'message' => 'Appointment confirmed']);
+            return response()->json([
+                'status' => 'already_redeemed',
+                'message' => '⚠️ ALREADY ATTENDED! Customer ' . $booking->customer_name . ' was verified on ' . $attendedTime . '.',
+                'booking' => [
+                    'name' => $booking->customer_name,
+                    'email' => $booking->customer_email,
+                    'phone' => $booking->customer_phone,
+                    'ref' => $booking->reference_no,
+                    'date' => $booking->bookingDate->display_date ?? 'N/A',
+                    'time' => $booking->bookingSlot->display_time ?? 'N/A',
+                    'venue' => $booking->venue,
+                    'status' => 'ATTENDED',
+                    'attended_at' => $attendedTime,
+                ]
+            ]);
+        }
+
+        // Mark Attendance
+        $booking->status = 'attended';
+        $booking->attended_at = now();
+        $booking->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => '✅ ATTENDANCE VERIFIED! Welcome ' . $booking->customer_name . '.',
+            'booking' => [
+                'name' => $booking->customer_name,
+                'email' => $booking->customer_email,
+                'phone' => $booking->customer_phone,
+                'ref' => $booking->reference_no,
+                'date' => $booking->bookingDate->display_date ?? 'N/A',
+                'time' => $booking->bookingSlot->display_time ?? 'N/A',
+                'venue' => $booking->venue,
+                'status' => 'ATTENDED',
+                'attended_at' => now()->format('M d, Y h:i A'),
+            ]
+        ]);
     }
 
 

@@ -17,7 +17,9 @@ class Booking extends Model
         'customer_name',
         'customer_email',
         'customer_phone',
+        'venue',
         'status',
+        'attended_at',
         'reschedule_count',
     ];
 

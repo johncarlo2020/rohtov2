@@ -7,17 +7,13 @@ use App\Helpers\GlobalHelper;
 use App\Http\Controllers\Controller;
 use App\Imports\EarlyBirdImport;
 use App\Models\Brand;
-use App\Models\Developer;
 use App\Models\EarlyBird;
 use App\Models\Gifts;
 use App\Models\GiftStockLog;
-use App\Models\Perfume;
-use App\Models\Question;
 use App\Models\Station;
 use App\Models\StationUser;
 use App\Models\User;
 use App\Models\UserGift;
-use App\Models\UserPerfume;
 use App\Models\Vote;
 use App\Models\Voucher;
 use App\Models\VoucherClaim;
@@ -132,7 +128,7 @@ class StationController extends Controller
     $userId = Auth::id();
 
     // $user = User::with('stationUser')->where('id', $userId)->first();
-    $user = User::with(["stationUser", "developers"])
+    $user = User::with(["stationUser"])
       ->where("id", $userId)
       ->first();
 
@@ -163,11 +159,7 @@ class StationController extends Controller
       return !$user->stationUser()->where("station_id", $station->id)->exists();
     });
 
-    $canAccessStation = auth()
-      ->user()
-      ->developers->every(function ($developer) {
-        return $developer->pivot->isCompleted == 1;
-      });
+    $canAccessStation = true;
     
     // $first50UserIds = User::orderBy('created_at')
     //     ->skip(4)
@@ -249,7 +241,20 @@ if ($activeVoucher) {
         $userBooking = null;
         if (auth()->check()) {
             $userBooking = \App\Models\Booking::with(['bookingDate', 'bookingSlot'])
-                ->where('customer_email', auth()->user()->email)
+                ->where(function ($q) {
+                    $q->where('customer_email', auth()->user()->email);
+                    if (!empty(auth()->user()->phone_number)) {
+                        $q->orWhere('customer_phone', auth()->user()->phone_number);
+                    }
+                })
+                ->where('status', 'confirmed')
+                ->latest()
+                ->first();
+        }
+
+        if (!$userBooking && session()->has('latest_booking_ref')) {
+            $userBooking = \App\Models\Booking::with(['bookingDate', 'bookingSlot'])
+                ->where('reference_no', session('latest_booking_ref'))
                 ->where('status', 'confirmed')
                 ->latest()
                 ->first();
@@ -648,21 +653,7 @@ if ($activeVoucher) {
       ];
     });
 
-    $developerCounts = collect($data['users'])
-        ->flatMap(function ($user) {
-            return $user->developers->pluck('id');
-        })
-        ->countBy();
-
-    $developers = \App\Models\Developer::pluck('name', 'id');
-
-    $data["developers"] = $developers->map(function ($name, $id) use ($developerCounts) {
-        return [
-            "id" => $id,
-            "name" => $name,
-            "total_users" => $developerCounts->get($id, 0),
-        ];
-    });
+    $data["developers"] = collect();
 
 
     $averagePlaytimeByUser = StationUser::select(
@@ -786,7 +777,7 @@ if ($activeVoucher) {
       ->whereDoesntHave("roles", function ($q) {
         $q->where("name", "admin");
       })
-      ->with("stationUser","developers","userGift.gift","developers.projects","voucherClaims.voucher")
+      ->with(["stationUser", "userGift.gift", "voucherClaims.voucher"])
       ->orderBy("id", "desc")
       ->get();
 
@@ -836,7 +827,7 @@ if ($activeVoucher) {
 
     $stations = Station::pluck('name', 'id');
 
-    $developers = Developer::where('id', '!=', 5)->pluck('name', 'id');
+    $developers = collect();
     
 
     foreach ($data["users"] as $user) {
@@ -852,22 +843,34 @@ if ($activeVoucher) {
         ];
       });
 
-      $userDevelopers = $user->developers->pluck("id")->toArray();
+      $latestBooking = \App\Models\Booking::with(['bookingDate', 'bookingSlot'])
+          ->where(function ($q) use ($user) {
+              if (!empty($user->email)) {
+                  $q->where('customer_email', $user->email);
+              }
+              if (!empty($user->number)) {
+                  $q->orWhere('customer_phone', $user->number);
+              }
+              if (!empty($user->fname)) {
+                  $q->orWhere('customer_name', 'LIKE', '%' . $user->fname . '%');
+              }
+          })
+          ->latest()
+          ->first();
 
-      $user->developers_list = $developers->map(function ($name, $id) use ($userDevelopers) {
-          return [
-              "name" => $name,
-              "value" => in_array($id, $userDevelopers),
-          ];
-      });
+      if (!$latestBooking) {
+          $latestBooking = \App\Models\Booking::with(['bookingDate', 'bookingSlot'])->latest()->first();
+      }
 
- $user->locations = $user->developers
-        ->map(function ($dev) {
-            return optional($dev->projects->first())->address;
-        })
-        ->filter()   // remove null
-        ->unique()   // remove duplicates
-        ->values();
+      $user->booking_ref = $latestBooking ? $latestBooking->reference_no : null;
+      $user->booking_date_text = ($latestBooking && $latestBooking->bookingDate) ? $latestBooking->bookingDate->display_date : 'No Booking';
+      $user->booking_time_text = ($latestBooking && $latestBooking->bookingSlot) ? $latestBooking->bookingSlot->display_time : 'N/A';
+      $user->booking_venue = $latestBooking ? ($latestBooking->venue ?? 'LONGCHAMP POP UP STORE THE GARDENS MALL') : 'LONGCHAMP POP UP STORE THE GARDENS MALL';
+      $user->is_attended = $latestBooking ? ($latestBooking->status === 'attended' || $latestBooking->status === 'completed' || !is_null($latestBooking->attended_at)) : false;
+      $user->attended_at_text = $latestBooking && $latestBooking->attended_at ? \Carbon\Carbon::parse($latestBooking->attended_at)->format('M d, Y h:i A') : null;
+
+      $user->developers_list = collect();
+      $user->locations = collect();
 
     }
     

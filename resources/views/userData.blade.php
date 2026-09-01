@@ -129,7 +129,7 @@
                     </div>
                 @endif
 
-                <div class="col-md-12 mt-3">
+                <div class="col-md-12 mt-3 d-none">
                     <div class="card">
                         <div class="pb-0 card-header">
                             <h6 class="mb-0">Stations</h6>

@@ -116,87 +116,37 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Fullname</th>
+                            <th>Full Name</th>
                             <th>Email</th>
-                            <th>Preferred Location</th>
-                            <th>Property Budget</th>
-                            <th>Marketing</th>
+                            <th>Booking Date</th>
+                            <th>Booking Time</th>
+                            <th>Venue</th>
+                            <th>Attendance Status</th>
                             <th>Registration Timestamp</th>
-                            <th>Chagee Voucher</th>
-                            @foreach ($data['stations'] as $station)
-                            <th>{!! strtoupper($station['name']) !!}</th>
-                            @endforeach
-                            @foreach ($data['developers'] as $developer)
-                                <th>{{ strtoupper($developer['name']) }}</th>
-                            @endforeach
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($data['users'] as $user)
-                        @php
-                        $user->has_claimed_chagee = $user->voucherClaims->isNotEmpty();
-                        @endphp
                         <tr data-user-id="{{ $user->id }}">
                             <td>{{ $loop->iteration }}</td>
-                            <td>
-                                {{ $user->fname }}
-                            </td>
+                            <td class="font-weight-bold">{{ $user->fname }}</td>
                             <td>{{ $user->email }}</td>
+                            <td><span class="badge bg-light text-dark border">{{ $user->booking_date_text }}</span></td>
+                            <td><span class="badge bg-light text-dark border">{{ $user->booking_time_text }}</span></td>
+                            <td class="text-xs" style="max-width: 200px; white-space: normal;">{{ $user->booking_venue }}</td>
                             <td>
-                                @foreach ($user->locations as $location)
-                                    <div>{{ $location }}</div>
-                                @endforeach
-                            </td>
-                            <td>{{ $user->property_budget }}</td>
-                            <td>{{ $user->marketing }}</td>
-                            <td>{{ \Carbon\Carbon::parse($user->created_at)->toDayDateTimeString() }}</td>
-                            <td>
-                                @if($user->has_claimed_chagee)
-                                    <span class="badge bg-success">Claimed</span>
+                                @if($user->is_attended)
+                                    <span class="badge bg-success"><i class="fa-solid fa-check-circle me-1"></i>ATTENDED</span>
+                                    @if($user->attended_at_text)
+                                        <br><small class="text-muted" style="font-size: 10px;">{{ $user->attended_at_text }}</small>
+                                    @endif
                                 @else
-                                    <span class="badge bg-danger">Not Claimed</span>
+                                    <span class="badge bg-secondary"><i class="fa-solid fa-clock me-1"></i>NOT ATTENDED</span>
                                 @endif
                             </td>
-                           
-                            @foreach ($user['stations'] as $station)
-                                <td class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-danger' }}">
-                                    @if($station['id'] == 3)
-
-                                        {{ $station['value'] ? 'Yes' : 'No' }}
-
-                                        @if($user->is_early_bird && $user->source_of_channel)
-                                            <br>
-                                            <small class="text-muted">
-                                                Channel:{{ $user->source_of_channel }}
-                                            </small>
-                                        @endif
-
-                                   @elseif($station['id'] == 1 && $station['value'])
-
-                                        {{ $user->userGift?->gift?->name ?? 'No Gift' }}
-
-                                        <br>
-
-                                        <small class="text-muted">
-                                            {{ $user->userGift?->created_at?->toDayDateTimeString() ?? '-' }}
-                                        </small>
-
-                                    @else
-
-                                        {{ $station['value'] ? 'Yes' : 'No' }}
-
-                                    @endif
-
-                                </td>
-                            @endforeach
-
-                            @foreach ($user['developers_list'] ?? [] as $developer)
-                                <td class="{{ $developer['value'] ? 'text-success' : 'text-danger' }}">
-                                    {{ $developer['value'] ? 'Yes' : 'No' }}
-                                </td>
-                            @endforeach
-                            <td class="button-delete">
+                            <td>{{ \Carbon\Carbon::parse($user->created_at)->toDayDateTimeString() }}</td>
+                            <td class="button-delete text-center">
                                 @if($user->isProtectedAdmin())
                                     <button class="btn btn-secondary btn-sm btn-protected" disabled 
                                             title="This admin user is protected and cannot be deleted"
@@ -205,7 +155,7 @@
                                     </button>
                                 @else
                                     <button class="btn btn-danger btn-sm delete-user-btn" data-user-id="{{ $user->id }}"
-                                        data-user-name="{{ $user->name }}">Delete</button>
+                                        data-user-name="{{ $user->fname }}">Delete</button>
                                 @endif
                             </td>
                         </tr>

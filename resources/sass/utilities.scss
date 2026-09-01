@@ -4,9 +4,45 @@
 @import "variables";
 
 .main-background {
-    background-image: $main-background;
-    background-size: cover;
-    background-position: bottom;
+    // background-image: $main-background;
+    // background-size: cover;
+    // background-position: bottom;
+    background-color: $white;
+    border: 6px solid $primary;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mid-top
+{
+    display: none;
+}
+.mobile-image-main
+{
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .main-background {
+        background-image: $main-background-mobile;
+        background-size: cover;
+    }
+
+    .desktop-image-main
+    {
+        display: none !important;
+    }
+
+    .mid-top
+    {
+        display: block !important;
+    }
+
+    .mobile-image-main
+    {
+        display: block !important;
+    }
 }
 
 .weekday-background {
@@ -79,9 +115,16 @@
 
 .with-scroll {
     width: 100%;
+    margin:auto;
     overflow-y: auto;
     overflow-x: hidden;
     max-height: 100vh;
+}
+
+@media (max-width: 768px) {
+    .with-scroll {
+        height: 85svh !important;
+    }
 }
 
 .congrats-container {

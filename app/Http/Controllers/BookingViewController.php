@@ -21,9 +21,71 @@ class BookingViewController extends Controller
     /**
      * Show the main booking flow view.
      */
-    public function index()
+    /**
+     * Show the main booking flow view.
+     */
+    public function index(Request $request)
     {
-        return view('booking');
+        $user = auth()->user();
+        $existingBooking = null;
+
+        if ($user) {
+            $existingBooking = \App\Models\Booking::with(['bookingDate', 'bookingSlot'])
+                ->where(function ($q) use ($user) {
+                    $q->where('customer_email', $user->email);
+                    if (!empty($user->phone_number)) {
+                        $q->orWhere('customer_phone', $user->phone_number);
+                    }
+                })
+                ->where('status', 'confirmed')
+                ->latest()
+                ->first();
+        }
+
+        if (!$existingBooking && session()->has('latest_booking_ref')) {
+            $existingBooking = \App\Models\Booking::with(['bookingDate', 'bookingSlot'])
+                ->where('reference_no', session('latest_booking_ref'))
+                ->where('status', 'confirmed')
+                ->latest()
+                ->first();
+        }
+
+        $formattedBooking = null;
+        if ($existingBooking && $existingBooking->bookingDate && $existingBooking->bookingSlot) {
+            $dateObj = Carbon::parse($existingBooking->bookingDate->date);
+            $day = $dateObj->day;
+            $suffix = 'TH';
+            if (!in_array($day, [11, 12, 13])) {
+                switch ($day % 10) {
+                    case 1: $suffix = 'ST'; break;
+                    case 2: $suffix = 'ND'; break;
+                    case 3: $suffix = 'RD'; break;
+                }
+            }
+            $dateStr = $day . $suffix . ' ' . strtoupper($dateObj->format('F'));
+
+            $startTime = Carbon::parse($existingBooking->bookingSlot->start_time);
+            $endTime = Carbon::parse($existingBooking->bookingSlot->end_time);
+            $timeStr = strtoupper($startTime->format('g:iA'));
+            $timeSlotLabel = strtoupper($startTime->format('g:iA') . ' - ' . $endTime->format('g:iA'));
+
+            $customerName = $existingBooking->customer_name ?: ($user->fname ?? 'CUSTOMER');
+            $firstName = strtoupper(explode(' ', trim($customerName))[0]);
+
+            $formattedBooking = [
+                'reference_no' => $existingBooking->reference_no,
+                'reschedule_count' => (int) $existingBooking->reschedule_count,
+                'date_raw' => $dateObj->format('Y-m-d'),
+                'date_formatted' => $dateStr,
+                'time_formatted' => $timeStr,
+                'time_label' => $timeSlotLabel,
+                'display_text' => $dateStr . ' AT ' . $timeStr,
+                'customer_name' => strtoupper($customerName),
+                'first_name' => $firstName,
+            ];
+        }
+
+        return view('booking', compact('existingBooking', 'formattedBooking'));
     }
 
     /**
@@ -102,6 +164,7 @@ class BookingViewController extends Controller
                     'message' => 'BOOKING CONFIRMED',
                     'data' => [
                         'reference_no' => $booking->reference_no,
+                        'reschedule_count' => (int) $booking->reschedule_count,
                         'date' => $dateFormatted,
                         'time' => $timeLabel,
                         'status' => strtoupper($booking->status),
@@ -116,6 +179,7 @@ class BookingViewController extends Controller
 
             return redirect()->route('booking.flow')->with('success_booking', [
                 'reference_no' => $booking->reference_no,
+                'reschedule_count' => (int) $booking->reschedule_count,
                 'date' => Carbon::parse($booking->bookingDate->date)->format('F j, Y'),
                 'time' => Carbon::parse($booking->bookingSlot->start_time)->format('g:i A') . ' - ' . Carbon::parse($booking->bookingSlot->end_time)->format('g:i A'),
                 'customer_name' => $booking->customer_name,
@@ -186,6 +250,7 @@ class BookingViewController extends Controller
                 'message' => 'BOOKING MODIFIED SUCCESSFULLY',
                 'data' => [
                     'reference_no' => $booking->reference_no,
+                    'reschedule_count' => (int) $booking->reschedule_count,
                     'date' => $dateFormatted,
                     'time' => $timeLabel,
                     'status' => strtoupper($booking->status),

@@ -22,11 +22,11 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 */
 
 
-// Route::get('/', function () {
-//     return view('login');
-// })->name('welcome');
+Route::get('/', function () {
+    return view('welcome');
+})->name('welcome');
 
-Route::get('/', [AuthenticatedSessionController::class, 'create'])->name('login');
+// Route::get('/', [AuthenticatedSessionController::class, 'create'])->name('login');
 
 
 Route::get('/upload-baby', function () {
@@ -87,6 +87,7 @@ Route::group(['middleware' => ['admin']], function () {
     // Route::get('/admin/user-gifts', 'App\Http\Controllers\StationController@userGifts')->name('admin.user.gifts');
 
     Route::get('/admin/bookings', [BookingController::class, 'index'])->name('bookings');
+    Route::post('/admin/bookings/{id}/attend', [BookingController::class, 'markAttended'])->name('booking.attend');
     Route::delete('/admin/bookings/{id}', [BookingController::class, 'destroy'])->name('booking.destroy');
     Route::get('/admin/{user}', 'App\Http\Controllers\StationController@userData')->name('userData');
     Route::post('/admin/check', 'App\Http\Controllers\StationController@check')->name('check');

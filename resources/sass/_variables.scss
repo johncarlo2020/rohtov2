@@ -1,5 +1,5 @@
 //colors
-$primary: #285CA9;
+$primary: #F26F31;
 $accent:#005eab;
 $white: #ffffff;
 $gray: #cacacc;
@@ -36,12 +36,15 @@ $button-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 
 
 //images
-$main-background: url('../images/landing_bg.webp');
+$main-background: url('../images/bg_desktop.webp');
+$main-background-mobile: url('../images/bg_mobile.webp');
 $dashboard-background:url('../images/landing_bg2.webp');
 $stamping-background: url('../images/landing_bg.webp');
 $weekday-background: url('../images/landing_bg.webp');
 $weekend-background: url('../images/landing_bg.webp');
 $referral-background: url('../images/landing_bg.webp');
+
+
 
 $back-btn-img: url('../images/backbtn.webp');
 //content

@@ -24,17 +24,14 @@ class StationSeeder extends Seeder
 
         Station::create([
             'name' => 'Lucky Draw',
-            'description' => 'Visit our lucky draw  <br> to claim your prizes',
         ]);
 
         Station::create([
             'name' => 'Game',
-            'description' => 'Visit our game booth <br> to join the fun',
         ]);
 
         Station::create([
             'name' => 'Early Bird',
-            'description' => 'Redeem your <br> pre-registration gift!',
         ]);
 
         
@@ -48,7 +45,7 @@ class StationSeeder extends Seeder
             'number' => '0123456789',
             'email' => 'admin@gmail.com',
             'country' => 'Malaysia',
-            'password' => Hash::make('WowsomeIproperty2026'),
+            'password' => Hash::make('LongChamp2026'),
         ]);
 
         $user->assignRole('admin');

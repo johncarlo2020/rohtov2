@@ -43,4 +43,10 @@ class BookingSlot extends Model
     {
         return $this->is_available && ($this->booked_count < $this->capacity);
     }
+
+    public function getDisplayTimeAttribute(): string
+    {
+        if (!$this->start_time) return 'N/A';
+        return strtoupper(\Carbon\Carbon::parse($this->start_time)->format('g:iA'));
+    }
 }

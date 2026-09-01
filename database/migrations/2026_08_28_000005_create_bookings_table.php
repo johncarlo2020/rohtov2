@@ -19,7 +19,9 @@ return new class extends Migration
             $table->string('customer_name');
             $table->string('customer_email');
             $table->string('customer_phone');
-            $table->enum('status', ['pending', 'confirmed', 'cancelled', 'completed', 'no_show'])->default('confirmed');
+            $table->string('venue')->default('LONGCHAMP POP UP STORE THE GARDENS MALL');
+            $table->enum('status', ['pending', 'confirmed', 'cancelled', 'completed', 'attended', 'no_show'])->default('confirmed');
+            $table->timestamp('attended_at')->nullable();
             $table->integer('reschedule_count')->default(0);
             $table->timestamps();
         });

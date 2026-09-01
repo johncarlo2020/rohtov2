@@ -30,4 +30,20 @@ class BookingDate extends Model
     {
         return $this->hasMany(Booking::class);
     }
+
+    public function getDisplayDateAttribute(): string
+    {
+        if (!$this->date) return 'N/A';
+        $dateObj = \Carbon\Carbon::parse($this->date);
+        $day = $dateObj->day;
+        $suffix = 'TH';
+        if (!in_array($day, [11, 12, 13])) {
+            switch ($day % 10) {
+                case 1: $suffix = 'ST'; break;
+                case 2: $suffix = 'ND'; break;
+                case 3: $suffix = 'RD'; break;
+            }
+        }
+        return $day . $suffix . ' ' . strtoupper($dateObj->format('F Y'));
+    }
 }

@@ -82,23 +82,14 @@ class User extends Authenticatable
         return $this->hasOne(UserGift::class);
     }
 
-    public function developers()
-    {
-        return $this->belongsToMany(Developer::class)
-            ->withPivot('isCompleted')
-            ->withTimestamps();
-    }
-
-    public function questions()
-    {
-        return $this->belongsToMany(Question::class,'user_question')
-            ->withPivot('is_correct')
-            ->withTimestamps();
-    }
-
     public function voucherClaims()
     {
         return $this->hasMany(VoucherClaim::class);
+    }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class, 'customer_email', 'email');
     }
 
     /**

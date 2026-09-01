@@ -96,100 +96,10 @@
         </div>
     </div>
 
-    {{-- CHAGEE Voucher Sessions --}}
-    <div class="row mt-4">
-        <p>CHAGEE Voucher</p>
-        @foreach ($voucherSessions as $session)
-            <div class="col-6">
-                <div class="card mb-3">
-                    <div class="card-body d-flex justify-content-between rounded p-3">
-
-                        <div class="d-flex align-items-center w-100">
-
-                            <div class="icon-stations">
-                                <img
-                                    src="{{ asset('images/brand/chagee.webp') }}"
-                                    alt="CHAGEE"
-                                    onerror="this.onerror=null;this.src='{{ asset('images/brand/chagee.webp') }}';">
-                            </div>
-                            
-
-                            <div class="d-flex flex-column ms-2">
-
-                                <h6 class="mb-1 text-sm">
-                                    SESSION {{ $session['session'] }}
-                                </h6>
-
-                                <span class="text-xs">
-                                    <strong>Starts:</strong>
-                                    {{ \Carbon\Carbon::parse($session['starts_at'])->format('M d, Y h:i A') }}
-                                </span>
-
-                                <span class="text-xs">
-                                    <strong>Ends:</strong>
-                                    {{ $session['ends_at']
-                                        ? \Carbon\Carbon::parse($session['ends_at'])->format('M d, Y h:i A')
-                                        : 'No End Time' }}
-                                </span>
-
-                                <span class="text-xs">
-                                    <strong>Status:</strong>
-                                    {{ strtoupper($session['status']) }}
-                                </span>
-
-                                <span class="text-xs">
-                                    <strong>Claims:</strong>
-                                    {{ $session['claimed'] }}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @endforeach
-    </div>
 
 
-    <div class="row mt-4">
-        <p>Stations</p>
-        @foreach ($data['stations'] as $station)
-            <div class="col">
-                <div class="card mb-3">
-                    <div class="card-body d-flex justify-content-between rounded  p-3">
-                        <div class="d-flex align-items-center w-100">
-                            <div class="icon-stations">
-                                <img class="" src="{{ asset("images/station/ST{$station['id']}.webp") }}" alt="Gift Image">
-                            </div>
-                            <div class="d-flex flex-column">
-                                <h6 class="mb-1 text-sm">{!! strtoupper($station['name']) !!}</h6>
-                                <span class="text-xs "><span class="font-weight-bold">{{ $station['total_users'] }} Users Completed</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @endforeach
-    </div>
-    <div class="row mt-4">
-        <p>Developers</p>
-        @foreach ($data['developers'] as $developer)
-            <div class="col-3">
-                <div class="card mb-3">
-                    <div class="card-body d-flex justify-content-between rounded  p-3">
-                        <div class="d-flex align-items-center w-100">
-                            <div class="icon-stations">
-                                <img class="" src="{{ asset("images/developer/DEV{$developer['id']}.webp") }}" alt="Gift Image">
-                            </div>
-                            <div class="d-flex flex-column">
-                                <h6 class="mb-1 text-sm">{!! strtoupper($developer['name']) !!}</h6>
-                                <span class="text-xs "><span class="font-weight-bold">{{ $developer['total_users'] }} Users Selected</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @endforeach
-    </div>
+
+
     <div class="row mt-1">
         <div class="col-lg-6 mb-lg-3 mb-3">
             <div class="card z-index-2 h-100">
@@ -273,60 +183,7 @@
         </div>
     </div>
 
-    
-        @php
-    $session1 = \App\Models\Voucher::where('name', 'CHAGEE')
-        ->where('session', 1)
-        ->first();
 
-    $session2 = \App\Models\Voucher::where('name', 'CHAGEE')
-        ->where('session', 2)
-        ->first();
-
-    $session1Claimed = $session1
-        ? \App\Models\VoucherClaim::where('voucher_id', $session1->id)->count()
-        : 0;
-
-    $session2Claimed = $session2
-        ? \App\Models\VoucherClaim::where('voucher_id', $session2->id)->count()
-        : 0;
-
-    $session1Available = $session1
-        ? max(0, $session1->quota - $session1Claimed)
-        : 0;
-
-    $session2Available = $session2
-        ? max(0, $session2->quota - $session2Claimed)
-        : 0;
-
-    $activeSession = \App\Models\Voucher::where('name', 'CHAGEE')
-        ->where('starts_at', '<=', now())
-        ->where(function ($q) {
-            $q->whereNull('ends_at')
-                ->orWhere('ends_at', '>=', now());
-        })
-        ->first();
-@endphp
-
-
-<div class="mb-2">
-    <strong>Active Session:</strong>
-    {{ $activeSession ? 'Session '.$activeSession->session : 'None' }}
-</div>
-
-<div>
-    Session 1:
-    Claimed {{ $session1Claimed }}/{{ $session1?->quota ?? 0 }}
-    |
-    Available {{ $session1Available }}
-</div>
-
-<div>
-    Session 2:
-    Claimed {{ $session2Claimed }}/{{ $session2?->quota ?? 0 }}
-    |
-    Available {{ $session2Available }}
-</div>
 
 
 

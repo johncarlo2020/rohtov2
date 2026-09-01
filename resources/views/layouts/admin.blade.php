@@ -78,15 +78,13 @@
                         </div>
                         <span class="nav-link-text ms-1">Users</span>
                     </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('gifts') ? 'active' : '' }}" href="{{ route('gifts') }}">
+                <li class="nav-item d-none">
+                    <a class="nav-link {{ request()->routeIs('bookings') ? 'active' : '' }}" href="{{ route('bookings') }}">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fa-solid fa-gift text-warning text-sm opacity-10"></i>
+                            <i class="fa-solid fa-calendar-days text-primary text-sm opacity-10"></i>
                         </div>
-                        <span class="nav-link-text ms-1">Gifts</span>
+                        <span class="nav-link-text ms-1">Bookings Calendar</span>
                     </a>
                 </li>
 

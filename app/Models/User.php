@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Developer;
+use App\Models\VoucherClaim;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -45,8 +46,10 @@ class User extends Authenticatable
         'baby_name',
         'charname',
         'marketing',
+        'source_of_channel',
         'property_budget',
         'is_early_bird',
+        'chagee_redeemed',
     ];
     /**
      * The attributes that should be hidden for serialization.
@@ -65,7 +68,6 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'marketing' => 'boolean',
     ];
 
 
@@ -92,6 +94,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Question::class,'user_question')
             ->withPivot('is_correct')
             ->withTimestamps();
+    }
+
+    public function voucherClaims()
+    {
+        return $this->hasMany(VoucherClaim::class);
     }
 
     /**

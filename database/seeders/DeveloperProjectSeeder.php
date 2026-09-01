@@ -17,87 +17,157 @@ class DeveloperProjectSeeder extends Seeder
         $developers = [
 
             1 => [
-                'name' => 'JRK Group',
+                'name' => 'JLG',
                 'projects' => [
-                    ['JRK CELESTIA', 'Kinrara Puchong'],
+                    ['Sanubari', "Bandar Dato' Onn"],
+                    ['Onn Eight -3 Storey Shop Office N8', "Bandar Dato' Onn"],
+                    ['2 Storey Terrace Tiram', 'Bandar Tiram'],
                 ],
             ],
-
+            
             2 => [
-                'name' => 'Mah Sing Group Berhad M Terra',
+                'name' => 'WCT',
                 'projects' => [
-                    ['M Terra', 'Puchong'],
-                    ['M Aspira', 'Taman Desa, Kuala Lumpur'],
+                    ['Adison @ W City Larkinton', 'Jalan Tun Abdul Razak'],
                 ],
             ],
 
             3 => [
-                'name' => 'Land & General Berhad',
+                'name' => 'PGB',
                 'projects' => [
-                    ['The WYN Residences', 'Puchong Jaya'],
+                    ['Calia Residences by PGB', 'Danga Bay'],
                 ],
             ],
 
             4 => [
-                'name' => 'Mah Sing Group Berhad M Aspira',
+                'name' => 'MahSing',
                 'projects' => [
-                    ['M Aspira', 'Taman Desa, Kuala Lumpur'],
+                    ['M Minori', 'Seri Austin'],
+                    ['M Grand Minori', 'Taman Pelangi'],
+                    ['Meridin East', 'Pasir Gudang'],
+                    ['M Tiara', 'Skudai'],
+                ],
+            ],
+
+            5 => [
+                'name' => 'TSLaw',
+                'projects' => [
+                    ['Skyline (Eastside) @ OneSentosa', 'Plaza Sentosa, Jalan Sutera, Taman Sentosa'],
                 ],
             ],
 
             6 => [
-                'name' => 'Malton Berhad',
+                'name' => 'UDA',
                 'projects' => [
-                    ['River Park Bangsar South', 'Bangsar South, Kuala Lumpur'],
-                    ['Park Green Pavilion Bukit Jalil', 'Bukit Jalil, Kuala Lumpur'],
-                    ['Mutiara Lake', 'Puchong, Selangor'],
+                    ['UDA Heights', 'Bandar UDA Utama'],
+                    ['UDA Sedili Residensi', 'Taman Sedili, Kota Tinggi'],
+                    ['UDA Mutiara Residence', 'Bandar UDA Utama'],
+                ],
+            ],
+
+            7 => [
+                'name' => 'Southern Marina',
+                'projects' => [
+                    ['Southern Marina Residences', 'Puteri Harbour, Iskandar Puteri'],
+                ],
+            ],
+
+            8 => [
+                'name' => 'Maxim',
+                'projects' => [
+                    ['Maxim The Address JB', 'Taman Pelangi'],
+                ],
+            ],
+
+            9 => [
+                'name' => 'Gunung Impian',
+                'projects' => [
+                    ['Iconia Garden Residence 2-Storey Terrace', 'Taman Impian Emas, Skudai'],
+                    ['Honeydale Residence 2-Storey Cluster', 'Taman Impian Emas, Skudai'],
+                ],
+            ],
+
+            10 => [
+                'name' => 'Tong Tor',
+                'projects' => [
+                    ['Rosewood II (Double Storey Terrace House)', 'Terra Heights @ Bukit Amber, Johor Bahru'],
+                    ['Rosewood I (Double Storey Semi-D Homes)', 'Terra Heights @ Bukit Amber, Johor Bahru'],
                 ],
             ],
 
             11 => [
-                'name' => 'Windsor Land',
+                'name' => 'R&F',
                 'projects' => [
-                    ['Windsor Villa @ Cyberjaya', 'Sepang, Cyberjaya'],
-                    ['ALAIA Titiwangsa', 'Titiwangsa'],
+                    ['R&F Princess Cove', 'R&F Tanjung Puteri'],
                 ],
             ],
 
             12 => [
-                'name' => 'Selangor Dredging Berhad',
+                'name' => 'Keck Seng',
                 'projects' => [
-                    ['DaMai', 'Ampang Jaya, Selangor'],
-                    ['Elina Senai', 'Taman Putra Perdana, Puchong, Selangor'],
+                    ['Daya 1 Residences - Serviced Apartments', 'Taman Daya (TD)'],
+                    ['Greenwoods Residence - 2 Storey Clusters, Semi-Dees & Link Bungalows', 'Taman Daya (TD)'],
+                    ['TD@CTIVE Lifestyle Square @ TD Central', 'Taman Daya (TD)'],
+                    ['TD Street - 2 Storey Shop Offices', 'Taman Daya (TD)'],
+                    ['Ruby Hills III - 2 Storey Clusters', 'Bandar Baru Kangkar Pulai (BBKP)'],
+                    ['Citrine Hills III - 2 Storey Terraces', 'Bandar Baru Kangkar Pulai (BBKP)'],
+                    ['Alysia III - 2 Storey Terraces', 'Tanjong Puteri Resort (TPR), Pasir Gudang'],
+                    ['Aster III - 1 Storey Terraces', 'Tanjong Puteri Resort (TPR), Pasir Gudang'],
                 ],
             ],
 
             13 => [
-                'name' => 'LBS Bina Group Berhad',
+                'name' => 'Malton',
                 'projects' => [
-                    ['KITA Sejati', 'KITA Cybersouth'],
-                    ['AULICA', "D'Island Residence Puchong"],
+                    ['River Park Bangsar South', 'Bangsar South, Kuala Lumpur'],
+                    ['Park Green Pavilion Bukit Jalil', 'Bukit Jalil, Kuala Lumpur'],
                 ],
             ],
 
             14 => [
-                'name' => 'Matrix Concepts Holdings Berhad',
+                'name' => 'Sunway',
                 'projects' => [
-                    ['Levia Residence Puchong', 'Persiaran Wawasan Puchong'],
+                    ['Sunway Majestic', 'Bandar Johor Bahru'],
+                    ['Sunway LakeHills', 'Taman Molek'],
+                    ['Sunway Citrine Residences', 'Iskandar Puteri'],
+                    ['Sunway Sakura 2', 'Bandar Sunway Iskandar Puteri'],
                 ],
             ],
 
             15 => [
-                'name' => 'Saujana Development Sdn Bhd',
+                'name' => 'Horizon Hills',
                 'projects' => [
-                    ['RESIDENSI RIMBUN SAUJANA', 'Shah Alam, Selangor'],
+                    ['Pavilion 2', 'Horizon Hills, Iskandar Puteri'],
                 ],
             ],
 
             16 => [
-                'name' => 'Eastern & Oriental Berhad',
+                'name' => 'Tanah Sutera',
                 'projects' => [
-                    ['The Lume', 'Andaman Island, Penang'],
-                    ['Maris', 'Andaman Island, Penang'],
-                    ['Avéa', 'Andaman Island, Penang'],
+                    ['The Seed', 'Taman Sutera Utama, Skudai'],
+                    ['Sutera Garden Village (SGV)', 'Taman Sutera Utama, Skudai'],
+                ],
+            ],
+
+            17 => [
+                'name' => 'Genting',
+                'projects' => [
+                    ['Bayu Idaman', 'Genting Indahputra, Kulai'],
+                ],
+            ],
+
+            18 => [
+                'name' => 'KPRJ',
+                'projects' => [
+                    ['Jauhar Bayu Damai', 'Taman Bayu Damai, Pengerang, Johor'],
+                ],
+            ],
+
+            20 => [
+                'name' => 'Webest',
+                'projects' => [
+                    ['Southbay', 'Bayu Puteri, Johor Bahru'],
+                    ['29 Reserve', 'Kota Syahbandar, Melaka'],
                 ],
             ],
 

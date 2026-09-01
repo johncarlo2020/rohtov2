@@ -55,10 +55,8 @@
             Stamp Collected!</h2> --}}
         </div>
         <div class="station-selection-container mb-2 animate-entry delay-2">
-            @if(request()->segment(2) == 1)
+            @if(request()->segment(2) == 2)
                 <h2 class="text-center mb-3 mt-5 booth-description">Win the game and get a stamp <br> to unlock a prize</h2>
-            @elseif(request()->segment(2) == 2)
-                <h2 class="text-center mb-3 mt-5 booth-description">Leave your best wishes <br> in our video! </h2>  
             @else
                 <h2 class="text-center mb-3 mt-5 booth-description">Lucky Draw Booth</h2>  
             @endif
@@ -74,7 +72,7 @@
                 </div>
             </div>
             
-            <p class="text-center mt-4 mb-5 done-booth">Please redeem the prize from our crew</p>
+            <p class="text-center mt-4 mb-5 done-booth">Please get the stamp from our crew</p> 
             <div id="countDisplay" class="text-center mt-3 d-none">
                 Touches inside count: <span id="countNum">0</span>
             </div>
@@ -95,9 +93,6 @@
         </div>
     </div>
     <script>
-        
-
-
         document.addEventListener("DOMContentLoaded", () => {
             const box = document.getElementById("touchBox");
             const countDisplay = document.getElementById("countNum");
@@ -116,14 +111,12 @@
                     stampingPage.classList.add("active");
                     const text = document.querySelector(".booth-description");
                     const doneBooth = document.querySelector(".done-booth");
-                        if(stationid == 1)
+                        if(stationid == 2)
                         {
                             text.innerHTML = "Conratulations!<br>You've won the game.";
-                        }
-                        else if(stationid == 2)
-                        {   
-                            text.innerHTML = "The video is fantastic, well<br>done!";
-                            doneBooth.textContent = "Don't forget to download your video";
+                            doneBooth.innerHTML = "Please redeem the prize from our crew";
+
+                            console.log(doneBooth);
                         }
                         else 
                         {
@@ -136,6 +129,9 @@
                                 button.classList.remove("d-none");
                                 button.style.pointerEvents = "auto";
                                 console.log('test');
+                                $('.nextBtn').on('click', function () {
+                                        window.location.href = '{{ route('dashboard') }}';
+                                    });
                             }
                 }
             }
@@ -155,16 +151,16 @@
                 // Toggle grayscale removal
                 // Only trigger once
 
-                let requiredCount;
+                let requiredCount = 3;
 
-                if (stationid == 1) 
-                {
-                    requiredCount = 3;
-                }
-                else
-                {
-                    requiredCount = 4;
-                }
+                // if (stationid == 2) 
+                // {
+                //     requiredCount = 3;//4
+                // }
+                // else
+                // {
+                //     requiredCount = 3;//3
+                // }
                 
                 console.log(requiredCount);
                 console.log('activeInside.size:', activeInside.size, 'requiredCount:', requiredCount, 'hasStamped:', hasStamped);
@@ -190,7 +186,7 @@
                                 },
                                 success: function (response) {
                                     $('.nextBtn').removeClass('d-none');
-
+                                    console.log('response.redirect_url:', response.redirect_url); // ✅ log the redirect URL
                                     // ✅ attach redirect dynamically
                                     $('.nextBtn').on('click', function () {
                                         window.location.href = response.redirect_url;
@@ -203,14 +199,10 @@
                             const text = document.querySelector(".booth-description");
                             const doneBooth = document.querySelector(".done-booth");
 
-                            if(stationid == 1)
+                            if(stationid == 2)
                             {
                                 text.innerHTML = "Congratulations!<br>You've won the game.";
-                            }
-                            else if(stationid == 2)
-                            {   
-                                text.innerHTML = "The video is fantastic, well<br>done!";
-                                doneBooth.textContent = "Don't forget to download your video";
+                                doneBooth.innerHTML = "Please redeem the prize from our crew";
                             }
                             else 
                             {
@@ -262,5 +254,5 @@
                 updateDisplay();
             });
         });
-        </script>
+    </script>
 </x-app-layout>

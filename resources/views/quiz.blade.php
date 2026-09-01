@@ -336,8 +336,15 @@
             submitAnswer(this.dataset.question, this.dataset.id, true);
 
             // 🎉 show modal
-            let modal = new bootstrap.Modal(document.getElementById('successModal'));
-            modal.show();
+            const successModal = new bootstrap.Modal(
+                document.getElementById('successModal'),
+                {
+                    backdrop: 'static', // Prevent closing when clicking outside
+                    keyboard: false     // Prevent closing with ESC
+                }
+            );
+
+            successModal.show();
 
         } else {
 

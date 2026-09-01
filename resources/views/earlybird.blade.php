@@ -63,6 +63,7 @@
                             <th>#</th>
                             <th>Name</th>
                             <th>Email</th>
+                            <th>Source of Channel</th>
                             <th>Created At</th>
                         </tr>
                     </thead>
@@ -76,6 +77,7 @@
                                 <span class="badge bg-warning text-dark ms-1">Early Bird</span>
                             </td>
                             <td>{{ $earlyBird->email }}</td>
+                            <td>{{ $earlyBird->source_of_channel }}</td>
                             <td>{{ \Carbon\Carbon::parse($earlyBird->created_at)->toDayDateTimeString() }}</td>
                         </tr>
                     @endforeach

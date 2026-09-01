@@ -104,7 +104,14 @@
                         <div class="d-block  mb-2">
                             <div class="colanimate-entry delay-2 btn-wrapperx px-5 mt-4">
                                 <a href="{{ route('register') }}" class="custom-btn custom-btn-secondary pulse-slow">
-                                    JOIN NOW
+                                    REGISTER
+                                </a>
+                            </div>
+                        </div>
+                        <div class="d-block  mb-2">
+                            <div class="colanimate-entry delay-2 btn-wrapperx px-5 mt-4">
+                                <a href="{{ route('login') }}" class="custom-btn custom-btn-secondary pulse-slow">
+                                    LOGIN
                                 </a>
                             </div>
                         </div>

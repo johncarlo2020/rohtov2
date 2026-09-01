@@ -39,12 +39,6 @@ class GiftsSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'name' => 'Oriental Kopi RM 10 Cash Voucher',
-                'stock_level' => 10,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
                 'name' => 'Texas Chicken RM 5 Cash Voucher',
                 'stock_level' => 10,
                 'created_at' => now(),

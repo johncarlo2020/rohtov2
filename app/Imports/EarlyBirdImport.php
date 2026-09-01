@@ -21,6 +21,7 @@ class EarlyBirdImport implements ToCollection, WithHeadingRow
             $data = [
                 'email' => strtolower(trim($row['email'] ?? '')),
                 'name' => trim($row['name'] ?? ''),
+                'source_of_channel' => strtolower($row['source_of_channel'] ?? ''),
             ];
 
             // ✅ Validate email
@@ -46,6 +47,7 @@ class EarlyBirdImport implements ToCollection, WithHeadingRow
             EarlyBird::create([
                 'email' => $data['email'],
                 'name' => $data['name'],
+                'source_of_channel' => $data['source_of_channel'],
                 'claimed' => false,
             ]);
 

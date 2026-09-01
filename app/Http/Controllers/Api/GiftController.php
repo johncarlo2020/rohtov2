@@ -7,6 +7,14 @@ use App\Models\Gifts;
 
 class GiftController extends Controller
 {
+    public function draw()
+    {
+        $gifts = Gifts::select('id', 'name', 'stock_level')->get();
+
+        return view('draw', [
+            'stocks' => $gifts,
+        ]);
+    }
 
     public function stocks()
     {

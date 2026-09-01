@@ -160,6 +160,57 @@
             transform: translateY(-6px);
             box-shadow: 0 20px 40px rgba(9, 30, 66, 0.13);
         }
+
+        .voucher-trigger {
+            position: fixed;
+            right: -25px;
+            bottom: -15px;
+            width: 130px;
+            height: 55px;
+            background: #2d67c8;
+            color: #fff;
+            border-radius: 30px 0 0 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,.2);
+            z-index: 1000;
+        }
+
+        .voucher-trigger img {
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .voucher-text {
+            font-size: 11px;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .voucher-overlay {
+            position: fixed;
+            right: -25px;
+            bottom: -15px;
+            width: 130px;
+            height: 55px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 30px 0 0 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+            pointer-events: none;
+        }
+
+        .voucher-overlay small {
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
     </style>
 
     <div class="py-4 map-page main-content main-background with-scroll">
@@ -169,227 +220,179 @@
             @include('components.branding')
         </div>
 
-        <!-- Title -->
-        <div class="text-center animate-entry">
-            <h2 class="my-5 text-center">Explore</h2>
-        </div>
+        <!-- CONFIRMED BOOKING TICKET CARD - MATCHING USER SCREENSHOT DESIGN -->
+        <div id="dashboard-booking-card-wrapper" class="px-4 my-6 animate-entry">
+            <div class="border-4 border-[#e86034] rounded-3xl bg-white shadow-2xl p-6 sm:p-8 max-w-sm mx-auto text-center relative font-sans">
+                
+                <!-- Branding Header -->
+                <div class="mb-4 text-center">
+                    <div class="text-xl font-serif italic text-slate-900 tracking-wide">Caroline Hélain</div>
+                    <div class="text-xs font-bold text-slate-500 my-0.5">x</div>
+                    <div class="text-sm font-extrabold tracking-widest text-slate-900 uppercase">LONGCHAMP</div>
+                </div>
 
-        <!-- Modal -->
-        <div class="animate-entry modal fade custom-modal" id="notAllowedModal" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered modal-sm">
-                <div class="modal-content card modal-parent">
-                    <div class="modal-body">
-                        <div class="text-center content">
-                            <img class="mx-auto mb-4 check" id="badge" src="{{ asset('images/error.png') }}"
-                                style="filter:brightness(0);">
+                <!-- Title -->
+                <h2 class="text-2xl font-black text-[#e86034] uppercase tracking-wider mb-2">
+                    BOOKING CONFIRMED!
+                </h2>
 
-                            <div class="mt-4 mb-4 text-content">
-                                <p class="text-dark">
-                                    Unlock this by completing<br>
-                                    your visits to 3 developer stations.
-                                </p>
-                            </div>
+                <!-- Subtitle -->
+                <p class="text-xs sm:text-sm font-black text-slate-800 uppercase tracking-wide leading-relaxed max-w-xs mx-auto mb-5">
+                    HI <span id="dash-greeting-name">{{ auth()->check() && isset(auth()->user()->fname) ? strtoupper(auth()->user()->fname) : 'CUSTOMER' }}</span>,<br>
+                    YOUR SLOT IS OFFICIALLY LOCKED IN. SEE YOU THERE!
+                </p>
 
-                            <button type="button" class="w-75 custom-btn custom-btn-primary" data-bs-dismiss="modal">
-                                CLOSE
-                            </button>
+                <!-- Red Dashed Ticket Container -->
+                <div id="dash-ticket-container" class="border-2 border-dashed border-red-500 rounded-2xl p-6 bg-white inline-block max-w-xs w-full shadow-sm mb-6 text-center">
+                    
+                    <!-- Dynamic QR Code Image -->
+                    <img id="dash-qr-code-img" src="{{ isset($userBooking) && $userBooking ? 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' . urlencode($userBooking->reference_no) : '' }}" alt="Booking QR Code" class="w-44 h-44 mx-auto mb-3 object-contain" crossorigin="anonymous">
+
+                    <!-- Customer Name -->
+                    <div id="dash-ticket-name" class="text-sm font-black text-slate-900 uppercase mb-2 tracking-wide">
+                        {{ isset($userBooking) && $userBooking ? strtoupper($userBooking->customer_name) : (auth()->check() ? strtoupper(auth()->user()->name) : 'JOSHUA') }}
+                    </div>
+
+                    <!-- Details List -->
+                    <div class="space-y-1 text-[10px] font-extrabold text-slate-900 uppercase tracking-wider">
+                        <div><span class="text-slate-400">DATE:</span> <span id="dash-ticket-date">{{ isset($userBooking) && $userBooking && $userBooking->bookingDate ? strtoupper(\Carbon\Carbon::parse($userBooking->bookingDate->date)->format('jS F')) : '7TH OCTOBER' }}</span></div>
+                        <div><span class="text-slate-400">TIME:</span> <span id="dash-ticket-time">{{ isset($userBooking) && $userBooking && $userBooking->bookingSlot ? strtoupper(\Carbon\Carbon::parse($userBooking->bookingSlot->start_time)->format('g:iA')) : '6:00PM' }}</span></div>
+                        <div class="mt-1 leading-snug px-2">
+                            <span class="text-slate-400">VENUE:</span> LONGCHAMP POP UP STORE THE GARDENS MALL
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- not allowed video -->
-        <div class="animate-entry modal fade custom-modal" id="notAllowedModalVideo" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered modal-sm">
-                <div class="modal-content card modal-parent">
-                    <div class="modal-body">
-                        <div class="text-center content">
-                            <div class="mt-4 mb-4 text-content">
-                                <p>
-                                    This booth is only open on May 1st for Labour Day, and May 9th - 10th for Mother's Day.<br>
-                                </p>
-                                <br>
-                                <p>If you're visiting on these dates, <br> please drop by!</p>
-                            </div>
-
-                            <button type="button" class="w-75 custom-btn custom-btn-primary" data-bs-dismiss="modal">
-                                CLOSE
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="px-0 py-3 container">
-
-
-
-            @foreach (auth()->user()->developers as $developer)
-                @php
-                    $imageDev = asset("images/developer/DEV{$developer->id}.webp");
-                @endphp
-
-                <div class="d-flex align-items-center justify-content-center mb-3 animate-entry developer-card"
-                    onclick="gotoQuiz({{ $developer->id }})">
-                    <img src="{{ $imageDev }}" alt="Developer {{ $developer->id }}" class="developer-logo">
-
-                    @if ($developer->pivot->isCompleted)
-                        <div class="overlay">
-                            <h2 class="text-white">COMPLETED</h2>
-                        </div>
-                    @endif
-                </div>
-            @endforeach
-
-        </div>
-
-        <!-- Stations -->
-        <div class="px-0 container" style="max-width: 420px;">
-
-            @php
-                $today = now()->format('m-d');
-                $videoBoothDates = ['05-01', '05-09', '05-10']; 
-                $canAccessVideoBooth = in_array($today, $videoBoothDates);
-            @endphp
-
-            <div class="d-flex justify-content-center animate-entry station-row">
-                @foreach ($stations as $station)
-                    @php
-                        $image = asset("images/station/ST{$station->id}.webp");
-
-                        $isLocked =
-                            ($station->id == 3 && !$canAccessStation3) ||
-                            ($station->id == 2 && !$canAccessVideoBooth);
-                    @endphp
-
-                    {{-- 🚫 HIDE station 4 if NOT early bird --}}
-                    @if ($station->id == 4 && !auth()->user()->is_early_bird)
-                        @continue
-                    @endif
-
-                    <div class="station-card"
-                        @if ($isLocked)
-                            onclick="gotoStation({{ $station->id }})"
-                        @else
-                            onclick="gotoStation({{ $station->id }})"
-                        @endif
-                    >
-
-                        <!-- Image -->
-                        <img src="{{ $image }}" alt="Station {{ $station->id }}">
-
-                        <!-- Title -->
-                        <div class="station-title">
-                            {{ $station->name }}
-                        </div>
-
-                        {{-- ✅ Redeemed (priority) --}}
-                        @if ($station->status)
-                            <div class="overlay">
-                                <span class="text-white" style="font-size:10px;">REDEEMED</span>
-                            </div>
-
-                        {{-- 🔒 LOCK (Station 3 or Video Booth) --}}
-                        @elseif ($isLocked)
-                            <div class="overlay">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
-                                    viewBox="0 0 24 24" fill="white">
-                                    <path
-                                        d="M12 1C9.243 1 7 3.243 7 6v2H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2h-2V6c0-2.757-2.243-5-5-5zm0 2c1.654 0 3 1.346 3 3v2H9V6c0-1.654 1.346-3 3-3zm0 9a2 2 0 1 1 0 4 2 2 0 0 1 0-4z" />
-                                </svg>
-                            </div>
-                        @endif
-
-                    </div>
-                @endforeach
-            </div>
-        </div>
-
-        @php
-            $earlyBird = auth()->user()->is_early_bird;
-            $completedStation4 = auth()->user()->stationUser()->where('station_id', 4)->exists();
-            $showEarlyBirdModal = $earlyBird;
-        @endphp
-
-        <div class="modal fade" id="earlyBirdModal" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="p-4 text-center modal-content">
-
-                    <h5>Hello!</h5>
-
-                    <p class="mb-4">
-                        We see you've pre-registered!<br>
-                        <br>
-                        Tap the <b>'Early Bird'</b> button below<br>
-                        and grab your special reward!
-                    </p>
-
-                    <button class="m-auto w-75 custom-btn custom-btn-primary" data-bs-dismiss="modal">
-                        CLOSE
+                <!-- Action Buttons (CHANGE YOUR SLOT / DOWNLOAD) -->
+                <div class="space-y-3 max-w-xs mx-auto">
+                    <a href="{{ url('/reservation-create?modify=1') }}" id="dash-change-slot-btn" class="block w-full py-3.5 px-6 rounded-lg bg-[#e86034] hover:bg-[#d44f25] text-white font-black text-sm tracking-widest uppercase transition shadow-md shadow-orange-500/20 text-center text-decoration-none">
+                        CHANGE YOUR SLOT
+                    </a>
+                    <button id="dash-download-btn" type="button" class="w-full py-3.5 px-6 rounded-lg bg-[#e86034] hover:bg-[#d44f25] text-white font-black text-sm tracking-widest uppercase transition shadow-md shadow-orange-500/20">
+                        DOWNLOAD
                     </button>
-
                 </div>
+
+                <!-- Longchamp Emblem Icon at Bottom -->
+                <div class="mt-6 flex justify-center items-center">
+                    <svg class="w-12 h-6 text-slate-800" viewBox="0 0 100 40" fill="currentColor">
+                        <path d="M12 25 C 20 10, 35 10, 45 20 C 50 15, 65 15, 75 25 C 65 23, 50 28, 45 35 C 35 28, 20 28, 12 25 Z M 40 18 C 42 12, 48 10, 52 14 C 48 18, 44 20, 40 18 Z" />
+                    </svg>
+                </div>
+
             </div>
         </div>
 
     </div>
+
     @push('scripts')
-        @if ($showEarlyBirdModal && !$completedStation4)
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    let modal = new bootstrap.Modal(document.getElementById('earlyBirdModal'));
-                    modal.show();
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const dashChangeSlotBtn = document.getElementById('dash-change-slot-btn');
+            const dashDownloadBtn = document.getElementById('dash-download-btn');
+
+            if (dashChangeSlotBtn) {
+                dashChangeSlotBtn.addEventListener('click', () => {
+                    const refNo = @json(isset($userBooking) && $userBooking ? $userBooking->reference_no : null);
+                    if (refNo) {
+                        localStorage.setItem('latest_booking_ref', refNo);
+                    }
                 });
-            </script>
-        @endif
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                let canAccessStation5 = @json($canAccessStation5);
-                let canAccessStation3 = @json($canAccessStation3);
-                let canAccessVideoBooth = @json($canAccessVideoBooth);
-                
+            }
 
-                window.gotoStamping = function(id, ) {
-                    var url = "{{ route('station', ['station' => ':id']) }}".replace(
-                        ":id", id
-                    );
-                    window.location.href = url;
-                }
+            if (dashDownloadBtn) {
+                dashDownloadBtn.addEventListener('click', () => {
+                    const refNo = @json(isset($userBooking) && $userBooking ? $userBooking->reference_no : null) || localStorage.getItem('latest_booking_ref') || 'ticket';
+                    
+                    const customerName = document.getElementById('dash-ticket-name').textContent.trim();
+                    const dateText = document.getElementById('dash-ticket-date').textContent.trim();
+                    const timeText = document.getElementById('dash-ticket-time').textContent.trim();
+                    const qrImgElem = document.getElementById('dash-qr-code-img');
 
-                window.gotoQuiz = function(id, ) {
-                    var url = "{{ route('developer', ['developer' => ':id']) }}".replace(
-                        ":id", id
-                    );
-                    // Redirect to the generated URL
-                    window.location.href = url;
-                }
+                    dashDownloadBtn.disabled = true;
+                    dashDownloadBtn.textContent = 'GENERATING JPEG...';
 
-                window.gotoStation = function(id, ) {
-                    var url = "{{ route('station', ['station' => ':id']) }}".replace(
-                        ":id",
-                        id
-                    );
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 600;
+                    canvas.height = 700;
+                    const ctx = canvas.getContext('2d');
 
-                    if (id == 3 && !canAccessStation3) {
-                        // Show the not allowed modal if trying to access station 3 without permission
-                        var notAllowedModal = new bootstrap.Modal(document.getElementById('notAllowedModal'));
-                        notAllowedModal.show();
-                        return;
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, 600, 700);
+
+                    ctx.save();
+                    ctx.strokeStyle = '#ef4444';
+                    ctx.lineWidth = 4;
+                    ctx.setLineDash([10, 8]);
+                    
+                    const r = 24;
+                    const x = 30, y = 30, w = 540, h = 640;
+                    ctx.beginPath();
+                    ctx.moveTo(x + r, y);
+                    ctx.lineTo(x + w - r, y);
+                    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+                    ctx.lineTo(x + w, y + h - r);
+                    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+                    ctx.lineTo(x + r, y + h);
+                    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+                    ctx.lineTo(x, y + r);
+                    ctx.quadraticCurveTo(x, y, x + r, y);
+                    ctx.closePath();
+                    ctx.stroke();
+                    ctx.restore();
+
+                    const triggerDownload = (imgSource) => {
+                        if (imgSource) {
+                            ctx.drawImage(imgSource, 160, 60, 280, 280);
+                        }
+
+                        ctx.fillStyle = '#0f172a';
+                        ctx.font = '900 28px "Plus Jakarta Sans", sans-serif';
+                        ctx.textAlign = 'center';
+                        ctx.fillText(customerName.toUpperCase(), 300, 390);
+
+                        ctx.font = '800 18px "Plus Jakarta Sans", sans-serif';
+                        
+                        ctx.fillStyle = '#94a3b8';
+                        ctx.fillText('DATE: ', 240, 440);
+                        ctx.fillStyle = '#0f172a';
+                        ctx.fillText(dateText, 320, 440);
+
+                        ctx.fillStyle = '#94a3b8';
+                        ctx.fillText('TIME: ', 240, 480);
+                        ctx.fillStyle = '#0f172a';
+                        ctx.fillText(timeText, 320, 480);
+
+                        ctx.fillStyle = '#94a3b8';
+                        ctx.fillText('VENUE: ', 220, 520);
+                        ctx.fillStyle = '#0f172a';
+                        ctx.fillText('LONGCHAMP POP UP STORE', 340, 520);
+                        ctx.fillText('THE GARDENS MALL', 300, 555);
+
+                        const imgData = canvas.toDataURL('image/jpeg', 0.95);
+                        const link = document.createElement('a');
+                        link.download = `booking-ticket-${refNo}.jpeg`;
+                        link.href = imgData;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+
+                        dashDownloadBtn.disabled = false;
+                        dashDownloadBtn.textContent = 'DOWNLOAD';
+                    };
+
+                    if (qrImgElem && qrImgElem.src) {
+                        const img = new Image();
+                        img.crossOrigin = 'anonymous';
+                        img.onload = () => triggerDownload(img);
+                        img.onerror = () => triggerDownload(null);
+                        img.src = qrImgElem.src;
+                    } else {
+                        triggerDownload(null);
                     }
-
-                    if (id == 2 && !canAccessVideoBooth) {
-                        // Show the not allowed modal if trying to access station 3 without permission
-                        var notAllowedModalVideo = new bootstrap.Modal(document.getElementById('notAllowedModalVideo'));
-                        notAllowedModalVideo.show();
-                        return;
-                    }
-
-                    // Redirect to the generated URL
-                    window.location.href = url;
-                }
-            });
-        </script>
+                });
+            }
+        });
+    </script>
     @endpush
 </x-app-layout>

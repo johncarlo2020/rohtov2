@@ -31,4 +31,17 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'brevo' => [
+        'api_key' => env('BREVO_API_KEY'),
+        'from_email' => env('BREVO_FROM_EMAIL'),
+        'from_name' => env('BREVO_FROM_NAME'),
+    ],
+
+    'mailtrap' => [
+        'host' => env('MAILTRAP_HOST', 'sandbox.smtp.mailtrap.io'),
+        'port' => env('MAILTRAP_PORT', 2525),
+        'username' => env('MAILTRAP_USERNAME'),
+        'password' => env('MAILTRAP_PASSWORD'),
+    ],
+
 ];

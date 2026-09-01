@@ -120,7 +120,9 @@
                             <th>Email</th>
                             <th>Preferred Location</th>
                             <th>Property Budget</th>
+                            <th>Marketing</th>
                             <th>Registration Timestamp</th>
+                            <th>Chagee Voucher</th>
                             @foreach ($data['stations'] as $station)
                             <th>{!! strtoupper($station['name']) !!}</th>
                             @endforeach
@@ -132,6 +134,9 @@
                     </thead>
                     <tbody>
                         @foreach ($data['users'] as $user)
+                        @php
+                        $user->has_claimed_chagee = $user->voucherClaims->isNotEmpty();
+                        @endphp
                         <tr data-user-id="{{ $user->id }}">
                             <td>{{ $loop->iteration }}</td>
                             <td>
@@ -144,22 +149,37 @@
                                 @endforeach
                             </td>
                             <td>{{ $user->property_budget }}</td>
+                            <td>{{ $user->marketing }}</td>
                             <td>{{ \Carbon\Carbon::parse($user->created_at)->toDayDateTimeString() }}</td>
+                            <td>
+                                @if($user->has_claimed_chagee)
+                                    <span class="badge bg-success">Claimed</span>
+                                @else
+                                    <span class="badge bg-danger">Not Claimed</span>
+                                @endif
+                            </td>
+                           
                             @foreach ($user['stations'] as $station)
                                 <td class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-danger' }}">
+                                    @if($station['id'] == 3)
 
-                                    @if($station['id'] == 3 && $station['value'])
+                                        {{ $station['value'] ? 'Yes' : 'No' }}
 
-                                        {{-- Gift name --}}
-                                        {{ optional($user->userGift->gift)->name ?? 'No Gift' }}
+                                        @if($user->is_early_bird && $user->source_of_channel)
+                                            <br>
+                                            <small class="text-muted">
+                                                Channel:{{ $user->source_of_channel }}
+                                            </small>
+                                        @endif
+
+                                   @elseif($station['id'] == 1 && $station['value'])
+
+                                        {{ $user->userGift?->gift?->name ?? 'No Gift' }}
 
                                         <br>
 
-                                        {{-- Gift created_at --}}
                                         <small class="text-muted">
-                                            {{ optional($user->userGift)->created_at 
-                                                ? \Carbon\Carbon::parse($user->userGift->created_at)->toDayDateTimeString()
-                                                : '-' }}
+                                            {{ $user->userGift?->created_at?->toDayDateTimeString() ?? '-' }}
                                         </small>
 
                                     @else
@@ -608,6 +628,7 @@
                     alert('"To date" cannot be earlier than "From date".');
                     return;
                 }
+                console.log(table);
                 table.draw();
                 updateFilterLabel();
                 $('#date-filter-dropdown').removeClass('show');
@@ -716,7 +737,7 @@
         let end = $('#endDate').val();
 
         // Registration Timestamp is always at column index 5
-        let rowDate = new Date(data[5]);
+        let rowDate = new Date(data[6]);
 
         // Convert row date to YYYY-MM-DD (DATE ONLY)
         let rowDateOnly = rowDate.getFullYear() + '-' +

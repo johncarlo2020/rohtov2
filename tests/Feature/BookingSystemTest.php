@@ -250,4 +250,44 @@ class BookingSystemTest extends TestCase
         $userADuplicate->assertStatus(422);
         $userADuplicate->assertJsonValidationErrors(['slot']);
     }
+
+    /** @test */
+    public function it_assigns_distinct_bookings_per_user_and_no_booking_for_unbooked_users()
+    {
+        $admin = \App\Models\User::factory()->create();
+        $admin->assignRole(\Spatie\Permission\Models\Role::create(['name' => 'admin']));
+
+        $userWithBooking = \App\Models\User::factory()->create([
+            'email' => 'user1@example.com',
+            'fname' => 'UserOne',
+        ]);
+
+        $userWithoutBooking = \App\Models\User::factory()->create([
+            'email' => 'user2@example.com',
+            'fname' => 'UserTwo',
+        ]);
+
+        // Create booking for user1
+        $slots = $this->getJson('/api/booking/dates/2026-10-06/slots')->json();
+        $this->postJson('/api/bookings', [
+            'date' => '2026-10-06',
+            'slot_id' => $slots[0]['id'],
+            'customer_name' => 'UserOne',
+            'customer_email' => 'user1@example.com',
+            'customer_phone' => '09111111111',
+        ]);
+
+        $response = $this->actingAs($admin)->get(route('users'));
+        $response->assertStatus(200);
+
+        $users = $response->viewData('data')['users'];
+        $u1 = $users->firstWhere('email', 'user1@example.com');
+        $u2 = $users->firstWhere('email', 'user2@example.com');
+
+        $this->assertNotNull($u1->booking_ref);
+        $this->assertNotEquals('No Booking', $u1->booking_date_text);
+
+        $this->assertNull($u2->booking_ref);
+        $this->assertEquals('No Booking', $u2->booking_date_text);
+    }
 }

@@ -36,6 +36,9 @@ class BookingViewController extends Controller
                     if (!empty($user->phone_number)) {
                         $q->orWhere('customer_phone', $user->phone_number);
                     }
+                    if (!empty($user->number)) {
+                        $q->orWhere('customer_phone', $user->number);
+                    }
                 })
                 ->where('status', 'confirmed')
                 ->latest()
@@ -43,11 +46,15 @@ class BookingViewController extends Controller
         }
 
         if (!$existingBooking && session()->has('latest_booking_ref')) {
-            $existingBooking = \App\Models\Booking::with(['bookingDate', 'bookingSlot'])
+            $refBooking = \App\Models\Booking::with(['bookingDate', 'bookingSlot'])
                 ->where('reference_no', session('latest_booking_ref'))
                 ->where('status', 'confirmed')
                 ->latest()
                 ->first();
+
+            if ($refBooking && (!$user || $refBooking->customer_email === $user->email || $refBooking->customer_phone === ($user->number ?? $user->phone_number ?? null))) {
+                $existingBooking = $refBooking;
+            }
         }
 
         $formattedBooking = null;
@@ -206,16 +213,28 @@ class BookingViewController extends Controller
         $referenceNo = $request->input('reference_no');
 
         if (!$referenceNo) {
-            if (session()->has('latest_booking_ref')) {
-                $referenceNo = session('latest_booking_ref');
-            } elseif (auth()->check()) {
-                $userBooking = \App\Models\Booking::where('customer_email', auth()->user()->email)
-                    ->where('status', 'confirmed')
-                    ->latest()
-                    ->first();
+            if (auth()->check()) {
+                $user = auth()->user();
+                $userBooking = \App\Models\Booking::where(function ($q) use ($user) {
+                    $q->where('customer_email', $user->email);
+                    if (!empty($user->phone_number)) {
+                        $q->orWhere('customer_phone', $user->phone_number);
+                    }
+                    if (!empty($user->number)) {
+                        $q->orWhere('customer_phone', $user->number);
+                    }
+                })
+                ->where('status', 'confirmed')
+                ->latest()
+                ->first();
+
                 if ($userBooking) {
                     $referenceNo = $userBooking->reference_no;
                 }
+            }
+
+            if (!$referenceNo && session()->has('latest_booking_ref')) {
+                $referenceNo = session('latest_booking_ref');
             }
         }
 

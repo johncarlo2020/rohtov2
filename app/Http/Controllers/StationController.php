@@ -240,11 +240,15 @@ if ($activeVoucher) {
 
         $userBooking = null;
         if (auth()->check()) {
+            $user = auth()->user();
             $userBooking = \App\Models\Booking::with(['bookingDate', 'bookingSlot'])
-                ->where(function ($q) {
-                    $q->where('customer_email', auth()->user()->email);
-                    if (!empty(auth()->user()->phone_number)) {
-                        $q->orWhere('customer_phone', auth()->user()->phone_number);
+                ->where(function ($q) use ($user) {
+                    $q->where('customer_email', $user->email);
+                    if (!empty($user->phone_number)) {
+                        $q->orWhere('customer_phone', $user->phone_number);
+                    }
+                    if (!empty($user->number)) {
+                        $q->orWhere('customer_phone', $user->number);
                     }
                 })
                 ->where('status', 'confirmed')
@@ -253,11 +257,17 @@ if ($activeVoucher) {
         }
 
         if (!$userBooking && session()->has('latest_booking_ref')) {
-            $userBooking = \App\Models\Booking::with(['bookingDate', 'bookingSlot'])
+            $refBooking = \App\Models\Booking::with(['bookingDate', 'bookingSlot'])
                 ->where('reference_no', session('latest_booking_ref'))
                 ->where('status', 'confirmed')
                 ->latest()
                 ->first();
+
+            if ($refBooking) {
+                if (!auth()->check() || $refBooking->customer_email === auth()->user()->email || $refBooking->customer_phone === (auth()->user()->number ?? auth()->user()->phone_number ?? null)) {
+                    $userBooking = $refBooking;
+                }
+            }
         }
 
         // If user does not have any confirmed booking, redirect to reservation-create page
@@ -843,29 +853,31 @@ if ($activeVoucher) {
         ];
       });
 
-      $latestBooking = \App\Models\Booking::with(['bookingDate', 'bookingSlot'])
-          ->where(function ($q) use ($user) {
-              if (!empty($user->email)) {
-                  $q->where('customer_email', $user->email);
-              }
-              if (!empty($user->number)) {
-                  $q->orWhere('customer_phone', $user->number);
-              }
-              if (!empty($user->fname)) {
-                  $q->orWhere('customer_name', 'LIKE', '%' . $user->fname . '%');
-              }
-          })
-          ->latest()
-          ->first();
-
-      if (!$latestBooking) {
-          $latestBooking = \App\Models\Booking::with(['bookingDate', 'bookingSlot'])->latest()->first();
+      $latestBooking = null;
+      if (!empty($user->email) || !empty($user->number)) {
+          $latestBooking = \App\Models\Booking::with(['bookingDate', 'bookingSlot'])
+              ->where(function ($q) use ($user) {
+                  $hasCond = false;
+                  if (!empty($user->email)) {
+                      $q->where('customer_email', $user->email);
+                      $hasCond = true;
+                  }
+                  if (!empty($user->number)) {
+                      if ($hasCond) {
+                          $q->orWhere('customer_phone', $user->number);
+                      } else {
+                          $q->where('customer_phone', $user->number);
+                      }
+                  }
+              })
+              ->latest()
+              ->first();
       }
 
       $user->booking_ref = $latestBooking ? $latestBooking->reference_no : null;
       $user->booking_date_text = ($latestBooking && $latestBooking->bookingDate) ? $latestBooking->bookingDate->display_date : 'No Booking';
       $user->booking_time_text = ($latestBooking && $latestBooking->bookingSlot) ? $latestBooking->bookingSlot->display_time : 'N/A';
-      $user->booking_venue = $latestBooking ? ($latestBooking->venue ?? 'LONGCHAMP POP UP STORE THE GARDENS MALL') : 'LONGCHAMP POP UP STORE THE GARDENS MALL';
+      $user->booking_venue = $latestBooking ? ($latestBooking->venue ?? 'LONGCHAMP POP UP STORE THE GARDENS MALL') : 'N/A';
       $user->is_attended = $latestBooking ? ($latestBooking->status === 'attended' || $latestBooking->status === 'completed' || !is_null($latestBooking->attended_at)) : false;
       $user->attended_at_text = $latestBooking && $latestBooking->attended_at ? \Carbon\Carbon::parse($latestBooking->attended_at)->format('M d, Y h:i A') : null;
 

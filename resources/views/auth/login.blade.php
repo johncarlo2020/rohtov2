@@ -40,7 +40,7 @@
                             <input type="hidden" name="password" value="password" />
 
                             <div class="mb-0 text-center">
-                                <button type="submit" class="mt-4 custom-btn custom-btn-primary pulse-slow">
+                                <button type="submit" class="mt-4 custom-btn custom-btn-primary pulse-slow w-50 m-auto">
                                     {{ __('LOGIN') }}
                                 </button>
                             </div>

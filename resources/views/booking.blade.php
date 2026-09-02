@@ -92,7 +92,7 @@
         }
     </style>
 
-    <div class="register-main with-scroll row">
+    <div class="register-main row">
         <div class="col-lg-8 desktop-image-main">
             <img src="{{ asset('images/brand/main_img.webp') }}" alt="Login Image" srcset="">
         </div>

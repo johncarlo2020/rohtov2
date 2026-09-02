@@ -12,7 +12,7 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Mulish', ...defaultTheme.fontFamily.sans],
+                sans: ['Gill Sans MT Pro', 'Gill Sans', 'Gill Sans MT', ...defaultTheme.fontFamily.sans],
             },
         },
     },

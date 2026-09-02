@@ -123,7 +123,7 @@
                                         WE CAN ONLY CHANGE YOUR BOOKING <span class="fw-black text-dark">ONCE</span>.<br>
                                         YOUR NEW SELECTION IS FINAL AND DEPENDS ENTIRELY ON SLOT AVAILABILITY FOR THAT SPECIFIC DAY.
                                     </p>
-                                    <div class="p-2.5 bg-light border text-dark small fw-bold text-uppercase rounded-0 my-3">
+                                    <div class="text-dark small fw-bold text-uppercase rounded-0 my-3">
                                         CURRENT BOOKING: <span class="fw-black">{{ $formattedBooking['display_text'] }}</span>
                                     </div>
                                 @else

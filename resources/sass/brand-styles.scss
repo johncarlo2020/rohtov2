@@ -134,26 +134,6 @@
             }
         }
 
-        .qr-container {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 28vw;
-            text-align: center;
-
-            img {
-                width: 100%;
-                height: auto;
-                object-fit: contain;
-            }
-
-            .qr-code {
-                margin-top: 60px;
-                margin-bottom: 30px;
-            }
-        }
-
         .cat-background {
             position: absolute;
             bottom: 0;

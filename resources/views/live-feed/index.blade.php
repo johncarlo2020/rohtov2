@@ -192,40 +192,62 @@
             width: 498px;
             height: auto;
         }
+
+        .qr-container {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 500px;
+            height: 500px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .qr-container.left {
+            left: 15%;
+        }
+
+        .qr-container.right {
+            right: 15%;
+        }
+
+        .qr-container .qr-img {
+            width: 261px;
+            height: 261px;
+            background: #fff;
+            border: 10px solid #243B81;
+            border-radius: 10px;
+        }
+
+        .qr-container .qr-text {
+            margin-bottom: 20px;
+            object-fit: contain;
+            width: 100%;
+            height: auto;
+        }
+
+        .live-feed-lobby {
+            width: 100%;
+            height: 100%;
+            background-image: url('{{ asset('images/brand/background-desktop.png') }}');
+            background-size: cover;
+            background-position: center;
+        }
     </style>
-    </body>
 </head>
 
 <body class="live-feed">
     <div class="live-feed-lobby">
-        <img src="{{ asset('images/brand/cat-right.webp') }}" alt="" class="cat-right">
-        <div class="player-list rounded">
-            <div class="player-list-header">
-                <h2 class="heading-text">User joined</h2>
-                {{-- <div class="player-count">
-                    <span id="player-count">{{ $totalUsersCount }}</span>
-                    <img src="{{ asset('images/brand/paw-icon.webp') }}" alt="Paw Icon" class="paw-icon">
-                </div> --}}
-            </div>
-            <div class="player-list-body">
-                <div class="user-container">
-                    @foreach ($users as $user)
-                        <div class="user-item">
-                            <img src="{{ asset('images/avatarCats/02_cat0' . $user->avatar_id . '.webp') }}"
-                                alt="Avatar" class="avatar">
-                            <p class="username-text"><span class="username">{{ $user->fname }}</span> <span
-                                    class="joined-text">Joined</span> </p>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
+        <div class="qr-container left">
+            <img class="qr-text" src="{{ asset('images/brand/text-exitement.png') }}" alt="">
+            <div class="qr-img"></div>
         </div>
 
-        <div class="qr-container">
-            <img src="{{ asset('images/brand/logo.webp') }}" alt="Brand Logo" class="brand-logo">
-            <img src="{{ asset('images/brand/qr.png') }}" alt="QR Code" class="qr-code">
-            <img src="{{ asset('images/brand/scan_for_excitement.webp') }}" alt="Scan for Excitement"
-                class="scan-image">
+        <div class="qr-container right">
+            <img class="qr-text" src="{{ asset('images/brand/text-exitement.png') }}" alt="">
+            <div class="qr-img"></div>
         </div>
     </div>
 

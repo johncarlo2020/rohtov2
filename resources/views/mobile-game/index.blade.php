@@ -48,8 +48,8 @@
 
         .mobile-logo {
             position: absolute;
-            top: 2vh;
-            left: 4vw;
+            top: 0vh;
+            left: 0vw;
             width: 34vw;
             max-width: 160px;
             height: auto;
@@ -169,7 +169,6 @@
         <img src="{{ asset('images/brand/background-desktop.png') }}" alt="" class="mobile-bg">
         <img src="{{ asset('images/brand/tap for more@3x 1.png') }}" alt="Tap for more good things!"
             class="mobile-tap-title">
-        <p class="mobile-tap-hint">TAP HERE TO START</p>
     </div>
 
     <div class="mobile-screen mobile-countdown d-none">

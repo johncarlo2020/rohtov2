@@ -1180,7 +1180,7 @@ function createFallingKibble(x, y, isBig = false) {
     // Cycle randomly between the 3 small falling objects, or use the big one when full
     const objectFile = isBig
         ? "big.png"
-        : `${Math.floor(Math.random() * 3) + 1}.png`;
+        : `${Math.floor(Math.random() * 4) + 1}.png`;
     const size = isBig ? 190 : 110;
 
     if (productCan) {

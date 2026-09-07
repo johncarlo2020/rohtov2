@@ -231,14 +231,13 @@ function handleGameStart(data) {
 
 function handleGameUpdate(data) {
     console.log("Mobile game: Game updated", data);
+    // Admin's Increase button should only affect the live-feed display, not this screen
     if (
         data &&
         data.currentWeight !== undefined &&
         data.currentWeight > currentWeight
     ) {
         currentWeight = data.currentWeight;
-        const count = data.kibbleCount || Math.floor(Math.random() * 3) + 1;
-        triggerFallingObjects(count, false);
     }
 }
 
@@ -289,31 +288,28 @@ function triggerFallingObjects(count = 1, isBig = false) {
     }
 }
 
-function createFallingObject(isBig, originX, originY) {
+function createFallingObject(isBig) {
     if (!productEl) return;
 
     const objectFile = isBig
         ? "big.png"
-        : `${Math.floor(Math.random() * 3) + 1}.png`;
-    const size = isBig ? 110 : 60;
+        : `${Math.floor(Math.random() * 4) + 1}.png`;
+    const size = isBig ? 170 : 110;
 
     const productRect = productEl.getBoundingClientRect();
-    const targetX = productRect.left + productRect.width / 2;
-    const targetY = productRect.top + productRect.height * 0.15;
+    const originX = productRect.left + productRect.width / 2;
+    const originY = productRect.top + productRect.height * 0.15;
 
-    // Launch from the tap point if provided, otherwise from the bottom of the screen
-    const startX =
-        originX !== undefined
-            ? originX
-            : targetX + (Math.random() - 0.5) * productRect.width * 0.4;
-    const startY = originY !== undefined ? originY : window.innerHeight + size;
+    // Fly straight up and off the top of the screen, like it's leaving the canvas
+    const targetX = originX + (Math.random() - 0.5) * productRect.width * 0.8;
+    const targetY = -size;
 
     const obj = document.createElement("div");
     obj.style.position = "fixed";
     obj.style.width = `${size}px`;
     obj.style.height = `${size}px`;
-    obj.style.left = `${startX - size / 2}px`;
-    obj.style.top = `${startY - size / 2}px`;
+    obj.style.left = `${originX - size / 2}px`;
+    obj.style.top = `${originY - size / 2}px`;
     obj.style.backgroundImage = `url('${window.ASSET_BASE}/images/brand/falling_objects/${objectFile}')`;
     obj.style.backgroundSize = "contain";
     obj.style.backgroundRepeat = "no-repeat";
@@ -321,10 +317,10 @@ function createFallingObject(isBig, originX, originY) {
     obj.style.zIndex = "10";
     obj.style.pointerEvents = "none";
     obj.style.opacity = "1";
-    obj.style.transform = "scale(1)";
-    // Throw upward onto the product, decelerating like a toss
+    obj.style.transform = "scale(0.5)";
+    // Throw straight up off the top of the screen and fade away right before it exits
     obj.style.transition =
-        "top 600ms ease-out, left 600ms ease-out, opacity 200ms ease-in 400ms, transform 200ms ease-in 400ms";
+        "top 800ms ease-in, left 800ms ease-in, transform 800ms ease-in, opacity 250ms ease-in 550ms";
     document.body.appendChild(obj);
 
     // Force a reflow so the browser paints the starting position before the transition target is applied
@@ -333,15 +329,17 @@ function createFallingObject(isBig, originX, originY) {
     obj.style.top = `${targetY - size / 2}px`;
     obj.style.left = `${targetX - size / 2}px`;
     obj.style.opacity = "0";
-    obj.style.transform = "scale(0.6)";
+    obj.style.transform = "scale(1.1)";
+
+    // Light effect bursts right at the product immediately
+    showLightEffect(originX, originY);
 
     setTimeout(() => {
         obj.remove();
-        showLightEffect(targetX, targetY);
-    }, 600);
+    }, 800);
 }
 
-// Light effect burst shown centered on where the object lands on the product
+// Light effect burst shown centered on the product where the object comes from
 function showLightEffect(x, y) {
     const light = document.createElement("img");
     light.src = `${window.ASSET_BASE}/images/brand/light-effect.png`;
@@ -359,9 +357,9 @@ function showLightEffect(x, y) {
     setTimeout(() => light.remove(), 600);
 }
 
-// Bounce feedback + throw an object up onto the product when the player taps the "TAP ME" screen
+// Bounce feedback + burst an object out of the product when the player taps the "TAP ME" screen
 if (tapGame) {
-    tapGame.addEventListener("click", (event) => {
+    tapGame.addEventListener("click", () => {
         if (gameOver || !productEl) return;
         productEl.style.transition = "transform 150ms ease-out";
         productEl.style.transform = "scale(1.06)";
@@ -369,7 +367,7 @@ if (tapGame) {
             productEl.style.transform = "scale(1)";
         }, 150);
 
-        createFallingObject(false, event.clientX, event.clientY);
+        createFallingObject(false);
     });
 }
 

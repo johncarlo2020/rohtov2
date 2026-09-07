@@ -188,8 +188,8 @@
 
         // Pusher configuration
         window.PUSHER_CONFIG = {
-            key: '{{ env('PUSHER_APP_KEY') }}',
-            cluster: '{{ env('PUSHER_APP_CLUSTER') }}'
+            key: '{{ config('broadcasting.connections.pusher.key') }}',
+            cluster: '{{ config('broadcasting.connections.pusher.cluster') }}'
         };
 
         // Routes configuration

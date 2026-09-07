@@ -628,8 +628,8 @@
         let kibbleCount = 12; // Default kibble count per increase
 
         // Pusher setup for broadcasting events
-        const pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
-            cluster: '{{ env('PUSHER_APP_CLUSTER') }}',
+        const pusher = new Pusher('{{ config('broadcasting.connections.pusher.key') }}', {
+            cluster: '{{ config('broadcasting.connections.pusher.cluster') }}',
             encrypted: true,
         });
 

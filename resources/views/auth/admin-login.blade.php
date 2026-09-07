@@ -36,7 +36,7 @@
                             <label for="remember">Remember me</label>
                         </div>
                         <button type="submit" class="btn login-button w-100 shadow-sm">Login</button>
-                        <p class="small-text text-center mt-4">Powered by WOWSOME®️ 2025</p>
+                        <p class="small-text text-center mt-4">Powered by WOWSOME®️ 2026</p>
                     </form>
                 </div>
             </div>

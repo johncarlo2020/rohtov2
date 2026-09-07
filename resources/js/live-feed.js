@@ -55,7 +55,7 @@ function initializePusher() {
             window.lastEventTime = new Date();
             console.log(
                 "Last event received at:",
-                window.lastEventTime.toLocaleTimeString()
+                window.lastEventTime.toLocaleTimeString(),
             );
 
             // Handle different actions
@@ -73,7 +73,7 @@ function initializePusher() {
                     handleGameReset(data.data);
                     break;
                 case "joined":
-                   handleUserJoined(data.data);
+                    handleUserJoined(data.data);
                     break;
                 default:
                     console.log("Unknown action:", data.action);
@@ -94,12 +94,12 @@ function handleConnectionFailure() {
         console.log(
             `Pusher connection failed. Retrying in ${
                 delay / 1000
-            } seconds... (Attempt ${retryAttempts}/${maxRetries})`
+            } seconds... (Attempt ${retryAttempts}/${maxRetries})`,
         );
 
         setTimeout(() => {
             console.log(
-                `Retry attempt ${retryAttempts}: Reconnecting to Pusher...`
+                `Retry attempt ${retryAttempts}: Reconnecting to Pusher...`,
             );
 
             // Disconnect existing connection if any
@@ -112,7 +112,7 @@ function handleConnectionFailure() {
         }, delay);
     } else {
         console.error(
-            `Failed to connect to Pusher after ${maxRetries} attempts. Please refresh the page.`
+            `Failed to connect to Pusher after ${maxRetries} attempts. Please refresh the page.`,
         );
 
         // Optional: Show user notification
@@ -186,7 +186,7 @@ setInterval(() => {
     // Check if game has been starting for too long
     if (isGameStarting) {
         console.warn(
-            "Health check: Game has been in starting state for extended period"
+            "Health check: Game has been in starting state for extended period",
         );
 
         // Check if countdown is visible but game hasn't progressed
@@ -197,16 +197,16 @@ setInterval(() => {
                 : 0;
 
             console.log(
-                `Time since last WebSocket event: ${timeSinceLastEvent} seconds`
+                `Time since last WebSocket event: ${timeSinceLastEvent} seconds`,
             );
 
             // If no events for 10 seconds and still in countdown, something is wrong
             if (timeSinceLastEvent > 10) {
                 console.error(
-                    "Health check: No WebSocket events for 10+ seconds, game may be stuck"
+                    "Health check: No WebSocket events for 10+ seconds, game may be stuck",
                 );
                 console.log(
-                    "Consider using window.forceGameStart() or window.resetGameState() to recover"
+                    "Consider using window.forceGameStart() or window.resetGameState() to recover",
                 );
             }
         }
@@ -241,7 +241,9 @@ function initializeLobbyMusic() {
         gameMusic.volume = 0.4; // Set volume to 40% for game music
 
         // Initialize countdown sound
-        countdownSound = new Audio(`${window.ASSET_BASE}/sounds/count-down.mp3`);
+        countdownSound = new Audio(
+            `${window.ASSET_BASE}/sounds/count-down.mp3`,
+        );
         countdownSound.volume = 0.6; // Set volume to 60% for countdown sound
 
         // Initialize kibble falling sound
@@ -256,28 +258,36 @@ function initializeLobbyMusic() {
         // We'll randomly select one each time we need to play a sound
         meowSound = []; // Array to hold all cat sounds
         for (let i = 1; i <= 8; i++) {
-            const catSound = new Audio(`${window.ASSET_BASE}/images/brand/cat_sounds/cat_sound_${i}.mp3`);
+            const catSound = new Audio(
+                `${window.ASSET_BASE}/images/brand/cat_sounds/cat_sound_${i}.mp3`,
+            );
             catSound.volume = 0.5; // Set volume to 50% for sound effect
             meowSound.push(catSound);
         }
 
         musicInitialized = true;
-        console.log("Lobby music, game music, countdown sound, kibble sound, finish sound and 8 cat sound effects initialized (ready to play on user interaction)");
+        console.log(
+            "Lobby music, game music, countdown sound, kibble sound, finish sound and 8 cat sound effects initialized (ready to play on user interaction)",
+        );
 
         // Listen for start experience event from modal
-        window.addEventListener('startExperience', function() {
-            console.log("Start experience event received - playing lobby music");
+        window.addEventListener("startExperience", function () {
+            console.log(
+                "Start experience event received - playing lobby music",
+            );
             playLobbyMusic();
         });
-
     } catch (error) {
         console.error("Error initializing lobby music and sounds:", error);
     }
-}// Play lobby music
+} // Play lobby music
 function playLobbyMusic() {
     if (lobbyMusic && !isGameStarting) {
-        lobbyMusic.play().catch(error => {
-            console.warn("Could not play lobby music (user interaction required):", error);
+        lobbyMusic.play().catch((error) => {
+            console.warn(
+                "Could not play lobby music (user interaction required):",
+                error,
+            );
         });
     }
 }
@@ -293,7 +303,7 @@ function stopLobbyMusic() {
 // Play game music
 function playGameMusic() {
     if (gameMusic && musicInitialized) {
-        gameMusic.play().catch(error => {
+        gameMusic.play().catch((error) => {
             console.warn("Could not play game music:", error);
         });
         console.log("Game music started");
@@ -328,18 +338,27 @@ function playMeowSound() {
         const playPromise = selectedCatSound.play();
 
         if (playPromise !== undefined) {
-            playPromise.then(() => {
-                console.log(`✅ Cat sound ${randomIndex + 1} played successfully!`);
-            }).catch(error => {
-                console.warn(`❌ Could not play cat sound ${randomIndex + 1}:`, error);
-                console.log("This might be due to browser autoplay policy - sound will work after user interaction");
-            });
+            playPromise
+                .then(() => {
+                    console.log(
+                        `✅ Cat sound ${randomIndex + 1} played successfully!`,
+                    );
+                })
+                .catch((error) => {
+                    console.warn(
+                        `❌ Could not play cat sound ${randomIndex + 1}:`,
+                        error,
+                    );
+                    console.log(
+                        "This might be due to browser autoplay policy - sound will work after user interaction",
+                    );
+                });
         }
     } else {
         console.warn("Cannot play meow sound:", {
             meowSoundExists: !!meowSound,
             meowSoundLength: meowSound ? meowSound.length : 0,
-            musicInitialized: musicInitialized
+            musicInitialized: musicInitialized,
         });
     }
 }
@@ -356,17 +375,21 @@ function playCountdownSound() {
         const playPromise = countdownSound.play();
 
         if (playPromise !== undefined) {
-            playPromise.then(() => {
-                console.log("✅ Countdown sound played successfully!");
-            }).catch(error => {
-                console.warn("❌ Could not play countdown sound:", error);
-                console.log("This might be due to browser autoplay policy - sound will work after user interaction");
-            });
+            playPromise
+                .then(() => {
+                    console.log("✅ Countdown sound played successfully!");
+                })
+                .catch((error) => {
+                    console.warn("❌ Could not play countdown sound:", error);
+                    console.log(
+                        "This might be due to browser autoplay policy - sound will work after user interaction",
+                    );
+                });
         }
     } else {
         console.warn("Cannot play countdown sound:", {
             countdownSoundExists: !!countdownSound,
-            musicInitialized: musicInitialized
+            musicInitialized: musicInitialized,
         });
     }
 }
@@ -381,16 +404,18 @@ function playKibbleSound() {
         const playPromise = kibbleSoundClone.play();
 
         if (playPromise !== undefined) {
-            playPromise.then(() => {
-                console.log("🥣 Kibble sound played!");
-            }).catch(error => {
-                console.warn("❌ Could not play kibble sound:", error);
-            });
+            playPromise
+                .then(() => {
+                    console.log("🥣 Kibble sound played!");
+                })
+                .catch((error) => {
+                    console.warn("❌ Could not play kibble sound:", error);
+                });
         }
     } else {
         console.warn("Cannot play kibble sound:", {
             kibbleSoundExists: !!kibbleSound,
-            musicInitialized: musicInitialized
+            musicInitialized: musicInitialized,
         });
     }
 }
@@ -406,52 +431,52 @@ function playFinishSound() {
         const playPromise = finishSound.play();
 
         if (playPromise !== undefined) {
-            playPromise.then(() => {
-                console.log("🎉 Finish sound played successfully!");
-            }).catch(error => {
-                console.warn("❌ Could not play finish sound:", error);
-            });
+            playPromise
+                .then(() => {
+                    console.log("🎉 Finish sound played successfully!");
+                })
+                .catch((error) => {
+                    console.warn("❌ Could not play finish sound:", error);
+                });
         }
     } else {
         console.warn("Cannot play finish sound:", {
             finishSoundExists: !!finishSound,
-            musicInitialized: musicInitialized
+            musicInitialized: musicInitialized,
         });
     }
 }
 
-// Scale pin management
+// Progress tube management
 let currentWeight = 0;
 
-// Function to move the scale pin
+// Update the two side progress tubes (0-100%)
+function setGameProgressBar(percent) {
+    const fillPercent = Math.max(0, Math.min(100, percent));
+    ["game-progress-bar-left", "game-progress-bar-right"].forEach((id) => {
+        const bar = document.getElementById(id);
+        if (bar) {
+            bar.style.height = fillPercent + "%";
+        }
+    });
+}
+
+// Function to update the progress tubes based on the current weight
 function moveScalePin(weight) {
-    const pin = document.getElementById("scale-pin");
     console.log("moveScalePin called with weight:", weight);
-    console.log("Pin element found:", pin);
     console.log("GAME_CONFIG available:", window.GAME_CONFIG);
 
-    if (pin && window.GAME_CONFIG) {
-        // Match gameTrigger calculation: 180-degree range (-90deg to +90deg)
+    if (window.GAME_CONFIG) {
         const maxWeight = window.GAME_CONFIG.maxWeight;
         const percentage = Math.min((weight / maxWeight) * 100, 100); // Convert to percentage (0-100)
-        const angle = (percentage / 100) * 180 - 90; // -90deg to +90deg for 180deg range
 
-        pin.style.transform = `translateX(-50%) rotate(${angle}deg)`;
-        console.log(
-            `Scale pin moved to ${weight}kg (${percentage}% = ${angle}°)`
-        );
-        console.log("Applied transform:", pin.style.transform);
-
-        // Align progress bar with scale
-        // Also update the vertical progress bar in the Blade file
-        if (typeof setGameProgressBar === 'function') {
-            setGameProgressBar(percentage);
-        }
+        setGameProgressBar(percentage);
+        console.log(`Progress tubes moved to ${weight}kg (${percentage}%)`);
 
         // Check if maximum weight is reached and trigger confetti
         if (weight >= maxWeight) {
             console.log(
-                "Maximum weight reached! Triggering confetti celebration!"
+                "Maximum weight reached! Triggering confetti celebration!",
             );
             triggerConfettiCelebration();
         }
@@ -459,24 +484,13 @@ function moveScalePin(weight) {
         // Update current weight
         currentWeight = weight;
     } else {
-        console.error("Cannot move pin - element or config missing:", {
-            pin: !!pin,
-            config: !!window.GAME_CONFIG,
-        });
+        console.error("Cannot update progress tubes - config missing");
     }
-} // Initialize pin when page loads
+} // Initialize progress tubes when page loads
 document.addEventListener("DOMContentLoaded", function () {
-    // Set pin to starting position (-90 degrees for 0kg to match gameTrigger)
-    const pin = document.getElementById("scale-pin");
-    if (pin) {
-        pin.style.transform = "translateX(-50%) rotate(-90deg)";
-        console.log(
-            "Pin initialized to starting position (-90 degrees for 0kg)"
-        );
-    }
     // Wait for GAME_CONFIG to be available, then initialize
     setTimeout(() => {
-        moveScalePin(0); // Ensure pin is at 0kg position
+        moveScalePin(0); // Ensure tubes are at 0kg position
     }, 100);
 
     // Initialize kibble system with retry capability
@@ -485,7 +499,7 @@ document.addEventListener("DOMContentLoaded", function () {
     } catch (error) {
         console.error(
             "Failed to initialize kibble system on page load:",
-            error
+            error,
         );
         handleKibbleInitFailure();
     }
@@ -508,7 +522,7 @@ function handleGameStart(data) {
     // Prevent multiple start triggers
     if (isGameStarting) {
         console.warn(
-            "Game start already in progress, ignoring duplicate trigger"
+            "Game start already in progress, ignoring duplicate trigger",
         );
         return;
     }
@@ -556,7 +570,7 @@ function handleGameStart(data) {
     setTimeout(() => {
         if (isGameStarting) {
             console.warn(
-                "Safety fallback: Game still starting after 5 seconds, forcing transition"
+                "Safety fallback: Game still starting after 5 seconds, forcing transition",
             );
             liveGame.classList.remove("d-none");
             countDown.classList.add("d-none");
@@ -575,45 +589,45 @@ function startCountdownSequence() {
     playCountdownSound();
 
     // Hide all countdown images first
-    const allCountdownImages = document.querySelectorAll('.countdown-image');
-    allCountdownImages.forEach(img => img.classList.remove('active'));
+    const allCountdownImages = document.querySelectorAll(".countdown-image");
+    allCountdownImages.forEach((img) => img.classList.remove("active"));
 
     // Show countdown 3
     setTimeout(() => {
-        const countdown3 = document.getElementById('countdown-3');
+        const countdown3 = document.getElementById("countdown-3");
         if (countdown3) {
-            countdown3.classList.add('active');
+            countdown3.classList.add("active");
             console.log("Showing countdown: 3");
         }
     }, 0);
 
     // Show countdown 2
     setTimeout(() => {
-        const countdown3 = document.getElementById('countdown-3');
-        const countdown2 = document.getElementById('countdown-2');
-        if (countdown3) countdown3.classList.remove('active');
+        const countdown3 = document.getElementById("countdown-3");
+        const countdown2 = document.getElementById("countdown-2");
+        if (countdown3) countdown3.classList.remove("active");
         if (countdown2) {
-            countdown2.classList.add('active');
+            countdown2.classList.add("active");
             console.log("Showing countdown: 2");
         }
     }, 1000);
 
     // Show countdown 1
     setTimeout(() => {
-        const countdown2 = document.getElementById('countdown-2');
-        const countdown1 = document.getElementById('countdown-1');
-        if (countdown2) countdown2.classList.remove('active');
+        const countdown2 = document.getElementById("countdown-2");
+        const countdown1 = document.getElementById("countdown-1");
+        if (countdown2) countdown2.classList.remove("active");
         if (countdown1) {
-            countdown1.classList.add('active');
+            countdown1.classList.add("active");
             console.log("Showing countdown: 1");
         }
     }, 2000);
 
     // Hide countdown 1 after sequence completes
     setTimeout(() => {
-        const countdown1 = document.getElementById('countdown-1');
+        const countdown1 = document.getElementById("countdown-1");
         if (countdown1) {
-            countdown1.classList.remove('active');
+            countdown1.classList.remove("active");
             console.log("Countdown sequence complete");
         }
     }, 3000);
@@ -621,43 +635,36 @@ function startCountdownSequence() {
 
 // Reset countdown images to initial state
 function resetCountdownImages() {
-    const allCountdownImages = document.querySelectorAll('.countdown-image');
-    allCountdownImages.forEach(img => img.classList.remove('active'));
+    const allCountdownImages = document.querySelectorAll(".countdown-image");
+    allCountdownImages.forEach((img) => img.classList.remove("active"));
     console.log("Countdown images reset");
 }
 
 function handleGameUpdate(data) {
     console.log("Game updated:", data);
 
-    // Update scale pin if weight data is provided
+    // Update progress tubes if weight data is provided
     if (data && data.currentWeight !== undefined) {
         console.log(
-            `Updating scale pin from ${currentWeight}kg to ${data.currentWeight}kg`
+            `Updating progress tubes from ${currentWeight}kg to ${data.currentWeight}kg`,
         );
 
-        // Trigger falling kibble when weight increases
+        // Trigger falling objects when weight increases
         if (data.currentWeight > currentWeight) {
             // Use kibble count from WebSocket data if available, otherwise default to random
             const kibbleCount =
                 data.kibbleCount || Math.floor(Math.random() * 4) + 3;
-            triggerKibbleFall(kibbleCount);
+            const maxWeight = window.GAME_CONFIG?.maxWeight;
+            const isMax =
+                maxWeight !== undefined && data.currentWeight >= maxWeight;
+            triggerKibbleFall(kibbleCount, isMax);
         }
 
         moveScalePin(data.currentWeight);
-
-        // Optional: Add visual feedback for weight updates
-        const pin = document.getElementById("scale-pin");
-        if (pin) {
-            // Add a brief glow effect to show the pin moved
-            pin.style.filter = "drop-shadow(0 0 10px rgba(255, 255, 0, 0.8))";
-            setTimeout(() => {
-                pin.style.filter = "none";
-            }, 500);
-        }
     } else {
         console.warn(
             "Game update received but no currentWeight data found:",
-            data
+            data,
         );
     }
 }
@@ -696,7 +703,7 @@ async function processUserQueue() {
         await addUserToList(data); // Process user addition
 
         // Small delay between processing to ensure smooth animations
-        await new Promise(resolve => setTimeout(resolve, 600));
+        await new Promise((resolve) => setTimeout(resolve, 600));
     }
 
     isProcessingQueue = false;
@@ -720,14 +727,14 @@ async function addUserToList(data) {
 
     // Add new user to the list
     if (data.user) {
-        const userContainer = document.querySelector('.user-container');
+        const userContainer = document.querySelector(".user-container");
         if (!userContainer) {
             console.error("User container not found!");
             return;
         }
 
         // Check if we need to remove the oldest user first
-        const currentUsers = userContainer.querySelectorAll('.user-item');
+        const currentUsers = userContainer.querySelectorAll(".user-item");
         if (currentUsers.length >= MAX_VISIBLE_USERS) {
             console.log("Max users reached, removing oldest user");
             await removeOldestUser(userContainer);
@@ -753,19 +760,20 @@ async function addUserToList(data) {
 }
 
 async function removeOldestUser(container) {
-    const oldestUser = container.querySelector('.user-item');
+    const oldestUser = container.querySelector(".user-item");
     if (!oldestUser) return;
 
-    const userName = oldestUser.querySelector('.username')?.textContent || 'Unknown';
+    const userName =
+        oldestUser.querySelector(".username")?.textContent || "Unknown";
     console.log("Fading out oldest user:", userName);
 
     // Fade out animation
-    oldestUser.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-    oldestUser.style.opacity = '0';
-    oldestUser.style.transform = 'translateX(-20px)'; // Slide left while fading
+    oldestUser.style.transition = "opacity 0.6s ease, transform 0.6s ease";
+    oldestUser.style.opacity = "0";
+    oldestUser.style.transform = "translateX(-20px)"; // Slide left while fading
 
     // Wait for animation to complete, then remove
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
         setTimeout(() => {
             if (oldestUser.parentNode) {
                 oldestUser.remove();
@@ -778,18 +786,18 @@ async function removeOldestUser(container) {
 
 function createUserElement(user) {
     // Create user item container
-    const userItem = document.createElement('div');
-    userItem.className = 'user-item';
+    const userItem = document.createElement("div");
+    userItem.className = "user-item";
 
     // Create avatar image
-    const avatarImg = document.createElement('img');
+    const avatarImg = document.createElement("img");
     avatarImg.src = `${window.ASSET_BASE}/images/avatarCats/02_cat0${user.avatar_id}.webp`;
-    avatarImg.alt = 'Avatar';
-    avatarImg.className = 'avatar';
+    avatarImg.alt = "Avatar";
+    avatarImg.className = "avatar";
 
     // Create username text
-    const usernameText = document.createElement('p');
-    usernameText.className = 'username-text';
+    const usernameText = document.createElement("p");
+    usernameText.className = "username-text";
     usernameText.innerHTML = `<span class="username">${user.fname}</span> <span class="joined-text">Joined</span>`;
 
     // Add elements to user item
@@ -797,8 +805,8 @@ function createUserElement(user) {
     userItem.appendChild(usernameText);
 
     // Set initial state for animation (hidden)
-    userItem.style.opacity = '0';
-    userItem.style.transform = 'translateY(20px)';
+    userItem.style.opacity = "0";
+    userItem.style.transform = "translateY(20px)";
 
     return userItem;
 }
@@ -808,12 +816,12 @@ async function animateUserIn(userItem) {
     userItem.offsetHeight;
 
     // Apply transition and animate in
-    userItem.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-    userItem.style.opacity = '1';
-    userItem.style.transform = 'translateY(0)';
+    userItem.style.transition = "opacity 0.8s ease, transform 0.8s ease";
+    userItem.style.opacity = "1";
+    userItem.style.transform = "translateY(0)";
 
     // Wait for animation to complete
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
         setTimeout(() => {
             resolve();
         }, 800); // Match transition duration
@@ -843,9 +851,9 @@ function createFloatingHeartsAtPosition(centerX, centerY) {
 }
 
 function createSingleHeart(startX, startY) {
-    const heart = document.createElement('div');
-    heart.className = 'floating-heart';
-    heart.innerHTML = '💖'; // Heart emoji
+    const heart = document.createElement("div");
+    heart.className = "floating-heart";
+    heart.innerHTML = "💖"; // Heart emoji
 
     // Random slight offset for variety
     const offsetX = (Math.random() - 0.5) * 60; // ±30px horizontal spread
@@ -874,21 +882,21 @@ function createSingleHeart(startX, startY) {
 
 // Animate player count when it updates
 function animatePlayerCount() {
-    const playerCountContainer = document.querySelector('.player-count');
+    const playerCountContainer = document.querySelector(".player-count");
     if (!playerCountContainer) return;
 
     // Remove any existing animation class
-    playerCountContainer.classList.remove('count-updated');
+    playerCountContainer.classList.remove("count-updated");
 
     // Force a reflow to ensure the class removal takes effect
     playerCountContainer.offsetHeight;
 
     // Add the animation class
-    playerCountContainer.classList.add('count-updated');
+    playerCountContainer.classList.add("count-updated");
 
     // Remove the class after animation completes
     setTimeout(() => {
-        playerCountContainer.classList.remove('count-updated');
+        playerCountContainer.classList.remove("count-updated");
     }, 600); // Match animation duration
 }
 
@@ -896,16 +904,6 @@ const finishDiv = document.querySelector(".finish");
 
 function handleGameComplete(data) {
     console.log("Game completed:", data);
-
-    // Show completion animation or effects
-    const pin = document.getElementById("scale-pin");
-    if (pin) {
-        // Flash the pin with green glow for completion
-        pin.style.filter = "drop-shadow(0 0 15px #28a745)";
-        setTimeout(() => {
-            pin.style.filter = "none"; // Reset filter
-        }, 2000);
-    }
 
     // Optional: Return to lobby after completion
     setTimeout(() => {
@@ -926,13 +924,17 @@ function handleGameFinish(data) {
 
     // Check if there are still kibbles falling
     if (activeKibbles > 0) {
-        console.log(`Waiting for ${activeKibbles} kibbles to finish falling before proceeding with game finish`);
+        console.log(
+            `Waiting for ${activeKibbles} kibbles to finish falling before proceeding with game finish`,
+        );
         window.pendingGameFinish = data; // Store the data for later
 
         // Safety timeout - proceed anyway after 5 seconds even if kibbles haven't finished
         setTimeout(() => {
             if (window.pendingGameFinish) {
-                console.warn("Safety timeout: Proceeding with game finish despite pending kibbles");
+                console.warn(
+                    "Safety timeout: Proceeding with game finish despite pending kibbles",
+                );
                 proceedWithGameFinish(window.pendingGameFinish);
                 window.pendingGameFinish = null;
                 activeKibbles = 0; // Reset counter to prevent issues
@@ -1055,18 +1057,24 @@ window.testPinRange = function () {
 };
 
 // Debug function to test cat sounds manually
-window.testCatSound = function(soundNumber = null) {
+window.testCatSound = function (soundNumber = null) {
     console.log("Testing cat sound manually...");
 
     if (soundNumber && soundNumber >= 1 && soundNumber <= 8) {
         // Test specific sound
         const catSound = meowSound[soundNumber - 1];
         catSound.currentTime = 0;
-        catSound.play().then(() => {
-            console.log(`✅ Cat sound ${soundNumber} played successfully!`);
-        }).catch(error => {
-            console.warn(`❌ Could not play cat sound ${soundNumber}:`, error);
-        });
+        catSound
+            .play()
+            .then(() => {
+                console.log(`✅ Cat sound ${soundNumber} played successfully!`);
+            })
+            .catch((error) => {
+                console.warn(
+                    `❌ Could not play cat sound ${soundNumber}:`,
+                    error,
+                );
+            });
     } else {
         // Test random sound (same as user join)
         playMeowSound();
@@ -1074,7 +1082,7 @@ window.testCatSound = function(soundNumber = null) {
 };
 
 // Debug function to test all cat sounds in sequence
-window.testAllCatSounds = function() {
+window.testAllCatSounds = function () {
     console.log("Testing all 8 cat sounds in sequence...");
 
     for (let i = 0; i < 8; i++) {
@@ -1082,35 +1090,44 @@ window.testAllCatSounds = function() {
             console.log(`Playing cat sound ${i + 1}...`);
             const catSound = meowSound[i];
             catSound.currentTime = 0;
-            catSound.play().then(() => {
-                console.log(`✅ Cat sound ${i + 1} played!`);
-            }).catch(error => {
-                console.warn(`❌ Cat sound ${i + 1} failed:`, error);
-            });
+            catSound
+                .play()
+                .then(() => {
+                    console.log(`✅ Cat sound ${i + 1} played!`);
+                })
+                .catch((error) => {
+                    console.warn(`❌ Cat sound ${i + 1} failed:`, error);
+                });
         }, i * 1500); // 1.5 second delay between sounds
     }
 };
 
 // Debug function to test countdown sound manually
-window.testCountdownSound = function() {
+window.testCountdownSound = function () {
     console.log("Testing countdown sound manually...");
     playCountdownSound();
 };
 
 // Debug function to test kibble sound manually
-window.testKibbleSound = function() {
+window.testKibbleSound = function () {
     console.log("Testing kibble sound manually...");
     playKibbleSound();
 };
 
+// Debug function to test the falling objects animation manually
+window.testFallingObjects = function (count = 4, isMax = false) {
+    console.log("Testing falling objects manually...", { count, isMax });
+    triggerKibbleFall(count, isMax);
+};
+
 // Debug function to test finish sound manually
-window.testFinishSound = function() {
+window.testFinishSound = function () {
     console.log("Testing finish sound manually...");
     playFinishSound();
 };
 
 // Debug function to test countdown sequence manually
-window.testCountdownSequence = function() {
+window.testCountdownSequence = function () {
     console.log("Testing countdown sequence manually...");
 
     // Show countdown container
@@ -1134,66 +1151,75 @@ let activeKibbles = 0; // Track number of kibbles currently falling
 
 // Kibble configuration - adjustable settings
 const KIBBLE_CONFIG = {
-    disappearOffset: -4, // pixels: positive = disappear before scale, negative = after scale
+    disappearOffset: 10, // pixels of clearance to keep above the product can before fading out
     fallSpeed: 200, // pixels per second (higher = faster fall)
-    soundTiming: 0.8 // when to play sound (0.8 = 80% through animation)
+    soundTiming: 0.8, // when to play sound (0.8 = 80% through animation)
 };
 
 // Function to adjust kibble disappear offset
-window.setKibbleOffset = function(offset) {
+window.setKibbleOffset = function (offset) {
     KIBBLE_CONFIG.disappearOffset = offset;
     console.log(`Kibble disappear offset set to: ${offset}px`);
 };
 
 // Function to adjust kibble fall speed
-window.setKibbleFallSpeed = function(speed) {
+window.setKibbleFallSpeed = function (speed) {
     KIBBLE_CONFIG.fallSpeed = speed;
     console.log(`Kibble fall speed set to: ${speed} pixels/second`);
 };
 
-function createFallingKibble(x, y) {
+function createFallingKibble(x, y, isBig = false) {
     activeKibbles++; // Increment active kibble count
-    console.log(`Creating kibble. Active kibbles: ${activeKibbles}`);
+    console.log(`Creating falling object. Active: ${activeKibbles}`);
 
-    // Find the scale-image element and get its position
-    const scaleImg = document.querySelector('.scale-image');
+    // Find the product can and get its position - objects fall toward it
+    const productCan = document.querySelector(".product-can");
     let scaleY = window.innerHeight * 0.8; // fallback if not found
     let animationDuration = 2000; // default duration
 
-    if (scaleImg) {
-        const scaleRect = scaleImg.getBoundingClientRect();
-        scaleY = scaleRect.top + KIBBLE_CONFIG.disappearOffset; // Apply offset to disappear position
+    // Cycle randomly between the 3 small falling objects, or use the big one when full
+    const objectFile = isBig
+        ? "big.png"
+        : `${Math.floor(Math.random() * 3) + 1}.png`;
+    const size = isBig ? 190 : 110;
 
-        // Calculate precise animation duration based on distance to scale
+    if (productCan) {
+        const canRect = productCan.getBoundingClientRect();
+        // Stop clear above the can's visible top, accounting for the object's own size
+        scaleY = canRect.top - size / 2 - KIBBLE_CONFIG.disappearOffset;
+
+        // Calculate precise animation duration based on distance to the can
         const startY = y;
         const endY = scaleY;
         const totalFall = Math.max(endY - startY, 100); // Minimum 100px fall
         animationDuration = (totalFall / KIBBLE_CONFIG.fallSpeed) * 1000; // Convert to milliseconds
 
-        console.log(`Kibble will fall ${totalFall}px in ${animationDuration}ms and disappear at scale position + ${KIBBLE_CONFIG.disappearOffset}px offset`);
+        console.log(
+            `Object will fall ${totalFall}px in ${animationDuration}ms and disappear ${KIBBLE_CONFIG.disappearOffset}px above the product can`,
+        );
     }
 
     const kibble = document.createElement("div");
     kibble.className = "falling-kibble";
     kibble.style.cssText = `
         position: fixed;
-        width: 30px;
-        height: 30px;
-        background-image: url('${window.ASSET_BASE}/images/brand/kibble.webp');
+        width: ${size}px;
+        height: ${size}px;
+        background-image: url('${window.ASSET_BASE}/images/brand/falling_objects/${objectFile}');
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
-        left: ${x - 15}px;
-        top: ${y - 15}px;
+        left: ${x - size / 2}px;
+        top: ${y - size / 2}px;
         z-index: 33;
         pointer-events: none;
-        animation: fallAndSpinToScale ${animationDuration}ms ease-in forwards;
+        animation: fallAndFadeToScale ${animationDuration}ms ease-in forwards;
         --fall-distance: ${scaleY - y}px;
     `;
 
     document.body.appendChild(kibble);
 
-    // Play kibble sound when it visually reaches the scale (adjustable timing)
+    // Play kibble sound when it visually reaches the can (adjustable timing)
     const soundTiming = animationDuration * KIBBLE_CONFIG.soundTiming;
     setTimeout(() => {
         playKibbleSound();
@@ -1205,28 +1231,36 @@ function createFallingKibble(x, y) {
             kibble.parentNode.removeChild(kibble);
         }
         activeKibbles--; // Decrement active kibble count
-        console.log(`Kibble removed. Active kibbles: ${activeKibbles}`);
+        console.log(`Falling object removed. Active: ${activeKibbles}`);
 
         // Check if this was the last kibble and game is waiting to finish
         if (activeKibbles === 0 && window.pendingGameFinish) {
-            console.log("All kibbles have fallen, proceeding with game finish");
+            console.log(
+                "All falling objects have landed, proceeding with game finish",
+            );
             proceedWithGameFinish(window.pendingGameFinish);
             window.pendingGameFinish = null;
         }
     }, animationDuration);
 }
 
-// Trigger kibble fall from random positions at top of screen
-function triggerKibbleFall(kibbleCount = null) {
+// Trigger falling objects from random positions at top of screen
+function triggerKibbleFall(kibbleCount = null, isMax = false) {
     // Only trigger in live game mode
     if (!liveGame.classList.contains("d-none")) {
         const screenWidth = window.innerWidth;
         const screenHeight = window.innerHeight;
 
-        // Target the bag area (center of screen where the dispenser/bag is)
+        // Target the product can area (center of screen)
         const bagCenterX = screenWidth / 2;
-        const bagCenterY = screenHeight * 0.4; // Approximate bag position
-        const bagWidth = screenWidth * 0.1; // Bag area width (10% of screen) - decreased from 20%
+        const bagWidth = screenWidth * 0.1; // Landing area width (10% of screen)
+
+        // When the side bars are full, drop a single big object instead of the usual batch
+        if (isMax) {
+            console.log("Bars full - dropping the big object!");
+            createFallingKibble(bagCenterX, -30, true);
+            return;
+        }
 
         // Use provided kibble count or default to random 3-6
         const finalKibbleCount =
@@ -1234,22 +1268,22 @@ function triggerKibbleFall(kibbleCount = null) {
                 ? kibbleCount
                 : Math.floor(Math.random() * 4) + 3;
 
-        console.log(`Dropping ${finalKibbleCount} kibbles into the bag!`);
+        console.log(`Dropping ${finalKibbleCount} objects!`);
 
         for (let i = 0; i < finalKibbleCount; i++) {
             setTimeout(() => {
-                // Random X position within bag area
+                // Random X position within the landing area
                 const randomOffset = (Math.random() - 0.5) * bagWidth;
                 const targetX = bagCenterX + randomOffset;
 
-                // Start from top of screen but target the bag
+                // Start from top of screen but target the product can
                 const startY = -30; // Start above screen
 
-                createFallingKibble(targetX, startY);
-            }, i * 150); // Stagger the kibbles every 150ms
+                createFallingKibble(targetX, startY, false);
+            }, i * 150); // Stagger the objects every 150ms
         }
 
-        console.log(`${finalKibbleCount} kibbles falling into the bag!`);
+        console.log(`${finalKibbleCount} objects falling!`);
     }
 }
 
@@ -1259,17 +1293,17 @@ function addKibbleStyles() {
         const style = document.createElement("style");
         style.id = "kibble-styles";
         style.textContent = `
-            @keyframes fallAndSpinToScale {
+            @keyframes fallAndFadeToScale {
                 0% {
-                    transform: translateY(0) rotate(0deg);
+                    transform: translateY(0) scale(1);
                     opacity: 1;
                 }
-                95% {
-                    transform: translateY(var(--fall-distance)) rotate(720deg);
+                75% {
+                    transform: translateY(var(--fall-distance)) scale(1);
                     opacity: 1;
                 }
                 100% {
-                    transform: translateY(var(--fall-distance)) rotate(720deg);
+                    transform: translateY(var(--fall-distance)) scale(0.4);
                     opacity: 0;
                 }
             }
@@ -1331,7 +1365,7 @@ function initializeKibble() {
         }
 
         console.log(
-            "Animation system initialized successfully - kibble and hearts will animate properly"
+            "Animation system initialized successfully - kibble and hearts will animate properly",
         );
         kibbleRetryAttempts = 0; // Reset counter on success
     } catch (error) {
@@ -1349,18 +1383,18 @@ function handleKibbleInitFailure() {
         console.log(
             `Kibble initialization failed. Retrying in ${
                 delay / 1000
-            } seconds... (Attempt ${kibbleRetryAttempts}/${maxKibbleRetries})`
+            } seconds... (Attempt ${kibbleRetryAttempts}/${maxKibbleRetries})`,
         );
 
         setTimeout(() => {
             console.log(
-                `Kibble retry attempt ${kibbleRetryAttempts}: Reinitializing kibble system...`
+                `Kibble retry attempt ${kibbleRetryAttempts}: Reinitializing kibble system...`,
             );
             initializeKibble();
         }, delay);
     } else {
         console.error(
-            `Failed to initialize kibble system after ${maxKibbleRetries} attempts. Kibble animations may not work properly.`
+            `Failed to initialize kibble system after ${maxKibbleRetries} attempts. Kibble animations may not work properly.`,
         );
 
         // Show user notification for kibble initialization failure
@@ -1426,13 +1460,13 @@ function triggerConfettiCelebration() {
     // Check if confetti library is available
     if (typeof confetti === "undefined") {
         console.warn(
-            "Confetti library not loaded. Cannot trigger celebration."
+            "Confetti library not loaded. Cannot trigger celebration.",
         );
         return;
     }
 
     console.log(
-        "🎉 Starting confetti celebration for reaching maximum weight!"
+        "🎉 Starting confetti celebration for reaching maximum weight!",
     );
 
     // Play finish sound for celebration
@@ -1524,7 +1558,7 @@ function enableIncreaseOnAdmin() {
 function startContinuousHearts() {
     const spawnInterval = 800; // ms between hearts
     // Find the user list container
-    const userContainer = document.querySelector('.user-container');
+    const userContainer = document.querySelector(".user-container");
     if (!userContainer) return;
     const rect = userContainer.getBoundingClientRect();
     // Position hearts beside the user list (right side, vertically centered)
@@ -1535,10 +1569,12 @@ function startContinuousHearts() {
 
     function spawnHeartsIfLobby() {
         // Only show hearts if lobby is visible and there is at least one user
-        const lobby = document.querySelector('.live-feed-lobby');
-        const userContainer = document.querySelector('.user-container');
-        const hasUsers = userContainer && userContainer.querySelectorAll('.user-item').length > 0;
-        if (lobby && !lobby.classList.contains('d-none') && hasUsers) {
+        const lobby = document.querySelector(".live-feed-lobby");
+        const userContainer = document.querySelector(".user-container");
+        const hasUsers =
+            userContainer &&
+            userContainer.querySelectorAll(".user-item").length > 0;
+        if (lobby && !lobby.classList.contains("d-none") && hasUsers) {
             createSingleHeart(centerX, centerY);
         }
     }

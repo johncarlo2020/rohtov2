@@ -168,14 +168,73 @@
             z-index: -1;
         }
 
-        .scale-image {
+        .product-can {
             position: absolute;
-            bottom: -1px;
+            bottom: 2vh;
             left: 50%;
             transform: translateX(-50%);
-            width: 100vw;
+            width: 30vw;
+            max-width: 480px;
             height: auto;
-            z-index: 0;
+            object-fit: contain;
+            z-index: 40;
+        }
+
+        .side-panel {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3vh;
+            z-index: 10;
+
+            &.side-panel-left {
+                left: 3vw;
+            }
+
+            &.side-panel-right {
+                right: 3vw;
+            }
+
+            .side-message {
+                width: 16vw;
+                min-width: 180px;
+                max-width: 260px;
+                height: auto;
+                object-fit: contain;
+            }
+
+            .progress-tube {
+                position: relative;
+                width: 3vw;
+                min-width: 26px;
+                max-width: 44px;
+                height: 38vh;
+                min-height: 200px;
+                max-height: 400px;
+                background: rgba(255, 255, 255, 0.85);
+                border: 3px solid #ffffff;
+                border-radius: 999px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+                overflow: hidden;
+
+                .progress-tube-fill {
+                    position: absolute;
+                    left: 0;
+                    bottom: 0;
+                    width: 100%;
+                    height: 0%;
+                    background-size: 100% 100%;
+                    background-position: center;
+                    background-repeat: no-repeat;
+                    border-radius: 999px;
+                    transition: height 0.5s cubic-bezier(0.4, 2, 0.6, 1);
+                }
+            }
         }
     }
 }
@@ -185,13 +244,27 @@
     height: 100vh;
     position: relative;
     overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 
-    .brand-logo {
-        width: 100%;
-        height: 13vh;
+    .countdown-ready {
+        width: 30vw;
+        max-width: 420px;
+        height: auto;
         object-fit: contain;
-        margin: 0 auto;
-        margin-top: 10vh;
+        margin-bottom: 2vh;
+    }
+
+    .countdown-number-wrap {
+        position: relative;
+        width: 18vw;
+        max-width: 220px;
+        height: 18vw;
+        max-height: 220px;
     }
 
     .countdown-image {
@@ -209,11 +282,6 @@
             opacity: 1;
         }
     }
-}
-
-.finish {
-    width: 100vw;
-    height: 100vh;
 }
 
 // Player count animation keyframes
@@ -286,40 +354,53 @@
     position: relative;
     width: 100vw;
     height: 100vh;
+    overflow: hidden;
 
-    .donate-gif {
-        width: 28vw;
-        height: auto;
-        object-fit: contain;
+    .finish-background {
         position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -1;
+    }
+
+    .finish-product {
+        position: absolute;
+        bottom: -306px;
+        right: -321px;
+
+        width: 1755px;
+        height: 1261px;
+        -o-object-fit: contain;
+        object-fit: cover;
         z-index: 1;
     }
 
-    .thank-end {
-        width: 80vw;
-        height: auto;
-        -o-object-fit: contain;
-        object-fit: contain;
+    .finish-content {
         position: absolute;
-        bottom: 74px !important;
-        left: 50%;
-        transform: translateX(-50%);
+        top: 50%;
+        left: 8vw;
+        transform: translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4vh;
         z-index: 2;
+        max-width: 34vw;
     }
 
-    .brand-logo {
+    .finish-title {
         width: 100%;
-        height: 13vh;
+        height: auto;
         object-fit: contain;
-        margin: 0 auto;
-        margin-top: 10vh;
-        position: absolute;
-        top: 0;
-        left: 50%;
-        transform: translateX(-50%);
+    }
+
+    .finish-subtitle {
+        width: 90%;
+        height: auto;
+        object-fit: contain;
     }
 }
 

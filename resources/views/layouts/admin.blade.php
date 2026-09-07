@@ -20,7 +20,7 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no, maximum-scale=1" />
     <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('assets/img/apple-icon.png') }}" />
-    <link rel="icon" type="image/png" href="images/logo.svg" />
+    <link rel="icon" type="image/png" href="{{ asset('images/brand/logo.png') }}" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <title>{{ config('app.name', 'Loading ...') }}</title>
     <!--     Fonts and icons     -->
@@ -55,7 +55,7 @@
                 aria-hidden="true" id="iconSidenav"></i> --}}
             <a class="navbar-brand m-0 d-flex w-100 justify-content-center align-items-center" href=""
                 target="_blank">
-                <img src="{{ asset('images/brand/logo.webp') }}" class="navbar-brand-img h-100" alt="main_logo" />
+                <img src="{{ asset('images/brand/logo.png') }}" class="navbar-brand-img h-100" alt="Friso Gold" />
             </a>
         </div>
         <hr class="horizontal dark mt-0" />

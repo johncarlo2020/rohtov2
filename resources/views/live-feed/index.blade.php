@@ -21,65 +21,6 @@
             align-items: center;
         }
 
-        .scale-labels {
-            position: absolute;
-            bottom: 20%;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            justify-content: space-between;
-            width: 80%;
-            max-width: 400px;
-        }
-
-        .scale-value {
-            color: #fff;
-            font-weight: normal;
-            font-size: 17px;
-            font-weight: bold;
-        }
-
-        .scale-label {
-            position: absolute;
-            z-index: 50;
-
-        }
-
-        .scale-min {
-            left: 419px;
-            bottom: 7px;
-        }
-
-        .scale-median {
-            left: 50%;
-            bottom: 56px;
-            transform: translateX(-50%);
-        }
-
-        .scale-max {
-            right: 420px;
-            bottom: 7px;
-        }
-
-        /* Scale Pin/Needle */
-        .scale-pin {
-            position: absolute;
-            width: 40px;
-            height: 80px;
-            background-image: url('{{ asset('images/brand/niddle.webp') }}');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center bottom;
-            bottom: 5px;
-            left: 50%;
-            transform: translateX(-50%) rotate(-90deg);
-            /* Start at -90deg (0kg) to match gameTrigger */
-            transform-origin: center bottom;
-            z-index: 60;
-            transition: transform 0.5s ease;
-            /* Debug border to see if element is there */
-        }
-
         /* User Container Overflow Prevention */
         .user-container {
             overflow: hidden;
@@ -235,6 +176,14 @@
             background-size: cover;
             background-position: center;
         }
+
+        .count-down {
+            background-image: url('{{ asset('images/brand/background-desktop.png') }}');
+        }
+
+        .progress-tube-fill {
+            background-image: url('{{ asset('images/brand/game/bar-fill.png') }}');
+        }
     </style>
 </head>
 
@@ -252,105 +201,50 @@
     </div>
 
     <div class="count-down d-none">
-        {{-- <img src="{{ asset('images/brand/logo.webp') }}" alt="Brand Logo" class="pattern-left">
-        <img src="{{ asset('images/brand/logo.webp') }}" alt="Brand Logo" class="pattern-right"> --}}
-        <img src="{{ asset('images/brand/countdown_images/3.webp') }}" alt="Countdown 3" class="countdown-image"
-            id="countdown-3">
-        <img src="{{ asset('images/brand/countdown_images/2.webp') }}" alt="Countdown 2" class="countdown-image"
-            id="countdown-2">
-        <img src="{{ asset('images/brand/countdown_images/1.webp') }}" alt="Countdown 1" class="countdown-image"
-            id="countdown-1">
+        <img src="{{ asset('images/brand/ready.png') }}" alt="Ready" class="countdown-ready">
+        <div class="countdown-number-wrap">
+            <img src="{{ asset('images/brand/countdown-number/3.png') }}" alt="Countdown 3" class="countdown-image"
+                id="countdown-3">
+            <img src="{{ asset('images/brand/countdown-number/2.png') }}" alt="Countdown 2" class="countdown-image"
+                id="countdown-2">
+            <img src="{{ asset('images/brand/countdown-number/1.png') }}" alt="Countdown 1" class="countdown-image"
+                id="countdown-1">
+        </div>
     </div>
 
     <div class="live-game d-none">
-        <img src="{{ asset('images/brand/gameBg.webp') }}" alt="" class="game-background">
-        <img src="{{ asset('images/brand/scale.webp') }}" alt="" class="scale-image">
+        <img src="{{ asset('images/brand/background-desktop.png') }}" alt="" class="game-background">
 
-        <div class="progress-container">
-            <div
-                style="position: absolute; left: 40px; top: 0; height: 100%; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; z-index: 91; pointer-events: none;">
-                <span style="color: #000; font-weight: bold; font-size: 1.1em; text-shadow: 0 1px 2px #fff;">MAX</span>
-                <span style="color: #000; font-weight: bold; font-size: 1.1em; text-shadow: 0 1px 2px #fff;">0kg</span>
-            </div>
-            <div class="progress-bar-bg"
-                style="position: relative; width: 100%; height: 100%; background: linear-gradient(180deg, #FF0101 0%, #FFA600 36%, #F7FF00 91%); border: 2px solid #e6c97a; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                <div id="game-progress-bar" class="progress-bar-fill"
-                    style="
-                    position: absolute;
-                    left: 0;
-                    bottom: 0;
-                    width: 100%;
-                    height: 0%;
-                    background: lime;
-                    transition: height 0.5s cubic-bezier(.4,2,.6,1);
-                    opacity: 0.95;
-                    border-radius: 20px;
-                ">
-                </div>
-                <!-- Rounded circle cap, positioned with JS -->
-                <div id="progress-cap" class="progress-cap"
-                    style="
-                    position: absolute;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    width: 30%;
-                    aspect-ratio: 1/1;
-                    background-color: lime;
-                    border-radius: 50%;
-                    box-shadow: 0 0 10px rgba(0,255,0,0.4);
-                    bottom: 0%;
-                    z-index: 2;
-                    transition: bottom 0.5s cubic-bezier(.4,2,.6,1);
-                ">
-                </div>
+        <img src="{{ asset('images/brand/game/product.png') }}" alt="Friso Gold" class="product-can">
+
+        <div class="side-panel side-panel-left">
+            <img src="{{ asset('images/brand/game/side-message.png') }}" alt="Tap for more good things!"
+                class="side-message">
+            <div class="progress-tube">
+                <div id="game-progress-bar-left" class="progress-tube-fill"></div>
             </div>
         </div>
 
-        <script>
-            // Example: update the progress bar based on current value (0-100%)
-            // You should call this function whenever the game value changes
-            function setGameProgressBar(percent) {
-                // percent: 0 to 100
-                const bar = document.getElementById('game-progress-bar');
-                const cap = document.getElementById('progress-cap');
-                const fillPercent = Math.max(0, Math.min(100, percent));
-                if (bar) {
-                    bar.style.height = fillPercent + '%';
-                }
-                if (cap) {
-                    // Cap's bottom should match the top of the fill
-                    cap.style.bottom = `calc(${fillPercent}% - 15px)`; // 15px is half the cap's height (adjust as needed)
-                    // Hide cap if fill is 0
-                    cap.style.opacity = fillPercent > 0 ? 1 : 0;
-                }
-            }
-
-            // Example usage: set to 50% on load (replace with your actual logic)
-            // document.addEventListener('DOMContentLoaded', function() {
-            //     setGameProgressBar(50);
-            // });
-        </script>
-
-        <!-- Scale Pin/Needle -->
-        <div class="scale-pin" id="scale-pin"></div>
-
-        <!-- Scale Value Labels -->
-        <div class="scale-label scale-min">
-            <span class="scale-value">{{ intval($gameConfig->min_weight ?? 0) }}KG</span>
-        </div>
-        <div class="scale-label scale-median d-none">
-            <span class="scale-value">{{ intval(($gameConfig->max_weight ?? 4) / 2) }}KG</span>
-        </div>
-        <div class="scale-label scale-max">
-            <span class="scale-value">MAX</span>
+        <div class="side-panel side-panel-right">
+            <img src="{{ asset('images/brand/game/side-message.png') }}" alt="Tap for more good things!"
+                class="side-message">
+            <div class="progress-tube">
+                <div id="game-progress-bar-right" class="progress-tube-fill"></div>
+            </div>
         </div>
 
         <div id="game"></div>
     </div>
     <div class="finish d-none">
-        <img src="{{ asset('images/brand/logo.webp') }}" alt="Brand Logo" class="brand-logo">
-        <img src="{{ asset('images/brand/donate gif.gif') }}" alt="" class="donate-gif">
-        <img src="{{ asset('images/brand/thank-end.webp') }}" alt="" class="thank-end">
+        <img src="{{ asset('images/brand/background-desktop.png') }}" alt="" class="finish-background">
+        <img src="{{ asset('images/brand/congratulation/product with lines.png') }}" alt="Friso Gold"
+            class="finish-product">
+        <div class="finish-content">
+            <img src="{{ asset('images/brand/congratulation/you did it@3x 1.png') }}" alt="You did it!"
+                class="finish-title">
+            <img src="{{ asset("images/brand/congratulation/We've unlocked 6x less tummy issues for more good things!.png") }}"
+                alt="We've unlocked 6x less tummy issues for more good things!" class="finish-subtitle">
+        </div>
     </div>
 
     <!-- Connection Status Modal -->

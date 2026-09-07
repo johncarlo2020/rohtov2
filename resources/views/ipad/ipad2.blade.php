@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="col-12 d-flex justify-content-center align-items-center animate-entry">
                     <div class="branding">
-                        <img class="logo" src="{{ asset('images/brand/logo.webp') }}" alt="Brand Logo" />
+                        <img class="logo" src="{{ asset('images/brand/logo.png') }}" alt="Friso Gold" />
                     </div>
                 </div>
                 <div class="text-center col-12 mt-5">

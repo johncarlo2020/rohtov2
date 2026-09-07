@@ -111,7 +111,7 @@
 
 <body>
     <div class="branding">
-        <img class="logo" src="{{ asset('images/brand/logo.webp') }}" alt="Brand Logo" />
+        <img class="logo" src="{{ asset('images/brand/logo.png') }}" alt="Friso Gold" />
     </div>
     <div id="aquarium-container">
         <video id="aquarium-bg-video" src="{{ asset('video/1080 x 1920 underworld.mp4') }}" width="1080"

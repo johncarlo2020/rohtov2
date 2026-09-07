@@ -15,7 +15,19 @@
                     </div>
                 </div>
                 <div class="mid">
-                    <div class="px-2 w-75 m-auto">
+                    <div class="px-2 w-85 m-auto text-center">
+                        <h2 class="fw-bold text-dark text-uppercase mb-4" style="font-size: 1.05rem; line-height: 1.4; letter-spacing: 0.5px;">
+                            LONGCHAMP INVITES YOU TO "<strong>BE CREATIVE</strong>" THIS WINTER 2026, EXCLUSIVELY IN MALAYSIA
+                        </h2>
+
+                        <p class="text-dark text-uppercase mb-3" style="font-size: 0.82rem; line-height: 1.5; letter-spacing: 0.3px;">
+                            THIS WINTER 2026, LONGCHAMP INVITES YOU TO "<strong>BE CREATIVE</strong>" &mdash; A CELEBRATION OF ART, CRAFTSMANSHIP AND IMAGINATION INSPIRED BY THE MAISON'S GLOBAL THEME OF <strong>CREATIVE CURIOSITY.</strong>
+                        </p>
+
+                        <p class="text-dark text-uppercase mb-4" style="font-size: 0.82rem; line-height: 1.5; letter-spacing: 0.3px;">
+                            THE CREATIVE EXPERIENCE EXTENDS BEYOND THE COLLECTION. IN THIS WORKSHOP, DISCOVER THE ART OF COLLAGE THROUGH AN INTERACTIVE ACTIVITY INSPIRED BY <strong>CAROLINE HÉLAIN'S EXPRESSIVE LANDSCAPES.</strong> CREATE YOUR OWN LAYERED LANDSCAPE USING PAPER, COLOUR AND TEXTURE TO BRING YOUR COMPOSITION TO LIFE.
+                        </p>
+
                         <div class="bottom-text">
                             <a href="{{ route('register') }}" class="custom-btn custom-btn-primary mb-2 pulse-slow">REGISTER</a>
                             <a href="{{ route('login') }}" class="custom-btn custom-btn-primary pulse-slow">LOGIN</a>

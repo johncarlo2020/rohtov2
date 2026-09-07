@@ -27,8 +27,8 @@ class BookingApiController extends Controller
      */
     public function getDates(Request $request): JsonResponse
     {
-        $startDate = $request->query('start_date', Carbon::today()->startOfMonth()->format('Y-m-d'));
-        $endDate = $request->query('end_date', Carbon::today()->addMonths(2)->endOfMonth()->format('Y-m-d'));
+        $startDate = $request->query('start_date', '2026-09-30');
+        $endDate = $request->query('end_date', '2026-10-17');
 
         $availabilities = $this->availabilityService->getDateAvailabilities($startDate, $endDate);
 

@@ -78,7 +78,7 @@
                         </div>
                         <span class="nav-link-text ms-1">Users</span>
                     </a>
-                <li class="nav-item d-none">
+                <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('bookings') ? 'active' : '' }}" href="{{ route('bookings') }}">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -95,6 +95,16 @@
                             <i class="fa-solid fa-barcode text-warning text-sm opacity-10"></i>
                         </div>
                         <span class="nav-link-text ms-1">Scanner</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.vip*') ? 'active' : '' }}" href="{{ route('admin.vip') }}">
+                        <div
+                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fa-solid fa-crown text-warning text-sm opacity-10"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">VIP Management</span>
                     </a>
                 </li>
 
@@ -268,6 +278,7 @@
     {{-- <script src="./assets/js/argon-dashboard.min.js?v=2.0.4"></script> --}}
      @vite(['resources/js/argon-dashboard.js'])
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
 </body>
 

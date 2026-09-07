@@ -5,6 +5,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\IpadController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\VipController;
 use App\Http\Controllers\Api\GiftController;
 use App\Http\Controllers\BookingViewController;
 use Illuminate\Support\Facades\Route;
@@ -74,6 +75,15 @@ Route::group(['middleware' => ['admin']], function () {
     Route::get('/admin/earlybird', 'App\Http\Controllers\StationController@earlybird')->name('earlybird');
 
     Route::get('/admin/scanner', 'App\Http\Controllers\StationController@scanner')->name('scanner');
+    Route::post('/admin/scanner/lookup', [BookingController::class, 'lookup'])->name('admin.scanner.lookup');
+    Route::post('/admin/scanner/attend', [BookingController::class, 'markAttendingNow'])->name('admin.scanner.attend');
+
+    Route::get('/admin/vip', [VipController::class, 'index'])->name('admin.vip');
+    Route::post('/admin/vip', [VipController::class, 'store'])->name('admin.vip.store');
+    Route::post('/admin/vip/{id}/attend', [VipController::class, 'markAttended'])->name('admin.vip.attend');
+    Route::delete('/admin/vip/{id}', [VipController::class, 'destroy'])->name('admin.vip.destroy');
+
+    Route::post('/admin/walkin-booking', [BookingController::class, 'storeWalkin'])->name('admin.walkin.store');
 
     Route::post('verify-otp-admin', 'App\Http\Controllers\StationController@verifyAdmin')->name('verifyAdmin');
 

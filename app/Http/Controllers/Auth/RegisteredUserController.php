@@ -41,57 +41,39 @@ class RegisteredUserController extends Controller
   public function store(Request $request): RedirectResponse
   {
       $request->validate([
+          'title' => ['required', 'string', 'max:20'],
+          'lname' => ['required', 'string', 'max:255'],
           'fname' => ['required', 'string', 'max:255'],
           'email' => ['required', 'email', 'unique:users,email'],
+          'preferred_contact' => ['required', 'string', 'max:50'],
           'privacy_policy' => ['required'],
       ]);
 
-      $marketing = $request->has('marketing');
-
-      // Get phone/country information
-      // $phoneNumber = $request->input('code');
-      // $dialCode = $request->input('dialCode');
-      // $countryIso = $request->input('countryIso');
-
-      // Find country
-      // $country = Countries::where('phone_code', $dialCode)
-      //     ->whereRaw('LOWER(code) = ?', [strtolower($countryIso)])
-      //     ->first();
-
-      // if (!$country) {
-      //     return back()
-      //         ->withInput()
-      //         ->withErrors([
-      //             'countryIso' => 'Country not found.',
-      //         ]);
-      // }
-
-      // Generate OTP
+      $communicationConsent = $request->has('communication_consent');
       $otp = random_int(100000, 999999);
 
-      // Create user FIRST
       $user = User::create([
+          'title' => $request->input('title'),
+          'lname' => $request->input('lname'),
           'fname' => $request->input('fname'),
           'email' => $request->input('email'),
+          'preferred_contact' => $request->input('preferred_contact'),
+          'communication_consent' => $communicationConsent,
+          'marketing' => $communicationConsent,
           'otp' => $otp,
-          'marketing' => $marketing,
           'created_at' => Carbon::now(),
           'last_login_at' => Carbon::now(),
           'password' => Hash::make('password'),
       ]);
 
-      // Assign role AFTER user is created
       $user->assignRole('client');
 
-      // Log the user in
       Auth::login($user);
 
-
-      // Send OTP via Brevo/Mailtrap
       GlobalHelper::sendOtpEmail(
           $user->email,
           $otp,
-          $user->name,
+          trim(($user->fname ?? '') . ' ' . ($user->lname ?? '')),
           $otpType = 'Registration'
       );
 

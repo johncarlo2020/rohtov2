@@ -518,6 +518,58 @@ if ($activeVoucher) {
         $startDate->toDateString()
       )
       ->count();
+    // ─── Dashboard Summary Cards Calculations ───────────────────────────────
+    $todayDateStr = now()->format('Y-m-d');
+    $currentHourStr = now()->format('H:00:00');
+
+    // 1. Today Total Pax (time slot basis count)
+    $todayTotalPax = \App\Models\Booking::whereHas('bookingDate', function ($q) use ($todayDateStr) {
+        $q->where('date', $todayDateStr);
+    })->sum('pax');
+    if ($todayTotalPax == 0) {
+        $todayTotalPax = \App\Models\Booking::whereHas('bookingDate', function ($q) use ($todayDateStr) {
+            $q->where('date', $todayDateStr);
+        })->count();
+    }
+
+    // 2. Upcoming Summary Total Count (customers attending after current session on hour basis)
+    $upcomingSummaryCount = \App\Models\Booking::whereHas('bookingDate', function ($q) use ($todayDateStr) {
+        $q->where('date', '>', $todayDateStr);
+    })->orWhere(function ($query) use ($todayDateStr, $currentHourStr) {
+        $query->whereHas('bookingDate', function ($q) use ($todayDateStr) {
+            $q->where('date', $todayDateStr);
+        })->whereHas('bookingSlot', function ($q) use ($currentHourStr) {
+            $q->where('start_time', '>', $currentHourStr);
+        });
+    })->sum('pax');
+
+    if ($upcomingSummaryCount == 0) {
+        $upcomingSummaryCount = \App\Models\Booking::whereHas('bookingDate', function ($q) use ($todayDateStr) {
+            $q->where('date', '>', $todayDateStr);
+        })->orWhere(function ($query) use ($todayDateStr, $currentHourStr) {
+            $query->whereHas('bookingDate', function ($q) use ($todayDateStr) {
+                $q->where('date', $todayDateStr);
+            })->whereHas('bookingSlot', function ($q) use ($currentHourStr) {
+                $q->where('start_time', '>', $currentHourStr);
+            });
+        })->count();
+    }
+
+    // 3. Accumulated Missed Count (every hour basis)
+    $allBookingsList = \App\Models\Booking::with(['bookingDate', 'bookingSlot'])->get();
+    $missedCount = $allBookingsList->filter(function ($b) {
+        return $b->computed_status === 'Missed';
+    })->sum('pax');
+    if ($missedCount == 0) {
+        $missedCount = $allBookingsList->filter(function ($b) {
+            return $b->computed_status === 'Missed';
+        })->count();
+    }
+
+    $data['todayTotalPax'] = $todayTotalPax;
+    $data['upcomingSummaryCount'] = $upcomingSummaryCount;
+    $data['missedCount'] = $missedCount;
+
     $data["userToday"] = User::whereDate("created_at", $today)
       ->whereDoesntHave("roles", function ($q) {
         $q->where("name", "admin");

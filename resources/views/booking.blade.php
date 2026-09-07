@@ -116,7 +116,7 @@
                         <form id="reservation-form" onsubmit="event.preventDefault();">
                             <!-- Header Text -->
                             <div class="text-center my-4">
-                                @if(isset($formattedBooking) && $formattedBooking && $formattedBooking['reschedule_count'] < 1)
+                                @if(isset($formattedBooking) && $formattedBooking && !empty($formattedBooking['can_modify']))
                                     <!-- MODIFY RESERVATION HEADER (MATCHES USER SCREENSHOT) -->
                                     <h2 class="h4 fw-bold text-dark mb-3 text-uppercase">HEY {{ $formattedBooking['first_name'] }},</h2>
                                     <p class="small text-dark fw-bold text-uppercase mb-2 leading-snug">
@@ -164,7 +164,7 @@
                                     <div id="date-dropdown-box" class="d-none dropdown-overlay p-3">
                                         <div class="small fw-bold text-dark text-uppercase pb-2 mb-2 border-bottom d-flex justify-content-between align-items-center">
                                             <span>DATE SELECTION</span>
-                                            <span>30 SEP – 18 OCT 2026</span>
+                                            <span>30 SEP – 17 OCT 2026</span>
                                         </div>
 
                                         <!-- Date Items List -->
@@ -356,7 +356,7 @@
             lucide.createIcons();
 
             const START_DATE = '2026-09-30';
-            const END_DATE = '2026-10-18';
+            const END_DATE = '2026-10-17';
 
             let state = {
                 selectedDate: null,
@@ -733,8 +733,8 @@
                 document.getElementById('qr-code-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${qrData}`;
 
                 const modifyBtn = document.getElementById('modify-btn');
-                if (rescheduleCount >= 1) {
-                    modifyBtn.classList.add('d-none'); // Hide "CHANGE YOUR SLOT" because customer can only modify once!
+                if (rescheduleCount >= 1 || data.can_modify === false) {
+                    modifyBtn.classList.add('d-none'); // Hide "CHANGE YOUR SLOT" because customer cannot modify!
                 } else {
                     modifyBtn.classList.remove('d-none');
                 }
@@ -948,8 +948,8 @@
                 state.modifyingRefNo = existingBooking.reference_no;
                 state.rescheduleCount = existingBooking.reschedule_count;
 
-                if (existingBooking.reschedule_count >= 1) {
-                    // Customer has ALREADY modified once -> directly show confirmation screen with ONLY Download button
+                if (!existingBooking.can_modify) {
+                    // Customer cannot modify (either already rescheduled once OR within 1 week of slot) -> directly show confirmation screen
                     showConfirmationScreen(existingBooking, existingBooking.reschedule_count);
                 } else {
                     // Customer has an active booking that can be modified once -> show form with Modify Reservation Header

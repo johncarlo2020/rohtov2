@@ -1,6 +1,78 @@
 @extends('layouts.admin')
 
 @section('content')
+    {{-- Event Attendance Summary Cards --}}
+    <div class="row pt-2 mb-3">
+        <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-3">
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="numbers">
+                                <p class="text-xs mb-1 text-uppercase font-weight-bold text-muted">Upcoming Summary</p>
+                                <h4 class="font-weight-bolder text-primary mb-0">
+                                    {{ $data['upcomingSummaryCount'] ?? 0 }}
+                                </h4>
+                                <span class="text-xs text-secondary">Attending after current session</span>
+                            </div>
+                        </div>
+                        <div class="col-4 text-end">
+                            <div class="icon icon-shape bg-gradient-info shadow-info text-center rounded-circle">
+                                <i class="fa-solid fa-clock-rotate-left text-lg opacity-10" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-3">
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="numbers">
+                                <p class="text-xs mb-1 text-uppercase font-weight-bold text-muted">Today Total Pax</p>
+                                <h4 class="font-weight-bolder text-success mb-0">
+                                    {{ $data['todayTotalPax'] ?? 0 }}
+                                </h4>
+                                <span class="text-xs text-secondary">Time slot basis total count</span>
+                            </div>
+                        </div>
+                        <div class="col-4 text-end">
+                            <div class="icon icon-shape bg-gradient-success shadow-success text-center rounded-circle">
+                                <i class="fa-solid fa-users text-lg opacity-10" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-3">
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="numbers">
+                                <p class="text-xs mb-1 text-uppercase font-weight-bold text-muted">Missed Count</p>
+                                <h4 class="font-weight-bolder text-danger mb-0">
+                                    {{ $data['missedCount'] ?? 0 }}
+                                </h4>
+                                <span class="text-xs text-secondary">Accumulated past slots</span>
+                            </div>
+                        </div>
+                        <div class="col-4 text-end">
+                            <div class="icon icon-shape bg-gradient-danger shadow-danger text-center rounded-circle">
+                                <i class="fa-solid fa-user-slash text-lg opacity-10" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row pt-2">
         <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
             <div class="card">

@@ -212,6 +212,39 @@ class BookingSystemTest extends TestCase
     }
 
     /** @test */
+    public function it_prevents_rescheduling_less_than_one_week_before_slot()
+    {
+        $tueSlots = $this->getJson('/api/booking/dates/2026-10-06/slots')->json();
+        $wedSlots = $this->getJson('/api/booking/dates/2026-10-07/slots')->json();
+
+        $slot1 = $tueSlots[0]['id'];
+        $slot2 = $wedSlots[0]['id'];
+
+        $booking = $this->postJson('/api/bookings', [
+            'date' => '2026-10-06',
+            'slot_id' => $slot1,
+            'customer_name' => 'Late Reschedule User',
+            'customer_email' => 'late@example.com',
+            'customer_phone' => '09555555555',
+        ]);
+        $bookingObj = Booking::where('customer_email', 'late@example.com')->first();
+
+        // Travel to 4 days before slot (October 2, 2026) -> Less than 1 week (7 days) away
+        \Carbon\Carbon::setTestNow('2026-10-02 10:00:00');
+
+        $modifyRes = $this->postJson("/api/bookings/{$bookingObj->id}/modify", [
+            'date' => '2026-10-07',
+            'slot_id' => $slot2,
+        ]);
+
+        $modifyRes->assertStatus(422);
+        $modifyRes->assertJsonValidationErrors(['slot']);
+        $this->assertStringContainsString('at least one week before', $modifyRes->json('errors.slot.0'));
+
+        \Carbon\Carbon::setTestNow(); // Reset test time
+    }
+
+    /** @test */
     public function it_allows_different_users_to_book_same_date_but_blocks_same_user_from_booking_same_date_twice()
     {
         // 2026-10-06 is Tuesday (2 sessions: slot 0 and slot 1)

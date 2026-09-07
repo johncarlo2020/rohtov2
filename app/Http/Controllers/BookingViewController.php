@@ -79,9 +79,17 @@ class BookingViewController extends Controller
             $customerName = $existingBooking->customer_name ?: ($user->fname ?? 'CUSTOMER');
             $firstName = strtoupper(explode(' ', trim($customerName))[0]);
 
+            $slotDateStr = $dateObj->format('Y-m-d');
+            $slotTimeStr = $existingBooking->bookingSlot->start_time ?? '00:00:00';
+            $slotDateTime = Carbon::parse($slotDateStr . ' ' . $slotTimeStr);
+
+            $rescheduleCount = (int) $existingBooking->reschedule_count;
+            $canModify = ($rescheduleCount < 1) && now()->lessThan($slotDateTime->copy()->subDays(7));
+
             $formattedBooking = [
                 'reference_no' => $existingBooking->reference_no,
-                'reschedule_count' => (int) $existingBooking->reschedule_count,
+                'reschedule_count' => $rescheduleCount,
+                'can_modify' => $canModify,
                 'date_raw' => $dateObj->format('Y-m-d'),
                 'date_formatted' => $dateStr,
                 'time_formatted' => $timeStr,

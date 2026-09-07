@@ -29,6 +29,7 @@
         }
 
         .form-control,
+        .form-select,
         .input-text {
             font-family: $font-family;
             font-size: 16px;
@@ -38,7 +39,7 @@
             border-radius: 0px;
             border: 1.5px solid $gray;
             color: $text;
-            background: $white;
+            background-color: $white;
             width: 100%;
 
             &::placeholder {
@@ -47,6 +48,21 @@
                 font-weight: 400;
                 color: $gray;
                 opacity: 1;
+            }
+
+            &:invalid {
+                color: $gray;
+            }
+
+            option {
+                color: $text;
+                font-family: $font-family;
+                font-size: 14px;
+                padding: 6px 10px;
+
+                &:disabled {
+                    color: $gray;
+                }
             }
 
             &:focus {

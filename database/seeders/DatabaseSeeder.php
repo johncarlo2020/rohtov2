@@ -19,5 +19,6 @@ class DatabaseSeeder extends Seeder
         $this->call(GiftsSeeder::class);
         $this->call(VoucherSeeder::class);
         $this->call(OperatingHoursSeeder::class);
+        $this->call(EventScheduleSeeder::class);
     }
 }

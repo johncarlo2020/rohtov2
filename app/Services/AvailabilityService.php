@@ -15,9 +15,20 @@ class AvailabilityService
      */
     public function getDateAvailabilities(string $startDate, string $endDate): array
     {
-        $start = Carbon::parse($startDate)->startOfDay();
-        $end = Carbon::parse($endDate)->endOfDay();
+        // Enforce event date boundary: September 30, 2026 to October 17, 2026
+        $eventMin = '2026-09-30';
+        $eventMax = '2026-10-17';
+
+        $startStr = max($startDate, $eventMin);
+        $endStr = min($endDate, $eventMax);
+
+        $start = Carbon::parse($startStr)->startOfDay();
+        $end = Carbon::parse($endStr)->endOfDay();
         $result = [];
+
+        if ($start->gt($end)) {
+            return [];
+        }
 
         $current = $start->copy();
         while ($current->lte($end)) {
@@ -40,10 +51,17 @@ class AvailabilityService
     public function getDateStatus(string $date): string
     {
         $carbonDate = Carbon::parse($date);
+        $dateStr = $carbonDate->format('Y-m-d');
+
+        // Enforce event date boundary: September 30, 2026 to October 17, 2026
+        if ($dateStr < '2026-09-30' || $dateStr > '2026-10-17') {
+            return 'closed';
+        }
+
         $dayOfWeek = $carbonDate->dayOfWeekIso; // 1 (Mon) to 7 (Sun)
 
         // 1. Check special date override in booking_dates
-        $bookingDate = BookingDate::where('date', $date)->first();
+        $bookingDate = BookingDate::where('date', $dateStr)->first();
         if ($bookingDate && !$bookingDate->is_available) {
             return 'closed';
         }
@@ -55,7 +73,7 @@ class AvailabilityService
         }
 
         // 3. Provision / ensure slots exist for this date if open
-        $slots = $this->getOrProvisionSlotsForDate($date, $operatingHour, $bookingDate);
+        $slots = $this->getOrProvisionSlotsForDate($dateStr, $operatingHour, $bookingDate);
 
         if ($slots->isEmpty()) {
             return 'closed';
@@ -75,10 +93,17 @@ class AvailabilityService
     public function getSlotsForDate(string $date): array
     {
         $carbonDate = Carbon::parse($date);
+        $dateStr = $carbonDate->format('Y-m-d');
+
+        // Enforce event date boundary: September 30, 2026 to October 17, 2026
+        if ($dateStr < '2026-09-30' || $dateStr > '2026-10-17') {
+            return [];
+        }
+
         $dayOfWeek = $carbonDate->dayOfWeekIso;
 
         // Check date availability override & operating hours
-        $bookingDate = BookingDate::where('date', $date)->first();
+        $bookingDate = BookingDate::where('date', $dateStr)->first();
         if ($bookingDate && !$bookingDate->is_available) {
             return [];
         }

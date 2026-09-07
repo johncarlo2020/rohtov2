@@ -21,6 +21,13 @@ class BookingService
             $slotId = $data['slot_id'];
             $requestedDate = $data['date'];
 
+            // Enforce event date boundary: September 30, 2026 to October 17, 2026
+            if ($requestedDate < '2026-09-30' || $requestedDate > '2026-10-17') {
+                throw ValidationException::withMessages([
+                    'date' => ['Bookings are only available from September 30 to October 17, 2026.']
+                ]);
+            }
+
             /** @var BookingSlot $slot */
             $slot = BookingSlot::with('bookingDate')
                 ->where('id', $slotId)
@@ -168,6 +175,20 @@ class BookingService
                 ]);
             }
 
+            // Rule: Rescheduling is only allowed at least one week (7 days) before the booked slot date/time
+            $booking->loadMissing(['bookingDate', 'bookingSlot']);
+            if ($booking->bookingDate && $booking->bookingSlot) {
+                $slotDateStr = Carbon::parse($booking->bookingDate->date)->format('Y-m-d');
+                $slotTimeStr = $booking->bookingSlot->start_time ?? '00:00:00';
+                $slotDateTime = Carbon::parse($slotDateStr . ' ' . $slotTimeStr);
+
+                if (now()->greaterThanOrEqualTo($slotDateTime->copy()->subDays(7))) {
+                    throw ValidationException::withMessages([
+                        'slot' => ['Rescheduling is only allowed at least one week before your booked slot. Modification is no longer possible for this booking.']
+                    ]);
+                }
+            }
+
             // Lock new slot
             $newSlot = BookingSlot::with('bookingDate')
                 ->where('id', $newSlotId)
@@ -182,9 +203,9 @@ class BookingService
 
             // Verify new slot matches requested date
             $slotDate = Carbon::parse($newSlot->bookingDate->date)->format('Y-m-d');
-            if ($slotDate !== $newDate) {
+            if ($slotDate !== $newDate || $newDate < '2026-09-30' || $newDate > '2026-10-17') {
                 throw ValidationException::withMessages([
-                    'slot' => ['New time slot does not match the requested date.']
+                    'slot' => ['Rescheduling dates are only available from September 30 to October 17, 2026.']
                 ]);
             }
 

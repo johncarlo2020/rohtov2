@@ -52,7 +52,16 @@
 
                                 if (isset($userBooking) && $userBooking) {
                                     $refNo = $userBooking->reference_no;
-                                    $canModify = ((int) $userBooking->reschedule_count) < 1;
+                                    $resCount = (int) $userBooking->reschedule_count;
+                                    $slotDateStr = $userBooking->bookingDate ? \Carbon\Carbon::parse($userBooking->bookingDate->date)->format('Y-m-d') : null;
+                                    $slotTimeStr = $userBooking->bookingSlot ? $userBooking->bookingSlot->start_time : '00:00:00';
+                                    
+                                    if ($resCount >= 1 || !$slotDateStr) {
+                                        $canModify = false;
+                                    } else {
+                                        $slotDateTime = \Carbon\Carbon::parse($slotDateStr . ' ' . $slotTimeStr);
+                                        $canModify = now()->lessThan($slotDateTime->copy()->subDays(7));
+                                    }
 
                                     if ($userBooking->customer_name) {
                                         $fullName = strtoupper($userBooking->customer_name);

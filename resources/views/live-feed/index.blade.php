@@ -92,6 +92,7 @@
             background: #fff;
             border: 10px solid #243B81;
             border-radius: 10px;
+            padding: 10px;
         }
 
         .qr-container .qr-text {
@@ -124,12 +125,12 @@
     <div class="live-feed-lobby">
         <div class="qr-container left">
             <img class="qr-text" src="{{ asset('images/brand/text-exitement.png') }}" alt="">
-            <div class="qr-img"></div>
+            <div class="qr-img" id="qrCodeLeft"></div>
         </div>
 
         <div class="qr-container right">
             <img class="qr-text" src="{{ asset('images/brand/text-exitement.png') }}" alt="">
-            <div class="qr-img"></div>
+            <div class="qr-img" id="qrCodeRight"></div>
         </div>
     </div>
 
@@ -181,6 +182,7 @@
     </div>
 
     <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
     <script>
         window.ASSET_BASE = "{{ asset('') }}".replace(/\/$/, '');
 
@@ -203,6 +205,22 @@
             medianWeight: {{ intval(($gameConfig->max_weight ?? 4) / 2) }}, // Median weight (half of max, no decimal)
             internalMax: 400 // Internal calculation range (0-400)
         };
+
+        // QR codes linking to the mobile game page
+        const gameUrl = "{{ route('game.index') }}";
+        [
+            'qrCodeLeft',
+            'qrCodeRight'
+        ].forEach(function(id) {
+            new QRCode(document.getElementById(id), {
+                text: gameUrl,
+                width: 241,
+                height: 241,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        });
 
         // Browsers block audio autoplay until a user gesture - unlock it on first interaction
         document.addEventListener('click', function unlockAudio() {

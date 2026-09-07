@@ -1,13 +1,11 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\IpadController;
-use App\Http\Controllers\StationController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\GameConfigController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\IpadController;
 use App\Http\Controllers\LiveFeedController;
+use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,31 +18,9 @@ use App\Http\Controllers\LiveFeedController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('welcome');
-
-
-
 Route::get('/game', function () {
     return view('mobile-game.index');
 })->name('game.index');
-
-// Game trigger routes
-Route::get('/game-trigger', [GameConfigController::class, 'trigger'])->name('game.trigger');
-Route::get('/game-config', [GameConfigController::class, 'index'])->name('game.config');
-Route::get('/game-reset', [GameConfigController::class, 'resetGame'])->name('game.reset');
-
-// Game config API routes
-Route::post('/game-config/save', [GameConfigController::class, 'store'])->name('game.config.store');
-Route::get('/game-config/active', [GameConfigController::class, 'getActive'])->name('game.config.active');
-
-// live feed route
-Route::get('/live-feed', [LiveFeedController::class, 'index'])->name('live.feed.index');
-//get live feed data
-Route::get('/live-feed/data', [LiveFeedController::class, 'getData'])->name('live.feed.data');
-
-Route::get('/start', [LiveFeedController::class, 'start'])->name('start');
 
 Route::get('/upload-baby', function () {
     return view('upload-baby');
@@ -60,7 +36,6 @@ Route::get('/pad', function () {
     return view('error');
 });
 
-
 Route::get('/admin/login', function () {
     return view('auth.admin-login');
 });
@@ -68,32 +43,30 @@ Route::get('/admin/login', function () {
 Route::get('/ipad', [IpadController::class, 'index'])->name('ipad.index');
 Route::get('/ipad-2', [IpadController::class, 'index2'])->name('ipad.index2');
 
-Route::get('/counter-value',[IpadController::class, 'donationCount'])->name('pledge.counter');
+Route::get('/counter-value', [IpadController::class, 'donationCount'])->name('pledge.counter');
 
-Route::get('/ipad-pledge-info',function(){
-        return view('ipad.info');
-    })->name('ipad.info');
+Route::get('/ipad-pledge-info', function () {
+    return view('ipad.info');
+})->name('ipad.info');
 
-Route::get('/ipad-pledge-info-2',function(){
-        return view('ipad.info2');
-    })->name('ipad.info2');
+Route::get('/ipad-pledge-info-2', function () {
+    return view('ipad.info2');
+})->name('ipad.info2');
 
+Route::get('/ipad-select-message-type', function () {
+    return view('ipad.message-type');
+})->name('ipad.message.type');
 
-Route::get('/ipad-select-message-type',function(){
-        return view('ipad.message-type');
-    })->name('ipad.message.type');
-
-Route::get('/ipad-select-message-type-duplicate',function(){
-        return view('ipad.message-type-duplicate');
-    })->name('ipad.message.type.duplicate');
+Route::get('/ipad-select-message-type-duplicate', function () {
+    return view('ipad.message-type-duplicate');
+})->name('ipad.message.type.duplicate');
 
 Route::get('/congrats', function () {
     return view('congrats');
 })->name('congrats');
 
-Route::get('/pledge-wall',function()
-{
-     return view('ipad.pledgewall');
+Route::get('/pledge-wall', function () {
+    return view('ipad.pledgewall');
 });
 
 Route::get('/voteyourfav', function () {
@@ -104,7 +77,7 @@ Route::post('/castVote', 'App\Http\Controllers\StationController@castVote')->nam
 Route::get('/voteData', 'App\Http\Controllers\StationController@voteData')->name('voteData');
 Route::get('/congratsVote', 'App\Http\Controllers\StationController@congratsVote')->name('congratsVote');
 
-//royal canine
+// royal canine
 Route::get('/join', function () {
     return view('join');
 })->name('join.welcome');
@@ -123,8 +96,24 @@ Route::group(['middleware' => ['admin']], function () {
     Route::get('/admin/scanner', 'App\Http\Controllers\StationController@scanner')->name('scanner');
     Route::get('/admin/trigger', [LiveFeedController::class, 'trigger'])->name('trigger');
 
+    // Game trigger routes
+    Route::get('/game-trigger', [GameConfigController::class, 'trigger'])->name('game.trigger');
+    Route::get('/game-config', [GameConfigController::class, 'index'])->name('game.config');
+    Route::get('/game-reset', [GameConfigController::class, 'resetGame'])->name('game.reset');
+
+    // Game config API routes
+    Route::post('/game-config/save', [GameConfigController::class, 'store'])->name('game.config.store');
+    Route::get('/game-config/active', [GameConfigController::class, 'getActive'])->name('game.config.active');
+
     // Game trigger live feed route
     Route::post('/trigger-live-feed', [GameConfigController::class, 'triggerLiveFeed'])->name('trigger.live.feed');
+
+    // live feed route
+    Route::get('/live-feed', [LiveFeedController::class, 'index'])->name('live.feed.index');
+    // get live feed data
+    Route::get('/live-feed/data', [LiveFeedController::class, 'getData'])->name('live.feed.data');
+
+    Route::get('/start', [LiveFeedController::class, 'start'])->name('start');
 
     Route::post('verify-otp-admin', 'App\Http\Controllers\StationController@verifyAdmin')->name('verifyAdmin');
 
@@ -140,7 +129,6 @@ Route::group(['middleware' => ['admin']], function () {
     Route::post('/editUser', 'App\Http\Controllers\StationController@editUser')->name('editUser');
 
 });
-
 
 Route::group(['middleware' => ['client']], function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -161,11 +149,9 @@ Route::group(['middleware' => ['client']], function () {
     Route::get('/workshop', 'App\Http\Controllers\WorkshopController@index')->name('workshop');
     Route::get('/pledge-dj', 'App\Http\Controllers\StationController@pledgeDj')->name('pledgeDj');
 
-
     Route::get('/promotion', function () {
         return view('promotion');
     })->name('promotion');
-
 
     Route::post('/upload', 'App\Http\Controllers\StationController@uploadBaby')->name('upload.baby');
 
@@ -176,12 +162,10 @@ Route::group(['middleware' => ['client']], function () {
     Route::get('/resend-otp', 'App\Http\Controllers\StationController@resend')->name('resend.otp');
     Route::post('/verify-otp', 'App\Http\Controllers\StationController@verify')->name('verify.otp');
 
-     Route::get('/register-welcome', function () {
+    Route::get('/register-welcome', function () {
         return view('registerSuccess');
     })->name('register.welcome');
 
 });
 
-
-
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

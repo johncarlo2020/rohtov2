@@ -1151,15 +1151,15 @@ let activeKibbles = 0; // Track number of kibbles currently falling
 
 // Kibble configuration - adjustable settings
 const KIBBLE_CONFIG = {
-    disappearOffset: 10, // pixels of clearance to keep above the product can before fading out
+    landingDepth: 0.18, // fraction of the can's height the object sinks past the rim before it's fully hidden behind the can
     fallSpeed: 200, // pixels per second (higher = faster fall)
     soundTiming: 0.8, // when to play sound (0.8 = 80% through animation)
 };
 
-// Function to adjust kibble disappear offset
-window.setKibbleOffset = function (offset) {
-    KIBBLE_CONFIG.disappearOffset = offset;
-    console.log(`Kibble disappear offset set to: ${offset}px`);
+// Function to adjust how far the object sinks into the can before disappearing
+window.setKibbleLandingDepth = function (depth) {
+    KIBBLE_CONFIG.landingDepth = depth;
+    console.log(`Kibble landing depth set to: ${depth}`);
 };
 
 // Function to adjust kibble fall speed
@@ -1174,6 +1174,10 @@ function createFallingKibble(x, y, isBig = false) {
 
     // Find the product can and get its position - objects fall toward it
     const productCan = document.querySelector(".product-can");
+    // Anchor inside the can's own container and z-order it behind the can, so stacking is
+    // guaranteed correct regardless of any other ancestor's stacking context
+    const container = productCan ? productCan.parentElement : document.body;
+    const containerRect = container.getBoundingClientRect();
     let scaleY = window.innerHeight * 0.8; // fallback if not found
     let animationDuration = 2000; // default duration
 
@@ -1185,8 +1189,10 @@ function createFallingKibble(x, y, isBig = false) {
 
     if (productCan) {
         const canRect = productCan.getBoundingClientRect();
-        // Stop clear above the can's visible top, accounting for the object's own size
-        scaleY = canRect.top - size / 2 - KIBBLE_CONFIG.disappearOffset;
+        // Keep falling past the rim and sink into the can - it gets covered by the can's own
+        // artwork (lower z-index) instead of shrinking away in mid-air above it
+        scaleY =
+            canRect.top + canRect.height * KIBBLE_CONFIG.landingDepth - size / 2;
 
         // Calculate precise animation duration based on distance to the can
         const startY = y;
@@ -1195,29 +1201,33 @@ function createFallingKibble(x, y, isBig = false) {
         animationDuration = (totalFall / KIBBLE_CONFIG.fallSpeed) * 1000; // Convert to milliseconds
 
         console.log(
-            `Object will fall ${totalFall}px in ${animationDuration}ms and disappear ${KIBBLE_CONFIG.disappearOffset}px above the product can`,
+            `Object will fall ${totalFall}px in ${animationDuration}ms and sink into the can`,
         );
     }
 
     const kibble = document.createElement("div");
     kibble.className = "falling-kibble";
     kibble.style.cssText = `
-        position: fixed;
+        position: absolute;
         width: ${size}px;
         height: ${size}px;
         background-image: url('${window.ASSET_BASE}/images/brand/falling_objects/${objectFile}');
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
-        left: ${x - size / 2}px;
-        top: ${y - size / 2}px;
-        z-index: 33;
+        left: ${x - containerRect.left - size / 2}px;
+        top: ${y - containerRect.top - size / 2}px;
+        z-index: 20;
         pointer-events: none;
         animation: fallAndFadeToScale ${animationDuration}ms ease-in forwards;
         --fall-distance: ${scaleY - y}px;
     `;
 
-    document.body.appendChild(kibble);
+    if (productCan) {
+        container.insertBefore(kibble, productCan);
+    } else {
+        container.appendChild(kibble);
+    }
 
     // Play kibble sound when it visually reaches the can (adjustable timing)
     const soundTiming = animationDuration * KIBBLE_CONFIG.soundTiming;
@@ -1298,12 +1308,12 @@ function addKibbleStyles() {
                     transform: translateY(0) scale(1);
                     opacity: 1;
                 }
-                75% {
+                90% {
                     transform: translateY(var(--fall-distance)) scale(1);
                     opacity: 1;
                 }
                 100% {
-                    transform: translateY(var(--fall-distance)) scale(0.4);
+                    transform: translateY(var(--fall-distance)) scale(0.92);
                     opacity: 0;
                 }
             }

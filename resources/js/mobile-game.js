@@ -341,20 +341,22 @@ function createFallingObject(isBig) {
 
 // Light effect burst shown centered on the product where the object comes from
 function showLightEffect(x, y) {
-    const light = document.createElement("img");
-    light.src = `${window.ASSET_BASE}/images/brand/light-effect.png`;
-    light.style.cssText = `
-        position: fixed;
-        width: 220px;
-        height: auto;
-        left: ${x - 110}px;
-        top: ${y - 110}px;
-        z-index: 20;
-        pointer-events: none;
-        animation: mobileLightBurst 600ms ease-out forwards;
-    `;
-    document.body.appendChild(light);
-    setTimeout(() => light.remove(), 600);
+    if (!productEl) return;
+
+    // Subtle flashlight-style beam rising from the lid, no image asset needed
+    // Anchored inside the product's own container (not <body>) and inserted behind it in the
+    // DOM so its lower z-index always keeps it under the can artwork instead of covering it
+    const container = productEl.parentElement;
+    const containerRect = container.getBoundingClientRect();
+
+    const burst = document.createElement("div");
+    burst.className = "mobile-light-burst";
+    burst.style.left = `${x - containerRect.left}px`;
+    burst.style.top = `${y - containerRect.top}px`;
+    burst.innerHTML =
+        '<span class="mobile-light-beam"></span><span class="mobile-light-core"></span>';
+    container.insertBefore(burst, productEl);
+    setTimeout(() => burst.remove(), 900);
 }
 
 // Bounce feedback + burst an object out of the product when the player taps the "TAP ME" screen
@@ -371,16 +373,50 @@ if (tapGame) {
     });
 }
 
-// Inject the light effect animation keyframes
+// Inject the light effect styles/keyframes
 (function addMobileGameStyles() {
     if (document.getElementById("mobile-game-styles")) return;
     const style = document.createElement("style");
     style.id = "mobile-game-styles";
     style.textContent = `
-        @keyframes mobileLightBurst {
-            0% { transform: scale(0.4); opacity: 0; }
-            40% { transform: scale(1.1); opacity: 1; }
-            100% { transform: scale(1.4); opacity: 0; }
+        .mobile-light-burst {
+            position: absolute;
+            width: 0;
+            height: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .mobile-light-burst .mobile-light-core {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 90px;
+            height: 90px;
+            margin: -45px 0 0 -45px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.85) 0%, rgba(255,246,200,0.45) 45%, rgba(255,215,120,0) 75%);
+            animation: mobileLightCore 900ms ease-in-out forwards;
+        }
+        .mobile-light-burst .mobile-light-beam {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 70px;
+            height: 220px;
+            background: linear-gradient(to top, rgba(255,250,222,0.5) 0%, rgba(255,250,222,0.22) 45%, rgba(255,255,255,0) 100%);
+            clip-path: polygon(38% 100%, 62% 100%, 100% 0%, 0% 0%);
+            filter: blur(2px);
+            animation: mobileLightBeam 900ms ease-in-out forwards;
+        }
+        @keyframes mobileLightCore {
+            0% { transform: scale(0.5); opacity: 0; }
+            35% { transform: scale(1); opacity: 0.9; }
+            100% { transform: scale(1.1); opacity: 0; }
+        }
+        @keyframes mobileLightBeam {
+            0% { transform: translateX(-50%) scaleY(0.7); opacity: 0; }
+            35% { transform: translateX(-50%) scaleY(1); opacity: 0.85; }
+            100% { transform: translateX(-50%) scaleY(1.05); opacity: 0; }
         }
     `;
     document.head.appendChild(style);

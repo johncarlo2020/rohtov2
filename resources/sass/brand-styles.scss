@@ -12,6 +12,18 @@
     }
 }
 
+.live-feed-logo {
+    position: fixed;
+    top: 0vh;
+    left: 0ch;
+    width: 12vw;
+    min-width: 183px;
+    max-width: 240px;
+    height: auto;
+    object-fit: contain;
+    z-index: 100;
+}
+
 .live-feed {
     width: 100vw;
     height: 100vh;

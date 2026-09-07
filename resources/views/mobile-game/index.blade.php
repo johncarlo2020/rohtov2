@@ -3,26 +3,15 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Live Feed</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Friso Gold Game</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flipclock@0.7.8/compiled/flipclock.css" />
     @vite(['resources/sass/app.scss'])
-
 
     <!-- Pusher -->
     <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
     <style>
-        @font-face {
-            font-family: 'Stella Demo';
-            src: url('{{ asset('images/font/Stella Demo.otf') }}') format('opentype');
-            font-weight: normal;
-            font-style: normal;
-        }
-
-
         html,
         body {
             width: 100vw;
@@ -33,88 +22,198 @@
             box-sizing: border-box;
         }
 
-        .waiting-img {
-            animation: blinkWaiting 1.2s infinite;
-        }
-
-        @keyframes blinkWaiting {
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.3;
-            }
-        }
-        .countdown-img {
+        .mobile-screen {
             position: absolute;
-            top: 159%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 100;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .mobile-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        .mobile-logo {
+            position: absolute;
+            top: 2vh;
+            left: 4vw;
+            width: 34vw;
+            max-width: 160px;
+            height: auto;
+            object-fit: contain;
+            z-index: 10;
+        }
+
+        /* Lobby */
+        .mobile-tap-title {
+            width: 70vw;
+            max-width: 320px;
+            height: auto;
+            object-fit: contain;
+            margin-bottom: 4vh;
+        }
+
+        .mobile-tap-hint {
+            color: #1a3a7a;
+            font-weight: 700;
+            font-size: 4.5vw;
+            letter-spacing: 1px;
+        }
+
+        /* Countdown */
+        .mobile-countdown .countdown-ready {
             width: 60vw;
-            max-width: 400px;
-            pointer-events: none;
+            max-width: 280px;
+            height: auto;
+            object-fit: contain;
+            margin-bottom: 3vh;
+        }
+
+        .mobile-countdown .countdown-number-wrap {
+            position: relative;
+            width: 34vw;
+            max-width: 160px;
+            height: 34vw;
+            max-height: 160px;
+        }
+
+        .mobile-countdown .countdown-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .mobile-countdown .countdown-image.active {
+            opacity: 1;
+        }
+
+        /* Tap game */
+        .mobile-tap-game {
+            cursor: pointer;
+        }
+
+        .mobile-tap-me {
+            width: 55vw;
+            max-width: 260px;
+            height: auto;
+            object-fit: contain;
+            margin-bottom: 4vh;
+        }
+
+        .mobile-product {
+            position: relative;
+            z-index: 50;
+            width: 55vw;
+            max-width: 260px;
+            height: auto;
+            object-fit: contain;
+        }
+
+        /* Finish */
+        .mobile-finish {
+            gap: 3vh;
+        }
+
+        .mobile-finish-product {
+            width: 85vw;
+            max-width: 380px;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .mobile-finish-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2vh;
+        }
+
+        .mobile-finish-title {
+            width: 60vw;
+            max-width: 260px;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .mobile-finish-subtitle {
+            width: 70vw;
+            max-width: 300px;
+            height: auto;
+            object-fit: contain;
         }
     </style>
 </head>
 
 <body>
-    <div class="w-100 d-flex flex-column justify-content-center align-items-center animate-entry p-4 mt-5" style="z-index: 99; position: relative;">
-        @include('components.branding')
-        <img id="game-status-image" class="waiting-img my-4" src="{{ asset('images/brand/waiting-page.webp') }}" alt="Waiting for Game" />
-        <div id="countdown-overlay" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 6rem; color: #fff; font-family: 'Stella Demo', Arial, sans-serif; display: none; pointer-events: none; text-shadow: 2px 2px 8px #000;">
+    <img src="{{ asset('images/brand/logo.png') }}" alt="Friso Gold" class="mobile-logo">
+
+    <div class="mobile-screen mobile-lobby">
+        <img src="{{ asset('images/brand/background-desktop.png') }}" alt="" class="mobile-bg">
+        <img src="{{ asset('images/brand/tap for more@3x 1.png') }}" alt="Tap for more good things!"
+            class="mobile-tap-title">
+        <p class="mobile-tap-hint">TAP HERE TO START</p>
+    </div>
+
+    <div class="mobile-screen mobile-countdown d-none">
+        <img src="{{ asset('images/brand/background-desktop.png') }}" alt="" class="mobile-bg">
+        <img src="{{ asset('images/brand/ready.png') }}" alt="Ready" class="countdown-ready">
+        <div class="countdown-number-wrap">
+            <img src="{{ asset('images/brand/countdown-number/3.png') }}" alt="Countdown 3" class="countdown-image"
+                id="m-countdown-3">
+            <img src="{{ asset('images/brand/countdown-number/2.png') }}" alt="Countdown 2" class="countdown-image"
+                id="m-countdown-2">
+            <img src="{{ asset('images/brand/countdown-number/1.png') }}" alt="Countdown 1" class="countdown-image"
+                id="m-countdown-1">
         </div>
     </div>
-    <div id="mobile-game-container"></div>
+
+    <div class="mobile-screen mobile-tap-game d-none">
+        <img src="{{ asset('images/brand/background-desktop.png') }}" alt="" class="mobile-bg">
+        <img src="{{ asset('images/brand/READY-05 2.png') }}" alt="Tap me" class="mobile-tap-me">
+        <img src="{{ asset('images/brand/game/product.png') }}" alt="Friso Gold" class="mobile-product"
+            id="mobileProduct">
+    </div>
+
+    <div class="mobile-screen mobile-finish d-none">
+        <img src="{{ asset('images/brand/background-desktop.png') }}" alt="" class="mobile-bg">
+        <img src="{{ asset('images/brand/congratulation/product with lines.png') }}" alt="Friso Gold"
+            class="mobile-finish-product">
+        <div class="mobile-finish-content">
+            <img src="{{ asset('images/brand/congratulation/you did it@3x 1.png') }}" alt="You did it!"
+                class="mobile-finish-title">
+            <img src="{{ asset("images/brand/congratulation/We've unlocked 6x less tummy issues for more good things!.png") }}"
+                alt="We've unlocked 6x less tummy issues for more good things!" class="mobile-finish-subtitle">
+        </div>
+    </div>
+
     <script>
         window.ASSET_BASE = "{{ asset('') }}".replace(/\/$/, '');
 
         // Pusher configuration for mobile game page
-          window.PUSHER_CONFIG = {
+        window.PUSHER_CONFIG = {
             key: '{{ env('PUSHER_APP_KEY') }}',
             cluster: '{{ env('PUSHER_APP_CLUSTER') }}'
         };
-
-        // Handle image switching based on game state
-        window.switchGameImage = function(action) {
-
-            const gameImage = document.getElementById('game-status-image');
-            const countdownOverlay = document.getElementById('countdown-overlay');
-            switch(action) {
-                case 'start':
-                    // Show 3-2-1 countdown using images as a new img overlay
-                    let count = 3;
-                    countdownOverlay.style.display = 'none'; // Hide overlay text
-                    let countdownImg = document.createElement('img');
-                    countdownImg.id = 'countdown-img';
-                    countdownImg.className = 'countdown-img';
-                    countdownImg.src = `${window.ASSET_BASE}/images/brand/count-down-mobile/${count}.webp`;
-                    gameImage.parentNode.appendChild(countdownImg);
-                    const countdownInterval = setInterval(() => {
-                        count--;
-                        if (count > 0) {
-                            countdownImg.src = `${window.ASSET_BASE}/images/brand/count-down-mobile/${count}.webp`;
-                        } else {
-                            clearInterval(countdownInterval);
-                            countdownImg.remove();
-                            gameImage.src = `${window.ASSET_BASE}/images/brand/start-game-text.webp`;
-                            // Show bag after countdown finishes
-                            if (window.showBagAfterCountdown) {
-                                window.showBagAfterCountdown();
-                            }
-                        }
-                    }, 1000);
-                    break;
-                    break;
-                case 'finish':
-                    //goto congrats page
-                    window.location.href = "{{ route('congrats') }}";
-                    break;
-            }
-        };
     </script>
-    @vite('resources/js/mobile-game.js')</html>
-    </body>
+    @vite('resources/js/mobile-game.js')
+</body>
+
 </html>

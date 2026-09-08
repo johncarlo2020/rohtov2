@@ -167,6 +167,26 @@
             object-fit: contain;
         }
 
+        .light-effect {
+            position: relative;
+            z-index: 49;
+            width: 55vw;
+            max-width: 260px;
+            height: auto;
+            object-fit: contain;
+            margin-bottom: -2vh;
+        }
+
+        // fade in effect for the light effect image
+        .light-effect {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .light-effect.active {
+            opacity: 1;
+        }
+
         /* Finish */
         .mobile-finish {
             gap: 3vh;
@@ -230,6 +250,7 @@
     <div class="mobile-screen mobile-tap-game d-none">
         <img src="{{ asset('images/brand/background-desktop.png') }}" alt="" class="mobile-bg">
         <img src="{{ asset('images/brand/READY-05 2.png') }}" alt="Tap me" class="mobile-tap-me">
+        <img src="{{ asset('images/brand/light.png') }}" alt="Friso Gold" class="light-effect">
         <img src="{{ asset('images/brand/game/product.png') }}" alt="Friso Gold" class="mobile-product"
             id="mobileProduct">
     </div>

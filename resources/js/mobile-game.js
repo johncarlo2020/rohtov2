@@ -381,15 +381,26 @@ if (tapGame) {
             productEl.style.transform = "scale(1)";
         }, 150);
 
+        //add lightning effect on product when tap is triggered
+
         // play random tap music from /sounds/mobile/tapCollection
         const tapSounds = [
             `${window.ASSET_BASE}/sounds/mobile/tapCollection/1.mp3`,
             `${window.ASSET_BASE}/sounds/mobile/tapCollection/2.mp3`,
             `${window.ASSET_BASE}/sounds/mobile/tapCollection/3.mp3`,
         ];
+
         const randomTapSound = new Audio(
             tapSounds[Math.floor(Math.random() * tapSounds.length)],
         );
+
+        // add and remove active class for light effect
+        const lightEffect = document.querySelector(".light-effect");
+        if (lightEffect) {
+            lightEffect.classList.add("active");
+            setTimeout(() => lightEffect.classList.remove("active"), 300);
+        }
+
         randomTapSound.play().catch((error) => {
             console.warn("❌ Could not play tap sound:", error);
         });

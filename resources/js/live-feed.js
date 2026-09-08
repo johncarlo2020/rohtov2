@@ -249,7 +249,7 @@ function initializeLobbyMusic() {
 
         // Initialize kibble falling sound
         kibbleSound = new Audio(
-            `${window.ASSET_BASE}/sounds/mobile/tapCollection/1.mp3`,
+            `${window.ASSET_BASE}/sounds/mobile/tapCollectionss/1.mp3`,
         );
         kibbleSound.volume = 0.4; // Set volume to 40% for kibble sound
 

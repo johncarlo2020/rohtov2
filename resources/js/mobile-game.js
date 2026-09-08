@@ -391,9 +391,9 @@ function showLightEffect(x, y) {
 }
 
 const tapSounds = [
-    `${window.ASSET_BASE}/sounds/mobile/tapCollection/1.mp3`,
-    `${window.ASSET_BASE}/sounds/mobile/tapCollection/2.mp3`,
-    `${window.ASSET_BASE}/sounds/mobile/tapCollection/3.mp3`,
+    `${window.ASSET_BASE}/sounds/mobile/tapCollections/1.mp3`,
+    `${window.ASSET_BASE}/sounds/mobile/tapCollections/2.mp3`,
+    `${window.ASSET_BASE}/sounds/mobile/tapCollections/3.mp3`,
 ];
 
 // Bounce feedback + burst an object out of the product when the player taps the "TAP ME" screen
@@ -408,7 +408,7 @@ if (tapGame) {
 
         //add lightning effect on product when tap is triggered
 
-        // play random tap music from /sounds/mobile/tapCollection
+        // play random tap music from /sounds/mobile/tapCollections
 
         const randomTapSound = new Audio(
             tapSounds[Math.floor(Math.random() * tapSounds.length)],

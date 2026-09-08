@@ -69,7 +69,8 @@
         .qr-container {
             position: absolute;
             top: 50%;
-            transform: translateY(-50%);
+            left: 50%;
+            transform: translate(-50%, -50%);
             width: 500px;
             height: 500px;
             display: flex;
@@ -78,9 +79,6 @@
             flex-direction: column;
         }
 
-        .qr-container.left {
-            left: 15%;
-        }
 
         .qr-container.right {
             right: 15%;
@@ -126,11 +124,6 @@
         <div class="qr-container left">
             <img class="qr-text" src="{{ asset('images/brand/text-exitement.png') }}" alt="">
             <div class="qr-img" id="qrCodeLeft"></div>
-        </div>
-
-        <div class="qr-container right">
-            <img class="qr-text" src="{{ asset('images/brand/text-exitement.png') }}" alt="">
-            <div class="qr-img" id="qrCodeRight"></div>
         </div>
     </div>
 

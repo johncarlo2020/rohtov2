@@ -50,10 +50,10 @@
                             count increase</div>
                     </div>
 
-                    <button class="btn btn-success mobile-friendly-btn w-100" id="startButton" onclick="startGame()">
+                    <button class="btn btn-success mobile-friendly-btn w-100-sm" id="startButton" onclick="startGame()">
                         <i class="fa-solid fa-play"></i> Start
                     </button>
-                    <button class="btn btn-success d-none mobile-friendly-btn w-100" id="increaseButton"
+                    <button class="btn btn-success d-none mobile-friendly-btn w-100-sm" id="increaseButton"
                         onclick="increaseScale()">
                         <i class="fa-solid fa-cow"></i> Increase
                     </button>

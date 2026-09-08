@@ -59,3 +59,10 @@
         font-size: 10px;
     }
 }
+
+//on big screens
+@media (min-width: 900px) {
+    .mobile-friendly-btn {
+        width: 200px !important;
+    }
+}

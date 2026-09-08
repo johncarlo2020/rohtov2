@@ -291,7 +291,7 @@ function createFallingObject(isBig) {
     if (!productEl) return;
 
     const objectFile = isBig
-        ? "big.png"
+        ? "big2.png"
         : `${Math.floor(Math.random() * 4) + 1}.png`;
     const size = isBig ? 170 : 110;
 

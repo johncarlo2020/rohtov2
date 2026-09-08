@@ -244,7 +244,6 @@ function handleGameUpdate(data) {
 function handleGameFinish(data) {
     console.log("Mobile game: Game finished", data);
     gameOver = true;
-    triggerFallingObjects(1, true);
 
     setTimeout(() => {
         tapGame.classList.add("d-none");

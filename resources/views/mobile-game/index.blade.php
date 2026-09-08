@@ -49,7 +49,7 @@
         .mobile-logo {
             position: absolute;
             top: 0vh;
-            left: 0vw;
+            left: 6vw;
             width: 34vw;
             max-width: 160px;
             height: auto;
@@ -133,8 +133,7 @@
         }
 
         .mobile-finish-product {
-            width: 85vw;
-            max-width: 380px;
+            width: 100vw;
             height: auto;
             object-fit: contain;
         }
@@ -147,8 +146,8 @@
         }
 
         .mobile-finish-title {
-            width: 60vw;
-            max-width: 260px;
+            width: 93vw;
+            max-width: 349px;
             height: auto;
             object-fit: contain;
         }
@@ -193,13 +192,15 @@
 
     <div class="mobile-screen mobile-finish d-none">
         <img src="{{ asset('images/brand/background-desktop.png') }}" alt="" class="mobile-bg">
-        <img src="{{ asset('images/brand/congratulation/product with lines.png') }}" alt="Friso Gold"
-            class="mobile-finish-product">
+
         <div class="mobile-finish-content">
             <img src="{{ asset('images/brand/congratulation/you did it@3x 1.png') }}" alt="You did it!"
                 class="mobile-finish-title">
-            <img src="{{ asset("images/brand/congratulation/We've unlocked 6x less tummy issues for more good things!.png") }}"
+            <img src="{{ asset("images/brand/congratulation/We've unlocked 6x less tummy issues_ for more good things!-mobile.png") }}"
                 alt="We've unlocked 6x less tummy issues for more good things!" class="mobile-finish-subtitle">
+
+            <img src="{{ asset('images/brand/congratulation/Group 1000008283 1.png') }}" alt="Friso Gold"
+                class="mobile-finish-product">
         </div>
     </div>
 

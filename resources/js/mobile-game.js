@@ -242,6 +242,8 @@ function handleGameUpdate(data) {
     }
 }
 
+let endmusicPLayed = false;
+
 function handleGameFinish(data) {
     console.log("Mobile game: Game finished", data);
     gameOver = true;
@@ -249,7 +251,17 @@ function handleGameFinish(data) {
     setTimeout(() => {
         tapGame.classList.add("d-none");
         finish.classList.remove("d-none");
+        playFinishMusic();
     }, 900);
+}
+
+function playFinishMusic() {
+    if (endmusicPLayed) return;
+    endmusicPLayed = true;
+    const audio = new Audio(`${window.ASSET_BASE}/sounds/finish.mp3`);
+    audio.play().catch((error) => {
+        console.warn("❌ Could not play finish music:", error);
+    });
 }
 
 function handleGameReset(data) {
@@ -368,6 +380,19 @@ if (tapGame) {
         setTimeout(() => {
             productEl.style.transform = "scale(1)";
         }, 150);
+
+        // play random tap music from /sounds/mobile/tapCollection
+        const tapSounds = [
+            `${window.ASSET_BASE}/sounds/mobile/tapCollection/1.mp3`,
+            `${window.ASSET_BASE}/sounds/mobile/tapCollection/2.mp3`,
+            `${window.ASSET_BASE}/sounds/mobile/tapCollection/3.mp3`,
+        ];
+        const randomTapSound = new Audio(
+            tapSounds[Math.floor(Math.random() * tapSounds.length)],
+        );
+        randomTapSound.play().catch((error) => {
+            console.warn("❌ Could not play tap sound:", error);
+        });
 
         createFallingObject(false);
     });

@@ -62,7 +62,7 @@
             max-width: 160px;
             height: auto;
             object-fit: contain;
-            z-index: 10;
+            z-index: 9999999;
         }
 
         /* Lobby */

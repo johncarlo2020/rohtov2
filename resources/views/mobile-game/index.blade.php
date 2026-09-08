@@ -30,8 +30,8 @@
     <style>
         html,
         body {
-            width: 100svw;
-            height: 100svh;
+            width: 100vw;
+            height: 100dvh;
             overflow: hidden;
             margin: 0;
             padding: 0;

@@ -305,49 +305,71 @@ function createFallingObject(isBig) {
     const objectFile = isBig
         ? "big2.png"
         : `${Math.floor(Math.random() * 4) + 1}.png`;
+
     const size = isBig ? 170 : 110;
 
     const productRect = productEl.getBoundingClientRect();
+
     const originX = productRect.left + productRect.width / 2;
     const originY = productRect.top + productRect.height * 0.15;
 
-    // Fly straight up and off the top of the screen, like it's leaving the canvas
     const targetX = originX + (Math.random() - 0.5) * productRect.width * 0.8;
+
     const targetY = -size;
 
+    const deltaX = targetX - originX;
+    const deltaY = targetY - originY;
+
     const obj = document.createElement("div");
-    obj.style.position = "fixed";
-    obj.style.width = `${size}px`;
-    obj.style.height = `${size}px`;
-    obj.style.left = `${originX - size / 2}px`;
-    obj.style.top = `${originY - size / 2}px`;
-    obj.style.backgroundImage = `url('${window.ASSET_BASE}/images/brand/falling_objects/${objectFile}')`;
-    obj.style.backgroundSize = "contain";
-    obj.style.backgroundRepeat = "no-repeat";
-    obj.style.backgroundPosition = "center";
-    obj.style.zIndex = "10";
-    obj.style.pointerEvents = "none";
-    obj.style.opacity = "1";
-    obj.style.transform = "scale(0.5)";
-    // Throw straight up off the top of the screen and fade away right before it exits
-    obj.style.transition =
-        "top 800ms ease-in, left 800ms ease-in, transform 800ms ease-in, opacity 250ms ease-in 550ms";
+
+    Object.assign(obj.style, {
+        position: "fixed",
+        width: `${size}px`,
+        height: `${size}px`,
+
+        // Set position only once
+        left: `${originX - size / 2}px`,
+        top: `${originY - size / 2}px`,
+
+        backgroundImage: `url('${window.ASSET_BASE}/images/brand/falling_objects/${objectFile}')`,
+        backgroundSize: "contain",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
+
+        zIndex: "10",
+        pointerEvents: "none",
+
+        opacity: "1",
+
+        // GPU-friendly animation
+        transform: "translate3d(0, 0, 0) scale(0.5)",
+        transformOrigin: "center",
+
+        willChange: "transform, opacity",
+
+        transition: "transform 800ms ease-in, opacity 250ms ease-in 550ms",
+    });
+
     document.body.appendChild(obj);
 
-    // Force a reflow so the browser paints the starting position before the transition target is applied
-    void obj.offsetHeight;
+    // Let browser commit the initial state without forced reflow
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            obj.style.transform = `translate3d(${deltaX}px, ${deltaY}px, 0) scale(1.1)`;
 
-    obj.style.top = `${targetY - size / 2}px`;
-    obj.style.left = `${targetX - size / 2}px`;
-    obj.style.opacity = "0";
-    obj.style.transform = "scale(1.1)";
+            obj.style.opacity = "0";
+        });
+    });
 
-    // Light effect bursts right at the product immediately
     showLightEffect(originX, originY);
 
-    setTimeout(() => {
-        obj.remove();
-    }, 800);
+    obj.addEventListener(
+        "transitionend",
+        () => {
+            obj.remove();
+        },
+        { once: true },
+    );
 }
 
 // Light effect burst shown centered on the product where the object comes from

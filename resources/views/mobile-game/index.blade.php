@@ -29,12 +29,13 @@
     <style>
         html,
         body {
-            width: 100vw;
-            height: 100vh;
+            width: 100svw;
+            height: 100svh;
             overflow: hidden;
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            touch-action: manipulation;
         }
 
         .mobile-screen {

@@ -1626,7 +1626,21 @@ function stopFinishMusic() {
     audio.pause();
 }
 
-//on load
+//create a modal on load and display it to play the lobby music
 window.addEventListener("load", () => {
-    playLobbyMusic();
+    const modal = document.createElement("div");
+    modal.className = "lobby-music-modal";
+    modal.innerHTML = `
+        <div class="modal-content">
+            <p>Click to play lobby music</p>
+            <button id="closeLobbyMusicModal">Play</button>
+        </div>
+    `;
+    document.body.appendChild(modal);
+
+    const closeButton = document.getElementById("closeLobbyMusicModal");
+    closeButton.addEventListener("click", () => {
+        modal.remove();
+        playLobbyMusic();
+    });
 });

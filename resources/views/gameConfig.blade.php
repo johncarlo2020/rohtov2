@@ -23,6 +23,16 @@
                             <div class="form-text">How much weight each +/- button adds/removes</div>
                         </div>
                     </div>
+                    <!-- Timer Configuration -->
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="timerInput" class="form-label">Timer (seconds):</label>
+                            <input type="number" class="form-control" id="timerInput" step="1"
+                                value="{{ $config->timer_seconds ?? 60 }}" oninput="updateTimer()">
+                            <div class="form-text">Set the duration of the game in seconds</div>
+                        </div>
+                    </div>
+
                 </div>
 
                 <!-- Configuration Display -->
@@ -31,7 +41,8 @@
                         <strong>Current Config:</strong>
                         Max: <span id="configMax">{{ $config->max_weight ?? 4 }}kg</span> |
                         Increment: <span id="configIncrement">{{ $config->increment_grams ?? 100 }}g</span> per click |
-                        Clicks to Complete: <span id="configClicks">0</span>
+                        Clicks to Complete: <span id="configClicks">0</span> |
+                        Timer: <span id="configTimer">{{ $config->timer_seconds ?? 60 }}s</span>
                     </small>
                 </div>
 
@@ -82,6 +93,7 @@
     <script>
         let maxWeight = {{ $config->max_weight ?? 4.0 }}; // Maximum weight in kg
         let incrementGrams = {{ $config->increment_grams ?? 100 }}; // Increment per click in grams
+        let timerSeconds = {{ $config->timer_seconds ?? 60 }}; // Timer in seconds
         const INTERNAL_MAX = 400; // Internal calculation range (0-400)
 
         // CSRF token for Laravel
@@ -109,13 +121,26 @@
             }
         }
 
+        // Update timer configuration
+        function updateTimer() {
+            const input = document.getElementById('timerInput');
+            const newTimer = parseInt(input.value);
+
+            if (!isNaN(newTimer) && newTimer > 0) {
+                timerSeconds = newTimer;
+                updateConfigDisplay();
+            }
+        }
+
         // Update configuration display
         function updateConfigDisplay() {
             const maxWeightNum = parseFloat(maxWeight);
             const incrementGramsNum = parseInt(incrementGrams);
+            const timerSecondsNum = parseInt(timerSeconds);
 
             document.getElementById('configMax').textContent = maxWeightNum.toFixed(1) + 'kg';
             document.getElementById('configIncrement').textContent = incrementGramsNum + 'g';
+            document.getElementById('configTimer').textContent = timerSecondsNum + 's';
 
             // Calculate how many clicks to complete (from 0 to maxWeight, in increments of incrementGrams)
             // Convert maxWeight (kg) to grams
@@ -157,7 +182,8 @@
                     },
                     body: JSON.stringify({
                         max_weight: maxWeight,
-                        increment_grams: incrementGrams
+                        increment_grams: incrementGrams,
+                        timer_seconds: timerSeconds
                     })
                 });
 
@@ -169,11 +195,13 @@
                     // Update the displayed config values with the saved data (ensure they're numbers)
                     maxWeight = parseFloat(data.config.max_weight);
                     incrementGrams = parseInt(data.config.increment_grams);
+                    timerSeconds = parseInt(data.config.timer_seconds);
                     updateConfigDisplay();
 
                     // Update form inputs to reflect saved values
                     document.getElementById('maxValueInput').value = maxWeight;
                     document.getElementById('incrementInput').value = incrementGrams;
+                    document.getElementById('timerInput').value = timerSeconds;
 
                     console.log('Configuration saved:', data.config);
                 } else {

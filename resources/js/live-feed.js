@@ -248,7 +248,9 @@ function initializeLobbyMusic() {
         countdownSound.volume = 0.6; // Set volume to 60% for countdown sound
 
         // Initialize kibble falling sound
-        kibbleSound = new Audio(`${window.ASSET_BASE}/sounds/collect.mp3`);
+        kibbleSound = new Audio(
+            `${window.ASSET_BASE}/sounds/tapCollection/1.mp3`,
+        );
         kibbleSound.volume = 0.4; // Set volume to 40% for kibble sound
 
         // Initialize finish sound (for confetti celebration)
@@ -671,8 +673,6 @@ function handleGameUpdate(data) {
                 maxWeight !== undefined && data.currentWeight >= maxWeight;
             triggerKibbleFall(kibbleCount, isMax);
         }
-
-        moveScalePin(data.currentWeight);
     } else {
         console.warn(
             "Game update received but no currentWeight data found:",

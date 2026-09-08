@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\GameConfig;
 use App\Events\LiveFeedEvent;
-use Illuminate\Http\Request;
+use App\Models\GameConfig;
 use App\Models\User;
+use Illuminate\Http\Request;
 
 class GameConfigController extends Controller
 {
@@ -15,13 +15,13 @@ class GameConfigController extends Controller
     public function index()
     {
         $config = GameConfig::getActive();
+
         return view('gameConfig', compact('config'));
     }
 
-
     public function resetGame()
     {
-       // get all user records with game_status 'active'
+        // get all user records with game_status 'active'
         $activeUsers = User::where('game_status', 'active')->get();
         // reset their game_status to 'completed'
         foreach ($activeUsers as $user) {
@@ -39,7 +39,8 @@ class GameConfigController extends Controller
     {
         $request->validate([
             'max_weight' => 'required|numeric|min:1',
-            'increment_grams' => 'required|integer|min:10'
+            'increment_grams' => 'required|integer|min:10',
+            'timer_seconds' => 'required|integer|min:1',
         ]);
 
         // Get the current active config or create new one
@@ -49,21 +50,23 @@ class GameConfigController extends Controller
             // Update existing active config
             $config->update([
                 'max_weight' => $request->max_weight,
-                'increment_grams' => $request->increment_grams
+                'increment_grams' => $request->increment_grams,
+                'timer_seconds' => $request->timer_seconds,
             ]);
         } else {
             // Create new config if none exists
             $config = GameConfig::create([
                 'max_weight' => $request->max_weight,
                 'increment_grams' => $request->increment_grams,
-                'is_active' => true
+                'timer_seconds' => $request->timer_seconds,
+                'is_active' => true,
             ]);
         }
 
         return response()->json([
             'success' => true,
             'message' => 'Configuration saved successfully!',
-            'config' => $config
+            'config' => $config,
         ]);
     }
 
@@ -77,7 +80,8 @@ class GameConfigController extends Controller
         return response()->json([
             'success' => true,
             'max_weight' => $config->max_weight ?? 4.0,
-            'increment_grams' => $config->increment_grams ?? 100
+            'increment_grams' => $config->increment_grams ?? 100,
+            'timer_seconds' => $config->timer_seconds ?? 60,
         ]);
     }
 
@@ -87,6 +91,7 @@ class GameConfigController extends Controller
     public function trigger()
     {
         $config = GameConfig::getActive();
+
         return view('gameTrigger', compact('config'));
     }
 
@@ -97,7 +102,7 @@ class GameConfigController extends Controller
     {
         $request->validate([
             'action' => 'required|string',
-            'data' => 'nullable|array'
+            'data' => 'nullable|array',
         ]);
 
         // Trigger the live feed event
@@ -105,7 +110,7 @@ class GameConfigController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Live feed event triggered successfully'
+            'message' => 'Live feed event triggered successfully',
         ]);
     }
 }

@@ -12,13 +12,15 @@ class GameConfig extends Model
     protected $fillable = [
         'max_weight',
         'increment_grams',
-        'is_active'
+        'timer_seconds',
+        'is_active',
     ];
 
     protected $casts = [
         'max_weight' => 'decimal:1',
         'increment_grams' => 'integer',
-        'is_active' => 'boolean'
+        'timer_seconds' => 'integer',
+        'is_active' => 'boolean',
     ];
 
     /**
@@ -36,7 +38,9 @@ class GameConfig extends Model
     {
         return (object) [
             'max_weight' => 4.0,
-            'increment_grams' => 100
+            'increment_grams' => 100,
+            'timer_seconds' => 60,
+            'is_active' => false,
         ];
     }
 

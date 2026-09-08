@@ -107,20 +107,7 @@
         <nav class="navbar navbar-main navbar-expand-lg px-0 shadow-none bg-white mb-2 border rounded-0 sticky-top"
             id="navbarBlur" data-scroll="false">
             <div class="container-fluid py-1 px-4">
-                <nav aria-label="breadcrumb">
-                    <div
-                        class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5 d-flex justify-content-start gap-2 align-items-center">
-                        <p class="font-weight-bolder mb-0  pr-3 mr-3 border px-3 py-1 rounded ">
-                            {{ ucfirst(Route::currentRouteName()) }}
-                        </p>
-                        <p class="breadcrumb-item text-sm mb-0">
-                            <a class="opacity-5 " href="javascript:;">Home</a>
-                        </p>
-                        <p class="breadcrumb-item text-sm first-line:active mb-0" aria-current="page">
-                            {{ ucfirst(Route::currentRouteName()) }}
-                        </p>
-                    </div>
-                </nav>
+
 
                 <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
                     <div class="ms-md-auto pe-md-3 d-flex align-items-center">
@@ -254,7 +241,7 @@
                     <div class="col-lg-6 mb-lg-0 mb-4">
                         <div class="copyright text-center text-sm text-muted text-lg-start">
                             <a href="https://wowsome.com.my/" class="font-weight-bold" target="_blank">Wowsome</a>
-                            © Copyright 2025
+                            © Copyright 2026
                         </div>
                     </div>
                 </div>

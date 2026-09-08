@@ -5,12 +5,12 @@
         <div class="card mt-5">
             <div class="card-body">
                 <h4 class="card-title text-center mb-2">
-                    Game Scale Meter
+                    Game click bar
                     <span id="connectionDot" class="connection-dot" title="Connecting..."></span>
                 </h4>
 
                 <!-- Scale Meter Container -->
-                <div class="scale-meter-container mb-2">
+                <div class="scale-meter-container mb-2 d-none">
                     <div class="gauge-container">
                         <div class="gauge-background">
                             <div class="gauge-fill" id="gaugeFill"></div>
@@ -25,11 +25,7 @@
                         </div>
                         <div class="gauge-needle" id="gaugeNeedle"></div>
                         <div class="gauge-center"></div>
-                        <div class="gauge-labels" id="gaugeLabels">
-                            <span class="gauge-label left">0kg<br><small>0</small></span>
-                            <span class="gauge-label right"
-                                id="maxWeightLabel">{{ $config->max_weight ?? 4 }}kg<br><small>400</small></span>
-                        </div>
+
                     </div>
                 </div>
 
@@ -38,8 +34,8 @@
                     <input type="hidden" id="csrf-token" value="{{ csrf_token() }}">
 
                     <!-- Kibble Count Preset Buttons -->
-                    <div class="kibble-preset-box mb-4">
-                        <div class="kibble-label fw-bold">Kibbles per Increase</div>
+                    <div class="kibble-preset-box mb-2">
+                        <div class="kibble-label fw-bold">Ingredients fall count</div>
                         <div class="kibble-preset-buttons mt-2">
                             <button type="button" class="kibble-preset-btn" data-count="1"
                                 onclick="setKibbleCount(1)">1</button>
@@ -50,16 +46,16 @@
                             <button type="button" class="kibble-preset-btn" data-count="20"
                                 onclick="setKibbleCount(20)">20</button>
                         </div>
-                        <div class="kibble-description">Selected: <span id="kibbleCountDisplay">12</span> kibbles per weight
-                            increase</div>
+                        <div class="kibble-description">Selected: <span id="kibbleCountDisplay">12</span> ingredients fall
+                            count increase</div>
                     </div>
 
-                    <button class="btn btn-success mobile-friendly-btn" id="startButton" onclick="startGame()">
+                    <button class="btn btn-success mobile-friendly-btn w-100" id="startButton" onclick="startGame()">
                         <i class="fa-solid fa-play"></i> Start
                     </button>
-                    <button class="btn btn-success d-none mobile-friendly-btn" id="increaseButton"
+                    <button class="btn btn-success d-none mobile-friendly-btn w-100" id="increaseButton"
                         onclick="increaseScale()">
-                        <i class="fa-solid fa-paw"></i> Increase
+                        <i class="fa-solid fa-cow"></i> Increase
                     </button>
 
                     <!-- Reset Button Area -->

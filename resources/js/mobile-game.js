@@ -321,7 +321,7 @@ function createFallingObject(isBig) {
     obj.style.height = `${size}px`;
     obj.style.left = `${originX - size / 2}px`;
     obj.style.top = `${originY - size / 2}px`;
-    obj.style.backgroundImage = `url('${window.ASSET_BASE}/images/brand/falling_olbjects/${objectFile}')`;
+    obj.style.backgroundImage = `url('${window.ASSET_BASE}/images/brand/falling_objects/${objectFile}')`;
     obj.style.backgroundSize = "contain";
     obj.style.backgroundRepeat = "no-repeat";
     obj.style.backgroundPosition = "center";
@@ -370,6 +370,12 @@ function showLightEffect(x, y) {
     setTimeout(() => burst.remove(), 900);
 }
 
+const tapSounds = [
+    `${window.ASSET_BASE}/sounds/mobile/tapCollection/1.mp3`,
+    `${window.ASSET_BASE}/sounds/mobile/tapCollection/2.mp3`,
+    `${window.ASSET_BASE}/sounds/mobile/tapCollection/3.mp3`,
+];
+
 // Bounce feedback + burst an object out of the product when the player taps the "TAP ME" screen
 if (tapGame) {
     tapGame.addEventListener("click", () => {
@@ -380,12 +386,9 @@ if (tapGame) {
             productEl.style.transform = "scale(1)";
         }, 150);
 
+        //add lightning effect on product when tap is triggered
+
         // play random tap music from /sounds/mobile/tapCollection
-        const tapSounds = [
-            `${window.ASSET_BASE}/sounds/mobile/tapCollection/1.mp3`,
-            `${window.ASSET_BASE}/sounds/mobile/tapCollection/2.mp3`,
-            `${window.ASSET_BASE}/sounds/mobile/tapCollection/3.mp3`,
-        ];
 
         const randomTapSound = new Audio(
             tapSounds[Math.floor(Math.random() * tapSounds.length)],
@@ -398,6 +401,8 @@ if (tapGame) {
         createFallingObject(false);
     });
 }
+
+// Inject the light effect styles/keyframes
 
 // Initialize Pusher when the page loads
 document.addEventListener("DOMContentLoaded", function () {

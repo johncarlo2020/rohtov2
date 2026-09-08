@@ -235,7 +235,7 @@
             <img src="{{ asset('images/brand/background-desktop.png') }}" alt="" class="mobile-bg">
             <img src="{{ asset('images/brand/tap for more@3x 1.png') }}" alt="Tap for more good things!"
                 class="mobile-tap-title">
-            <img src="{{ asset('images/brand/TAP HERE TO START.png') }}" alt="Tap for more good things!"
+            <img src="{{ asset('images/brand/congratulation/tap-text.png') }}" alt="Tap for more good things!"
                 class="mobile-tap-here">
         </div>
     </div>
@@ -267,10 +267,10 @@
         <div class="mobile-finish-content">
             <img src="{{ asset('images/brand/congratulation/you did it@3x 1.png') }}" alt="You did it!"
                 class="mobile-finish-title">
-            <img src="{{ asset("images/brand/congratulation/We've unlocked 6x less tummy issues_ for more good things!-mobile.png") }}"
+            <img src="{{ asset('images/brand/congratulation/blue-text.png') }}"
                 alt="We've unlocked 6x less tummy issues for more good things!" class="mobile-finish-subtitle">
 
-            <img src="{{ asset('images/brand/congratulation/Group 1000008283 1.png') }}" alt="Friso Gold"
+            <img src="{{ asset('images/brand/congratulation/product.png') }}" alt="Friso Gold"
                 class="mobile-finish-product">
         </div>
 

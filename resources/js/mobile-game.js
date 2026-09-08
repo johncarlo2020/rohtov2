@@ -321,7 +321,7 @@ function createFallingObject(isBig) {
     obj.style.height = `${size}px`;
     obj.style.left = `${originX - size / 2}px`;
     obj.style.top = `${originY - size / 2}px`;
-    obj.style.backgroundImage = `url('${window.ASSET_BASE}/images/brand/falling_objects/${objectFile}')`;
+    obj.style.backgroundImage = `url('${window.ASSET_BASE}/images/brand/falling_olbjects/${objectFile}')`;
     obj.style.backgroundSize = "contain";
     obj.style.backgroundRepeat = "no-repeat";
     obj.style.backgroundPosition = "center";
@@ -380,8 +380,6 @@ if (tapGame) {
             productEl.style.transform = "scale(1)";
         }, 150);
 
-        //add lightning effect on product when tap is triggered
-
         // play random tap music from /sounds/mobile/tapCollection
         const tapSounds = [
             `${window.ASSET_BASE}/sounds/mobile/tapCollection/1.mp3`,
@@ -393,13 +391,6 @@ if (tapGame) {
             tapSounds[Math.floor(Math.random() * tapSounds.length)],
         );
 
-        // add and remove active class for light effect
-        const lightEffect = document.querySelector(".light-effect");
-        if (lightEffect) {
-            lightEffect.classList.add("active");
-            setTimeout(() => lightEffect.classList.remove("active"), 300);
-        }
-
         randomTapSound.play().catch((error) => {
             console.warn("❌ Could not play tap sound:", error);
         });
@@ -407,55 +398,6 @@ if (tapGame) {
         createFallingObject(false);
     });
 }
-
-// Inject the light effect styles/keyframes
-(function addMobileGameStyles() {
-    if (document.getElementById("mobile-game-styles")) return;
-    const style = document.createElement("style");
-    style.id = "mobile-game-styles";
-    style.textContent = `
-        .mobile-light-burst {
-            position: absolute;
-            width: 0;
-            height: 0;
-            z-index: 1;
-            pointer-events: none;
-        }
-        .mobile-light-burst .mobile-light-core {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            width: 90px;
-            height: 90px;
-            margin: -45px 0 0 -45px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(255,255,255,0.85) 0%, rgba(255,246,200,0.45) 45%, rgba(255,215,120,0) 75%);
-            animation: mobileLightCore 900ms ease-in-out forwards;
-        }
-        .mobile-light-burst .mobile-light-beam {
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 70px;
-            height: 220px;
-            background: linear-gradient(to top, rgba(255,250,222,0.5) 0%, rgba(255,250,222,0.22) 45%, rgba(255,255,255,0) 100%);
-            clip-path: polygon(38% 100%, 62% 100%, 100% 0%, 0% 0%);
-            filter: blur(2px);
-            animation: mobileLightBeam 900ms ease-in-out forwards;
-        }
-        @keyframes mobileLightCore {
-            0% { transform: scale(0.5); opacity: 0; }
-            35% { transform: scale(1); opacity: 0.9; }
-            100% { transform: scale(1.1); opacity: 0; }
-        }
-        @keyframes mobileLightBeam {
-            0% { transform: translateX(-50%) scaleY(0.7); opacity: 0; }
-            35% { transform: translateX(-50%) scaleY(1); opacity: 0.85; }
-            100% { transform: translateX(-50%) scaleY(1.05); opacity: 0; }
-        }
-    `;
-    document.head.appendChild(style);
-})();
 
 // Initialize Pusher when the page loads
 document.addEventListener("DOMContentLoaded", function () {

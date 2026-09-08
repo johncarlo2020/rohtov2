@@ -71,7 +71,32 @@
             max-width: 320px;
             height: auto;
             object-fit: contain;
-            margin-bottom: 4vh;
+            margin-bottom: 6vh;
+        }
+
+        .mobile-tap-here {
+            width: 60vw;
+            max-width: 320px;
+            height: auto;
+            object-fit: contain;
+            margin: 0 auto;
+
+            /* blinking animation for the tap here image */
+            animation: blink 3s infinite;
+
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+
         }
 
         .mobile-tap-hint {
@@ -173,9 +198,13 @@
     <img src="{{ asset('images/brand/logo.png') }}" alt="Friso Gold" class="mobile-logo">
 
     <div class="mobile-screen mobile-lobby">
-        <img src="{{ asset('images/brand/background-desktop.png') }}" alt="" class="mobile-bg">
-        <img src="{{ asset('images/brand/tap for more@3x 1.png') }}" alt="Tap for more good things!"
-            class="mobile-tap-title">
+        <div class="first-lobby">
+            <img src="{{ asset('images/brand/background-desktop.png') }}" alt="" class="mobile-bg">
+            <img src="{{ asset('images/brand/tap for more@3x 1.png') }}" alt="Tap for more good things!"
+                class="mobile-tap-title">
+            <img src="{{ asset('images/brand/TAP HERE TO START.png') }}" alt="Tap for more good things!"
+                class="mobile-tap-here">
+        </div>
     </div>
 
     <div class="mobile-screen mobile-countdown d-none">
@@ -229,6 +258,17 @@
             key: '{{ config('broadcasting.connections.pusher.key') }}',
             cluster: '{{ config('broadcasting.connections.pusher.cluster') }}'
         };
+
+        const mobileTapHere = document.querySelector('.mobile-tap-here');
+
+        function showTapGame() {
+            //hide lobby screens if any before showing the tap game
+            const lobbyScreens = document.querySelectorAll('.mobile-screen');
+            lobbyScreens.forEach(screen => screen.classList.add('d-none'));
+            document.querySelector('.mobile-tap-game').classList.remove('d-none');
+        }
+
+        mobileTapHere.addEventListener('click', showTapGame);
     </script>
     @vite('resources/js/mobile-game.js')
 </body>

@@ -4,6 +4,7 @@ let channel = null;
 let reconnectAttempts = 0;
 const maxReconnectAttempts = 5;
 const reconnectDelay = 2000; // 2 seconds
+const mobileTapHere = document.querySelector(".mobile-tap-here");
 
 // Initialize Pusher connection
 function initializePusher() {

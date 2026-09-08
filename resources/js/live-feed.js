@@ -287,7 +287,9 @@ function initializeLobbyMusic() {
     } catch (error) {
         console.error("Error initializing lobby music and sounds:", error);
     }
-} // Play lobby music
+}
+
+// Play lobby music
 function playLobbyMusic() {
     if (lobbyMusic && !isGameStarting) {
         lobbyMusic.play().catch((error) => {
@@ -464,7 +466,7 @@ function playFinishSound() {
 // Progress tube management
 let currentWeight = 0;
 
-// Update the two side progress tubes (0-100%)
+// Update the two side progress tubes base on time config
 function setGameProgressBar(percent) {
     const fillPercent = Math.max(0, Math.min(100, percent));
     ["game-progress-bar-left", "game-progress-bar-right"].forEach((id) => {
@@ -473,6 +475,27 @@ function setGameProgressBar(percent) {
             bar.style.height = fillPercent + "%";
         }
     });
+}
+
+//start game timer base on game config timer_seconds
+
+function startGameTimer() {
+    console.log("Starting game timer...");
+    console.log(window.GAME_CONFIG);
+    const timerConfig = window.GAME_CONFIG?.timerDuration; // Default to 60 seconds if not set
+    let elapsedTime = 0;
+
+    console.log("Starting game timer with duration:", timerConfig);
+
+    const interval = setInterval(() => {
+        elapsedTime++;
+        const percentage = Math.min((elapsedTime / timerConfig) * 100, 100);
+        setGameProgressBar(percentage);
+
+        if (elapsedTime >= timerConfig) {
+            clearInterval(interval);
+        }
+    }, 1000);
 }
 
 // Function to update the progress tubes based on the current weight
@@ -575,7 +598,7 @@ function handleGameStart(data) {
         // Reset game starting state
         isGameStarting = false;
         gameStartTimeout = null;
-
+        startGameTimer();
         enableIncreaseOnAdmin();
         console.log("Game transition complete, admin controls enabled");
     }, 3000);
@@ -1266,7 +1289,7 @@ function triggerKibbleFall(kibbleCount = null, isMax = false) {
         // When the side bars are full, drop a single big object instead of the usual batch
         if (isMax) {
             console.log("Bars full - dropping the big object!");
-            createFallingKibble(bagCenterX, -30, true);
+            createFallingKibble(bagCenterX, -500, true);
             return;
         }
 

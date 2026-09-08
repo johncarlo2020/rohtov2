@@ -205,7 +205,8 @@
             incrementGrams: {{ $gameConfig->increment_grams ?? 100 }}, // Increment per click in grams
             minWeight: 0.0, // Minimum weight (always 0)
             medianWeight: {{ intval(($gameConfig->max_weight ?? 4) / 2) }}, // Median weight (half of max, no decimal)
-            internalMax: 400 // Internal calculation range (0-400)
+            internalMax: 400, // Internal calculation range (0-400)
+            timerDuration: {{ $gameConfig->timer_seconds - 3 }} // Game timer duration in seconds
         };
 
         // QR codes linking to the mobile game page

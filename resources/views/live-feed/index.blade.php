@@ -161,6 +161,10 @@
         </div>
 
         <div id="game"></div>
+
+        <div class="final-message-bottom">
+            <p>*referring to ingredients contained in Friso Gold milk.</p>
+        </div>
     </div>
     <div class="finish d-none">
         <img src="{{ asset('images/brand/background-desktop.png') }}" alt="" class="finish-background">
@@ -169,7 +173,7 @@
         <div class="finish-content">
             <img src="{{ asset('images/brand/congratulation/you did it@3x 1.png') }}" alt="You did it!"
                 class="finish-title">
-            <img src="{{ asset("images/brand/congratulation/We've unlocked 6x less tummy issues for more good things!.png") }}"
+            <img src="{{ asset("images/brand/congratulation/We've unlocked 6x less tummy issues_ for more good things!.png") }}"
                 alt="We've unlocked 6x less tummy issues for more good things!" class="finish-subtitle">
         </div>
         <div class="final-message-bottom">

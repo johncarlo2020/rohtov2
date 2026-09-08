@@ -402,22 +402,6 @@
         max-width: 34vw;
     }
 
-    .final-message-bottom {
-        position: absolute;
-        bottom: 12px;
-        right: 17px;
-        text-align: center;
-        color: #000000 !important;
-        font-size: 14px;
-
-        p {
-            margin: 0;
-            color: #000000 !important;
-            font-size: 16px;
-            text-align: left;
-        }
-    }
-
     .finish-title {
         width: 100%;
         height: auto;
@@ -480,4 +464,20 @@
     min-height: 300px;
     max-height: 700px;
     z-index: 90;
+}
+
+.final-message-bottom {
+    position: absolute;
+    bottom: 12px;
+    right: 17px;
+    text-align: center;
+    color: #000000 !important;
+    font-size: 14px;
+
+    p {
+        margin: 0;
+        color: #000000 !important;
+        font-size: 16px;
+        text-align: left;
+    }
 }

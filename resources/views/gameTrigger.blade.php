@@ -68,11 +68,15 @@
                 </div>
 
                 <!-- Remaining Clicks Display -->
-                <div class="remaining-clicks-box text-center mb-3">
+                <div class="remaining-clicks-box text-center mb-3 d-none">
                     <span id="remainingClicksLabel"
                         style="font-weight:700;font-size:16px;color:#2c3e50;background:#f8f9fa;padding:8px 18px;border-radius:12px;border:2px solid #e9ecef;box-shadow:0 2px 8px rgba(0,0,0,0.08);display:inline-block;">
                         Remaining Clicks: <span id="remainingClicksValue"></span>
                     </span>
+                </div>
+
+                <div class="timer text-center">
+                    <span id="timerLabel">Seconds: <span id="timerValue">{{ $config['timer_seconds'] }}</span></span>
                 </div>
             </div>
         </div>
@@ -728,6 +732,7 @@
                     // For start events, wait for acknowledgment
                     if (action === 'start') {
                         console.log('Game start event sent, waiting for live feed acknowledgment...');
+                        startTimer({{ $config['timer_seconds'] }});
 
                         // If no acknowledgment after 10 seconds, show manual recovery
                         setTimeout(() => {
@@ -980,74 +985,22 @@
         function increaseScale() {
             const incrementKg = incrementGrams / 1000; // Convert grams to kg
             const newWeight = currentWeight + incrementKg;
+            //get selected kibble count from the active button
+            const selectedButton = document.querySelector('.kibble-preset-btn.active');
+            const kibblesThisIncrease = selectedButton ? parseInt(selectedButton.getAttribute('data-count')) : 0;
 
-            if (newWeight <= maxWeight) {
-                currentWeight = newWeight;
-                updateMeter();
+            // no restriction just update live feed with kibble count
 
-                // Use the current kibble count from the + / - buttons
-                const kibblesThisIncrease = kibbleCount;
+            triggerLiveFeedEvent('update', {
+                currentWeight: currentWeight,
+                maxWeight: maxWeight,
+                incrementGrams: incrementGrams,
+                kibbleCount: kibblesThisIncrease,
+                totalKibbles: totalKibbles,
+                status: 'weight_updated'
+            });
 
-                totalKibbles += kibblesThisIncrease;
 
-                // Check if maximum weight has been reached
-                const hasReachedMax = currentWeight >= maxWeight;
-
-                if (hasReachedMax) {
-                    console.log('🎉 Maximum weight reached! Sending finish event...');
-
-                    // Send finish event when max weight is reached
-                    triggerLiveFeedEvent('finish', {
-                        currentWeight: currentWeight,
-                        maxWeight: maxWeight,
-                        incrementGrams: incrementGrams,
-                        kibbleCount: kibblesThisIncrease,
-                        totalKibbles: totalKibbles,
-                        status: 'game_finished',
-                        message: 'Maximum weight achieved! Game completed successfully!'
-                    });
-
-                    // Disable increase button to prevent further increases
-                    const increaseButton = document.getElementById('increaseButton');
-                    increaseButton.disabled = true;
-                    increaseButton.innerHTML = '<i class="fa-solid fa-trophy"></i> Max Reached!';
-                    increaseButton.style.backgroundColor = '#28a745';
-
-                    // Show reset button
-                    showResetButton();
-
-                    console.log('🏆 Game completed! Maximum weight of', maxWeight, 'kg achieved!');
-                } else {
-                    // Regular weight update event
-                    triggerLiveFeedEvent('update', {
-                        currentWeight: currentWeight,
-                        maxWeight: maxWeight,
-                        incrementGrams: incrementGrams,
-                        kibbleCount: kibblesThisIncrease,
-                        totalKibbles: totalKibbles,
-                        status: 'weight_updated'
-                    });
-                }
-
-                console.log('Weight updated to:', currentWeight, 'kg', '| Kibbles dropped:', kibblesThisIncrease,
-                    '| Total:', totalKibbles);
-            } else {
-                console.log('Cannot increase weight further - maximum weight already reached');
-
-                // Send finish event to live feed
-                triggerLiveFeedEvent('finish', {
-                    currentWeight: currentWeight,
-                    maxWeight: maxWeight,
-                    incrementGrams: incrementGrams,
-                    kibbleCount: 0,
-                    totalKibbles: totalKibbles,
-                    status: 'game_finished',
-                    message: 'Maximum weight limit exceeded!'
-                });
-
-                // Show reset button instead of auto-resetting
-                showResetButton();
-            }
         }
 
         // Show reset button when max weight is reached
@@ -1099,6 +1052,45 @@
         let isStarting = false;
         let startTimeout = null;
 
+        function updateTimerLabel(seconds) {
+            const timerValue = document.getElementById('timerValue');
+            if (timerValue) {
+                timerValue.textContent = seconds;
+            }
+        }
+
+        function startTimer(duration) {
+            let timer = duration,
+                seconds;
+            const timerInterval = setInterval(() => {
+                seconds = parseInt(timer, 10);
+                updateTimerLabel(seconds);
+
+                if (--timer < 0) {
+                    // Send finish event when max weight is reached
+                    triggerLiveFeedEvent('finish', {
+                        currentWeight: currentWeight,
+                        maxWeight: maxWeight,
+                        incrementGrams: incrementGrams,
+                        kibbleCount: kibbleCount,
+                        totalKibbles: totalKibbles,
+                        status: 'game_finished',
+                        message: 'Maximum weight achieved! Game completed successfully!'
+                    });
+
+                    // Disable increase button to prevent further increases
+                    const increaseButton = document.getElementById('increaseButton');
+                    increaseButton.disabled = true;
+                    increaseButton.innerHTML = '<i class="fa-solid fa-trophy"></i> Max Reached!';
+                    increaseButton.style.backgroundColor = '#28a745';
+
+                    // Show reset button
+                    showResetButton();
+                    clearInterval(timerInterval);
+                }
+            }, 1000);
+        }
+
         function startGame() {
             const startButton = document.getElementById('startButton');
             const increaseButton = document.getElementById('increaseButton');
@@ -1108,6 +1100,7 @@
                 console.warn('Game start already in progress');
                 return;
             }
+
 
             isStarting = true;
             console.log('Starting game...');
@@ -1119,7 +1112,7 @@
             // Reset the scale and kibble count when starting
             currentWeight = 0.0;
             totalKibbles = 0;
-            updateMeter();
+
 
             // Trigger live feed event for game start with enhanced error handling
             triggerLiveFeedEventWithRetry('start', {

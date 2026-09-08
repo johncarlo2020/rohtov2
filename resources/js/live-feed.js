@@ -249,7 +249,7 @@ function initializeLobbyMusic() {
 
         // Initialize kibble falling sound
         kibbleSound = new Audio(
-            `${window.ASSET_BASE}/sounds/tapCollection/1.mp3`,
+            `${window.ASSET_BASE}/sounds/mobile/tapCollection/1.mp3`,
         );
         kibbleSound.volume = 0.4; // Set volume to 40% for kibble sound
 
@@ -655,30 +655,9 @@ function resetCountdownImages() {
 }
 
 function handleGameUpdate(data) {
-    console.log("Game updated:", data);
-
-    // Update progress tubes if weight data is provided
-    if (data && data.currentWeight !== undefined) {
-        console.log(
-            `Updating progress tubes from ${currentWeight}kg to ${data.currentWeight}kg`,
-        );
-
-        // Trigger falling objects when weight increases
-        if (data.currentWeight > currentWeight) {
-            // Use kibble count from WebSocket data if available, otherwise default to random
-            const kibbleCount =
-                data.kibbleCount || Math.floor(Math.random() * 4) + 3;
-            const maxWeight = window.GAME_CONFIG?.maxWeight;
-            const isMax =
-                maxWeight !== undefined && data.currentWeight >= maxWeight;
-            triggerKibbleFall(kibbleCount, isMax);
-        }
-    } else {
-        console.warn(
-            "Game update received but no currentWeight data found:",
-            data,
-        );
-    }
+    //trigger fall of kibble no restriction only count
+    const kibbleCount = data.kibbleCount || Math.floor(Math.random() * 4) + 3;
+    triggerKibbleFall(kibbleCount);
 }
 
 // User join queue system

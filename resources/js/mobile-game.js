@@ -251,7 +251,6 @@ function handleGameFinish(data) {
     setTimeout(() => {
         tapGame.classList.add("d-none");
         finish.classList.remove("d-none");
-        playFinishMusic();
     }, 900);
 }
 

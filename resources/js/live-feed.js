@@ -225,6 +225,7 @@ let kibbleSound = null;
 let finishSound = null;
 let musicInitialized = false;
 let meowSound = null;
+let clapSound = null;
 
 // Initialize lobby music and sound effects
 function initializeLobbyMusic() {
@@ -247,12 +248,16 @@ function initializeLobbyMusic() {
         countdownSound.volume = 0.6; // Set volume to 60% for countdown sound
 
         // Initialize kibble falling sound
-        kibbleSound = new Audio(`${window.ASSET_BASE}/sounds/kibble.mp3`);
+        kibbleSound = new Audio(`${window.ASSET_BASE}/sounds/collect.mp3`);
         kibbleSound.volume = 0.4; // Set volume to 40% for kibble sound
 
         // Initialize finish sound (for confetti celebration)
         finishSound = new Audio(`${window.ASSET_BASE}/sounds/finish.mp3`);
         finishSound.volume = 0.7; // Set volume to 70% for finish sound
+
+        // clap on finish sound
+        clapSound = new Audio(`${window.ASSET_BASE}/sounds/clap.mp3`);
+        clapSound.volume = 0.7; // Set volume to 70% for clap sound
 
         // Initialize meow sound effects (8 different cat sounds available)
         // We'll randomly select one each time we need to play a sound
@@ -427,8 +432,14 @@ function playFinishSound() {
     if (finishSound && musicInitialized) {
         // Reset sound to beginning in case it's already playing
         finishSound.currentTime = 0;
-
         const playPromise = finishSound.play();
+        // Play clap sound along with finish sound
+        if (clapSound && musicInitialized) {
+            clapSound.currentTime = 0;
+            clapSound.play().catch((error) => {
+                console.warn("❌ Could not play clap sound:", error);
+            });
+        }
 
         if (playPromise !== undefined) {
             playPromise
@@ -442,6 +453,7 @@ function playFinishSound() {
     } else {
         console.warn("Cannot play finish sound:", {
             finishSoundExists: !!finishSound,
+            clapSoundExists: !!clapSound,
             musicInitialized: musicInitialized,
         });
     }
@@ -927,8 +939,13 @@ function handleGameFinish(data) {
         console.log(
             `Waiting for ${activeKibbles} kibbles to finish falling before proceeding with game finish`,
         );
-        window.pendingGameFinish = data; // Store the data for later
+        window.pendingGameFinish = data;
+        // Store the data for later
 
+        //stop game music
+        stopGameMusic();
+
+        //play finish music
         // Safety timeout - proceed anyway after 5 seconds even if kibbles haven't finished
         setTimeout(() => {
             if (window.pendingGameFinish) {
@@ -1192,7 +1209,9 @@ function createFallingKibble(x, y, isBig = false) {
         // Keep falling past the rim and sink into the can - it gets covered by the can's own
         // artwork (lower z-index) instead of shrinking away in mid-air above it
         scaleY =
-            canRect.top + canRect.height * KIBBLE_CONFIG.landingDepth - size / 2;
+            canRect.top +
+            canRect.height * KIBBLE_CONFIG.landingDepth -
+            size / 2;
 
         // Calculate precise animation duration based on distance to the can
         const startY = y;
@@ -1591,3 +1610,23 @@ function startContinuousHearts() {
 
     heartInterval = setInterval(spawnHeartsIfLobby, spawnInterval);
 }
+
+function playFinishMusic() {
+    const audio = new Audio(`${window.ASSET_BASE}/sounds/end screen music.mp3`);
+    audio.loop = true;
+    audio.play().catch((error) => {
+        console.error("Error playing finish music:", error);
+    });
+}
+
+//stop finish music
+function stopFinishMusic() {
+    const audio = new Audio(`${window.ASSET_BASE}/sounds/end screen music.mp3`);
+    audio.loop = false;
+    audio.pause();
+}
+
+//on load
+window.addEventListener("load", () => {
+    playLobbyMusic();
+});

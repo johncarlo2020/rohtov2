@@ -361,8 +361,6 @@ function createFallingObject(isBig) {
         });
     });
 
-    showLightEffect(originX, originY);
-
     obj.addEventListener(
         "transitionend",
         () => {

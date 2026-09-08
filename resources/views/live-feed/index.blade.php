@@ -71,8 +71,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 500px;
-            height: 500px;
+            width: 800px;
+            height: 800px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -85,8 +85,8 @@
         }
 
         .qr-container .qr-img {
-            width: 261px;
-            height: 261px;
+            width: 361px;
+            height: 361px;
             background: #fff;
             border: 10px solid #243B81;
             border-radius: 10px;
@@ -207,8 +207,8 @@
         ].forEach(function(id) {
             new QRCode(document.getElementById(id), {
                 text: gameUrl,
-                width: 241,
-                height: 241,
+                width: 361,
+                height: 361,
                 colorDark: "#000000",
                 colorLight: "#ffffff",
                 correctLevel: QRCode.CorrectLevel.H

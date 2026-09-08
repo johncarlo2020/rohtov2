@@ -164,13 +164,18 @@
     </div>
     <div class="finish d-none">
         <img src="{{ asset('images/brand/background-desktop.png') }}" alt="" class="finish-background">
-        <img src="{{ asset('images/brand/congratulation/product with lines.png') }}" alt="Friso Gold"
+        <img src="{{ asset('images/brand/congratulation/Group 1000008281.png') }}" alt="Friso Gold"
             class="finish-product">
         <div class="finish-content">
             <img src="{{ asset('images/brand/congratulation/you did it@3x 1.png') }}" alt="You did it!"
                 class="finish-title">
             <img src="{{ asset("images/brand/congratulation/We've unlocked 6x less tummy issues for more good things!.png") }}"
                 alt="We've unlocked 6x less tummy issues for more good things!" class="finish-subtitle">
+        </div>
+        <div class="final-message-bottom">
+            <p>*Referring to flatulence, diarrhoea & constipation, in just a week. <br />
+                *Sheng et al. JNME (2020)
+            </p>
         </div>
     </div>
 

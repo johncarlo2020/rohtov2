@@ -280,9 +280,7 @@
         </div>
     </div>
 
-    <div class="footer-text">
-        <p>Powered by WOWSOME®️ 2026</p>
-    </div>
+
 
     <script>
         window.ASSET_BASE = "{{ asset('') }}".replace(/\/$/, '');

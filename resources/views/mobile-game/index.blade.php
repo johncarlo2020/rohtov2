@@ -7,6 +7,14 @@
     <title>Friso Gold Game</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+
+
     @vite(['resources/sass/app.scss'])
 
     <!-- Pusher -->
@@ -202,6 +210,15 @@
             <img src="{{ asset('images/brand/congratulation/Group 1000008283 1.png') }}" alt="Friso Gold"
                 class="mobile-finish-product">
         </div>
+
+        <div class="text-disclaimer">
+            <p>*Referring to flatulence, diarrhoea & constipation, in just a week.
+                *Sheng et al. JNME (2020)</p>
+        </div>
+    </div>
+
+    <div class="footer-text">
+        <p>Powered by WOWSOME®️ 2026</p>
     </div>
 
     <script>

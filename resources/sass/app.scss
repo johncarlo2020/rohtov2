@@ -8,13 +8,54 @@
 @import "main";
 @import "brand-styles";
 @import "animations";
-@import 'pages/index';
+@import "pages/index";
 
-
-.join-main
-{
+.join-main {
     height: 100vh;
     background-size: cover;
     background-repeat: no-repeat;
-    background-position:bottom;
+    background-position: bottom;
+}
+
+.footer-text {
+    position: fixed;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    font-family: "DIN Pro";
+    color: #fffcfc;
+    font-style: normal;
+}
+
+.footer-text p {
+    margin: 0;
+    padding: 0;
+    color: #fffcfc !important;
+    font-family: "DIN Pro";
+    font-style: normal;
+    font-weight: 300;
+}
+
+.text-disclaimer {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 40px;
+    width: 70%;
+    text-align: center;
+    font-size: 10px;
+    font-family: "DIN Pro";
+    color: #080808;
+    font-style: normal;
+
+    p {
+        margin: 0;
+        padding: 0;
+        color: #080808 !important;
+        font-family: "DIN Pro";
+        font-style: normal;
+        font-weight: 300;
+        font-size: 10px;
+    }
 }

@@ -46,7 +46,7 @@ class BookingViewController extends Controller
                         $q->orWhere('customer_phone', $phone2);
                     }
                 })
-                ->where('status', '!=', 'cancelled')
+                ->where('status', 'confirmed')
                 ->latest()
                 ->first();
         }
@@ -54,7 +54,7 @@ class BookingViewController extends Controller
         if (!$existingBooking && session()->has('latest_booking_ref')) {
             $refBooking = \App\Models\Booking::with(['bookingDate', 'bookingSlot'])
                 ->where('reference_no', session('latest_booking_ref'))
-                ->where('status', '!=', 'cancelled')
+                ->where('status', 'confirmed')
                 ->latest()
                 ->first();
 
@@ -306,13 +306,13 @@ class BookingViewController extends Controller
                     $q->orWhere('customer_phone', $phone2);
                 }
             })
-            ->where('status', '!=', 'cancelled')
+            ->where('status', 'confirmed')
             ->latest()
             ->first();
 
             if (!$userBooking && session()->has('latest_booking_ref')) {
                 $refBooking = \App\Models\Booking::where('reference_no', session('latest_booking_ref'))
-                    ->where('status', '!=', 'cancelled')
+                    ->where('status', 'confirmed')
                     ->first();
                 if ($refBooking && ($refBooking->customer_email === $user->email || $refBooking->customer_phone === ($user->number ?? $user->phone_number ?? null))) {
                     $userBooking = $refBooking;

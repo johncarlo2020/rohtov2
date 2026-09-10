@@ -3,6 +3,8 @@
 // import _variables.scss
 @import "variables";
 
+
+
 .main-background {
     // background-image: $main-background;
     // background-size: cover;
@@ -24,8 +26,7 @@
 
 @media (max-width: 768px) {
     .main-background {
-        background-image: $main-background-mobile;
-        background-size: cover;
+        border-radius: 40px;
     }
 
     .desktop-image-main {

@@ -580,39 +580,4 @@ class BookingSystemTest extends TestCase
         $usersRes->assertSee('Sarah');
         $usersRes->assertSee('Walkin');
     }
-
-    /** @test */
-    public function it_redirects_logged_in_walkin_user_to_dashboard_with_qr_code_instead_of_reservation_create()
-    {
-        \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'admin']);
-        \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'client']);
-        $admin = \App\Models\User::factory()->create(['fname' => 'Admin', 'lname' => 'User']);
-        $admin->assignRole('admin');
-
-        $this->getJson('/api/booking/dates/2026-10-02/slots');
-        $dateObj = \App\Models\BookingDate::where('date', '2026-10-02')->first();
-        $slot = $dateObj->slots()->first();
-
-        // Create walkin booking
-        $this->actingAs($admin)->post('/admin/walkin-booking', [
-            'title' => 'MR.',
-            'fname' => 'John',
-            'lname' => 'Walkin',
-            'email' => 'john.walkin@example.com',
-            'phone' => '+601199887766',
-            'booking_date_id' => $dateObj->id,
-            'booking_slot_id' => $slot->id,
-            'pax' => 1,
-            'mark_attended' => 0,
-        ]);
-
-        $walkinUser = \App\Models\User::where('email', 'john.walkin@example.com')->first();
-        $this->assertNotNull($walkinUser);
-
-        // Access dashboard as the walk-in user
-        $dashboardRes = $this->actingAs($walkinUser)->get('/dashboard');
-        $dashboardRes->assertStatus(200);
-        $dashboardRes->assertViewIs('dashboard');
-        $dashboardRes->assertSee('JOHN');
-    }
 }

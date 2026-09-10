@@ -32,6 +32,10 @@ html {
     overflow: hidden;
 }
 
+html {
+    background-color: #F26F31;
+}
+
 // Make images responsive by default.
 img,
 picture,
@@ -184,6 +188,7 @@ input[type="radio"] {
 }
 
 @media (max-width: 768px) {
+
     input[type="text"],
     input[type="email"],
     input[type="number"],

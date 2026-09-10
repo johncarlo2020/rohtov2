@@ -244,16 +244,14 @@ if ($activeVoucher) {
             $userBooking = \App\Models\Booking::with(['bookingDate', 'bookingSlot'])
                 ->where(function ($q) use ($user) {
                     $q->where('customer_email', $user->email);
-                    $phone1 = trim($user->phone_number ?? '');
-                    $phone2 = trim($user->number ?? '');
-                    if (!empty($phone1) && !in_array($phone1, ['-', 'N/A', 'null'])) {
-                        $q->orWhere('customer_phone', $phone1);
+                    if (!empty($user->phone_number)) {
+                        $q->orWhere('customer_phone', $user->phone_number);
                     }
-                    if (!empty($phone2) && !in_array($phone2, ['-', 'N/A', 'null'])) {
-                        $q->orWhere('customer_phone', $phone2);
+                    if (!empty($user->number)) {
+                        $q->orWhere('customer_phone', $user->number);
                     }
                 })
-                ->where('status', '!=', 'cancelled')
+                ->where('status', 'confirmed')
                 ->latest()
                 ->first();
         }
@@ -261,7 +259,7 @@ if ($activeVoucher) {
         if (!$userBooking && session()->has('latest_booking_ref')) {
             $refBooking = \App\Models\Booking::with(['bookingDate', 'bookingSlot'])
                 ->where('reference_no', session('latest_booking_ref'))
-                ->where('status', '!=', 'cancelled')
+                ->where('status', 'confirmed')
                 ->latest()
                 ->first();
 
@@ -272,7 +270,7 @@ if ($activeVoucher) {
             }
         }
 
-        // If user does not have any active booking, redirect to reservation-create page
+        // If user does not have any confirmed booking, redirect to reservation-create page
         if (!$userBooking) {
             return redirect()->route('reservation.create');
         }

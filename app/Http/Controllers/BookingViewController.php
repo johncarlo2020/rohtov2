@@ -91,19 +91,8 @@ class BookingViewController extends Controller
             $slotTimeStr = $existingBooking->bookingSlot->start_time ?? '00:00:00';
             $slotDateTime = Carbon::parse($slotDateStr . ' ' . $slotTimeStr);
 
-            $maxAllowedDate = $dateObj->copy()->subDays(7)->format('Y-m-d');
-            $hasAvailablePriorDate = \App\Models\BookingDate::where('date', '>=', '2026-09-30')
-                ->where('date', '<=', $maxAllowedDate)
-                ->where('is_available', true)
-                ->whereHas('slots', function ($q) {
-                    $q->where('is_available', true)->whereColumn('booked_count', '<', 'capacity');
-                })
-                ->exists();
-
             $rescheduleCount = (int) $existingBooking->reschedule_count;
-            $canModify = ($rescheduleCount < 1) 
-                && now()->lessThan($slotDateTime->copy()->subDays(7)) 
-                && $hasAvailablePriorDate;
+            $canModify = ($rescheduleCount < 1) && now()->lessThan($slotDateTime->copy()->subDays(7));
 
             $formattedBooking = [
                 'reference_no' => $existingBooking->reference_no,
@@ -111,7 +100,6 @@ class BookingViewController extends Controller
                 'booking_slot_id' => $existingBooking->booking_slot_id,
                 'reschedule_count' => $rescheduleCount,
                 'can_modify' => $canModify,
-                'has_available_prior_date' => $hasAvailablePriorDate,
                 'date_raw' => $dateObj->format('Y-m-d'),
                 'date_formatted' => $dateStr,
                 'time_formatted' => $timeSlotLabel,

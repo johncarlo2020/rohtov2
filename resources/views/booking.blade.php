@@ -478,19 +478,7 @@
                     if (!grouped[monthKey]) grouped[monthKey] = [];
                     grouped[monthKey].push(item);
 
-                    let isAllowed = true;
-                    if (state.isModifying && state.currentDateRaw) {
-                        const itemDateObj = new Date(item.date + 'T00:00:00');
-                        const currentBookedDateObj = new Date(state.currentDateRaw + 'T00:00:00');
-                        const diffTime = currentBookedDateObj.getTime() - itemDateObj.getTime();
-                        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-                        if (diffDays < 7) {
-                            isAllowed = false;
-                        }
-                    }
-
-                    if (item.status === 'available' && isAllowed) {
+                    if (item.status === 'available') {
                         availableModifyCount++;
                     }
                 });
@@ -526,20 +514,7 @@
                     grouped[monthName].forEach(item => {
                         const dateRow = document.createElement('div');
                         const isSelected = state.selectedDate === item.date;
-                        
-                        let isDateAllowedForModify = true;
-                        if (state.isModifying && state.currentDateRaw) {
-                            const itemDateObj = new Date(item.date + 'T00:00:00');
-                            const currentBookedDateObj = new Date(state.currentDateRaw + 'T00:00:00');
-                            const diffTime = currentBookedDateObj.getTime() - itemDateObj.getTime();
-                            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-                            if (diffDays < 7) {
-                                isDateAllowedForModify = false;
-                            }
-                        }
-
-                        const isAvailable = (item.status === 'available') && isDateAllowedForModify;
+                        const isAvailable = (item.status === 'available');
                         const formattedLabel = formatDateOrdinal(item.date);
 
                         let rowClasses = 'date-row d-flex align-items-center justify-content-between px-3 py-2 rounded-0 transition small fw-bold text-uppercase ';
@@ -559,8 +534,6 @@
                             statusSpan = `<svg style="width: 18px; height: 18px;" class="brand-orange-text" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>`;
                         } else if (isAvailable) {
                             statusSpan = `<span class="small fw-bold text-success text-uppercase">AVAILABLE</span>`;
-                        } else if (!isDateAllowedForModify) {
-                            statusSpan = `<span class="small fw-bold text-muted text-uppercase">UNAVAILABLE (<7 DAYS)</span>`;
                         } else if (item.status === 'full') {
                             statusSpan = `<span class="small fw-bold text-muted text-uppercase">FULLY BOOKED</span>`;
                         } else {
@@ -826,9 +799,28 @@
                 document.getElementById('confirmed-ticket-date').textContent = fullDateStr;
                 document.getElementById('confirmed-ticket-time').textContent = fullTimeRange;
 
-                // Dynamic QR Code Image
-                const qrData = encodeURIComponent(data.reference_no);
-                document.getElementById('qr-code-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${qrData}`;
+                // Dynamic QR Code Image (Local client-side QRCode with fallback to QR Server)
+                const qrData = data.reference_no;
+                const qrImgElem = document.getElementById('qr-code-img');
+                if (typeof QRCode !== 'undefined' && qrData) {
+                    const tempDiv = document.createElement('div');
+                    new QRCode(tempDiv, {
+                        text: qrData,
+                        width: 200,
+                        height: 200,
+                        correctLevel: QRCode.CorrectLevel.M
+                    });
+                    setTimeout(() => {
+                        const generatedImg = tempDiv.querySelector('img') || tempDiv.querySelector('canvas');
+                        if (generatedImg) {
+                            qrImgElem.src = generatedImg.tagName === 'CANVAS' ? generatedImg.toDataURL('image/png') : generatedImg.src;
+                        } else {
+                            qrImgElem.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrData)}`;
+                        }
+                    }, 50);
+                } else if (qrData) {
+                    qrImgElem.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrData)}`;
+                }
 
                 const modifyBtn = document.getElementById('modify-btn');
                 const noModifyNotice = document.getElementById('no-modify-notice');
@@ -992,22 +984,73 @@
                     yCursor += 22;
                     ctx.fillText('THE GARDENS MALL', 225, yCursor);
 
-                    // Convert Canvas to Data URL & Trigger Download
-                    const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
-                    const link = document.createElement('a');
-                    link.download = `Reservation_${refNo}.jpg`;
-                    link.href = dataUrl;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
+                    // Convert Canvas to JPEG Blob & Trigger iOS Web Share or Download
+                    canvas.toBlob(async (blob) => {
+                        if (!blob) {
+                            downloadBtn.disabled = false;
+                            downloadBtn.textContent = 'DOWNLOAD';
+                            return;
+                        }
 
-                    downloadBtn.disabled = false;
-                    downloadBtn.textContent = 'DOWNLOAD';
+                        const fileName = `Reservation_${refNo}.jpg`;
+                        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
-                    // Redirect to dashboard after download
-                    setTimeout(() => {
-                        window.location.href = "{{ route('dashboard') }}";
-                    }, 1000);
+                        const finishDownload = () => {
+                            downloadBtn.disabled = false;
+                            downloadBtn.textContent = 'DOWNLOAD';
+                            setTimeout(() => {
+                                window.location.href = "{{ route('dashboard') }}";
+                            }, 1200);
+                        };
+
+                        // 1. Try iOS Mobile Web Share API first
+                        if (isIOS && navigator.canShare) {
+                            try {
+                                const file = new File([blob], fileName, { type: 'image/jpeg' });
+                                if (navigator.canShare({ files: [file] })) {
+                                    await navigator.share({
+                                        files: [file],
+                                        title: 'Reservation Ticket',
+                                        text: `Longchamp Workshop Reservation - ${refNo}`
+                                    });
+                                    finishDownload();
+                                    return;
+                                }
+                            } catch (shareErr) {
+                                console.log('Share dismissed or not supported:', shareErr);
+                                if (shareErr.name === 'AbortError') {
+                                    finishDownload();
+                                    return;
+                                }
+                            }
+                        }
+
+                        // 2. iOS Fallback: Open image in new window/tab for user to long-press & save
+                        if (isIOS) {
+                            const blobUrl = URL.createObjectURL(blob);
+                            const newWin = window.open(blobUrl, '_blank');
+                            if (!newWin) {
+                                window.location.href = blobUrl;
+                            }
+                            finishDownload();
+                            return;
+                        }
+
+                        // 3. Desktop / Android Download Link
+                        const blobUrl = URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.download = fileName;
+                        link.href = blobUrl;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+
+                        setTimeout(() => {
+                            URL.revokeObjectURL(blobUrl);
+                        }, 1000);
+
+                        finishDownload();
+                    }, 'image/jpeg', 0.95);
                 };
 
                 let logoLoaded = undefined;
@@ -1030,8 +1073,14 @@
                 if (qrImgElem && qrImgElem.src) {
                     const qrImg = new Image();
                     qrImg.crossOrigin = 'anonymous';
-                    qrImg.onload = () => { qrLoaded = qrImg; checkComplete(); };
-                    qrImg.onerror = () => { qrLoaded = null; checkComplete(); };
+                    qrImg.onload = () => { logoLoaded !== undefined ? renderCanvasContent(logoLoaded, qrImg) : (qrLoaded = qrImg, checkComplete()); };
+                    qrImg.onerror = () => {
+                        // Fallback without crossOrigin if CORS fails
+                        const fallbackQr = new Image();
+                        fallbackQr.onload = () => { qrLoaded = fallbackQr; checkComplete(); };
+                        fallbackQr.onerror = () => { qrLoaded = null; checkComplete(); };
+                        fallbackQr.src = qrImgElem.src;
+                    };
                     qrImg.src = qrImgElem.src;
                 } else {
                     qrLoaded = null;

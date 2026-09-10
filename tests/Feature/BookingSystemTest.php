@@ -399,13 +399,15 @@ class BookingSystemTest extends TestCase
         ]);
         $res2->assertStatus(201);
 
-        // 5. User 1 tries to modify to Oct 10 (only 4 days prior to Oct 14) -> FAILS (< 7 days prior rule)
+        // 5. User 1 attempts modification when current booking is < 7 days away (travel to Oct 10 -> current booking Oct 14 is only 4 days away) -> FAILS
+        \Carbon\Carbon::setTestNow('2026-10-10 10:00:00');
         $modInvalidDate = $this->actingAs($user1)->postJson('/reservation-create/modify', [
             'reference_no' => $booking1Ref,
-            'date' => '2026-10-10',
-            'slot_id' => $slotOct10,
+            'date' => '2026-10-07',
+            'slot_id' => $slotOct7,
         ]);
         $modInvalidDate->assertStatus(422);
+        \Carbon\Carbon::setTestNow(); // Reset test time
 
         // 6. User 2 tries to modify User 1's booking -> FAILS (403 unauthorized)
         $modUnauthorized = $this->actingAs($user2)->postJson('/reservation-create/modify', [
@@ -579,5 +581,45 @@ class BookingSystemTest extends TestCase
         $usersRes->assertSee('sarah.walkin@example.com');
         $usersRes->assertSee('Sarah');
         $usersRes->assertSee('Walkin');
+    }
+
+    /** @test */
+    public function it_allows_modifying_to_earlier_date_if_current_booking_is_at_least_one_week_away_from_current_date()
+    {
+        // Current date: Sept 30, 2026. User books Oct 8, 2026 (8 days in future)
+        \Carbon\Carbon::setTestNow('2026-09-30 10:00:00');
+
+        $oct8Slots = $this->getJson('/api/booking/dates/2026-10-08/slots')->json();
+        $oct3Slots = $this->getJson('/api/booking/dates/2026-10-03/slots')->json();
+
+        $user = \App\Models\User::factory()->create(['email' => 'earlier@example.com']);
+        $user->assignRole(\Spatie\Permission\Models\Role::firstOrCreate(['name' => 'client']));
+
+        $bookingRes = $this->actingAs($user)->postJson('/reservation-create', [
+            'date' => '2026-10-08',
+            'slot_id' => $oct8Slots[0]['id'],
+        ]);
+        $bookingRes->assertStatus(201);
+        $refNo = $bookingRes->json('data.reference_no');
+
+        // Sept 30: Modify to earlier date Oct 3 -> SUCCEEDS (because Oct 8 is >= 7 days away from Sept 30)
+        $modifyRes = $this->actingAs($user)->postJson('/reservation-create/modify', [
+            'reference_no' => $refNo,
+            'date' => '2026-10-03',
+            'slot_id' => $oct3Slots[0]['id'],
+        ]);
+        $modifyRes->assertStatus(200);
+        $modifyRes->assertJsonPath('success', true);
+
+        // Travel to Oct 2: Current booking is Oct 3 (only 1 day away from today Oct 2) -> FAILS modification (< 7 days)
+        \Carbon\Carbon::setTestNow('2026-10-02 10:00:00');
+        $modifyRes2 = $this->actingAs($user)->postJson('/reservation-create/modify', [
+            'reference_no' => $refNo,
+            'date' => '2026-10-08',
+            'slot_id' => $oct8Slots[0]['id'],
+        ]);
+        $modifyRes2->assertStatus(422);
+
+        \Carbon\Carbon::setTestNow();
     }
 }

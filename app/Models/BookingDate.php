@@ -44,6 +44,6 @@ class BookingDate extends Model
                 case 3: $suffix = 'RD'; break;
             }
         }
-        return $day . $suffix . ' ' . strtoupper($dateObj->format('F Y'));
+        return strtoupper($dateObj->format('D')) . ', ' . $day . $suffix . ' ' . strtoupper($dateObj->format('F Y'));
     }
 }

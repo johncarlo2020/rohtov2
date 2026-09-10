@@ -120,7 +120,6 @@
                             <th>Email</th>
                             <th>Booking Date</th>
                             <th>Booking Time</th>
-                            <th>Venue</th>
                             <th>Attendance Status</th>
                             <th>Registration Timestamp</th>
                             <th>Action</th>
@@ -134,15 +133,19 @@
                             <td>{{ $user->email }}</td>
                             <td><span class="badge bg-light text-dark border">{{ $user->booking_date_text }}</span></td>
                             <td><span class="badge bg-light text-dark border">{{ $user->booking_time_text }}</span></td>
-                            <td class="text-xs" style="max-width: 200px; white-space: normal;">{{ $user->booking_venue }}</td>
                             <td>
-                                @if($user->is_attended)
-                                    <span class="badge bg-success"><i class="fa-solid fa-check-circle me-1"></i>ATTENDED</span>
+                                @php
+                                    $status = $user->attendance_status ?? ($user->is_attended ? 'attended' : 'upcoming');
+                                @endphp
+                                @if($status === 'attended')
+                                    <span class="badge bg-success badge-attendance"><i class="fa-solid fa-check-circle me-1"></i>ATTENDED</span>
                                     @if($user->attended_at_text)
                                         <br><small class="text-muted" style="font-size: 10px;">{{ $user->attended_at_text }}</small>
                                     @endif
+                                @elseif($status === 'missed')
+                                    <span class="badge bg-danger badge-attendance"><i class="fa-solid fa-circle-xmark me-1"></i>MISSED</span>
                                 @else
-                                    <span class="badge bg-secondary"><i class="fa-solid fa-clock me-1"></i>NOT ATTENDED</span>
+                                    <span class="badge bg-warning text-dark badge-attendance"><i class="fa-solid fa-clock me-1"></i>UPCOMING</span>
                                 @endif
                             </td>
                             <td>{{ \Carbon\Carbon::parse($user->created_at)->toDayDateTimeString() }}</td>
@@ -264,13 +267,26 @@
     }
 
     /* Admin badge styling */
-    .badge.bg-warning {
+    .badge.bg-warning:not(.badge-attendance) {
         font-size: 0.65rem !important;
         padding: 0.25rem 0.4rem !important;
     }
 
     .badge .fa-crown {
         font-size: 0.6rem !important;
+    }
+
+    /* Attendance status badge pill styling */
+    .badge-attendance {
+        font-size: 0.72rem !important;
+        padding: 0.4em 0.75em !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.4px !important;
+        border-radius: 6px !important;
+    }
+    .badge-attendance.bg-warning {
+        background-color: #ffc107 !important;
+        color: #1e293b !important;
     }
 
     /* ===== DATATABLE TOOLBAR ALIGNMENT ===== */

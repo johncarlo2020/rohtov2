@@ -47,6 +47,11 @@ class BookingSlot extends Model
     public function getDisplayTimeAttribute(): string
     {
         if (!$this->start_time) return 'N/A';
-        return strtoupper(\Carbon\Carbon::parse($this->start_time)->format('g:iA'));
+        $start = strtoupper(\Carbon\Carbon::parse($this->start_time)->format('g:i A'));
+        if ($this->end_time) {
+            $end = strtoupper(\Carbon\Carbon::parse($this->end_time)->format('g:i A'));
+            return $start . ' - ' . $end;
+        }
+        return $start;
     }
 }

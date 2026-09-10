@@ -52,14 +52,7 @@
         cursor: pointer;
         transition: transform 0.15s ease, box-shadow 0.15s ease;
     }
-    .cell-vip-blue {
-        background-color: #bbdefb !important;
-        color: #0d47a1 !important;
-        font-weight: 700;
-        cursor: pointer;
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }
-    .cell-vip:hover, .cell-vip-blue:hover {
+    .cell-vip:hover {
         transform: scale(1.03);
         box-shadow: 0 4px 10px rgba(0,0,0,0.15);
     }
@@ -275,15 +268,10 @@
                                     @endphp
 
                                     @if($cellData && ($pubCount > 0 || $vipCount > 0))
-                                        @if($vipCount > 0 && $pubCount == 0)
+                                        @if($vipCount > 0)
                                             {{-- VIP Cell --}}
                                             <td class="cell-vip text-center" onclick="openSessionModal('{{ $label }}', '{{ $d['display_day'] }}', {{ json_encode($cellData['bookings']) }})">
                                                 {{ $vipName }} x{{ $vipCount }}
-                                            </td>
-                                        @elseif($pubCount > 0 && $vipCount > 0)
-                                            {{-- Combined Cell --}}
-                                            <td class="cell-vip-blue text-center" onclick="openSessionModal('{{ $label }}', '{{ $d['display_day'] }}', {{ json_encode($cellData['bookings']) }})">
-                                                Public x{{ $pubCount }}<br><small>({{ $vipName }} x{{ $vipCount }})</small>
                                             </td>
                                         @else
                                             {{-- Public Cell --}}
@@ -309,9 +297,6 @@
                 </div>
                 <div class="d-flex align-items-center gap-2">
                     <span class="d-inline-block px-3 py-1 rounded" style="background:#ffe0b2; border: 1px solid #e65100; color:#e65100;">VIP Session</span>
-                </div>
-                <div class="d-flex align-items-center gap-2">
-                    <span class="d-inline-block px-3 py-1 rounded" style="background:#bbdefb; border: 1px solid #0d47a1; color:#0d47a1;">Combined (Public + VIP)</span>
                 </div>
             </div>
         </div>
@@ -339,6 +324,7 @@
                         @foreach ($bookings as $b)
                         @php
                             $isAttended = ($b->computed_status === 'Attended');
+                            $isToday = $b->bookingDate && \Carbon\Carbon::parse($b->bookingDate->date)->isToday();
                         @endphp
                         <tr>
                             <td>
@@ -369,14 +355,24 @@
                                 @elseif($b->computed_status === 'Missed')
                                     <span class="badge bg-danger"><i class="fa-solid fa-xmark me-1"></i>MISSED</span>
                                 @else
-                                    <span class="badge bg-secondary"><i class="fa-solid fa-clock me-1"></i>NOT YET ATTENDED</span>
+                                    <span class="badge bg-warning text-dark"><i class="fa-solid fa-clock me-1"></i>UPCOMING</span>
                                 @endif
                             </td>
                             <td class="text-center">
-                                <button class="btn btn-xs {{ $isAttended ? 'btn-outline-secondary' : 'btn-success' }} me-1" 
-                                        onclick="toggleAttendance({{ $b->id }})">
-                                    {{ $isAttended ? 'Mark Unattended' : 'Mark Attended' }}
-                                </button>
+                                @if($isAttended)
+                                    <button class="btn btn-xs btn-outline-secondary me-1" onclick="toggleAttendance({{ $b->id }})">
+                                        Mark Unattended
+                                    </button>
+                                @elseif($isToday)
+                                    <button class="btn btn-xs btn-success me-1" onclick="toggleAttendance({{ $b->id }})">
+                                        Mark Attended
+                                    </button>
+                                @else
+                                    <button class="btn btn-xs btn-secondary opacity-60 me-1" disabled 
+                                            title="Marking attendance is only allowed on the actual booking date ({{ $b->bookingDate->display_date ?? '' }})">
+                                        Mark Attended
+                                    </button>
+                                @endif
                                 <button class="btn btn-xs btn-outline-danger" onclick="deleteBooking({{ $b->id }})">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
@@ -543,6 +539,7 @@
                             <label class="form-check-label text-xs font-weight-bold text-dark" for="markAttendedWalkin">
                                 Mark as Attended Now
                             </label>
+                            <small id="markAttendedHelp" class="text-muted text-xxs d-block mt-1 d-none">(Only available for today's booking date)</small>
                         </div>
                     </div>
                 </div>
@@ -690,25 +687,44 @@
         const tbody = document.getElementById('session-modal-tbody');
         tbody.innerHTML = '';
 
+        const dObj = new Date();
+        const todayStr = `${dObj.getFullYear()}-${String(dObj.getMonth() + 1).padStart(2, '0')}-${String(dObj.getDate()).padStart(2, '0')}`;
+
         if (!bookings || bookings.length === 0) {
             tbody.innerHTML = '<tr><td colspan="6" class="text-center py-3 text-muted text-xs">No bookings recorded for this session.</td></tr>';
         } else {
             bookings.forEach(b => {
                 const tr = document.createElement('tr');
-                const badgeClass = b.status === 'Attended' ? 'bg-success' : (b.status === 'Missed' ? 'bg-danger' : 'bg-warning text-dark');
+                let badgeClass = 'bg-warning text-dark';
+                let statusText = 'UPCOMING';
+
+                if (b.status === 'Attended') {
+                    badgeClass = 'bg-success';
+                    statusText = 'ATTENDED';
+                } else if (b.status === 'Missed') {
+                    badgeClass = 'bg-danger';
+                    statusText = 'MISSED';
+                }
+
                 const isVipBadge = b.is_vip ? '<span class="badge bg-warning text-dark me-1">VIP</span>' : '';
+                const isToday = b.raw_date ? (b.raw_date === todayStr) : false;
+
+                let actionBtn = '';
+                if (b.status === 'Attended') {
+                    actionBtn = `<button class="btn btn-xs btn-outline-secondary" onclick="toggleAttendance(${b.id})">Mark Unattended</button>`;
+                } else if (isToday) {
+                    actionBtn = `<button class="btn btn-xs btn-success" onclick="toggleAttendance(${b.id})">Mark Attended</button>`;
+                } else {
+                    actionBtn = `<button class="btn btn-xs btn-secondary opacity-60 cursor-not-allowed" disabled title="Marking attendance is only allowed on the actual booking date.">Mark Attended</button>`;
+                }
 
                 tr.innerHTML = `
                     <td class="ps-3"><span class="badge bg-dark">${b.ref}</span></td>
                     <td><span class="font-weight-bold text-dark text-xs">${isVipBadge}${b.name}</span></td>
                     <td><span class="text-xs text-muted">${b.email} | ${b.phone}</span></td>
                     <td class="text-center font-weight-bold text-xs">${b.pax || 1}</td>
-                    <td class="text-center"><span class="badge ${badgeClass}">${b.status}</span></td>
-                    <td class="text-center">
-                        <button class="btn btn-xs ${b.status === 'Attended' ? 'btn-outline-secondary' : 'btn-success'}" onclick="toggleAttendance(${b.id})">
-                            ${b.status === 'Attended' ? 'Mark Unattended' : 'Mark Attended'}
-                        </button>
-                    </td>
+                    <td class="text-center"><span class="badge ${badgeClass}">${statusText}</span></td>
+                    <td class="text-center">${actionBtn}</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -879,6 +895,24 @@
                         const timeTrigger = document.getElementById('walkin-time-trigger-box');
                         if (timeTrigger) {
                             timeTrigger.classList.remove('opacity-60', 'cursor-not-allowed');
+                        }
+
+                        // Check if selected date is today to enable/disable Mark Attended checkbox
+                        const dObj = new Date();
+                        const todayStr = `${dObj.getFullYear()}-${String(dObj.getMonth() + 1).padStart(2, '0')}-${String(dObj.getDate()).padStart(2, '0')}`;
+                        const markAttendedCb = document.getElementById('markAttendedWalkin');
+                        const markAttendedHelp = document.getElementById('markAttendedHelp');
+
+                        if (markAttendedCb) {
+                            if (item.date !== todayStr) {
+                                markAttendedCb.checked = false;
+                                markAttendedCb.disabled = true;
+                                if (markAttendedHelp) markAttendedHelp.classList.remove('d-none');
+                            } else {
+                                markAttendedCb.disabled = false;
+                                markAttendedCb.checked = true;
+                                if (markAttendedHelp) markAttendedHelp.classList.add('d-none');
+                            }
                         }
 
                         loadWalkinSlotsForDate(item.date);

@@ -167,10 +167,29 @@
         document.addEventListener('DOMContentLoaded', () => {
             const modifyBtn = document.getElementById('modify-btn');
             const downloadBtn = document.getElementById('download-btn');
+            const refNo = @json($refNo);
+            const qrImgElem = document.getElementById('qr-code-img');
+
+            if (qrImgElem && refNo) {
+                if (typeof QRCode !== 'undefined') {
+                    const tempDiv = document.createElement('div');
+                    new QRCode(tempDiv, {
+                        text: refNo,
+                        width: 200,
+                        height: 200,
+                        correctLevel: QRCode.CorrectLevel.M
+                    });
+                    setTimeout(() => {
+                        const generatedImg = tempDiv.querySelector('img') || tempDiv.querySelector('canvas');
+                        if (generatedImg) {
+                            qrImgElem.src = generatedImg.tagName === 'CANVAS' ? generatedImg.toDataURL('image/png') : generatedImg.src;
+                        }
+                    }, 50);
+                }
+            }
 
             if (modifyBtn) {
                 modifyBtn.addEventListener('click', () => {
-                    const refNo = @json($refNo);
                     if (refNo) {
                         localStorage.setItem('latest_booking_ref', refNo);
                     }
@@ -179,12 +198,11 @@
 
             if (downloadBtn) {
                 downloadBtn.addEventListener('click', () => {
-                    const refNo = @json($refNo) || localStorage.getItem('latest_booking_ref') || 'ticket';
+                    const activeRefNo = refNo || localStorage.getItem('latest_booking_ref') || 'ticket';
                     
                     const customerName = document.getElementById('confirmed-ticket-name')?.textContent.trim() || 'CUSTOMER';
                     const dateText = document.getElementById('confirmed-ticket-date')?.textContent.trim() || '';
                     const timeText = document.getElementById('confirmed-ticket-time')?.textContent.trim() || '';
-                    const qrImgElem = document.getElementById('qr-code-img');
 
                     downloadBtn.disabled = true;
                     downloadBtn.textContent = 'GENERATING JPEG...';
@@ -246,17 +264,70 @@
                         yCursor += 22;
                         ctx.fillText('THE GARDENS MALL', 225, yCursor);
 
-                        // Convert Canvas to Data URL & Trigger Download
-                        const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
-                        const link = document.createElement('a');
-                        link.download = `Reservation_${refNo}.jpg`;
-                        link.href = dataUrl;
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
+                        // Convert Canvas to JPEG Blob & Trigger iOS Web Share or Download
+                        canvas.toBlob(async (blob) => {
+                            if (!blob) {
+                                downloadBtn.disabled = false;
+                                downloadBtn.textContent = 'DOWNLOAD';
+                                return;
+                            }
 
-                        downloadBtn.disabled = false;
-                        downloadBtn.textContent = 'DOWNLOAD';
+                            const fileName = `Reservation_${activeRefNo}.jpg`;
+                            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+                            const finishDownload = () => {
+                                downloadBtn.disabled = false;
+                                downloadBtn.textContent = 'DOWNLOAD';
+                            };
+
+                            // 1. Try iOS Mobile Web Share API first
+                            if (isIOS && navigator.canShare) {
+                                try {
+                                    const file = new File([blob], fileName, { type: 'image/jpeg' });
+                                    if (navigator.canShare({ files: [file] })) {
+                                        await navigator.share({
+                                            files: [file],
+                                            title: 'Reservation Ticket',
+                                            text: `Longchamp Workshop Reservation - ${activeRefNo}`
+                                        });
+                                        finishDownload();
+                                        return;
+                                    }
+                                } catch (shareErr) {
+                                    console.log('Share dismissed or not supported:', shareErr);
+                                    if (shareErr.name === 'AbortError') {
+                                        finishDownload();
+                                        return;
+                                    }
+                                }
+                            }
+
+                            // 2. iOS Fallback: Open image in new window/tab for user to long-press & save
+                            if (isIOS) {
+                                const blobUrl = URL.createObjectURL(blob);
+                                const newWin = window.open(blobUrl, '_blank');
+                                if (!newWin) {
+                                    window.location.href = blobUrl;
+                                }
+                                finishDownload();
+                                return;
+                            }
+
+                            // 3. Desktop / Android Download Link
+                            const blobUrl = URL.createObjectURL(blob);
+                            const link = document.createElement('a');
+                            link.download = fileName;
+                            link.href = blobUrl;
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+
+                            setTimeout(() => {
+                                URL.revokeObjectURL(blobUrl);
+                            }, 1000);
+
+                            finishDownload();
+                        }, 'image/jpeg', 0.95);
                     };
 
                     let logoLoaded = undefined;
@@ -279,8 +350,13 @@
                     if (qrImgElem && qrImgElem.src) {
                         const qrImg = new Image();
                         qrImg.crossOrigin = 'anonymous';
-                        qrImg.onload = () => { qrLoaded = qrImg; checkComplete(); };
-                        qrImg.onerror = () => { qrLoaded = null; checkComplete(); };
+                        qrImg.onload = () => { logoLoaded !== undefined ? renderCanvasContent(logoLoaded, qrImg) : (qrLoaded = qrImg, checkComplete()); };
+                        qrImg.onerror = () => {
+                            const fallbackQr = new Image();
+                            fallbackQr.onload = () => { qrLoaded = fallbackQr; checkComplete(); };
+                            fallbackQr.onerror = () => { qrLoaded = null; checkComplete(); };
+                            fallbackQr.src = qrImgElem.src;
+                        };
                         qrImg.src = qrImgElem.src;
                     } else {
                         qrLoaded = null;

@@ -943,6 +943,32 @@ if ($activeVoucher) {
       $user->is_attended = $latestBooking ? ($latestBooking->status === 'attended' || $latestBooking->status === 'completed' || !is_null($latestBooking->attended_at)) : false;
       $user->attended_at_text = $latestBooking && $latestBooking->attended_at ? \Carbon\Carbon::parse($latestBooking->attended_at)->format('M d, Y h:i A') : null;
 
+      if ($user->is_attended) {
+          $user->attendance_status = 'attended';
+      } elseif ($latestBooking) {
+          if (in_array($latestBooking->status, ['missed', 'cancelled'])) {
+              $user->attendance_status = 'missed';
+          } else {
+              $bookingDate = $latestBooking->bookingDate ? $latestBooking->bookingDate->date : null;
+              if ($bookingDate) {
+                  $dateStr = \Carbon\Carbon::parse($bookingDate)->format('Y-m-d');
+                  $timeStr = ($latestBooking->bookingSlot && $latestBooking->bookingSlot->end_time)
+                      ? \Carbon\Carbon::parse($latestBooking->bookingSlot->end_time)->format('H:i:s')
+                      : (($latestBooking->bookingSlot && $latestBooking->bookingSlot->start_time) ? \Carbon\Carbon::parse($latestBooking->bookingSlot->start_time)->format('H:i:s') : '23:59:59');
+
+                  if (\Carbon\Carbon::parse($dateStr . ' ' . $timeStr)->isPast()) {
+                      $user->attendance_status = 'missed';
+                  } else {
+                      $user->attendance_status = 'upcoming';
+                  }
+              } else {
+                  $user->attendance_status = 'upcoming';
+              }
+          }
+      } else {
+          $user->attendance_status = 'upcoming';
+      }
+
       $user->developers_list = collect();
       $user->locations = collect();
 

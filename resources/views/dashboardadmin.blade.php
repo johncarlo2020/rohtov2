@@ -73,7 +73,7 @@
         </div>
     </div>
 
-    <div class="row pt-2">
+    <div class="row pt-2 d-none">
         <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
             <div class="card">
                 <div class="card-body p-3">

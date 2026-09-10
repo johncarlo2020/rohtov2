@@ -126,7 +126,13 @@ class VipController extends Controller
 
     public function markAttended($id)
     {
-        $booking = Booking::findOrFail($id);
+        $booking = Booking::with('bookingDate')->findOrFail($id);
+
+        if ($booking->bookingDate && !\Carbon\Carbon::parse($booking->bookingDate->date)->isToday()) {
+            $formattedDate = $booking->bookingDate->display_date ?? $booking->bookingDate->date;
+            return redirect()->back()->with('error', "Cannot mark attendance for a booking scheduled on {$formattedDate}. Attendance can only be marked on the actual booking date.");
+        }
+
         $booking->status = 'Attended';
         $booking->attended_at = now();
         $booking->save();

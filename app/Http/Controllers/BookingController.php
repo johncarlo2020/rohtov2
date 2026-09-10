@@ -148,6 +148,7 @@ class BookingController extends Controller
                                 'is_vip' => $b->is_vip,
                                 'status' => $b->computed_status,
                                 'ref' => $b->reference_no,
+                                'raw_date' => $b->bookingDate ? \Carbon\Carbon::parse($b->bookingDate->date)->format('Y-m-d') : null,
                             ];
                         })->values()
                     ];
@@ -205,9 +206,21 @@ class BookingController extends Controller
      */
     public function markAttended($id)
     {
-        $booking = Booking::findOrFail($id);
+        $booking = Booking::with('bookingDate')->findOrFail($id);
 
-        if ($booking->status === 'attended' || !is_null($booking->attended_at)) {
+        $isAlreadyAttended = ($booking->status === 'attended' || !is_null($booking->attended_at));
+        $isToday = $booking->bookingDate && Carbon::parse($booking->bookingDate->date)->isToday();
+
+        if (!$isAlreadyAttended && !$isToday) {
+            $formattedDate = $booking->bookingDate->display_date ?? $booking->bookingDate->date;
+            $message = "Cannot mark attendance for a booking scheduled on {$formattedDate}. Attendance can only be marked on the actual booking date.";
+            if (request()->wantsJson()) {
+                return response()->json(['success' => false, 'message' => $message], 422);
+            }
+            return redirect()->back()->with('error', $message);
+        }
+
+        if ($isAlreadyAttended) {
             $booking->status = 'confirmed';
             $booking->attended_at = null;
             $message = 'Booking marked as NOT ATTENDED.';
@@ -316,13 +329,21 @@ class BookingController extends Controller
 
         $booking = null;
         if ($id) {
-            $booking = Booking::find($id);
+            $booking = Booking::with('bookingDate')->find($id);
         } elseif ($ref) {
-            $booking = Booking::where('reference_no', $ref)->first();
+            $booking = Booking::with('bookingDate')->where('reference_no', $ref)->first();
         }
 
         if (!$booking) {
             return response()->json(['status' => 'error', 'message' => 'Booking record not found.'], 404);
+        }
+
+        if ($booking->bookingDate && !Carbon::parse($booking->bookingDate->date)->isToday()) {
+            $formattedDate = $booking->bookingDate->display_date ?? $booking->bookingDate->date;
+            return response()->json([
+                'status' => 'error',
+                'message' => "Cannot mark attendance today. This booking is scheduled for {$formattedDate}."
+            ], 422);
         }
 
         $booking->status = 'Attended';
@@ -424,7 +445,10 @@ class BookingController extends Controller
         // 2. Generate unique reference code for walk-in booking
         $refNo = 'WK-' . strtoupper(Str::random(6));
 
-        $markAttended = $request->has('mark_attended') || $request->input('mark_attended') == 1;
+        $bookingDateObj = BookingDate::find($request->booking_date_id);
+        $isToday = $bookingDateObj && Carbon::parse($bookingDateObj->date)->isToday();
+
+        $markAttended = ($request->has('mark_attended') || $request->input('mark_attended') == 1) && $isToday;
 
         $booking = Booking::create([
             'booking_date_id' => $request->booking_date_id,

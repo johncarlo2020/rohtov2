@@ -212,25 +212,12 @@ class BookingService
                 ]);
             }
 
-            // Verify new slot matches requested date
+            // Verify new slot matches requested date and event boundaries
             $slotDate = Carbon::parse($newSlot->bookingDate->date)->format('Y-m-d');
             if ($slotDate !== $newDate || $newDate < '2026-09-30' || $newDate > '2026-10-17') {
                 throw ValidationException::withMessages([
                     'slot' => ['Rescheduling dates are only available from September 30 to October 17, 2026.']
                 ]);
-            }
-
-            // Rule: New date must be at least 1 week (7 days) before the currently booked date
-            if ($booking->bookingDate) {
-                $currentBookedDate = Carbon::parse($booking->bookingDate->date)->startOfDay();
-                $requestedNewDate = Carbon::parse($newDate)->startOfDay();
-                $maxAllowedNewDate = $currentBookedDate->copy()->subDays(7);
-
-                if ($requestedNewDate->greaterThan($maxAllowedNewDate)) {
-                    throw ValidationException::withMessages([
-                        'slot' => ['Rescheduling is only permitted to dates at least 1 week before your currently booked date.']
-                    ]);
-                }
             }
 
             // Verify new slot is available and has capacity

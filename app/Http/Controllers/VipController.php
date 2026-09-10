@@ -63,11 +63,26 @@ class VipController extends Controller
     {
         $request->validate([
             'user_id' => 'nullable|exists:users,id',
-            'vip_name' => 'required_without:user_id|nullable|string|max:255',
+            'vip_name' => 'required|string|max:255',
             'booking_date_id' => 'required|exists:booking_dates,id',
             'booking_slot_id' => 'required|exists:booking_slots,id',
             'pax' => 'required|integer|min:1|max:50',
         ]);
+
+        $slot = BookingSlot::with('bookingDate')->findOrFail($request->booking_slot_id);
+        $remaining = max(0, $slot->capacity - $slot->booked_count);
+
+        if ($remaining <= 0) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['booking_slot_id' => 'The selected time slot is fully booked.']);
+        }
+
+        if ((int) $request->pax > $remaining) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['pax' => "Requested pax count ({$request->pax}) exceeds available capacity for this time slot ({$remaining} left out of {$slot->capacity})."]);
+        }
 
         $customerName = 'VIP Guest';
         $customerEmail = 'vip@longchamp.com';
@@ -104,10 +119,7 @@ class VipController extends Controller
         ]);
 
         // Increment booked_count on the slot
-        $slot = BookingSlot::find($request->booking_slot_id);
-        if ($slot) {
-            $slot->increment('booked_count', (int) $request->pax);
-        }
+        $slot->increment('booked_count', (int) $request->pax);
 
         return redirect()->back()->with('success', 'VIP Reservation created successfully!');
     }

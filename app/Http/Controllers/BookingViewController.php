@@ -26,21 +26,27 @@ class BookingViewController extends Controller
      */
     public function index(Request $request)
     {
+        if (!auth()->check()) {
+            return redirect()->route('login');
+        }
+
         $user = auth()->user();
         $existingBooking = null;
 
         if ($user) {
             $existingBooking = \App\Models\Booking::with(['bookingDate', 'bookingSlot'])
                 ->where(function ($q) use ($user) {
-                    $q->where('customer_email', $user->email);
-                    if (!empty($user->phone_number)) {
-                        $q->orWhere('customer_phone', $user->phone_number);
+                    $q->where('customer_email', strtolower($user->email));
+                    $phone1 = trim($user->phone_number ?? '');
+                    $phone2 = trim($user->number ?? '');
+                    if (!empty($phone1) && !in_array($phone1, ['-', 'N/A', 'null'])) {
+                        $q->orWhere('customer_phone', $phone1);
                     }
-                    if (!empty($user->number)) {
-                        $q->orWhere('customer_phone', $user->number);
+                    if (!empty($phone2) && !in_array($phone2, ['-', 'N/A', 'null'])) {
+                        $q->orWhere('customer_phone', $phone2);
                     }
                 })
-                ->where('status', 'confirmed')
+                ->where('status', '!=', 'cancelled')
                 ->latest()
                 ->first();
         }
@@ -48,11 +54,11 @@ class BookingViewController extends Controller
         if (!$existingBooking && session()->has('latest_booking_ref')) {
             $refBooking = \App\Models\Booking::with(['bookingDate', 'bookingSlot'])
                 ->where('reference_no', session('latest_booking_ref'))
-                ->where('status', 'confirmed')
+                ->where('status', '!=', 'cancelled')
                 ->latest()
                 ->first();
 
-            if ($refBooking && (!$user || $refBooking->customer_email === $user->email || $refBooking->customer_phone === ($user->number ?? $user->phone_number ?? null))) {
+            if ($refBooking && ($refBooking->customer_email === $user->email || $refBooking->customer_phone === ($user->number ?? $user->phone_number ?? null))) {
                 $existingBooking = $refBooking;
             }
         }
@@ -69,32 +75,48 @@ class BookingViewController extends Controller
                     case 3: $suffix = 'RD'; break;
                 }
             }
-            $dateStr = $day . $suffix . ' ' . strtoupper($dateObj->format('F'));
+            $dayOfWeek = strtoupper($dateObj->format('l'));
+            $monthName = strtoupper($dateObj->format('F'));
+            $dateStr = $dayOfWeek . ', ' . $day . $suffix . ' ' . $monthName;
 
             $startTime = Carbon::parse($existingBooking->bookingSlot->start_time);
             $endTime = Carbon::parse($existingBooking->bookingSlot->end_time);
             $timeStr = strtoupper($startTime->format('g:iA'));
             $timeSlotLabel = strtoupper($startTime->format('g:iA') . ' - ' . $endTime->format('g:iA'));
 
-            $customerName = $existingBooking->customer_name ?: ($user->fname ?? 'CUSTOMER');
+            $customerName = $existingBooking->customer_name ?: (trim(($user->fname ?? '') . ' ' . ($user->lname ?? '')) ?: ($user->name ?? 'CUSTOMER'));
             $firstName = strtoupper(explode(' ', trim($customerName))[0]);
 
             $slotDateStr = $dateObj->format('Y-m-d');
             $slotTimeStr = $existingBooking->bookingSlot->start_time ?? '00:00:00';
             $slotDateTime = Carbon::parse($slotDateStr . ' ' . $slotTimeStr);
 
+            $maxAllowedDate = $dateObj->copy()->subDays(7)->format('Y-m-d');
+            $hasAvailablePriorDate = \App\Models\BookingDate::where('date', '>=', '2026-09-30')
+                ->where('date', '<=', $maxAllowedDate)
+                ->where('is_available', true)
+                ->whereHas('slots', function ($q) {
+                    $q->where('is_available', true)->whereColumn('booked_count', '<', 'capacity');
+                })
+                ->exists();
+
             $rescheduleCount = (int) $existingBooking->reschedule_count;
-            $canModify = ($rescheduleCount < 1) && now()->lessThan($slotDateTime->copy()->subDays(7));
+            $canModify = ($rescheduleCount < 1) 
+                && now()->lessThan($slotDateTime->copy()->subDays(7)) 
+                && $hasAvailablePriorDate;
 
             $formattedBooking = [
                 'reference_no' => $existingBooking->reference_no,
+                'booking_date_id' => $existingBooking->booking_date_id,
+                'booking_slot_id' => $existingBooking->booking_slot_id,
                 'reschedule_count' => $rescheduleCount,
                 'can_modify' => $canModify,
+                'has_available_prior_date' => $hasAvailablePriorDate,
                 'date_raw' => $dateObj->format('Y-m-d'),
                 'date_formatted' => $dateStr,
-                'time_formatted' => $timeStr,
+                'time_formatted' => $timeSlotLabel,
                 'time_label' => $timeSlotLabel,
-                'display_text' => $dateStr . ' AT ' . $timeStr,
+                'display_text' => $dateStr . ' AT ' . $timeSlotLabel,
                 'customer_name' => strtoupper($customerName),
                 'first_name' => $firstName,
             ];
@@ -108,24 +130,26 @@ class BookingViewController extends Controller
      */
     public function store(Request $request)
     {
+        if (!auth()->check()) {
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'message' => 'Unauthenticated. Please log in to complete your booking.',
+                    'errors' => ['auth' => ['Please log in to complete your booking.']]
+                ], 401);
+            }
+            return redirect()->route('login');
+        }
+
         $user = auth()->user();
-        $sessionId = session()->getId();
 
-        $customerName = $request->input('customer_name') 
-            ?? $request->input('name') 
-            ?? ($user ? trim(($user->fname ?? '') . ' ' . ($user->lname ?? '')) : null)
-            ?? 'Guest Customer';
+        $fullName = trim(($user->fname ?? '') . ' ' . ($user->lname ?? ''));
+        if (empty($fullName)) {
+            $fullName = $user->name ?? 'Customer';
+        }
 
-        $customerEmail = $request->input('customer_email') 
-            ?? $request->input('email') 
-            ?? ($user ? $user->email : null)
-            ?? ('guest_' . $sessionId . '@guest.com');
-
-        $customerPhone = $request->input('customer_phone') 
-            ?? $request->input('phone') 
-            ?? $request->input('phone_number')
-            ?? ($user ? ($user->phone_number ?? $user->phone ?? null) : null)
-            ?? ('guest_' . $sessionId);
+        $customerName = $request->input('customer_name') ?? $request->input('name') ?? $fullName;
+        $customerEmail = $user->email;
+        $customerPhone = $user->phone_number ?? $user->number ?? '-';
 
         $date = $request->input('date');
         $slotId = $request->input('slot_id');
@@ -171,15 +195,35 @@ class BookingViewController extends Controller
 
             if ($request->wantsJson()) {
                 $slot = $booking->bookingSlot;
-                $dateFormatted = Carbon::parse($booking->bookingDate->date)->format('F j, Y');
-                $timeLabel = Carbon::parse($slot->start_time)->format('g:i A') . ' - ' . Carbon::parse($slot->end_time)->format('g:i A');
+                $dateObj = Carbon::parse($booking->bookingDate->date);
+                $day = $dateObj->day;
+                $suffix = 'TH';
+                if (!in_array($day, [11, 12, 13])) {
+                    switch ($day % 10) {
+                        case 1: $suffix = 'ST'; break;
+                        case 2: $suffix = 'ND'; break;
+                        case 3: $suffix = 'RD'; break;
+                    }
+                }
+                $dayOfWeek = strtoupper($dateObj->format('l'));
+                $monthName = strtoupper($dateObj->format('F'));
+                $dateFormatted = $dayOfWeek . ', ' . $day . $suffix . ' ' . $monthName;
+
+                $startTime = Carbon::parse($slot->start_time)->format('g:iA');
+                $endTime = Carbon::parse($slot->end_time)->format('g:iA');
+                $timeLabel = strtoupper("{$startTime} - {$endTime}");
+
+                $slotDateTime = Carbon::parse($dateObj->format('Y-m-d') . ' ' . ($slot->start_time ?? '00:00:00'));
+                $rescheduleCount = (int) $booking->reschedule_count;
+                $canModify = ($rescheduleCount < 1) && now()->lessThan($slotDateTime->copy()->subDays(7));
 
                 return response()->json([
                     'success' => true,
                     'message' => 'BOOKING CONFIRMED',
                     'data' => [
                         'reference_no' => $booking->reference_no,
-                        'reschedule_count' => (int) $booking->reschedule_count,
+                        'reschedule_count' => $rescheduleCount,
+                        'can_modify' => $canModify,
                         'date' => $dateFormatted,
                         'time' => $timeLabel,
                         'status' => strtoupper($booking->status),
@@ -192,11 +236,30 @@ class BookingViewController extends Controller
                 ], 201);
             }
 
+            $slot = $booking->bookingSlot;
+            $dateObj = Carbon::parse($booking->bookingDate->date);
+            $day = $dateObj->day;
+            $suffix = 'TH';
+            if (!in_array($day, [11, 12, 13])) {
+                switch ($day % 10) {
+                    case 1: $suffix = 'ST'; break;
+                    case 2: $suffix = 'ND'; break;
+                    case 3: $suffix = 'RD'; break;
+                }
+            }
+            $dayOfWeek = strtoupper($dateObj->format('l'));
+            $monthName = strtoupper($dateObj->format('F'));
+            $dateFormatted = $dayOfWeek . ', ' . $day . $suffix . ' ' . $monthName;
+
+            $startTime = Carbon::parse($slot->start_time)->format('g:iA');
+            $endTime = Carbon::parse($slot->end_time)->format('g:iA');
+            $timeLabel = strtoupper("{$startTime} - {$endTime}");
+
             return redirect()->route('booking.flow')->with('success_booking', [
                 'reference_no' => $booking->reference_no,
                 'reschedule_count' => (int) $booking->reschedule_count,
-                'date' => Carbon::parse($booking->bookingDate->date)->format('F j, Y'),
-                'time' => Carbon::parse($booking->bookingSlot->start_time)->format('g:i A') . ' - ' . Carbon::parse($booking->bookingSlot->end_time)->format('g:i A'),
+                'date' => $dateFormatted,
+                'time' => $timeLabel,
                 'customer_name' => $booking->customer_name,
                 'customer_email' => $booking->customer_email,
                 'customer_phone' => $booking->customer_phone,
@@ -218,32 +281,63 @@ class BookingViewController extends Controller
      */
     public function modify(Request $request)
     {
+        if (!auth()->check()) {
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'message' => 'Unauthenticated. Please log in to modify your booking.',
+                    'errors' => ['auth' => ['Please log in to modify your booking.']]
+                ], 401);
+            }
+            return redirect()->route('login');
+        }
+
         $referenceNo = $request->input('reference_no');
 
-        if (!$referenceNo) {
-            if (auth()->check()) {
-                $user = auth()->user();
-                $userBooking = \App\Models\Booking::where(function ($q) use ($user) {
-                    $q->where('customer_email', $user->email);
-                    if (!empty($user->phone_number)) {
-                        $q->orWhere('customer_phone', $user->phone_number);
-                    }
-                    if (!empty($user->number)) {
-                        $q->orWhere('customer_phone', $user->number);
-                    }
-                })
-                ->where('status', 'confirmed')
-                ->latest()
-                ->first();
+        if (auth()->check()) {
+            $user = auth()->user();
+            $userBooking = \App\Models\Booking::where(function ($q) use ($user) {
+                $q->where('customer_email', strtolower($user->email));
+                $phone1 = trim($user->phone_number ?? '');
+                $phone2 = trim($user->number ?? '');
+                if (!empty($phone1) && !in_array($phone1, ['-', 'N/A', 'null'])) {
+                    $q->orWhere('customer_phone', $phone1);
+                }
+                if (!empty($phone2) && !in_array($phone2, ['-', 'N/A', 'null'])) {
+                    $q->orWhere('customer_phone', $phone2);
+                }
+            })
+            ->where('status', '!=', 'cancelled')
+            ->latest()
+            ->first();
 
-                if ($userBooking) {
-                    $referenceNo = $userBooking->reference_no;
+            if (!$userBooking && session()->has('latest_booking_ref')) {
+                $refBooking = \App\Models\Booking::where('reference_no', session('latest_booking_ref'))
+                    ->where('status', '!=', 'cancelled')
+                    ->first();
+                if ($refBooking && ($refBooking->customer_email === $user->email || $refBooking->customer_phone === ($user->number ?? $user->phone_number ?? null))) {
+                    $userBooking = $refBooking;
                 }
             }
 
-            if (!$referenceNo && session()->has('latest_booking_ref')) {
-                $referenceNo = session('latest_booking_ref');
+            if (!$userBooking) {
+                return response()->json([
+                    'message' => 'No active booking reference found to modify.',
+                    'errors' => ['booking' => ['No active booking reference found to modify.']]
+                ], 422);
             }
+
+            if ($referenceNo && $userBooking->reference_no !== $referenceNo) {
+                return response()->json([
+                    'message' => 'You are not authorized to modify this booking.',
+                    'errors' => ['booking' => ['You are not authorized to modify this booking.']]
+                ], 403);
+            }
+
+            $referenceNo = $userBooking->reference_no;
+        }
+
+        if (!$referenceNo && session()->has('latest_booking_ref')) {
+            $referenceNo = session('latest_booking_ref');
         }
 
         if (!$referenceNo) {
@@ -269,15 +363,35 @@ class BookingViewController extends Controller
             session(['latest_booking_ref' => $booking->reference_no]);
 
             $slot = $booking->bookingSlot;
-            $dateFormatted = Carbon::parse($booking->bookingDate->date)->format('F j, Y');
-            $timeLabel = Carbon::parse($slot->start_time)->format('g:i A') . ' - ' . Carbon::parse($slot->end_time)->format('g:i A');
+            $dateObj = Carbon::parse($booking->bookingDate->date);
+            $day = $dateObj->day;
+            $suffix = 'TH';
+            if (!in_array($day, [11, 12, 13])) {
+                switch ($day % 10) {
+                    case 1: $suffix = 'ST'; break;
+                    case 2: $suffix = 'ND'; break;
+                    case 3: $suffix = 'RD'; break;
+                }
+            }
+            $dayOfWeek = strtoupper($dateObj->format('l'));
+            $monthName = strtoupper($dateObj->format('F'));
+            $dateFormatted = $dayOfWeek . ', ' . $day . $suffix . ' ' . $monthName;
+
+            $startTime = Carbon::parse($slot->start_time)->format('g:iA');
+            $endTime = Carbon::parse($slot->end_time)->format('g:iA');
+            $timeLabel = strtoupper("{$startTime} - {$endTime}");
+
+            $slotDateTime = Carbon::parse($dateObj->format('Y-m-d') . ' ' . ($slot->start_time ?? '00:00:00'));
+            $rescheduleCount = (int) $booking->reschedule_count;
+            $canModify = ($rescheduleCount < 1) && now()->lessThan($slotDateTime->copy()->subDays(7));
 
             return response()->json([
                 'success' => true,
                 'message' => 'BOOKING MODIFIED SUCCESSFULLY',
                 'data' => [
                     'reference_no' => $booking->reference_no,
-                    'reschedule_count' => (int) $booking->reschedule_count,
+                    'reschedule_count' => $rescheduleCount,
+                    'can_modify' => $canModify,
                     'date' => $dateFormatted,
                     'time' => $timeLabel,
                     'status' => strtoupper($booking->status),

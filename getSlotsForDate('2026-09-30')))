@@ -17,6 +17,6 @@
       Psy\Exception\ParseErrorException::fromParseError(Object(PhpParser\Error))
 
   2   vendor\psy\psysh\src\CodeCleaner.php:273
-      Psy\CodeCleaner::parse("<?php print_r(app(App\Services\AvailabilityService::class)-;
+      Psy\CodeCleaner::parse("<?php var_dump(count(app(App\Services\AvailabilityService::class)-;
 ")
 

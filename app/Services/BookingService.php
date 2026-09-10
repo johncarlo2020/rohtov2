@@ -70,18 +70,23 @@ class BookingService
                 ]);
             }
 
-            // Prevent user from double booking on the same date
-            $existingBooking = Booking::where('booking_date_id', $slot->booking_date_id)
-                ->where('status', '!=', 'cancelled')
+            // Prevent user from double booking across the entire event schedule (1 time slot per user only)
+            $existingBooking = Booking::where('status', '!=', 'cancelled')
                 ->where(function ($q) use ($data) {
-                    $q->where('customer_email', $data['customer_email'])
-                      ->orWhere('customer_phone', $data['customer_phone']);
+                    $email = strtolower(trim($data['customer_email'] ?? ''));
+                    $phone = trim($data['customer_phone'] ?? '');
+
+                    $q->where('customer_email', $email);
+
+                    if (!empty($phone) && !in_array($phone, ['-', 'N/A', 'null'])) {
+                        $q->orWhere('customer_phone', $phone);
+                    }
                 })
                 ->first();
 
             if ($existingBooking) {
                 throw ValidationException::withMessages([
-                    'slot' => ['You have already booked a session for this date.']
+                    'slot' => ['You already have an active booking. Only 1 time slot per user is allowed.']
                 ]);
             }
 
@@ -189,6 +194,12 @@ class BookingService
                 }
             }
 
+            if ((int)$newSlotId === (int)$booking->booking_slot_id) {
+                throw ValidationException::withMessages([
+                    'slot' => ['You are already booked for this time slot. Please select a different session.']
+                ]);
+            }
+
             // Lock new slot
             $newSlot = BookingSlot::with('bookingDate')
                 ->where('id', $newSlotId)
@@ -207,6 +218,19 @@ class BookingService
                 throw ValidationException::withMessages([
                     'slot' => ['Rescheduling dates are only available from September 30 to October 17, 2026.']
                 ]);
+            }
+
+            // Rule: New date must be at least 1 week (7 days) before the currently booked date
+            if ($booking->bookingDate) {
+                $currentBookedDate = Carbon::parse($booking->bookingDate->date)->startOfDay();
+                $requestedNewDate = Carbon::parse($newDate)->startOfDay();
+                $maxAllowedNewDate = $currentBookedDate->copy()->subDays(7);
+
+                if ($requestedNewDate->greaterThan($maxAllowedNewDate)) {
+                    throw ValidationException::withMessages([
+                        'slot' => ['Rescheduling is only permitted to dates at least 1 week before your currently booked date.']
+                    ]);
+                }
             }
 
             // Verify new slot is available and has capacity

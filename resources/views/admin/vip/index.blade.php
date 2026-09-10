@@ -47,6 +47,18 @@
         </div>
     @endif
 
+    @if($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show text-white" role="alert">
+            <i class="fa-solid fa-triangle-exclamation me-2"></i>
+            <ul class="mb-0 ps-3 text-sm">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
     {{-- Header --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
@@ -67,16 +79,16 @@
                     </h5>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('admin.vip.store') }}" method="POST">
+                    <form id="vip-reservation-form" action="{{ route('admin.vip.store') }}" method="POST">
                         @csrf
 
                         {{-- VIP Group Schedule Preset --}}
                         <div class="mb-3">
                             <label for="vip_group_preset" class="form-label font-weight-bold text-xs text-uppercase text-primary">
-                                <i class="fa-solid fa-crown me-1"></i>Select VIP Group / Schedule Preset
+                                <i class="fa-solid fa-crown me-1"></i>Select VIP Group / Schedule Preset *
                             </label>
-                            <select id="vip_group_preset" class="form-select font-weight-bold border-primary text-dark" style="border-width: 2px;">
-                                <option value="">-- All Dates & Time Slots --</option>
+                            <select id="vip_group_preset" name="vip_name" class="form-select font-weight-bold border-primary text-dark" style="border-width: 2px;" required>
+                                <option value="" disabled selected>-- Select VIP Group Preset --</option>
                                 <option value="KOL AND MEDIA INFLUENCER">KOL AND MEDIA INFLUENCER (80 Pax: Sep 30 & Oct 1)</option>
                                 <option value="LONGCHAMP VIC">LONGCHAMP VIC (20 Pax: Sep 30)</option>
                                 <option value="THE GARDENS EMERALD MEMBER">THE GARDENS EMERALD MEMBER (24 Pax: Sep 30 & Oct 1)</option>
@@ -84,24 +96,6 @@
                                 <option value="PIN PRESTIGE">PIN PRESTIGE (12 Pax: Oct 1)</option>
                             </select>
                             <div class="form-text text-xxs text-muted">Selecting a VIP group filters available dates, slots & pre-fills pax count automatically.</div>
-                        </div>
-
-                        {{-- VIP User Dropdown or Custom Name --}}
-                        <div class="mb-3">
-                            <label for="user_id" class="form-label font-weight-bold text-xs text-uppercase text-muted">Select VIP User (Optional)</label>
-                            <select id="user_id" name="user_id" class="form-select @error('user_id') is-invalid @enderror">
-                                <option value="">-- Select Existing User --</option>
-                                @foreach($users as $u)
-                                    <option value="{{ $u->id }}">
-                                        {{ trim(($u->fname ?? '') . ' ' . ($u->lname ?? '')) ?: ($u->name ?? 'User #' . $u->id) }} ({{ $u->email }})
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="vip_name" class="form-label font-weight-bold text-xs text-uppercase text-muted">Or Enter / Edit VIP Name *</label>
-                            <input type="text" id="vip_name" name="vip_name" class="form-control font-weight-bold" placeholder="e.g. KOL AND MEDIA INFLUENCER / VIP Guest" />
                         </div>
 
                         {{-- Hidden Form Controls for Submission --}}
@@ -159,6 +153,8 @@
                         <div class="mb-4">
                             <label for="pax" class="form-label font-weight-bold text-xs text-uppercase text-muted">Pax Count (Number of Guests) *</label>
                             <input type="number" id="pax" name="pax" class="form-control @error('pax') is-invalid @enderror" value="1" min="1" max="50" required />
+                            <div id="pax-capacity-info" class="form-text text-xxs font-weight-bold text-info mt-1 d-none"></div>
+                            <div id="pax-error-msg" class="invalid-feedback font-weight-bold text-xxs mt-1"></div>
                         </div>
 
                         <button type="submit" class="btn btn-primary w-100 py-2 font-weight-bold shadow-sm" style="border-radius: 8px;">
@@ -446,6 +442,7 @@
             selectedGroup: null,
             selectedDateRaw: null,
             selectedSlotId: null,
+            selectedSlotObject: null,
             dateDropdownOpen: false,
             timeDropdownOpen: false
         };
@@ -454,11 +451,72 @@
         const vipNameInput = document.getElementById('vip_name');
         const paxInput = document.getElementById('pax');
 
+        function updatePaxHelpText(slot) {
+            const infoDiv = document.getElementById('pax-capacity-info');
+            if (!infoDiv) return;
+            if (!slot) {
+                infoDiv.classList.add('d-none');
+                return;
+            }
+            const booked = slot.booked_count || 0;
+            const cap = slot.capacity || 20;
+            const remaining = Math.max(0, cap - booked);
+            infoDiv.textContent = `Selected slot capacity: ${remaining} Pax available (Total Capacity: ${cap})`;
+            infoDiv.classList.remove('d-none');
+        }
+
+        function validatePaxInput() {
+            if (!paxInput) return true;
+            const val = parseInt(paxInput.value) || 0;
+            const errorDiv = document.getElementById('pax-error-msg');
+
+            if (vipState.selectedSlotObject) {
+                const slot = vipState.selectedSlotObject;
+                const booked = slot.booked_count || 0;
+                const cap = slot.capacity || 20;
+                const remaining = Math.max(0, cap - booked);
+
+                if (remaining <= 0) {
+                    paxInput.classList.add('is-invalid');
+                    if (errorDiv) {
+                        errorDiv.textContent = 'Selected time slot is FULLY BOOKED (0 Pax available).';
+                        errorDiv.style.display = 'block';
+                    }
+                    return false;
+                } else if (val > remaining) {
+                    paxInput.classList.add('is-invalid');
+                    if (errorDiv) {
+                        errorDiv.textContent = `Pax count cannot exceed remaining slot capacity (${remaining} Pax left).`;
+                        errorDiv.style.display = 'block';
+                    }
+                    return false;
+                } else if (val < 1) {
+                    paxInput.classList.add('is-invalid');
+                    if (errorDiv) {
+                        errorDiv.textContent = 'Pax count must be at least 1.';
+                        errorDiv.style.display = 'block';
+                    }
+                    return false;
+                }
+            }
+
+            paxInput.classList.remove('is-invalid');
+            if (errorDiv) {
+                errorDiv.textContent = '';
+                errorDiv.style.display = 'none';
+            }
+            return true;
+        }
+
+        if (paxInput) {
+            paxInput.addEventListener('input', validatePaxInput);
+            paxInput.addEventListener('change', validatePaxInput);
+        }
+
         if (presetSelect) {
             presetSelect.addEventListener('change', () => {
                 const val = presetSelect.value;
                 if (val) {
-                    if (vipNameInput) vipNameInput.value = val;
                     vipState.selectedGroup = val;
                 } else {
                     vipState.selectedGroup = null;
@@ -467,6 +525,7 @@
                 // Reset selections
                 vipState.selectedDateRaw = null;
                 vipState.selectedSlotId = null;
+                vipState.selectedSlotObject = null;
                 const dateInput = document.getElementById('vip_booking_date_id');
                 const slotInput = document.getElementById('vip_booking_slot_id');
                 if (dateInput) dateInput.value = '';
@@ -485,6 +544,9 @@
 
                 const tTrigger = document.getElementById('vip-time-trigger-box');
                 if (tTrigger) tTrigger.classList.add('opacity-60', 'cursor-not-allowed');
+
+                updatePaxHelpText(null);
+                validatePaxInput();
 
                 renderVipDateDropdown(vipState.dateAvailabilities);
             });
@@ -614,8 +676,12 @@
                 timeBoxText.className = 'text-muted font-weight-bold text-xs text-uppercase';
             }
             vipState.selectedSlotId = null;
+            vipState.selectedSlotObject = null;
             const slotInput = document.getElementById('vip_booking_slot_id');
             if (slotInput) slotInput.value = '';
+
+            updatePaxHelpText(null);
+            validatePaxInput();
 
             try {
                 const res = await fetch(`/api/booking/dates/${dateRaw}/slots`);
@@ -652,7 +718,11 @@
             slots.forEach(slot => {
                 const slotRow = document.createElement('div');
                 const isSelected = vipState.selectedSlotId === slot.id;
-                const isAvailable = slot.available;
+                const bookedCount = slot.booked_count || 0;
+                const capacity = slot.capacity || 20;
+                const remaining = Math.max(0, capacity - bookedCount);
+                const isAvailable = slot.available && remaining > 0;
+                const isHalfBooked = bookedCount > (capacity / 2);
 
                 let rowClasses = 'slot-row d-flex align-items-center justify-content-between px-3 py-2 border mb-1 cursor-pointer transition text-uppercase rounded-1 ';
                 if (isSelected) {
@@ -667,8 +737,10 @@
                 let rightSpan = '';
                 if (isSelected) {
                     rightSpan = `<svg style="width: 18px; height: 18px;" class="brand-orange-text" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>`;
-                } else if (!isAvailable) {
-                    rightSpan = `<span class="text-xs font-weight-bold text-danger">SLOT FULL</span>`;
+                } else if (!isAvailable || remaining <= 0) {
+                    rightSpan = `<span class="text-xs font-weight-bold text-danger">FULLY BOOKED</span>`;
+                } else if (isHalfBooked) {
+                    rightSpan = `<span class="text-xs font-weight-bold text-warning">LIMITED SLOTS</span>`;
                 } else {
                     rightSpan = `<span class="text-xs font-weight-bold text-success">AVAILABLE</span>`;
                 }
@@ -682,6 +754,8 @@
                     slotRow.addEventListener('click', (e) => {
                         e.stopPropagation();
                         vipState.selectedSlotId = slot.id;
+                        vipState.selectedSlotObject = slot;
+
                         const slotInput = document.getElementById('vip_booking_slot_id');
                         if (slotInput) slotInput.value = slot.id;
 
@@ -691,16 +765,25 @@
                             timeBoxText.className = 'text-dark font-weight-bold text-xs text-uppercase';
                         }
 
+                        let targetPax = 1;
                         // Auto pre-fill pax if defined in schedule map
                         if (vipState.selectedGroup && vipGroupScheduleMap[vipState.selectedGroup] && dateRaw) {
                             const groupDateSlots = vipGroupScheduleMap[vipState.selectedGroup][dateRaw];
                             if (groupDateSlots) {
                                 const matched = groupDateSlots.find(x => x.start_time === slot.start_time);
-                                if (matched && paxInput) {
-                                    paxInput.value = matched.pax;
+                                if (matched) {
+                                    targetPax = matched.pax;
                                 }
                             }
                         }
+
+                        if (paxInput) {
+                            paxInput.max = remaining;
+                            paxInput.value = Math.min(targetPax, remaining);
+                        }
+
+                        updatePaxHelpText(slot);
+                        validatePaxInput();
 
                         toggleVipTimeDropdown(false);
                         renderVipSlotDropdown(vipState.slots, dateRaw);
@@ -708,6 +791,39 @@
                 }
 
                 container.appendChild(slotRow);
+            });
+        }
+
+        const vipForm = document.getElementById('vip-reservation-form');
+        if (vipForm) {
+            vipForm.addEventListener('submit', (e) => {
+                const groupVal = presetSelect ? presetSelect.value : '';
+                const dateVal = document.getElementById('vip_booking_date_id').value;
+                const slotVal = document.getElementById('vip_booking_slot_id').value;
+
+                if (!groupVal) {
+                    e.preventDefault();
+                    alert('Please select a VIP Group Preset.');
+                    return false;
+                }
+
+                if (!dateVal) {
+                    e.preventDefault();
+                    alert('Please select a date for the VIP reservation.');
+                    return false;
+                }
+
+                if (!slotVal) {
+                    e.preventDefault();
+                    alert('Please select a time slot for the VIP reservation.');
+                    return false;
+                }
+
+                if (!validatePaxInput()) {
+                    e.preventDefault();
+                    alert('Cannot submit reservation: Pax count exceeds available capacity for the selected time slot.');
+                    return false;
+                }
             });
         }
 

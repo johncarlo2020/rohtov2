@@ -325,8 +325,9 @@
         console.log(chart);
 
         Object.keys(chart).forEach(function(date, index) {
-            var dateObj = new Date(date);
-            var formattedDate = dateObj.toLocaleDateString('en-US', {
+            var dateStr = date ? (date.indexOf('T') !== -1 ? date : date.replace(/ /g, 'T') + (date.length === 10 ? 'T00:00:00' : '')) : '';
+            var dateObj = new Date(dateStr);
+            var formattedDate = isNaN(dateObj.getTime()) ? date : dateObj.toLocaleDateString('en-US', {
                 month: 'long',
                 day: 'numeric'
             });
@@ -334,11 +335,23 @@
             data.push(chart[date]); // Push the count for the corresponding date
         });
 
+        function parseTimeToMinutes(timeStr) {
+            if (!timeStr) return 0;
+            var str = timeStr.trim().toLowerCase();
+            var isPm = str.indexOf('pm') !== -1;
+            var isAm = str.indexOf('am') !== -1;
+            str = str.replace(/[ap]m/g, '').trim();
+            var parts = str.split(':');
+            var hours = parseInt(parts[0], 10) || 0;
+            var minutes = parts[1] ? parseInt(parts[1], 10) : 0;
+            if (isPm && hours < 12) hours += 12;
+            if (isAm && hours === 12) hours = 0;
+            return hours * 60 + minutes;
+        }
+
         var registrationsPerHour = @json($data['registrationsPerHour']);
         var hours = Object.keys(registrationsPerHour).sort(function(a, b) {
-            var timeA = new Date('1970/01/01 ' + a.replace(/([ap]m)/, ' $1'));
-            var timeB = new Date('1970/01/01 ' + b.replace(/([ap]m)/, ' $1'));
-            return timeA - timeB;
+            return parseTimeToMinutes(a) - parseTimeToMinutes(b);
         });
         var allDates = [];
 

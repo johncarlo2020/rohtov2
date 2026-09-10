@@ -168,17 +168,17 @@ class BookingSystemTest extends TestCase
     /** @test */
     public function it_allows_guest_to_modify_booking_once_only()
     {
-        // Fetch slots for Tuesday Oct 6 and Wednesday Oct 7
-        $tueSlots = $this->getJson('/api/booking/dates/2026-10-06/slots')->json();
-        $wedSlots = $this->getJson('/api/booking/dates/2026-10-07/slots')->json();
+        // Fetch slots for Wednesday Oct 14 and Wednesday Oct 7 (7 days before Oct 14)
+        $oct14Slots = $this->getJson('/api/booking/dates/2026-10-14/slots')->json();
+        $oct7Slots = $this->getJson('/api/booking/dates/2026-10-07/slots')->json();
 
-        $slot1 = $tueSlots[0]['id'];
-        $slot2 = $wedSlots[0]['id'];
+        $slotLate = $oct14Slots[0]['id'];
+        $slotEarly = $oct7Slots[0]['id'];
 
-        // Create initial booking
+        // Create initial booking on Oct 14
         $createRes = $this->postJson('/api/bookings', [
-            'date' => '2026-10-06',
-            'slot_id' => $slot1,
+            'date' => '2026-10-14',
+            'slot_id' => $slotLate,
             'customer_name' => 'Modify User',
             'customer_email' => 'modify@example.com',
             'customer_phone' => '09444444444',
@@ -186,17 +186,17 @@ class BookingSystemTest extends TestCase
         $createRes->assertStatus(201);
         $booking = Booking::where('customer_email', 'modify@example.com')->first();
 
-        // 1st Modification: Move to Wednesday Oct 7 -> SUCCEEDS
+        // 1st Modification: Move to Oct 7 (7 days before Oct 14) -> SUCCEEDS
         $modifyRes1 = $this->postJson("/api/bookings/{$booking->id}/modify", [
             'date' => '2026-10-07',
-            'slot_id' => $slot2,
+            'slot_id' => $slotEarly,
         ]);
         $modifyRes1->assertStatus(200);
         $modifyRes1->assertJsonPath('success', true);
 
         // Verify slot counts
-        $this->assertEquals(0, BookingSlot::find($slot1)->booked_count);
-        $this->assertEquals(1, BookingSlot::find($slot2)->booked_count);
+        $this->assertEquals(0, BookingSlot::find($slotLate)->booked_count);
+        $this->assertEquals(1, BookingSlot::find($slotEarly)->booked_count);
 
         // Verify booking reschedule_count is 1
         $booking->refresh();
@@ -204,8 +204,8 @@ class BookingSystemTest extends TestCase
 
         // 2nd Modification attempt -> FAILS (1 time limit)
         $modifyRes2 = $this->postJson("/api/bookings/{$booking->id}/modify", [
-            'date' => '2026-10-06',
-            'slot_id' => $slot1,
+            'date' => '2026-10-14',
+            'slot_id' => $slotLate,
         ]);
         $modifyRes2->assertStatus(422);
         $modifyRes2->assertJsonValidationErrors(['slot']);
@@ -245,7 +245,7 @@ class BookingSystemTest extends TestCase
     }
 
     /** @test */
-    public function it_allows_different_users_to_book_same_date_but_blocks_same_user_from_booking_same_date_twice()
+    public function it_allows_different_users_to_book_different_slots_but_blocks_user_from_booking_multiple_slots()
     {
         // 2026-10-06 is Tuesday (2 sessions: slot 0 and slot 1)
         $slots = $this->getJson('/api/booking/dates/2026-10-06/slots')->json();
@@ -272,7 +272,7 @@ class BookingSystemTest extends TestCase
         ]);
         $userBBooking->assertStatus(201);
 
-        // User A tries to book slot 2 (6:00 PM) on Oct 6 as well -> Should FAIL!
+        // User A tries to book slot 2 (6:00 PM) on Oct 6 as well -> Should FAIL! (1 time slot per user rule)
         $userADuplicate = $this->postJson('/api/bookings', [
             'date' => '2026-10-06',
             'slot_id' => $slot2,
@@ -322,5 +322,297 @@ class BookingSystemTest extends TestCase
 
         $this->assertNull($u2->booking_ref);
         $this->assertEquals('No Booking', $u2->booking_date_text);
+    }
+
+    /** @test */
+    public function it_redirects_guests_attempting_to_access_booking_flow_to_login()
+    {
+        $response = $this->get('/booking');
+        $response->assertRedirect(route('login'));
+
+        $modifyResponse = $this->get('/booking?modify=1');
+        $modifyResponse->assertRedirect(route('login'));
+    }
+
+    /** @test */
+    public function it_allows_authenticated_client_to_access_booking_flow()
+    {
+        $role = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'client']);
+        $user = \App\Models\User::factory()->create();
+        $user->assignRole($role);
+
+        $response = $this->actingAs($user)->get('/booking');
+        $response->assertStatus(200);
+    }
+
+    /** @test */
+    public function it_runs_full_booking_and_modification_flow_across_slots_without_loopholes()
+    {
+        $role = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'client']);
+
+        // Create 3 Users
+        $user1 = \App\Models\User::factory()->create(['email' => 'scenario1@example.com', 'fname' => 'ScenarioOne']);
+        $user1->assignRole($role);
+
+        $user2 = \App\Models\User::factory()->create(['email' => 'scenario2@example.com', 'fname' => 'ScenarioTwo']);
+        $user2->assignRole($role);
+
+        $user3 = \App\Models\User::factory()->create(['email' => 'scenario3@example.com', 'fname' => 'ScenarioThree']);
+        $user3->assignRole($role);
+
+        // Fetch slots for Oct 14 (Wednesday), Oct 7 (Wednesday - 7 days prior), and Oct 10 (Saturday - 4 days prior)
+        $oct14Slots = $this->getJson('/api/booking/dates/2026-10-14/slots')->json();
+        $oct7Slots = $this->getJson('/api/booking/dates/2026-10-07/slots')->json();
+        $oct10Slots = $this->getJson('/api/booking/dates/2026-10-10/slots')->json();
+
+        $slotOct14 = $oct14Slots[0]['id'];
+        $slotOct7 = $oct7Slots[0]['id'];
+        $slotOct10 = $oct10Slots[0]['id'];
+
+        // 1. User 1 books Oct 14 slot
+        $res1 = $this->actingAs($user1)->postJson('/reservation-create', [
+            'date' => '2026-10-14',
+            'slot_id' => $slotOct14,
+        ]);
+        $res1->assertStatus(201);
+        $res1->assertJsonPath('success', true);
+        $booking1Ref = $res1->json('data.reference_no');
+
+        // 2. User 1 tries to book a second slot on Oct 7 -> FAILS (1 slot per user rule)
+        $res1Duplicate = $this->actingAs($user1)->postJson('/reservation-create', [
+            'date' => '2026-10-07',
+            'slot_id' => $slotOct7,
+        ]);
+        $res1Duplicate->assertStatus(422);
+
+        // 3. User 2 tries to book the same Oct 14 slot -> FAILS (capacity limit = 1)
+        $res2Overbook = $this->actingAs($user2)->postJson('/reservation-create', [
+            'date' => '2026-10-14',
+            'slot_id' => $slotOct14,
+        ]);
+        $res2Overbook->assertStatus(422);
+
+        // 4. User 2 books Oct 10 slot instead -> SUCCEEDS
+        $res2 = $this->actingAs($user2)->postJson('/reservation-create', [
+            'date' => '2026-10-10',
+            'slot_id' => $slotOct10,
+        ]);
+        $res2->assertStatus(201);
+
+        // 5. User 1 tries to modify to Oct 10 (only 4 days prior to Oct 14) -> FAILS (< 7 days prior rule)
+        $modInvalidDate = $this->actingAs($user1)->postJson('/reservation-create/modify', [
+            'reference_no' => $booking1Ref,
+            'date' => '2026-10-10',
+            'slot_id' => $slotOct10,
+        ]);
+        $modInvalidDate->assertStatus(422);
+
+        // 6. User 2 tries to modify User 1's booking -> FAILS (403 unauthorized)
+        $modUnauthorized = $this->actingAs($user2)->postJson('/reservation-create/modify', [
+            'reference_no' => $booking1Ref,
+            'date' => '2026-10-07',
+            'slot_id' => $slotOct7,
+        ]);
+        $modUnauthorized->assertStatus(403);
+
+        // 7. User 1 modifies booking to Oct 7 (exactly 7 days prior) -> SUCCEEDS
+        $modSuccess = $this->actingAs($user1)->postJson('/reservation-create/modify', [
+            'reference_no' => $booking1Ref,
+            'date' => '2026-10-07',
+            'slot_id' => $slotOct7,
+        ]);
+        $modSuccess->assertStatus(200);
+        $modSuccess->assertJsonPath('success', true);
+
+        // Verify slot counts: Oct 14 slot is now 0 (freed), Oct 7 slot is now 1
+        $this->assertEquals(0, BookingSlot::find($slotOct14)->booked_count);
+        $this->assertEquals(1, BookingSlot::find($slotOct7)->booked_count);
+
+        // 8. User 1 attempts a second modification -> FAILS (1-time modification limit)
+        $modSecond = $this->actingAs($user1)->postJson('/reservation-create/modify', [
+            'reference_no' => $booking1Ref,
+            'date' => '2026-10-02',
+            'slot_id' => $this->getJson('/api/booking/dates/2026-10-02/slots')->json()[0]['id'],
+        ]);
+        $modSecond->assertStatus(422);
+
+        // 9. Now Oct 14 slot is freed, User 3 can book Oct 14 slot -> SUCCEEDS
+        $res3 = $this->actingAs($user3)->postJson('/reservation-create', [
+            'date' => '2026-10-14',
+            'slot_id' => $slotOct14,
+        ]);
+        $res3->assertStatus(201);
+        $this->assertEquals(1, BookingSlot::find($slotOct14)->booked_count);
+    }
+
+    /** @test */
+    public function it_validates_vip_pax_capacity_and_prevents_overbooking()
+    {
+        \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'admin']);
+        $admin = \App\Models\User::factory()->create(['fname' => 'Admin', 'lname' => 'User']);
+        $admin->assignRole('admin');
+
+        $this->getJson('/api/booking/dates/2026-09-30/slots');
+        $dateObj = \App\Models\BookingDate::where('date', '2026-09-30')->first();
+        $slot = $dateObj->slots()->first();
+        $slot->capacity = 20;
+        $slot->booked_count = 0;
+        $slot->save();
+
+        // Attempting to book 25 pax on a slot of capacity 20 -> fails validation
+        $response = $this->actingAs($admin)->post('/admin/vip', [
+            'vip_name' => 'Test VIP Group',
+            'booking_date_id' => $dateObj->id,
+            'booking_slot_id' => $slot->id,
+            'pax' => 25,
+        ]);
+
+        $response->assertSessionHasErrors(['pax']);
+        $this->assertEquals(0, $slot->fresh()->booked_count);
+
+        // Booking 15 pax -> succeeds
+        $validRes = $this->actingAs($admin)->post('/admin/vip', [
+            'vip_name' => 'Valid VIP Group',
+            'booking_date_id' => $dateObj->id,
+            'booking_slot_id' => $slot->id,
+            'pax' => 15,
+        ]);
+
+        $validRes->assertSessionHasNoErrors();
+        $validRes->assertSessionHas('success');
+        $this->assertEquals(15, $slot->fresh()->booked_count);
+
+        // Attempting to book 10 pax when only 5 remaining -> fails validation
+        $overRes = $this->actingAs($admin)->post('/admin/vip', [
+            'vip_name' => 'Excess VIP Group',
+            'booking_date_id' => $dateObj->id,
+            'booking_slot_id' => $slot->id,
+            'pax' => 10,
+        ]);
+
+        $overRes->assertSessionHasErrors(['pax']);
+        $this->assertEquals(15, $slot->fresh()->booked_count);
+    }
+
+    /** @test */
+    public function it_requires_unique_email_for_walkin_customer_registration()
+    {
+        \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'admin']);
+        $admin = \App\Models\User::factory()->create(['fname' => 'Admin', 'lname' => 'User']);
+        $admin->assignRole('admin');
+
+        $this->getJson('/api/booking/dates/2026-10-02/slots');
+        $dateObj = \App\Models\BookingDate::where('date', '2026-10-02')->first();
+        $slot = $dateObj->slots()->first();
+        $slot->capacity = 5;
+        $slot->booked_count = 0;
+        $slot->save();
+
+        // 1. Create initial walk-in registration
+        $res1 = $this->actingAs($admin)->from('/admin/booking')->post('/admin/walkin-booking', [
+            'title' => 'MR.',
+            'fname' => 'Unique',
+            'lname' => 'Walker',
+            'email' => 'unique.walkin@example.com',
+            'phone' => '+60123456789',
+            'booking_date_id' => $dateObj->id,
+            'booking_slot_id' => $slot->id,
+            'pax' => 1,
+        ]);
+
+        $res1->assertSessionHasNoErrors();
+        $res1->assertSessionHas('success');
+
+        // 2. Attempting to register another walk-in customer with the same email -> FAILS
+        $res2 = $this->actingAs($admin)->from('/admin/booking')->post('/admin/walkin-booking', [
+            'title' => 'MS.',
+            'fname' => 'Duplicate',
+            'lname' => 'Walker',
+            'email' => 'unique.walkin@example.com',
+            'phone' => '+60123456799',
+            'booking_date_id' => $dateObj->id,
+            'booking_slot_id' => $slot->id,
+            'pax' => 1,
+        ]);
+
+        $res2->assertSessionHasErrors(['email']);
+    }
+
+    /** @test */
+    public function it_creates_user_account_for_walkin_registration_and_shows_on_admin_users_table()
+    {
+        \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'admin']);
+        \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'client']);
+        $admin = \App\Models\User::factory()->create(['fname' => 'Admin', 'lname' => 'User']);
+        $admin->assignRole('admin');
+
+        $this->getJson('/api/booking/dates/2026-10-02/slots');
+        $dateObj = \App\Models\BookingDate::where('date', '2026-10-02')->first();
+        $slot = $dateObj->slots()->first();
+
+        $res = $this->actingAs($admin)->from('/admin/booking')->post('/admin/walkin-booking', [
+            'title' => 'MS.',
+            'fname' => 'Sarah',
+            'lname' => 'Walkin',
+            'email' => 'sarah.walkin@example.com',
+            'phone' => '+601122334455',
+            'booking_date_id' => $dateObj->id,
+            'booking_slot_id' => $slot->id,
+            'pax' => 1,
+            'mark_attended' => 1,
+        ]);
+
+        $res->assertSessionHasNoErrors();
+        $res->assertRedirect();
+
+        // 1. Assert user record was created
+        $user = \App\Models\User::where('email', 'sarah.walkin@example.com')->first();
+        $this->assertNotNull($user);
+        $this->assertEquals('Sarah', $user->fname);
+        $this->assertEquals('Walkin', $user->lname);
+        $this->assertEquals(1, $user->otp_verified);
+        $this->assertTrue($user->hasRole('client'));
+
+        // 2. Assert walkin user appears in the admin users list response
+        $usersRes = $this->actingAs($admin)->get('/admin/users');
+        $usersRes->assertStatus(200);
+        $usersRes->assertSee('sarah.walkin@example.com');
+        $usersRes->assertSee('Sarah');
+        $usersRes->assertSee('Walkin');
+    }
+
+    /** @test */
+    public function it_redirects_logged_in_walkin_user_to_dashboard_with_qr_code_instead_of_reservation_create()
+    {
+        \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'admin']);
+        \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'client']);
+        $admin = \App\Models\User::factory()->create(['fname' => 'Admin', 'lname' => 'User']);
+        $admin->assignRole('admin');
+
+        $this->getJson('/api/booking/dates/2026-10-02/slots');
+        $dateObj = \App\Models\BookingDate::where('date', '2026-10-02')->first();
+        $slot = $dateObj->slots()->first();
+
+        // Create walkin booking
+        $this->actingAs($admin)->post('/admin/walkin-booking', [
+            'title' => 'MR.',
+            'fname' => 'John',
+            'lname' => 'Walkin',
+            'email' => 'john.walkin@example.com',
+            'phone' => '+601199887766',
+            'booking_date_id' => $dateObj->id,
+            'booking_slot_id' => $slot->id,
+            'pax' => 1,
+            'mark_attended' => 0,
+        ]);
+
+        $walkinUser = \App\Models\User::where('email', 'john.walkin@example.com')->first();
+        $this->assertNotNull($walkinUser);
+
+        // Access dashboard as the walk-in user
+        $dashboardRes = $this->actingAs($walkinUser)->get('/dashboard');
+        $dashboardRes->assertStatus(200);
+        $dashboardRes->assertViewIs('dashboard');
+        $dashboardRes->assertSee('JOHN');
     }
 }

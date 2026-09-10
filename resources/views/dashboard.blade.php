@@ -8,8 +8,8 @@
         .brand-orange-bg:hover, .brand-orange-bg:focus { background-color: #d44f25 !important; color: #ffffff !important; }
 
         .ticket-box {
-            border: 2px dashed #ef4444;
-            padding: 1.5rem;
+            border: 1px solid #cbd5e1;
+            padding: 1.25rem 1rem;
             background: #ffffff;
         }
 
@@ -38,17 +38,18 @@
                         <div id="confirmation-success-screen" class="text-center py-2 step-fade">
                             
                             <!-- Title -->
-                            <h2 class="h4 fw-bold brand-orange-text text-uppercase mb-2">
+                            <h2 class="h4 fw-semi-bold brand-orange-text text-uppercase mb-3" style="letter-spacing: 0.05em;">
                                 BOOKING CONFIRMED!
                             </h2>
 
                             @php
                                 $firstName = 'CUSTOMER';
-                                $fullName = 'JOSHUA';
-                                $formattedDateStr = '1ST OCTOBER';
-                                $formattedTimeStr = '2:00PM';
+                                $fullName = 'CUSTOMER';
+                                $formattedDateStr = '';
+                                $formattedTimeStr = '';
                                 $refNo = null;
                                 $canModify = true;
+                                $resCount = 0;
 
                                 if (isset($userBooking) && $userBooking) {
                                     $refNo = $userBooking->reference_no;
@@ -79,11 +80,13 @@
                                                 case 3: $sfx = 'RD'; break;
                                             }
                                         }
-                                        $formattedDateStr = $dayNum . $sfx . ' ' . strtoupper($d->format('F'));
+                                        $formattedDateStr = strtoupper($d->format('l')) . ', ' . $dayNum . $sfx . ' ' . strtoupper($d->format('F'));
                                     }
 
                                     if ($userBooking->bookingSlot) {
-                                        $formattedTimeStr = strtoupper(\Carbon\Carbon::parse($userBooking->bookingSlot->start_time)->format('g:iA'));
+                                        $start = \Carbon\Carbon::parse($userBooking->bookingSlot->start_time)->format('g:iA');
+                                        $end = \Carbon\Carbon::parse($userBooking->bookingSlot->end_time)->format('g:iA');
+                                        $formattedTimeStr = strtoupper($start . ' - ' . $end);
                                     }
                                 } elseif (auth()->check()) {
                                     $fullName = strtoupper(trim((auth()->user()->fname ?? '') . ' ' . (auth()->user()->lname ?? '')));
@@ -94,45 +97,53 @@
                                 }
                             @endphp
 
-                            <!-- Subtitle -->
-                            <p class="small fw-bold text-dark text-uppercase mb-2">
-                                HI <span id="dash-greeting-name">{{ $firstName }}</span>,
-                                YOUR IS CONFIRMED
-                            </p>
-                            <p class="small text-dark mb-4">
-                                PLEASE CHECK YOUR EMAIL FOR YOUR<br>CONFIRMATION DETAILS AND PRESENT THIS <br> QR CODE UPON ARRIVAL  
+                            <!-- Subtitle 1 -->
+                            <p class="small fw-semi-bold text-dark text-uppercase mb-3" style="letter-spacing: 0.03em; font-size: 0.85rem;">
+                                HI <span id="confirmed-greeting-name" class="text-dark">{{ $firstName }}</span>, YOUR RESERVATION IS CONFIRMED
                             </p>
 
-                            <!-- Red Dashed Ticket Container -->
-                            <div id="dash-ticket-container" class="ticket-box d-inline-block w-100 mb-4 text-center" style="max-width: 320px;">
+                            <!-- Subtitle 2 -->
+                            <p class="small text-dark text-uppercase mb-4 mx-auto" style="letter-spacing: 0.02em; font-size: 0.8rem; line-height: 1.45; max-width: 320px;">
+                                PLEASE CHECK YOUR EMAIL FOR YOUR CONFIRMATION DETAILS AND PRESENT THIS QR CODE UPON ARRIVAL.
+                            </p>
+
+                            <!-- Ticket Container (Boxed QR Code + Details) -->
+                            <div id="ticket-container" class="ticket-box d-inline-block w-100 mb-4 text-center" style="max-width: 290px; border: 2px dashed red; padding: 1.25rem 1rem; background: #ffffff;">
                                 
                                 <!-- Dynamic QR Code Image -->
-                                <img id="dash-qr-code-img" src="{{ $refNo ? 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' . urlencode($refNo) : '' }}" alt="Booking QR Code" class="img-fluid mb-3" style="width: 170px; height: 170px; margin:auto; object-fit: contain;" crossorigin="anonymous">
+                                <img id="qr-code-img" src="{{ $refNo ? 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' . urlencode($refNo) : '' }}" alt="Booking QR Code" class="img-fluid mb-2" style="width: 170px; height: 170px; margin: auto; object-fit: contain; display: block;" crossorigin="anonymous">
 
                                 <!-- Customer Name -->
-                                <div id="dash-ticket-name" class="fw-bold text-dark text-uppercase mb-2">
+                                <div id="confirmed-ticket-name" class="fw-bold text-dark text-uppercase my-2" style="font-size: 0.95rem; letter-spacing: 0.05em;">
                                     {{ $fullName }}
                                 </div>
 
                                 <!-- Details List -->
-                                <div class="small fw-bold text-dark text-uppercase">
-                                    <div><span class="text-muted">DATE:</span> <span id="dash-ticket-date" class="brand-orange-text">{{ $formattedDateStr }}</span></div>
-                                    <div class="my-1"><span class="text-muted">TIME:</span> <span id="dash-ticket-time">{{ $formattedTimeStr }}</span></div>
-                                    <div class="mt-2 text-muted">
-                                        <span class="text-muted">VENUE:</span> LONGCHAMP POP UP STORE THE GARDENS MALL
+                                <div class="small fw-bold text-dark text-uppercase" style="font-size: 0.725rem; line-height: 1.5; letter-spacing: 0.03em;">
+                                    <div class="mb-1"><span class="fw-bold text-dark">DATE:</span> <span id="confirmed-ticket-date" class="text-dark">{{ $formattedDateStr }}</span></div>
+                                    <div class="mb-1"><span class="fw-bold text-dark">TIME:</span> <span id="confirmed-ticket-time" class="text-dark">{{ $formattedTimeStr }}</span></div>
+                                    <div class="text-dark">
+                                        <span class="fw-bold text-dark">VENUE:</span> LONGCHAMP POP UP STORE<br>THE GARDENS MALL
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Action Buttons (CHANGE YOUR SLOT / DOWNLOAD) -->
-                            <div class="d-flex flex-column gap-2 mx-auto" style="max-width: 320px;">
+                            <!-- Action Buttons (MODIFY / DOWNLOAD) -->
+                            <div class="d-flex flex-column gap-2 mx-auto mb-4">
                                 @if($canModify)
-                                    <a href="{{ url('/reservation-create?modify=1') }}" id="dash-change-slot-btn" class="custom-btn custom-btn-primary pulse-slow w-50 m-auto text-decoration-none">
-                                        CHANGE YOUR SLOT
+                                    <a id="modify-btn" href="{{ url('/reservation-create?modify=1') }}" class="custom-btn custom-btn-primary w-50 m-auto text-decoration-none d-block text-center" style="border-radius: 0; padding: 0.7rem 1rem; font-weight: bold; letter-spacing: 0.05em;">
+                                        MODIFY
                                     </a>
+                                @else
+                                    <div id="no-modify-notice" class="small fw-bold text-muted text-uppercase my-1 text-center" style="font-size: 0.7rem;">
+                                        @if(isset($resCount) && $resCount >= 1)
+                                            * YOU HAVE ALREADY RESCHEDULED YOUR BOOKING ONCE.
+                                        @else
+                                            * RESCHEDULING NOT AVAILABLE (NO DATES AVAILABLE AT LEAST 1 WEEK PRIOR TO YOUR SLOT)
+                                        @endif
+                                    </div>
                                 @endif
-
-                                <button id="dash-download-btn" type="button" class="custom-btn custom-btn-primary pulse-slow w-50 m-auto">
+                                <button id="download-btn" type="button" class="custom-btn custom-btn-primary w-50 m-auto" style="border-radius: 0; padding: 0.7rem 1rem; font-weight: bold; letter-spacing: 0.05em;">
                                     DOWNLOAD
                                 </button>
                             </div>
@@ -154,11 +165,11 @@
     @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const dashChangeSlotBtn = document.getElementById('dash-change-slot-btn');
-            const dashDownloadBtn = document.getElementById('dash-download-btn');
+            const modifyBtn = document.getElementById('modify-btn');
+            const downloadBtn = document.getElementById('download-btn');
 
-            if (dashChangeSlotBtn) {
-                dashChangeSlotBtn.addEventListener('click', () => {
+            if (modifyBtn) {
+                modifyBtn.addEventListener('click', () => {
                     const refNo = @json($refNo);
                     if (refNo) {
                         localStorage.setItem('latest_booking_ref', refNo);
@@ -166,81 +177,74 @@
                 });
             }
 
-            if (dashDownloadBtn) {
-                dashDownloadBtn.addEventListener('click', () => {
+            if (downloadBtn) {
+                downloadBtn.addEventListener('click', () => {
                     const refNo = @json($refNo) || localStorage.getItem('latest_booking_ref') || 'ticket';
                     
-                    const customerName = document.getElementById('dash-ticket-name').textContent.trim();
-                    const dateText = document.getElementById('dash-ticket-date').textContent.trim();
-                    const timeText = document.getElementById('dash-ticket-time').textContent.trim();
-                    const qrImgElem = document.getElementById('dash-qr-code-img');
+                    const customerName = document.getElementById('confirmed-ticket-name')?.textContent.trim() || 'CUSTOMER';
+                    const dateText = document.getElementById('confirmed-ticket-date')?.textContent.trim() || '';
+                    const timeText = document.getElementById('confirmed-ticket-time')?.textContent.trim() || '';
+                    const qrImgElem = document.getElementById('qr-code-img');
 
-                    dashDownloadBtn.disabled = true;
-                    dashDownloadBtn.textContent = 'GENERATING...';
+                    downloadBtn.disabled = true;
+                    downloadBtn.textContent = 'GENERATING JPEG...';
 
-                    // Create offscreen canvas matching red dashed ticket box aspect (450x540)
+                    // Create offscreen canvas (450x620)
                     const canvas = document.createElement('canvas');
                     canvas.width = 450;
-                    canvas.height = 540;
+                    canvas.height = 620;
                     const ctx = canvas.getContext('2d');
 
                     // Fill white background
                     ctx.fillStyle = '#ffffff';
-                    ctx.fillRect(0, 0, 450, 540);
+                    ctx.fillRect(0, 0, 450, 620);
 
-                    // Outer Red Dashed Border Box (inset 15px)
-                    ctx.strokeStyle = '#ef4444';
-                    ctx.lineWidth = 3;
-                    ctx.setLineDash([8, 6]);
-                    ctx.strokeRect(15, 15, 420, 510);
-                    ctx.setLineDash([]); // reset dash
+                    const renderCanvasContent = (loadedLogoImage, loadedQrImage) => {
+                        let yCursor = 35;
 
-                    // Helper to trigger image download
-                    const triggerDownload = (loadedQrImage) => {
-                        // 1. QR Code (Centered 200x200)
-                        if (loadedQrImage) {
-                            ctx.drawImage(loadedQrImage, 125, 40, 200, 200);
+                        // 1. Logo at Top (Centered)
+                        if (loadedLogoImage) {
+                            const logoWidth = 200;
+                            const aspect = loadedLogoImage.height / loadedLogoImage.width;
+                            const logoHeight = logoWidth * aspect;
+                            const logoX = (450 - logoWidth) / 2;
+                            ctx.drawImage(loadedLogoImage, logoX, yCursor, logoWidth, logoHeight);
+                            yCursor += logoHeight + 35;
                         } else {
-                            ctx.fillStyle = '#f1f5f9';
-                            ctx.fillRect(125, 40, 200, 200);
-                            ctx.fillStyle = '#64748b';
-                            ctx.font = 'bold 16px "Helvetica Neue", Helvetica, Arial, sans-serif';
-                            ctx.textAlign = 'center';
-                            ctx.fillText('QR CODE', 225, 145);
+                            yCursor += 120;
                         }
 
-                        // 2. Customer Name (Bold, Centered)
-                        ctx.fillStyle = '#0f172a';
+                        // 2. QR Code (Centered 210x210)
+                        if (loadedQrImage) {
+                            const qrSize = 210;
+                            const qrX = (450 - qrSize) / 2;
+                            ctx.drawImage(loadedQrImage, qrX, yCursor, qrSize, qrSize);
+                            yCursor += qrSize + 35;
+                        } else {
+                            yCursor += 230;
+                        }
+
+                        // 3. Customer Name (Bold, Centered)
+                        ctx.fillStyle = '#000000';
                         ctx.font = 'bold 22px "Helvetica Neue", Helvetica, Arial, sans-serif';
                         ctx.textAlign = 'center';
-                        ctx.fillText(customerName.toUpperCase(), 225, 280);
+                        ctx.fillText(customerName.toUpperCase(), 225, yCursor);
+                        yCursor += 40;
 
-                        // 3. DATE Line (DATE: dark, value: brand orange)
+                        // 4. DATE Line (Centered)
                         ctx.font = 'bold 14px "Helvetica Neue", Helvetica, Arial, sans-serif';
-                        const dateLabel = 'DATE: ';
-                        const dateVal = dateText.toUpperCase();
+                        ctx.fillStyle = '#000000';
+                        ctx.fillText(`DATE: ${dateText.toUpperCase()}`, 225, yCursor);
+                        yCursor += 25;
 
-                        ctx.fillStyle = '#0f172a';
-                        const labelW = ctx.measureText(dateLabel).width;
-                        ctx.fillStyle = '#e86034';
-                        const valW = ctx.measureText(dateVal).width;
-                        const dateStartX = (450 - (labelW + valW)) / 2;
+                        // 5. TIME Line (Centered)
+                        ctx.fillText(`TIME: ${timeText.toUpperCase()}`, 225, yCursor);
+                        yCursor += 25;
 
-                        ctx.textAlign = 'left';
-                        ctx.fillStyle = '#0f172a';
-                        ctx.fillText(dateLabel, dateStartX, 330);
-                        ctx.fillStyle = '#e86034';
-                        ctx.fillText(dateVal, dateStartX + labelW, 330);
-
-                        // 4. TIME Line (Centered)
-                        ctx.textAlign = 'center';
-                        ctx.fillStyle = '#0f172a';
-                        ctx.font = 'bold 14px "Helvetica Neue", Helvetica, Arial, sans-serif';
-                        ctx.fillText(`TIME: ${timeText.toUpperCase()}`, 225, 360);
-
-                        // 5. VENUE Lines (Centered)
-                        ctx.fillText('VENUE: LONGCHAMP POP UP STORE', 225, 410);
-                        ctx.fillText('THE GARDENS MALL', 225, 435);
+                        // 6. VENUE Lines (Centered)
+                        ctx.fillText('VENUE: LONGCHAMP POP UP STORE', 225, yCursor);
+                        yCursor += 22;
+                        ctx.fillText('THE GARDENS MALL', 225, yCursor);
 
                         // Convert Canvas to Data URL & Trigger Download
                         const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
@@ -251,18 +255,36 @@
                         link.click();
                         document.body.removeChild(link);
 
-                        dashDownloadBtn.disabled = false;
-                        dashDownloadBtn.textContent = 'DOWNLOAD';
+                        downloadBtn.disabled = false;
+                        downloadBtn.textContent = 'DOWNLOAD';
                     };
 
+                    let logoLoaded = undefined;
+                    let qrLoaded = undefined;
+
+                    const checkComplete = () => {
+                        if (logoLoaded !== undefined && qrLoaded !== undefined) {
+                            renderCanvasContent(logoLoaded, qrLoaded);
+                        }
+                    };
+
+                    // Load Logo Image
+                    const logoImg = new Image();
+                    logoImg.crossOrigin = 'anonymous';
+                    logoImg.onload = () => { logoLoaded = logoImg; checkComplete(); };
+                    logoImg.onerror = () => { logoLoaded = null; checkComplete(); };
+                    logoImg.src = "{{ asset('images/brand/logo.webp') }}";
+
+                    // Load QR Image
                     if (qrImgElem && qrImgElem.src) {
-                        const img = new Image();
-                        img.crossOrigin = 'anonymous';
-                        img.onload = () => triggerDownload(img);
-                        img.onerror = () => triggerDownload(null);
-                        img.src = qrImgElem.src;
+                        const qrImg = new Image();
+                        qrImg.crossOrigin = 'anonymous';
+                        qrImg.onload = () => { qrLoaded = qrImg; checkComplete(); };
+                        qrImg.onerror = () => { qrLoaded = null; checkComplete(); };
+                        qrImg.src = qrImgElem.src;
                     } else {
-                        triggerDownload(null);
+                        qrLoaded = null;
+                        checkComplete();
                     }
                 });
             }

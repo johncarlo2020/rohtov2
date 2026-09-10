@@ -10,6 +10,12 @@ class RegistrationTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'client']);
+    }
+
     public function test_registration_screen_can_be_rendered(): void
     {
         $response = $this->get('/register');
@@ -20,13 +26,20 @@ class RegistrationTest extends TestCase
     public function test_new_users_can_register(): void
     {
         $response = $this->post('/register', [
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => 'password',
-            'password_confirmation' => 'password',
+            'title' => 'Mr',
+            'fname' => 'John',
+            'lname' => 'Doe',
+            'email' => 'registered_user@example.com',
+            'preferred_contact' => 'Email',
+            'privacy_policy' => '1',
+            'communication_consent' => '1',
         ]);
 
         $this->assertAuthenticated();
-        $response->assertRedirect(RouteServiceProvider::HOME);
+
+        $user = \App\Models\User::where('email', 'registered_user@example.com')->first();
+        $this->assertNotNull($user);
+
+        $response->assertRedirect(route('otp', ['user' => $user->id]));
     }
 }

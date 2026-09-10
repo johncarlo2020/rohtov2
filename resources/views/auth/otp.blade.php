@@ -9,20 +9,15 @@
                         @include('components.branding')
                     </div>
                 </div>
-                <div class="mid-top">
-                    <div class="col-lg-8 mobile-image-main">
-                        <img src="{{ asset('images/brand/main_img.webp') }}" alt="Login Image" srcset="">
-                    </div>
-                </div>
                 <div class="mid">
                     <form method="POST" action="{{ route('verify.otp') }}">
                         @csrf
                         <div class="text-center mb-4 px-1">
-                            <h2 class="heading text-dark text-center mb-2">OTP VERIFICATION</h2>
-                            <p class="text-dark text-center mb-2">We've sent a 6-digit verification code to your</p>
+                            <h2 class="fw-bold text-dark text-center mb-2">OTP VERIFICATION</h2>
+                            <p class="text-dark text-center">We've sent a 6-digit verification code to your</p>
                             <p class="text-dark text-center">registered E-mail Please enter it below.</p>
                             @if($errors->has('otp'))
-                                <div class="alert alert-danger text-center mb-3">
+                                <div class="alert alert-danger text-center my-3">
                                     {{ $errors->first('otp') }}
                                 </div>
                             @endif
@@ -35,9 +30,9 @@
                         </div>
 
                         <div class="d-flex flex-column align-items-center justify-content-center">
-                            <button type="submit" class="btn custom-btn-primary mb-2 w-50 m-auto">SUBMIT OTP</button>
-                            <small id="resendTimer" class="text-dark d-none">DIDN'T RECEIVE THE CODE? RESEND OTP IN  <span class="text-dark" id="timerValue">180</span>s</small>
-                            <a id="resendOtpLink" href="#" class="text-dark no-underline"><strong>RESEND OTP</strong></a>
+                            <button type="submit" class="btn custom-btn-primary mb-2 w-50 m-auto" style="margin-top: 15svh !important;">SUBMIT OTP</button>
+                            <small id="resendTimer" class="text-dark text-center d-none">DIDN'T RECEIVE THE CODE? <span class="fw-bold text-dark">RESEND</span> OTP IN  <span class="text-dark" id="timerValue">180</span>s</small>
+                            <a id="resendOtpLink" href="#" class="text-dark no-underline fw-bold"><small>RESEND OTP</small></a>
                         </div>
                     </form>
                     {{-- <a class="text-center no-underline mt-3 fw-bold" href="{{ route('login') }}">Back</a> --}}

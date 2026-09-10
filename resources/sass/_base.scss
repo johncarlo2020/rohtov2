@@ -177,3 +177,26 @@ input[type="radio"] {
 .modal-content {
     border-radius: $modal-border-radius;
 }
+
+// iOS Safari & Mobile Touch Compatibility Rules
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+@media (max-width: 768px) {
+    input[type="text"],
+    input[type="email"],
+    input[type="number"],
+    input[type="tel"],
+    input[type="date"],
+    select,
+    textarea {
+        font-size: 16px !important; // Prevents iOS Safari page auto-zoom on focus
+    }
+}
+
+.custom-scroll,
+.matrix-container,
+.modal-body {
+    -webkit-overflow-scrolling: touch;
+}

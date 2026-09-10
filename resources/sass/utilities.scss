@@ -9,17 +9,16 @@
     // background-position: bottom;
     background-color: $white;
     border: 6px solid $primary;
-    display:flex;
+    display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.mid-top
-{
+.mid-top {
     display: none;
 }
-.mobile-image-main
-{
+
+.mobile-image-main {
     display: none;
 }
 
@@ -29,18 +28,15 @@
         background-size: cover;
     }
 
-    .desktop-image-main
-    {
+    .desktop-image-main {
         display: none !important;
     }
 
-    .mid-top
-    {
+    .mid-top {
         display: block !important;
     }
 
-    .mobile-image-main
-    {
+    .mobile-image-main {
         display: block !important;
     }
 }
@@ -115,7 +111,7 @@
 
 .with-scroll {
     width: 100%;
-    margin:auto;
+    margin: auto;
     overflow-y: auto;
     overflow-x: hidden;
     max-height: 100vh;
@@ -123,9 +119,15 @@
 
 @media (max-width: 768px) {
     .with-scroll {
-        height: 85svh !important;
+        height: 95svh !important;
     }
 }
+
+// @media (max-width: 768px) {
+//     .with-scroll {
+//         height: 100svh !important;
+//     }
+// }
 
 .congrats-container {
     display: flex;

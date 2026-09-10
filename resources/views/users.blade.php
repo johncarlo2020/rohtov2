@@ -130,7 +130,7 @@
                         @foreach ($data['users'] as $user)
                         <tr data-user-id="{{ $user->id }}">
                             <td>{{ $loop->iteration }}</td>
-                            <td class="font-weight-bold">{{ $user->fname }}</td>
+                            <td class="font-weight-bold">{{ trim(($user->title ? $user->title . ' ' : '') . $user->fname . ' ' . $user->lname) ?: $user->fname }}</td>
                             <td>{{ $user->email }}</td>
                             <td><span class="badge bg-light text-dark border">{{ $user->booking_date_text }}</span></td>
                             <td><span class="badge bg-light text-dark border">{{ $user->booking_time_text }}</span></td>
@@ -687,7 +687,8 @@
         let end = $('#endDate').val();
 
         // Registration Timestamp is always at column index 5
-        let rowDate = new Date(data[6]);
+        let rawDateStr = data[6] ? String(data[6]).trim().replace(' ', 'T') : '';
+        let rowDate = new Date(rawDateStr);
 
         // Convert row date to YYYY-MM-DD (DATE ONLY)
         let rowDateOnly = rowDate.getFullYear() + '-' +
@@ -799,7 +800,8 @@
         let end = $('#endDate').val();
 
         // Timestamp column (2nd last column)
-        let rowDate = new Date(data[data.length - 2]);
+        let rawDateStr = data[data.length - 2] ? String(data[data.length - 2]).trim().replace(' ', 'T') : '';
+        let rowDate = new Date(rawDateStr);
 
         if (!start && !end) return true;
 

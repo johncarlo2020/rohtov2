@@ -24,29 +24,29 @@ class EventScheduleSeeder extends Seeder
             3 => [ // Wednesday
                 'is_open' => true,
                 'sessions' => [
-                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 6],
-                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 6],
+                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 1],
+                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 1],
                 ]
             ],
             4 => [ // Thursday
                 'is_open' => true,
                 'sessions' => [
-                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 6],
-                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 6],
+                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 1],
+                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 1],
                 ]
             ],
             5 => [ // Friday
                 'is_open' => true,
                 'sessions' => [
-                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 6],
-                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 6],
+                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 1],
+                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 1],
                 ]
             ],
             6 => [ // Saturday
                 'is_open' => true,
                 'sessions' => [
-                    ['start_time' => '11:00:00', 'end_time' => '12:00:00', 'capacity' => 6],
-                    ['start_time' => '16:00:00', 'end_time' => '17:00:00', 'capacity' => 6],
+                    ['start_time' => '11:00:00', 'end_time' => '12:00:00', 'capacity' => 1],
+                    ['start_time' => '16:00:00', 'end_time' => '17:00:00', 'capacity' => 1],
                 ]
             ],
             7 => ['is_open' => false, 'sessions' => []], // Sunday
@@ -109,16 +109,16 @@ class EventScheduleSeeder extends Seeder
             '2026-10-02' => [
                 'is_available' => true,
                 'slots' => [
-                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 6],
-                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 6],
+                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 1],
+                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 1],
                 ]
             ],
             // Saturday 3 Oct
             '2026-10-03' => [
                 'is_available' => true,
                 'slots' => [
-                    ['start_time' => '11:00:00', 'end_time' => '12:00:00', 'capacity' => 6],
-                    ['start_time' => '16:00:00', 'end_time' => '17:00:00', 'capacity' => 6],
+                    ['start_time' => '11:00:00', 'end_time' => '12:00:00', 'capacity' => 1],
+                    ['start_time' => '16:00:00', 'end_time' => '17:00:00', 'capacity' => 1],
                 ]
             ],
             // Closed Days
@@ -131,32 +131,32 @@ class EventScheduleSeeder extends Seeder
             '2026-10-07' => [
                 'is_available' => true,
                 'slots' => [
-                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 6],
-                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 6],
+                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 1],
+                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 1],
                 ]
             ],
             // Thursday 8 Oct
             '2026-10-08' => [
                 'is_available' => true,
                 'slots' => [
-                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 6],
-                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 6],
+                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 1],
+                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 1],
                 ]
             ],
             // Friday 9 Oct
             '2026-10-09' => [
                 'is_available' => true,
                 'slots' => [
-                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 6],
-                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 6],
+                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 1],
+                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 1],
                 ]
             ],
             // Saturday 10 Oct
             '2026-10-10' => [
                 'is_available' => true,
                 'slots' => [
-                    ['start_time' => '11:00:00', 'end_time' => '12:00:00', 'capacity' => 6],
-                    ['start_time' => '16:00:00', 'end_time' => '17:00:00', 'capacity' => 6],
+                    ['start_time' => '11:00:00', 'end_time' => '12:00:00', 'capacity' => 1],
+                    ['start_time' => '16:00:00', 'end_time' => '17:00:00', 'capacity' => 1],
                 ]
             ],
             // Closed Days
@@ -169,32 +169,32 @@ class EventScheduleSeeder extends Seeder
             '2026-10-14' => [
                 'is_available' => true,
                 'slots' => [
-                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 6],
-                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 6],
+                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 1],
+                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 1],
                 ]
             ],
             // Thursday 15 Oct
             '2026-10-15' => [
                 'is_available' => true,
                 'slots' => [
-                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 6],
-                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 6],
+                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 1],
+                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 1],
                 ]
             ],
             // Friday 16 Oct
             '2026-10-16' => [
                 'is_available' => true,
                 'slots' => [
-                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 6],
-                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 6],
+                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 1],
+                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 1],
                 ]
             ],
             // Saturday 17 Oct
             '2026-10-17' => [
                 'is_available' => true,
                 'slots' => [
-                    ['start_time' => '11:00:00', 'end_time' => '12:00:00', 'capacity' => 6],
-                    ['start_time' => '16:00:00', 'end_time' => '17:00:00', 'capacity' => 6],
+                    ['start_time' => '11:00:00', 'end_time' => '12:00:00', 'capacity' => 1],
+                    ['start_time' => '16:00:00', 'end_time' => '17:00:00', 'capacity' => 1],
                 ]
             ],
         ];

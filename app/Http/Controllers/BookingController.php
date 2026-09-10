@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 use Carbon\Carbon;
 
 class BookingController extends Controller
@@ -156,9 +157,9 @@ class BookingController extends Controller
             }
         }
 
-        // Walk-in Customer Dropdown Data (Formatted same as front page: Sept 30 to Oct 17)
+        // Walk-in Customer Dropdown Data (Formatted same as front page: Oct 2 to Oct 17)
         $walkinDates = BookingDate::where('is_available', true)
-            ->whereBetween('date', ['2026-09-30', '2026-10-17'])
+            ->whereBetween('date', ['2026-10-02', '2026-10-17'])
             ->orderBy('date', 'asc')
             ->get();
 
@@ -180,6 +181,8 @@ class BookingController extends Controller
                 ];
             });
 
+        $bookingDates = BookingDate::orderBy('date', 'asc')->get();
+
         return view('admin.booking.index', compact(
             'bookings',
             'calendarEvents',
@@ -192,7 +195,8 @@ class BookingController extends Controller
             'standardTimeSlots',
             'matrixCells',
             'walkinDates',
-            'walkinSlots'
+            'walkinSlots',
+            'bookingDates'
         ));
     }
 
@@ -347,33 +351,74 @@ class BookingController extends Controller
             'title' => 'required|string|max:20',
             'fname' => 'required|string|max:255',
             'lname' => 'required|string|max:255',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users,email',
             'phone' => 'nullable|string|max:50',
             'booking_date_id' => 'required|exists:booking_dates,id',
             'booking_slot_id' => 'required|exists:booking_slots,id',
-            'pax' => 'required|integer|min:1|max:20',
+            'pax' => 'nullable|integer|min:1|max:20',
             'mark_attended' => 'nullable|boolean',
+        ], [
+            'email.unique' => 'This email address is already registered in the system.',
         ]);
 
-        $fullName = trim($request->fname . ' ' . $request->lname);
         $email = strtolower(trim($request->email));
+        $pax = (int) $request->input('pax', 1);
+
+        // Check if an active booking already exists under this email address
+        $existingBooking = Booking::where('customer_email', $email)
+            ->where('status', '!=', 'cancelled')
+            ->exists();
+
+        if ($existingBooking) {
+            throw ValidationException::withMessages([
+                'email' => ['This email address already has an active booking registered.']
+            ]);
+        }
+
+        // Verify remaining slot capacity
+        $slot = BookingSlot::find($request->booking_slot_id);
+        if (!$slot) {
+            throw ValidationException::withMessages([
+                'booking_slot_id' => ['The selected time slot does not exist.']
+            ]);
+        }
+
+        $remaining = max(0, $slot->capacity - $slot->booked_count);
+        if ($remaining <= 0) {
+            throw ValidationException::withMessages([
+                'booking_slot_id' => ['The selected time slot is fully booked.']
+            ]);
+        }
+
+        if ($pax > $remaining) {
+            throw ValidationException::withMessages([
+                'pax' => ["Requested pax count ({$pax}) exceeds available capacity for this time slot ({$remaining} left)."]
+            ]);
+        }
+
+        $fullName = trim($request->fname . ' ' . $request->lname);
         $phone = $request->phone ?? '-';
 
-        // 1. Create or find User without OTP requirement
-        $user = User::where('email', $email)->first();
-        if (!$user) {
-            $user = User::create([
-                'title' => $request->title,
-                'fname' => $request->fname,
-                'lname' => $request->lname,
-                'email' => $email,
-                'number' => $phone,
-                'otp_verified' => 1,
-                'created_at' => now(),
-                'last_login_at' => now(),
-                'password' => Hash::make('password'),
-            ]);
-            $user->assignRole('client');
+        // 1. Create User without OTP requirement
+        $user = User::create([
+            'title' => $request->title,
+            'fname' => $request->fname,
+            'lname' => $request->lname,
+            'email' => $email,
+            'number' => $phone,
+            'country' => 'Malaysia',
+            'preferred_contact' => 'Email',
+            'communication_consent' => true,
+            'marketing' => true,
+            'otp_verified' => 1,
+            'created_at' => now(),
+            'last_login_at' => now(),
+            'password' => Hash::make('password'),
+        ]);
+        
+        $clientRole = \Spatie\Permission\Models\Role::where('name', 'client')->first();
+        if ($clientRole) {
+            $user->assignRole($clientRole);
         }
 
         // 2. Generate unique reference code for walk-in booking
@@ -390,16 +435,13 @@ class BookingController extends Controller
             'customer_phone' => $phone,
             'venue' => 'LONGCHAMP POP UP STORE THE GARDENS MALL',
             'is_vip' => false,
-            'pax' => (int) $request->pax,
+            'pax' => $pax,
             'status' => $markAttended ? 'Attended' : 'Not Yet Attended',
             'attended_at' => $markAttended ? now() : null,
         ]);
 
         // Increment slot capacity count
-        $slot = BookingSlot::find($request->booking_slot_id);
-        if ($slot) {
-            $slot->increment('booked_count', (int) $request->pax);
-        }
+        $slot->increment('booked_count', $pax);
 
         return redirect()->back()->with('success', 'Walk-in booking created successfully! Reference: ' . $refNo);
     }

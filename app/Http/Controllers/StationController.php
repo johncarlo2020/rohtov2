@@ -244,14 +244,16 @@ if ($activeVoucher) {
             $userBooking = \App\Models\Booking::with(['bookingDate', 'bookingSlot'])
                 ->where(function ($q) use ($user) {
                     $q->where('customer_email', $user->email);
-                    if (!empty($user->phone_number)) {
-                        $q->orWhere('customer_phone', $user->phone_number);
+                    $phone1 = trim($user->phone_number ?? '');
+                    $phone2 = trim($user->number ?? '');
+                    if (!empty($phone1) && !in_array($phone1, ['-', 'N/A', 'null'])) {
+                        $q->orWhere('customer_phone', $phone1);
                     }
-                    if (!empty($user->number)) {
-                        $q->orWhere('customer_phone', $user->number);
+                    if (!empty($phone2) && !in_array($phone2, ['-', 'N/A', 'null'])) {
+                        $q->orWhere('customer_phone', $phone2);
                     }
                 })
-                ->where('status', 'confirmed')
+                ->where('status', '!=', 'cancelled')
                 ->latest()
                 ->first();
         }
@@ -259,7 +261,7 @@ if ($activeVoucher) {
         if (!$userBooking && session()->has('latest_booking_ref')) {
             $refBooking = \App\Models\Booking::with(['bookingDate', 'bookingSlot'])
                 ->where('reference_no', session('latest_booking_ref'))
-                ->where('status', 'confirmed')
+                ->where('status', '!=', 'cancelled')
                 ->latest()
                 ->first();
 
@@ -270,7 +272,7 @@ if ($activeVoucher) {
             }
         }
 
-        // If user does not have any confirmed booking, redirect to reservation-create page
+        // If user does not have any active booking, redirect to reservation-create page
         if (!$userBooking) {
             return redirect()->route('reservation.create');
         }
@@ -523,40 +525,50 @@ if ($activeVoucher) {
     $currentHourStr = now()->format('H:00:00');
 
     // 1. Today Total Pax (time slot basis count)
-    $todayTotalPax = \App\Models\Booking::whereHas('bookingDate', function ($q) use ($todayDateStr) {
-        $q->where('date', $todayDateStr);
-    })->sum('pax');
-    if ($todayTotalPax == 0) {
-        $todayTotalPax = \App\Models\Booking::whereHas('bookingDate', function ($q) use ($todayDateStr) {
+    $todayTotalPax = \App\Models\Booking::where('status', '!=', 'cancelled')
+        ->whereHas('bookingDate', function ($q) use ($todayDateStr) {
             $q->where('date', $todayDateStr);
-        })->count();
+        })->sum('pax');
+    if ($todayTotalPax == 0) {
+        $todayTotalPax = \App\Models\Booking::where('status', '!=', 'cancelled')
+            ->whereHas('bookingDate', function ($q) use ($todayDateStr) {
+                $q->where('date', $todayDateStr);
+            })->count();
     }
 
     // 2. Upcoming Summary Total Count (customers attending after current session on hour basis)
-    $upcomingSummaryCount = \App\Models\Booking::whereHas('bookingDate', function ($q) use ($todayDateStr) {
-        $q->where('date', '>', $todayDateStr);
-    })->orWhere(function ($query) use ($todayDateStr, $currentHourStr) {
-        $query->whereHas('bookingDate', function ($q) use ($todayDateStr) {
-            $q->where('date', $todayDateStr);
-        })->whereHas('bookingSlot', function ($q) use ($currentHourStr) {
-            $q->where('start_time', '>', $currentHourStr);
-        });
-    })->sum('pax');
+    $upcomingSummaryCount = \App\Models\Booking::where('status', '!=', 'cancelled')
+        ->where(function ($query) use ($todayDateStr, $currentHourStr) {
+            $query->whereHas('bookingDate', function ($q) use ($todayDateStr) {
+                $q->where('date', '>', $todayDateStr);
+            })->orWhere(function ($q2) use ($todayDateStr, $currentHourStr) {
+                $q2->whereHas('bookingDate', function ($q) use ($todayDateStr) {
+                    $q->where('date', $todayDateStr);
+                })->whereHas('bookingSlot', function ($q) use ($currentHourStr) {
+                    $q->where('start_time', '>', $currentHourStr);
+                });
+            });
+        })->sum('pax');
 
     if ($upcomingSummaryCount == 0) {
-        $upcomingSummaryCount = \App\Models\Booking::whereHas('bookingDate', function ($q) use ($todayDateStr) {
-            $q->where('date', '>', $todayDateStr);
-        })->orWhere(function ($query) use ($todayDateStr, $currentHourStr) {
-            $query->whereHas('bookingDate', function ($q) use ($todayDateStr) {
-                $q->where('date', $todayDateStr);
-            })->whereHas('bookingSlot', function ($q) use ($currentHourStr) {
-                $q->where('start_time', '>', $currentHourStr);
-            });
-        })->count();
+        $upcomingSummaryCount = \App\Models\Booking::where('status', '!=', 'cancelled')
+            ->where(function ($query) use ($todayDateStr, $currentHourStr) {
+                $query->whereHas('bookingDate', function ($q) use ($todayDateStr) {
+                    $q->where('date', '>', $todayDateStr);
+                })->orWhere(function ($q2) use ($todayDateStr, $currentHourStr) {
+                    $q2->whereHas('bookingDate', function ($q) use ($todayDateStr) {
+                        $q->where('date', $todayDateStr);
+                    })->whereHas('bookingSlot', function ($q) use ($currentHourStr) {
+                        $q->where('start_time', '>', $currentHourStr);
+                    });
+                });
+            })->count();
     }
 
     // 3. Accumulated Missed Count (every hour basis)
-    $allBookingsList = \App\Models\Booking::with(['bookingDate', 'bookingSlot'])->get();
+    $allBookingsList = \App\Models\Booking::where('status', '!=', 'cancelled')
+        ->with(['bookingDate', 'bookingSlot'])
+        ->get();
     $missedCount = $allBookingsList->filter(function ($b) {
         return $b->computed_status === 'Missed';
     })->sum('pax');
@@ -906,7 +918,7 @@ if ($activeVoucher) {
       });
 
       $latestBooking = null;
-      if (!empty($user->email) || !empty($user->number)) {
+      if (!empty($user->email) || (!empty($user->number) && $user->number !== '-')) {
           $latestBooking = \App\Models\Booking::with(['bookingDate', 'bookingSlot'])
               ->where(function ($q) use ($user) {
                   $hasCond = false;
@@ -914,7 +926,7 @@ if ($activeVoucher) {
                       $q->where('customer_email', $user->email);
                       $hasCond = true;
                   }
-                  if (!empty($user->number)) {
+                  if (!empty($user->number) && $user->number !== '-') {
                       if ($hasCond) {
                           $q->orWhere('customer_phone', $user->number);
                       } else {

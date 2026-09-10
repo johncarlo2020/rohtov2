@@ -21,6 +21,6 @@ class ClientMiddleware
             return $next($request);
         }
 
-        return redirect('/');
+        return redirect()->route('login');
     }
 }

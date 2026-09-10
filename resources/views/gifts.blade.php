@@ -299,7 +299,8 @@
     let end = $('#endDate').val();
 
     // Timestamp column (second last column)
-    let rowDate = new Date(data[data.length - 2]);
+    let rawDateStr = data[data.length - 2] ? String(data[data.length - 2]).trim().replace(' ', 'T') : '';
+    let rowDate = new Date(rawDateStr);
 
     // Convert row date to YYYY-MM-DD (DATE ONLY)
     let rowDateOnly = rowDate.getFullYear() + '-' +

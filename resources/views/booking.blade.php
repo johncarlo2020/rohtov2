@@ -45,7 +45,7 @@
         }
 
         .ticket-box {
-            border: 2px dashed #ef4444;
+            border: 3px solid #e86034;
             padding: 1.5rem;
             background: #ffffff;
         }
@@ -92,11 +92,11 @@
         }
     </style>
 
-    <div class="register-main row">
-        <div class="col-lg-8 desktop-image-main">
+    <div class="register-main with-scroll row">
+        <div class="col-lg-8 desktop-image-main d-lg-flex align-items-center">
             <img src="{{ asset('images/brand/main_img.webp') }}" alt="Login Image" srcset="">
         </div>
-        <div class="flex-parent col-lg-4 d-flex flex-column justify-content-between">
+        <div class="flex-parent col-lg-4 d-flex flex-column justify-content-between gap-3">
             <div class="top">
                 <div class="d-flex justify-content-center col-12">
                     @include('components.branding')
@@ -108,7 +108,7 @@
                 </div>
             </div> -->
             <div class="mid">
-                <div class="px-2 w-100 m-auto">
+                <div class="w-100 m-auto">
                     <!-- Main Card -->
                     <main>
                         
@@ -118,7 +118,7 @@
                             <div class="text-center my-4">
                                 @if(isset($formattedBooking) && $formattedBooking && !empty($formattedBooking['can_modify']))
                                     <!-- MODIFY RESERVATION HEADER (MATCHES USER SCREENSHOT) -->
-                                    <h2 class="h4 fw-bold text-dark mb-3 text-uppercase">HEY {{ $formattedBooking['first_name'] }},</h2>
+                                    <h2 class="h4 fw-bold text-dark mb-5 text-uppercase">HEY {{ $formattedBooking['first_name'] }},</h2>
                                     <p class="small text-dark fw-bold text-uppercase mb-2 leading-snug">
                                         WE CAN ONLY CHANGE YOUR BOOKING <span class="fw-black text-dark">ONCE</span>.<br>
                                         YOUR NEW SELECTION IS FINAL AND DEPENDS ENTIRELY ON SLOT AVAILABILITY FOR THAT SPECIFIC DAY.
@@ -128,14 +128,14 @@
                                     </div>
                                 @else
                                     <!-- NEW RESERVATION HEADER -->
-                                    <h2 class="h4 fw-bold text-dark mb-4 text-uppercase">Hey {{ auth()->check() && isset(auth()->user()->fname) ? auth()->user()->fname : 'Guest' }}!</h2>
+                                    <h2 class="h4 fw-bold text-dark mb-4 text-uppercase">Hey {{ auth()->check() && isset(auth()->user()->fname) ? auth()->user()->fname : 'Guest' }},</h2>
                                     <p class="small text-secondary text-uppercase mb-0 leading-snug text-dark">
                                         PLEASE CHOOSE YOUR PREFERRED DATE AND TIME SLOT,<br>
                                         KEEPING IN MIND THAT <br>
                                         <span class="fw-bold text-dark">YOU CAN ONLY RESCHEDULE ONCE,<br>
                                         AT LEAST ONE WEEK BEFORE YOUR SLOT.</span>
                                     </p>
-                                    <p class="small fw-bold text-danger text-uppercase mt-2 mb-0">
+                                    <p class="small text-danger text-uppercase mt-3 mb-0">
                                         SUBJECT TO AVAILABILITY*
                                     </p>
                                 @endif
@@ -147,8 +147,16 @@
                                 <div id="alert-message" class="flex-grow-1"></div>
                             </div>
 
+                            <!-- Warning container when no dates are available for modify -->
+                            <div id="no-available-modify-dates-warning" class="d-none alert alert-warning p-3 text-center small fw-bold text-uppercase border-warning mb-4">
+                                <i data-lucide="alert-circle" class="me-1" style="width: 18px; height: 18px;"></i>
+                                <span id="no-dates-warning-text">
+                                    THERE ARE NO AVAILABLE DATES AT LEAST 1 WEEK BEFORE YOUR CURRENT BOOKED DATE. RESCHEDULING IS NOT AVAILABLE FOR THIS BOOKING.
+                                </span>
+                            </div>
+
                             <!-- SECTION 1: DATE SELECTION -->
-                            <div class="mb-4">
+                            <div id="date-selection-section" class="mb-4 mt-5">
                                 <label class="form-label small fw-bold text-uppercase text-dark mb-1">
                                     DATE AVAILABLE:
                                 </label>
@@ -164,7 +172,7 @@
                                     <div id="date-dropdown-box" class="d-none dropdown-overlay p-3">
                                         <div class="small fw-bold text-dark text-uppercase pb-2 mb-2 border-bottom d-flex justify-content-between align-items-center">
                                             <span>DATE SELECTION</span>
-                                            <span>30 SEP – 17 OCT 2026</span>
+                                            <span>2 OCT – 17 OCT 2026</span>
                                         </div>
 
                                         <!-- Date Items List -->
@@ -202,7 +210,7 @@
                                 </div>
 
                                 <!-- 1 Hour Session Note -->
-                                <div id="session-note" class="mt-2 small fw-bold text-danger text-uppercase">
+                                <div id="session-note" class="mt-2 small text-danger text-uppercase">
                                     * 1 HOUR SESSION
                                 </div>
                             </div>
@@ -221,51 +229,54 @@
                                 </a>
                             </div>
 
-                        </form>
-
-                        <!-- BOOKING CONFIRMED SUCCESS SCREEN -->
+                        </form>                        <!-- BOOKING CONFIRMED SUCCESS SCREEN -->
                         <div id="confirmation-success-screen" class="d-none text-center py-2 step-fade">
 
                             <!-- Title -->
-                            <h2 class="h4 fw-bold brand-orange-text text-uppercase mb-2">
+                            <h2 class="h4 fw-semi-bold brand-orange-text text-uppercase mb-3" style="letter-spacing: 0.05em;">
                                 BOOKING CONFIRMED!
                             </h2>
 
-                            <!-- Subtitle -->
-                            <p class="small fw-bold text-dark text-uppercase mb-4">
-                                HI <span id="confirmed-greeting-name">CUSTOMER</span>,
-                                YOUR IS CONFIRMED
+                            <!-- Subtitle 1 -->
+                            <p class="small fw-semi-bold text-dark text-uppercase mb-3" style="letter-spacing: 0.03em; font-size: 0.85rem;">
+                                HI <span id="confirmed-greeting-name" class="text-dark">JOSHUA</span>, YOUR RESERVATION IS CONFIRMED
                             </p>
-                            <p class="small text-dark mb-4">
-                              PLEASE CHECK YOUR EMAIL FOR YOUR<br>CONFIRMATION DETAILS AND PRESENT THIS <br> QR CODE UPON ARRIVAL  
+
+                            <!-- Subtitle 2 -->
+                            <p class="small text-dark text-uppercase mb-4 mx-auto" style="letter-spacing: 0.02em; font-size: 0.8rem; line-height: 1.45; max-width: 320px;">
+                                PLEASE CHECK YOUR EMAIL FOR YOUR CONFIRMATION DETAILS AND PRESENT THIS QR CODE UPON ARRIVAL.
                             </p>
-                            <!-- Red Dashed Ticket Container -->
-                            <div id="ticket-container" class="ticket-box d-inline-block w-100 mb-4 text-center" style="max-width: 320px;">
+
+                            <!-- Ticket Container (Boxed QR Code + Details) -->
+                            <div id="ticket-container" class="ticket-box d-inline-block w-100 mb-4 text-center" style="max-width: 290px; border: 2px dashed red; padding: 1.25rem 1rem; background: #ffffff;">
                                 
                                 <!-- Dynamic QR Code Image -->
-                                <img id="qr-code-img" src="" alt="Booking QR Code" class="img-fluid mb-3" style="width: 170px; height: 170px; margin:auto; object-fit: contain;" crossorigin="anonymous">
+                                <img id="qr-code-img" src="" alt="Booking QR Code" class="img-fluid mb-2" style="width: 170px; height: 170px; margin: auto; object-fit: contain; display: block;" crossorigin="anonymous">
 
                                 <!-- Customer Name -->
-                                <div id="confirmed-ticket-name" class="fw-bold text-dark text-uppercase mb-2">
+                                <div id="confirmed-ticket-name" class="fw-semi-bold text-dark text-uppercase my-2" style="font-size: 0.95rem; letter-spacing: 0.05em;">
                                     JOSHUA
                                 </div>
 
                                 <!-- Details List -->
-                                <div class="small fw-bold text-dark text-uppercase">
-                                    <div><span class="text-muted">DATE:</span> <span id="confirmed-ticket-date">7TH OCTOBER</span></div>
-                                    <div class="my-1"><span class="text-muted">TIME:</span> <span id="confirmed-ticket-time">6:00PM</span></div>
-                                    <div class="mt-2 text-muted">
-                                        <span class="text-muted">VENUE:</span> LONGCHAMP POP UP STORE THE GARDENS MALL
+                                <div class="small fw-bold text-dark text-uppercase" style="font-size: 0.725rem; line-height: 1.5; letter-spacing: 0.03em;">
+                                    <div class="mb-1"><span class="fw-bold text-dark">DATE:</span> <span id="confirmed-ticket-date" class="text-dark">SATURDAY, 3RD OCTOBER</span></div>
+                                    <div class="mb-1"><span class="fw-bold text-dark">TIME:</span> <span id="confirmed-ticket-time" class="text-dark">4:00PM - 5:00PM</span></div>
+                                    <div>
+                                        <span class="fw-bold text-dark">VENUE:</span> LONGCHAMP POP UP STORE<br>THE GARDENS MALL
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Action Buttons (CHANGE YOUR SLOT / DOWNLOAD) -->
-                            <div class="d-flex flex-column gap-2 mx-auto" style="max-width: 320px;">
-                                <button id="modify-btn" type="button" class="custom-btn custom-btn-primary pulse-slow w-50 m-auto">
+                            <!-- Action Buttons (MODIFY / DOWNLOAD) -->
+                            <div class="d-flex flex-column gap-2 mx-auto mb-4">
+                                <button id="modify-btn" type="button" class="custom-btn custom-btn-primary  w-50 m-auto" style="border-radius: 0; padding: 0.7rem 1rem; font-weight: bold; letter-spacing: 0.05em;">
                                     MODIFY
                                 </button>
-                                <button id="download-btn" type="button" class="custom-btn custom-btn-primary pulse-slow w-50 m-auto">
+                                <div id="no-modify-notice" class="d-none small fw-bold text-muted text-uppercase my-1 text-center" style="font-size: 0.7rem;">
+                                    * RESCHEDULING NOT AVAILABLE (NO DATES AVAILABLE AT LEAST 1 WEEK PRIOR)
+                                </div>
+                                <button id="download-btn" type="button" class="custom-btn custom-btn-primary  w-50 m-auto" style="border-radius: 0; padding: 0.7rem 1rem; font-weight: bold; letter-spacing: 0.05em;">
                                     DOWNLOAD
                                 </button>
                             </div>
@@ -287,30 +298,30 @@
         <div class="modal-dialog-custom text-center">
             
             <!-- Modal Title -->
-            <h3 class="h4 fw-bold brand-orange-text text-uppercase mb-2">
+            <h3 class="h4 fw-semi-bold brand-orange-text text-uppercase mb-4">
                 ALMOST THERE!
             </h3>
 
             <!-- Subtitle -->
-            <p class="small fw-bold text-dark text-uppercase mb-4">
+            <p class="small fw-semi-bold text-dark text-uppercase mb-4">
                 PLEASE REVIEW YOUR BOOKING DETAILS BEFORE CONFIRMING.
             </p>
 
             <!-- Review Items -->
             <div class="mb-4 text-center">
                 <div class="mb-3">
-                    <div class="small text-muted fw-bold text-uppercase">DATE:</div>
-                    <div id="modal-review-date" class="fw-bold text-dark text-uppercase">7TH OCTOBER</div>
+                    <div class="small text-muted text-uppercase">DATE:</div>
+                    <div id="modal-review-date" class="fw-semi-bold text-dark text-uppercase">SATURDAY, 3RD OCTOBER</div>
                 </div>
 
                 <div class="mb-3">
-                    <div class="small text-muted fw-bold text-uppercase">TIME:</div>
-                    <div id="modal-review-time" class="fw-bold text-dark text-uppercase">6:00PM</div>
+                    <div class="small text-muted text-uppercase">TIME:</div>
+                    <div id="modal-review-time" class="fw-semi-bold text-dark text-uppercase">4:00PM - 5:00PM</div>
                 </div>
 
                 <div>
-                    <div class="small text-muted fw-bold text-uppercase">VENUE:</div>
-                    <div class="small fw-bold text-dark text-uppercase">
+                    <div class="small text-muted text-uppercase">VENUE:</div>
+                    <div class="small fw-semi-bold text-dark text-uppercase">
                         LONGCHAMP POP UP STORE THE GARDENS MALL
                     </div>
                 </div>
@@ -339,7 +350,7 @@
             </h3>
 
             <!-- Message -->
-            <p id="slot-error-modal-message" class="small fw-bold text-dark text-uppercase mb-4">
+            <p id="slot-error-modal-message" class="small fw-semi-bold text-dark text-uppercase mb-4">
                 LOOKS LIKE THIS SLOT HAS JUST BEEN TAKEN. PLEASE CHOOSE ANOTHER PREFERRED DATE.
             </p>
 
@@ -355,7 +366,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
 
-            const START_DATE = '2026-09-30';
+            const START_DATE = '2026-10-02';
             const END_DATE = '2026-10-17';
 
             let state = {
@@ -411,6 +422,29 @@
                 return `${day}${getOrdinalSuffix(day)} ${monthName}`;
             }
 
+            function formatDateFullWithDay(dateStr) {
+                if (!dateStr) return '';
+                const parts = dateStr.split('-');
+                const year = parseInt(parts[0]);
+                const month = parseInt(parts[1]) - 1;
+                const day = parseInt(parts[2]);
+                const d = new Date(year, month, day);
+                const dayOfWeek = d.toLocaleString('default', { weekday: 'long' }).toUpperCase();
+                const monthName = d.toLocaleString('default', { month: 'long' }).toUpperCase();
+                return `${dayOfWeek}, ${day}${getOrdinalSuffix(day)} ${monthName}`;
+            }
+
+            function formatTimeRange(timeStr) {
+                if (!timeStr) return '';
+                if (timeStr.includes('-')) {
+                    const parts = timeStr.split('-');
+                    const start = parts[0].trim().replace(/\s+/g, '').toUpperCase();
+                    const end = parts[1].trim().replace(/\s+/g, '').toUpperCase();
+                    return `${start} - ${end}`;
+                }
+                return timeStr.trim().replace(/\s+/g, '').toUpperCase();
+            }
+
             // Fetch Date Availabilities (30 Sep - 18 Oct 2026)
             async function fetchDateAvailabilities() {
                 try {
@@ -430,6 +464,8 @@
                 const container = document.getElementById('date-items-list');
                 container.innerHTML = '';
 
+                let availableModifyCount = 0;
+
                 // Group by Month
                 const grouped = {};
                 items.forEach(item => {
@@ -441,7 +477,39 @@
 
                     if (!grouped[monthKey]) grouped[monthKey] = [];
                     grouped[monthKey].push(item);
+
+                    let isAllowed = true;
+                    if (state.isModifying && state.currentDateRaw) {
+                        const itemDateObj = new Date(item.date + 'T00:00:00');
+                        const currentBookedDateObj = new Date(state.currentDateRaw + 'T00:00:00');
+                        const diffTime = currentBookedDateObj.getTime() - itemDateObj.getTime();
+                        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+                        if (diffDays < 7) {
+                            isAllowed = false;
+                        }
+                    }
+
+                    if (item.status === 'available' && isAllowed) {
+                        availableModifyCount++;
+                    }
                 });
+
+                const warningBox = document.getElementById('no-available-modify-dates-warning');
+                const dateSelectionSection = document.getElementById('date-selection-section');
+
+                if (state.isModifying && availableModifyCount === 0) {
+                    if (warningBox) warningBox.classList.remove('d-none');
+                    if (dateSelectionSection) dateSelectionSection.classList.add('d-none');
+                    document.getElementById('time-slots-section')?.classList.add('d-none');
+                    document.getElementById('next-btn')?.classList.add('d-none');
+                } else {
+                    if (warningBox) warningBox.classList.add('d-none');
+                    if (dateSelectionSection) dateSelectionSection.classList.remove('d-none');
+                    if (state.selectedSlotId) {
+                        document.getElementById('next-btn')?.classList.remove('d-none');
+                    }
+                }
 
                 Object.keys(grouped).forEach(monthName => {
                     const monthGroup = document.createElement('div');
@@ -458,15 +526,28 @@
                     grouped[monthName].forEach(item => {
                         const dateRow = document.createElement('div');
                         const isSelected = state.selectedDate === item.date;
-                        const isAvailable = item.status === 'available';
+                        
+                        let isDateAllowedForModify = true;
+                        if (state.isModifying && state.currentDateRaw) {
+                            const itemDateObj = new Date(item.date + 'T00:00:00');
+                            const currentBookedDateObj = new Date(state.currentDateRaw + 'T00:00:00');
+                            const diffTime = currentBookedDateObj.getTime() - itemDateObj.getTime();
+                            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+                            if (diffDays < 7) {
+                                isDateAllowedForModify = false;
+                            }
+                        }
+
+                        const isAvailable = (item.status === 'available') && isDateAllowedForModify;
                         const formattedLabel = formatDateOrdinal(item.date);
 
-                        let rowClasses = 'date-row d-flex align-items-center justify-between px-3 py-2 rounded-0 transition small fw-bold text-uppercase cursor-pointer ';
+                        let rowClasses = 'date-row d-flex align-items-center justify-content-between px-3 py-2 rounded-0 transition small fw-bold text-uppercase ';
 
                         if (isSelected) {
-                            rowClasses += 'selected-pill text-dark';
+                            rowClasses += 'selected-pill text-dark cursor-pointer';
                         } else if (isAvailable) {
-                            rowClasses += 'text-dark';
+                            rowClasses += 'text-dark cursor-pointer';
                         } else {
                             rowClasses += 'opacity-50 cursor-not-allowed text-muted';
                         }
@@ -476,8 +557,10 @@
                         let statusSpan = '';
                         if (isSelected) {
                             statusSpan = `<svg style="width: 18px; height: 18px;" class="brand-orange-text" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>`;
-                        } else if (item.status === 'available') {
+                        } else if (isAvailable) {
                             statusSpan = `<span class="small fw-bold text-success text-uppercase">AVAILABLE</span>`;
+                        } else if (!isDateAllowedForModify) {
+                            statusSpan = `<span class="small fw-bold text-muted text-uppercase">UNAVAILABLE (<7 DAYS)</span>`;
                         } else if (item.status === 'full') {
                             statusSpan = `<span class="small fw-bold text-muted text-uppercase">FULLY BOOKED</span>`;
                         } else {
@@ -539,17 +622,16 @@
 
                 document.getElementById('time-slots-section').classList.remove('d-none');
 
-                const d = new Date(dateStr + 'T00:00:00');
-                const dayOfWeek = d.getDay(); // 6 = Saturday
-                const headerText = dayOfWeek === 6 ? '4 SESSIONS PER DAY' : '2 SESSIONS PER DAY';
-                document.getElementById('sessions-per-day-header').textContent = headerText;
-
                 try {
                     const res = await fetch(`/api/booking/dates/${dateStr}/slots`);
                     const data = await res.json();
                     state.slots = data;
                     state.selectedSlotId = null;
                     state.selectedSlotLabel = null;
+
+                    const count = Array.isArray(data) ? data.length : 0;
+                    const headerText = `${count} SESSION${count === 1 ? '' : 'S'} PER DAY`;
+                    document.getElementById('sessions-per-day-header').textContent = headerText;
 
                     document.getElementById('time-box-text').textContent = 'SELECT YOUR TIME SLOT';
                     document.getElementById('time-box-text').className = 'text-muted fw-bold';
@@ -574,26 +656,38 @@
 
                 slots.forEach(slot => {
                     const slotRow = document.createElement('div');
+                    const isCurrentSlot = state.isModifying && state.currentSlotId && (parseInt(slot.id) === parseInt(state.currentSlotId));
                     const isSelected = state.selectedSlotId === slot.id;
-                    const isAvailable = slot.available;
+                    const isAvailable = slot.available && !isCurrentSlot;
 
-                    let rowClasses = 'slot-row d-flex align-items-center justify-content-between px-3 py-2 rounded-0 transition small fw-bold text-uppercase cursor-pointer ';
+                    let rowClasses = 'slot-row d-flex align-items-center justify-content-between px-3 py-2 rounded-0 transition small fw-bold text-uppercase ';
 
-                    if (isSelected) {
-                        rowClasses += 'selected-pill text-dark';
+                    if (isCurrentSlot) {
+                        rowClasses += 'opacity-50 cursor-not-allowed text-muted bg-light';
+                    } else if (isSelected) {
+                        rowClasses += 'selected-pill text-dark cursor-pointer';
                     } else if (isAvailable) {
-                        rowClasses += 'text-dark';
+                        rowClasses += 'text-dark cursor-pointer';
                     } else {
                         rowClasses += 'opacity-50 cursor-not-allowed text-muted';
                     }
 
                     slotRow.className = rowClasses;
 
+                    const bookedCount = slot.booked_count || 0;
+                    const capacity = slot.capacity || 20;
+                    const remaining = Math.max(0, capacity - bookedCount);
+                    const isHalfBooked = bookedCount > (capacity / 2);
+
                     let rightSpan = '';
-                    if (isSelected) {
+                    if (isCurrentSlot) {
+                        rightSpan = `<span class="small fw-bold text-muted text-uppercase">YOUR CURRENT SLOT</span>`;
+                    } else if (isSelected) {
                         rightSpan = `<svg style="width: 18px; height: 18px;" class="brand-orange-text" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>`;
-                    } else if (!isAvailable) {
+                    } else if (!isAvailable || remaining <= 0) {
                         rightSpan = `<span class="small fw-bold text-danger text-uppercase">SLOT FULL</span>`;
+                    } else if (isHalfBooked) {
+                        rightSpan = `<span class="small fw-bold text-warning text-uppercase">LIMITED SLOTS</span>`;
                     } else {
                         rightSpan = `<span class="small fw-bold text-success text-uppercase">AVAILABLE</span>`;
                     }
@@ -603,7 +697,7 @@
                         ${rightSpan}
                     `;
 
-                    if (isAvailable) {
+                    if (isAvailable && !isCurrentSlot) {
                         slotRow.addEventListener('click', () => {
                             state.selectedSlotId = slot.id;
                             state.selectedSlotLabel = slot.label;
@@ -704,10 +798,11 @@
                     return;
                 }
 
-                let timeFormatted = state.selectedSlotLabel.split('-')[0].trim().replace(/\s+/g, '');
+                let dateFormattedFull = formatDateFullWithDay(state.selectedDate);
+                let timeFormattedRange = formatTimeRange(state.selectedSlotLabel);
 
-                document.getElementById('modal-review-date').textContent = state.selectedDateFormatted;
-                document.getElementById('modal-review-time').textContent = timeFormatted;
+                document.getElementById('modal-review-date').textContent = dateFormattedFull;
+                document.getElementById('modal-review-time').textContent = timeFormattedRange;
 
                 modalOverlay.classList.remove('d-none');
             });
@@ -723,20 +818,34 @@
                 const customerName = (data.customer && data.customer.name) ? data.customer.name : (data.customer_name || 'CUSTOMER');
                 const firstFirstName = customerName.split(' ')[0].toUpperCase();
 
+                let fullDateStr = data.date_full || (data.date_raw ? formatDateFullWithDay(data.date_raw) : data.date);
+                let fullTimeRange = formatTimeRange(data.time || data.time_formatted || data.time_label);
+
                 document.getElementById('confirmed-greeting-name').textContent = firstFirstName;
                 document.getElementById('confirmed-ticket-name').textContent = customerName.toUpperCase();
-                document.getElementById('confirmed-ticket-date').textContent = data.date || data.date_formatted;
-                document.getElementById('confirmed-ticket-time').textContent = data.time || data.time_formatted;
+                document.getElementById('confirmed-ticket-date').textContent = fullDateStr;
+                document.getElementById('confirmed-ticket-time').textContent = fullTimeRange;
 
                 // Dynamic QR Code Image
                 const qrData = encodeURIComponent(data.reference_no);
                 document.getElementById('qr-code-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${qrData}`;
 
                 const modifyBtn = document.getElementById('modify-btn');
+                const noModifyNotice = document.getElementById('no-modify-notice');
+
                 if (rescheduleCount >= 1 || data.can_modify === false) {
-                    modifyBtn.classList.add('d-none'); // Hide "CHANGE YOUR SLOT" because customer cannot modify!
+                    modifyBtn.classList.add('d-none'); // Hide "MODIFY" because customer cannot modify!
+                    if (noModifyNotice) {
+                        if (rescheduleCount >= 1) {
+                            noModifyNotice.textContent = '* YOU HAVE ALREADY RESCHEDULED YOUR BOOKING ONCE.';
+                        } else {
+                            noModifyNotice.textContent = '* RESCHEDULING NOT AVAILABLE (NO DATES AVAILABLE AT LEAST 1 WEEK PRIOR TO YOUR SLOT)';
+                        }
+                        noModifyNotice.classList.remove('d-none');
+                    }
                 } else {
                     modifyBtn.classList.remove('d-none');
+                    if (noModifyNotice) noModifyNotice.classList.add('d-none');
                 }
 
                 document.getElementById('confirmation-success-screen').classList.remove('d-none');
@@ -782,13 +891,16 @@
 
                         modalOverlay.classList.add('d-none');
                         
-                        let formattedTimeSlot = state.selectedSlotLabel ? state.selectedSlotLabel.split('-')[0].trim().replace(/\s+/g, '') : data.data.time;
+                        let fullDate = formatDateFullWithDay(state.selectedDate) || data.data.date;
+                        let fullTime = formatTimeRange(state.selectedSlotLabel || data.data.time);
 
                         showConfirmationScreen({
                             reference_no: data.data.reference_no,
-                            date: state.selectedDateFormatted || data.data.date,
-                            time: formattedTimeSlot,
-                            customer: data.data.customer
+                            date: fullDate,
+                            date_raw: state.selectedDate,
+                            time: fullTime,
+                            customer: data.data.customer,
+                            can_modify: data.data.can_modify
                         }, newRescheduleCount);
                     } else {
                         const errorMsg = data.errors?.slot?.[0] || data.errors?.date?.[0] || data.errors?.booking?.[0] || data.message || 'LOOKS LIKE THIS SLOT HAS JUST BEEN TAKEN. PLEASE CHOOSE ANOTHER PREFERRED DATE.';
@@ -803,37 +915,12 @@
                 }
             });
 
-            // CHANGE YOUR SLOT button re-opens date/slot selection view for modification
+            // CHANGE YOUR SLOT / MODIFY button refreshes the page with ?modify=1 to reload current booking info from DB
             document.getElementById('modify-btn').addEventListener('click', () => {
-                const storedRef = localStorage.getItem('latest_booking_ref');
-                if (state.bookingResult && state.bookingResult.reference_no) {
-                    state.isModifying = true;
-                    state.modifyingRefNo = state.bookingResult.reference_no;
-                } else if (storedRef) {
-                    state.isModifying = true;
-                    state.modifyingRefNo = storedRef;
-                } else if (existingBooking) {
-                    state.isModifying = true;
-                    state.modifyingRefNo = existingBooking.reference_no;
-                }
-                
-                document.getElementById('confirmation-success-screen').classList.add('d-none');
-                document.getElementById('reservation-form').classList.remove('d-none');
-                
-                // Reset selected values for modification
-                state.selectedDate = null;
-                state.selectedSlotId = null;
-                document.getElementById('date-box-text').textContent = 'DATE SELECTION';
-                document.getElementById('date-box-text').className = 'text-muted fw-bold';
-                document.getElementById('time-slots-section').classList.add('d-none');
-                nextBtn.disabled = true;
-                nextBtn.className = 'custom-btn custom-btn-primary mb-2 pulse-slow w-50';
-
-                toggleDateDropdown(true);
-                fetchDateAvailabilities();
+                window.location.href = "{{ route('booking.flow') }}?modify=1";
             });
 
-            // DOWNLOAD button saves ONLY the red dashed ticket box as JPEG
+            // DOWNLOAD button saves ticket layout as JPEG
             document.getElementById('download-btn').addEventListener('click', () => {
                 const downloadBtn = document.getElementById('download-btn');
                 const refNo = state.bookingResult && state.bookingResult.reference_no 
@@ -848,69 +935,62 @@
                 downloadBtn.disabled = true;
                 downloadBtn.textContent = 'GENERATING JPEG...';
 
-                // Create offscreen canvas matching red dashed ticket box aspect (450x540)
+                // Create offscreen canvas (450x620)
                 const canvas = document.createElement('canvas');
                 canvas.width = 450;
-                canvas.height = 540;
+                canvas.height = 620;
                 const ctx = canvas.getContext('2d');
 
                 // Fill white background
                 ctx.fillStyle = '#ffffff';
-                ctx.fillRect(0, 0, 450, 540);
+                ctx.fillRect(0, 0, 450, 620);
 
-                // Outer Red Dashed Border Box (inset 15px)
-                ctx.strokeStyle = '#ef4444';
-                ctx.lineWidth = 3;
-                ctx.setLineDash([8, 6]);
-                ctx.strokeRect(15, 15, 420, 510);
-                ctx.setLineDash([]); // reset dash
+                const renderCanvasContent = (loadedLogoImage, loadedQrImage) => {
+                    let yCursor = 35;
 
-                // Helper to trigger image download
-                const triggerDownload = (loadedQrImage) => {
-                    // 1. QR Code (Centered 200x200)
-                    if (loadedQrImage) {
-                        ctx.drawImage(loadedQrImage, 125, 40, 200, 200);
+                    // 1. Logo at Top (Centered)
+                    if (loadedLogoImage) {
+                        const logoWidth = 200;
+                        const aspect = loadedLogoImage.height / loadedLogoImage.width;
+                        const logoHeight = logoWidth * aspect;
+                        const logoX = (450 - logoWidth) / 2;
+                        ctx.drawImage(loadedLogoImage, logoX, yCursor, logoWidth, logoHeight);
+                        yCursor += logoHeight + 35;
                     } else {
-                        ctx.fillStyle = '#f1f5f9';
-                        ctx.fillRect(125, 40, 200, 200);
-                        ctx.fillStyle = '#64748b';
-                        ctx.font = 'bold 16px "Helvetica Neue", Helvetica, Arial, sans-serif';
-                        ctx.textAlign = 'center';
-                        ctx.fillText('QR CODE', 225, 145);
+                        yCursor += 120;
                     }
 
-                    // 2. Customer Name (Bold, Centered)
-                    ctx.fillStyle = '#0f172a';
+                    // 2. QR Code (Centered 210x210)
+                    if (loadedQrImage) {
+                        const qrSize = 210;
+                        const qrX = (450 - qrSize) / 2;
+                        ctx.drawImage(loadedQrImage, qrX, yCursor, qrSize, qrSize);
+                        yCursor += qrSize + 35;
+                    } else {
+                        yCursor += 230;
+                    }
+
+                    // 3. Customer Name (Bold, Centered)
+                    ctx.fillStyle = '#000000';
                     ctx.font = 'bold 22px "Helvetica Neue", Helvetica, Arial, sans-serif';
                     ctx.textAlign = 'center';
-                    ctx.fillText(customerName.toUpperCase(), 225, 280);
+                    ctx.fillText(customerName.toUpperCase(), 225, yCursor);
+                    yCursor += 40;
 
-                    // 3. DATE Line (DATE: dark, value: brand orange)
+                    // 4. DATE Line (Centered)
                     ctx.font = 'bold 14px "Helvetica Neue", Helvetica, Arial, sans-serif';
-                    const dateLabel = 'DATE: ';
-                    const dateVal = dateText.toUpperCase();
+                    ctx.fillStyle = '#000000';
+                    ctx.fillText(`DATE: ${dateText.toUpperCase()}`, 225, yCursor);
+                    yCursor += 25;
 
-                    ctx.fillStyle = '#0f172a';
-                    const labelW = ctx.measureText(dateLabel).width;
-                    ctx.fillStyle = '#e86034';
-                    const valW = ctx.measureText(dateVal).width;
-                    const dateStartX = (450 - (labelW + valW)) / 2;
+                    // 5. TIME Line (Centered)
+                    ctx.fillText(`TIME: ${timeText.toUpperCase()}`, 225, yCursor);
+                    yCursor += 25;
 
-                    ctx.textAlign = 'left';
-                    ctx.fillStyle = '#0f172a';
-                    ctx.fillText(dateLabel, dateStartX, 330);
-                    ctx.fillStyle = '#e86034';
-                    ctx.fillText(dateVal, dateStartX + labelW, 330);
-
-                    // 4. TIME Line (Centered)
-                    ctx.textAlign = 'center';
-                    ctx.fillStyle = '#0f172a';
-                    ctx.font = 'bold 14px "Helvetica Neue", Helvetica, Arial, sans-serif';
-                    ctx.fillText(`TIME: ${timeText.toUpperCase()}`, 225, 360);
-
-                    // 5. VENUE Lines (Centered)
-                    ctx.fillText('VENUE: LONGCHAMP POP UP STORE', 225, 410);
-                    ctx.fillText('THE GARDENS MALL', 225, 435);
+                    // 6. VENUE Lines (Centered)
+                    ctx.fillText('VENUE: LONGCHAMP POP UP STORE', 225, yCursor);
+                    yCursor += 22;
+                    ctx.fillText('THE GARDENS MALL', 225, yCursor);
 
                     // Convert Canvas to Data URL & Trigger Download
                     const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
@@ -930,14 +1010,32 @@
                     }, 1000);
                 };
 
+                let logoLoaded = undefined;
+                let qrLoaded = undefined;
+
+                const checkComplete = () => {
+                    if (logoLoaded !== undefined && qrLoaded !== undefined) {
+                        renderCanvasContent(logoLoaded, qrLoaded);
+                    }
+                };
+
+                // Load Branding Top Logo
+                const logoImg = new Image();
+                logoImg.crossOrigin = 'anonymous';
+                logoImg.onload = () => { logoLoaded = logoImg; checkComplete(); };
+                logoImg.onerror = () => { logoLoaded = null; checkComplete(); };
+                logoImg.src = "{{ asset('images/brand/logo.webp') }}";
+
+                // Load QR image
                 if (qrImgElem && qrImgElem.src) {
-                    const img = new Image();
-                    img.crossOrigin = 'anonymous';
-                    img.onload = () => triggerDownload(img);
-                    img.onerror = () => triggerDownload(null);
-                    img.src = qrImgElem.src;
+                    const qrImg = new Image();
+                    qrImg.crossOrigin = 'anonymous';
+                    qrImg.onload = () => { qrLoaded = qrImg; checkComplete(); };
+                    qrImg.onerror = () => { qrLoaded = null; checkComplete(); };
+                    qrImg.src = qrImgElem.src;
                 } else {
-                    triggerDownload(null);
+                    qrLoaded = null;
+                    checkComplete();
                 }
             });
 
@@ -947,13 +1045,23 @@
             if (existingBooking) {
                 state.modifyingRefNo = existingBooking.reference_no;
                 state.rescheduleCount = existingBooking.reschedule_count;
+                state.currentSlotId = existingBooking.booking_slot_id;
+                state.currentDateRaw = existingBooking.date_raw;
+
+                const urlParams = new URLSearchParams(window.location.search);
+                const isModifyQuery = urlParams.get('modify') === '1' || urlParams.has('modify');
 
                 if (!existingBooking.can_modify) {
                     // Customer cannot modify (either already rescheduled once OR within 1 week of slot) -> directly show confirmation screen
                     showConfirmationScreen(existingBooking, existingBooking.reschedule_count);
-                } else {
-                    // Customer has an active booking that can be modified once -> show form with Modify Reservation Header
+                } else if (isModifyQuery) {
+                    // Customer clicked MODIFY -> show booking form with Modify Header & open date dropdown
                     state.isModifying = true;
+                    document.getElementById('confirmation-success-screen').classList.add('d-none');
+                    document.getElementById('reservation-form').classList.remove('d-none');
+                    toggleDateDropdown(true);
+                } else {
+                    showConfirmationScreen(existingBooking, existingBooking.reschedule_count);
                 }
             } else {
                 const urlParams = new URLSearchParams(window.location.search);

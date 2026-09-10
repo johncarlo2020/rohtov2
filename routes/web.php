@@ -190,12 +190,11 @@ Route::group(['middleware' => ['client']], function () {
     Route::post('/reservation-create', [BookingViewController::class, 'store'])->name('reservation.store');
     Route::post('/reservation-create/modify', [BookingViewController::class, 'modify'])->name('reservation.modify');
 
-});
+    Route::get('/booking', [BookingViewController::class, 'index'])->name('booking.flow');
+    Route::post('/booking', [BookingViewController::class, 'store']);
+    Route::post('/booking/modify', [BookingViewController::class, 'modify']);
 
-// Public Booking System UI Flow
-Route::get('/booking', [BookingViewController::class, 'index'])->name('booking.flow');
-Route::post('/booking', [BookingViewController::class, 'store']);
-Route::post('/booking/modify', [BookingViewController::class, 'modify']);
+});
 
 require __DIR__ . '/auth.php';
 

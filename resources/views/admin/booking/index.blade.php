@@ -119,6 +119,24 @@
 </style>
 
 <div class="container-fluid py-3">
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show text-white mb-3" role="alert">
+            <i class="fa-solid fa-circle-check me-2"></i>{{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show text-white mb-3" role="alert">
+            <i class="fa-solid fa-triangle-exclamation me-2"></i>
+            <ul class="mb-0 ps-3 text-sm">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
 
     <!-- Stat Summary Cards -->
     <div class="row g-3 mb-4">
@@ -129,7 +147,7 @@
                         <p class="text-xs text-uppercase font-weight-bold text-muted mb-1">Total Reservations</p>
                         <h4 class="font-weight-bolder text-dark mb-0">{{ $totalBookings }}</h4>
                     </div>
-                    <div class="icon icon-shape bg-gradient-dark text-white rounded-3 p-3">
+                    <div class="icon icon-shape bg-gradient-dark shadow-info text-center rounded-circle">
                         <i class="fa-solid fa-ticket fa-lg"></i>
                     </div>
                 </div>
@@ -142,7 +160,7 @@
                         <p class="text-xs text-uppercase font-weight-bold text-muted mb-1">Attended Customers</p>
                         <h4 class="font-weight-bolder text-success mb-0">{{ $attendedCount }}</h4>
                     </div>
-                    <div class="icon icon-shape bg-gradient-success text-white rounded-3 p-3">
+                    <div class="icon icon-shape bg-gradient-success shadow-info text-center rounded-circle">
                         <i class="fa-solid fa-user-check fa-lg"></i>
                     </div>
                 </div>
@@ -155,7 +173,7 @@
                         <p class="text-xs text-uppercase font-weight-bold text-muted mb-1">Confirmed / Active</p>
                         <h4 class="font-weight-bolder text-warning mb-0">{{ $confirmedCount }}</h4>
                     </div>
-                    <div class="icon icon-shape bg-gradient-warning text-white rounded-3 p-3">
+                    <div class="icon icon-shape bg-gradient-warning shadow-info text-center rounded-circle">
                         <i class="fa-solid fa-clock fa-lg"></i>
                     </div>
                 </div>
@@ -168,7 +186,7 @@
                         <p class="text-xs text-uppercase font-weight-bold text-muted mb-1">Attendance Rate</p>
                         <h4 class="font-weight-bolder text-info mb-0">{{ $attendanceRate }}%</h4>
                     </div>
-                    <div class="icon icon-shape bg-gradient-info text-white rounded-3 p-3">
+                    <div class="icon icon-shape bg-gradient-info shadow-info text-center rounded-circle">
                         <i class="fa-solid fa-chart-line fa-lg"></i>
                     </div>
                 </div>
@@ -178,33 +196,41 @@
 
     <!-- Controls & View Mode Tabs -->
     <div class="card card-dashboard p-4 mb-4">
-        <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
-            <div>
-                <h4 class="font-weight-bold text-dark mb-1">
-                    <i class="fa-solid fa-table-cells text-success me-2"></i>Master Workshop Schedule
-                </h4>
-                <p class="text-xs text-muted mb-0">Overview of public bookings, VIP sessions, and capacity per date & time slot</p>
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-3">
+            <div class="d-flex align-items-center gap-3">
+                <div class="icon icon-shape bg-gradient-success text-white rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
+                    <i class="fa-solid fa-table-cells fa-lg"></i>
+                </div>
+                <div>
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                        <h4 class="font-weight-bold text-dark mb-0">Master Workshop Schedule</h4>
+                        <span class="badge bg-dark text-white font-weight-bolder px-2 py-1" style="letter-spacing: 3px; font-size: 11px;">LONGCHAMP</span>
+                    </div>
+                    <p class="text-xs text-muted mb-0">Overview of public bookings, VIP sessions, and capacity per date & time slot</p>
+                </div>
             </div>
             
-            <div class="d-flex align-items-center gap-3">
-                <div class="brand-title-longchamp d-none d-md-block me-3">L O N G C H A M P</div>
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <button type="button" class="btn btn-warning btn-sm font-weight-bold text-dark shadow-sm mb-0 px-3 py-2 d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#vipBookingModal" onclick="openVipModal()">
+                    <i class="fa-solid fa-crown text-dark"></i>
+                    <span>+ VIP Reservation</span>
+                </button>
 
-                <div class="d-flex align-items-center gap-2">
-                    <button type="button" class="btn btn-success btn-sm font-weight-bold shadow-sm mb-0" data-bs-toggle="modal" data-bs-target="#walkinBookingModal" onclick="openWalkinModal()">
-                        <i class="fa-solid fa-person-walking me-1"></i> + Walk-In Customer
+                <button type="button" class="btn btn-success btn-sm font-weight-bold shadow-sm mb-0 px-3 py-2 d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#walkinBookingModal" onclick="openWalkinModal()">
+                    <i class="fa-solid fa-person-walking"></i>
+                    <span>+ Walk-In Customer</span>
+                </button>
+
+                <div class="btn-group shadow-sm mb-0" role="group" aria-label="View Switcher">
+                    <button type="button" class="btn btn-primary active btn-sm font-weight-bold mb-0" id="btn-view-matrix" onclick="switchView('matrix')">
+                        <i class="fa-solid fa-table-cells me-1"></i> Matrix Schedule
                     </button>
-
-                    <div class="btn-group shadow-sm mb-0" role="group" aria-label="View Switcher">
-                        <button type="button" class="btn btn-primary active btn-sm font-weight-bold" id="btn-view-matrix" onclick="switchView('matrix')">
-                            <i class="fa-solid fa-table-cells me-1"></i> Matrix Schedule
-                        </button>
-                        <button type="button" class="btn btn-outline-primary btn-sm font-weight-bold" id="btn-view-calendar" onclick="switchView('calendar')">
-                            <i class="fa-solid fa-calendar-days me-1"></i> FullCalendar
-                        </button>
-                        <button type="button" class="btn btn-outline-primary btn-sm font-weight-bold" id="btn-view-table" onclick="switchView('table')">
-                            <i class="fa-solid fa-list me-1"></i> Table List
-                        </button>
-                    </div>
+                    <button type="button" class="btn btn-outline-primary btn-sm font-weight-bold mb-0" id="btn-view-calendar" onclick="switchView('calendar')">
+                        <i class="fa-solid fa-calendar-days me-1"></i> FullCalendar
+                    </button>
+                    <button type="button" class="btn btn-outline-primary btn-sm font-weight-bold mb-0" id="btn-view-table" onclick="switchView('table')">
+                        <i class="fa-solid fa-list me-1"></i> Table List
+                    </button>
                 </div>
             </div>
         </div>
@@ -444,11 +470,10 @@
                     {{-- Email & Phone --}}
                     <div class="mb-3">
                         <label class="form-label font-weight-bold text-xs text-uppercase text-muted">Email Address *</label>
-                        <input type="email" name="email" class="form-control" placeholder="customer@example.com" required />
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label font-weight-bold text-xs text-uppercase text-muted">Phone Number</label>
-                        <input type="text" name="phone" class="form-control" placeholder="+60123456789" />
+                        <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" placeholder="customer@example.com" value="{{ old('email') }}" required />
+                        @error('email')
+                            <div class="invalid-feedback font-weight-bold text-xxs mt-1">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     {{-- Hidden Form Controls for Submission --}}
@@ -472,7 +497,7 @@
                             <div id="walkin-date-dropdown-box" class="d-none dropdown-overlay p-3">
                                 <div class="small font-weight-bold text-dark text-uppercase pb-2 mb-2 border-bottom d-flex justify-content-between align-items-center text-xs">
                                     <span>DATE SELECTION</span>
-                                    <span>30 SEP – 17 OCT 2026</span>
+                                    <span>2 OCT – 17 OCT 2026</span>
                                 </div>
 
                                 <!-- Date Items List -->
@@ -510,19 +535,14 @@
                         </div>
                     </div>
 
-                    {{-- Pax & Mark Attended Checkbox --}}
-                    <div class="row g-2 align-items-center mb-2">
-                        <div class="col-6">
-                            <label class="form-label font-weight-bold text-xs text-uppercase text-muted">Pax Count *</label>
-                            <input type="number" name="pax" class="form-control" value="1" min="1" max="20" required />
-                        </div>
-                        <div class="col-6 pt-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="mark_attended" value="1" id="markAttendedWalkin" checked />
-                                <label class="form-check-label text-xs font-weight-bold text-dark" for="markAttendedWalkin">
-                                    Mark as Attended Now
-                                </label>
-                            </div>
+                    {{-- Hidden Pax Input & Mark Attended Checkbox --}}
+                    <input type="hidden" name="pax" value="1">
+                    <div class="mb-2">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="mark_attended" value="1" id="markAttendedWalkin" checked />
+                            <label class="form-check-label text-xs font-weight-bold text-dark" for="markAttendedWalkin">
+                                Mark as Attended Now
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -531,6 +551,106 @@
                     <button type="button" class="btn btn-secondary btn-sm px-3" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-success btn-sm px-4 font-weight-bold shadow-sm">
                         <i class="fa-solid fa-check me-1"></i>Confirm Walk-In Booking
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- VIP BOOKING MODAL FOR MASTER SCHEDULE --}}
+<div class="modal fade" id="vipBookingModal" tabindex="-1" aria-labelledby="vipBookingModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow border-0" style="border-radius: 14px;">
+            <div class="modal-header bg-gradient-warning text-dark border-0 py-3">
+                <h5 class="modal-title font-weight-bold text-dark mb-0" id="vipBookingModalLabel">
+                    <i class="fa-solid fa-crown me-2"></i>Add VIP Reservation
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="vip-booking-modal-form" action="{{ route('admin.vip.store') }}" method="POST">
+                @csrf
+                <div class="modal-body p-4">
+                    {{-- VIP Group Schedule Preset --}}
+                    <div class="mb-3">
+                        <label for="vip_group_preset_modal" class="form-label font-weight-bold text-xs text-uppercase text-primary mb-1">
+                            <i class="fa-solid fa-crown me-1"></i>Select VIP Group / Schedule Preset *
+                        </label>
+                        <select id="vip_group_preset_modal" name="vip_name" class="form-select font-weight-bold border-warning text-dark" style="border-width: 2px;" required>
+                            <option value="" disabled selected>-- Select VIP Group Preset --</option>
+                            <option value="KOL AND MEDIA INFLUENCER">KOL AND MEDIA INFLUENCER (80 Pax: Sep 30 & Oct 1)</option>
+                            <option value="LONGCHAMP VIC">LONGCHAMP VIC (20 Pax: Sep 30)</option>
+                            <option value="THE GARDENS EMERALD MEMBER">THE GARDENS EMERALD MEMBER (24 Pax: Sep 30 & Oct 1)</option>
+                            <option value="MAYBANK PREMIUM CUSTOMER">MAYBANK PREMIUM CUSTOMER (30 Pax: Sep 30)</option>
+                            <option value="PIN PRESTIGE">PIN PRESTIGE (12 Pax: Oct 1)</option>
+                        </select>
+                        <div class="form-text text-xxs text-muted">Selecting a VIP group filters available dates, slots & pre-fills pax count automatically.</div>
+                    </div>
+
+                    {{-- Hidden Inputs --}}
+                    <input type="hidden" name="booking_date_id" id="vip_modal_booking_date_id" required>
+                    <input type="hidden" name="booking_slot_id" id="vip_modal_booking_slot_id" required>
+
+                    {{-- SECTION 1: DATE SELECTION --}}
+                    <div class="mb-3">
+                        <label class="form-label font-weight-bold text-xs text-uppercase text-muted mb-1">
+                            DATE AVAILABLE: *
+                        </label>
+
+                        <div class="position-relative">
+                            <div id="vip-modal-date-trigger-box" class="form-control d-flex justify-content-between align-items-center py-2 px-3 bg-white border cursor-pointer rounded-1">
+                                <span id="vip-modal-date-box-text" class="text-muted font-weight-bold text-xs text-uppercase">DATE SELECTION</span>
+                                <i class="fa-solid fa-chevron-down text-muted" id="vip-modal-date-chevron" style="transition: transform 0.2s;"></i>
+                            </div>
+
+                            <div id="vip-modal-date-dropdown-box" class="d-none dropdown-overlay p-3">
+                                <div class="small font-weight-bold text-dark text-uppercase pb-2 mb-2 border-bottom d-flex justify-content-between align-items-center text-xs">
+                                    <span>DATE SELECTION</span>
+                                    <span>30 SEP – 17 OCT 2026</span>
+                                </div>
+                                <div id="vip-modal-date-items-list" class="custom-scroll">
+                                    <!-- Dynamically populated -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- SECTION 2: TIME SLOTS SELECTION --}}
+                    <div class="mb-3">
+                        <label class="form-label font-weight-bold text-xs text-uppercase text-muted mb-1">
+                            SELECT YOUR TIME SLOT: *
+                        </label>
+
+                        <div class="position-relative">
+                            <div id="vip-modal-time-trigger-box" class="form-control d-flex justify-content-between align-items-center py-2 px-3 bg-white border cursor-pointer rounded-1 opacity-60 cursor-not-allowed">
+                                <span id="vip-modal-time-box-text" class="text-muted font-weight-bold text-xs text-uppercase">SELECT YOUR TIME SLOT</span>
+                                <i class="fa-solid fa-chevron-down text-muted" id="vip-modal-time-chevron" style="transition: transform 0.2s;"></i>
+                            </div>
+
+                            <div id="vip-modal-time-dropdown-box" class="d-none dropdown-overlay p-3">
+                                <div class="small font-weight-bold text-muted text-uppercase pb-2 mb-2 border-bottom text-xs">
+                                    <span>TIME SLOTS</span>
+                                </div>
+                                <div id="vip-modal-time-items-list">
+                                    <!-- Dynamically populated -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Pax Count --}}
+                    <div class="mb-3">
+                        <label for="pax_modal" class="form-label font-weight-bold text-xs text-uppercase text-muted mb-1">Pax Count (Number of Guests) *</label>
+                        <input type="number" id="pax_modal" name="pax" class="form-control" value="1" min="1" max="50" required />
+                        <div id="pax-capacity-info-modal" class="form-text text-xxs font-weight-bold text-info mt-1 d-none"></div>
+                        <div id="pax-error-msg-modal" class="invalid-feedback font-weight-bold text-xxs mt-1"></div>
+                    </div>
+                </div>
+
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-secondary btn-sm px-3" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-warning btn-sm px-4 font-weight-bold text-dark shadow-sm">
+                        <i class="fa-solid fa-crown me-1"></i>CREATE VIP RESERVATION
                     </button>
                 </div>
             </form>
@@ -615,6 +735,19 @@
         }
     }
 
+    function openVipModal() {
+        const modalElem = document.getElementById('vipBookingModal');
+        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+            const instance = bootstrap.Modal.getOrCreateInstance(modalElem);
+            instance.show();
+        } else if (typeof $ !== 'undefined' && typeof $.fn.modal === 'function') {
+            $(modalElem).modal('show');
+        } else {
+            modalElem.classList.add('show', 'd-block');
+            modalElem.style.display = 'block';
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         const calendarEl = document.getElementById('calendar');
         const eventsData = @json($calendarEvents);
@@ -649,7 +782,7 @@
 
         async function fetchWalkinDateAvailabilities() {
             try {
-                const res = await fetch('/api/booking/dates?start_date=2026-09-30&end_date=2026-10-17');
+                const res = await fetch('/api/booking/dates?start_date=2026-10-02&end_date=2026-10-17');
                 const data = await res.json();
                 walkinState.dateAvailabilities = data;
                 renderWalkinDateDropdown(data);
@@ -805,11 +938,18 @@
                 }
                 slotRow.className = rowClasses;
 
+                const bookedCount = slot.booked_count || 0;
+                const capacity = slot.capacity || 20;
+                const remaining = Math.max(0, capacity - bookedCount);
+                const isHalfBooked = bookedCount > (capacity / 2);
+
                 let rightSpan = '';
                 if (isSelected) {
                     rightSpan = `<svg style="width: 18px; height: 18px;" class="brand-orange-text" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>`;
-                } else if (!isAvailable) {
+                } else if (!isAvailable || remaining <= 0) {
                     rightSpan = `<span class="text-xs font-weight-bold text-danger">SLOT FULL</span>`;
+                } else if (isHalfBooked) {
+                    rightSpan = `<span class="text-xs font-weight-bold text-warning">LIMITED SLOTS</span>`;
                 } else {
                     rightSpan = `<span class="text-xs font-weight-bold text-success">AVAILABLE</span>`;
                 }
@@ -904,6 +1044,442 @@
 
         // Initialize loading dates for Walk-in modal
         fetchWalkinDateAvailabilities();
+
+        // VIP Modal Custom Dropdown & Capacity Validation Logic
+        const vipDbDatesModal = @json($bookingDates);
+
+        const vipGroupScheduleMapModal = {
+            'KOL AND MEDIA INFLUENCER': {
+                '2026-09-30': [
+                    { start_time: '11:00', pax: 20 },
+                    { start_time: '12:00', pax: 20 },
+                    { start_time: '13:00', pax: 20 },
+                    { start_time: '14:00', pax: 20 }
+                ],
+                '2026-10-01': [
+                    { start_time: '11:00', pax: 10 },
+                    { start_time: '12:00', pax: 10 }
+                ]
+            },
+            'LONGCHAMP VIC': {
+                '2026-09-30': [
+                    { start_time: '15:00', pax: 10 },
+                    { start_time: '16:00', pax: 10 }
+                ]
+            },
+            'THE GARDENS EMERALD MEMBER': {
+                '2026-09-30': [
+                    { start_time: '17:00', pax: 6 },
+                    { start_time: '18:00', pax: 6 }
+                ],
+                '2026-10-01': [
+                    { start_time: '15:00', pax: 6 },
+                    { start_time: '16:00', pax: 6 }
+                ]
+            },
+            'MAYBANK PREMIUM CUSTOMER': {
+                '2026-09-30': [
+                    { start_time: '19:00', pax: 10 },
+                    { start_time: '20:00', pax: 10 },
+                    { start_time: '21:00', pax: 10 }
+                ]
+            },
+            'PIN PRESTIGE': {
+                '2026-10-01': [
+                    { start_time: '13:00', pax: 6 },
+                    { start_time: '14:00', pax: 6 }
+                ]
+            }
+        };
+
+        let vipModalState = {
+            dateAvailabilities: [],
+            slots: [],
+            selectedGroup: null,
+            selectedDateRaw: null,
+            selectedSlotId: null,
+            selectedSlotObject: null,
+            dateDropdownOpen: false,
+            timeDropdownOpen: false
+        };
+
+        const presetSelectModal = document.getElementById('vip_group_preset_modal');
+        const paxInputModal = document.getElementById('pax_modal');
+
+        function updateVipModalPaxHelpText(slot) {
+            const infoDiv = document.getElementById('pax-capacity-info-modal');
+            if (!infoDiv) return;
+            if (!slot) {
+                infoDiv.classList.add('d-none');
+                return;
+            }
+            const booked = slot.booked_count || 0;
+            const cap = slot.capacity || 20;
+            const remaining = Math.max(0, cap - booked);
+            infoDiv.textContent = `Selected slot capacity: ${remaining} Pax available (Total Capacity: ${cap})`;
+            infoDiv.classList.remove('d-none');
+        }
+
+        function validateVipModalPaxInput() {
+            if (!paxInputModal) return true;
+            const val = parseInt(paxInputModal.value) || 0;
+            const errorDiv = document.getElementById('pax-error-msg-modal');
+
+            if (vipModalState.selectedSlotObject) {
+                const slot = vipModalState.selectedSlotObject;
+                const booked = slot.booked_count || 0;
+                const cap = slot.capacity || 20;
+                const remaining = Math.max(0, cap - booked);
+
+                if (remaining <= 0) {
+                    paxInputModal.classList.add('is-invalid');
+                    if (errorDiv) {
+                        errorDiv.textContent = 'Selected time slot is FULLY BOOKED (0 Pax available).';
+                        errorDiv.style.display = 'block';
+                    }
+                    return false;
+                } else if (val > remaining) {
+                    paxInputModal.classList.add('is-invalid');
+                    if (errorDiv) {
+                        errorDiv.textContent = `Pax count cannot exceed remaining slot capacity (${remaining} Pax left).`;
+                        errorDiv.style.display = 'block';
+                    }
+                    return false;
+                } else if (val < 1) {
+                    paxInputModal.classList.add('is-invalid');
+                    if (errorDiv) {
+                        errorDiv.textContent = 'Pax count must be at least 1.';
+                        errorDiv.style.display = 'block';
+                    }
+                    return false;
+                }
+            }
+
+            paxInputModal.classList.remove('is-invalid');
+            if (errorDiv) {
+                errorDiv.textContent = '';
+                errorDiv.style.display = 'none';
+            }
+            return true;
+        }
+
+        if (paxInputModal) {
+            paxInputModal.addEventListener('input', validateVipModalPaxInput);
+            paxInputModal.addEventListener('change', validateVipModalPaxInput);
+        }
+
+        if (presetSelectModal) {
+            presetSelectModal.addEventListener('change', () => {
+                const val = presetSelectModal.value;
+                vipModalState.selectedGroup = val || null;
+
+                vipModalState.selectedDateRaw = null;
+                vipModalState.selectedSlotId = null;
+                vipModalState.selectedSlotObject = null;
+                const dateInput = document.getElementById('vip_modal_booking_date_id');
+                const slotInput = document.getElementById('vip_modal_booking_slot_id');
+                if (dateInput) dateInput.value = '';
+                if (slotInput) slotInput.value = '';
+
+                const dBoxText = document.getElementById('vip-modal-date-box-text');
+                const tBoxText = document.getElementById('vip-modal-time-box-text');
+                if (dBoxText) {
+                    dBoxText.textContent = 'DATE SELECTION';
+                    dBoxText.className = 'text-muted font-weight-bold text-xs text-uppercase';
+                }
+                if (tBoxText) {
+                    tBoxText.textContent = 'SELECT YOUR TIME SLOT';
+                    tBoxText.className = 'text-muted font-weight-bold text-xs text-uppercase';
+                }
+
+                const tTrigger = document.getElementById('vip-modal-time-trigger-box');
+                if (tTrigger) tTrigger.classList.add('opacity-60', 'cursor-not-allowed');
+
+                updateVipModalPaxHelpText(null);
+                validateVipModalPaxInput();
+
+                renderVipModalDateDropdown(vipModalState.dateAvailabilities);
+            });
+        }
+
+        async function fetchVipModalDateAvailabilities() {
+            try {
+                const res = await fetch('/api/booking/dates?start_date=2026-09-30&end_date=2026-10-17');
+                const data = await res.json();
+                vipModalState.dateAvailabilities = data;
+                renderVipModalDateDropdown(data);
+            } catch (err) {
+                console.error('Error fetching VIP date availability:', err);
+            }
+        }
+
+        function renderVipModalDateDropdown(items) {
+            const container = document.getElementById('vip-modal-date-items-list');
+            if (!container) return;
+            container.innerHTML = '';
+
+            let filteredItems = items;
+            if (vipModalState.selectedGroup && vipGroupScheduleMapModal[vipModalState.selectedGroup]) {
+                const allowedDates = Object.keys(vipGroupScheduleMapModal[vipModalState.selectedGroup]);
+                filteredItems = items.filter(item => allowedDates.includes(item.date));
+            }
+
+            if (!filteredItems || filteredItems.length === 0) {
+                container.innerHTML = '<div class="py-2 text-center text-xs text-muted font-weight-bold">NO DATES AVAILABLE FOR THIS VIP GROUP</div>';
+                return;
+            }
+
+            filteredItems.forEach(item => {
+                const dateRow = document.createElement('div');
+                const isSelected = vipModalState.selectedDateRaw === item.date;
+                const isAvailable = item.status === 'available';
+                const formattedLabel = formatOrdinalDate(item.date);
+                const dowStr = getDayOfWeek(item.date);
+
+                let rowClasses = 'date-row d-flex flex-column px-3 py-2 border mb-1 cursor-pointer transition text-uppercase rounded-1 ';
+                if (isSelected) {
+                    rowClasses += 'selected-pill text-dark';
+                } else if (isAvailable) {
+                    rowClasses += 'text-dark bg-white';
+                } else {
+                    rowClasses += 'opacity-50 cursor-not-allowed text-muted bg-light';
+                }
+                dateRow.className = rowClasses;
+
+                let statusSpan = '';
+                if (isSelected) {
+                    statusSpan = `<svg style="width: 18px; height: 18px;" class="brand-orange-text" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>`;
+                } else if (item.status === 'available') {
+                    statusSpan = `<span class="text-xs font-weight-bold text-success">AVAILABLE</span>`;
+                } else if (item.status === 'full') {
+                    statusSpan = `<span class="text-xs font-weight-bold text-muted">FULLY BOOKED</span>`;
+                } else {
+                    statusSpan = `<span class="text-xs font-weight-bold text-muted">CLOSED</span>`;
+                }
+
+                dateRow.innerHTML = `
+                    <div class="text-xxs text-muted font-weight-bold tracking-wider">${dowStr}</div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="font-weight-bold text-xs text-dark">${formattedLabel}</span>
+                        ${statusSpan}
+                    </div>
+                `;
+
+                if (isAvailable) {
+                    dateRow.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        vipModalState.selectedDateRaw = item.date;
+
+                        const match = vipDbDatesModal.find(d => d.date === item.date || (d.date && d.date.startsWith(item.date)));
+                        const dateId = match ? match.id : item.date;
+                        const dateInput = document.getElementById('vip_modal_booking_date_id');
+                        if (dateInput) dateInput.value = dateId;
+
+                        const dateBoxText = document.getElementById('vip-modal-date-box-text');
+                        if (dateBoxText) {
+                            dateBoxText.textContent = formattedLabel;
+                            dateBoxText.className = 'text-dark font-weight-bold text-xs text-uppercase';
+                        }
+
+                        toggleVipModalDateDropdown(false);
+
+                        const timeTrigger = document.getElementById('vip-modal-time-trigger-box');
+                        if (timeTrigger) timeTrigger.classList.remove('opacity-60', 'cursor-not-allowed');
+
+                        vipModalState.selectedSlotId = null;
+                        vipModalState.selectedSlotObject = null;
+                        const slotInput = document.getElementById('vip_modal_booking_slot_id');
+                        if (slotInput) slotInput.value = '';
+                        const timeBoxText = document.getElementById('vip-modal-time-box-text');
+                        if (timeBoxText) {
+                            timeBoxText.textContent = 'SELECT YOUR TIME SLOT';
+                            timeBoxText.className = 'text-muted font-weight-bold text-xs text-uppercase';
+                        }
+
+                        updateVipModalPaxHelpText(null);
+                        validateVipModalPaxInput();
+
+                        fetchVipModalSlots(item.date);
+                        renderVipModalDateDropdown(items);
+                    });
+                }
+
+                container.appendChild(dateRow);
+            });
+        }
+
+        async function fetchVipModalSlots(dateStr) {
+            try {
+                const res = await fetch(`/api/booking/dates/${dateStr}/slots`);
+                const slotsData = await res.json();
+                vipModalState.slots = slotsData;
+                renderVipModalSlotDropdown(slotsData);
+            } catch (err) {
+                console.error('Error fetching VIP slots:', err);
+            }
+        }
+
+        function renderVipModalSlotDropdown(slots) {
+            const container = document.getElementById('vip-modal-time-items-list');
+            if (!container) return;
+            container.innerHTML = '';
+
+            let filteredSlots = slots;
+            if (vipModalState.selectedGroup && vipModalState.selectedDateRaw && vipGroupScheduleMapModal[vipModalState.selectedGroup]) {
+                const dateMap = vipGroupScheduleMapModal[vipModalState.selectedGroup];
+                if (dateMap[vipModalState.selectedDateRaw]) {
+                    const groupRules = dateMap[vipModalState.selectedDateRaw];
+                    const allowedTimes = groupRules.map(r => r.start_time);
+                    filteredSlots = slots.filter(s => {
+                        const sTimeStr = s.start_time || s.label || '';
+                        return allowedTimes.some(at => sTimeStr.includes(at));
+                    });
+                }
+            }
+
+            if (!filteredSlots || filteredSlots.length === 0) {
+                container.innerHTML = `<div class="py-2 text-center text-xs font-weight-bold text-muted">NO AVAILABLE SESSIONS FOR THIS VIP GROUP ON THIS DATE.</div>`;
+                return;
+            }
+
+            filteredSlots.forEach(slot => {
+                const slotRow = document.createElement('div');
+                const isSelected = vipModalState.selectedSlotId === slot.id;
+                const isAvailable = slot.available;
+
+                let rowClasses = 'slot-row d-flex align-items-center justify-content-between px-3 py-2 border mb-1 cursor-pointer transition text-uppercase rounded-1 ';
+                if (isSelected) {
+                    rowClasses += 'selected-pill text-dark';
+                } else if (isAvailable) {
+                    rowClasses += 'text-dark bg-white';
+                } else {
+                    rowClasses += 'opacity-50 cursor-not-allowed text-muted bg-light';
+                }
+                slotRow.className = rowClasses;
+
+                const bookedCount = slot.booked_count || 0;
+                const capacity = slot.capacity || 20;
+                const remaining = Math.max(0, capacity - bookedCount);
+                const isHalfBooked = bookedCount > (capacity / 2);
+
+                let rightSpan = '';
+                if (isSelected) {
+                    rightSpan = `<svg style="width: 18px; height: 18px;" class="brand-orange-text" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>`;
+                } else if (!isAvailable || remaining <= 0) {
+                    rightSpan = `<span class="text-xs font-weight-bold text-danger">SLOT FULL</span>`;
+                } else if (isHalfBooked) {
+                    rightSpan = `<span class="text-xs font-weight-bold text-warning">LIMITED SLOTS</span>`;
+                } else {
+                    rightSpan = `<span class="text-xs font-weight-bold text-success">AVAILABLE</span>`;
+                }
+
+                slotRow.innerHTML = `
+                    <span class="font-weight-bold text-xs text-dark">${slot.label}</span>
+                    ${rightSpan}
+                `;
+
+                if (isAvailable) {
+                    slotRow.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        vipModalState.selectedSlotId = slot.id;
+                        vipModalState.selectedSlotObject = slot;
+                        const slotInput = document.getElementById('vip_modal_booking_slot_id');
+                        if (slotInput) slotInput.value = slot.id;
+
+                        const timeBoxText = document.getElementById('vip-modal-time-box-text');
+                        if (timeBoxText) {
+                            timeBoxText.textContent = slot.label;
+                            timeBoxText.className = 'text-dark font-weight-bold text-xs text-uppercase';
+                        }
+
+                        if (vipModalState.selectedGroup && vipModalState.selectedDateRaw && vipGroupScheduleMapModal[vipModalState.selectedGroup]) {
+                            const dateMap = vipGroupScheduleMapModal[vipModalState.selectedGroup];
+                            if (dateMap[vipModalState.selectedDateRaw]) {
+                                const groupRules = dateMap[vipModalState.selectedDateRaw];
+                                const sTimeStr = slot.start_time || slot.label || '';
+                                const matchedRule = groupRules.find(r => sTimeStr.includes(r.start_time));
+                                if (matchedRule && matchedRule.pax) {
+                                    const paxInput = document.getElementById('pax_modal');
+                                    if (paxInput) paxInput.value = matchedRule.pax;
+                                }
+                            }
+                        }
+
+                        updateVipModalPaxHelpText(slot);
+                        validateVipModalPaxInput();
+
+                        toggleVipModalTimeDropdown(false);
+                        renderVipModalSlotDropdown(vipModalState.slots);
+                    });
+                }
+
+                container.appendChild(slotRow);
+            });
+        }
+
+        function toggleVipModalDateDropdown(open = null) {
+            vipModalState.dateDropdownOpen = open !== null ? open : !vipModalState.dateDropdownOpen;
+            const box = document.getElementById('vip-modal-date-dropdown-box');
+            const chevron = document.getElementById('vip-modal-date-chevron');
+            if (vipModalState.dateDropdownOpen) {
+                if (vipModalState.timeDropdownOpen) toggleVipModalTimeDropdown(false);
+                if (box) box.classList.remove('d-none');
+                if (chevron) chevron.style.transform = 'rotate(180deg)';
+            } else {
+                if (box) box.classList.add('d-none');
+                if (chevron) chevron.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        function toggleVipModalTimeDropdown(open = null) {
+            const timeTrigger = document.getElementById('vip-modal-time-trigger-box');
+            if (timeTrigger && timeTrigger.classList.contains('cursor-not-allowed')) return;
+
+            vipModalState.timeDropdownOpen = open !== null ? open : !vipModalState.timeDropdownOpen;
+            const box = document.getElementById('vip-modal-time-dropdown-box');
+            const chevron = document.getElementById('vip-modal-time-chevron');
+            if (vipModalState.timeDropdownOpen) {
+                if (vipModalState.dateDropdownOpen) toggleVipModalDateDropdown(false);
+                if (box) box.classList.remove('d-none');
+                if (chevron) chevron.style.transform = 'rotate(180deg)';
+            } else {
+                if (box) box.classList.add('d-none');
+                if (chevron) chevron.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        const dateTrigModal = document.getElementById('vip-modal-date-trigger-box');
+        if (dateTrigModal) {
+            dateTrigModal.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleVipModalDateDropdown();
+            });
+        }
+
+        const timeTrigModal = document.getElementById('vip-modal-time-trigger-box');
+        if (timeTrigModal) {
+            timeTrigModal.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleVipModalTimeDropdown();
+            });
+        }
+
+        document.addEventListener('click', (e) => {
+            const dTrig = document.getElementById('vip-modal-date-trigger-box');
+            const dBox = document.getElementById('vip-modal-date-dropdown-box');
+            if (dTrig && dBox && !dTrig.contains(e.target) && !dBox.contains(e.target) && vipModalState.dateDropdownOpen) {
+                toggleVipModalDateDropdown(false);
+            }
+
+            const tTrig = document.getElementById('vip-modal-time-trigger-box');
+            const tBox = document.getElementById('vip-modal-time-dropdown-box');
+            if (tTrig && tBox && !tTrig.contains(e.target) && !tBox.contains(e.target) && vipModalState.timeDropdownOpen) {
+                toggleVipModalTimeDropdown(false);
+            }
+        });
+
+        // Initialize VIP date availabilities
+        fetchVipModalDateAvailabilities();
     });
 
     function toggleAttendance(id) {

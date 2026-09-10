@@ -1,23 +1,31 @@
 <x-guest-layout>
+    <style>
+    @media (max-width: 430px) {
+        .bottom-text
+        {
+            margin-bottom:5%;
+        }
+    }
+    </style>
     <div class="register-main with-scroll row">
-        <div class="col-lg-8 desktop-image-main">
-            <img src="{{ asset('images/brand/main_img.webp') }}" alt="Login Image" srcset="">
+        <div class="col-lg-8 desktop-image-main d-flex align-items-center">
+            <img src="{{ asset('images/brand/main_img.webp') }}" alt="Hero Image" srcset="">
         </div>
-        <div class="flex-parent col-lg-4 d-flex flex-column justify-content-between">
+        <div class="flex-parent col-lg-4 d-flex flex-column justify-content-between gap-5">
                 <div class="top">
-                    <div class="d-flex justify-content-center mt-3 col-12">
+                    <div class="d-flex justify-content-center col-12">
                         @include('components.branding')
                     </div>
                 </div>
                 <div class="mid-top">
                     <div class="col-lg-8 mobile-image-main">
-                        <img src="{{ asset('images/brand/main_img.webp') }}" alt="Login Image" srcset="">
+                        <img src="{{ asset('images/brand/main_img.webp') }}" class="img-fluid hero-image" alt="Hero Image" srcset="">
                     </div>
                 </div>
                 <div class="mid">
-                    <div class="mt-2 px-2 w-100">
+                    <div class="mt-2 w-100">
                         <h1 class="mt-3 mb-3 text-center fw-bold text-dark text-uppercase" style="letter-spacing: 1px;">WORKSHOP REGISTRATION</h1> 
-                        <div class="px-4 py-3 register-form-parent">
+                        <div class="register-form-parent">
                             <form id="form" method="POST" action="{{ route('register') }}">
                                 @csrf
 
@@ -97,19 +105,19 @@
                                 <div x-data="{ agreed: false }">
                                     <div class="mt-4 mb-3">
                                         <label class="fw-bold text-dark text-uppercase mb-1">COMMUNICATION CONSENT*</label>
-                                        <div class="form-check d-flex align-items-start gap-2 mb-3 ps-0">
+                                        <div class="form-check d-flex align-items-start gap-2 mb-3">
                                             <input class="form-check-input mt-1 me-2" type="checkbox" name="communication_consent"
                                                 value="1" id="communicationConsent" {{ old('communication_consent') ? 'checked' : '' }} />
-                                            <label class="text-dark form-check-label" for="communicationConsent" style="text-transform: none; font-size: 0.78rem; line-height: 1.35; letter-spacing: 0;">
+                                            <label class="text-dark form-check-label" for="communicationConsent" style="text-transform: none; font-size: 0.78rem; line-height: 1.35; letter-spacing: 0; font-weight:400;">
                                                 I agree to receive communications from Longchamp via my selected contact method regarding its products, services, events, offers and experiences.
                                             </label>
                                         </div>
 
                                         <label class="fw-bold text-dark text-uppercase mb-1">TERMS & CONDITIONS*</label>
-                                        <div class="form-check d-flex align-items-start gap-2 mb-2 ps-0">
+                                        <div class="form-check d-flex align-items-start gap-2 mb-2">
                                             <input class="form-check-input mt-1 me-2" type="checkbox" name="privacy_policy"
                                                 value="1" id="privacyPolicy" x-model="agreed" required />
-                                            <label class="text-dark form-check-label" for="privacyPolicy" style="text-transform: none; font-size: 0.78rem; line-height: 1.35; letter-spacing: 0;">
+                                            <label class="text-dark form-check-label" for="privacyPolicy" style="text-transform: none; font-size: 0.78rem; line-height: 1.35; letter-spacing: 0; font-weight:400;">
                                                 I have read and agree to the Terms & Conditions and acknowledge the Privacy Policy.
                                             </label>
                                         </div>
@@ -122,7 +130,7 @@
                                             {{ __('REGISTER') }}
                                         </button>
                                         <br>
-                                        <small class="already-register text-dark">ALREADY REGISTERED? <a href="{{ route('login') }}" class="text-dark fw-bold">LOGIN HERE</a></small>
+                                        <small class="already-register text-dark" style="margin-top:1rem;">ALREADY REGISTERED? <a href="{{ route('login') }}" class="text-dark fw-bold">LOGIN HERE</a></small>
                                     </div>
                                 </div>
                             </form>

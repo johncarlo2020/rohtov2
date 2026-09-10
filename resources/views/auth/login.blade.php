@@ -3,28 +3,26 @@
         <div class="col-lg-8 desktop-image-main">
             <img src="{{ asset('images/brand/main_img.webp') }}" alt="Login Image" srcset="">
         </div>
-        <div class="col-lg-4">
-            <div class="justify-content-center w-100">
-                <div class="d-flex justify-content-center my-5 col-12">
+        <div class="col-lg-4 d-flex flex-column justify-content-between gap-5">
+                <div class="d-flex justify-content-center col-12 top">
                     @include('components.branding')
                 </div>
-                <div class="col-lg-8 mobile-image-main">
+                <div class="col-lg-8 mobile-image-main mid-top">
                     <img src="{{ asset('images/brand/main_img.webp') }}" alt="Login Image" srcset="">
                 </div>
-                <div class="mt-3 px-2 w-100">
-                    <h1 class="mt-5 mb-3 text-center fw-bold heading-dutch">LOGIN</h1>
-                    <div class="py-5 pt-1 register-form-parent">
+                <div class="px-2 w-100 mid">
+                    <h1 class="mb-3 text-center fw-bold text-dark">LOGIN</h1>
+                    <div class="register-form-parent">
                         <x-auth-session-status class="mb-4" :status="session('status')" />
 
                         <form method="POST" action="{{ route('login') }}">
                             @csrf
 
                             <div class="mb-3">
-                                <label for="email">Email Address</label>
                                 <input id="email" type="email"
                                     class="form-control input-text @error('email') is-invalid @enderror" name="email"
                                     value="{{ old('email') }}" required autocomplete="email"
-                                    placeholder="Enter your email" />
+                                    placeholder="EMAIL ADDRESS" />
                                 @error('email')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -39,22 +37,25 @@
 
                             <input type="hidden" name="password" value="password" />
 
-                            <div class="mb-0 text-center">
-                                <button type="submit" class="mt-4 custom-btn custom-btn-primary pulse-slow w-50 m-auto">
+                            <div class="mb-0 text-center" style="margin-top:5svh !important;">
+                                <button type="submit" class="custom-btn custom-btn-primary pulse-slow w-50 m-auto">
                                     {{ __('LOGIN') }}
                                 </button>
                             </div>
+                            <div class="bottom-text">
+                                <span class="already-register text-dark text-uppercase">Haven't Registered?</span>
+                                <span class="already-register">
+                                    <a href="{{ route('register') }}" class="text-dark text-uppercase fw-bold">REGISTER HERE</a>
+                                </span>
+                            </div>
                         </form>
                     </div>
-
-                    <div class="bottom-text">
-                        <p class="already-register">Haven't Registered?</p>
-                        <p class="already-register">
-                            Click <a href="{{ route('register') }}">here</a> to register
-                        </p>
+                </div>
+                <div class="col-12 bot">
+                    <div class="logo-bot d-flex justify-content-center">
+                        <img src="{{ asset('images/brand/bot_logo.webp') }}" class="img-fluid w-25" alt="Login Image" srcset="">
                     </div>
                 </div>
-            </div>
         </div>
     </div>
 </x-guest-layout>

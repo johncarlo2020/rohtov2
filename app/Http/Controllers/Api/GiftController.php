@@ -4,12 +4,15 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Gifts;
+use Illuminate\Support\Facades\Schema;
 
 class GiftController extends Controller
 {
     public function draw()
     {
-        $gifts = Gifts::select('id', 'name', 'stock_level')->get();
+        $gifts = Schema::hasTable('gifts')
+            ? Gifts::select('id', 'name', 'stock_level')->get()
+            : collect();
 
         return view('draw', [
             'stocks' => $gifts,
@@ -18,7 +21,9 @@ class GiftController extends Controller
 
     public function stocks()
     {
-        $gifts = Gifts::select('id', 'name', 'stock_level')->get();
+        $gifts = Schema::hasTable('gifts')
+            ? Gifts::select('id', 'name', 'stock_level')->get()
+            : collect();
 
         return response()->json([
             'status' => 'success',
@@ -28,7 +33,9 @@ class GiftController extends Controller
 
     public function stock($id)
     {
-        $gift = Gifts::select('id', 'name', 'stock_level')->find($id);
+        $gift = Schema::hasTable('gifts')
+            ? Gifts::select('id', 'name', 'stock_level')->find($id)
+            : null;
 
         if (!$gift) {
             return response()->json([

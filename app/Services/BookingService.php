@@ -119,6 +119,16 @@ class BookingService
             // Send confirmation email to customer
             \App\Helpers\GlobalHelper::sendBookingConfirmationEmail($booking, false);
 
+            // Log action in history log
+            $bookingType = !empty($booking->is_vip) ? 'VIP' : (!empty($booking->is_walkin) ? 'WALK-IN' : 'PUBLIC');
+            $slotTime = $booking->bookingSlot ? Carbon::parse($booking->bookingSlot->start_time)->format('g:i A') : 'N/A';
+            \App\Services\HistoryLogService::log(
+                "CREATE_{$bookingType}_BOOKING",
+                "Created {$bookingType} booking ({$booking->reference_no}) for customer {$booking->customer_name} ({$booking->customer_email}) on {$requestedDate} at {$slotTime}",
+                'Booking',
+                $booking->id
+            );
+
             return $booking;
         });
     }
@@ -144,6 +154,13 @@ class BookingService
             if ($slot && $slot->booked_count > 0) {
                 $slot->decrement('booked_count');
             }
+
+            \App\Services\HistoryLogService::log(
+                'CANCEL_BOOKING',
+                "Cancelled booking ({$booking->reference_no}) for customer {$booking->customer_name} ({$booking->customer_email})",
+                'Booking',
+                $booking->id
+            );
 
             return $booking;
         });
@@ -246,6 +263,15 @@ class BookingService
 
             // Send modification email to customer
             \App\Helpers\GlobalHelper::sendBookingConfirmationEmail($booking, true);
+
+            // Log action in history log
+            $newTime = $booking->bookingSlot ? Carbon::parse($booking->bookingSlot->start_time)->format('g:i A') : 'N/A';
+            \App\Services\HistoryLogService::log(
+                'MODIFY_BOOKING',
+                "Modified booking ({$booking->reference_no}) for customer {$booking->customer_name} ({$booking->customer_email}) to new date {$newDate} at {$newTime}",
+                'Booking',
+                $booking->id
+            );
 
             return $booking;
         });

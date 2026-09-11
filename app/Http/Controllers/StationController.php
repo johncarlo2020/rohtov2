@@ -127,7 +127,14 @@ class StationController extends Controller
   {
     $userId = Auth::id();
 
-    $user = User::with(["stationUser"])
+    $hasStationUsers = \Schema::hasTable('station_users');
+    $hasUserGifts = \Schema::hasTable('user_gifts');
+    $hasStations = \Schema::hasTable('stations');
+    $hasVouchers = \Schema::hasTable('vouchers');
+    $hasVoucherClaims = \Schema::hasTable('voucher_claims');
+
+    $withArr = $hasStationUsers ? ["stationUser"] : [];
+    $user = User::when(!empty($withArr), fn($q) => $q->with($withArr))
       ->where("id", $userId)
       ->first();
 
@@ -135,111 +142,77 @@ class StationController extends Controller
         return redirect()->route('otp');
     }
 
-    $stationDone = $user->stationUser->count();
-    $stations = Station::get();
+    $stationDone = ($hasStationUsers && $user && $user->relationLoaded('stationUser')) ? $user->stationUser->count() : 0;
+    $stations = $hasStations ? Station::get() : collect();
 
-    $completedStationIds = $user->stationUser->pluck("id")->toArray();
+    $completedStationIds = ($hasStationUsers && $user && $user->relationLoaded('stationUser')) ? $user->stationUser->pluck("id")->toArray() : [];
 
     // Add status flag to each station
     foreach ($stations as $station) {
-      $station->status = $user->stationUser->contains(
-        "station_id",
-        $station->id
-      );
+      $station->status = ($hasStationUsers && $user && $user->relationLoaded('stationUser'))
+        ? $user->stationUser->contains("station_id", $station->id)
+        : false;
     }
 
     // Determine if stations 1-4 are all completed
-
     $canAccessStation5 = $stations
       ->filter(fn($s) => $s->id <= 5)
       ->every(fn($s) => $s->status == true);
 
-    $isRedeemed = \App\Models\UserGift::where("user_id", $userId)
-      ->where("is_redeemed", true)
-      ->exists();
+    $isRedeemed = $hasUserGifts
+      ? \App\Models\UserGift::where("user_id", $userId)->where("is_redeemed", true)->exists()
+      : false;
 
-    $nextStation = $stations->firstWhere(function ($station) use ($user) {
-      return !$user->stationUser()->where("station_id", $station->id)->exists();
-    });
+    $nextStation = ($hasStationUsers && $user)
+      ? $stations->firstWhere(fn($station) => !$user->stationUser()->where("station_id", $station->id)->exists())
+      : null;
 
     $canAccessStation = true;
-    
-    // $first50UserIds = User::orderBy('created_at')
-    //     ->skip(4)
-    //     ->take(50)
-    //     ->pluck('id');
+    $user = auth()->user();
 
-    // $canSeeVoucher = $first50UserIds->contains(auth()->id());
-    // $voucherRedemeed = auth()->user()->chagee_redeemed;
+    $requiredStations = [2];
 
-$user = auth()->user();
+    $completedJourney = ($hasStationUsers && $user)
+      ? ($user->stationUser()->whereIn('station_id', $requiredStations)->distinct()->count('station_id') >= count($requiredStations))
+      : false;
 
-$requiredStations = [2];
+    $voucherRedeemed = ($hasVoucherClaims && $user)
+      ? VoucherClaim::where('user_id', $user->id)->exists()
+      : false;
 
-$completedJourney = $user->stationUser()
-    ->whereIn('station_id', $requiredStations)
-    ->distinct()
-    ->count('station_id') >= count($requiredStations);
+    $activeVoucher = $hasVouchers
+      ? Voucher::where('name', 'CHAGEE')
+          ->where('starts_at', '<=', now())
+          ->where(function ($q) {
+              $q->whereNull('ends_at')->orWhere('ends_at', '>=', now());
+          })
+          ->first()
+      : null;
 
-$voucherRedeemed = VoucherClaim::where(
-    'user_id',
-    $user->id
-)->exists();
+    $canSeeVoucher = false;
+    $voucherStatus = 'Not Available';
+    $voucherMessage = 'Voucher redemption is not available yet.';
 
-$activeVoucher = Voucher::where('name', 'CHAGEE')
-    ->where('starts_at', '<=', now())
-    ->where(function ($q) {
-        $q->whereNull('ends_at')
-            ->orWhere('ends_at', '>=', now());
-    })
-    ->first();
-
-$canSeeVoucher = false;
-
-$voucherStatus = 'Not Available';
-$voucherMessage = 'Voucher redemption is not available yet.';
-
-if ($activeVoucher) {
-
-    $claimedCount = VoucherClaim::where(
-    'voucher_id',
-    $activeVoucher->id
-)->count();
-    
-
-    $remaining = max(
-        0,
-        $activeVoucher->quota - $claimedCount
-    );
-
-    if ($remaining <= 0) {
-
-        if ($activeVoucher->session == 1) {
-
-            $voucherStatus = 'Session 1 Full';
-            $voucherMessage = 'Session 1 quota has been reached. Please come back at 6:00 PM for Session 2.';
-
-        } 
-        else {
-
-            $voucherStatus = 'Fully Redeemed';
-            $voucherMessage = 'All CHAGEE vouchers have been claimed.';
+    if ($activeVoucher && $hasVoucherClaims) {
+        $claimedCount = VoucherClaim::where('voucher_id', $activeVoucher->id)->count();
+        $remaining = max(0, $activeVoucher->quota - $claimedCount);
+        if ($remaining <= 0) {
+            if ($activeVoucher->session == 1) {
+                $voucherStatus = 'Session 1 Full';
+                $voucherMessage = 'Session 1 quota has been reached. Please come back at 6:00 PM for Session 2.';
+            } else {
+                $voucherStatus = 'Fully Redeemed';
+                $voucherMessage = 'All CHAGEE vouchers have been claimed.';
+            }
+        } else {
+            $voucherStatus = "Session {$activeVoucher->session}";
+            $voucherMessage = "{$remaining} voucher(s) remaining.";
         }
 
-    } else {
-
-        $voucherStatus = "Session {$activeVoucher->session}";
-        $voucherMessage = "{$remaining} voucher(s) remaining.";
+        if (!$voucherRedeemed && $completedJourney && $remaining > 0) {
+            $canSeeVoucher = true;
+        }
     }
-
-    if (
-        !$voucherRedeemed &&
-        $completedJourney &&
-        $remaining > 0
-    ) {
-        $canSeeVoucher = true;
-    }
-}
 
         $userBooking = null;
         if (auth()->check()) {
@@ -495,10 +468,11 @@ if ($activeVoucher) {
     $today = Carbon::today();
     $startDate = Carbon::create(2025, 11, 17);
 
-    $data["users"] = User::with("stationUser")
+    $withStations = \Schema::hasTable('station_users') ? ["stationUser"] : [];
+    $data["users"] = User::with($withStations)
       ->orderBy("id", "desc")
       ->whereDoesntHave("roles", function ($q) {
-        $q->where("name", "admin");
+        $q->whereIn("name", ["admin", "superadmin", "staff"]);
       })
       ->where(
         DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'),
@@ -513,7 +487,7 @@ if ($activeVoucher) {
       $startDate->toDateString()
     )
       ->whereDoesntHave("roles", function ($q) {
-        $q->where("name", "admin");
+        $q->whereIn("name", ["admin", "superadmin", "staff"]);
       })
       ->where(
         DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'),
@@ -585,7 +559,7 @@ if ($activeVoucher) {
 
     $data["userToday"] = User::whereDate("created_at", $today)
       ->whereDoesntHave("roles", function ($q) {
-        $q->where("name", "admin");
+        $q->whereIn("name", ["admin", "superadmin", "staff"]);
       })
       ->where(
         DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'),
@@ -595,7 +569,7 @@ if ($activeVoucher) {
       ->count();
     $data["country"] = User::selectRaw("country , COUNT(*) as count")
       ->whereDoesntHave("roles", function ($q) {
-        $q->where("name", "admin");
+        $q->whereIn("name", ["admin", "superadmin", "staff"]);
       })
       ->where(
         DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'),
@@ -608,13 +582,14 @@ if ($activeVoucher) {
 
     //   dd($data['where']);
 
-    $usersWithSixStationUsers = User::with("stationUser")
-      ->whereDoesntHave("roles", function ($q) {
-        $q->where("name", "admin");
-      })
-      ->whereDate("created_at", ">=", $startDate->toDateString())
-      ->has("stationUser", ">=", 3)
-      ->count();
+    $usersWithSixStationUsers = \Schema::hasTable('station_users')
+      ? User::whereDoesntHave("roles", function ($q) {
+          $q->whereIn("name", ["admin", "superadmin", "staff"]);
+        })
+        ->whereDate("created_at", ">=", $startDate->toDateString())
+        ->has("stationUser", ">=", 3)
+        ->count()
+      : 0;
     // dd($usersWithSixStationUsers);
     $data["completedUsers"] = $usersWithSixStationUsers;
     // dd($usersWithSixStationUsers);
@@ -629,7 +604,7 @@ if ($activeVoucher) {
     }
     $userCounts = User::selectRaw("DATE(created_at) as date, COUNT(*) as count")
       ->whereDoesntHave("roles", function ($q) {
-        $q->where("name", "admin");
+        $q->whereIn("name", ["admin", "superadmin", "staff"]);
       })
       ->groupBy("date")
       ->orderBy("date")
@@ -641,7 +616,7 @@ if ($activeVoucher) {
       DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as date')
     )
       ->whereDoesntHave("roles", function ($q) {
-        $q->where("name", "admin");
+        $q->whereIn("name", ["admin", "superadmin", "staff"]);
       })
       ->where(
         DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'),
@@ -658,7 +633,7 @@ if ($activeVoucher) {
       DB::raw("COUNT(*) as registrations")
     )
       ->whereDoesntHave("roles", function ($q) {
-        $q->where("name", "admin");
+        $q->whereIn("name", ["admin", "superadmin", "staff"]);
       })
       ->whereNotNull("created_at")
       ->whereDate("created_at", ">=", $startDate->toDateString())
@@ -676,25 +651,29 @@ if ($activeVoucher) {
     $data["usersDaily"] = $userCountsArray;
     // $completed = StationUser::w
 
-    $averageTimespentByStation = StationUser::select(
-      "station_id",
-      \DB::raw("AVG(time_spent) as average_timespent")
-    )
-      ->groupBy("station_id")
-      ->get()
-      ->keyBy("station_id");
+    $hasStationUsers = \Schema::hasTable('station_users');
+    $hasStations = \Schema::hasTable('stations');
 
-    $stations = Station::pluck('name', 'id');
+    $averageTimespentByStation = $hasStationUsers
+      ? StationUser::select(
+          "station_id",
+          \DB::raw("AVG(time_spent) as average_timespent")
+        )
+          ->groupBy("station_id")
+          ->get()
+          ->keyBy("station_id")
+      : collect();
 
-    $count = 0;
+    $stations = $hasStations ? Station::pluck('name', 'id') : collect();
 
     foreach ($data["users"] as $user) {
-      $userStations = $user->stationUser->pluck("station_id")->toArray() ?? [];
+      $userStations = ($hasStationUsers && $user->relationLoaded('stationUser'))
+        ? $user->stationUser->pluck("station_id")->toArray()
+        : [];
       $numStations = count($userStations);
 
       $user->stations = $stations->map(function ($name, $id) use (
-        $userStations,
-        $averageTimespentByStation
+        $userStations
       ) {
         return [
           "name" => $name,
@@ -707,11 +686,11 @@ if ($activeVoucher) {
       $user->completed_count = $numStations;
     }
 
-    $stationCounts = collect($data['users'])
-    ->flatMap(function ($user) {
-        return $user->stationUser->pluck('station_id');
-    })
-    ->countBy();
+    $stationCounts = ($hasStationUsers)
+      ? collect($data['users'])->flatMap(function ($user) {
+          return $user->relationLoaded('stationUser') ? $user->stationUser->pluck('station_id') : [];
+        })->countBy()
+      : collect();
 
     $data["stations"] = $stations->map(function ($name, $id) use (
       $averageTimespentByStation,
@@ -724,21 +703,22 @@ if ($activeVoucher) {
           2
         ),
         "id" => $id,
-         "total_users" => $stationCounts->get($id, 0),
+        "total_users" => $stationCounts->get($id, 0),
       ];
     });
 
     $data["developers"] = collect();
 
+    $averagePlaytimeByUser = $hasStationUsers
+      ? StationUser::select(
+          "user_id",
+          DB::raw("SUM(time_spent) / 60 as total_playtime")
+        )
+          ->groupBy("user_id")
+          ->get()
+      : collect();
 
-    $averagePlaytimeByUser = StationUser::select(
-      "user_id",
-      DB::raw("SUM(time_spent) / 60 as total_playtime")
-    )
-      ->groupBy("user_id")
-      ->get();
-
-    $totalAveragePlaytime = $averagePlaytimeByUser->avg("total_playtime");
+    $totalAveragePlaytime = $averagePlaytimeByUser->avg("total_playtime") ?? 0;
 
     // get all users race column for pie chart
     $data["race"] = User::where("race", "!=", "admin")
@@ -755,69 +735,67 @@ if ($activeVoucher) {
       ->values()
       ->toArray();
 
-    $session1 = Voucher::where('name', 'CHAGEE')
-    ->where('session', 1)
-    ->first();
+    $hasVouchers = \Schema::hasTable('vouchers');
+    $hasVoucherClaims = \Schema::hasTable('voucher_claims');
 
-    $session1Claimed = VoucherClaim::where(
-        'voucher_id',
-        $session1->id
-    )->count();
+    if ($hasVouchers && $hasVoucherClaims) {
+        $session1 = Voucher::where('name', 'CHAGEE')
+            ->where('session', 1)
+            ->first();
 
-    $voucherSessions = Voucher::where('name', 'CHAGEE')
-        ->orderBy('session')
-        ->get()
-        ->map(function ($voucher) use ($session1, $session1Claimed) {
+        $session1Claimed = $session1 ? VoucherClaim::where(
+            'voucher_id',
+            $session1->id
+        )->count() : 0;
 
-            $claimedCount = VoucherClaim::where(
-                'voucher_id',
-                $voucher->id
-            )->count();
+        $voucherSessions = Voucher::where('name', 'CHAGEE')
+            ->orderBy('session')
+            ->get()
+            ->map(function ($voucher) use ($session1, $session1Claimed) {
+                $claimedCount = VoucherClaim::where(
+                    'voucher_id',
+                    $voucher->id
+                )->count();
 
-            // Dynamic Session 2 quota
-            $displayQuota = $voucher->quota;
+                $displayQuota = $voucher->quota;
 
-            if (
-                  $voucher->session == 2 &&
-                  $session1->ends_at &&
-                  now()->gt($session1->ends_at)
-              ) {
+                if (
+                    $voucher->session == 2 &&
+                    $session1 &&
+                    $session1->ends_at &&
+                    now()->gt($session1->ends_at)
+                ) {
+                    $carryOver = max(
+                        0,
+                        $session1->quota - $session1Claimed
+                    );
+                    $displayQuota = $voucher->quota + $carryOver;
+                }
 
-                  $carryOver = max(
-                      0,
-                      $session1->quota - $session1Claimed
-                  );
+                if (now()->lt($voucher->starts_at)) {
+                    $status = 'Upcoming';
+                } elseif (
+                    $voucher->ends_at &&
+                    now()->gt($voucher->ends_at)
+                ) {
+                    $status = 'Ended';
+                } else {
+                    $status = 'Active';
+                }
 
-                  $displayQuota =
-                      $voucher->quota + $carryOver;
-              }
+                return [
+                    'session' => $voucher->session,
+                    'status' => $status,
+                    'claimed' => "{$claimedCount}/{$displayQuota}",
+                    'starts_at' => $voucher->starts_at,
+                    'ends_at' => $voucher->ends_at,
+                ];
+            });
+    } else {
+        $voucherSessions = collect();
+    }
 
-            if (now()->lt($voucher->starts_at)) {
-
-                $status = 'Upcoming';
-
-            } elseif (
-                $voucher->ends_at &&
-                now()->gt($voucher->ends_at)
-            ) {
-
-                $status = 'Ended';
-
-            } else {
-
-                $status = 'Active';
-            }
-
-            return [
-                'session' => $voucher->session,
-                'status' => $status,
-                'claimed' => "{$claimedCount}/{$displayQuota}",
-                'starts_at' => $voucher->starts_at,
-                'ends_at' => $voucher->ends_at,
-            ];
-    });
-
-    return view("dashboardadmin", compact("data", "permission","voucherSessions"));
+    return view("dashboardadmin", compact("data", "permission", "voucherSessions"));
   }
 
   public function import(Request $request)
@@ -844,15 +822,22 @@ if ($activeVoucher) {
     $permission = auth()->user()->getPermissionNames()->first();
 
     $startDate = Carbon::create(2025, 6, 17);
+    $withRelations = [];
+    if (\Schema::hasTable('station_users')) $withRelations[] = 'stationUser';
+    if (\Schema::hasTable('user_gifts')) $withRelations[] = 'userGift.gift';
+    if (\Schema::hasTable('vouchers')) $withRelations[] = 'voucherClaims.voucher';
+
     $data["users"] = User::whereDate(
       "created_at",
       ">=",
       $startDate->toDateString()
     )
       ->whereDoesntHave("roles", function ($q) {
-        $q->where("name", "admin");
+        $q->whereIn("name", ["admin", "superadmin", "staff"]);
       })
-      ->with(["stationUser", "userGift.gift", "voucherClaims.voucher"])
+      ->when(!empty($withRelations), function ($q) use ($withRelations) {
+        $q->with($withRelations);
+      })
       ->orderBy("id", "desc")
       ->get();
 
@@ -865,22 +850,24 @@ if ($activeVoucher) {
       $startDate->toDateString()
     )
       ->whereDoesntHave("roles", function ($q) {
-        $q->where("name", "admin");
+        $q->whereIn("name", ["admin", "superadmin", "staff"]);
       })
       ->count();
     $data["userToday"] = User::whereDate("created_at", $today)
       ->whereDoesntHave("roles", function ($q) {
-        $q->where("name", "admin");
+        $q->whereIn("name", ["admin", "superadmin", "staff"]);
       })
       ->count();
 
-    $usersWithSixStationUsers = User::whereDate(
-      "created_at",
-      ">=",
-      $startDate->toDateString()
-    )
-      ->has("stationUser", ">=", 5)
-      ->count();
+    $usersWithSixStationUsers = \Schema::hasTable('station_users')
+      ? User::whereDate(
+          "created_at",
+          ">=",
+          $startDate->toDateString()
+        )
+        ->has("stationUser", ">=", 5)
+        ->count()
+      : 0;
     $data["completedUsers"] = $usersWithSixStationUsers;
 
     if ($data["usersCount"] > 0) {
@@ -892,21 +879,26 @@ if ($activeVoucher) {
       $data["percentage"] = 0; // Avoid division by zero
     }
 
-    $averageTimespentByStation = StationUser::select(
-      "station_id",
-      \DB::raw("AVG(time_spent) as average_timespent")
-    )
-      ->groupBy("station_id")
-      ->get()
-      ->keyBy("station_id");
+    $averageTimespentByStation = \Schema::hasTable('station_users')
+      ? StationUser::select(
+          "station_id",
+          \DB::raw("AVG(time_spent) as average_timespent")
+        )
+          ->groupBy("station_id")
+          ->get()
+          ->keyBy("station_id")
+      : collect();
 
-    $stations = Station::pluck('name', 'id');
+    $stations = \Schema::hasTable('stations') ? Station::pluck('name', 'id') : collect();
 
     $developers = collect();
     
 
+    $hasStationUsers = \Schema::hasTable('station_users');
     foreach ($data["users"] as $user) {
-      $userStations = $user->stationUser->pluck("station_id")->toArray();
+      $userStations = ($hasStationUsers && $user->relationLoaded('stationUser'))
+        ? $user->stationUser->pluck("station_id")->toArray()
+        : [];
       $user->stations = $stations->map(function ($name, $id) use (
         $userStations,
         $averageTimespentByStation
@@ -1001,45 +993,42 @@ if ($activeVoucher) {
 
   public function gifts(Request $request)
   {
-    $gifts = Gifts::get();
-    return view("gifts",compact("gifts"));
+    $gifts = \Schema::hasTable('gifts') ? Gifts::get() : collect();
+    return view("gifts", compact("gifts"));
   }
 
   public function earlybird()
   {
-    $earlyBirds = EarlyBird::all();
+    $earlyBirds = \Schema::hasTable('early_birds') ? EarlyBird::all() : collect();
 
     return view("earlybird", compact("earlyBirds"));
   }
 
   public function userData(User $user)
   {
-    $averagePlaytimeByUser = StationUser::where("user_id", $user->id)->avg(
-      "time_spent"
-    );
-    $permission = auth()->user()->getPermissionNames()->first();
+    $hasStationUsers = \Schema::hasTable('station_users');
+    $hasStations = \Schema::hasTable('stations');
 
-    $stations = Station::pluck("name", "id");
+    $averagePlaytimeByUser = $hasStationUsers ? StationUser::where("user_id", $user->id)->avg("time_spent") : 0;
+    $permission = auth()->user() ? auth()->user()->getPermissionNames()->first() : null;
 
-    $averageTimespentByStation = StationUser::where("user_id", $user->id)
-      ->orderBy("id", "asc")
-      ->get();
-    $total = StationUser::where("user_id", $user->id)
-      ->orderBy("id", "asc")
-      ->sum("time_spent");
-    $totalMinutes = $total / 60;
-    $totalMinutes = number_format($totalMinutes, 2);
+    $stations = $hasStations ? Station::pluck("name", "id") : collect();
 
-    $userStations = $user->stationUser->pluck("station_id")->toArray();
+    $averageTimespentByStation = $hasStationUsers ? StationUser::where("user_id", $user->id)->orderBy("id", "asc")->get() : collect();
+    $total = $hasStationUsers ? StationUser::where("user_id", $user->id)->orderBy("id", "asc")->sum("time_spent") : 0;
+    $totalMinutes = number_format($total / 60, 2);
+
+    $userStations = $hasStationUsers && $user->relationLoaded('stationUser') ? $user->stationUser->pluck("station_id")->toArray() : [];
     $numStations = count($userStations);
 
     $user->stations = $stations->map(function ($name, $id) use (
       $userStations,
-      $user
+      $user,
+      $hasStationUsers
     ) {
-      $spent = StationUser::where("user_id", $user->id)
+      $spent = $hasStationUsers ? StationUser::where("user_id", $user->id)
         ->where("station_id", $id)
-        ->first();
+        ->first() : null;
       if (!$spent) {
         $minute = 0;
       } else {
@@ -1178,9 +1167,11 @@ if ($activeVoucher) {
   {
     $userId = auth()->id();
 
-    $isRedeemed = \App\Models\UserGift::where("user_id", $userId)
-      ->where("is_redeemed", true)
-      ->exists();
+    $isRedeemed = \Schema::hasTable('user_gifts')
+      ? \App\Models\UserGift::where("user_id", $userId)
+          ->where("is_redeemed", true)
+          ->exists()
+      : false;
 
     return view("giftSelection", compact("isRedeemed"));
   }
@@ -1207,6 +1198,9 @@ if ($activeVoucher) {
 
   public function userGifts()
   {
+    if (!\Schema::hasTable('user_gifts')) {
+      return redirect()->route("admin")->with("info", "User gifts module is disabled.");
+    }
     try {
       $userGifts = \App\Models\UserGift::with(["user", "gift"])
         ->orderBy("created_at", "desc")
@@ -1222,6 +1216,9 @@ if ($activeVoucher) {
 
   public function adminGifts()
   {
+    if (!\Schema::hasTable('gifts')) {
+      return redirect()->route("admin")->with("info", "Gifts module is disabled.");
+    }
     // Debug: Test if method is being called
     logger("adminGifts method called");
 
@@ -1233,7 +1230,7 @@ if ($activeVoucher) {
       $totalGifts = $gifts->count();
       $enabledGifts = $gifts->where("enabled", true)->count();
       $disabledGifts = $gifts->where("enabled", false)->count();
-      $totalSelectedGifts = \App\Models\UserGift::count();
+      $totalSelectedGifts = \Schema::hasTable('user_gifts') ? \App\Models\UserGift::count() : 0;
 
       $stats = [
         "total_gifts" => $totalGifts,
@@ -1267,102 +1264,64 @@ if ($activeVoucher) {
 
   public function stamp(Request $request)
   {
-    // Get the last character of the QR code message
     $station_id = $request->station;
 
-    // if ($station_id == 5) {
-    //     auth()->user()->update([
-    //         'chagee_redeemed' => 1,
-    //     ]);
-
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'CHAGEE voucher redeemed.',
-    //     ]);
-    // }
     if ($station_id == 5) {
+      if (\Schema::hasTable('vouchers') && \Schema::hasTable('voucher_claims')) {
+        $activeVoucher = Voucher::where('name', 'CHAGEE')
+          ->where('starts_at', '<=', now())
+          ->where(function ($q) {
+              $q->whereNull('ends_at')->orWhere('ends_at', '>=', now());
+          })
+          ->first();
 
-    $activeVoucher = Voucher::where('name', 'CHAGEE')
-        ->where('starts_at', '<=', now())
-        ->where(function ($q) {
-            $q->whereNull('ends_at')
-                ->orWhere('ends_at', '>=', now());
-        })
-        ->first();
+        if (!$activeVoucher) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Voucher redemption is not available yet.',
+            ]);
+        }
 
-    if (!$activeVoucher) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Voucher redemption is not available yet.',
+        $alreadyClaimed = VoucherClaim::where('user_id', auth()->id())->exists();
+
+        if ($alreadyClaimed) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Voucher already redeemed.',
+            ]);
+        }
+
+        $claimedCount = VoucherClaim::where('voucher_id', $activeVoucher->id)->count();
+
+        if ($claimedCount >= $activeVoucher->quota) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Voucher quota exhausted.',
+            ]);
+        }
+
+        VoucherClaim::create([
+            'voucher_id' => $activeVoucher->id,
+            'user_id' => auth()->id(),
+            'claimed_at' => now(),
         ]);
+      } else {
+        if (auth()->check()) {
+          auth()->user()->update(['chagee_redeemed' => 1]);
+        }
+      }
+
+      return response()->json([
+          'success' => true,
+          'message' => 'Voucher redeemed.',
+      ]);
     }
 
-    $alreadyClaimed = VoucherClaim::where(
-        'user_id',
-        auth()->id()
-    )->exists();
-
-    if ($alreadyClaimed) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Voucher already redeemed.',
-        ]);
+    if (!\Schema::hasTable('station_users')) {
+      return response()->json([
+        "redirect_url" => route("dashboard"),
+      ]);
     }
-
-    $claimedCount = VoucherClaim::where(
-        'voucher_id',
-        $activeVoucher->id
-    )->count();
-
-    if ($claimedCount >= $activeVoucher->quota) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Voucher quota exhausted.',
-        ]);
-    }
-
-    VoucherClaim::create([
-        'voucher_id' => $activeVoucher->id,
-        'user_id' => auth()->id(),
-        'claimed_at' => now(),
-    ]);
-
-    $session1 = Voucher::where('name', 'CHAGEE')
-        ->where('session', 1)
-        ->first();
-
-    $session2 = Voucher::where('name', 'CHAGEE')
-        ->where('session', 2)
-        ->first();
-
-    if ($session1 && $session2) {
-
-        $session1Claimed = VoucherClaim::where(
-            'voucher_id',
-            $session1->id
-        )->count();
-
-        $session2Claimed = VoucherClaim::where(
-            'voucher_id',
-            $session2->id
-        )->count();
-
-        $remaining = max(
-            0,
-            $session1->quota - $session1Claimed
-        );
-
-        // $session2->update([
-        //     'quota' => $remaining + 1 // TESTING
-        // ]);
-    }
-
-    return response()->json([
-        'success' => true,
-        'message' => 'CHAGEE voucher redeemed.',
-    ]);
-}
-    // Assume that `$station_id` is validated before this point
 
     try {
       DB::beginTransaction();
@@ -1372,22 +1331,15 @@ if ($activeVoucher) {
         ->first();
 
       if (empty($lastStation)) {
-        $lastLoginTime = Auth::user()->last_login_at;
+        $lastLoginTime = Auth::user()->last_login_at ?? now();
         $currentDateTime = Carbon::now();
         $timeSpent = $currentDateTime->diff($lastLoginTime);
-        $minutesSpent = $timeSpent->i; // Minutes spent
-        $secondsDifference = $timeSpent->s; // Seconds
-
-        // Convert minutes to seconds
-        $secondsSpent = $minutesSpent * 60 + $secondsDifference;
+        $secondsSpent = ($timeSpent->i * 60) + $timeSpent->s;
       } else {
         $lastLoginTime = $lastStation->created_at;
         $currentDateTime = Carbon::now();
         $timeSpent = $currentDateTime->diff($lastLoginTime);
-        $minutesSpent = $timeSpent->i; // Minutes spent
-        $secondsDifference = $timeSpent->s; // Seconds
-        // Convert minutes to seconds
-        $secondsSpent = $minutesSpent * 60 + $secondsDifference;
+        $secondsSpent = ($timeSpent->i * 60) + $timeSpent->s;
       }
 
       $stationUser = new StationUser();
@@ -1398,18 +1350,10 @@ if ($activeVoucher) {
 
       $user = auth()->user();
 
-      // count completed
       $completed = $user->stationUser()->distinct("station_id")->count();
-
-      $today = now()->format('m-d');
-      $videoBoothDates = ['05-01', '05-09', '05-10'];
-
-      $isVideoBoothDay = in_array($today, $videoBoothDates);
-
-      $totalRequired = $user->is_early_bird ? 3 : 2;
+      $totalRequired = ($user && isset($user->is_early_bird) && $user->is_early_bird) ? 3 : 2;
 
       DB::commit();
-      // 🎉 CHECK IF FINISHED
 
       if ($completed >= $totalRequired) {
         return response()->json([
@@ -1417,16 +1361,13 @@ if ($activeVoucher) {
         ]);
       }
 
-      // otherwise go dashboard
       return response()->json([
         "redirect_url" => route("dashboard"),
       ]);
 
     } catch (\Exception $e) {
       DB::rollback();
-
-      // Handle the error, log it, or return an appropriate response
-      return response()->json(["error" => $e], 500);
+      return response()->json(["error" => $e->getMessage()], 500);
     }
   }
 
@@ -1548,7 +1489,7 @@ if ($activeVoucher) {
   public function prize($prize_id)
   {
       // Example: get prize info (optional, if you have a Prize model)
-      $prize = \App\Models\Gifts::find($prize_id);
+      $prize = \Schema::hasTable('gifts') ? \App\Models\Gifts::find($prize_id) : null;
 
       return view('prize', [
           'prize_id' => $prize_id,
@@ -1558,9 +1499,10 @@ if ($activeVoucher) {
   public function prizeDone()
   {
       $user = auth()->user();
+      $hasStationUsers = \Schema::hasTable('station_users');
 
-      $completed = $user->stationUser()->distinct("station_id")->count();
-      $totalRequired = $user->is_early_bird ? 3 : 2;
+      $completed = ($hasStationUsers && $user) ? $user->stationUser()->distinct("station_id")->count() : 0;
+      $totalRequired = ($user && isset($user->is_early_bird) && $user->is_early_bird) ? 3 : 2;
 
       if ($completed >= $totalRequired) {
           return redirect()->route('congrats');
@@ -1571,6 +1513,10 @@ if ($activeVoucher) {
 
   public function updateStock(Request $request, $id)
   {
+      if (!\Schema::hasTable('gifts')) {
+          return response()->json(['status' => 'error', 'message' => 'Gifts table does not exist.'], 400);
+      }
+
       $request->validate([
           'stock_level' => 'required|integer|min:1',
           'action' => 'required|in:add,deduct'
@@ -1611,14 +1557,16 @@ if ($activeVoucher) {
           $gift->refresh();
 
           // 🔥 LOG STOCK CHANGE
-          GiftStockLog::create([
-              'gift_id' => $gift->id,
-              'user_id' => Auth::id(),
-              'action' => $request->action,
-              'quantity' => $request->stock_level,
-              'stock_before' => $beforeStock,
-              'stock_after' => $gift->stock_level,
-          ]);
+          if (\Schema::hasTable('gift_stock_logs')) {
+              GiftStockLog::create([
+                  'gift_id' => $gift->id,
+                  'user_id' => Auth::id(),
+                  'action' => $request->action,
+                  'quantity' => $request->stock_level,
+                  'stock_before' => $beforeStock,
+                  'stock_after' => $gift->stock_level,
+              ]);
+          }
 
           DB::commit();
 
@@ -1643,26 +1591,33 @@ if ($activeVoucher) {
 
   public function giftReport(Request $request,$id)
   {
+    if (!\Schema::hasTable('gifts')) {
+        return redirect()->route('admin')->with('error', 'Gifts table does not exist.');
+    }
     $gift = Gifts::findOrFail($id);
 
     // 🔥 Stock Logs
-    $logs = GiftStockLog::with('user')
-        ->where('gift_id', $id)
-        ->when($request->action, fn($q) => $q->where('action', $request->action))
-        ->when($request->date_from, fn($q) =>
-            $q->whereDate('created_at', '>=', $request->date_from)
-        )
-        ->when($request->date_to, fn($q) =>
-            $q->whereDate('created_at', '<=', $request->date_to)
-        )
-        ->latest()
-        ->paginate(10);
+    $logs = \Schema::hasTable('gift_stock_logs')
+        ? GiftStockLog::with('user')
+            ->where('gift_id', $id)
+            ->when($request->action, fn($q) => $q->where('action', $request->action))
+            ->when($request->date_from, fn($q) =>
+                $q->whereDate('created_at', '>=', $request->date_from)
+            )
+            ->when($request->date_to, fn($q) =>
+                $q->whereDate('created_at', '<=', $request->date_to)
+            )
+            ->latest()
+            ->paginate(10)
+        : new \Illuminate\Pagination\LengthAwarePaginator([], 0, 10);
 
     // 🔥 Redeemed users
-    $redeemedUsers = UserGift::with('user')
-        ->where('gift_id', $id)
-        ->latest()
-        ->get();
+    $redeemedUsers = \Schema::hasTable('user_gifts')
+        ? UserGift::with('user')
+            ->where('gift_id', $id)
+            ->latest()
+            ->get()
+        : collect();
         
     return view('admin.gift-report', compact(
         'gift',

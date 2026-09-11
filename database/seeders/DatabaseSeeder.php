@@ -13,11 +13,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call(StationSeeder::class);
         $this->call(CountriesTableSeeder::class);
         $this->call(AdminUserSeeder::class);
-        $this->call(GiftsSeeder::class);
-        $this->call(VoucherSeeder::class);
         $this->call(OperatingHoursSeeder::class);
         $this->call(EventScheduleSeeder::class);
     }

@@ -448,7 +448,18 @@
             async function fetchDateAvailabilities() {
                 try {
                     const res = await fetch(`/api/booking/dates?start_date=${START_DATE}&end_date=${END_DATE}`);
+                    if (!res.ok) {
+                        if (res.status === 429) {
+                            showAlert('Too many requests. Please wait a moment and refresh.');
+                            return;
+                        }
+                        throw new Error(`HTTP error! status: ${res.status}`);
+                    }
                     const data = await res.json();
+                    if (!Array.isArray(data)) {
+                        showAlert('Failed to load date availability.');
+                        return;
+                    }
                     state.dateAvailabilities = data;
 
                     renderDateDropdown(data);
@@ -461,6 +472,7 @@
             // Render Date Dropdown List
             function renderDateDropdown(items) {
                 const container = document.getElementById('date-items-list');
+                if (!container || !Array.isArray(items)) return;
                 container.innerHTML = '';
 
                 let availableModifyCount = 0;
@@ -548,12 +560,10 @@
                             dateRow.addEventListener('click', () => {
                                 state.selectedDate = item.date;
                                 state.selectedDateFormatted = formattedLabel;
-
                                 document.getElementById('date-box-text').textContent = formattedLabel;
                                 document.getElementById('date-box-text').className = 'text-dark fw-bold';
                                 toggleDateDropdown(false);
 
-                                renderDateDropdown(state.dateAvailabilities);
                                 loadSlotsForSelectedDate(item.date);
                             });
                         }
@@ -596,7 +606,18 @@
 
                 try {
                     const res = await fetch(`/api/booking/dates/${dateStr}/slots`);
+                    if (!res.ok) {
+                        if (res.status === 429) {
+                            showAlert('Too many requests. Please wait a moment and try again.');
+                            return;
+                        }
+                        throw new Error(`HTTP error! status: ${res.status}`);
+                    }
                     const data = await res.json();
+                    if (!Array.isArray(data)) {
+                        showAlert('Failed to load session time slots.');
+                        return;
+                    }
                     state.slots = data;
                     state.selectedSlotId = null;
                     state.selectedSlotLabel = null;

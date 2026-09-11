@@ -15,26 +15,30 @@ class WorkshopController extends Controller
     {
         $user = auth()->user();
 
-        $check = Appointment::where('user_id', $user->id)
-            ->exists();
-            if($check) {
+        $check = (\Schema::hasTable('appointments') && $user)
+            ? Appointment::where('user_id', $user->id)->exists()
+            : false;
+            
+        if ($check) {
+            return redirect()->route('workshop.congrats');
+        }
 
-                return redirect()->route('workshop.congrats');
-            }
-
-        return view('workshop.index' );
+        return view('workshop.index');
     }
 
     public function register()
     {
-        $workshops = Workshop::all();
-        $appointmentDates = AppointmentDate::all();
-        $appointments = Appointment::all();
+        $workshops = \Schema::hasTable('workshops') ? Workshop::all() : collect();
+        $appointmentDates = \Schema::hasTable('appointment_dates') ? AppointmentDate::all() : collect();
+        $appointments = \Schema::hasTable('appointments') ? Appointment::all() : collect();
         return view('workshop.register', compact('workshops', 'appointmentDates', 'appointments'));
     }
 
     public function check(Request $request)
     {
+        if (!\Schema::hasTable('appointments')) {
+            return response()->json(['slots' => 20]);
+        }
         $attendeeCount = Appointment::where('workshop_id', $request->id)
             ->where('appointment_date_id', $request->date)
             ->sum('attendee'); //  sum instead of count
@@ -50,6 +54,9 @@ class WorkshopController extends Controller
 
     public function submit(Request $request)
     {
+        if (!\Schema::hasTable('appointments')) {
+            return response()->json(['error' => 'Workshop system not configured'], 400);
+        }
         $request->validate([
             'guardian' => 'required|string|max:255',
             'workshop' => 'required|exists:workshops,id',
@@ -180,9 +187,11 @@ class WorkshopController extends Controller
 
     public function congrats()
     {
-        $appointment = Appointment::with(['appointmentDate', 'workshop'])
-            ->where('user_id', auth()->id())
-            ->first();
+        $appointment = (\Schema::hasTable('appointments') && auth()->check())
+            ? Appointment::with(['appointmentDate', 'workshop'])
+                ->where('user_id', auth()->id())
+                ->first()
+            : null;
 
         return view('workshop.congrats', compact('appointment'));
     }

@@ -102,11 +102,15 @@
 <div class="mt-4 row">
     <div class="mb-4 col-lg-12 mb-lg-0">
         <div class="card table-card py-3">
-            {{-- <div class="p-3 pb-0 card-header">
-                <div class="d-flex justify-content-between">
-                    <h6 class="mb-2">Customer</h6>
+            @if(auth()->check() && auth()->user()->isSuperAdmin())
+                <div class="px-4 pt-2 pb-2 d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold mb-0 text-dark">User Management</h5>
+                    <button type="button" class="btn btn-primary bg-gradient-warning text-white fw-bold mb-0" data-bs-toggle="modal" data-bs-target="#createUserModal">
+                        <i class="fas fa-user-plus me-1"></i> Create User / Staff
+                    </button>
                 </div>
-            </div> --}}
+                <hr class="horizontal dark my-2">
+            @endif
             <div class="p-3 px-4">
                 <div class="loader-container">
                     <div class="loader"></div>
@@ -906,5 +910,53 @@
         }
     });
 </script>
+@endif
+
+@if(auth()->check() && auth()->user()->isSuperAdmin())
+<!-- Create User Modal -->
+<div class="modal fade" id="createUserModal" tabindex="-1" aria-labelledby="createUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-gradient-dark text-white">
+                <h5 class="modal-title text-white font-weight-bold" id="createUserModalLabel">
+                    <i class="fas fa-user-plus me-2"></i>Create New System User
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ route('users.store') }}" method="POST">
+                @csrf
+                <div class="modal-body p-4">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label font-weight-bold text-xs text-uppercase text-dark">First Name <span class="text-danger">*</span></label>
+                            <input type="text" name="fname" class="form-control" required placeholder="John">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label font-weight-bold text-xs text-uppercase text-dark">Last Name</label>
+                            <input type="text" name="lname" class="form-control" placeholder="Doe">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label font-weight-bold text-xs text-uppercase text-dark">Email Address <span class="text-danger">*</span></label>
+                            <input type="email" name="email" class="form-control" required placeholder="user@example.com">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label font-weight-bold text-xs text-uppercase text-dark">Assigned Role</label>
+                            <input type="text" class="form-control bg-light" value="Staff" readonly disabled>
+                            <input type="hidden" name="role" value="staff">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label font-weight-bold text-xs text-uppercase text-dark">Password <span class="text-danger">*</span></label>
+                            <input type="password" name="password" class="form-control" required minlength="6" placeholder="At least 6 characters">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light px-4">
+                    <button type="button" class="btn btn-secondary mb-0" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-warning text-white fw-bold mb-0">Create User</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endif
 @endsection

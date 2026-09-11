@@ -16,7 +16,7 @@ class VipController extends Controller
     {
         // 1. VIP users list for dropdown
         $users = User::whereDoesntHave('roles', function ($q) {
-            $q->where('name', 'admin');
+            $q->whereIn('name', ['admin', 'superadmin', 'staff']);
         })->orderBy('fname')->get();
 
         // 2. Dates & Slots for form selection (Sept 30 to Oct 17)
@@ -121,6 +121,14 @@ class VipController extends Controller
         // Increment booked_count on the slot
         $slot->increment('booked_count', (int) $request->pax);
 
+        // Log history
+        \App\Services\HistoryLogService::log(
+            'CREATE_VIP_BOOKING',
+            "Created VIP booking ({$refNo}) for {$customerName} (pax: {$request->pax})",
+            'Booking',
+            $booking->id
+        );
+
         return redirect()->back()->with('success', 'VIP Reservation created successfully!');
     }
 
@@ -137,6 +145,14 @@ class VipController extends Controller
         $booking->attended_at = now();
         $booking->save();
 
+        // Log history
+        \App\Services\HistoryLogService::log(
+            'MARK_ATTENDED',
+            "Marked VIP {$booking->customer_name} ({$booking->reference_no}) as ATTENDED",
+            'Booking',
+            $booking->id
+        );
+
         return redirect()->back()->with('success', 'VIP marked as Attended!');
     }
 
@@ -147,6 +163,14 @@ class VipController extends Controller
             $booking->bookingSlot->decrement('booked_count', max(1, $booking->pax));
         }
         $booking->delete();
+
+        // Log history
+        \App\Services\HistoryLogService::log(
+            'DELETE_VIP_BOOKING',
+            "Deleted VIP booking ({$booking->reference_no}) for {$booking->customer_name}",
+            'Booking',
+            $booking->id
+        );
 
         return redirect()->back()->with('success', 'VIP Booking deleted successfully.');
     }

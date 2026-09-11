@@ -16,16 +16,11 @@ class AdminUserSeeder extends Seeder
      */
     public function run(): void
     {
-        // Check if admin role exists, if not create it
-        if (!Role::where('name', 'admin')->exists()) {
-            $adminRole = Role::create(['name' => 'admin']);
-        } else {
-            $adminRole = Role::where('name', 'admin')->first();
-        }
-
-        // Check if client role exists, if not create it
-        if (!Role::where('name', 'client')->exists()) {
-            Role::create(['name' => 'client']);
+        // Ensure roles exist
+        foreach (['superadmin', 'admin', 'staff', 'client'] as $roleName) {
+            if (!Role::where('name', $roleName)->exists()) {
+                Role::create(['name' => $roleName]);
+            }
         }
 
         // Create permissions if they don't exist
@@ -37,39 +32,44 @@ class AdminUserSeeder extends Seeder
             Permission::create(['name' => 'view']);
         }
 
-        // Create a new admin user
-        $adminUser = User::updateOrCreate(
-            ['email' => 'superadmin@gmail.com'], // Check by email
+        // 1. Create admin@gmail.com (Super Admin)
+        $adminMain = User::updateOrCreate(
+            ['email' => 'admin@gmail.com'],
+            [
+                'fname' => 'Super',
+                'lname' => 'Admin',
+                'number' => '0123456788',
+                'country' => 'Malaysia',
+                'password' => Hash::make('LongChamp2026!'),
+                'marketing' => false,
+                'otp_verified' => true,
+                'email_verified_at' => now(),
+            ]
+        );
+        $adminMain->syncRoles(['superadmin', 'admin']);
+        $adminMain->givePermissionTo(['full', 'view']);
+
+        // 2. Create superadmin@gmail.com (Super Admin)
+        $superAdminUser = User::updateOrCreate(
+            ['email' => 'superadmin@gmail.com'],
             [
                 'fname' => 'Super Admin',
                 'number' => '0123456789',
                 'country' => 'Malaysia',
-                'password' => Hash::make('SuperAdmin123!'),
+                'password' => Hash::make('LongChampSuper2026!'),
                 'marketing' => false,
-                'otp_verified' => true, // If OTP field exists
+                'otp_verified' => true,
                 'email_verified_at' => now(),
             ]
         );
+        $superAdminUser->syncRoles(['superadmin', 'admin']);
+        $superAdminUser->givePermissionTo(['full', 'view']);
 
-        // Assign admin role
-        if (!$adminUser->hasRole('admin')) {
-            $adminUser->assignRole('admin');
-        }
+        $this->command->info('Super Admin users created successfully!');
+        $this->command->info('Email: admin@gmail.com / LongChamp2026!');
+        $this->command->info('Email: superadmin@gmail.com / LongChampSuper2026!');
 
-        // Give full permissions
-        if (!$adminUser->hasPermissionTo('full')) {
-            $adminUser->givePermissionTo('full');
-        }
-
-        if (!$adminUser->hasPermissionTo('view')) {
-            $adminUser->givePermissionTo('view');
-        }
-
-        $this->command->info('Super Admin user created successfully!');
-        $this->command->info('Email: superadmin@gmail.com');
-        $this->command->info('Password: SuperAdmin123!');
-
-        // Optionally create additional admin users
+        // Optionally create additional admin & staff users
         $this->createAdditionalAdmins();
     }
 

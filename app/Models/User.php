@@ -93,12 +93,37 @@ class User extends Authenticatable
     }
 
     /**
+     * Check if the user is a super admin
+     */
+    public function isSuperAdmin()
+    {
+        $superAdminEmails = ['admin@gmail.com', 'superadmin@gmail.com'];
+        return in_array(strtolower($this->email), $superAdminEmails) || $this->hasRole('superadmin');
+    }
+
+    /**
+     * Check if the user has staff role
+     */
+    public function isStaff()
+    {
+        return $this->hasRole('staff');
+    }
+
+    /**
+     * Check if the user is any admin, superadmin, or staff member
+     */
+    public function isAdminOrStaff()
+    {
+        return $this->isSuperAdmin() || $this->hasRole('admin') || $this->hasRole('staff');
+    }
+
+    /**
      * Check if the user is a protected admin user
      */
     public function isProtectedAdmin()
     {
         $protectedEmails = ['admin@gmail.com', 'superadmin@gmail.com', 'manager@gmail.com', 'support@gmail.com'];
         
-        return in_array($this->email, $protectedEmails) || $this->hasRole('admin');
+        return in_array(strtolower($this->email), $protectedEmails) || $this->isSuperAdmin() || $this->hasRole('admin') || $this->hasRole('staff');
     }
 }

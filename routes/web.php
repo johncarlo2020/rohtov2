@@ -99,6 +99,9 @@ Route::group(['middleware' => ['admin']], function () {
     Route::get('/admin/bookings', [BookingController::class, 'index'])->name('bookings');
     Route::post('/admin/bookings/{id}/attend', [BookingController::class, 'markAttended'])->name('booking.attend');
     Route::delete('/admin/bookings/{id}', [BookingController::class, 'destroy'])->name('booking.destroy');
+    Route::post('/admin/users', [\App\Http\Controllers\Admin\UserController::class, 'store'])->middleware('superadmin')->name('users.store');
+    Route::get('/admin/history-logs', [\App\Http\Controllers\Admin\HistoryLogController::class, 'index'])->middleware('superadmin')->name('history.logs');
+
     Route::get('/admin/{user}', 'App\Http\Controllers\StationController@userData')->name('userData');
     Route::post('/admin/check', 'App\Http\Controllers\StationController@check')->name('check');
     Route::delete('/admin/users/{id}', 'App\Http\Controllers\StationController@userDelete')->name('users.destroy');

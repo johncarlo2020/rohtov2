@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class AdminMiddleware
+class SuperAdminMiddleware
 {
     /**
      * Handle an incoming request.
@@ -17,10 +17,10 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check() && (Auth::user()->isProtectedAdmin() || Auth::user()->isAdminOrStaff())) {
+        if (Auth::check() && Auth::user()->isSuperAdmin()) {
             return $next($request);
         }
 
-        return redirect('/admin/login');
+        abort(403, 'Unauthorized. Only Super Admins can perform this action.');
     }
 }

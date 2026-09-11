@@ -306,36 +306,43 @@ class BookingController extends Controller
                 'name' => $booking->customer_name,
                 'email' => $booking->customer_email,
                 'phone' => $booking->customer_phone,
-                'ref' => $booking->reference_no,
-                'date' => $booking->bookingDate->display_date ?? 'N/A',
-                'time' => $booking->bookingSlot->display_time ?? 'N/A',
-                'venue' => $booking->venue,
+                'venue' => $booking->venue ?? 'LONGCHAMP POP UP STORE',
                 'pax' => $booking->pax ?? 1,
-                'is_vip' => $booking->is_vip,
-                'status' => $computedStatus,
-                'raw_status' => $booking->status,
+                'date' => $dateStr,
+                'time' => $timeStr,
+                'status' => $isAttended ? 'Attended' : 'Not Yet Attended',
                 'attended_at' => $booking->attended_at ? Carbon::parse($booking->attended_at)->format('M d, Y h:i A') : null,
+                'is_attended' => $isAttended,
             ]
         ]);
     }
 
     /**
-     * Mark booking as 'Attended' from Scanner pop-up or Admin action
+     * Confirm attendance via scanner endpoint
      */
-    public function markAttendingNow(Request $request)
+    public function confirmAttendanceByScan(Request $request)
     {
-        $id = $request->input('booking_id');
-        $ref = $request->input('reference_no');
+        $bookingId = $request->input('booking_id');
+        $refNo = $request->input('reference_no');
 
-        $booking = null;
-        if ($id) {
-            $booking = Booking::with('bookingDate')->find($id);
-        } elseif ($ref) {
-            $booking = Booking::with('bookingDate')->where('reference_no', $ref)->first();
-        }
+        $booking = Booking::with('bookingDate')->where('id', $bookingId)->orWhere('reference_no', $refNo)->first();
 
         if (!$booking) {
             return response()->json(['status' => 'error', 'message' => 'Booking record not found.'], 404);
+        }
+
+        if ($booking->status === 'attended' || $booking->status === 'completed' || !is_null($booking->attended_at)) {
+            return response()->json([
+                'status' => 'info',
+                'message' => 'Customer is already marked as Attended.',
+                'booking' => [
+                    'id' => $booking->id,
+                    'name' => $booking->customer_name,
+                    'ref' => $booking->reference_no,
+                    'status' => 'Attended',
+                    'attended_at' => Carbon::parse($booking->attended_at)->format('M d, Y h:i A'),
+                ]
+            ]);
         }
 
         if ($booking->bookingDate && !Carbon::parse($booking->bookingDate->date)->isToday()) {
@@ -349,6 +356,13 @@ class BookingController extends Controller
         $booking->status = 'Attended';
         $booking->attended_at = now();
         $booking->save();
+
+        \App\Services\HistoryLogService::log(
+            'MARK_ATTENDED',
+            "Marked ATTENDED via scanner for booking {$booking->reference_no} ({$booking->customer_name})",
+            'Booking',
+            $booking->id
+        );
 
         return response()->json([
             'status' => 'success',
@@ -467,6 +481,14 @@ class BookingController extends Controller
         // Increment slot capacity count
         $slot->increment('booked_count', $pax);
 
+        // Log history
+        \App\Services\HistoryLogService::log(
+            'CREATE_WALKIN_BOOKING',
+            "Registered walk-in booking ({$refNo}) for customer {$fullName} ({$email})",
+            'Booking',
+            $booking->id
+        );
+
         return redirect()->back()->with('success', 'Walk-in booking created successfully! Reference: ' . $refNo);
     }
 
@@ -476,7 +498,16 @@ class BookingController extends Controller
     public function destroy($id)
     {
         $booking = Booking::findOrFail($id);
+        $refNo = $booking->reference_no;
+        $name = $booking->customer_name;
         $booking->delete();
+
+        \App\Services\HistoryLogService::log(
+            'DELETE_BOOKING',
+            "Deleted booking ({$refNo}) for {$name}",
+            'Booking',
+            $id
+        );
 
         if (request()->wantsJson()) {
             return response()->json(['success' => true, 'message' => 'Booking deleted successfully.']);

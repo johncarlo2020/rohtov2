@@ -8,7 +8,6 @@
         .brand-orange-bg:hover, .brand-orange-bg:focus { background-color: #d44f25 !important; color: #ffffff !important; }
 
         .ticket-box {
-            border: 1px solid #cbd5e1;
             padding: 1.25rem 1rem;
             background: #ffffff;
         }
@@ -108,7 +107,7 @@
                             </p>
 
                             <!-- Ticket Container (Boxed QR Code + Details) -->
-                            <div id="ticket-container" class="ticket-box d-inline-block w-100 mb-4 text-center" style="max-width: 290px; border: 2px dashed red; padding: 1.25rem 1rem; background: #ffffff;">
+                            <div id="ticket-container" class="ticket-box d-inline-block w-100 mb-4 text-center" style="max-width: 290px; padding: 1.25rem 1rem; background: #ffffff;">
                                 
                                 <!-- Dynamic QR Code Image -->
                                 <img id="qr-code-img" src="{{ $refNo ? 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' . urlencode($refNo) : '' }}" alt="Booking QR Code" class="img-fluid mb-2" style="width: 170px; height: 170px; margin: auto; object-fit: contain; display: block;" crossorigin="anonymous">

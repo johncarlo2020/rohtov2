@@ -31,6 +31,11 @@ class BookingViewController extends Controller
         }
 
         $user = auth()->user();
+
+        if ($user && !$user->isProtectedAdmin() && !$user->hasRole('admin') && !$user->otp_verified) {
+            return redirect()->route('otp');
+        }
+
         $existingBooking = null;
 
         if ($user) {

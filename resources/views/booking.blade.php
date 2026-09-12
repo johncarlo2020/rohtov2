@@ -38,6 +38,30 @@
         .custom-scroll::-webkit-scrollbar-track { background: #f1f5f9; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; }
 
+        @media (min-width: 992px) {
+            .booking-fields-scroll {
+                max-height: 48vh;
+                overflow-y: auto;
+                overflow-x: hidden;
+                padding-right: 8px;
+                margin-bottom: 0.5rem;
+            }
+            .booking-fields-scroll::-webkit-scrollbar {
+                width: 5px;
+            }
+            .booking-fields-scroll::-webkit-scrollbar-track {
+                background: #f1f1f1;
+                border-radius: 4px;
+            }
+            .booking-fields-scroll::-webkit-scrollbar-thumb {
+                background: #ccc;
+                border-radius: 4px;
+            }
+            .booking-fields-scroll::-webkit-scrollbar-thumb:hover {
+                background: #999;
+            }
+        }
+
         .step-fade { animation: fadeIn 0.25s ease-in-out; }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(4px); }
@@ -110,8 +134,8 @@
                 <div class="w-100 m-auto">
                     <!-- Main Card -->
                     <main>
-                        
-                        <!-- BOOKING FLOW FORM -->
+                        <div class="booking-fields-scroll">
+                            <!-- BOOKING FLOW FORM -->
                         <form id="reservation-form" onsubmit="event.preventDefault();">
                             <!-- Header Text -->
                             <div class="text-center my-4">
@@ -227,7 +251,6 @@
                                     TERMS & CONDITIONS
                                 </a>
                             </div>
-
                         </form>                        <!-- BOOKING CONFIRMED SUCCESS SCREEN -->
                         <div id="confirmation-success-screen" class="d-none text-center py-2 step-fade">
 
@@ -279,14 +302,14 @@
                                     DOWNLOAD
                                 </button>
                             </div>
-
+                            </div>
                         </div>
                     </main>
                 </div>
             </div>
             <div class="col-12 bot">
-                <div class="logo-bot d-flex justify-content-center mt-4">
-                    <img src="{{ asset('images/brand/bot_logo.webp') }}" class="img-fluid w-25" alt="Login Image" srcset="">
+                <div class="logo-bot d-flex justify-content-center mt-3">
+                    <img src="{{ asset('images/brand/bot_logo.webp') }}" class="img-fluid" alt="Footer Image" srcset="" style="width:4rem;">
                 </div>
             </div>
         </div>

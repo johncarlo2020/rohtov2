@@ -3,7 +3,7 @@
         <div class="col-lg-8 desktop-image-main">
             <img src="{{ asset('images/brand/main_img.webp') }}" alt="Login Image" srcset="">
         </div>
-        <div class="col-lg-4 d-flex flex-column justify-content-between gap-5">
+        <div class="col-lg-4 d-flex flex-column justify-content-start gap-5">
                 <div class="d-flex justify-content-center col-12 top">
                     @include('components.branding')
                 </div>
@@ -48,14 +48,17 @@
                                     <a href="{{ route('register') }}" class="text-dark text-uppercase fw-bold">REGISTER HERE</a>
                                 </span>
                             </div>
+                            <div class="logo-bot d-flex justify-content-center mt-3">
+                                <img src="{{ asset('images/brand/bot_logo.webp') }}" class="img-fluid" alt="Footer Image" srcset="" style="width:4rem;">
+                            </div>
                         </form>
                     </div>
                 </div>
-                <div class="col-12 bot">
+                <!-- <div class="col-12 bot">
                     <div class="logo-bot d-flex justify-content-center">
                         <img src="{{ asset('images/brand/bot_logo.webp') }}" class="img-fluid w-25" alt="Login Image" srcset="">
                     </div>
-                </div>
+                </div> -->
         </div>
     </div>
 </x-guest-layout>

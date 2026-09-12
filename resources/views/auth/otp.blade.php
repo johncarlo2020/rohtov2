@@ -3,13 +3,13 @@
         <div class="col-lg-8 desktop-image-main">
             <img src="{{ asset('images/brand/main_img.webp') }}" alt="Login Image" srcset="">
         </div>
-        <div class="flex-parent col-lg-4 d-flex flex-column justify-content-between">
+        <div class="flex-parent col-lg-4 d-flex flex-column justify-content-start">
                 <div class="top">
                     <div class="d-flex justify-content-center col-12">
                         @include('components.branding')
                     </div>
                 </div>
-                <div class="mid">
+                <div class="mid mt-5">
                     <form method="POST" action="{{ route('verify.otp') }}">
                         @csrf
                         <div class="text-center mb-4 px-1">
@@ -34,14 +34,17 @@
                             <small id="resendTimer" class="text-dark text-center d-none">DIDN'T RECEIVE THE CODE? <span class="fw-bold text-dark">RESEND</span> OTP IN  <span class="text-dark" id="timerValue">180</span>s</small>
                             <a id="resendOtpLink" href="#" class="text-dark no-underline fw-bold"><small>RESEND OTP</small></a>
                         </div>
+                        <div class="logo-bot d-flex justify-content-center mt-3">
+                            <img src="{{ asset('images/brand/bot_logo.webp') }}" class="img-fluid" alt="Footer Image" srcset="" style="width:4rem;">
+                        </div>
                     </form>
                     {{-- <a class="text-center no-underline mt-3 fw-bold" href="{{ route('login') }}">Back</a> --}}
                 </div>
-                <div class="col-12 bot">
+                <!-- <div class="col-12 bot">
                     <div class="logo-bot d-flex justify-content-center">
                         <img src="{{ asset('images/brand/bot_logo.webp') }}" class="img-fluid w-25" alt="Login Image" srcset="">
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     {{-- <div class="justify-content-center w-100 px-3">

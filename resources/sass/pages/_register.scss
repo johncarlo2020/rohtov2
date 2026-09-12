@@ -71,6 +71,31 @@
                 outline: none;
             }
         }
+
+        .register-fields-scroll {
+            @media (min-width: 992px) {
+                max-height: 42vh;
+                overflow-y: auto;
+                overflow-x: hidden;
+                padding-right: 8px;
+                margin-bottom: 0.5rem;
+
+                &::-webkit-scrollbar {
+                    width: 5px;
+                }
+                &::-webkit-scrollbar-track {
+                    background: #f1f1f1;
+                    border-radius: 4px;
+                }
+                &::-webkit-scrollbar-thumb {
+                    background: #ccc;
+                    border-radius: 4px;
+                }
+                &::-webkit-scrollbar-thumb:hover {
+                    background: #999;
+                }
+            }
+        }
     }
 }
 

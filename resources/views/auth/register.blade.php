@@ -47,7 +47,7 @@
                 </div>
                 <div class="mid">
                     <div class="mt-2 w-100">
-                        <h1 class="mt-3 mb-3 text-center fw-bold text-dark text-uppercase" style="letter-spacing: 1px;">WORKSHOP REGISTRATION</h1> 
+                        <h1 class="mt-3 mb-5 text-center fw-bold text-dark text-uppercase" style="letter-spacing: 1px;">WORKSHOP REGISTRATION</h1> 
                         <div class="register-form-parent">
                             <form id="form" method="POST" action="{{ route('register') }}">
                                 @csrf

@@ -17,7 +17,7 @@
         <div class="col-lg-8 desktop-image-main">
             <img src="{{ asset('images/brand/main_img.webp') }}" alt="Login Image" srcset="">
         </div>
-        <div class="flex-parent col-lg-4 d-flex flex-column justify-content-between">
+        <div class="flex-parent col-lg-4 d-flex flex-column justify-content-between p-0">
                 <div class="top mb-4">
                     <div class="d-flex justify-content-center col-12">
                         @include('components.branding')
@@ -29,7 +29,7 @@
                     </div>
                 </div>
                 <div class="mid">
-                    <div class="px-2 w-85 m-auto text-center">
+                    <div class="text-center">
                         <h2 class="text-dark text-uppercase mb-4" style="font-size: 1.25rem; line-height: 1.4; letter-spacing: 0.5px;">
                             LONGCHAMP INVITES YOU TO <br>"<strong class="fw-bold">BE CREATIVE</strong>" THIS WINTER <br> 2026, EXCLUSIVELY IN MALAYSIA
                         </h2>
@@ -42,7 +42,7 @@
                             THE CREATIVE EXPERIENCE EXTENDS BEYOND THE <br>COLLECTION. IN THIS WORKSHOP, DISCOVER THE <br> ART OF COLLAGE THROUGH AN INTERACTIVE <br>ACTIVITY INSPIRED BY <strong>CAROLINE HÉLAIN'S <br> EXPRESSIVE LANDSCAPES.</strong> CREATE YOUR OWN <br>LAYERED LANDSCAPE USING PAPER, COLOUR AND <br>TEXTURE TO BRING YOUR COMPOSITION TO LIFE.
                         </p> -->
 
-                        <p class="text-dark  mb-4" style="font-size: 1rem; line-height: 1.5; letter-spacing: 0.3px;">
+                        <p class="text-dark  text-uppercase mb-4" style="font-size: 0.75rem; line-height: 1.5; letter-spacing: 0.3px;">
                             The creative experience extends beyond the<br> collection In this workshop, discover the art of <br> collage through an interactive activity inspired<br>
                             by <strong>Caroline Hélain’s expressive landscapes.</strong><br> Create your own layered landscape using <br> paper, colour and tetxure to bring your <br> 
                             composition to life.

@@ -21,12 +21,19 @@
 </IfModule>
 
 <IfModule mod_headers.c>
-    SetEnvIf Origin "^https://(luckydrawkl\.ipropertyevents\.com|luckydrawpng\.ipropertyevents\.com)$" CORS_ORIGIN=$0
+
+    # Allow CORS from your domain
+    SetEnvIf Origin "^https://longchamp\.wowbynow\.com\.my$" CORS_ORIGIN=$0
+
     Header always unset Access-Control-Allow-Origin
     Header always set Access-Control-Allow-Origin "%{CORS_ORIGIN}e" env=CORS_ORIGIN
     Header always set Access-Control-Allow-Methods "GET, POST, OPTIONS"
     Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
     Header always set Access-Control-Allow-Credentials "true"
+
+    # Allow camera access
+    Header always set Permissions-Policy "camera=(self)"
+
 </IfModule>
 
 <IfModule mod_rewrite.c>

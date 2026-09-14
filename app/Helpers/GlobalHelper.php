@@ -231,6 +231,24 @@ class GlobalHelper
         ])->render();
 
         try {
+            if (config('services.mail_otp_provider', 'mailtrap') === 'brevo') {
+                Http::withHeaders([
+                    'api-key' => config('services.brevo.api_key'),
+                    'accept' => 'application/json',
+                ])->connectTimeout(5)->timeout(15)->post('https://api.brevo.com/v3/smtp/email', [
+                    'sender' => [
+                        'name' => config('services.brevo.from_name'),
+                        'email' => config('services.brevo.from_email'),
+                    ],
+                    'to' => [['email' => $email, 'name' => $booking->customer_name ?? 'Valued Guest']],
+                    'subject' => $subject,
+                    'htmlContent' => $htmlContent,
+                    'tags' => [$isModification ? 'booking-modification' : 'booking-confirmation'],
+                ])->throw();
+
+                return true;
+            }
+
             Mail::html($htmlContent, function ($message) use ($email, $customerName, $subject) {
                 $message->to($email, $customerName)
                         ->subject($subject);

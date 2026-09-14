@@ -31,6 +31,8 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'mail_otp_provider' => env('MAIL_OTP_PROVIDER', 'mailtrap'),
+
     'brevo' => [
         'api_key' => env('BREVO_API_KEY'),
         'from_email' => env('BREVO_FROM_EMAIL'),

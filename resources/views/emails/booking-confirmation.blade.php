@@ -133,7 +133,7 @@
     <div class="email-wrapper">
         <div class="email-card">
             <!-- Header Image Placeholder -->
-            <img class="header-image" src="{{ $headerImage ?? 'https://placehold.co/600x240/f4efe9/555555?text=Header+Image+Placeholder' }}" alt="Longchamp Event Banner">
+            <img class="header-image" src="{{ $headerImage ?? asset('images/brand/email_banner.webp') }}" alt="Longchamp Event Banner">
 
             <div class="content-body">
                 <!-- Status Title -->

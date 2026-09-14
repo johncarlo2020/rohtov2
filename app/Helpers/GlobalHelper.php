@@ -100,7 +100,7 @@ class GlobalHelper
      * - brevo
      * - mailtrap
      */
-    public static function sendOtpEmail($email, $otp, $name = null,$otpType)
+    public static function sendOtpEmail($email, $otp, $name = null, $otpType = 'Verification')
     {
         $provider = config('services.mail_otp_provider', 'mailtrap');
 
@@ -114,7 +114,7 @@ class GlobalHelper
     /**
      * Send OTP using Brevo API.
      */
-    private static function sendOtpViaBrevo($email, $otp, $name = null,$otpType)
+    private static function sendOtpViaBrevo($email, $otp, $name = null, $otpType = 'Verification')
     {
         $htmlContent = self::otpEmailContent($otp, $name,$otpType);
 
@@ -155,7 +155,7 @@ class GlobalHelper
     /**
      * Send OTP using Mailtrap SMTP.
      */
-    private static function sendOtpViaMailtrap($email, $otp, $name = null,$otpType)
+    private static function sendOtpViaMailtrap($email, $otp, $name = null, $otpType = 'Verification')
     {
         $html = self::otpEmailContent($otp, $name,$otpType);
 
@@ -171,7 +171,7 @@ class GlobalHelper
     /**
      * OTP email HTML content.
      */
-    private static function otpEmailContent($otp, $name = null,$otpType)
+    private static function otpEmailContent($otp, $name = null, $otpType = 'Verification')
     {
         $name = e($name ?? 'there');
 
@@ -195,16 +195,89 @@ class GlobalHelper
     /**
      * Send booking confirmation or modification email.
      */
+    // public static function sendBookingConfirmationEmail($booking, bool $isModification = false)
+    // {
+    //     $email = $booking->customer_email;
+    //     if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    //         return false;
+    //     }
+
+    //     $customerName = e($booking->customer_name ?? 'Valued Guest');
+    //     $dateFormatted = $booking->bookingDate ? strtoupper(\Carbon\Carbon::parse($booking->bookingDate->date)->format('jS F')) : 'N/A';
+    //     $timeFormatted = $booking->bookingSlot ? strtoupper(\Carbon\Carbon::parse($booking->bookingSlot->start_time)->format('g:i A')) : 'N/A';
+    //     $venue = 'LONGCHAMP POP UP STORE THE GARDENS MALL';
+
+    //     // Retrieve user ID if available
+    //     $user = \App\Models\User::where('email', $email)->first();
+    //     $userId = $user ? $user->id : ($booking->id ?? 'GUEST');
+
+    //     $qrRawData = "USER_ID:{$userId}|REF:{$booking->reference_no}";
+    //     $qrCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=" . urlencode($qrRawData);
+    //     $modifyUrl = url('/reservation-create?modify=1');
+
+    //     $actionText = $isModification ? 'UPDATED' : 'CONFIRMED';
+    //     $subject = $isModification 
+    //         ? 'Booking Modification – Longchamp x Caroline Hélain'
+    //         : 'Booking Confirmation – Longchamp x Caroline Hélain';
+
+    //     $htmlContent = view('emails.booking-confirmation', [
+    //         'subject' => $subject,
+    //         'customerName' => $customerName,
+    //         'dateFormatted' => $dateFormatted,
+    //         'timeFormatted' => $timeFormatted,
+    //         'qrCodeUrl' => $qrCodeUrl,
+    //         'modifyUrl' => $modifyUrl,
+    //         'actionText' => $actionText,
+    //     ])->render();
+
+    //     try {
+    //         if (config('services.mail_otp_provider', 'mailtrap') === 'brevo') {
+    //             Http::withHeaders([
+    //                 'api-key' => config('services.brevo.api_key'),
+    //                 'accept' => 'application/json',
+    //             ])->connectTimeout(5)->timeout(15)->post('https://api.brevo.com/v3/smtp/email', [
+    //                 'sender' => [
+    //                     'name' => config('services.brevo.from_name'),
+    //                     'email' => config('services.brevo.from_email'),
+    //                 ],
+    //                 'to' => [['email' => $email, 'name' => $booking->customer_name ?? 'Valued Guest']],
+    //                 'subject' => $subject,
+    //                 'htmlContent' => $htmlContent,
+    //                 'tags' => [$isModification ? 'booking-modification' : 'booking-confirmation'],
+    //             ])->throw();
+
+    //             return true;
+    //         }
+
+    //         Mail::html($htmlContent, function ($message) use ($email, $customerName, $subject) {
+    //             $message->to($email, $customerName)
+    //                     ->subject($subject);
+    //         });
+    //         return true;
+    //     } catch (\Throwable $e) {
+    //         \Log::error('Failed to send booking confirmation email: ' . $e->getMessage());
+    //         return false;
+    //     }
+    // }
+
     public static function sendBookingConfirmationEmail($booking, bool $isModification = false)
     {
         $email = $booking->customer_email;
+
         if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return false;
         }
 
         $customerName = e($booking->customer_name ?? 'Valued Guest');
-        $dateFormatted = $booking->bookingDate ? strtoupper(\Carbon\Carbon::parse($booking->bookingDate->date)->format('jS F')) : 'N/A';
-        $timeFormatted = $booking->bookingSlot ? strtoupper(\Carbon\Carbon::parse($booking->bookingSlot->start_time)->format('g:i A')) : 'N/A';
+
+        $dateFormatted = $booking->bookingDate
+            ? strtoupper(\Carbon\Carbon::parse($booking->bookingDate->date)->format('jS F'))
+            : 'N/A';
+
+        $timeFormatted = $booking->bookingSlot
+            ? strtoupper(\Carbon\Carbon::parse($booking->bookingSlot->start_time)->format('g:i A'))
+            : 'N/A';
+
         $venue = 'LONGCHAMP POP UP STORE THE GARDENS MALL';
 
         // Retrieve user ID if available
@@ -212,11 +285,15 @@ class GlobalHelper
         $userId = $user ? $user->id : ($booking->id ?? 'GUEST');
 
         $qrRawData = "USER_ID:{$userId}|REF:{$booking->reference_no}";
-        $qrCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=" . urlencode($qrRawData);
+
+        $qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data='
+            . urlencode($qrRawData);
+
         $modifyUrl = url('/reservation-create?modify=1');
 
         $actionText = $isModification ? 'UPDATED' : 'CONFIRMED';
-        $subject = $isModification 
+
+        $subject = $isModification
             ? 'Booking Modification – Longchamp x Caroline Hélain'
             : 'Booking Confirmation – Longchamp x Caroline Hélain';
 
@@ -230,33 +307,71 @@ class GlobalHelper
             'actionText' => $actionText,
         ])->render();
 
-        try {
-            if (config('services.mail_otp_provider', 'mailtrap') === 'brevo') {
-                Http::withHeaders([
-                    'api-key' => config('services.brevo.api_key'),
-                    'accept' => 'application/json',
-                ])->connectTimeout(5)->timeout(15)->post('https://api.brevo.com/v3/smtp/email', [
-                    'sender' => [
-                        'name' => config('services.brevo.from_name'),
-                        'email' => config('services.brevo.from_email'),
-                    ],
-                    'to' => [['email' => $email, 'name' => $booking->customer_name ?? 'Valued Guest']],
-                    'subject' => $subject,
-                    'htmlContent' => $htmlContent,
-                    'tags' => [$isModification ? 'booking-modification' : 'booking-confirmation'],
-                ])->throw();
+        $textContent = $isModification
+            ? "Your Longchamp x Caroline Hélain booking has been updated. "
+            . "Date: {$dateFormatted}. "
+            . "Time: {$timeFormatted}. "
+            . "Reference: {$booking->reference_no}. "
+            . "Venue: {$venue}."
+            : "Your Longchamp x Caroline Hélain booking is confirmed. "
+            . "Date: {$dateFormatted}. "
+            . "Time: {$timeFormatted}. "
+            . "Reference: {$booking->reference_no}. "
+            . "Venue: {$venue}.";
 
-                return true;
+        try {
+            $response = Http::withHeaders([
+                'accept' => 'application/json',
+                'api-key' => config('services.brevo.api_key'),
+                'content-type' => 'application/json',
+            ])
+            ->connectTimeout(5)
+            ->timeout(15)
+            ->post('https://api.brevo.com/v3/smtp/email', [
+                'sender' => [
+                    'name' => config('services.brevo.from_name'),
+                    'email' => config('services.brevo.from_email'),
+                ],
+
+                'to' => [
+                    [
+                        'email' => $email,
+                        'name' => $booking->customer_name ?? 'Valued Guest',
+                    ],
+                ],
+
+                'subject' => $subject,
+                'htmlContent' => $htmlContent,
+                'textContent' => $textContent,
+
+                'tags' => [
+                    $isModification
+                        ? 'booking-modification'
+                        : 'booking-confirmation',
+                ],
+            ]);
+
+            if ($response->failed()) {
+                throw new \Exception(
+                    'Brevo failed to send booking email: ' . $response->body()
+                );
             }
 
-            Mail::html($htmlContent, function ($message) use ($email, $customerName, $subject) {
-                $message->to($email, $customerName)
-                        ->subject($subject);
-            });
             return true;
+
         } catch (\Throwable $e) {
-            \Log::error('Failed to send booking confirmation email: ' . $e->getMessage());
+            \Log::error(
+                'Failed to send booking confirmation email via Brevo: '
+                . $e->getMessage(),
+                [
+                    'email' => $email,
+                    'booking_id' => $booking->id ?? null,
+                    'reference_no' => $booking->reference_no ?? null,
+                ]
+            );
+
             return false;
         }
     }
+
 }

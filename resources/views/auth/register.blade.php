@@ -27,7 +27,7 @@
                     <form id="form" method="POST" action="{{ route('register') }}">
                         @csrf
 
-                        <div class="register-fields-scroll pe-2">
+                        <div class="pe-2">
                             {{-- Title --}}
                             <div class="mb-3">
                                 <label class="field-label">Title:</label>

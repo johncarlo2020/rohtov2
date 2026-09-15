@@ -34,7 +34,7 @@
 
         @media (min-width: 992px) {
             .booking-fields-scroll {
-                max-height: 60vh;
+                max-height: 90vh;
                 overflow-y: auto;
                 overflow-x: hidden;
                 padding-right: 6px;
@@ -237,7 +237,7 @@
 
                                 <!-- NEXT BUTTON -->
                                 <div class="mt-4 text-center">
-                                    <button id="next-btn" disabled type="button" class="custom-btn custom-btn-primary mb-2 pulse-slow" style="max-width: 220px; width: 100%;">
+                                    <button id="next-btn" disabled type="button" class="custom-btn custom-btn-primary mb-2" style="max-width: 220px; width: 100%;">
                                         NEXT
                                     </button>
                                 </div>
@@ -313,7 +313,7 @@
             <!-- Bottom Horse Logo -->
             <div class="col-12 bot">
                 <div class="logo-bot d-flex justify-content-center mt-3">
-                    <img src="{{ asset('images/brand/bot_logo.webp') }}" class="img-fluid" alt="Footer Image" srcset="" style="width: 4rem;">
+                    <img src="{{ asset('images/brand/bot_logo.webp') }}" class="img-fluid" alt="Footer Image" srcset="" style="width: 123px; height: 45px; object-fit: contain;">
                 </div>
             </div>
         </div>
@@ -358,7 +358,7 @@
                 <button id="modal-back-btn" type="button" class="btn btn-link text-dark fw-bold text-uppercase p-0 text-decoration-none mb-1" style="font-size: 0.8rem; letter-spacing: 0.05em;">
                     BACK
                 </button>
-                <button id="modal-confirm-btn" type="button" class="custom-btn custom-btn-primary pulse-slow" style="max-width: 220px; width: 100%;">
+                <button id="modal-confirm-btn" type="button" class="custom-btn custom-btn-primary" style="max-width: 220px; width: 100%;">
                     CONFIRM
                 </button>
             </div>
@@ -382,7 +382,7 @@
 
             <!-- Action Button -->
             <div class="d-flex justify-content-center">
-                <button id="slot-error-back-btn" type="button" class="custom-btn custom-btn-primary pulse-slow" style="max-width: 220px; width: 100%;">
+                <button id="slot-error-back-btn" type="button" class="custom-btn custom-btn-primary " style="max-width: 220px; width: 100%;">
                     BACK
                 </button>
             </div>
@@ -776,7 +776,7 @@
 
             function enableNextButton() {
                 nextBtn.disabled = false;
-                nextBtn.className = 'custom-btn custom-btn-primary mb-2 pulse-slow';
+                nextBtn.className = 'custom-btn custom-btn-primary mb-2';
                 nextBtn.style.maxWidth = '220px';
                 nextBtn.style.width = '100%';
             }
@@ -809,7 +809,7 @@
                 document.getElementById('date-box-text').className = 'text-muted fw-bold';
                 document.getElementById('time-slots-section').classList.add('d-none');
                 nextBtn.disabled = true;
-                nextBtn.className = 'custom-btn custom-btn-primary mb-2 pulse-slow';
+                nextBtn.className = 'custom-btn custom-btn-primary mb-2';
                 nextBtn.style.maxWidth = '220px';
                 nextBtn.style.width = '100%';
 

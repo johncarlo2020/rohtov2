@@ -289,8 +289,15 @@ class GlobalHelper
         $qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data='
             . urlencode($qrRawData);
 
-        $modifyUrl = url('/reservation-create?modify=1');
-        $cancelUrl = url('/reservation-cancel?ref=' . urlencode($booking->reference_no));
+        $modifyUrl = secure_url('/reservation-create?modify=1');
+        if (str_starts_with($modifyUrl, 'http://')) {
+            $modifyUrl = 'https://' . substr($modifyUrl, 7);
+        }
+
+        $cancelUrl = secure_url('/reservation-cancel?ref=' . urlencode($booking->reference_no));
+        if (str_starts_with($cancelUrl, 'http://')) {
+            $cancelUrl = 'https://' . substr($cancelUrl, 7);
+        }
 
         $actionText = $isModification ? 'UPDATED' : 'CONFIRMED';
 
@@ -298,9 +305,45 @@ class GlobalHelper
             ? 'Booking Modification - Longchamp x Caroline Helain'
             : 'Booking Confirmation - Longchamp x Caroline Helain';
 
-        // Use clean lightweight image URLs (< 4 KB total payload) to prevent Gmail 102 KB message clipping & rejection
-        $headerImage = asset('images/brand/email_banner.jpg');
-        $bottomLogo = asset('images/brand/bot_logo.png');
+        $baseUrl = config('app.url');
+        if (empty($baseUrl) || str_contains($baseUrl, '.test') || str_contains($baseUrl, 'localhost')) {
+            $baseUrl = 'https://workshopbooking.longchamppopupmy.com';
+        }
+
+        // Prepare inline CID attachments for Brevo API so images render natively in Gmail/Yahoo
+        $attachments = [];
+        $bannerFile  = public_path('images/brand/email_banner.jpg');
+        if (!file_exists($bannerFile)) {
+            $bannerFile = public_path('images/brand/email_banner.webp');
+        }
+
+        $logoFile = public_path('images/brand/bot_logo.png');
+        if (!file_exists($logoFile)) {
+            $logoFile = public_path('images/brand/bot_logo.webp');
+        }
+
+        if (file_exists($bannerFile)) {
+            $bannerName = basename($bannerFile);
+            $attachments[] = [
+                'name' => $bannerName,
+                'content' => base64_encode(file_get_contents($bannerFile)),
+            ];
+            $headerImage = 'cid:' . $bannerName;
+        } else {
+            $headerImage = rtrim($baseUrl, '/') . '/images/brand/email_banner.webp';
+        }
+
+        if (file_exists($logoFile)) {
+            $logoName = basename($logoFile);
+            $attachments[] = [
+                'name' => $logoName,
+                'content' => base64_encode(file_get_contents($logoFile)),
+            ];
+            $bottomLogo = 'cid:' . $logoName;
+        } else {
+            $bottomLogo = rtrim($baseUrl, '/') . '/images/brand/bot_logo.webp';
+        }
+
         $qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' . urlencode($qrRawData);
 
         $htmlContent = view('emails.booking-confirmation', [
@@ -329,14 +372,7 @@ class GlobalHelper
             . "Venue: {$venue}.";
 
         try {
-            $response = Http::withHeaders([
-                'accept' => 'application/json',
-                'api-key' => config('services.brevo.api_key'),
-                'content-type' => 'application/json',
-            ])
-            ->connectTimeout(5)
-            ->timeout(15)
-            ->post('https://api.brevo.com/v3/smtp/email', [
+            $brevoPayload = [
                 'sender' => [
                     'name' => config('services.brevo.from_name'),
                     'email' => config('services.brevo.from_email'),
@@ -358,7 +394,20 @@ class GlobalHelper
                         ? 'booking-modification'
                         : 'booking-confirmation',
                 ],
-            ]);
+            ];
+
+            if (!empty($attachments)) {
+                $brevoPayload['attachment'] = $attachments;
+            }
+
+            $response = Http::withHeaders([
+                'accept' => 'application/json',
+                'api-key' => config('services.brevo.api_key'),
+                'content-type' => 'application/json',
+            ])
+            ->connectTimeout(5)
+            ->timeout(15)
+            ->post('https://api.brevo.com/v3/smtp/email', $brevoPayload);
 
             if ($response->failed()) {
                 throw new \Exception(

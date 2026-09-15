@@ -345,7 +345,7 @@
         const userName = $(this).data('user-name');
 
         let deleteUrl = @json(route('users.destroy', ['id' => ':id']));
-        deleteUrl = deleteUrl.replace(':id', userId);
+        deleteUrl = deleteUrl.replace(':id', userId).replace('%3Aid', userId);
 
         $('#deleteUserForm').attr('action', deleteUrl);
         $('#deleteUserName').text(userName);

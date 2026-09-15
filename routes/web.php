@@ -192,10 +192,12 @@ Route::group(['middleware' => ['client']], function () {
     Route::get('/reservation-create', [BookingViewController::class, 'index'])->name('reservation.create');
     Route::post('/reservation-create', [BookingViewController::class, 'store'])->name('reservation.store');
     Route::post('/reservation-create/modify', [BookingViewController::class, 'modify'])->name('reservation.modify');
+    Route::get('/reservation-cancel', [BookingViewController::class, 'cancel'])->name('reservation.cancel');
 
     Route::get('/booking', [BookingViewController::class, 'index'])->name('booking.flow');
     Route::post('/booking', [BookingViewController::class, 'store']);
     Route::post('/booking/modify', [BookingViewController::class, 'modify']);
+    Route::get('/booking/cancel', [BookingViewController::class, 'cancel'])->name('booking.cancel');
 
 });
 

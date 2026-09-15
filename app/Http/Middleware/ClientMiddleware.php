@@ -21,6 +21,7 @@ class ClientMiddleware
             return $next($request);
         }
 
+        session()->put('url.intended', $request->fullUrl());
         return redirect()->route('login');
     }
 }

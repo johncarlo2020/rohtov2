@@ -443,36 +443,109 @@ class StationController extends Controller
 
   public function userDelete($id)
   {
-    $user = User::findOrFail($id);
+    try {
+      $user = User::findOrFail($id);
 
-    // Check if user is protected admin
-    if ($user->isProtectedAdmin()) {
-      return redirect()
-        ->back()
-        ->with("error", "This admin user is protected and cannot be deleted.");
+      // Check if user is protected admin
+      if ($user->isProtectedAdmin()) {
+        return redirect()
+          ->back()
+          ->with("error", "This admin user is protected and cannot be deleted.");
+      }
+
+      DB::transaction(function () use ($user) {
+        // Delete related station user entries if table exists
+        if (\Illuminate\Support\Facades\Schema::hasTable('station_users')) {
+          $user->stationUser()->delete();
+        }
+
+        // Delete related user gifts if table exists
+        if (\Illuminate\Support\Facades\Schema::hasTable('user_gifts')) {
+          \App\Models\UserGift::where('user_id', $user->id)->delete();
+        }
+
+        // Delete related voucher claims if table exists
+        if (\Illuminate\Support\Facades\Schema::hasTable('voucher_claims')) {
+          \App\Models\VoucherClaim::where('user_id', $user->id)->delete();
+        }
+
+        // Nullify history logs & gift stock logs user_id
+        if (\Illuminate\Support\Facades\Schema::hasTable('history_logs')) {
+          \App\Models\HistoryLog::where('user_id', $user->id)->update(['user_id' => null]);
+        }
+        if (\Illuminate\Support\Facades\Schema::hasTable('gift_stock_logs')) {
+          \App\Models\GiftStockLog::where('user_id', $user->id)->update(['user_id' => null]);
+        }
+
+        // Clean up bookings associated with this user and restore slot capacity
+        $userBookings = \App\Models\Booking::where(function ($q) use ($user) {
+          $q->where('customer_email', strtolower($user->email));
+          $phone1 = trim($user->phone_number ?? '');
+          $phone2 = trim($user->number ?? '');
+          if (!empty($phone1) && !in_array($phone1, ['-', 'N/A', 'null'])) {
+            $q->orWhere('customer_phone', $phone1);
+          }
+          if (!empty($phone2) && !in_array($phone2, ['-', 'N/A', 'null'])) {
+            $q->orWhere('customer_phone', $phone2);
+          }
+        })->get();
+
+        foreach ($userBookings as $b) {
+          if ($b->status === 'confirmed' && $b->booking_slot_id) {
+            $slot = \App\Models\BookingSlot::find($b->booking_slot_id);
+            if ($slot && $slot->booked_count > 0) {
+              $slot->decrement('booked_count');
+            }
+          }
+          $b->delete();
+        }
+
+        // Detach roles & permissions
+        if (method_exists($user, 'syncRoles')) {
+          $user->syncRoles([]);
+        }
+        if (method_exists($user, 'syncPermissions')) {
+          $user->syncPermissions([]);
+        }
+
+        $userName = $user->name ?: (trim(($user->fname ?? '') . ' ' . ($user->lname ?? '')) ?: 'User');
+        $userEmail = $user->email;
+
+        // Delete the user
+        $user->delete();
+
+        \App\Services\HistoryLogService::log(
+          'DELETE_USER',
+          "Deleted user account {$userName} ({$userEmail})",
+          'User',
+          null
+        );
+      });
+
+      return redirect()->back()->with("success", "User deleted successfully.");
+
+    } catch (\Throwable $e) {
+      \Log::error("Failed to delete user ID {$id}: " . $e->getMessage());
+      return redirect()->back()->with("error", "Failed to delete user: " . $e->getMessage());
     }
-
-    // Delete related station user entries
-    $user->stationUser()->delete(); // ✅ Correct for hasMany
-
-    // Delete the user
-    $user->delete();
-
-    return redirect()->back()->with("success", "User deleted successfully.");
   }
 
   public function admin()
   {
     $admin = User::find(auth()->id());
-    $permission = $admin->getPermissionNames()->first();
+    $permission = $admin ? $admin->getPermissionNames()->first() : null;
     $today = Carbon::today();
     $startDate = Carbon::create(2025, 11, 17);
+
+    $currentUser = auth()->user();
+    $isAdmin = $currentUser && ($currentUser->isSuperAdmin() || $currentUser->hasRole('admin') || $currentUser->isProtectedAdmin() || $currentUser->isAdminOrStaff());
+    $excludedRoles = $isAdmin ? ["admin", "superadmin"] : ["admin", "superadmin", "staff"];
 
     $withStations = \Schema::hasTable('station_users') ? ["stationUser"] : [];
     $data["users"] = User::with($withStations)
       ->orderBy("id", "desc")
-      ->whereDoesntHave("roles", function ($q) {
-        $q->whereIn("name", ["admin", "superadmin", "staff"]);
+      ->whereDoesntHave("roles", function ($q) use ($excludedRoles) {
+        $q->whereIn("name", $excludedRoles);
       })
       ->where(
         DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'),
@@ -486,8 +559,8 @@ class StationController extends Controller
       ">=",
       $startDate->toDateString()
     )
-      ->whereDoesntHave("roles", function ($q) {
-        $q->whereIn("name", ["admin", "superadmin", "staff"]);
+      ->whereDoesntHave("roles", function ($q) use ($excludedRoles) {
+        $q->whereIn("name", $excludedRoles);
       })
       ->where(
         DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'),
@@ -558,8 +631,8 @@ class StationController extends Controller
     $data['missedCount'] = $missedCount;
 
     $data["userToday"] = User::whereDate("created_at", $today)
-      ->whereDoesntHave("roles", function ($q) {
-        $q->whereIn("name", ["admin", "superadmin", "staff"]);
+      ->whereDoesntHave("roles", function ($q) use ($excludedRoles) {
+        $q->whereIn("name", $excludedRoles);
       })
       ->where(
         DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'),
@@ -568,8 +641,8 @@ class StationController extends Controller
       )
       ->count();
     $data["country"] = User::selectRaw("country , COUNT(*) as count")
-      ->whereDoesntHave("roles", function ($q) {
-        $q->whereIn("name", ["admin", "superadmin", "staff"]);
+      ->whereDoesntHave("roles", function ($q) use ($excludedRoles) {
+        $q->whereIn("name", $excludedRoles);
       })
       ->where(
         DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'),
@@ -583,8 +656,8 @@ class StationController extends Controller
     //   dd($data['where']);
 
     $usersWithSixStationUsers = \Schema::hasTable('station_users')
-      ? User::whereDoesntHave("roles", function ($q) {
-          $q->whereIn("name", ["admin", "superadmin", "staff"]);
+      ? User::whereDoesntHave("roles", function ($q) use ($excludedRoles) {
+          $q->whereIn("name", $excludedRoles);
         })
         ->whereDate("created_at", ">=", $startDate->toDateString())
         ->has("stationUser", ">=", 3)
@@ -603,8 +676,8 @@ class StationController extends Controller
       $data["percentage"] = 0; // Avoid division by zero
     }
     $userCounts = User::selectRaw("DATE(created_at) as date, COUNT(*) as count")
-      ->whereDoesntHave("roles", function ($q) {
-        $q->whereIn("name", ["admin", "superadmin", "staff"]);
+      ->whereDoesntHave("roles", function ($q) use ($excludedRoles) {
+        $q->whereIn("name", $excludedRoles);
       })
       ->groupBy("date")
       ->orderBy("date")
@@ -615,8 +688,8 @@ class StationController extends Controller
     $data["dates"] = User::select(
       DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as date')
     )
-      ->whereDoesntHave("roles", function ($q) {
-        $q->whereIn("name", ["admin", "superadmin", "staff"]);
+      ->whereDoesntHave("roles", function ($q) use ($excludedRoles) {
+        $q->whereIn("name", $excludedRoles);
       })
       ->where(
         DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'),
@@ -632,8 +705,8 @@ class StationController extends Controller
       DB::raw('LOWER(DATE_FORMAT(created_at, "%l%p")) as hour'),
       DB::raw("COUNT(*) as registrations")
     )
-      ->whereDoesntHave("roles", function ($q) {
-        $q->whereIn("name", ["admin", "superadmin", "staff"]);
+      ->whereDoesntHave("roles", function ($q) use ($excludedRoles) {
+        $q->whereIn("name", $excludedRoles);
       })
       ->whereNotNull("created_at")
       ->whereDate("created_at", ">=", $startDate->toDateString())
@@ -817,9 +890,8 @@ class StationController extends Controller
 
   public function users()
   {
-  
     $today = Carbon::today();
-    $permission = auth()->user()->getPermissionNames()->first();
+    $permission = auth()->user() ? auth()->user()->getPermissionNames()->first() : null;
 
     $startDate = Carbon::create(2025, 6, 17);
     $withRelations = [];
@@ -827,13 +899,17 @@ class StationController extends Controller
     if (\Schema::hasTable('user_gifts')) $withRelations[] = 'userGift.gift';
     if (\Schema::hasTable('vouchers')) $withRelations[] = 'voucherClaims.voucher';
 
+    $currentUser = auth()->user();
+    $isAdmin = $currentUser && ($currentUser->isSuperAdmin() || $currentUser->hasRole('admin') || $currentUser->isProtectedAdmin() || $currentUser->isAdminOrStaff());
+    $excludedRoles = $isAdmin ? ["admin", "superadmin"] : ["admin", "superadmin", "staff"];
+
     $data["users"] = User::whereDate(
       "created_at",
       ">=",
       $startDate->toDateString()
     )
-      ->whereDoesntHave("roles", function ($q) {
-        $q->whereIn("name", ["admin", "superadmin", "staff"]);
+      ->whereDoesntHave("roles", function ($q) use ($excludedRoles) {
+        $q->whereIn("name", $excludedRoles);
       })
       ->when(!empty($withRelations), function ($q) use ($withRelations) {
         $q->with($withRelations);
@@ -841,21 +917,18 @@ class StationController extends Controller
       ->orderBy("id", "desc")
       ->get();
 
-
-    // dd($data["users"]);
-
     $data["usersCount"] = User::whereDate(
       "created_at",
       ">=",
       $startDate->toDateString()
     )
-      ->whereDoesntHave("roles", function ($q) {
-        $q->whereIn("name", ["admin", "superadmin", "staff"]);
+      ->whereDoesntHave("roles", function ($q) use ($excludedRoles) {
+        $q->whereIn("name", $excludedRoles);
       })
       ->count();
     $data["userToday"] = User::whereDate("created_at", $today)
-      ->whereDoesntHave("roles", function ($q) {
-        $q->whereIn("name", ["admin", "superadmin", "staff"]);
+      ->whereDoesntHave("roles", function ($q) use ($excludedRoles) {
+        $q->whereIn("name", $excludedRoles);
       })
       ->count();
 
@@ -1102,7 +1175,7 @@ class StationController extends Controller
       // $data = GlobalHelper::createSampleProfile();
       //  dd($data);
 
-      return redirect()->route("dashboard");
+      return redirect()->intended(route("dashboard"));
     }
 
     return back()->withErrors(["otp" => "Invalid OTP"]);

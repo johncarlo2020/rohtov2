@@ -133,7 +133,7 @@
     <div class="email-wrapper">
         <div class="email-card">
             <!-- Header Image Placeholder -->
-            <img class="header-image" src="{{ $headerImage ?? asset('images/brand/email_banner.webp') }}" alt="Longchamp Event Banner">
+            <img class="header-image" src="{{ $headerImage ?? asset('images/brand/email_banner.jpg') }}" alt="Longchamp Event Banner">
 
             <div class="content-body">
                 <!-- Status Title -->
@@ -185,6 +185,9 @@
                 <div style="margin-bottom: 10px;">
                     <a href="{{ $modifyUrl }}" class="btn-modify">MODIFY</a>
                 </div>
+                <div style="margin-top: 15px; margin-bottom: 15px; font-size: 11px; letter-spacing: 0.5px; text-transform: uppercase; font-family: sans-serif; color: #333333; text-align: center;">
+                    DO YOU WANT TO CANCEL? <a href="{{ $cancelUrl ?? url('/reservation-cancel') }}" style="color: #000000; text-decoration: underline; font-weight: bold;">CLICK HERE</a>
+                </div>
 
                 <!-- Footer Text -->
                 <div class="footer-text" style="margin-top: 35px;">
@@ -193,7 +196,7 @@
                 </div>
 
                 <!-- Bottom Logo -->
-                <img class="bottom-logo" src="{{ $bottomLogo ?? asset('images/brand/bot_logo.webp') }}" alt="Longchamp Logo">
+                <img class="bottom-logo" src="{{ $bottomLogo ?? asset('images/brand/bot_logo.png') }}" alt="Longchamp Logo">
             </div>
         </div>
     </div>

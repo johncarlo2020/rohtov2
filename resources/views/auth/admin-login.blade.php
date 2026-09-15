@@ -7,9 +7,13 @@
     <div class="main-content">
         <div class="card p-0 shadow-lg rounded admin-card animate-entry">
             <div class="row g-0 h-100">
-                <div class="col-lg-6 col-md-0 main-background d-lg-flex h-lg-100 h-md-50 py-4">
+                <div class="col-lg-6 col-md-0 d-lg-flex py-4">
                     <div class="branding-container w-100 h-100  d-flex justify-content-center align-items-center animate-entry delay-2">
-                        @include('components.branding')
+                        <div class="branding-header desktop-only-logo">
+                            <div class="branding text-center mb-5">
+                                <img class="logo" src="{{ asset('images/brand/logo.webp') }}" alt="Longchamp" />
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-12 col-lg-6 d-flex flex-column justify-content-center align-items-center p-lg-5 px-md-5  p-3">

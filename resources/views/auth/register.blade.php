@@ -20,7 +20,7 @@
             <!-- Middle Content -->
             <div class="mid">
                 <h1 class="mb-3 text-center fw-bold text-dark text-uppercase" style="font-size: 1.35rem; letter-spacing: 1px;">
-                    WORKSHOP REGISTRATION
+                    WORKSHOP <br> REGISTRATION
                 </h1> 
 
                 <div class="register-form-parent">

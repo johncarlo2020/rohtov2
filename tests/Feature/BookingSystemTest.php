@@ -166,6 +166,90 @@ class BookingSystemTest extends TestCase
     }
 
     /** @test */
+    public function it_redirects_unauthenticated_user_to_login_and_cancels_booking_on_web_flow()
+    {
+        $role = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'client']);
+        $user = \App\Models\User::factory()->create([
+            'email' => 'webcancel@example.com',
+            'number' => '09888888888',
+            'otp_verified' => 1,
+        ]);
+        $user->assignRole($role);
+
+        $slotsResponse = $this->getJson('/api/booking/dates/2026-10-06/slots');
+        $slotId = $slotsResponse->json()[0]['id'];
+
+        $slot = BookingSlot::find($slotId);
+
+        $bookingModel = Booking::create([
+            'booking_date_id' => $slot->booking_date_id,
+            'booking_slot_id' => $slot->id,
+            'reference_no' => 'REF-WEBCANCEL-123',
+            'customer_name' => 'Joshua Test',
+            'customer_email' => 'webcancel@example.com',
+            'customer_phone' => '09888888888',
+            'status' => 'confirmed',
+        ]);
+        BookingSlot::find($slotId)->increment('booked_count');
+
+        // Unauthenticated request should redirect to login and save intended URL
+        $response = $this->get('/reservation-cancel?ref=REF-WEBCANCEL-123');
+        $response->assertRedirect(route('login'));
+        $this->assertEquals(url('/reservation-cancel?ref=REF-WEBCANCEL-123'), session('url.intended'));
+
+        // Authenticated request cancels booking and shows success view
+        $response = $this->actingAs($user)->get('/reservation-cancel?ref=REF-WEBCANCEL-123');
+        $response->assertStatus(200);
+        $response->assertSee('BOOKING CANCEL!');
+        $response->assertSee('HI JOSHUA');
+        $response->assertSee('YOUR BOOKING HAS BEEN CANCELLED');
+
+        $bookingModel->refresh();
+        $this->assertEquals('cancelled', $bookingModel->status);
+    }
+
+    /** @test */
+    public function it_displays_cancel_booking_button_on_dashboard_for_authenticated_user()
+    {
+        $role = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'client']);
+        $user = \App\Models\User::factory()->create([
+            'email' => 'dashboardcancel@example.com',
+            'number' => '09777777777',
+            'otp_verified' => 1,
+        ]);
+        $user->assignRole($role);
+
+        $slotsResponse = $this->getJson('/api/booking/dates/2026-10-06/slots');
+        $slotId = $slotsResponse->json()[0]['id'];
+        $slot = BookingSlot::find($slotId);
+
+        $booking = Booking::create([
+            'booking_date_id' => $slot->booking_date_id,
+            'booking_slot_id' => $slot->id,
+            'reference_no' => 'REF-DASHBOARD-123',
+            'customer_name' => 'Dashboard User',
+            'customer_email' => 'dashboardcancel@example.com',
+            'customer_phone' => '09777777777',
+            'status' => 'confirmed',
+            'reschedule_count' => 0,
+        ]);
+
+        // Unmodified booking (reschedule_count = 0) should NOT show CANCEL BOOKING button
+        $response = $this->actingAs($user)->get('/dashboard');
+        $response->assertStatus(200);
+        $response->assertDontSee('CANCEL BOOKING');
+
+        // Modified booking (reschedule_count = 1) SHOULD show CANCEL BOOKING button
+        $booking->reschedule_count = 1;
+        $booking->save();
+
+        $response2 = $this->actingAs($user)->get('/dashboard');
+        $response2->assertStatus(200);
+        $response2->assertSee('CANCEL BOOKING');
+        $response2->assertSee('/reservation-cancel?ref=REF-DASHBOARD-123');
+    }
+
+    /** @test */
     public function it_allows_guest_to_modify_booking_once_only()
     {
         // Fetch slots for Wednesday Oct 14 and Wednesday Oct 7 (7 days before Oct 14)
@@ -621,5 +705,55 @@ class BookingSystemTest extends TestCase
         $modifyRes2->assertStatus(422);
 
         \Carbon\Carbon::setTestNow();
+    }
+
+    /** @test */
+    public function it_deletes_user_and_cleans_up_relations_via_admin_delete()
+    {
+        $adminRole = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'admin']);
+        $admin = \App\Models\User::factory()->create(['email' => 'admin_del@example.com']);
+        $admin->assignRole($adminRole);
+
+        $clientRole = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'client']);
+        $targetUser = \App\Models\User::factory()->create([
+            'email' => 'todelete@example.com',
+            'number' => '09111111111',
+        ]);
+        $targetUser->assignRole($clientRole);
+
+        if (\Illuminate\Support\Facades\Schema::hasTable('station_users')) {
+            \App\Models\StationUser::create([
+                'user_id' => $targetUser->id,
+                'station_id' => 1,
+                'time_spent' => 60,
+            ]);
+        }
+
+        $response = $this->actingAs($admin)->delete("/admin/users/{$targetUser->id}");
+        $response->assertRedirect();
+        $response->assertSessionHas('success', 'User deleted successfully.');
+
+        $this->assertDatabaseMissing('users', ['id' => $targetUser->id]);
+    }
+
+    /** @test */
+    public function it_allows_admin_to_see_staff_accounts_in_users_list()
+    {
+        $adminRole = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'admin']);
+        $admin = \App\Models\User::factory()->create(['email' => 'admin_viewer@example.com']);
+        $admin->assignRole($adminRole);
+
+        $staffRole = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'staff']);
+        $staffUser = \App\Models\User::factory()->create([
+            'fname' => 'StaffMember',
+            'email' => 'staffmember@example.com',
+        ]);
+        $staffUser->assignRole($staffRole);
+
+        $response = $this->actingAs($admin)->get('/admin/users');
+        $response->assertStatus(200);
+        $response->assertSee('staffmember@example.com');
+        $response->assertSee('StaffMember');
+        $response->assertSee('STAFF');
     }
 }

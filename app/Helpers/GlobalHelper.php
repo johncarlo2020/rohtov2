@@ -290,6 +290,7 @@ class GlobalHelper
             . urlencode($qrRawData);
 
         $modifyUrl = url('/reservation-create?modify=1');
+        $cancelUrl = url('/reservation-cancel?ref=' . urlencode($booking->reference_no));
 
         $actionText = $isModification ? 'UPDATED' : 'CONFIRMED';
 
@@ -304,6 +305,7 @@ class GlobalHelper
             'timeFormatted' => $timeFormatted,
             'qrCodeUrl' => $qrCodeUrl,
             'modifyUrl' => $modifyUrl,
+            'cancelUrl' => $cancelUrl,
             'actionText' => $actionText,
         ])->render();
 

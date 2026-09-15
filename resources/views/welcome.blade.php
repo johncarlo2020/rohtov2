@@ -20,13 +20,12 @@
             <!-- Middle Content -->
             <div class="mid">
                 <div class="text-center">
-                    <h1 class="text-dark text-uppercase mb-3" style="font-size: 1.15rem; line-height: 1.45; letter-spacing: 0.5px; font-weight: 700;">
-                        LONGCHAMP INVITES YOU TO <br>
-                        "<strong class="fw-bold">BE CREATIVE</strong>" <br>
+                    <h1 class="text-dark text-uppercase mb-3" style="font-size: 1.15rem; line-height: 1.45; letter-spacing: 0.5px; font-weight:400;">
+                        LONGCHAMP INVITES YOU TO "<strong class="fw-bold">BE CREATIVE</strong>" <br>
                         THIS WINTER 2026, EXCLUSIVELY IN MALAYSIA
                     </h1>
 
-                    <p class="text-dark text-uppercase mb-4" style="font-size: 0.725rem; line-height: 1.55; letter-spacing: 0.3px; color: #444444;">
+                    <p class="text-dark mb-4" style="font-size: 0.725rem; line-height: 1.55; letter-spacing: 0.3px; color: #444444;">
                         The creative experience extends beyond the collection. In this workshop, discover the art of collage through an interactive activity inspired by <strong>Caroline Hélain’s expressive landscapes.</strong> Create your own layered landscape using paper, colour and texture to bring your composition to life.
                     </p>
 

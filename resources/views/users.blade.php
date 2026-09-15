@@ -128,13 +128,28 @@
                             <th>Attendance Status</th>
                             <th>Registration Timestamp</th>
                             <th>Action</th>
+                            <th class="export-col d-none">title</th>
+                            <th class="export-col d-none">fname</th>
+                            <th class="export-col d-none">lname</th>
+                            <th class="export-col d-none">number</th>
+                            <th class="export-col d-none">email</th>
+                            <th class="export-col d-none">preferred_contact</th>
+                            <th class="export-col d-none">consent_channels</th>
+                            <th class="export-col d-none">communication_consent</th>
+                            <th class="export-col d-none">newsletter_consent</th>
+                            <th class="export-col d-none">created_at</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($data['users'] as $user)
                         <tr data-user-id="{{ $user->id }}">
                             <td>{{ $loop->iteration }}</td>
-                            <td class="font-weight-bold">{{ trim(($user->title ? $user->title . ' ' : '') . $user->fname . ' ' . $user->lname) ?: $user->fname }}</td>
+                            <td class="font-weight-bold">
+                                {{ trim(($user->title ? $user->title . ' ' : '') . $user->fname . ' ' . $user->lname) ?: $user->fname }}
+                                @if($user->hasRole('staff'))
+                                    <span class="badge bg-info text-white ms-1" style="font-size: 10px; font-weight: 600;">STAFF</span>
+                                @endif
+                            </td>
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->number ?? '-' }}</td>
                             <td><span class="badge bg-light text-dark border">{{ $user->booking_date_text }}</span></td>
@@ -167,6 +182,16 @@
                                         data-user-name="{{ $user->fname }}">Delete</button>
                                 @endif
                             </td>
+                            <td class="export-col d-none">{{ $user->title ?? '' }}</td>
+                            <td class="export-col d-none">{{ $user->fname ?? '' }}</td>
+                            <td class="export-col d-none">{{ $user->lname ?? '' }}</td>
+                            <td class="export-col d-none">{{ $user->number ?? '' }}</td>
+                            <td class="export-col d-none">{{ $user->email ?? '' }}</td>
+                            <td class="export-col d-none">{{ $user->preferred_contact ?? '' }}</td>
+                            <td class="export-col d-none">{{ is_array($user->consent_channels) ? implode(', ', $user->consent_channels) : ($user->consent_channels ?? '') }}</td>
+                            <td class="export-col d-none">{{ $user->communication_consent ? '1' : '0' }}</td>
+                            <td class="export-col d-none">{{ $user->newsletter_consent ? '1' : '0' }}</td>
+                            <td class="export-col d-none">{{ $user->created_at ? \Carbon\Carbon::parse($user->created_at)->toDateTimeString() : '' }}</td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -487,7 +512,7 @@
                     return exportFileName; // ✅ ALWAYS correct
                 },
                 exportOptions: {
-                    columns: ':not(:last-child)',
+                    columns: '.export-col',
                     modifier: { search: 'applied' }
                 }
             },
@@ -498,7 +523,7 @@
                     return exportFileName; // ✅ ALWAYS correct
                 },
                 exportOptions: {
-                    columns: ':not(:last-child)',
+                    columns: '.export-col',
                     modifier: { search: 'applied' }
                 }
             },
@@ -525,7 +550,7 @@
         columnDefs: [
             {
                 orderable: false,
-                targets: -1 // Action/Delete column
+                targets: 8 // Action/Delete column
             },
             {
                 targets: 4, // Preferred Location / Booking Date
@@ -765,7 +790,7 @@
         const userName = $(this).data('user-name');
 
         let deleteUrl = @json(route('users.destroy', ['id' => ':id']));
-        deleteUrl = deleteUrl.replace(':id', userId);
+        deleteUrl = deleteUrl.replace(':id', userId).replace('%3Aid', userId);
 
         $('#deleteUserForm').attr('action', deleteUrl);
         $('#deleteUserName').text(userName);

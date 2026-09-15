@@ -402,4 +402,66 @@ class BookingViewController extends Controller
             ], 422);
         }
     }
+
+    /**
+     * Handle booking cancellation and display cancellation success view.
+     */
+    public function cancel(Request $request)
+    {
+        if (!auth()->check()) {
+            session()->put('url.intended', $request->fullUrl());
+            return redirect()->route('login');
+        }
+
+        $user = auth()->user();
+
+        if ($user && !$user->isProtectedAdmin() && !$user->hasRole('admin') && !$user->otp_verified) {
+            session()->put('url.intended', $request->fullUrl());
+            return redirect()->route('otp');
+        }
+
+        $ref = $request->query('ref');
+        $booking = null;
+
+        if ($ref) {
+            $booking = \App\Models\Booking::where('reference_no', $ref)->first();
+            if ($booking) {
+                $phone1 = trim($user->phone_number ?? '');
+                $phone2 = trim($user->number ?? '');
+                $emailMatch = strtolower($booking->customer_email) === strtolower($user->email);
+                $phoneMatch = (!empty($phone1) && $booking->customer_phone === $phone1) ||
+                             (!empty($phone2) && $booking->customer_phone === $phone2);
+                if (!$emailMatch && !$phoneMatch) {
+                    $booking = null;
+                }
+            }
+        }
+
+        if (!$booking) {
+            $booking = \App\Models\Booking::where(function ($q) use ($user) {
+                $q->where('customer_email', strtolower($user->email));
+                $phone1 = trim($user->phone_number ?? '');
+                $phone2 = trim($user->number ?? '');
+                if (!empty($phone1) && !in_array($phone1, ['-', 'N/A', 'null'])) {
+                    $q->orWhere('customer_phone', $phone1);
+                }
+                if (!empty($phone2) && !in_array($phone2, ['-', 'N/A', 'null'])) {
+                    $q->orWhere('customer_phone', $phone2);
+                }
+            })
+            ->whereIn('status', ['confirmed', 'cancelled'])
+            ->latest()
+            ->first();
+        }
+
+        if ($booking && $booking->status === 'confirmed') {
+            $this->bookingService->cancelBooking($booking->id);
+            $booking->refresh();
+        }
+
+        $customerName = $booking->customer_name ?? (trim(($user->fname ?? '') . ' ' . ($user->lname ?? '')) ?: ($user->name ?? 'GUEST'));
+        $firstName = strtoupper(explode(' ', trim($customerName))[0]);
+
+        return view('booking-cancel-success', compact('booking', 'firstName'));
+    }
 }

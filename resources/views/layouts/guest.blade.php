@@ -22,7 +22,7 @@
 
 <body class="main-background">
     <!-- Main content area where page-specific content will be injected -->
-    <main class="container">
+    <main class="container-fluid p-0 m-0 w-100 min-vh-100">
         {{ $slot }}
     </main>
 

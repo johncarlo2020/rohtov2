@@ -122,6 +122,7 @@
                             <th>ID</th>
                             <th>Full Name</th>
                             <th>Email</th>
+                            <th>Phone</th>
                             <th>Booking Date</th>
                             <th>Booking Time</th>
                             <th>Attendance Status</th>
@@ -135,6 +136,7 @@
                             <td>{{ $loop->iteration }}</td>
                             <td class="font-weight-bold">{{ trim(($user->title ? $user->title . ' ' : '') . $user->fname . ' ' . $user->lname) ?: $user->fname }}</td>
                             <td>{{ $user->email }}</td>
+                            <td>{{ $user->number ?? '-' }}</td>
                             <td><span class="badge bg-light text-dark border">{{ $user->booking_date_text }}</span></td>
                             <td><span class="badge bg-light text-dark border">{{ $user->booking_time_text }}</span></td>
                             <td>
@@ -526,7 +528,7 @@
                 targets: -1 // Action/Delete column
             },
             {
-                targets: 3, // Preferred Location
+                targets: 4, // Preferred Location / Booking Date
                 width: '220px',
                 className: 'preferred-location-col'
             }
@@ -706,8 +708,8 @@
         let start = $('#startDate').val();
         let end = $('#endDate').val();
 
-        // Registration Timestamp is always at column index 5
-        let rawDateStr = data[6] ? String(data[6]).trim().replace(' ', 'T') : '';
+        // Registration Timestamp is at column index 7
+        let rawDateStr = data[7] ? String(data[7]).trim().replace(' ', 'T') : '';
         let rowDate = new Date(rawDateStr);
 
         // Convert row date to YYYY-MM-DD (DATE ONLY)

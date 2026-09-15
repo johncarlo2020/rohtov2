@@ -3,19 +3,13 @@
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
-        .brand-orange-text { color: #e86034 !important; }
-        .brand-orange-bg { background-color: #e86034 !important; color: #ffffff !important; border: none; }
-        .brand-orange-bg:hover, .brand-orange-bg:focus { background-color: #d44f25 !important; color: #ffffff !important; }
-
-        .main-card {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
-        }
+        .brand-orange-text { color: #F26522 !important; }
+        .brand-orange-bg { background-color: #F26522 !important; color: #ffffff !important; border: none; }
+        .brand-orange-bg:hover, .brand-orange-bg:focus { background-color: #d95214 !important; color: #ffffff !important; }
 
         .selected-pill {
-            border: 2px solid #e86034 !important;
-            background-color: rgba(232, 96, 52, 0.03) !important;
+            border: 2px solid #F26522 !important;
+            background-color: rgba(242, 101, 34, 0.04) !important;
         }
 
         .dropdown-overlay {
@@ -27,11 +21,11 @@
             margin-top: 0.375rem;
             background: #ffffff;
             border: 1px solid #cbd5e1;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
         }
 
         .custom-scroll {
-            max-height: 250px;
+            max-height: 240px;
             overflow-y: auto;
         }
         .custom-scroll::-webkit-scrollbar { width: 5px; }
@@ -40,10 +34,10 @@
 
         @media (min-width: 992px) {
             .booking-fields-scroll {
-                max-height: 48vh;
+                max-height: 60vh;
                 overflow-y: auto;
                 overflow-x: hidden;
-                padding-right: 8px;
+                padding-right: 6px;
                 margin-bottom: 0.5rem;
             }
             .booking-fields-scroll::-webkit-scrollbar {
@@ -69,15 +63,15 @@
         }
 
         .ticket-box {
-            padding: 1.5rem;
+            padding: 1.25rem 1rem;
             background: #ffffff;
         }
 
         .modal-backdrop-custom {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(15, 23, 42, 0.7);
-            backdrop-filter: blur(4px);
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(3px);
             z-index: 2000;
             display: flex;
             align-items: center;
@@ -86,12 +80,13 @@
         }
 
         .modal-dialog-custom {
-            border: 4px solid #e86034;
+            border: 3.5px solid #F26522;
             background: #ffffff;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
-            padding: 1.5rem;
-            max-width: 380px;
+            padding: 2.25rem 1.75rem;
+            max-width: 370px;
             width: 100%;
+            border-radius: 0;
         }
 
         .cursor-pointer { cursor: pointer; }
@@ -115,201 +110,210 @@
         }
     </style>
 
-    <div class="register-main with-scroll row">
-        <div class="col-lg-8 desktop-image-main d-lg-flex align-items-center">
-            <img src="{{ asset('images/brand/main_img.webp') }}" alt="Login Image" srcset="">
+    <div class="register-main with-scroll">
+        <!-- Desktop Left Hero Image -->
+        <div class="desktop-image-main">
+            <img src="{{ asset('images/brand/main_img.webp') }}" alt="Longchamp Workshop">
         </div>
-        <div class="flex-parent col-lg-4 d-flex flex-column justify-content-between gap-3">
+
+        <!-- Mobile Top Hero Image -->
+        <div class="mobile-image-main">
+            <img src="{{ asset('images/brand/main_img.webp') }}" alt="Longchamp Workshop">
+        </div>
+
+        <!-- Right / Bottom Content Area -->
+        <div class="flex-parent">
+            <!-- Top Logo (Desktop Only) -->
             <div class="top">
-                <div class="d-flex justify-content-center col-12">
-                    @include('components.branding')
-                </div>
+                @include('components.branding')
             </div>
-            <!-- <div class="mid-top">
-                <div class="col-lg-8 mobile-image-main">
-                    <img src="{{ asset('images/brand/main_img.webp') }}" alt="Login Image" srcset="">
-                </div>
-            </div> -->
+
+            <!-- Middle Content Area -->
             <div class="mid">
                 <div class="w-100 m-auto">
-                    <!-- Main Card -->
                     <main>
                         <div class="booking-fields-scroll">
                             <!-- BOOKING FLOW FORM -->
-                        <form id="reservation-form" onsubmit="event.preventDefault();">
-                            <!-- Header Text -->
-                            <div class="text-center my-4">
-                                @if(isset($formattedBooking) && $formattedBooking && !empty($formattedBooking['can_modify']))
-                                    <!-- MODIFY RESERVATION HEADER (MATCHES USER SCREENSHOT) -->
-                                    <h2 class="h4 fw-bold text-dark mb-5 text-uppercase">HEY {{ $formattedBooking['first_name'] }},</h2>
-                                    <p class="small text-dark fw-bold text-uppercase mb-2 leading-snug">
-                                        WE CAN ONLY CHANGE YOUR BOOKING <span class="fw-black text-dark">ONCE</span>.<br>
-                                        YOUR NEW SELECTION IS FINAL AND DEPENDS ENTIRELY ON SLOT AVAILABILITY FOR THAT SPECIFIC DAY.
-                                    </p>
-                                    <div class="text-dark small fw-bold text-uppercase rounded-0 my-3">
-                                        CURRENT BOOKING: <span class="fw-black">{{ $formattedBooking['display_text'] }}</span>
-                                    </div>
-                                @else
-                                    <!-- NEW RESERVATION HEADER -->
-                                    <h2 class="h4 fw-bold text-dark mb-4 text-uppercase">Hey {{ auth()->check() && isset(auth()->user()->fname) ? auth()->user()->fname : 'Guest' }},</h2>
-                                    <p class="small text-secondary text-uppercase mb-0 leading-snug text-dark">
-                                        PLEASE CHOOSE YOUR PREFERRED DATE AND TIME SLOT,<br>
-                                        KEEPING IN MIND THAT <br>
-                                        <span class="fw-bold text-dark">YOU CAN ONLY RESCHEDULE ONCE,<br>
-                                        AT LEAST ONE WEEK BEFORE YOUR SLOT.</span>
-                                    </p>
-                                    <p class="small text-danger text-uppercase mt-3 mb-0">
-                                        SUBJECT TO AVAILABILITY*
-                                    </p>
-                                @endif
-                            </div>
-
-                            <!-- Global Alert Banner -->
-                            <div id="alert-banner" class="d-none mb-3 p-3 rounded-0 alert alert-danger small fw-bold d-flex align-items-center gap-2">
-                                <i id="alert-icon" data-lucide="alert-circle" style="width: 16px; height: 16px;"></i>
-                                <div id="alert-message" class="flex-grow-1"></div>
-                            </div>
-
-                            <!-- Warning container when no dates are available for modify -->
-                            <div id="no-available-modify-dates-warning" class="d-none alert alert-warning p-3 text-center small fw-bold text-uppercase border-warning mb-4">
-                                <i data-lucide="alert-circle" class="me-1" style="width: 18px; height: 18px;"></i>
-                                <span id="no-dates-warning-text">
-                                    THERE ARE NO AVAILABLE DATES AT LEAST 1 WEEK BEFORE YOUR CURRENT BOOKED DATE. RESCHEDULING IS NOT AVAILABLE FOR THIS BOOKING.
-                                </span>
-                            </div>
-
-                            <!-- SECTION 1: DATE SELECTION -->
-                            <div id="date-selection-section" class="mb-4 mt-5">
-                                <label class="form-label small fw-bold text-uppercase text-dark mb-1">
-                                    DATE AVAILABLE:
-                                </label>
-
-                                <div class="position-relative">
-                                    <!-- Date Selection Box (Collapsed / Selected Display) -->
-                                    <div id="date-trigger-box" class="form-control d-flex justify-content-between align-items-center py-3 px-3 bg-white border cursor-pointer rounded-0">
-                                        <span id="date-box-text" class="text-muted fw-bold">DATE SELECTION</span>
-                                        <i data-lucide="chevron-down" id="date-chevron" class="text-muted" style="width: 18px; height: 18px; transition: transform 0.2s;"></i>
-                                    </div>
-
-                                    <!-- Date Selection Expanded Dropdown Box (Overlay) -->
-                                    <div id="date-dropdown-box" class="d-none dropdown-overlay p-3">
-                                        <div class="small fw-bold text-dark text-uppercase pb-2 mb-2 border-bottom d-flex justify-content-between align-items-center">
-                                            <span>DATE SELECTION</span>
-                                            <span>2 OCT – 17 OCT 2026</span>
+                            <form id="reservation-form" onsubmit="event.preventDefault();">
+                                <!-- Header Text -->
+                                <div class="text-center mb-3">
+                                    @if(isset($formattedBooking) && $formattedBooking && !empty($formattedBooking['can_modify']))
+                                        <!-- MODIFY RESERVATION HEADER -->
+                                        <h2 class="h4 fw-bold text-dark mb-3 text-uppercase">HEY {{ $formattedBooking['first_name'] }},</h2>
+                                        <p class="small text-dark text-uppercase mb-2" style="font-size: 0.8rem; line-height: 1.45; font-weight: 600;">
+                                            WE CAN ONLY CHANGE YOUR BOOKING <span class="fw-bold text-dark">ONCE</span>.<br>
+                                            YOUR NEW SELECTION IS FINAL AND DEPENDS ENTIRELY ON SLOT AVAILABILITY FOR THAT SPECIFIC DAY.
+                                        </p>
+                                        <div class="text-dark small fw-bold text-uppercase my-3" style="font-size: 0.8rem; letter-spacing: 0.5px;">
+                                            CURRENT BOOKING: <span class="fw-bolder">{{ $formattedBooking['display_text'] }}</span>
                                         </div>
-
-                                        <!-- Date Items List -->
-                                        <div id="date-items-list" class="custom-scroll">
-                                            <!-- Dynamically populated -->
-                                        </div>
-                                    </div>
+                                    @else
+                                        <!-- NEW RESERVATION HEADER -->
+                                        <h2 class="h4 fw-bold text-dark mb-3 text-uppercase">HEY {{ auth()->check() && isset(auth()->user()->fname) ? strtoupper(auth()->user()->fname) : 'GUEST' }},</h2>
+                                        <p class="small text-dark text-uppercase mb-1" style="font-size: 0.775rem; line-height: 1.45; font-weight: 500;">
+                                            PLEASE CHOOSE YOUR PREFERRED DATE AND TIME SLOT,<br>
+                                            KEEPING IN MIND THAT <br>
+                                            <span class="fw-bold text-dark">YOU CAN ONLY RESCHEDULE ONCE, AT LEAST ONE WEEK BEFORE THE EVENT.</span>
+                                        </p>
+                                        <p class="small brand-orange-text text-uppercase mt-2 mb-0 fw-bold" style="letter-spacing: 0.5px; font-size: 0.75rem;">
+                                            SUBJECT TO AVAILABILITY*
+                                        </p>
+                                    @endif
                                 </div>
-                            </div>
 
-                            <!-- SECTION 2: TIME SLOTS SELECTION (Appears once Date is Selected) -->
-                            <div id="time-slots-section" class="d-none mb-4 step-fade">
-                                <label class="form-label small fw-bold text-uppercase text-dark mb-1">
-                                    TIME SLOTS:
-                                </label>
+                                <!-- Global Alert Banner -->
+                                <div id="alert-banner" class="d-none mb-3 p-3 rounded-0 alert alert-danger small fw-bold d-flex align-items-center gap-2">
+                                    <i id="alert-icon" data-lucide="alert-circle" style="width: 16px; height: 16px;"></i>
+                                    <div id="alert-message" class="flex-grow-1"></div>
+                                </div>
 
-                                <div class="position-relative">
-                                    <!-- Time Slot Trigger Box (Collapsed / Selected Display) -->
-                                    <div id="time-trigger-box" class="form-control d-flex justify-content-between align-items-center py-3 px-3 bg-white border cursor-pointer rounded-0">
-                                        <span id="time-box-text" class="text-muted fw-bold">SELECT YOUR TIME SLOT</span>
-                                        <i data-lucide="chevron-down" id="time-chevron" class="text-muted" style="width: 18px; height: 18px; transition: transform 0.2s;"></i>
-                                    </div>
+                                <!-- Warning container when no dates are available for modify -->
+                                <div id="no-available-modify-dates-warning" class="d-none alert alert-warning p-3 text-center small fw-bold text-uppercase border-warning mb-4">
+                                    <i data-lucide="alert-circle" class="me-1" style="width: 18px; height: 18px;"></i>
+                                    <span id="no-dates-warning-text">
+                                        THERE ARE NO AVAILABLE DATES AT LEAST 1 WEEK BEFORE YOUR CURRENT BOOKED DATE. RESCHEDULING IS NOT AVAILABLE FOR THIS BOOKING.
+                                    </span>
+                                </div>
 
-                                    <!-- Time Slot Expanded Dropdown Box (Overlay) -->
-                                    <div id="time-dropdown-box" class="d-none dropdown-overlay p-3">
-                                        <div class="small fw-bold text-muted text-uppercase pb-2 mb-2 border-bottom">
-                                            <span id="sessions-per-day-header">2 SESSIONS PER DAY</span>
+                                <!-- SECTION 1: DATE SELECTION -->
+                                <div id="date-selection-section" class="mb-3">
+                                    <label class="form-label small fw-bold text-uppercase text-dark mb-1" style="font-size: 11px; letter-spacing: 0.8px;">
+                                        DATE AVAILABLE:
+                                    </label>
+
+                                    <div class="position-relative">
+                                        <!-- Date Selection Box (Collapsed / Selected Display) -->
+                                        <div id="date-trigger-box" class="form-control d-flex justify-content-between align-items-center py-2 px-3 bg-white border cursor-pointer rounded-0" style="min-height: 42px;">
+                                            <span id="date-box-text" class="text-muted fw-bold" style="font-size: 13px;">DATE SELECTION</span>
+                                            <i data-lucide="chevron-down" id="date-chevron" class="text-muted" style="width: 16px; height: 16px; transition: transform 0.2s;"></i>
                                         </div>
 
-                                        <!-- Time Slot Items List -->
-                                        <div id="time-items-list">
-                                            <!-- Dynamically populated -->
+                                        <!-- Date Selection Expanded Dropdown Box (Overlay) -->
+                                        <div id="date-dropdown-box" class="d-none dropdown-overlay p-3">
+                                            <div class="small fw-bold text-dark text-uppercase pb-2 mb-2 border-bottom d-flex justify-content-between align-items-center">
+                                                <span>DATE SELECTION</span>
+                                                <span>2 OCT – 17 OCT 2026</span>
+                                            </div>
+
+                                            <!-- Date Items List -->
+                                            <div id="date-items-list" class="custom-scroll">
+                                                <!-- Dynamically populated -->
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- 1 Hour Session Note -->
-                                <div id="session-note" class="mt-2 small text-danger text-uppercase">
-                                    * 1 HOUR SESSION
-                                </div>
-                            </div>
+                                <!-- SECTION 2: TIME SLOTS SELECTION (Appears once Date is Selected) -->
+                                <div id="time-slots-section" class="d-none mb-3 step-fade">
+                                    <label class="form-label small fw-bold text-uppercase text-dark mb-1" style="font-size: 11px; letter-spacing: 0.8px;">
+                                        TIME SLOTS:
+                                    </label>
 
-                            <!-- NEXT BUTTON -->
-                            <div class="mt-4 text-center">
-                                <button id="next-btn" disabled type="button" class="custom-btn custom-btn-primary mb-2 pulse-slow w-50">
-                                    NEXT
-                                </button>
-                            </div>
+                                    <div class="position-relative">
+                                        <!-- Time Slot Trigger Box (Collapsed / Selected Display) -->
+                                        <div id="time-trigger-box" class="form-control d-flex justify-content-between align-items-center py-2 px-3 bg-white border cursor-pointer rounded-0" style="min-height: 42px;">
+                                            <span id="time-box-text" class="text-muted fw-bold" style="font-size: 13px;">SELECT YOUR TIME SLOT</span>
+                                            <i data-lucide="chevron-down" id="time-chevron" class="text-muted" style="width: 16px; height: 16px; transition: transform 0.2s;"></i>
+                                        </div>
 
-                            <!-- Terms Link -->
-                            <div class="text-center mt-3">
-                                <a href="{{ url('/terms-and-conditions') }}" class="small fw-bold text-muted text-decoration-underline text-uppercase">
-                                    TERMS & CONDITIONS
-                                </a>
-                            </div>
-                        </form>                        <!-- BOOKING CONFIRMED SUCCESS SCREEN -->
-                        <div id="confirmation-success-screen" class="d-none text-center py-2 step-fade">
+                                        <!-- Time Slot Expanded Dropdown Box (Overlay) -->
+                                        <div id="time-dropdown-box" class="d-none dropdown-overlay p-3">
+                                            <div class="small fw-bold text-muted text-uppercase pb-2 mb-2 border-bottom">
+                                                <span id="sessions-per-day-header">2 SESSIONS PER DAY</span>
+                                            </div>
 
-                            <!-- Title -->
-                            <h2 class="h4 fw-semi-bold brand-orange-text text-uppercase mb-3" style="letter-spacing: 0.05em;">
-                                BOOKING CONFIRMED!
-                            </h2>
+                                            <!-- Time Slot Items List -->
+                                            <div id="time-items-list">
+                                                <!-- Dynamically populated -->
+                                            </div>
+                                        </div>
+                                    </div>
 
-                            <!-- Subtitle 1 -->
-                            <p class="small fw-semi-bold text-dark text-uppercase mb-3" style="letter-spacing: 0.03em; font-size: 0.85rem;">
-                                HI <span id="confirmed-greeting-name" class="text-dark">JOSHUA</span>, YOUR RESERVATION IS CONFIRMED
-                            </p>
-
-                            <!-- Subtitle 2 -->
-                            <p class="small text-dark text-uppercase mb-4 mx-auto" style="letter-spacing: 0.02em; font-size: 0.8rem; line-height: 1.45; max-width: 320px;">
-                                PLEASE CHECK YOUR EMAIL FOR YOUR CONFIRMATION DETAILS AND PRESENT THIS QR CODE UPON ARRIVAL.
-                            </p>
-
-                            <!-- Ticket Container (Boxed QR Code + Details) -->
-                            <div id="ticket-container" class="ticket-box d-inline-block w-100 mb-4 text-center" style="max-width: 290px; padding: 1.25rem 1rem; background: #ffffff;">
-                                
-                                <!-- Dynamic QR Code Image -->
-                                <img id="qr-code-img" src="" alt="Booking QR Code" class="img-fluid mb-2" style="width: 170px; height: 170px; margin: auto; object-fit: contain; display: block;" crossorigin="anonymous">
-
-                                <!-- Customer Name -->
-                                <div id="confirmed-ticket-name" class="fw-semi-bold text-dark text-uppercase my-2" style="font-size: 0.95rem; letter-spacing: 0.05em;">
-                                    JOSHUA
-                                </div>
-
-                                <!-- Details List -->
-                                <div class="small fw-bold text-dark text-uppercase" style="font-size: 0.725rem; line-height: 1.5; letter-spacing: 0.03em;">
-                                    <div class="mb-1"><span class="fw-bold text-dark">DATE:</span> <span id="confirmed-ticket-date" class="text-dark">SATURDAY, 3RD OCTOBER</span></div>
-                                    <div class="mb-1"><span class="fw-bold text-dark">TIME:</span> <span id="confirmed-ticket-time" class="text-dark">4:00PM - 5:00PM</span></div>
-                                    <div>
-                                        <span class="fw-bold text-dark">VENUE:</span> LONGCHAMP POP UP STORE<br>THE GARDENS MALL
+                                    <!-- 1 Hour Session Note -->
+                                    <div id="session-note" class="mt-2 small brand-orange-text text-uppercase fw-bold" style="font-size: 11px; letter-spacing: 0.5px;">
+                                        * 1 HOUR SESSION
                                     </div>
                                 </div>
-                            </div>
 
-                            <!-- Action Buttons (MODIFY / DOWNLOAD) -->
-                            <div class="d-flex flex-column gap-2 mx-auto mb-4">
-                                <button id="modify-btn" type="button" class="custom-btn custom-btn-primary  w-50 m-auto" style="border-radius: 0; padding: 0.7rem 1rem; font-weight: bold; letter-spacing: 0.05em;">
-                                    MODIFY
-                                </button>
-                                <div id="no-modify-notice" class="d-none small fw-bold text-muted text-uppercase my-1 text-center" style="font-size: 0.7rem;">
-                                    * RESCHEDULING NOT AVAILABLE (NO DATES AVAILABLE AT LEAST 1 WEEK PRIOR)
+                                <!-- NEXT BUTTON -->
+                                <div class="mt-4 text-center">
+                                    <button id="next-btn" disabled type="button" class="custom-btn custom-btn-primary mb-2 pulse-slow" style="max-width: 220px; width: 100%;">
+                                        NEXT
+                                    </button>
                                 </div>
-                                <button id="download-btn" type="button" class="custom-btn custom-btn-primary  w-50 m-auto" style="border-radius: 0; padding: 0.7rem 1rem; font-weight: bold; letter-spacing: 0.05em;">
-                                    DOWNLOAD
-                                </button>
-                            </div>
+
+                                <!-- Terms Link -->
+                                <div class="text-center mt-3">
+                                    <a href="{{ url('/terms-and-conditions') }}" class="text-dark text-uppercase fw-bold text-decoration-underline" style="font-size: 11px; letter-spacing: 0.8px;">
+                                        TERMS & CONDITIONS
+                                    </a>
+                                </div>
+                            </form>
+
+                            <!-- BOOKING CONFIRMED SUCCESS SCREEN -->
+                            <div id="confirmation-success-screen" class="d-none text-center py-2 step-fade">
+                                <!-- Title -->
+                                <h2 class="h4 fw-bold brand-orange-text text-uppercase mb-2" style="letter-spacing: 0.05em;">
+                                    BOOKING CONFIRMED!
+                                </h2>
+
+                                <!-- Subtitle 1 -->
+                                <p class="small fw-bold text-dark text-uppercase mb-2" style="letter-spacing: 0.03em; font-size: 0.825rem;">
+                                    HI <span id="confirmed-greeting-name" class="text-dark">JOSHUA</span>, YOUR RESERVATION IS CONFIRMED
+                                </p>
+
+                                <!-- Subtitle 2 -->
+                                <p class="small text-dark text-uppercase mb-3 mx-auto" style="letter-spacing: 0.02em; font-size: 0.75rem; line-height: 1.45; max-width: 320px; color: #444;">
+                                    PLEASE CHECK YOUR EMAIL FOR YOUR CONFIRMATION DETAILS AND PRESENT THIS QR CODE UPON ARRIVAL.
+                                </p>
+
+                                <!-- Ticket Container (Boxed QR Code + Details) -->
+                                <div id="ticket-container" class="ticket-box d-inline-block w-100 mb-3 text-center" style="max-width: 280px; padding: 1.25rem 1rem; background: #ffffff;">
+                                    <!-- Dynamic QR Code Image -->
+                                    <img id="qr-code-img" src="" alt="Booking QR Code" class="img-fluid mb-2" style="width: 170px; height: 170px; margin: auto; object-fit: contain; display: block;" crossorigin="anonymous">
+
+                                    <!-- Customer Name -->
+                                    <div id="confirmed-ticket-name" class="fw-bold text-dark text-uppercase my-2" style="font-size: 0.95rem; letter-spacing: 0.05em;">
+                                        JOSHUA
+                                    </div>
+
+                                    <!-- Details List -->
+                                    <div class="small fw-bold text-dark text-uppercase" style="font-size: 0.725rem; line-height: 1.6; letter-spacing: 0.03em;">
+                                        <div class="mb-1"><span class="text-muted">DATE:</span> <span id="confirmed-ticket-date" class="text-dark">SATURDAY, 3RD OCTOBER</span></div>
+                                        <div class="mb-1"><span class="text-muted">TIME:</span> <span id="confirmed-ticket-time" class="text-dark">4:00PM - 5:00PM</span></div>
+                                        <div>
+                                            <span class="text-muted">VENUE:</span> LONGCHAMP POP UP STORE<br>THE GARDENS MALL
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- SEE YOU SOON! text from mockups -->
+                                <div class="fw-bold text-dark text-uppercase mb-3" style="font-size: 0.85rem; letter-spacing: 0.05em;">
+                                    SEE YOU SOON!
+                                </div>
+
+                                <!-- Action Buttons (MODIFY / DOWNLOAD) -->
+                                <div class="d-flex flex-column gap-2 align-items-center mb-3">
+                                    <button id="modify-btn" type="button" class="custom-btn custom-btn-primary" style="max-width: 220px; width: 100%;">
+                                        CHANGE YOUR SLOT
+                                    </button>
+                                    <div id="no-modify-notice" class="d-none small fw-bold text-muted text-uppercase my-1 text-center" style="font-size: 0.7rem; max-width: 260px;">
+                                        * RESCHEDULING NOT AVAILABLE (NO DATES AVAILABLE AT LEAST 1 WEEK PRIOR)
+                                    </div>
+                                    <button id="download-btn" type="button" class="custom-btn custom-btn-primary" style="max-width: 220px; width: 100%;">
+                                        DOWNLOAD
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </main>
                 </div>
             </div>
+
+            <!-- Bottom Horse Logo -->
             <div class="col-12 bot">
                 <div class="logo-bot d-flex justify-content-center mt-3">
-                    <img src="{{ asset('images/brand/bot_logo.webp') }}" class="img-fluid" alt="Footer Image" srcset="" style="width:4rem;">
+                    <img src="{{ asset('images/brand/bot_logo.webp') }}" class="img-fluid" alt="Footer Image" srcset="" style="width: 4rem;">
                 </div>
             </div>
         </div>
@@ -320,41 +324,41 @@
         <div class="modal-dialog-custom text-center">
             
             <!-- Modal Title -->
-            <h3 class="h4 fw-semi-bold brand-orange-text text-uppercase mb-4">
+            <h3 class="h4 fw-bold brand-orange-text text-uppercase mb-3" style="letter-spacing: 0.05em;">
                 ALMOST THERE!
             </h3>
 
             <!-- Subtitle -->
-            <p class="small fw-semi-bold text-dark text-uppercase mb-4">
+            <p class="small fw-bold text-dark text-uppercase mb-4" style="font-size: 0.775rem; letter-spacing: 0.02em;">
                 PLEASE REVIEW YOUR BOOKING DETAILS BEFORE CONFIRMING.
             </p>
 
             <!-- Review Items -->
             <div class="mb-4 text-center">
                 <div class="mb-3">
-                    <div class="small text-muted text-uppercase">DATE:</div>
-                    <div id="modal-review-date" class="fw-semi-bold text-dark text-uppercase">SATURDAY, 3RD OCTOBER</div>
+                    <div class="small text-muted text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.05em;">DATE:</div>
+                    <div id="modal-review-date" class="fw-bold text-dark text-uppercase" style="font-size: 0.85rem;">SATURDAY, 3RD OCTOBER</div>
                 </div>
 
                 <div class="mb-3">
-                    <div class="small text-muted text-uppercase">TIME:</div>
-                    <div id="modal-review-time" class="fw-semi-bold text-dark text-uppercase">4:00PM - 5:00PM</div>
+                    <div class="small text-muted text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.05em;">TIME:</div>
+                    <div id="modal-review-time" class="fw-bold text-dark text-uppercase" style="font-size: 0.85rem;">4:00PM - 5:00PM</div>
                 </div>
 
                 <div>
-                    <div class="small text-muted text-uppercase">VENUE:</div>
-                    <div class="small fw-semi-bold text-dark text-uppercase">
+                    <div class="small text-muted text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.05em;">VENUE:</div>
+                    <div class="fw-bold text-dark text-uppercase" style="font-size: 0.85rem;">
                         LONGCHAMP POP UP STORE THE GARDENS MALL
                     </div>
                 </div>
             </div>
 
             <!-- Modal Action Buttons -->
-            <div class="d-flex flex-column gap-2">
-                <button id="modal-back-btn" type="button" class="btn btn-link text-dark fw-bold text-uppercase p-0 text-decoration-none mb-1">
+            <div class="d-flex flex-column gap-2 align-items-center">
+                <button id="modal-back-btn" type="button" class="btn btn-link text-dark fw-bold text-uppercase p-0 text-decoration-none mb-1" style="font-size: 0.8rem; letter-spacing: 0.05em;">
                     BACK
                 </button>
-                <button id="modal-confirm-btn" type="button" class="custom-btn custom-btn-primary pulse-slow w-50 m-auto">
+                <button id="modal-confirm-btn" type="button" class="custom-btn custom-btn-primary pulse-slow" style="max-width: 220px; width: 100%;">
                     CONFIRM
                 </button>
             </div>
@@ -367,19 +371,21 @@
         <div class="modal-dialog-custom text-center">
             
             <!-- Modal Title -->
-            <h3 class="h4 fw-bold brand-orange-text text-uppercase mb-3">
+            <h3 class="h4 fw-bold brand-orange-text text-uppercase mb-3" style="letter-spacing: 0.05em;">
                 OH, NO!
             </h3>
 
             <!-- Message -->
-            <p id="slot-error-modal-message" class="small fw-semi-bold text-dark text-uppercase mb-4">
+            <p id="slot-error-modal-message" class="small fw-bold text-dark text-uppercase mb-4" style="font-size: 0.775rem; letter-spacing: 0.02em; line-height: 1.45;">
                 LOOKS LIKE THIS SLOT HAS JUST BEEN TAKEN. PLEASE CHOOSE ANOTHER PREFERRED DATE.
             </p>
 
             <!-- Action Button -->
-            <button id="slot-error-back-btn" type="button" class="custom-btn custom-btn-primary pulse-slow w-50 m-auto">
-                BACK
-            </button>
+            <div class="d-flex justify-content-center">
+                <button id="slot-error-back-btn" type="button" class="custom-btn custom-btn-primary pulse-slow" style="max-width: 220px; width: 100%;">
+                    BACK
+                </button>
+            </div>
         </div>
     </div>
 
@@ -770,7 +776,9 @@
 
             function enableNextButton() {
                 nextBtn.disabled = false;
-                nextBtn.className = 'custom-btn custom-btn-primary mb-2 pulse-slow w-50';
+                nextBtn.className = 'custom-btn custom-btn-primary mb-2 pulse-slow';
+                nextBtn.style.maxWidth = '220px';
+                nextBtn.style.width = '100%';
             }
 
             // Review Modal Dom Elements
@@ -801,7 +809,9 @@
                 document.getElementById('date-box-text').className = 'text-muted fw-bold';
                 document.getElementById('time-slots-section').classList.add('d-none');
                 nextBtn.disabled = true;
-                nextBtn.className = 'custom-btn custom-btn-primary mb-2 pulse-slow w-50';
+                nextBtn.className = 'custom-btn custom-btn-primary mb-2 pulse-slow';
+                nextBtn.style.maxWidth = '220px';
+                nextBtn.style.width = '100%';
 
                 toggleDateDropdown(true);
                 fetchDateAvailabilities();
@@ -970,61 +980,77 @@
                 downloadBtn.disabled = true;
                 downloadBtn.textContent = 'GENERATING JPEG...';
 
-                // Create offscreen canvas (450x620)
+                // Create offscreen canvas (450x680)
                 const canvas = document.createElement('canvas');
                 canvas.width = 450;
-                canvas.height = 620;
+                canvas.height = 680;
                 const ctx = canvas.getContext('2d');
 
                 // Fill white background
                 ctx.fillStyle = '#ffffff';
-                ctx.fillRect(0, 0, 450, 620);
+                ctx.fillRect(0, 0, 450, 680);
 
                 const renderCanvasContent = (loadedLogoImage, loadedQrImage) => {
-                    let yCursor = 35;
+                    let yCursor = 36;
 
-                    // 1. Logo at Top (Centered)
+                    // 1. Artist Credit "Caroline Hélain" (Italic serif / elegant script look)
+                    ctx.fillStyle = '#111111';
+                    ctx.font = 'italic 600 22px "Playfair Display", Georgia, "Times New Roman", serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('Caroline Hélain', 225, yCursor);
+                    yCursor += 22;
+
+                    // 2. "x" separator
+                    ctx.font = '400 14px "Helvetica Neue", Helvetica, Arial, sans-serif';
+                    ctx.fillStyle = '#555555';
+                    ctx.fillText('x', 225, yCursor);
+                    yCursor += 18;
+
+                    // 3. LONGCHAMP Logo / Text
                     if (loadedLogoImage) {
-                        const logoWidth = 200;
+                        const logoWidth = 180;
                         const aspect = loadedLogoImage.height / loadedLogoImage.width;
                         const logoHeight = logoWidth * aspect;
                         const logoX = (450 - logoWidth) / 2;
                         ctx.drawImage(loadedLogoImage, logoX, yCursor, logoWidth, logoHeight);
-                        yCursor += logoHeight + 35;
+                        yCursor += logoHeight + 24;
                     } else {
-                        yCursor += 120;
+                        ctx.fillStyle = '#000000';
+                        ctx.font = 'bold 20px "Helvetica Neue", Helvetica, Arial, sans-serif';
+                        ctx.fillText('LONGCHAMP', 225, yCursor + 16);
+                        yCursor += 40;
                     }
 
-                    // 2. QR Code (Centered 210x210)
+                    // 4. QR Code (Centered 200x200)
                     if (loadedQrImage) {
-                        const qrSize = 210;
+                        const qrSize = 200;
                         const qrX = (450 - qrSize) / 2;
                         ctx.drawImage(loadedQrImage, qrX, yCursor, qrSize, qrSize);
-                        yCursor += qrSize + 35;
+                        yCursor += qrSize + 28;
                     } else {
-                        yCursor += 230;
+                        yCursor += 220;
                     }
 
-                    // 3. Customer Name (Bold, Centered)
+                    // 5. Customer Name (Bold, Centered)
                     ctx.fillStyle = '#000000';
-                    ctx.font = 'bold 22px "Helvetica Neue", Helvetica, Arial, sans-serif';
+                    ctx.font = 'bold 20px "Helvetica Neue", Helvetica, Arial, sans-serif';
                     ctx.textAlign = 'center';
                     ctx.fillText(customerName.toUpperCase(), 225, yCursor);
-                    yCursor += 40;
+                    yCursor += 32;
 
-                    // 4. DATE Line (Centered)
-                    ctx.font = 'bold 14px "Helvetica Neue", Helvetica, Arial, sans-serif';
+                    // 6. DATE Line (Centered)
+                    ctx.font = 'bold 13px "Helvetica Neue", Helvetica, Arial, sans-serif';
                     ctx.fillStyle = '#000000';
                     ctx.fillText(`DATE: ${dateText.toUpperCase()}`, 225, yCursor);
-                    yCursor += 25;
-
-                    // 5. TIME Line (Centered)
-                    ctx.fillText(`TIME: ${timeText.toUpperCase()}`, 225, yCursor);
-                    yCursor += 25;
-
-                    // 6. VENUE Lines (Centered)
-                    ctx.fillText('VENUE: LONGCHAMP POP UP STORE', 225, yCursor);
                     yCursor += 22;
+
+                    // 7. TIME Line (Centered)
+                    ctx.fillText(`TIME: ${timeText.toUpperCase()}`, 225, yCursor);
+                    yCursor += 22;
+
+                    // 8. VENUE Lines (Centered)
+                    ctx.fillText('VENUE: LONGCHAMP POP UP STORE', 225, yCursor);
+                    yCursor += 20;
                     ctx.fillText('THE GARDENS MALL', 225, yCursor);
 
                     // Convert Canvas to JPEG Blob & Trigger iOS Web Share or Download

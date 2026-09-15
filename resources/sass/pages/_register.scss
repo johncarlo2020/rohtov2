@@ -1,80 +1,328 @@
 @import '../variables';
 
 .register-main {
-    // padding-bottom: 2rem;
+    display: flex;
+    width: 100vw;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    background: $white;
+    overflow-x: hidden;
+
+    @media (min-width: 992px) {
+        flex-direction: row;
+        height: 100vh !important;
+        overflow: hidden !important;
+
+        .desktop-image-main {
+            display: block !important;
+            flex: 0 0 52%;
+            max-width: 52%;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            background-color: #f5f5f5;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: center;
+                display: block;
+            }
+        }
+
+        .mobile-image-main {
+            display: none !important;
+        }
+
+        .flex-parent {
+            flex: 0 0 48%;
+            max-width: 48%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2.5rem 3rem 2rem 3rem;
+            overflow-y: auto;
+            background: $white;
+
+            .top {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                flex-shrink: 0;
+            }
+
+            .mid {
+                width: 100%;
+                max-width: 420px;
+                margin: auto 0;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+
+            .bot {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                flex-shrink: 0;
+                padding-top: 1.5rem;
+                padding-bottom: 0.5rem;
+            }
+        }
+    }
+
+    @media (max-width: 991px) {
+        flex-direction: column;
+        min-height: 100vh;
+        min-height: 100dvh;
+        height: 100vh;
+        height: 100dvh;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+        overscroll-behavior-y: contain;
+
+        .desktop-image-main {
+            display: none !important;
+        }
+
+        .mobile-image-main {
+            display: block !important;
+            width: 100%;
+            height: 35vh;
+            min-height: 220px;
+            max-height: 320px;
+            overflow: hidden;
+            position: relative;
+            background-color: #f5f5f5;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: center;
+                display: block;
+            }
+        }
+
+        .flex-parent {
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.75rem 1.5rem 2rem 1.5rem;
+            background: $white;
+
+            // Mockup requirement 4: Remove Longchamp logo on mobile
+            .top,
+            .branding-header,
+            .branding,
+            .desktop-only-logo {
+                display: none !important;
+            }
+
+            .mid {
+                width: 100%;
+                max-width: 400px;
+                margin: 0 auto;
+            }
+
+            .bot {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                margin-top: 2rem;
+                margin-bottom: 1.5rem;
+            }
+        }
+    }
+
+    .logo-bot {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        img {
+            width: 4rem;
+            max-width: 4rem;
+            height: auto;
+            object-fit: contain;
+            display: block;
+        }
+    }
 
     .bottom-text {
         text-align: center;
-        margin-top: 1rem;
+        margin-top: 1.25rem;
 
-        p {
+        p, span {
             font-family: $font-family;
-            font-size: 14px;
-            font-weight: 300;
-            letter-spacing: 1.3px;
+            font-size: 13px;
+            font-weight: 400;
+            letter-spacing: 1px;
             margin: 0;
         }
     }
 
     .register-form-parent {
-        label {
+        .field-label {
             display: block;
             font-family: $font-family;
             font-size: 13px;
             font-weight: 700;
-            letter-spacing: 1.4px;
-            text-transform: uppercase;
-            color: $text;
+            letter-spacing: 0.8px;
+            color: #111111;
             margin-bottom: 6px;
+            text-transform: none;
+        }
+
+        .consent-title {
+            display: block;
+            font-family: $font-family;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.6px;
+            color: #111111;
+            margin-bottom: 4px;
+            text-transform: none;
+        }
+
+        .consent-description {
+            font-family: $font-family;
+            font-size: 12px;
+            line-height: 1.45;
+            color: #444444;
+            margin-bottom: 12px;
+            letter-spacing: 0.1px;
+
+            strong {
+                font-weight: 700;
+                color: #111111;
+            }
+        }
+
+        .section-header-title {
+            display: block;
+            font-family: $font-family;
+            font-size: 12.5px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: #111111;
+            margin-top: 18px;
+            margin-bottom: 8px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 7px;
+            cursor: pointer;
+
+            .option-label {
+                font-family: $font-family;
+                font-size: 12.5px;
+                line-height: 1.4;
+                color: #222222;
+                font-weight: 400;
+                letter-spacing: 0.1px;
+                text-transform: none;
+                cursor: pointer;
+                margin-bottom: 0;
+            }
+        }
+
+        .custom-square-check,
+        .custom-square-radio {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            min-width: 16px;
+            border: 1.5px solid #888888;
+            border-radius: 0px !important;
+            outline: none;
+            cursor: pointer;
+            background-color: $white;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2px;
+            flex-shrink: 0;
+            transition: border-color 0.15s, background-color 0.15s;
+
+            &:focus {
+                outline: none;
+                box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.15);
+            }
+
+            &:checked {
+                background-color: #000000;
+                border-color: #000000;
+                background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m5 10 3.5 3.5 7-7'/%3e%3c/svg%3e") !important;
+                background-size: 10px 10px;
+                background-position: center;
+                background-repeat: no-repeat;
+            }
         }
 
         .form-control,
         .form-select,
         .input-text {
             font-family: $font-family;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 400;
             padding: 10px 14px;
             height: auto;
             border-radius: 0px;
-            border: 1.5px solid $gray;
-            color: $text;
+            border: 1px solid #d1d5db;
+            color: #111111;
             background-color: $white;
             width: 100%;
+            transition: border-color 0.2s, box-shadow 0.2s;
 
             &::placeholder {
                 font-family: $font-family;
-                font-size: 16px;
+                font-size: 13px;
                 font-weight: 400;
-                color: $gray;
+                color: #9ca3af;
                 opacity: 1;
+                letter-spacing: 0.3px;
             }
 
             &:invalid {
-                color: $gray;
+                color: #9ca3af;
             }
 
             option {
-                color: $text;
+                color: #111111;
                 font-family: $font-family;
                 font-size: 14px;
                 padding: 6px 10px;
 
                 &:disabled {
-                    color: $gray;
+                    color: #9ca3af;
                 }
             }
 
             &:focus {
-                border-color: $primary;
-                box-shadow: 0 0 0 3px rgba($primary, 0.12);
+                border-color: #F26522;
+                box-shadow: 0 0 0 3px rgba(242, 101, 34, 0.15);
                 outline: none;
             }
         }
 
         .register-fields-scroll {
             @media (min-width: 992px) {
-                max-height: 42vh;
+                max-height: 56vh;
                 overflow-y: auto;
                 overflow-x: hidden;
                 padding-right: 8px;

@@ -1,5 +1,5 @@
-<div class="mt-5">
-    <div class="branding">
-        <img class="logo" src="{{ asset('images/brand/logo.webp') }}" alt="Brand Logo" />
+<div class="branding-header desktop-only-logo">
+    <div class="branding text-center">
+        <img class="logo" src="{{ asset('images/brand/logo.webp') }}" alt="Longchamp" />
     </div>
 </div>

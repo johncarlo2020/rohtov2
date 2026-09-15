@@ -6,14 +6,26 @@
 
 
 .main-background {
-    // background-image: $main-background;
-    // background-size: cover;
-    // background-position: bottom;
     background-color: $white;
-    border: 6px solid $primary;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+.desktop-only-logo {
+    display: block;
+    @media (max-width: 991px) {
+        display: none !important;
+    }
+}
+
+.mobile-only-logo {
+    display: none;
+    @media (max-width: 991px) {
+        display: block !important;
+    }
 }
 
 .mid-top {
@@ -24,11 +36,7 @@
     display: none;
 }
 
-@media (max-width: 768px) {
-    .main-background {
-        border-radius: 40px;
-    }
-
+@media (max-width: 991px) {
     .desktop-image-main {
         display: none !important;
     }
@@ -116,6 +124,9 @@
     overflow-y: auto;
     overflow-x: hidden;
     max-height: 100vh;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    overscroll-behavior-y: contain;
 }
 
 @media (max-width: 768px) {

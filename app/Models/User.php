@@ -40,6 +40,8 @@ class User extends Authenticatable
         'email',
         'preferred_contact',
         'communication_consent',
+        'newsletter_consent',
+        'consent_channels',
         'marketing',
         'number',
         'find',
@@ -68,6 +70,9 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'communication_consent' => 'boolean',
+        'newsletter_consent' => 'boolean',
+        'consent_channels' => 'array',
     ];
 
 

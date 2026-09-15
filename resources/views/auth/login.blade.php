@@ -1,64 +1,75 @@
 <x-guest-layout>
-    <div class="register-main with-scroll row">
-        <div class="col-lg-8 desktop-image-main">
-            <img src="{{ asset('images/brand/main_img.webp') }}" alt="Login Image" srcset="">
+    <div class="register-main with-scroll">
+        <!-- Desktop Left Hero Image -->
+        <div class="desktop-image-main">
+            <img src="{{ asset('images/brand/main_img.webp') }}" alt="Longchamp Workshop">
         </div>
-        <div class="col-lg-4 d-flex flex-column justify-content-start gap-5">
-                <div class="d-flex justify-content-center col-12 top">
-                    @include('components.branding')
-                </div>
-                <div class="col-lg-8 mobile-image-main mid-top">
-                    <img src="{{ asset('images/brand/main_img.webp') }}" alt="Login Image" srcset="">
-                </div>
-                <div class="px-2 w-100 mid">
-                    <h1 class="mb-3 text-center fw-bold text-dark">LOGIN</h1>
-                    <div class="register-form-parent">
-                        <x-auth-session-status class="mb-4" :status="session('status')" />
 
-                        <form method="POST" action="{{ route('login') }}">
-                            @csrf
+        <!-- Mobile Top Hero Image -->
+        <div class="mobile-image-main">
+            <img src="{{ asset('images/brand/main_img.webp') }}" alt="Longchamp Workshop">
+        </div>
 
-                            <div class="mb-3">
-                                <input id="email" type="email"
-                                    class="form-control input-text @error('email') is-invalid @enderror" name="email"
-                                    value="{{ old('email') }}" required autocomplete="email"
-                                    placeholder="EMAIL ADDRESS" />
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                                @if (session('error'))
-                                    <span class="d-block invalid-feedback" role="alert">
-                                        <strong>{{ session('error') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
+        <!-- Right / Bottom Content Area -->
+        <div class="flex-parent">
+            <!-- Top Logo (Desktop Only) -->
+            <div class="top">
+                @include('components.branding')
+            </div>
 
-                            <input type="hidden" name="password" value="password" />
+            <!-- Middle Content -->
+            <div class="mid">
+                <h1 class="mb-4 text-center fw-bold text-dark text-uppercase" style="font-size: 1.5rem; letter-spacing: 1px;">
+                    LOGIN
+                </h1>
 
-                            <div class="mb-0 text-center" style="margin-top:5svh !important;">
-                                <button type="submit" class="custom-btn custom-btn-primary pulse-slow w-50 m-auto">
-                                    {{ __('LOGIN') }}
-                                </button>
-                            </div>
-                            <div class="bottom-text">
-                                <span class="already-register text-dark text-uppercase">Haven't Registered?</span>
-                                <span class="already-register">
-                                    <a href="{{ route('register') }}" class="text-dark text-uppercase fw-bold">REGISTER HERE</a>
+                <div class="register-form-parent">
+                    <x-auth-session-status class="mb-3" :status="session('status')" />
+
+                    <form method="POST" action="{{ route('login') }}">
+                        @csrf
+
+                        <div class="mb-4">
+                            <input id="email" type="email"
+                                class="form-control input-text @error('email') is-invalid @enderror" name="email"
+                                value="{{ old('email') }}" required autocomplete="email"
+                                placeholder="EMAIL ADDRESS" style="text-align: center;" />
+                            @error('email')
+                                <span class="invalid-feedback text-center d-block mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
                                 </span>
-                            </div>
-                            <div class="logo-bot d-flex justify-content-center mt-3">
-                                <img src="{{ asset('images/brand/bot_logo.webp') }}" class="img-fluid" alt="Footer Image" srcset="" style="width:4rem;">
-                            </div>
-                        </form>
-                    </div>
+                            @enderror
+                            @if (session('error'))
+                                <span class="invalid-feedback text-center d-block mt-1" role="alert">
+                                    <strong>{{ session('error') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+
+                        <input type="hidden" name="password" value="password" />
+
+                        <div class="text-center mb-3">
+                            <button type="submit" class="custom-btn custom-btn-primary" style="max-width: 220px; width: 100%;">
+                                {{ __('LOGIN') }}
+                            </button>
+                        </div>
+
+                        <div class="bottom-text text-center mt-3">
+                            <span class="text-dark text-uppercase" style="font-size: 11px; letter-spacing: 0.8px;">HAVEN'T? </span>
+                            <a href="{{ route('register') }}" class="text-dark text-uppercase fw-bold text-decoration-none" style="font-size: 11px; letter-spacing: 0.8px;">
+                                REGISTER HERE
+                            </a>
+                        </div>
+                    </form>
                 </div>
-                <!-- <div class="col-12 bot">
-                    <div class="logo-bot d-flex justify-content-center">
-                        <img src="{{ asset('images/brand/bot_logo.webp') }}" class="img-fluid w-25" alt="Login Image" srcset="">
-                    </div>
-                </div> -->
+            </div>
+
+            <!-- Bottom Horse Logo -->
+            <div class="col-12 bot">
+                <div class="logo-bot d-flex justify-content-center mt-3">
+                    <img src="{{ asset('images/brand/bot_logo.webp') }}" class="img-fluid" alt="Footer Image" srcset="" style="width: 4rem;">
+                </div>
+            </div>
         </div>
     </div>
 </x-guest-layout>

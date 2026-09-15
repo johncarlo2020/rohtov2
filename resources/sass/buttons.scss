@@ -44,22 +44,32 @@
 
 // Primary button - for the main call to action
 .custom-btn-primary {
-    background-color: $primary;
-    border-radius: 0px;
-    color: $white;
+    background-color: #F26522 !important;
+    border-radius: 2px !important;
+    border: none !important;
+    color: #ffffff !important;
     letter-spacing: 1.4px;
+    font-weight: 700;
+    text-transform: uppercase;
     width: 100%;
+    padding: 12px 20px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(242, 101, 34, 0.2);
+    transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
 
     &:hover {
-        background-color: darken($primary, 1%);
-        color: $white;
-        border-color: darken($primary, 1%);
+        background-color: #df5413 !important;
+        color: #ffffff !important;
+        border-color: #df5413 !important;
+        box-shadow: 0 4px 10px rgba(242, 101, 34, 0.3);
     }
 
     &:active {
-        background-color: darken($primary, 1%);
-        color: $white;
-        border-color: darken($primary, 1%);
+        background-color: #c9460c !important;
+        transform: translateY(1px);
     }
 
     &:disabled,

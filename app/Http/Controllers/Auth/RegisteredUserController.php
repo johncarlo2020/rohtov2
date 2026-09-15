@@ -44,12 +44,68 @@ class RegisteredUserController extends Controller
           'title' => ['required', 'string', 'max:20'],
           'lname' => ['required', 'string', 'max:255'],
           'fname' => ['required', 'string', 'max:255'],
-          'email' => ['required', 'email', 'unique:users,email'],
-          'preferred_contact' => ['required', 'string', 'max:50'],
-          'privacy_policy' => ['required'],
+          'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+          'number' => ['nullable', 'string', 'max:30'],
+          'consent_channels' => ['nullable', 'array'],
+          'consent_channels.*' => ['string', 'in:email,sms,whatsapp,phone,none'],
+          'newsletter_consent' => ['nullable', 'in:0,1,true,false'],
+          'communication_consent' => ['nullable', 'in:0,1,true,false'],
+          'preferred_contact' => ['nullable', 'string', 'max:50'],
+          'privacy_policy' => ['nullable'],
       ]);
 
-      $communicationConsent = $request->has('communication_consent');
+      // Normalize phone number
+      $number = $request->input('number');
+      if ($number) {
+          $number = trim($number);
+          $clean = preg_replace('/[^\d+]/', '', $number);
+          if (!str_starts_with($clean, '+')) {
+              if (str_starts_with($clean, '60')) {
+                  $clean = '+' . $clean;
+              } elseif (str_starts_with($clean, '0')) {
+                  $clean = '+60' . substr($clean, 1);
+              } else {
+                  $clean = '+60' . $clean;
+              }
+          }
+          $number = $clean;
+      }
+
+      // Process consent channels
+      $consentChannels = $request->input('consent_channels', []);
+      if (!is_array($consentChannels)) {
+          $consentChannels = [];
+      }
+
+      // Determine preferred contact for backwards compatibility
+      if ($request->filled('preferred_contact')) {
+          $preferredContact = $request->input('preferred_contact');
+      } elseif (in_array('none', $consentChannels)) {
+          $preferredContact = 'None';
+      } elseif (!empty($consentChannels)) {
+          $preferredContact = implode(', ', array_map(function($c) {
+              return match($c) {
+                  'email' => 'Email',
+                  'sms' => 'SMS',
+                  'whatsapp' => 'WhatsApp',
+                  'phone' => 'Phone',
+                  default => ucfirst($c)
+              };
+          }, $consentChannels));
+      } else {
+          $preferredContact = 'Email';
+      }
+
+      // Process boolean consents
+      $communicationConsent = $request->has('communication_consent')
+          ? filter_var($request->input('communication_consent'), FILTER_VALIDATE_BOOLEAN)
+          : false;
+
+      $newsletterConsent = $request->has('newsletter_consent')
+          ? filter_var($request->input('newsletter_consent'), FILTER_VALIDATE_BOOLEAN)
+          : false;
+
+      $marketing = $newsletterConsent || $communicationConsent;
       $otp = random_int(100000, 999999);
 
       $user = User::create([
@@ -57,9 +113,12 @@ class RegisteredUserController extends Controller
           'lname' => $request->input('lname'),
           'fname' => $request->input('fname'),
           'email' => $request->input('email'),
-          'preferred_contact' => $request->input('preferred_contact'),
+          'number' => $number,
+          'consent_channels' => $consentChannels,
+          'newsletter_consent' => $newsletterConsent,
+          'preferred_contact' => $preferredContact,
           'communication_consent' => $communicationConsent,
-          'marketing' => $communicationConsent,
+          'marketing' => $marketing,
           'otp' => $otp,
           'created_at' => Carbon::now(),
           'last_login_at' => Carbon::now(),

@@ -132,7 +132,7 @@
             <div class="mid">
                 <div class="w-100 m-auto">
                     <main>
-                        <div class="booking-fields-scroll">
+                        <div class="">
                             <!-- BOOKING FLOW FORM -->
                             <form id="reservation-form" onsubmit="event.preventDefault();">
                                 <!-- Header Text -->
@@ -282,7 +282,7 @@
                                         <div class="mb-1"><span class="text-muted">DATE:</span> <span id="confirmed-ticket-date" class="text-dark">SATURDAY, 3RD OCTOBER</span></div>
                                         <div class="mb-1"><span class="text-muted">TIME:</span> <span id="confirmed-ticket-time" class="text-dark">4:00PM - 5:00PM</span></div>
                                         <div>
-                                            <span class="text-muted">VENUE:</span> LONGCHAMP POP UP STORE<br>THE GARDENS MALL
+                                            <span class="text-muted">VENUE:</span> LONGCHAMP POP UP<br>South Palm, Ground Floor, The Gardens Mall
                                         </div>
                                     </div>
                                 </div>
@@ -313,7 +313,7 @@
             <!-- Bottom Horse Logo -->
             <div class="col-12 bot">
                 <div class="logo-bot d-flex justify-content-center mt-3">
-                    <img src="{{ asset('images/brand/bot_logo.webp') }}" class="img-fluid" alt="Footer Image" srcset="" style="width: 123px; height: 45px; object-fit: contain;">
+                    <img src="{{ asset('images/brand/bot_logo.webp') }}" class="img-fluid" alt="Footer Image" srcset="" style="width: 4rem;">
                 </div>
             </div>
         </div>
@@ -347,8 +347,9 @@
 
                 <div>
                     <div class="small text-muted text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.05em;">VENUE:</div>
-                    <div class="fw-bold text-dark text-uppercase" style="font-size: 0.85rem;">
-                        LONGCHAMP POP UP STORE THE GARDENS MALL
+                    <div class="fw-bold text-dark" style="font-size: 0.85rem;">
+                        LONGCHAMP POP UP <br>
+                        South Palm, Ground Floor, The Gardens Mall
                     </div>
                 </div>
             </div>
@@ -980,78 +981,65 @@
                 downloadBtn.disabled = true;
                 downloadBtn.textContent = 'GENERATING JPEG...';
 
-                // Create offscreen canvas (450x680)
+                // Create offscreen canvas (450x430)
                 const canvas = document.createElement('canvas');
                 canvas.width = 450;
-                canvas.height = 680;
+                canvas.height = 430;
                 const ctx = canvas.getContext('2d');
 
                 // Fill white background
                 ctx.fillStyle = '#ffffff';
-                ctx.fillRect(0, 0, 450, 680);
+                ctx.fillRect(0, 0, 450, 430);
 
-                const renderCanvasContent = (loadedLogoImage, loadedQrImage) => {
-                    let yCursor = 36;
+                const formatTitleCase = (str) => {
+                    if (!str) return '';
+                    return str.toLowerCase().replace(/\b[a-z]/g, (char, index, fullStr) => {
+                        if (index > 0 && /\d/.test(fullStr[index - 1])) {
+                            return char;
+                        }
+                        return char.toUpperCase();
+                    });
+                };
 
-                    // 1. Artist Credit "Caroline Hélain" (Italic serif / elegant script look)
-                    ctx.fillStyle = '#111111';
-                    ctx.font = 'italic 600 22px "Playfair Display", Georgia, "Times New Roman", serif';
-                    ctx.textAlign = 'center';
-                    ctx.fillText('Caroline Hélain', 225, yCursor);
-                    yCursor += 22;
+                const formatTime = (str) => {
+                    if (!str) return '';
+                    return str.toLowerCase().trim().replace(/\s+/g, ' ');
+                };
 
-                    // 2. "x" separator
-                    ctx.font = '400 14px "Helvetica Neue", Helvetica, Arial, sans-serif';
-                    ctx.fillStyle = '#555555';
-                    ctx.fillText('x', 225, yCursor);
-                    yCursor += 18;
+                const renderCanvasContent = (loadedQrImage) => {
+                    let yCursor = 35;
 
-                    // 3. LONGCHAMP Logo / Text
-                    if (loadedLogoImage) {
-                        const logoWidth = 180;
-                        const aspect = loadedLogoImage.height / loadedLogoImage.width;
-                        const logoHeight = logoWidth * aspect;
-                        const logoX = (450 - logoWidth) / 2;
-                        ctx.drawImage(loadedLogoImage, logoX, yCursor, logoWidth, logoHeight);
-                        yCursor += logoHeight + 24;
-                    } else {
-                        ctx.fillStyle = '#000000';
-                        ctx.font = 'bold 20px "Helvetica Neue", Helvetica, Arial, sans-serif';
-                        ctx.fillText('LONGCHAMP', 225, yCursor + 16);
-                        yCursor += 40;
-                    }
-
-                    // 4. QR Code (Centered 200x200)
+                    // 1. QR Code (Centered 210x210)
                     if (loadedQrImage) {
-                        const qrSize = 200;
+                        const qrSize = 210;
                         const qrX = (450 - qrSize) / 2;
                         ctx.drawImage(loadedQrImage, qrX, yCursor, qrSize, qrSize);
-                        yCursor += qrSize + 28;
+                        yCursor += qrSize + 32;
                     } else {
-                        yCursor += 220;
+                        yCursor += 242;
                     }
 
-                    // 5. Customer Name (Bold, Centered)
+                    // 2. Customer Name (Bold, Centered, ALL CAPS)
                     ctx.fillStyle = '#000000';
-                    ctx.font = 'bold 20px "Helvetica Neue", Helvetica, Arial, sans-serif';
+                    ctx.font = 'bold 22px "Helvetica Neue", Helvetica, Arial, sans-serif';
                     ctx.textAlign = 'center';
                     ctx.fillText(customerName.toUpperCase(), 225, yCursor);
-                    yCursor += 32;
+                    yCursor += 36;
 
-                    // 6. DATE Line (Centered)
-                    ctx.font = 'bold 13px "Helvetica Neue", Helvetica, Arial, sans-serif';
+                    // 3. Date Line (Centered - Title Case)
+                    ctx.font = 'bold 14px "Helvetica Neue", Helvetica, Arial, sans-serif';
                     ctx.fillStyle = '#000000';
-                    ctx.fillText(`DATE: ${dateText.toUpperCase()}`, 225, yCursor);
-                    yCursor += 22;
+                    ctx.fillText(`Date: ${formatTitleCase(dateText)}`, 225, yCursor);
+                    yCursor += 25;
 
-                    // 7. TIME Line (Centered)
-                    ctx.fillText(`TIME: ${timeText.toUpperCase()}`, 225, yCursor);
-                    yCursor += 22;
+                    // 4. Time Line (Centered - Lowercase AM/PM)
+                    ctx.fillText(`Time: ${formatTime(timeText)}`, 225, yCursor);
+                    yCursor += 25;
 
-                    // 8. VENUE Lines (Centered)
-                    ctx.fillText('VENUE: LONGCHAMP POP UP STORE', 225, yCursor);
-                    yCursor += 20;
-                    ctx.fillText('THE GARDENS MALL', 225, yCursor);
+                    // 5. Venue Lines (Centered - Title Case)
+                    ctx.fillText('Venue: Longchamp Pop Up', 225, yCursor);
+                    yCursor += 22;
+                    ctx.fillText('South Palm, Ground Floor, The Gardens Mall', 225, yCursor);
 
                     // Convert Canvas to JPEG Blob & Trigger iOS Web Share or Download
                     canvas.toBlob(async (blob) => {
@@ -1122,38 +1110,27 @@
                     }, 'image/jpeg', 0.95);
                 };
 
-                let logoLoaded = undefined;
-                let qrLoaded = undefined;
-
-                const checkComplete = () => {
-                    if (logoLoaded !== undefined && qrLoaded !== undefined) {
-                        renderCanvasContent(logoLoaded, qrLoaded);
-                    }
-                };
-
-                // Load Branding Top Logo
-                const logoImg = new Image();
-                logoImg.crossOrigin = 'anonymous';
-                logoImg.onload = () => { logoLoaded = logoImg; checkComplete(); };
-                logoImg.onerror = () => { logoLoaded = null; checkComplete(); };
-                logoImg.src = "{{ asset('images/brand/logo.webp') }}";
-
                 // Load QR image
                 if (qrImgElem && qrImgElem.src) {
                     const qrImg = new Image();
                     qrImg.crossOrigin = 'anonymous';
-                    qrImg.onload = () => { logoLoaded !== undefined ? renderCanvasContent(logoLoaded, qrImg) : (qrLoaded = qrImg, checkComplete()); };
+                    qrImg.onload = () => {
+                        renderCanvasContent(qrImg);
+                    };
                     qrImg.onerror = () => {
                         // Fallback without crossOrigin if CORS fails
                         const fallbackQr = new Image();
-                        fallbackQr.onload = () => { qrLoaded = fallbackQr; checkComplete(); };
-                        fallbackQr.onerror = () => { qrLoaded = null; checkComplete(); };
+                        fallbackQr.onload = () => {
+                            renderCanvasContent(fallbackQr);
+                        };
+                        fallbackQr.onerror = () => {
+                            renderCanvasContent(null);
+                        };
                         fallbackQr.src = qrImgElem.src;
                     };
                     qrImg.src = qrImgElem.src;
                 } else {
-                    qrLoaded = null;
-                    checkComplete();
+                    renderCanvasContent(null);
                 }
             });
 

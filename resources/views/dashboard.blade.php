@@ -206,62 +206,65 @@
                     downloadBtn.disabled = true;
                     downloadBtn.textContent = 'GENERATING JPEG...';
 
-                    // Create offscreen canvas (450x620)
+                    // Create offscreen canvas (450x430)
                     const canvas = document.createElement('canvas');
                     canvas.width = 450;
-                    canvas.height = 620;
+                    canvas.height = 430;
                     const ctx = canvas.getContext('2d');
 
                     // Fill white background
                     ctx.fillStyle = '#ffffff';
-                    ctx.fillRect(0, 0, 450, 620);
+                    ctx.fillRect(0, 0, 450, 430);
 
-                    const renderCanvasContent = (loadedLogoImage, loadedQrImage) => {
+                    const formatTitleCase = (str) => {
+                        if (!str) return '';
+                        return str.toLowerCase().replace(/\b[a-z]/g, (char, index, fullStr) => {
+                            if (index > 0 && /\d/.test(fullStr[index - 1])) {
+                                return char;
+                            }
+                            return char.toUpperCase();
+                        });
+                    };
+
+                    const formatTime = (str) => {
+                        if (!str) return '';
+                        return str.toLowerCase().trim().replace(/\s+/g, ' ');
+                    };
+
+                    const renderCanvasContent = (loadedQrImage) => {
                         let yCursor = 35;
 
-                        // 1. Logo at Top (Centered)
-                        if (loadedLogoImage) {
-                            const logoWidth = 200;
-                            const aspect = loadedLogoImage.height / loadedLogoImage.width;
-                            const logoHeight = logoWidth * aspect;
-                            const logoX = (450 - logoWidth) / 2;
-                            ctx.drawImage(loadedLogoImage, logoX, yCursor, logoWidth, logoHeight);
-                            yCursor += logoHeight + 35;
-                        } else {
-                            yCursor += 120;
-                        }
-
-                        // 2. QR Code (Centered 210x210)
+                        // 1. QR Code (Centered 210x210)
                         if (loadedQrImage) {
                             const qrSize = 210;
                             const qrX = (450 - qrSize) / 2;
                             ctx.drawImage(loadedQrImage, qrX, yCursor, qrSize, qrSize);
-                            yCursor += qrSize + 35;
+                            yCursor += qrSize + 32;
                         } else {
-                            yCursor += 230;
+                            yCursor += 242;
                         }
 
-                        // 3. Customer Name (Bold, Centered)
+                        // 2. Customer Name (Bold, Centered, ALL CAPS)
                         ctx.fillStyle = '#000000';
                         ctx.font = 'bold 22px "Helvetica Neue", Helvetica, Arial, sans-serif';
                         ctx.textAlign = 'center';
                         ctx.fillText(customerName.toUpperCase(), 225, yCursor);
-                        yCursor += 40;
+                        yCursor += 36;
 
-                        // 4. DATE Line (Centered)
+                        // 3. Date Line (Centered - Title Case)
                         ctx.font = 'bold 14px "Helvetica Neue", Helvetica, Arial, sans-serif';
                         ctx.fillStyle = '#000000';
-                        ctx.fillText(`DATE: ${dateText.toUpperCase()}`, 225, yCursor);
+                        ctx.fillText(`Date: ${formatTitleCase(dateText)}`, 225, yCursor);
                         yCursor += 25;
 
-                        // 5. TIME Line (Centered)
-                        ctx.fillText(`TIME: ${timeText.toUpperCase()}`, 225, yCursor);
+                        // 4. Time Line (Centered - Lowercase AM/PM)
+                        ctx.fillText(`Time: ${formatTime(timeText)}`, 225, yCursor);
                         yCursor += 25;
 
-                        // 6. VENUE Lines (Centered)
-                        ctx.fillText('VENUE: LONGCHAMP POP UP STORE', 225, yCursor);
+                        // 5. Venue Lines (Centered - Title Case)
+                        ctx.fillText('Venue: Longchamp Pop Up Store', 225, yCursor);
                         yCursor += 22;
-                        ctx.fillText('THE GARDENS MALL', 225, yCursor);
+                        ctx.fillText('The Gardens Mall', 225, yCursor);
 
                         // Convert Canvas to JPEG Blob & Trigger iOS Web Share or Download
                         canvas.toBlob(async (blob) => {
@@ -329,37 +332,26 @@
                         }, 'image/jpeg', 0.95);
                     };
 
-                    let logoLoaded = undefined;
-                    let qrLoaded = undefined;
-
-                    const checkComplete = () => {
-                        if (logoLoaded !== undefined && qrLoaded !== undefined) {
-                            renderCanvasContent(logoLoaded, qrLoaded);
-                        }
-                    };
-
-                    // Load Logo Image
-                    const logoImg = new Image();
-                    logoImg.crossOrigin = 'anonymous';
-                    logoImg.onload = () => { logoLoaded = logoImg; checkComplete(); };
-                    logoImg.onerror = () => { logoLoaded = null; checkComplete(); };
-                    logoImg.src = "{{ asset('images/brand/logo.webp') }}";
-
                     // Load QR Image
                     if (qrImgElem && qrImgElem.src) {
                         const qrImg = new Image();
                         qrImg.crossOrigin = 'anonymous';
-                        qrImg.onload = () => { logoLoaded !== undefined ? renderCanvasContent(logoLoaded, qrImg) : (qrLoaded = qrImg, checkComplete()); };
+                        qrImg.onload = () => {
+                            renderCanvasContent(qrImg);
+                        };
                         qrImg.onerror = () => {
                             const fallbackQr = new Image();
-                            fallbackQr.onload = () => { qrLoaded = fallbackQr; checkComplete(); };
-                            fallbackQr.onerror = () => { qrLoaded = null; checkComplete(); };
+                            fallbackQr.onload = () => {
+                                renderCanvasContent(fallbackQr);
+                            };
+                            fallbackQr.onerror = () => {
+                                renderCanvasContent(null);
+                            };
                             fallbackQr.src = qrImgElem.src;
                         };
                         qrImg.src = qrImgElem.src;
                     } else {
-                        qrLoaded = null;
-                        checkComplete();
+                        renderCanvasContent(null);
                     }
                 });
             }

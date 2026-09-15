@@ -42,9 +42,8 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
             align-items: center;
-            padding: 2.5rem 3rem 2rem 3rem;
+            padding: 2.25rem 3rem 1.75rem 3rem;
             overflow-y: auto;
             background: $white;
 
@@ -53,15 +52,17 @@
                 display: flex;
                 justify-content: center;
                 flex-shrink: 0;
+                margin-bottom: 1.5rem;
             }
 
             .mid {
                 width: 100%;
                 max-width: 420px;
-                margin: auto 0;
+                margin: 0 auto;
+                flex: 1 0 auto;
                 display: flex;
                 flex-direction: column;
-                justify-content: center;
+                justify-content: flex-start;
             }
 
             .bot {
@@ -69,6 +70,7 @@
                 display: flex;
                 justify-content: center;
                 flex-shrink: 0;
+                margin-top: auto;
                 padding-top: 1.5rem;
                 padding-bottom: 0.5rem;
             }
@@ -115,31 +117,32 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
             align-items: center;
             padding: 1.75rem 1.5rem 2rem 1.5rem;
             background: $white;
 
-            // Mockup requirement 4: Remove Longchamp logo on mobile
-            .top,
-            .branding-header,
-            .branding,
-            .desktop-only-logo {
-                display: none !important;
+            .top {
+                width: 100%;
+                display: flex !important;
+                justify-content: center;
+                flex-shrink: 0;
+                margin-bottom: 1.5rem;
             }
 
             .mid {
                 width: 100%;
                 max-width: 400px;
                 margin: 0 auto;
+                flex: 1 0 auto;
             }
 
             .bot {
                 width: 100%;
                 display: flex;
                 justify-content: center;
-                margin-top: 2rem;
-                margin-bottom: 1.5rem;
+                margin-top: auto;
+                padding-top: 1.5rem;
+                padding-bottom: 1rem;
             }
         }
     }

@@ -298,26 +298,10 @@ class GlobalHelper
             ? 'Booking Modification - Longchamp x Caroline Helain'
             : 'Booking Confirmation - Longchamp x Caroline Helain';
 
-        // Base64 encode images for 100% email client compatibility (Yahoo Mail, Gmail, Outlook)
-        $headerImagePath = public_path('images/brand/email_banner.jpg');
-        $headerImage = file_exists($headerImagePath)
-            ? 'data:image/jpeg;base64,' . base64_encode(file_get_contents($headerImagePath))
-            : asset('images/brand/email_banner.jpg');
-
-        $bottomLogoPath = public_path('images/brand/bot_logo.png');
-        $bottomLogo = file_exists($bottomLogoPath)
-            ? 'data:image/png;base64,' . base64_encode(file_get_contents($bottomLogoPath))
-            : asset('images/brand/bot_logo.png');
-
-        $qrCodeApiUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' . urlencode($qrRawData);
-        try {
-            $qrBytes = @file_get_contents($qrCodeApiUrl);
-            $qrCodeUrl = ($qrBytes && strlen($qrBytes) > 50)
-                ? 'data:image/png;base64,' . base64_encode($qrBytes)
-                : $qrCodeApiUrl;
-        } catch (\Throwable $e) {
-            $qrCodeUrl = $qrCodeApiUrl;
-        }
+        // Use clean lightweight image URLs (< 4 KB total payload) to prevent Gmail 102 KB message clipping & rejection
+        $headerImage = asset('images/brand/email_banner.jpg');
+        $bottomLogo = asset('images/brand/bot_logo.png');
+        $qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' . urlencode($qrRawData);
 
         $htmlContent = view('emails.booking-confirmation', [
             'subject' => $subject,

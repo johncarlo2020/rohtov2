@@ -182,11 +182,11 @@
                     If you need to update your booking details, please use the link below:<br>
                     Modify your booking:
                 </div>
-                <div style="margin-bottom: 10px;">
-                    <a href="{{ $modifyUrl }}" class="btn-modify">MODIFY</a>
+                <div style="margin-bottom: 10px; text-align: center;">
+                    <a href="{{ $modifyUrl }}" target="_blank" style="display: inline-block; background-color: #f26522; color: #ffffff !important; font-weight: 700; font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; text-decoration: none; padding: 12px 48px; border-radius: 2px; cursor: pointer;">MODIFY</a>
                 </div>
                 <div style="margin-top: 15px; margin-bottom: 15px; font-size: 11px; letter-spacing: 0.5px; text-transform: uppercase; font-family: sans-serif; color: #333333; text-align: center;">
-                    DO YOU WANT TO CANCEL? <a href="{{ $cancelUrl ?? url('/reservation-cancel') }}" style="color: #000000; text-decoration: underline; font-weight: bold;">CLICK HERE</a>
+                    DO YOU WANT TO CANCEL? <a href="{{ $cancelUrl ?? url('/reservation-cancel') }}" target="_blank" style="color: #000000 !important; text-decoration: underline !important; font-weight: bold; cursor: pointer;">CLICK HERE</a>
                 </div>
 
                 <!-- Footer Text -->

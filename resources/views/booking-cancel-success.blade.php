@@ -33,9 +33,14 @@
                 </div>
 
                 <div class="mt-4" style="color: #222222; font-family: 'Gill Sans MT Pro', sans-serif; font-weight: 500; letter-spacing: 0.8px;">
-                    <p class="mb-0 text-uppercase" style="font-size: 1.05rem;">
+                    <p class="mb-3 text-uppercase" style="font-size: 1.05rem;">
                         THANK YOU!
                     </p>
+                    <div class="mt-3">
+                        <a href="{{ url('/dashboard') }}" class="custom-btn custom-btn-primary text-decoration-none d-inline-flex align-items-center justify-content-center" style="max-width: 220px; width: 100%; background-color: #F26522 !important; border-color: #F26522 !important; color: #ffffff !important; font-weight: bold; letter-spacing: 1.5px; padding: 0.75rem 1.5rem; text-transform: uppercase;">
+                            HOME
+                        </a>
+                    </div>
                 </div>
             </div>
 

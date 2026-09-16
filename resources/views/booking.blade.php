@@ -300,7 +300,7 @@
                                     <div id="no-modify-notice" class="d-none small fw-bold text-muted text-uppercase my-1 text-center" style="font-size: 0.7rem; max-width: 260px;">
                                         * RESCHEDULING NOT AVAILABLE (NO DATES AVAILABLE AT LEAST 1 WEEK PRIOR)
                                     </div>
-                                    <a id="cancel-btn" href="{{ url('/reservation-cancel' . (isset($formattedBooking) && !empty($formattedBooking['reference_no']) ? '?ref=' . urlencode($formattedBooking['reference_no']) : '')) }}" onclick="return confirm('Are you sure you want to cancel your booking?');" class="custom-btn custom-btn-primary text-decoration-none d-inline-flex align-items-center justify-content-center @if(!isset($formattedBooking['reschedule_count']) || $formattedBooking['reschedule_count'] < 1) d-none @endif" style="max-width: 220px; width: 100%; background-color: #333333 !important; border-color: #333333 !important; color: #ffffff !important;">
+                                    <a id="cancel-btn" href="{{ url('/reservation-cancel' . (isset($formattedBooking) && !empty($formattedBooking['reference_no']) ? '?ref=' . urlencode($formattedBooking['reference_no']) : '')) }}" onclick="return confirm('Are you sure you want to cancel your booking?');" class="custom-btn custom-btn-primary text-decoration-none d-inline-flex align-items-center justify-content-center" style="max-width: 220px; width: 100%; background-color: #333333 !important; border-color: #333333 !important; color: #ffffff !important;">
                                         CANCEL BOOKING
                                     </a>
                                     <button id="download-btn" type="button" class="custom-btn custom-btn-primary" style="max-width: 220px; width: 100%;">
@@ -510,9 +510,12 @@
 
                 let availableModifyCount = 0;
 
+                // Filter out closed dates from registration date dropdown
+                const filteredItems = items.filter(item => item.status !== 'closed');
+
                 // Group by Month
                 const grouped = {};
-                items.forEach(item => {
+                filteredItems.forEach(item => {
                     const parts = item.date.split('-');
                     const year = parts[0];
                     const monthIdx = parseInt(parts[1]) - 1;

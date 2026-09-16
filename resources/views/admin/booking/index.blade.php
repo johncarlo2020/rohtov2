@@ -834,12 +834,14 @@
             if (!container) return;
             container.innerHTML = '';
 
-            if (!items || items.length === 0) {
+            const activeItems = (items || []).filter(item => item.status !== 'closed');
+
+            if (!activeItems || activeItems.length === 0) {
                 container.innerHTML = '<div class="py-2 text-center text-xs text-muted font-weight-bold">NO DATES AVAILABLE</div>';
                 return;
             }
 
-            items.forEach(item => {
+            activeItems.forEach(item => {
                 const dateRow = document.createElement('div');
                 const isSelected = walkinState.selectedDateRaw === item.date;
                 const isAvailable = item.status === 'available';
@@ -1252,10 +1254,10 @@
             if (!container) return;
             container.innerHTML = '';
 
-            let filteredItems = items;
+            let filteredItems = (items || []).filter(item => item.status !== 'closed');
             if (vipModalState.selectedGroup && vipGroupScheduleMapModal[vipModalState.selectedGroup]) {
                 const allowedDates = Object.keys(vipGroupScheduleMapModal[vipModalState.selectedGroup]);
-                filteredItems = items.filter(item => allowedDates.includes(item.date));
+                filteredItems = filteredItems.filter(item => allowedDates.includes(item.date));
             }
 
             if (!filteredItems || filteredItems.length === 0) {

@@ -234,19 +234,11 @@ class BookingSystemTest extends TestCase
             'reschedule_count' => 0,
         ]);
 
-        // Unmodified booking (reschedule_count = 0) should NOT show CANCEL BOOKING button
+        // Active booking should show CANCEL BOOKING button anytime
         $response = $this->actingAs($user)->get('/dashboard');
         $response->assertStatus(200);
-        $response->assertDontSee('CANCEL BOOKING');
-
-        // Modified booking (reschedule_count = 1) SHOULD show CANCEL BOOKING button
-        $booking->reschedule_count = 1;
-        $booking->save();
-
-        $response2 = $this->actingAs($user)->get('/dashboard');
-        $response2->assertStatus(200);
-        $response2->assertSee('CANCEL BOOKING');
-        $response2->assertSee('/reservation-cancel?ref=REF-DASHBOARD-123');
+        $response->assertSee('CANCEL BOOKING');
+        $response->assertSee('/reservation-cancel?ref=REF-DASHBOARD-123');
     }
 
     /** @test */
@@ -755,5 +747,40 @@ class BookingSystemTest extends TestCase
         $response->assertSee('staffmember@example.com');
         $response->assertSee('StaffMember');
         $response->assertSee('STAFF');
+    }
+
+    /** @test */
+    public function it_shows_cancelled_status_for_cancelled_booking_users_in_user_management()
+    {
+        $adminRole = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'admin']);
+        $admin = \App\Models\User::factory()->create(['email' => 'admin_cancel_test@example.com']);
+        $admin->assignRole($adminRole);
+
+        $clientRole = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'client']);
+        $cancelledUser = \App\Models\User::factory()->create([
+            'fname' => 'CancelledGuest',
+            'email' => 'cancelledguest@example.com',
+            'number' => '0999111222333',
+        ]);
+        $cancelledUser->assignRole($clientRole);
+
+        $slotsResponse = $this->getJson('/api/booking/dates/2026-10-06/slots');
+        $slotId = $slotsResponse->json()[0]['id'];
+        $slot = BookingSlot::find($slotId);
+
+        Booking::create([
+            'booking_date_id' => $slot->booking_date_id,
+            'booking_slot_id' => $slot->id,
+            'reference_no' => 'REF-CANCELLED-999',
+            'customer_name' => 'CancelledGuest',
+            'customer_email' => 'cancelledguest@example.com',
+            'customer_phone' => '0999111222333',
+            'status' => 'cancelled',
+        ]);
+
+        $response = $this->actingAs($admin)->get('/admin/users');
+        $response->assertStatus(200);
+        $response->assertSee('CANCELLED');
+        $response->assertDontSee('MISSED');
     }
 }

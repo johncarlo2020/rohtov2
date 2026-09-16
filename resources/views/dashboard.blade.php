@@ -142,11 +142,9 @@
                                         @endif
                                     </div>
                                 @endif
-                                @if(isset($resCount) && $resCount >= 1)
-                                    <a id="cancel-btn" href="{{ url('/reservation-cancel' . ($refNo ? '?ref=' . urlencode($refNo) : '')) }}" onclick="return confirm('Are you sure you want to cancel your booking?');" class="custom-btn custom-btn-primary w-50 m-auto text-decoration-none d-block text-center" style="border-radius: 0; padding: 0.7rem 1rem; font-weight: bold; letter-spacing: 0.05em; background-color: #333333 !important; border-color: #333333 !important; color: #ffffff !important;">
-                                        CANCEL BOOKING
-                                    </a>
-                                @endif
+                                <a id="cancel-btn" href="{{ url('/reservation-cancel' . ($refNo ? '?ref=' . urlencode($refNo) : '')) }}" onclick="return confirm('Are you sure you want to cancel your booking?');" class="custom-btn custom-btn-primary w-50 m-auto text-decoration-none d-block text-center" style="border-radius: 0; padding: 0.7rem 1rem; font-weight: bold; letter-spacing: 0.05em; background-color: #333333 !important; border-color: #333333 !important; color: #ffffff !important;">
+                                    CANCEL BOOKING
+                                </a>
                                 <button id="download-btn" type="button" class="custom-btn custom-btn-primary w-50 m-auto" style="border-radius: 0; padding: 0.7rem 1rem; font-weight: bold; letter-spacing: 0.05em;">
                                     DOWNLOAD
                                 </button>

@@ -163,6 +163,8 @@
                                     @if($user->attended_at_text)
                                         <br><small class="text-muted" style="font-size: 10px;">{{ $user->attended_at_text }}</small>
                                     @endif
+                                @elseif($status === 'cancelled')
+                                    <span class="badge bg-secondary badge-attendance"><i class="fa-solid fa-ban me-1"></i>CANCELLED</span>
                                 @elseif($status === 'missed')
                                     <span class="badge bg-danger badge-attendance"><i class="fa-solid fa-circle-xmark me-1"></i>MISSED</span>
                                 @else

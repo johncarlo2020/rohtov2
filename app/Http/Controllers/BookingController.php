@@ -114,7 +114,7 @@ class BookingController extends Controller
                     ->first();
 
                 if ($slot) {
-                    $slotBookings = Booking::where('booking_slot_id', $slot->id)->get();
+                    $slotBookings = Booking::where('booking_slot_id', $slot->id)->where('status', '!=', 'cancelled')->get();
                     $vipBookings = $slotBookings->where('is_vip', true);
                     $publicBookings = $slotBookings->where('is_vip', false);
 

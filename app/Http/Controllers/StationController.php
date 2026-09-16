@@ -1014,7 +1014,9 @@ class StationController extends Controller
       if ($user->is_attended) {
           $user->attendance_status = 'attended';
       } elseif ($latestBooking) {
-          if (in_array($latestBooking->status, ['missed', 'cancelled'])) {
+          if ($latestBooking->status === 'cancelled') {
+              $user->attendance_status = 'cancelled';
+          } elseif ($latestBooking->status === 'missed') {
               $user->attendance_status = 'missed';
           } else {
               $bookingDate = $latestBooking->bookingDate ? $latestBooking->bookingDate->date : null;

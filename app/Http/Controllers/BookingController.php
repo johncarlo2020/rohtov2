@@ -61,7 +61,7 @@ class BookingController extends Controller
                     'phone' => $b->customer_phone,
                     'date' => $b->bookingDate->display_date ?? 'N/A',
                     'time' => $b->bookingSlot->display_time ?? 'N/A',
-                    'venue' => $b->venue ?? 'LONGCHAMP POP UP STORE THE GARDENS MALL',
+                    'venue' => $b->venue ?? 'LONGCHAMP POP UP South Palm, Ground Floor, The Gardens Mall',
                     'status' => $isAttended ? 'ATTENDED' : strtoupper($b->status),
                     'attended_at' => $b->attended_at ? Carbon::parse($b->attended_at)->format('M d, Y h:i A') : 'Not yet',
                     'is_attended' => $isAttended

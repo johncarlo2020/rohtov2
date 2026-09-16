@@ -160,8 +160,8 @@
                 <div class="detail-group" style="margin-bottom: 10px;">
                     <div class="detail-label">VENUE:</div>
                     <div class="detail-value">
-                        LONGCHAMP POP UP STORE<br>
-                        THE GARDENS MALL
+                        LONGCHAMP POP UP<br>
+                        South Palm, Ground Floor, The Gardens Mall
                     </div>
                 </div>
 

@@ -14,17 +14,20 @@
             width: 100px;
         }
     </style>
-    <div id="stationPage" class="station-page home content-box main-background d-flex flex-column min-vh-100 pt-5 ">
+     <div class="mb-3 branding-container">
+            @include('components.branding')
+        </div>
+    <div id="stationPage" class="d-flex flex-column pt-4 content-box station-page home main-background min-vh-100">
         <div class="modal fade" data-bs-backdrop="static" id="scanCompleteModal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> --}}
                     <div class="modal-body">
                         <div class="text-center content">
-                            <i class="fa-regular fa-circle-check text-yellow"></i>
-                            <div class="text-content mt-0">
-                                <p class="station-text mb-2 text-dark">{{ $station->name }}</p>
-                                <p class="message text-dark">
+                            <i class="text-yellow fa-regular fa-circle-check"></i>
+                            <div class="mt-0 text-content">
+                                <p class="mb-2 text-dark station-text">{{ $station->name }}</p>
+                                <p class="text-dark message">
                                     Check-in Successful
                                 </p>
                             </div>
@@ -44,8 +47,8 @@
                     {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> --}}
                     <div class="modal-body">
                         <div class="text-center content">
-                            <div class="text-content mt-0">
-                                <p class="heading-text text-dark">
+                            <div class="mt-0 text-content">
+                                <p class="text-dark heading-text">
                                     Invalid QR Code
                                 </p>
                             </div>
@@ -60,23 +63,29 @@
             </div>
         </div>
 
-        <div class="mb-3 branding-container">
-            @include('components.branding')
+        <div class="station-number">
+              <p class="station-id">{{ $station->id }}</p>
         </div>
-        <h2 class="station-subheading mt-2"># {{ $station->id }} {{ $station->name }}</h2>
-        <p class="pharagraph-text px-4">{{ $selectedStationDescription }}</p>
+        <h2 class="mt-2 station-subheading">{{ $station->name }}</h2>
         <div id="mainContent" class="p-0">
             <div id="{{ $user ? '' : 'forceQr' }}" class="mt-4 icon-container">
             </div>
             <img class="mt-2 station-image station-img-{{ $station->id }}"
                 src="{{ asset('files/station/' . $station->id . '.webp') }}" alt="Station Image">
 
+            <div class="station-not-finish">
+                <p class="">Proceed to</p>
+                <h2 class="station-subheading">{{ $station->name }}</h2>
+                 <p class="">to begin your journey.</p>
+            </div>
+
+
 
             {{-- Display Selected Product (New) --}}
             {{-- This can be shown for a specific station or globally if a product is selected --}}
             @if ($station->id == 5 && count($selectedProduct) === 0)
                 <div class="p-3 sample-selection-container">
-                    <div class="bg-light p-3 rounded shadow-sm">
+                    <div class="bg-light shadow-sm p-3 rounded">
                         <form id="productForm">
                             <p class="fw-bold">Sample Selection</p>
                             <div class="form-group">
@@ -91,14 +100,14 @@
                                     @endif
                                 </select>
                             </div>
-                            <button type="button" class="button button-primary w-100 my-2"
+                            <button type="button" class="my-2 w-100 button button-primary"
                                 id="confirmProductButton">Confirm</button>
                         </form>
                     </div>
                 </div>
             @elseif ($station->id == 5 && count($selectedProduct) > 0)
                 <div class="p-3 sample-selection-container">
-                    <div class="selected-product p-3 rounded bg-light shadow-sm">
+                    <div class="bg-light shadow-sm p-3 rounded selected-product">
                         <p class="mb-1 fw-bold">Your Selected Product:</p>
                         @foreach ($selectedProduct as $product)
                             <p class="selected-id">{{ $product->name }}</p>
@@ -109,8 +118,8 @@
 
             @if ($station->id == 6 && $selectedProduct !== null)
                 <div class="p-3">
-                    <div class="bg-white p-3 rounded shadow-sm sample-selection-container">
-                        <img class="small-logo mb-2" src="{{ asset('files/main/logo.webp') }}" alt="" />
+                    <div class="bg-white shadow-sm p-3 rounded sample-selection-container">
+                        <img class="mb-2 small-logo" src="{{ asset('files/main/logo.webp') }}" alt="" />
                         <p class="mb-1 fw-bold">Personalised Hair Sample</p>
                         @foreach ($selectedProduct as $product)
                             <p class="selected-id">{{ $product->name }}</p>
@@ -123,11 +132,11 @@
         @if ($user != true && $station->id == 5)
             @if (count($selectedProduct) > 0)
                 {{-- For Station 5, trigger product modal --}}
-                <button id="start-scanner" type="button" class="btn btn-info mx-auto mt-2 camera-btn">
+                <button id="start-scanner" type="button" class="mx-auto mt-2 btn btn-info camera-btn">
                     <i class="fa-solid fa-camera"></i>
                 </button>
             @else
-                <button id="start-scanner" type="button" class="btn btn-info mx-auto mt-2 camera-btn d-none">
+                <button id="start-scanner" type="button" class="mx-auto mt-2 btn btn-info camera-btn d-none">
                     <i class="fa-solid fa-camera"></i>
                 </button>
             @endif
@@ -152,20 +161,16 @@
             </div> --}}
     </div>
     @if ($user != true)
-        <p class="px-4 mt-4 bottom-text main-color font-medium small-width">Scan the QR code at the station to
-            check in</p>
+        <p class="bottom-text mt-4 px-4 font-medium main-color small-width">Scan the QR code to proceed</p>
     @else
-        <p class="mt-4 bottom-text main-color font-medium">Checked In</p>
+        <p class="bottom-text mt-4 font-medium main-color">Checked In</p>
 
-        <div class="scanner-button d-flex justify-content-center mb-4">
-            <a href="{{ route('map') }}" class="button button-white w-50 text-center">
+        <div class="d-flex justify-content-center mb-4 scanner-button">
+            <a href="{{ route('map') }}" class="w-50 text-center button button-white">
                 BACK
             </a>
         </div>
     @endif
-    <div class="footer-container p-0 mt-auto">
-        @include('components.footer')
-    </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>

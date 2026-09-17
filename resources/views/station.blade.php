@@ -14,6 +14,7 @@
             width: 100px;
         }
     </style>
+    @include('components.back-button')
      <div class="mb-3 branding-container">
             @include('components.branding')
         </div>

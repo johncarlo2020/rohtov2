@@ -99,7 +99,7 @@
                                 <label for="number" class="field-label">Phone number:</label>
                                 <input id="number" placeholder="+60" type="tel"
                                     class="form-control input-text @error('number') is-invalid @enderror" name="number"
-                                    value="{{ old('number') }}" required autocomplete="tel" />
+                                    value="{{ old('number') }}" autocomplete="tel" />
                                 @error('number')
                                     <span class="invalid-feedback d-block" role="alert">
                                         <strong>{{ $message }}</strong>

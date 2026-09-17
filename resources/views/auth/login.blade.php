@@ -1,46 +1,35 @@
 <x-guest-layout>
-    <div class="content-box main-background px-3 d-flex flex-column min-vh-100">
-        <div class="container">
-            <div>
-                @include('components.branding')
-            </div>
-        </div>
-        <div class="form-container p-4 mt-5 bg-white rounded fade-in">
-            <h1 class="heading-text mb-1 text-center">
-                LOG IN
-            </h1>
-            <form method="POST" action="{{ route('login') }}">
+    <main class="registration-page login-page">
+        <div class="registration-shell">
+            <a class="registration-brand" href="{{ route('welcome') }}" aria-label="Maybank home">
+                <img src="{{ asset('files/main/logo.webp') }}" alt="Maybank" />
+            </a>
+
+            <h1>LOGIN</h1>
+
+            <form method="POST" action="{{ route('login') }}" class="registration-form">
                 @csrf
-                <div class="mb-2 row">
-                    <div class="col-12 w-100 phone-number-input">
-                        <label class="form-label" for="">Email</label>
+                <input type="hidden" name="password" value="password">
 
-                        <input id="email" type="email"
-                            class="input-text form-control w-100 @error('email') is-invalid @enderror d-block" placeholder="example@email.com"
-                            name="email" value="{{ old('email') }}" required autocomplete="email" autofocus />
-                    </div>
-                    <div class="mt-2 col-12">
-                        <span id="valid-msg" class="d-none text-danger"></span>
-                        <span id="error-msg" class="d-none text-danger"></span>
-                    </div>
+                <div class="registration-field">
+                    <label for="email">EMAIL ADDRESS</label>
+                    <input id="email" name="email" type="email" placeholder="Enter your email"
+                        value="{{ old('email') }}" autocomplete="email" required
+                        @error('email') aria-invalid="true" aria-describedby="email-error" @enderror>
+                    @error('email')
+                        <p class="registration-error" id="email-error" role="alert">{{ $message }}</p>
+                    @enderror
                 </div>
+                @error('password')
+                    <p class="registration-error" role="alert">{{ $message }}</p>
+                @enderror
 
-                <!-- Password -->
-                <x-text-input id="password" class="block w-full mt-1" type="hidden" name="password" value="password"
-                    required autocomplete="current-password" />
-
-                <x-input-error :messages="$errors->get('password')" class="mt-2" />
-
-                <div class="flex items-center justify-end">
-                    <x-primary-button class="button button-secondary w-100">
-                        Submit
-                    </x-primary-button>
-                </div>
+                <button class="registration-submit" type="submit">LOGIN</button>
             </form>
-        </div>
-        <div class="footer-container p-4 mt-auto">
-            @include('components.footer')
-        </div>
-    </div>
-</x-guest-layout>
 
+            <p class="registration-login">Haven't Register?<br>
+                Click <a href="{{ route('register') }}"><u>here</u></a> to register
+            </p>
+        </div>
+    </main>
+</x-guest-layout>

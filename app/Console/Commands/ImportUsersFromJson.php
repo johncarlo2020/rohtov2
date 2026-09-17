@@ -66,8 +66,6 @@ class ImportUsersFromJson extends Command
                     'country' => $userData['country'] ?? '',
                     'utm_source' => $userData['utm_source'] ?? null,
                     'utm_medium' => $userData['utm_medium'] ?? null,
-                    'otp' => $userData['otp'] ?? null,
-                    'otp_verified' => $userData['otp_verified'] ?? false,
                     'sms_consent' => $userData['sms_consent'] ?? false,
                     'email_consent' => $userData['email_consent'] ?? false,
                     'alliance_bank' => $userData['alliance_bank'] ?? false,

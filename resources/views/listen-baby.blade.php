@@ -10,14 +10,7 @@
 
     <!-- Pusher -->
     <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
-    <style>
-            @font-face {
-                font-family: 'Stella Demo';
-                src: url('{{ asset('images/font/Stella Demo.otf') }}') format('opentype');
-                font-weight: normal;
-                font-style: normal;
-            }
-    </style>
+    @include('components.fonts')
 </head>
 
 <body class="container py-5">

@@ -10,6 +10,11 @@ class Station extends Model
     use HasFactory;
     protected $fillable = [
         'name',
+        'is_mandatory',
+    ];
+
+    protected $casts = [
+        'is_mandatory' => 'boolean',
     ];
 
     public function stationUser()

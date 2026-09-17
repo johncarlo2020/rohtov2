@@ -13,6 +13,10 @@ class CreateStationsTable extends Migration
      */
     public function up()
     {
+        if (Schema::hasTable('stations')) {
+            return;
+        }
+
         Schema::create('stations', function (Blueprint $table) {
             $table->id();
             $table->string('name');

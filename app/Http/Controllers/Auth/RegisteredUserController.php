@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use App\Rules\InternationalPhoneNumber;
-use App\Helpers\GlobalHelper;
 
 class RegisteredUserController extends Controller
 {
@@ -88,7 +87,6 @@ class RegisteredUserController extends Controller
 
         // Query the country based on the phone prefix
         $country = Countries::where('phone_code', $phonePrefix)->first();
-        $otp = rand(100000, 999999);
 
         $user = User::create([
             'fname' => $request->fname,
@@ -96,7 +94,6 @@ class RegisteredUserController extends Controller
             'dob' => $request->dob,
             'number' => $phoneNumber,
             'email' => $request->email,
-            'otp' => $otp,
             'country'=> $country->name,
             'marketing' => $marketing,
             'email_consent' => $email_consent,
@@ -130,9 +127,6 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
 
 
-        GlobalHelper::sendOtpSms($phoneNumber, $otp);
-
-    // ✅ Step 3: Redirect to OTP verification screen
-    return redirect()->route('otp')->with('message', 'OTP has been sent to your phone.');
+        return redirect(RouteServiceProvider::HOME);
     }
 }

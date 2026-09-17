@@ -1,0 +1,1 @@
+{"version":2,"defects":[],"times":{"Tests\\Feature\\StationSeederTest::test_station_migrations_and_seeding_can_be_repeated":0.037,"Tests\\Feature\\Auth\\RegistrationWithoutOtpTest::test_registration_logs_in_without_generating_or_sending_an_otp":0.069}}

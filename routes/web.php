@@ -87,7 +87,6 @@ Route::group(['middleware' => ['admin']], function () {
     Route::post('/admin/check', 'App\Http\Controllers\StationController@check')->name('check');
     Route::post('/editUser', 'App\Http\Controllers\StationController@editUser')->name('editUser');
     Route::post('/tasks/redeem', 'App\Http\Controllers\StationController@redeem')->name('tasks.redeem');
-    Route::post('/verify-otp-admin', 'App\Http\Controllers\StationController@verifyAdmin')->name('verifyAdmin');
     Route::get('/admin/users/{date}/{keyword?}', 'App\Http\Controllers\StationController@usersFilter')->name('userFilter');
     Route::get('/dumpUser', 'App\Http\Controllers\StationController@logUser')->name('logUser');
 });
@@ -110,16 +109,6 @@ Route::group(['middleware' => ['client']], function () {
 
 
     Route::post('/upload', 'App\Http\Controllers\StationController@uploadBaby')->name('upload.baby');
-
-    Route::get('/otp', function () {
-        if (Auth::user() && Auth::user()->otp_verified == 1) {
-            return redirect()->route('dashboard'); // or your desired route
-        }
-        return view('otp');
-    })->name('otp');
-
-    Route::get('/resend-otp', 'App\Http\Controllers\StationController@resend')->name('resend.otp');
-    Route::post('/verify-otp', 'App\Http\Controllers\StationController@verify')->name('verify.otp');
 
     Route::post('/appointment/submit', 'App\Http\Controllers\StationController@appointmentSubmit')->name('appointments.submit');
     Route::get('/pre-reg-event', 'App\Http\Controllers\StationController@preRegEvent')->name('preRegEvent');

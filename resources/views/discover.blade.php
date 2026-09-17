@@ -7,13 +7,7 @@
         <title>Ocean or Plastic</title>
 
         @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap"
-            rel="stylesheet"
-        />
+        @include('components.fonts')
     </head>
 
     <style>
@@ -23,7 +17,7 @@
             margin: 0;
             display: flex;
             flex-direction: column;
-            font-family: "Nunito", sans-serif; /* Set the font to Nunito */
+            font-family: "Poppins", sans-serif;
             font-size: 16px; /* Set the font size to 16px */
         }
         .container-fluid {

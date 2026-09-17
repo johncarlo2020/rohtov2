@@ -72,12 +72,6 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="example-text-input" class="form-control-label">OTP</label>
-                                            <input class="form-control" type="text" disabled value="{{ $user->otp }}">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
                                             <label for="example-text-input" class="form-control-label">Email Address</label>
                                             <input id="emailInput" class="form-control" type="email" disabled
                                                 value="{{ $user->email }}">
@@ -121,25 +115,7 @@
                         </div>
                     </div>
                 </div>
-                @if ($user->otp_verified == 0)
-                    <div class="col-12 mt-3">
-                        <div class="card">
-                            <div class="p-3 card-header">
-                                <h6 class="mb-0">Manual OTP verify</h6>
-                            </div>
-                            <div class="card-body d-flex align-items-center gap-2 pt-0">
-                                <form method="POST" action="{{ route('verifyAdmin') }}" class="row">
-                                    <div class="col-auto">
-                                        <input type="text" class="form-control" id="otp" placeholder="Enter OTP">
-                                    </div>
-                                    <div class="col-auto">
-                                        <button type="submit" class="btn btn-primary mb-3">Verify</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                @endif
+
 
                 <div class="col-md-12 mt-3">
                     <div class="card">
@@ -292,44 +268,5 @@
             $('input').prop('disabled', true);
         }
 
-        $(document).ready(function() {
-            $('form[action="{{ route('verifyAdmin') }}"]').on('submit', function(event) {
-                event.preventDefault(); // Prevent default form submission
-
-                var otp = $('#otp').val();
-                var userId = {{ $user->id }}; // Include the user ID
-                console.log('OTP Value:', otp); // Log the OTP value for debugging
-
-                if (!otp) {
-                    toastr.error('OTP field cannot be empty.');
-                    return; // Stop execution if OTP is empty
-                }
-
-                var csrfToken = $('meta[name="csrf-token"]').attr('content');
-
-                $.ajax({
-                    url: '{{ route('verifyAdmin') }}',
-                    type: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    data: {
-                        otp: otp,
-                        user_id: userId // Pass the user ID in the request
-                    },
-                    success: function(response) {
-                        toastr.success('OTP verified successfully!');
-
-                        // reload the page to reflect changes
-                        setTimeout(function() {
-                            location.reload();
-                        }, 1000);
-                    },
-                    error: function(xhr, status, error) {
-                        toastr.error('Failed to verify OTP. Please try again.');
-                    }
-                });
-            });
-        });
     </script>
 @endsection

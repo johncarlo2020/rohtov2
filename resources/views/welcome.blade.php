@@ -9,25 +9,21 @@
 
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
-        rel="stylesheet" />
-
     <style>        .content-box {
             position: relative;
         }
     </style>
+    @include('components.fonts')
 </head>
 
 <body class="antialiased welcome-page">
-    <div class="content-box main-background fade-in pt-0">
-        <img class="w-100 mb-4" src="{{ asset('files/main/welcomBG.webp') }}" />
-        <div class="button-container px-4">
-            <a href="{{ route('register') }}" id="routeBtn" class="button-primary button mb-3">
+    <div class="pt-0 content-box main-background fade-in">
+        <img class="mb-4 w-100" src="{{ asset('files/main/welcomBG.webp') }}" />
+        <div class="px-4 button-container">
+            <a href="{{ route('register') }}" id="routeBtn" class="mb-3 button-primary button">
                Sign Up
             </a>
-             <a href="{{ route('login') }}" id="routeBtn" class="button-secondary button mb-3">
+             <a href="{{ route('login') }}" id="routeBtn" class="mb-3 button-secondary button">
                Log In
             </a>
         </div>

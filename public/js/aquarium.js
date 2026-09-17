@@ -76,7 +76,7 @@ function addFish() {
       const name = Phaser.Utils.Array.GetRandom(fishNames);
       const bubble = this.add.circle(spawnX + BUBBLE_OFFSET_X, spawnY + BUBBLE_OFFSET_Y, BUBBLE_RADIUS, 0x87ceeb, 0.5);
       const text = this.add.text(spawnX + BUBBLE_OFFSET_X, spawnY + BUBBLE_OFFSET_Y, name, {
-        font: "18px Arial",
+        font: "18px Poppins",
         fill: "#ffffff",
       }).setOrigin(0.5, 0.5).setDepth(1);
 

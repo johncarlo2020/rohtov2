@@ -123,8 +123,7 @@
                     </div>
                 </div>
                 <p class="pharagraph-text">
-                    *Please make sure you are using an active phone number. Please fill in your mobile number. An OTP
-                    (One Time Passcode) will be sent for verification.
+                    *Please enter an active mobile number.
                 </p>
 
                 <p class="pharagraph-text">

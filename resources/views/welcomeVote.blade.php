@@ -8,14 +8,7 @@
     <title>Ocean or Plastic</title>
 
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
-        rel="stylesheet" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
-        rel="stylesheet" />
+    @include('components.fonts')
 </head>
 <style>
     body,
@@ -24,7 +17,7 @@
         margin: 0;
         display: flex;
         flex-direction: column;
-        font-family: "Nunito", sans-serif;
+        font-family: "Poppins", sans-serif;
         font-size: 16px;
     }
 
@@ -44,7 +37,7 @@
     }
 
     h1 {
-        font-family: "Montserrat", sans-serif;
+        font-family: "Poppins", sans-serif;
         font-weight: 700;
         /* Bold */
     }

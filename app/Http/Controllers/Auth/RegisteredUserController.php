@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\Countries;
-use App\Models\Regime;
 use App\Models\Utm;
 
 use Carbon\Carbon;
@@ -16,9 +14,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
 use Illuminate\View\View;
-use App\Rules\InternationalPhoneNumber;
 
 class RegisteredUserController extends Controller
 {
@@ -45,65 +41,51 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
-            'fname' => ['required', 'string', 'max:255'],
-            'lname' => ['required', 'string', 'max:255'],
+        $number = preg_replace('/[\s()\-]+/', '', (string) $request->input('number'));
+        if (str_starts_with($number, '0')) {
+            $number = '+60' . substr($number, 1);
+        } elseif (str_starts_with($number, '60')) {
+            $number = '+' . $number;
+        }
+        $request->merge(['number' => $number]);
+
+        $validated = $request->validate([
+            'full_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
-            'dob' => ['required', 'date', function ($attribute, $value, $fail) {
-                if (Carbon::parse($value)->age < 18) {
-                    $fail('You must be at least 18 years old to register.');
-                }
-            }],
-            'country' => [
-                'required',
-                'string',
-                function ($attribute, $value, $fail) {
-                    if (User::where('number', $value)->exists()) {
-                      $fail('This phone number is already registered. If you’ve signed up for a previous event or pre-registered, please. <a href="' . route('login') . '">Login</a> instead');
-                    }
-                }
-            ],
+            'number' => ['required', 'string', 'regex:/^\+601[0-9]{8,9}$/', 'unique:users,number'],
+            'terms' => ['accepted'],
+            'age_confirmed' => ['accepted'],
+            'marketing' => ['sometimes', 'boolean'],
+        ], [
+            'number.regex' => 'Please enter a valid Malaysian mobile number.',
+            'number.unique' => 'This mobile number is already registered. Please log in instead.',
+            'terms.accepted' => 'Please agree to the Terms and Conditions and Privacy Policy.',
+            'age_confirmed.accepted' => 'You must confirm that you are 21 or above to register.',
         ]);
 
-        $marketing = false;
-        $email_consent = false;
-        $sms_consent = false;
-
-        if($request->has('email_consent')){
-            $email_consent = true;
-        }
-        if($request->has('sms_consent')){
-            $sms_consent = true;
-        }
-
-        if($request->has('marketing')){
-            $marketing = true;
-        }
-        // After validation, fetch country by phone number
-        $phoneNumber = $request->input('country');
-
-      // Extract the phone prefix
-        $phonePrefix = '+' . substr($phoneNumber, 1, 2); // This assumes the prefix is always 2 characters after the '+'
-
-        // Query the country based on the phone prefix
-        $country = Countries::where('phone_code', $phonePrefix)->first();
+        // Keep the existing name columns compatible with the rest of the application.
+        $name = preg_split('/\s+/', trim($validated['full_name']), 2);
+        $marketing = $request->boolean('marketing');
 
         $user = User::create([
-            'fname' => $request->fname,
-            'lname' => $request->lname,
-            'dob' => $request->dob,
-            'number' => $phoneNumber,
+            'fname' => $name[0],
+            'lname' => $name[1] ?? '',
+            'dob' => '', // Date of birth is no longer collected.
+            'number' => $validated['number'],
             'email' => $request->email,
-            'country'=> $country->name,
+            'country' => 'Malaysia',
+            'terms' => $request->boolean('terms'),
+            'age_confirmed' => $request->boolean('age_confirmed'),
             'marketing' => $marketing,
-            'email_consent' => $email_consent,
-            'sms_consent' => $sms_consent,
+            'email_consent' => $marketing,
+            'sms_consent' => $marketing,
             'last_login_at' => Carbon::now(),
             'password' => Hash::make('password'),
         ]);
 
+        $utm = new Utm();
+
         if ($request->filled('utm_source')) {
-            $utm = new Utm();
             $utm->utm_source = $request->input('utm_source');
             $utm->save();
 
@@ -122,6 +104,7 @@ class RegisteredUserController extends Controller
 
         $user->assignRole('client');
         Auth::login($user);
+        $request->session()->regenerate();
 
         // Use the insert method to insert multiple records in one query
         event(new Registered($user));

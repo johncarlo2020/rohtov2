@@ -1,0 +1,134 @@
+.registration-page {
+    height: 100svh;
+    overflow-y: auto;
+    background: #000;
+    color: #fff;
+
+    .registration-shell {
+        width: min(100%, 445px);
+        margin: 0 auto;
+        padding: 53px 41px 60px;
+    }
+
+    .registration-brand {
+        display: block;
+        width: 188px;
+        margin: 0 auto;
+        img { display: block; width: 100%; height: auto; }
+    }
+
+    h1 {
+        margin: 61px 0 40px;
+        color: #fff;
+        text-align: center;
+        font-size: 24px;
+        font-weight: 600;
+        line-height: 1.3;
+    }
+
+    .registration-field {
+        margin-bottom: 20px;
+        > label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: .35px;
+            line-height: 1.5;
+        }
+    }
+
+    input:not([type="checkbox"]):not([type="hidden"]) {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        height: 46px;
+        padding: 12px 13px;
+        border: 1px solid #b9bdc3;
+        border-radius: 6px;
+        background: #fff;
+        color: #161616;
+        font-size: 14px;
+        &::placeholder { color: #919191; opacity: 1; }
+        &:focus { outline: 2px solid #ffb700; outline-offset: 3px; }
+    }
+
+    .registration-phone {
+        position: relative;
+        input { padding-left: 67px !important; }
+    }
+    .registration-flag {
+        position: absolute;
+        top: 50%;
+        left: 13px;
+        transform: translateY(-50%);
+        font-size: 34px;
+        line-height: 1;
+        pointer-events: none;
+    }
+
+    .registration-consents {
+        padding-top: 30px;
+        margin-top: 30px;
+        border-top: 1px solid #b9bdc357;
+    }
+
+    .registration-check {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin: 0 0 13px;
+        padding-left: 7px;
+        font-size: 12px;
+        cursor: pointer;
+        span { line-height: 1.5; color: #fff; }
+        input {
+            flex: 0 0 23px;
+            width: 23px;
+            height: 23px;
+            margin: 0;
+            appearance: none;
+            border: 1px solid #aeb3ba;
+            border-radius: 4px;
+            background: #fff;
+            &:checked {
+                background: #ffb700 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%23000' stroke-width='3' d='m5 12 4 4 10-10'/%3E%3C/svg%3E") center / 19px no-repeat;
+                border-color: #ffb700;
+            }
+            cursor: pointer;
+        }
+        a, .registration-policy { color: #fff; font-weight: 700; text-decoration: underline; }
+    }
+
+    .registration-submit {
+        width: 100%;
+        min-height: 46px;
+        margin-top: 32px;
+        border: 0;
+        border-radius: 12px;
+        background: #ffb700;
+        color: #000;
+        font-size: 18px;
+        font-weight: 500;
+        &:hover { background: #ffc529; }
+    }
+
+    .registration-login {
+        margin: 103px 0 0;
+        text-align: center;
+        font-size: 16px;
+        line-height: 1.5;
+        letter-spacing: .4px;
+        font-weight: 400;
+        a { color: #fff; font-weight: 600; text-decoration: none; }
+    }
+    .registration-error { margin: 7px 0 0; color: #ff9c9c; font-size: 12px; line-height: 1.5; }
+    a:focus-visible, button:focus-visible, input[type="checkbox"]:focus-visible {
+        outline: 2px solid #ffb700;
+        outline-offset: 4px;
+    }
+    @media (max-width: 374px) {
+        .registration-shell { padding-right: 24px; padding-left: 24px; }
+        .registration-check { gap: 10px; }
+    }
+}

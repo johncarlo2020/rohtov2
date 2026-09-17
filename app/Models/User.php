@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-       'alliance_bank','redeem_date','email_consent','sms_consent','utm_medium','utm_source','type','guess','is_appointment','lname', 'email','fname','number','password','last_login_at','dob','country','task_2_image','task_3_image','hasRedeemed'
+       'terms','age_confirmed','marketing','alliance_bank','redeem_date','email_consent','sms_consent','utm_medium','utm_source','type','guess','is_appointment','lname', 'email','fname','number','password','last_login_at','dob','country','task_2_image','task_3_image','hasRedeemed'
     ];
 
 
@@ -43,6 +43,9 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
+        'terms' => 'boolean',
+        'age_confirmed' => 'boolean',
+        'marketing' => 'boolean',
         'email_verified_at' => 'datetime',
         'hasRedeemed' => 'boolean',
         'email_consent' => 'boolean',

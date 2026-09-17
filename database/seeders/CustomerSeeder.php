@@ -31,8 +31,6 @@ class CustomerSeeder extends Seeder
                 'last_login_at'     => $faker->dateTimeBetween('-1 year', 'now'),
                 'dob'               => $faker->date('Y-m-d', '-18 years'),
                 'country'           => $faker->country,
-                'otp'               => rand(100000, 999999),
-                'otp_verified'      => 1,
                 'task_2_image'      => null,
                 'task_3_image'      => null,
                 'email_verified_at' => Carbon::now(),

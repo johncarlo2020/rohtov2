@@ -1,367 +1,72 @@
 <x-guest-layout>
+    <main class="registration-page">
+        <div class="registration-shell">
+            <a class="registration-brand" href="{{ route('welcome') }}" aria-label="Maybank home">
+                <img src="{{ asset('files/main/logo.webp') }}" alt="Maybank" />
+            </a>
 
-    <div class="content-box main-background">
-             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-body">
-                            <a type="button" class="modal-close" data-bs-dismiss="modal">
-                                <img src="{{ asset('files/main/circle_x.webp') }}" alt="">
-                            </a>
-                            <div class="icon-container d-flex justify-content-center mb-2">
-                                    <img class="info icon" src="{{ asset('files/main/alert_circle.webp') }}" alt="">
-                            </div>
-                            <p class="pharagraph-text text-center fw-bold mb-4 gray-text">*If you are our existing user
-                            from previous event
-                            or pre-registered
-                            please click on Login</p>
-                           <div class="d-flex justify-content-center align-items-center  gap-2">
-                            <a type="button" class="button button-secondary w-100" href="{{ route('login') }}">Login</a>
-                           </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        <div class="container">
-            <div>
-                <a href="{{ route('welcome') }}" class="go-home"><i class="fa-solid fa-arrow-left"></i></a>
-                @include('components.branding')
-            </div>
-        </div>
-        <div class="form-container px-4 mt-5 fade-in">
-            <h1 class="heading-text mb-1 text-center">
-                YOU ARE ONE STEP AWAY
-            </h1>
-            <p class="sub-heading-text text-center">
-                Please fill in your details below to complete the registration.
-            </p>
-            <form id="form" method="POST" action="{{ route('register') }}">
+            <h1>SIGN UP</h1>
+
+            <form method="POST" action="{{ route('register') }}" class="registration-form">
                 @csrf
-                <!-- reCAPTCHA token -->
-                <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response" />
-                <div class="mb-2 row">
-                    <div class="col-12">
-                        <label class="form-label" for="">First Name</label>
+                <input type="hidden" name="utm_source" value="{{ session('utm.source') }}">
+                <input type="hidden" name="utm_medium" value="{{ session('utm.medium') }}">
 
-                        <input id="fname" placeholder="Enter your first name" type="text"
-                            class="input-text form-control @error('fname') is-invalid @enderror" name="fname"
-                            value="{{ old('fname') }}" required autocomplete="fname" autofocus />
-                        @error('fname')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
+                <div class="registration-field">
+                    <label for="full_name">FULL NAME</label>
+                    <input id="full_name" name="full_name" type="text" placeholder="Enter your full name"
+                        value="{{ old('full_name') }}" autocomplete="name" maxlength="255" required
+                        @error('full_name') aria-invalid="true" aria-describedby="full_name-error" @enderror>
+                    @error('full_name') <p class="registration-error" id="full_name-error" role="alert">{{ $message }}</p> @enderror
+                </div>
+
+                <div class="registration-field">
+                    <label for="email">EMAIL ADDRESS</label>
+                    <input id="email" name="email" type="email" placeholder="Enter your email"
+                        value="{{ old('email') }}" autocomplete="email" required
+                        @error('email') aria-invalid="true" aria-describedby="email-error" @enderror>
+                    @error('email') <p class="registration-error" id="email-error" role="alert">{{ $message }}</p> @enderror
+                </div>
+
+                <div class="registration-field">
+                    <label for="number">CONTACT NUMBER</label>
+                    <div class="registration-phone">
+                        <span class="registration-flag" aria-label="Malaysia">🇲🇾</span>
+                        <input id="number" name="number" type="tel" placeholder="+60 12-3739 1590"
+                            value="{{ old('number') }}" autocomplete="tel" required
+                            @error('number') aria-invalid="true" aria-describedby="number-error" @enderror>
                     </div>
+                    @error('number') <p class="registration-error" id="number-error" role="alert">{{ $message }}</p> @enderror
                 </div>
 
-                <div class="mb-2 row">
-                    <div class="col-12">
-                        <label class="form-label" for="">Last Name</label>
-                        <input type="hidden" name="utm_source" value="{{ session('utm.source') }}">
-                        <input type="hidden" name="utm_medium" value="{{ session('utm.medium') }}">
-                        <input id="lname" placeholder="Enter your last name" type="text"
-                            class="input-text form-control @error('lname') is-invalid @enderror" name="lname"
-                            value="{{ old('lname') }}" required autocomplete="lname" autofocus />
+                <div class="mb-3 registration-consents">
+                    <label class="registration-check" for="terms">
+                        <input id="terms" name="terms" type="checkbox" value="1" @checked(old('terms')) required>
+                        <span>I have read and agree to the
+                            <a href="#" onclick="event.preventDefault()">Terms and Conditions</a>
+                            and <a href="#" onclick="event.preventDefault()">Privacy Policy</a>.
+                        </span>
+                    </label>
+                    @error('terms') <p class="registration-error" role="alert">{{ $message }}</p> @enderror
 
-                        @error('lname')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
+                    <label class="registration-check" for="marketing">
+                        <input id="marketing" name="marketing" type="checkbox" value="1" @checked(old('marketing'))>
+                        <span>I agree to receive marketing communications from Maybank.</span>
+                    </label>
+
+                    <label class="registration-check" for="age_confirmed">
+                        <input id="age_confirmed" name="age_confirmed" type="checkbox" value="1" @checked(old('age_confirmed')) required>
+                        <span>Are you 21 and above?</span>
+                    </label>
+                    @error('age_confirmed') <p class="registration-error" role="alert">{{ $message }}</p> @enderror
                 </div>
 
-                <div class="mb-2 row">
-                    <div class="col-12">
-                        <label class="form-label" for="">Date of Birth</label>
-                        <input id="dob" placeholder="Date of Birth" type="date"
-                            class="input-text form-control @error('dob') is-invalid @enderror" name="dob"
-                            value="{{ old('dob') }}" required autocomplete="dob" autofocus />
-
-                        @error('dob')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="mb-2 row">
-                    <div class="col-12">
-                        <label class="form-label" for="">Email Address</label>
-
-                        <input id="email" placeholder="example@email.com" type="email"
-                            class="input-text form-control @error('email') is-invalid @enderror" name="email"
-                            value="{{ old('email') }}" required autocomplete="email" />
-
-                        @error('email')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="mb-2 row">
-                    <div class="col-12 input-group w-100 phone-number-input">
-                        <label class="form-label" for="">Phone Number</label>
-
-                        <input id="number" type="tel"
-                            class="input-text form-control w-100 @error('country') is-invalid @enderror d-block"
-                            name="number" value="{{ old('number') }}" required autocomplete="tel" autofocus />
-
-                    </div>
-                    <div class="mt-2 col-12">
-                        <span id="valid-msg" class="d-none text-danger"></span>
-                        <span id="error-msg" class="d-none text-danger"></span>
-                        @error('country')
-                            <span class="invalid-feedback d-block" role="alert">
-                              <span class="text-danger fw-bold">{!! $message !!}</span>
-                            </span>
-                        @enderror
-                    </div>
-                </div>
-                <p class="pharagraph-text">
-                    *Please enter an active mobile number.
-                </p>
-
-                <p class="pharagraph-text">
-                    I agree to receive marketing information, latest promotions, products and services from Loccitane
-                    Malaysia via the following channels:
-                </p>
-
-                <div class="mt-4 mb-1 row">
-                    <div class="col-12">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="email_consent" value="0"
-                                id="emailConsent" />
-                            <label class="form-check-label" for="emailConsent">
-                                Email
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="mb-2 row">
-                    <div class="col-12">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="sms_consent" value="0"
-                                id="smsConsent" />
-                            <label class="form-check-label" for="smsConsent">
-                                Text Message (SMS/Whatsapp)
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <p class="sub-heading-text"><Strong>Data Protection and Privacy Policy</Strong></p>
-                <div class="box p-3 bg-white rounded mb-3">
-                    <p class="sub-heading-text-small">By submitting your particulars and/or by signing this form, you
-                        agree
-                        that L’OCCITANE Malaysia Sdn Bhd may collect, use and disclose your personal data obtained by us
-                        as a result of your membership, for purposes in accordance with the Personal Data Protection Act
-                        2010 and our privacy policy (available at our website https://my.loccitane.com). You understand
-                        that by signing this form, you consent to us processing your data. Please visit our website
-                        https://my.loccitane.com for how you may access and correct your personal data or withdraw
-                        consent to the collection, use or disclosure of your personal data.</p>
-                </div>
-
-
-                <div class="mb-2 row">
-                    <div class="col-12">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="privacy_policy" value="1"
-                                id="privacyPolicy" required />
-                            <label class="form-check-label" for="privacyPolicy">
-                                *I agree to L'OCCITANE Malaysia group using and disclosing your personal information to
-                                contact you about other goods and services and using your information for direct
-                                marketing purposes including contact by phone, email, SMS or other electronic means.
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="mb-3 row">
-                    <div class="col-12">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="marketing" value="1"
-                                id="marketing" required />
-                            <label class="form-check-label" for="marketing">
-                                *I hereby consent to the Processing of my Personal Data for the above Purpose and agree
-                                to the terms in the Data Protection and Privacy Policy Notice.
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="mb-3 d-flex justify-content-center">
-                    <!-- Visible reCAPTCHA v2 widget -->
-                    <div class="g-recaptcha" data-sitekey="6LfSnzorAAAAABAcoPooh89ujm8IKf5eyCsqm25y"
-                        data-callback="onRecaptchaSuccess" data-expired-callback="onRecaptchaExpired"></div>
-                </div>
-                <div class="mb-0 row">
-                    <div class="col-12">
-                        <button id="submitButton" type="submit" class="button button-primary w-100 mb-2">
-                            {{ __('SUBMIT') }}
-                        </button>
-                        {{-- <div class="bottom-text text-center">
-                            <a class="button-text" href="{{ route('login') }}" class="">Back</a>
-                        </div> --}}
-                    </div>
-                </div>
+                <button class="mt-4 w-100 button button-primary" type="submit">SUBMIT</button>
             </form>
-            <div class="footer-container p-4">
-                @include('components.footer')
-            </div>
+
+            <p class="registration-login">Already Register?<br>
+                <a href="{{ route('login') }}">Please Login <u>here</u></a>
+            </p>
         </div>
-    </div>
+    </main>
 </x-guest-layout>
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
-<script>
-    ! function(w, d, t) {
-
-        w.TiktokAnalyticsObject = t;
-        var ttq = w[t] = w[t] || [];
-        ttq.methods = ["page", "track", "identify", "instances", "debug", "on", "off", "once", "ready", "alias",
-            "group", "enableCookie", "disableCookie"
-        ], ttq.setAndDefer = function(t, e) {
-            t[e] = function() {
-                t.push([e].concat(Array.prototype.slice.call(arguments, 0)))
-            }
-        };
-        for (var i = 0; i < ttq.methods.length; i++) ttq.setAndDefer(ttq, ttq.methods[i]);
-        ttq.instance = function(t) {
-            for (var e = ttq._i[t] || [], n = 0; n < ttq.methods.length; n++
-
-            ) ttq.setAndDefer(e, ttq.methods[n]);
-            return e
-        }, ttq.load = function(e, n) {
-            var i = "https://analytics.tiktok.com/i18n/pixel/events.js";
-            ttq._i = ttq._i || {}, ttq._i[e] = [], ttq._i[e]._u = i, ttq._t = ttq._t || {}, ttq._t[e] = +new Date,
-                ttq._o = ttq._o || {}, ttq._o[e] = n || {};
-            n = document.createElement("script");
-            n.type = "text/javascript", n.async = !0, n.src = i + "?sdkid=" + e + "&lib=" + t;
-            e = document.getElementsByTagName("script")[0];
-            e.parentNode.insertBefore(n, e)
-        };
-
-        ttq.track('PageView');
-
-        ttq.load('CIHP63RC77U9G5MV8B0G');
-
-        ttq.page();
-
-    }(window, document, 'ttq');
-</script>
-
-<!-- Facebook Pixel Code -->
-<!-- <script>
-    ! function(f, b, e, v, n, t, s) {
-        if (f.fbq) return;
-        n = f.fbq = function() {
-            n.callMethod ?
-                n.callMethod.apply(n, arguments) : n.queue.push(arguments)
-        };
-        if (!f._fbq) f._fbq = n;
-        n.push = n;
-        n.loaded = !0;
-        n.version = '2.0';
-        n.queue = [];
-        t = b.createElement(e);
-        t.async = !0;
-        t.src = v;
-        s = b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t, s)
-    }(window, document, 'script',
-        'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '800121447587288');
-    fbq('track', 'PageView');
-</script> -->
-
-<!-- Facebook Pixel Code -->
-<script>
-    ! function(f, b, e, v, n, t, s) {
-        if (f.fbq) return;
-        n = f.fbq = function() {
-            n.callMethod ?
-                n.callMethod.apply(n, arguments) : n.queue.push(arguments)
-        };
-        if (!f._fbq) f._fbq = n;
-        n.push = n;
-        n.loaded = !0;
-        n.version = '2.0';
-        n.queue = [];
-        t = b.createElement(e);
-        t.async = !0;
-        t.src = v;
-        s = b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t, s)
-    }(window, document, 'script',
-        'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '1857983581193229');
-    fbq('track', 'PageView');
-</script>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-    //    const el = document.getElementById("exampleModal");
-    //     const bsModal = new bootstrap.Modal(el);
-    //     bsModal.show();
-
-        const input = document.querySelector("#number");
-        const errorMsg = document.querySelector("#error-msg");
-        const validMsg = document.querySelector("#valid-msg");
-
-        // here, the index maps to the error code returned from getValidationError - see readme
-        const errorMap = [
-            "Invalid number",
-            "Invalid country code",
-            "Too short",
-            "Too long",
-            "Invalid number",
-        ];
-        const submitButton = document.querySelector("#submitButton");
-        const iti = window.intlTelInput(input, {
-            initialCountry: "my",
-            onlyCountries: ["my"],
-            hiddenInput: "country",
-            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js", // just for formatting/placeholders etc
-        });
-
-        const reset = () => {
-            input.classList.remove("error");
-            errorMsg.innerHTML = "";
-            errorMsg.classList.add("d-none");
-            validMsg.classList.add("d-none");
-        };
-
-        const showError = (msg) => {
-            input.classList.add("error");
-            errorMsg.innerHTML = msg;
-            errorMsg.classList.remove("d-none");
-        };
-
-        input.addEventListener("keyup", function() {
-            reset();
-            if (!input.value.trim()) {
-                showError("Required");
-                submitButton.disabled = true;
-            } else if (iti.isValidNumber()) {
-                validMsg.classList.remove("d-none");
-                submitButton.disabled = false;
-                // leave disabled until reCAPTCHA is completed
-            } else {
-                const errorCode = iti.getValidationError();
-                const msg = errorMap[errorCode] || "Invalid number";
-                showError(msg);
-                 submitButton.disabled = true;
-            }
-        });
-    });
-
-    // reCAPTCHA callback functions
-    function onRecaptchaSuccess(token) {
-        document.getElementById('submitButton').disabled = false;
-    }
-
-    function onRecaptchaExpired() {
-        document.getElementById('submitButton').disabled = true;
-    }
-</script>

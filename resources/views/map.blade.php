@@ -1,7 +1,6 @@
 <x-app-layout>
     <div class="content-box main-background px-1 d-flex flex-column min-vh-100 pt-5">
-        <a href="{{ route('preRegEvent') }}" class="go-home"><i class="fa-solid fa-arrow-left"></i></a>
-        {{-- <a href="{{ route('appointment') }}" class="go-qr"><i class="fa-solid fa-qrcode"></i></a> --}}
+        <a href="{{ route('map') }}" class="go-home"><i class="fa-solid fa-arrow-left"></i></a>
         {{-- <div class="map-next-step">
             <div class="label-text d-flex align-items-center border-bottom mb-2 pb-2">
                 <img id="station-branding" src="{{ asset('files/main/bulb.webp') }}" alt="" />
@@ -12,13 +11,13 @@
             </div>
         </div> --}}
         <div class="container mb-4">
-            <div><a href="{{ route('preRegEvent') }}">
+            <div><a href="{{ route('map') }}">
                     @include('components.branding')
                 </a>
             </div>
         </div>
         <div class="container mb-5">
-            <div class="station-logo" onclick="showStaffIdModal()">
+            <div class="station-logo">
                 <img id="station-branding" src="{{ asset('files/main/station_branding.webp') }}" alt="" />
             </div>
         </div>
@@ -138,11 +137,6 @@
                             or
                             Plastic Roadshow Journey (5 stations) for verification.</p>
                         <div class="qr d-flex justify-content-center"></div>
-                        @if($selectedAppointment && $selectedAppointment->appointment)
-                        <p class="text-center mt-4"><span
-                                id="selected-date">{{ $selectedAppointment->appointment->name ?? '' }}</span>,
-                            {{ $convertedDate }}</p>
-                        @endif
                     </div>
                 </div>
             </div>
@@ -169,25 +163,6 @@
             </div>
         </div>
 
-        <div class="modal fade" id="staffId" tabindex="-1" aria-labelledby="dateLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <a type="button" class="modal-close" data-bs-dismiss="modal" aria-label="Close"><i
-                                class="fa-solid fa-xmark"></i></a>
-                        <div class="container mb-3">
-                            <div>
-                                @include('components.branding')
-                            </div>
-                        </div>
-                        <p class="text-center py-4 fw-bold">{{ $selectedStaff }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-
         <div class="footer-container p-0 mt-auto">
             @include('components.footer')
         </div>
@@ -197,9 +172,6 @@
         let pledgeModalInstance; // Instance for the pledge modal (exampleModal)
         let dateModalInstance; // Instance for the date modal
 
-        function showStaffIdModal() {
-            $('#staffId').modal('show');
-        }
 
 
 

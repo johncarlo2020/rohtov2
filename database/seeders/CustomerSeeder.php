@@ -22,7 +22,6 @@ class CustomerSeeder extends Seeder
                 'utm_source'        => $faker->domainWord,
                 'type'              => 'pre-reg',
                 'guess'             => $faker->word,
-                'is_appointment'    => $faker->boolean,
                 'lname'             => $faker->lastName,
                 'email'             => $faker->unique()->safeEmail,
                 'fname'             => $faker->firstName,

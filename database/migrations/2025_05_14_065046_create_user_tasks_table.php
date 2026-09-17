@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('status')->default('pending'); // pending, completed, in-progress
 
 
+            $table->string('images')->nullable();
             $table->timestamps();
         });
     }

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Station;
-use App\Models\UserAppointment;
 use Illuminate\Support\Facades\DB;
 use App\Exports\UsersExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -65,13 +64,6 @@ class UserController extends Controller
         $stations = Station::all();
 
         foreach($records as $record){
-            $appointment_dates = $record->userAppointments->map(function($ua) {
-                return $ua->appointment->name;
-            })->implode(', ');
-
-            if (empty($appointment_dates)) {
-                $appointment_dates = 'n/a';
-            }
 
             $user_stations = [];
             foreach ($stations as $station) {
@@ -113,7 +105,6 @@ class UserController extends Controller
                 "email_consent" => $record->email_consent ? 'Yes' : 'No',
                 "alliance_bank" => $record->alliance_bank ? 'Yes' : 'No',
                 "created_at" => $record->created_at->format('Y-m-d H:i:s'),
-                "appointment_dates_string" => $appointment_dates,
                 "stations" => $user_stations,
             );
         }
@@ -142,7 +133,7 @@ class UserController extends Controller
             // Add CSV headers
             $csv_headers = [
                 'ID', 'Name', 'Date of Birth', 'Email', 'Number', 'Country', 'UTM Source',
-                'SMS Consent', 'Email Consent', 'Alliance Bank', 'Created At', 'Appointments'
+                'SMS Consent', 'Email Consent', 'Alliance Bank', 'Created At'
             ];
             foreach ($stations as $station) {
                 $csv_headers[] = $station->name;
@@ -150,10 +141,6 @@ class UserController extends Controller
             fputcsv($handle, $csv_headers);
 
             User::cursor()->each(function ($user) use ($handle, $stations) {
-                $appointment_dates_string = $user->userAppointments->map(function($ua) { return $ua->appointment->name; })->implode(', ');
-                if (empty($appointment_dates_string)) {
-                    $appointment_dates_string = 'n/a';
-                }
 
                 // Check if user was created after August 11, 2025
                 $cutoffDate = \Carbon\Carbon::create(2025, 8, 11, 23, 59, 59);
@@ -173,7 +160,6 @@ class UserController extends Controller
                     $user->email_consent ? 'Yes' : 'No',
                     $user->alliance_bank ? 'Yes' : 'No',
                     $user->created_at->format('Y-m-d H:i:s'),
-                    $appointment_dates_string,
                 ];
 
                 foreach ($stations as $station) {

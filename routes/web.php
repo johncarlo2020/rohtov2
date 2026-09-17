@@ -102,7 +102,6 @@ Route::group(['middleware' => ['client']], function () {
     Route::get('/station/{station}/brand', 'App\Http\Controllers\StationController@brand')->name('station.brand');
     Route::get('/puzzle', 'App\Http\Controllers\StationController@puzzle')->name('station.puzzle');
     Route::get('/brands', 'App\Http\Controllers\StationController@brands')->name('station.brands');
-    Route::post('/saveStaff', 'App\Http\Controllers\StationController@saveStaff')->name('saveStaff');
     Route::post('/save-product', 'App\Http\Controllers\StationController@saveProduct')->name('saveProduct');
     Route::post('/submit-pledge', 'App\Http\Controllers\StationController@submitPledge')->name('pledge.submit');
 
@@ -110,8 +109,6 @@ Route::group(['middleware' => ['client']], function () {
 
     Route::post('/upload', 'App\Http\Controllers\StationController@uploadBaby')->name('upload.baby');
 
-    Route::post('/appointment/submit', 'App\Http\Controllers\StationController@appointmentSubmit')->name('appointments.submit');
-    Route::get('/pre-reg-event', 'App\Http\Controllers\StationController@preRegEvent')->name('preRegEvent');
     Route::get('/pre-reg-event/guestAndWin', 'App\Http\Controllers\StationController@guestAndWin')->name('guestAndWin');
     Route::get('/pre-reg-event/embarkJourney', 'App\Http\Controllers\StationController@embarckJourney')->name('embarckJourney');
     Route::get('/pre-reg-event/embarkJourney/station/{station}', 'App\Http\Controllers\StationController@embarckStation')->name('embarckStation');
@@ -124,7 +121,6 @@ Route::group(['middleware' => ['client']], function () {
 
 });
 
-Route::get('/appointment', 'App\Http\Controllers\StationController@appointment')->name('appointment')->middleware('auth');
 // Route outside middleware - accessible to all authenticated users
 Route::get('/reg-congrats', 'App\Http\Controllers\StationController@regCongrats')->name('regCongrats')->middleware('auth');
 

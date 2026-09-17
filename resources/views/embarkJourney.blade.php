@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="content-box main-background d-flex flex-column min-vh-100 px-3">
-        <a href="{{ route('preRegEvent') }}" class="go-home"><i class="fa-solid fa-arrow-left"></i></a>
+        <a href="{{ route('map') }}" class="go-home"><i class="fa-solid fa-arrow-left"></i></a>
         <div class="container mb-5">
             <div>
                 @include('components.branding')
@@ -153,7 +153,7 @@
         </div>
 
         <div class="text-center mt-auto px-4 d-flex justify-content-center">
-            <a href="{{ route('preRegEvent') }}" class="button button-white w-50">Back</a>
+            <a href="{{ route('map') }}" class="button button-white w-50">Back</a>
         </div>
         <div class="footer-container p-4">
             @include('components.footer')

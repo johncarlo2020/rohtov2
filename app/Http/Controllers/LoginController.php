@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 
 class LoginController extends Controller
 {
@@ -19,21 +18,10 @@ class LoginController extends Controller
             'password' => ['required'],
         ]);
 
-        //
-
-         if (Auth::attempt($credentials)) {
+        if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            $user = Auth::user();
-
-            // Check if user has completed station 6
-            $stationCount = $user->stationUser()->where('station_id', 6)->count();
-
-            if ($stationCount > 0 || $user->hasRedeemed === true) {
-                return redirect()->route('regCongrats');
-            } else {
-                return redirect()->intended('appointment');
-            }
+            return redirect()->route('map');
         }
 
         return back()->withErrors([

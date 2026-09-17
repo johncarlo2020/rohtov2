@@ -67,7 +67,6 @@
                                 <th>Alliance Bank</th>
 
                                 <th>Created At</th>
-                                <th>Appointments</th> {{-- Add this --}}
                                 @foreach ($data['stations'] as $station)
                                     <th>{{ $station['name'] }}</th>
                                 @endforeach
@@ -128,7 +127,6 @@
                 { data: 'email_consent', name: 'email_consent' },
                 { data: 'alliance_bank', name: 'alliance_bank' },
                 { data: 'created_at', name: 'created_at' },
-                { data: 'appointment_dates_string', name: 'appointment_dates_string', orderable: false, searchable: false },
                     @foreach ($data['stations'] as $station)
                         {
                             data: 'stations.{{ $loop->index }}.display_value',

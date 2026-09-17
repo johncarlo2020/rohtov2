@@ -8,11 +8,12 @@ use App\Models\Utm;
 
 use Carbon\Carbon;
 
-use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 
@@ -67,42 +68,47 @@ class RegisteredUserController extends Controller
         $name = preg_split('/\s+/', trim($validated['full_name']), 2);
         $marketing = $request->boolean('marketing');
 
-        $user = User::create([
-            'fname' => $name[0],
-            'lname' => $name[1] ?? '',
-            'dob' => '', // Date of birth is no longer collected.
-            'number' => $validated['number'],
-            'email' => $request->email,
-            'country' => 'Malaysia',
-            'terms' => $request->boolean('terms'),
-            'age_confirmed' => $request->boolean('age_confirmed'),
-            'marketing' => $marketing,
-            'email_consent' => $marketing,
-            'sms_consent' => $marketing,
-            'last_login_at' => Carbon::now(),
-            'password' => Hash::make('password'),
-        ]);
+        $user = DB::transaction(function () use ($request, $validated, $name, $marketing) {
+            $user = User::create([
+                'fname' => $name[0],
+                'lname' => $name[1] ?? '',
+                'dob' => '', // Date of birth is no longer collected.
+                'number' => $validated['number'],
+                'email' => $request->email,
+                'country' => 'Malaysia',
+                'terms' => $request->boolean('terms'),
+                'age_confirmed' => $request->boolean('age_confirmed'),
+                'marketing' => $marketing,
+                'email_consent' => $marketing,
+                'sms_consent' => $marketing,
+                'last_login_at' => Carbon::now(),
+                'password' => Hash::make('password'),
+            ]);
 
-        $utm = new Utm();
+            $utm = new Utm();
 
-        if ($request->filled('utm_source')) {
-            $utm->utm_source = $request->input('utm_source');
-            $utm->save();
+            if ($request->filled('utm_source')) {
+                $utm->utm_source = $request->input('utm_source');
+                $utm->save();
 
-            $user->utm_source = $request->input('utm_source');
-            $user->type = 'pre-reg';
-            $user->save();
-        }
+                $user->utm_source = $request->input('utm_source');
+                $user->type = 'pre-reg';
+                $user->save();
+            }
 
-        if ($request->filled('utm_medium')) {
-            $utm->utm_medium = $request->input('utm_medium');
-            $utm->save();
+            if ($request->filled('utm_medium')) {
+                $utm->utm_medium = $request->input('utm_medium');
+                $utm->save();
 
-            $user->utm_medium = $request->input('utm_medium');
-            $user->save();
-        }
+                $user->utm_medium = $request->input('utm_medium');
+                $user->save();
+            }
 
-        $user->assignRole('client');
+            $user->assignRole(Role::findOrCreate('client', 'web'));
+
+            return $user;
+        });
+
         Auth::login($user);
         $request->session()->regenerate();
 
@@ -110,6 +116,6 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
 
 
-        return redirect(RouteServiceProvider::HOME);
+        return redirect()->route('map');
     }
 }

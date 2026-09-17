@@ -3,7 +3,6 @@
 namespace Tests\Feature\Auth;
 
 use App\Models\User;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -25,33 +24,20 @@ class RegistrationWithoutOtpTest extends TestCase
         Http::fake();
 
         try {
-            Schema::create('users', function (Blueprint $table) {
-                $table->id();
-                foreach (['fname', 'lname', 'email', 'number', 'country', 'dob', 'password'] as $column) {
-                    $table->string($column);
-                }
-                $table->boolean('marketing')->default(false);
-                $table->boolean('email_consent')->default(false);
-                $table->boolean('sms_consent')->default(false);
-                $table->string('otp')->nullable();
-                $table->boolean('otp_verified')->default(false);
-                $table->timestamp('last_login_at')->nullable();
-                $table->timestamps();
-            });
-            $migration = require database_path('migrations/2026_09_17_000001_update_registration_fields_on_users_table.php');
-            $migration->up();
+            $migration = require database_path('migrations/2014_10_12_000000_create_users_table.php');
             $migration->up();
             $this->assertFalse(Schema::hasColumn('users', 'otp'));
             $this->assertFalse(Schema::hasColumn('users', 'otp_verified'));
             $permissions = require database_path('migrations/2024_07_16_061509_create_permission_tables.php');
             $permissions->up();
-            Role::create(['name' => 'client', 'guard_name' => 'web']);
+            $this->assertSame(0, Role::count());
 
             $this->post('/pre-reg', [
                 'full_name' => 'Test User', 'email' => 'test@example.com',
                 'number' => '012-345 6789', 'terms' => '1', 'age_confirmed' => '1',
-            ])->assertSessionHasNoErrors()->assertRedirect(RouteServiceProvider::HOME);
+            ])->assertSessionHasNoErrors()->assertRedirect(route('map'));
 
+            $this->assertSame(1, Role::where('name', 'client')->where('guard_name', 'web')->count());
             $this->assertAuthenticated();
             $user = User::where('email', 'test@example.com')->firstOrFail();
             $this->assertTrue($user->terms);
@@ -73,18 +59,19 @@ class RegistrationWithoutOtpTest extends TestCase
             $this->post('/pre-reg', [
                 'full_name' => 'SingleName', 'email' => 'optin@example.com',
                 'number' => '+60 19-876 5432', 'terms' => '1', 'age_confirmed' => '1', 'marketing' => '1',
-            ])->assertRedirect(RouteServiceProvider::HOME);
+            ])->assertRedirect(route('map'));
             $optedIn = User::where('email', 'optin@example.com')->firstOrFail();
             $this->assertSame('', $optedIn->lname);
             $this->assertTrue($optedIn->email_consent);
             $this->assertTrue($optedIn->sms_consent);
             $this->assertTrue($optedIn->marketing);
+            $this->assertSame(1, Role::where('name', 'client')->where('guard_name', 'web')->count());
             Http::assertNothingSent();
             foreach (['otp', 'verify.otp', 'resend.otp', 'verifyAdmin'] as $route) {
                 $this->assertFalse(Route::has($route));
             }
             $migration->down();
-            $this->assertTrue(Schema::hasColumn('users', 'otp'));
+            $this->assertFalse(Schema::hasTable('users'));
             $this->assertFalse(Schema::hasColumn('users', 'terms'));
         } finally {
             DB::purge('registration_test');

@@ -76,7 +76,7 @@
             </div>
 
             <div class="confirm-container text-center mt-auto px-4 flex-self-end d-none fade-in">
-                <a id="homeButton" href="{{ route('preRegEvent') }}" class="button button-primary w-100 mb-2">
+                <a id="homeButton" href="{{ route('map') }}" class="button button-primary w-100 mb-2">
                     Home
                 </a>
             </div>

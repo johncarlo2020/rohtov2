@@ -75,7 +75,6 @@
                                 <th>Alliance Bank</th>
 
                                 <th>Created At</th>
-                                <th>Appointments</th> {{-- Add this --}}
                                 @foreach ($data['stations'] as $station)
                                     <th>{{ $station['name'] }}</th>
                                 @endforeach
@@ -100,9 +99,6 @@
 
 
                                     <td>{{ $user['created_at'] }}</td>
-                                    <td>
-                                        {{ $user['appointment_dates_string'] }}
-                                    </td>
                                     @foreach ($user['stations'] as $station)
                                         <td class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-danger' }}">
                                             {{ $station['display_value'] }}

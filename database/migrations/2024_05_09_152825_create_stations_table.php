@@ -20,6 +20,7 @@ class CreateStationsTable extends Migration
         Schema::create('stations', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->boolean('is_mandatory')->default(false);
             $table->timestamps();
         });
     }

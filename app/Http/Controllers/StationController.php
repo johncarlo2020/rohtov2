@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
-use App\Models\UserAppointment;
 use Illuminate\Http\Request;
 use App\Models\Station;
 use App\Models\User;
@@ -12,11 +11,9 @@ use App\Models\Brand;
 use App\Models\Vote;
 use App\Models\Task;
 use App\Models\UserTask;
-use App\Models\Staff;
 use App\Models\Products; // Added for product selection
 use App\Models\UserProducts; // Added for saving to user_products table
 use Illuminate\Support\Str;
-use App\Models\Appointment;
 use App\Events\babyEvent;
 
 use DB;
@@ -76,15 +73,6 @@ class StationController extends Controller
             $station->status = $userHasStation;
         }
 
-           $appointments = Appointment::where('status', '1')->withCount('userAppointments')
-        ->get()
-        ->map(function ($appointment) {
-            $available = max(0, $appointment->total - $appointment->user_appointments_count);
-            $appointment->available_slots = $available;
-            $appointment->status = $available === 0 ? 'full' : 'available';
-            return $appointment;
-        });
-
         $claimed = StationUser::where('user_id', auth()->id())
             ->where('station_id', 7)
             ->exists();
@@ -100,30 +88,12 @@ class StationController extends Controller
             $is2000 = $userCreatedDate < Carbon::create(2025, 8, 18, 17, 30, 0);
         }
 
-        $userAppointment = $user->userAppointments()->count();
-        $selectedAppointment = $user->userAppointments()->with('appointment')->first() ?? '';
-        $convertedDate = '';
-        if ($selectedAppointment && isset($selectedAppointment->appointment->name)) {
-            try {
-                $convertedDate = Carbon::createFromFormat('m-d-Y', $selectedAppointment->appointment->name)->format('l');
-            } catch (\Exception $e) {
-                // Handle potential parsing errors, e.g., log or set a default
-                $convertedDate = 'Invalid Date';
-            }
-        }
-
-        if (is_null(Auth::user()->staff_id)) {
-            $selectedStaff = 'no staff id selected';
-        } else {
-            $selectedStaff = Staff::find(Auth::user()->staff_id)->name;
-        }
-
         // find the next station that the user has not completed
         $nextStation = $stations->firstWhere(function ($station) use ($user) {
             return !$user->stationUser()->where('station_id', $station->id)->exists();
         });
 
-        return view('map', compact('canStation6','stations', 'stationDone', 'appointments', 'is2000', 'userAppointment', 'selectedAppointment', 'convertedDate', 'user', 'selectedStaff', 'nextStation'));
+        return view('map', compact('canStation6','stations', 'stationDone', 'is2000', 'user', 'nextStation'));
     }
 
     public function editUser(Request $request)
@@ -244,66 +214,6 @@ class StationController extends Controller
     }
 
 
-    public function appointment()
-    {
-        $user = Auth::user();
-
-
-
-        $appointments = Appointment::withCount('userAppointments')->where('status',1)
-        ->get()
-        ->map(function ($appointment) {
-            $available = max(0, $appointment->total - $appointment->user_appointments_count);
-            $appointment->available_slots = $available;
-            $appointment->status = $available === 0 ? 'full' : 'available';
-            return $appointment;
-        });
-
-
-        $claimed = StationUser::where('user_id', auth()->id())
-            ->where('station_id', 7)
-            ->exists();
-
-        $charmData = $this->isCharmCountFull();
-
-        $userCreatedDate = $user->created_at;
-
-        if ($claimed) {
-            $is2000 = false;
-        } else {
-            $is2000 = $userCreatedDate < Carbon::create(2025, 8, 18, 17, 30, 0);
-        }
-
-
-        $userAppointment = $user->userAppointments()
-            ->whereHas('appointment', function ($q) {
-                $q->where('status', 1);
-            })
-            ->count();
-        $selectedAppointment = $user->userAppointments()
-            ->whereHas('appointment', function ($q) {
-                $q->where('status', 1);
-            })->with('appointment')->first() ?? '';
-
-        $convertedDate = '';
-
-
-        if ($selectedAppointment && isset($selectedAppointment->appointment->name)) {
-            try {
-                $convertedDate = Carbon::createFromFormat('m-d-Y', $selectedAppointment->appointment->name)->format('l');
-            } catch (\Exception $e) {
-                // Handle potential parsing errors, e.g., log or set a default
-                $convertedDate = 'Invalid Date';
-            }
-        }
-        //  dd($selectedAppointment);
-
-        //check if user is on first 2000 verified users
-
-
-        return view('appointment', compact('appointments','user','is2000','userAppointment','selectedAppointment','convertedDate'));
-    }
-
     public function regCongrats()
     {
         $user = Auth::user();
@@ -322,59 +232,7 @@ class StationController extends Controller
             $is2000 = $userCreatedDate < Carbon::create(2025, 8, 18, 17, 30, 0);
         }
 
-         $userAppointment = $user->userAppointments()->count();
-        $selectedAppointment = $user->userAppointments()->with('appointment')->first() ?? '';
-        $convertedDate = '';
-        if ($selectedAppointment && isset($selectedAppointment->appointment->name)) {
-            try {
-                $convertedDate = Carbon::createFromFormat('m-d-Y', $selectedAppointment->appointment->name)->format('l');
-            } catch (\Exception $e) {
-                // Handle potential parsing errors, e.g., log or set a default
-                $convertedDate = 'Invalid Date';
-            }
-        }
-
-
-        return view('tempCongrats', compact('user', 'is2000', 'userAppointment', 'selectedAppointment', 'convertedDate'));
-    }
-
-    public function appointmentSubmit(Request $request)
-    {
-        $request->validate([
-            'appointment_id' => 'required|exists:appointments,id',
-        ]);
-
-        $user = Auth::user();
-        $appointment = Appointment::find($request->appointment_id);
-
-
-        if ($appointment->userAppointments()->count() >= $appointment->total) {
-            return response()->json(['error' => 'No available slots for this appointment.'], 400);
-        }
-
-
-        $existing = $user->userAppointments()->first();
-
-        if ($existing) {
-
-            if ($existing->rescheduled) {
-                return response()->json(['error' => 'You can only reschedule once.'], 400);
-            }
-
-
-            $existing->update([
-                'appointment_id' => $appointment->id,
-                'rescheduled' => true,
-            ]);
-        } else {
-
-            $user->userAppointments()->create([
-                'appointment_id' => $appointment->id,
-                'rescheduled' => false,
-            ]);
-        }
-
-        return response()->json(['message' => 'Appointment booked successfully.','appointment' => $existing]);
+        return view('tempCongrats', compact('user', 'is2000'));
     }
 
     public function guessSubmit(Request $request)
@@ -387,7 +245,7 @@ class StationController extends Controller
         $user->guess = $request->number;
         $user->save();
 
-        return response()->json(['message' => 'Appointment booked successfully.','appointment' => $user]);
+        return response()->json(['message' => 'Consent saved successfully.','user' => $user]);
     }
 
     public function guestAndWin(Request $request)
@@ -465,17 +323,6 @@ class StationController extends Controller
         // dd($check);
 
         return view('embarkStation', compact('station','status','check','data'));
-    }
-
-    public function preRegEvent(Request $request)
-    {
-        $user = Auth::user();
-        $userAppointment = $user->userAppointments()->count();
-
-        $selectedAppointment = $user->userAppointments()->with('appointment')->first() ?? '';
-
-
-        return view('preRegisterView', compact('userAppointment', 'selectedAppointment'));
     }
 
     public function uploadBaby(Request $request)
@@ -597,11 +444,8 @@ class StationController extends Controller
 
         // It seems there was a logic issue here. If station is 2 and user is true,
         // we still need to pass all relevant data for the station view.
-        // The original code would only pass station and user, missing descriptions, staff, products etc.
         // Let's ensure all necessary data is passed regardless of this specific condition if it renders the same 'station' view.
 
-        $stafs = Staff::all();
-        $selectedStaff = Staff::find(Auth::user()->staff_id);
 
 
         // Fetch user's selected product from user_products table
@@ -621,21 +465,9 @@ class StationController extends Controller
             'station',
             'user',
             'selectedStationDescription',
-            'stafs',
-            'selectedStaff',
             'products',         // Pass products to the view
             'selectedProduct'   // Pass selected product to the view
         ));
-    }
-
-    public function saveStaff(Request $request)
-    {
-       // save staff_id on user table
-        $user = Auth::user();
-        $user->staff_id = $request->staff_id;
-        $user->save();
-
-        return response()->json(['message' => 'Staff saved successfully']);
     }
 
     // New method to save product selection
@@ -800,9 +632,6 @@ class StationController extends Controller
         $user = User::with('stationUser')->where('id', $userId)->first();
 
 
-        if ($user->userAppointments()->count() == 0) {
-            return redirect()->route('appointment');
-        }
 
         $stationDone = $user->stationUser->count();
         $stations = Station::where('id','!=','7')->get();
@@ -880,9 +709,6 @@ class StationController extends Controller
                 $stationUser->time_spent = 0;
                 $stationUser->save();
 
-                // $userAppointment = UserAppointment::where('user_id', $id)->where('is_attended', 0)->first();
-                // $userAppointment->is_attended = 1;
-                // $userAppointment->save();
                 DB::commit();
 
                 return response()->json([
@@ -1038,8 +864,7 @@ class StationController extends Controller
 
 
     public function logUser(){
-        // get all user with station user appointments and apointment names
-        $users = User::with(['stationUser', 'userAppointments.appointment:id,name'])
+        $users = User::with(['stationUser'])
             ->orderBy('id', 'desc')
             ->get();
         $averageTimespentByStation = StationUser::select('station_id', \DB::raw('AVG(time_spent) as average_timespent'))
@@ -1086,7 +911,7 @@ class StationController extends Controller
         $data['users'] = $query
          ->with([
              'stationUser',
-             'userAppointments.appointment:id,name'
+
          ])
         ->orderBy('id', 'desc')
         ->get();
@@ -1121,19 +946,8 @@ class StationController extends Controller
                 ];
             });
 
-            // Pre-process appointment dates into a simple string
-            $appointmentDates = collect($user->userAppointments)->map(function($ua) {
-                try {
-                    return \Carbon\Carbon::createFromFormat('m-d-Y', $ua->appointment->name)->format('d M');
-                } catch (\Exception $e) {
-                    return null;
-                }
-            })->filter()->implode(', ');
-
-            $user->appointment_dates_string = !empty($appointmentDates) ? $appointmentDates : 'No dates are selected here';
 
             // Unset relationships to avoid passing complex objects
-            unset($user->userAppointments);
             unset($user->stationUser);
         }
 
@@ -1178,7 +992,7 @@ class StationController extends Controller
 
         $eloquent_users = $query->with([
             'stationUser',
-            'userAppointments.appointment:id,name'
+
         ])
         ->orderBy('id', 'desc')
         ->get();
@@ -1214,16 +1028,6 @@ class StationController extends Controller
                 ];
             })->toArray();
 
-            // Pre-process appointment dates into a simple string
-            $appointmentDates = collect($user->userAppointments)->map(function($ua) {
-                try {
-                    return \Carbon\Carbon::createFromFormat('m-d-Y', $ua->appointment->name)->format('d M');
-                } catch (\Exception $e) {
-                    return null;
-                }
-            })->filter()->implode(', ');
-
-            $appointment_dates_string = !empty($appointmentDates) ? $appointmentDates : 'No dates are selected here';
 
             $station6Data = $userStationsWithData->get(6);
             if ($station6Data) {
@@ -1245,7 +1049,6 @@ class StationController extends Controller
                 'email_consent' => $user->email_consent,
                 'alliance_bank' => $user->alliance_bank,
                 'created_at' => $user->created_at ? \Carbon\Carbon::parse($user->created_at)->format('d M h:i A') : 'N/A',
-                'appointment_dates_string' => $appointment_dates_string,
                 'stations' => $user_stations,
                 'redeem_date' => $redeem_date_string,
             ];
@@ -1423,25 +1226,9 @@ class StationController extends Controller
 
     public function dumpDetails(Request $request)
     {
-           // get all appointments data that is enabled
-        $appointments = Appointment::where('status', '1')->get();
-
-        // get total count of all users with appointments
-        $totalUsersWithAppointments = UserAppointment::whereIn('appointment_id', $appointments->pluck('id'))
-            ->distinct('user_id')
-            ->count('user_id');
-
-        $totalAppointmentSlots = Appointment::where('status', '1')->sum('total');
-
-        $data = [
-            'total_appointment_bookings' => $totalUsersWithAppointments,
-            'total_appointment_slots' => $totalAppointmentSlots,
-            'total_available_appointments' => $totalAppointmentSlots - $totalUsersWithAppointments,
-            'total_station_7' => StationUser::where('station_id', 7)->count()
-        ];
-
-        // Return the processed data
-        return response()->json($data);
+        return response()->json([
+            'total_station_7' => StationUser::where('station_id', 7)->count(),
+        ]);
     }
 
     public function isCharmCountFull()

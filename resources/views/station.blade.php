@@ -182,8 +182,6 @@
         var message = '';
         var count = 0;
         var lastClick = 0;
-        let selectedStaffId = null; // Added to store selected staff ID
-        let selectedStaffName = null; // Added to store selected staff name
         let selectedProductId = null; // Added to store selected product ID
         let selectedProductName = null; // Added to store selected product name
 
@@ -282,32 +280,6 @@
                         document.getElementById('routeBtn').setAttribute('href', '{{ route('station', $station) }}');
                     }
 
-                    // show the selected staff container with staff id
-                    if ({{ $station->id }} == 3) { // Check if it's station 3
-                        if (selectedStaffId) { // Check if a staff ID was selected and stored
-                            const staffDisplayElement = $('.selected-staff');
-                            const staffIdElement = $('.selected-staff .selected-id');
-                            // Ensure the elements exist before trying to modify them
-                            if (staffDisplayElement.length && staffIdElement.length) {
-                                staffIdElement.text(selectedStaffName ? selectedStaffName + ' (ID: ' +
-                                    selectedStaffId + ')' : 'ID: ' + selectedStaffId);
-                                staffDisplayElement.removeClass('d-none');
-                                // Also update the static display if present
-                                if ($('.selected-staff').length && !$('.selected-staff').hasClass('d-none')) {
-                                    $('.selected-staff .selected-id').text(selectedStaffName ?
-                                        selectedStaffName : 'ID: ' + selectedStaffId);
-                                }
-                            } else {
-                                console.warn(
-                                    '.selected-staff or .selected-id element not found for station 3 display.'
-                                );
-                            }
-                        } else {
-                            // This case might occur if QR scan happens for station 3 without prior staff selection.
-                            // A potential flow improvement could be to ensure scanner for station 3 only starts after staff selection.
-                            console.warn('Station 3 QR success, but selectedStaffId is not set globally.');
-                        }
-                    }
                 },
                 error: function(xhr, status, error) {
                     $('#scanFailedModal').modal('show');
@@ -347,44 +319,7 @@
             lastClick = now;
         });
 
-        // Add this script for handling staff form submission
         $(document).ready(function() {
-            $('#staffForm').on('submit', function(event) {
-                event.preventDefault(); // Prevent default form submission
-
-                var staffIdValue = $('#floatingSelectStaff').val(); // Get selected staff ID
-                var staffNameValue = $('#floatingSelectStaff option:selected')
-                    .text(); // Get selected staff name
-                var csrfToken = $('meta[name="csrf-token"]').attr('content');
-
-                $.ajax({
-                    url: '{{ route('saveStaff') }}', // Make sure this route is defined in your web.php
-                    type: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    data: {
-                        staff_id: staffIdValue // Use the obtained staff ID
-                    },
-                    success: function(response) {
-                        location.reload(); // Reload the page to reflect changes
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error saving staff ID:', xhr.responseText);
-                        alert('Failed to save Staff ID. Please try again.'); // Or handle error
-                    }
-                });
-            });
-
-            // Add this to handle enabling/disabling the staff confirm button
-            $('#floatingSelectStaff').on('change', function() {
-                if ($(this).val() && $(this).val() !== "") {
-                    $('#confirmStaffButton').prop('disabled', false);
-                } else {
-                    $('#confirmStaffButton').prop('disabled', true);
-                }
-            });
-
             // --- Product Selection Modal Logic (New) ---
             $('#confirmProductButton').on('click', function() {
                 console.log('Product form submission triggered.'); // New debug line

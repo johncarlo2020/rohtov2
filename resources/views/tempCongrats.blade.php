@@ -61,11 +61,6 @@
                             or
                             Plastic Roadshow Journey (5 stations) for verification.</p>
                         <div class="qr d-flex justify-content-center"></div>
-                        @if ($selectedAppointment && $selectedAppointment->appointment)
-                            <p class="text-center mt-4"><span
-                                    id="selected-date">{{ $selectedAppointment->appointment->name ?? '' }}</span>,
-                                {{ $convertedDate }}</p>
-                        @endif
                     </div>
                 </div>
             </div>

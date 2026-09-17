@@ -29,9 +29,6 @@ class StationSeederTest extends TestCase
 
             // Simulate an existing station with linked history that must retain its ID.
             $id = DB::table('stations')->insertGetId(['name' => 'Shop for More']);
-            $migration = require database_path('migrations/2026_09_17_000000_add_is_mandatory_to_stations_table.php');
-            $migration->up();
-            $migration->up();
 
             $seeder = new StationSeeder;
             $seeder->run();
@@ -50,8 +47,8 @@ class StationSeederTest extends TestCase
             $this->assertTrue(Station::findOrFail($id)->is_mandatory);
             $this->assertFalse(Station::where('name', 'Merchandise')->firstOrFail()->is_mandatory);
 
-            $migration->down();
-            $this->assertFalse(Schema::hasColumn('stations', 'is_mandatory'));
+            $create->down();
+            $this->assertFalse(Schema::hasTable('stations'));
         } finally {
             DB::purge('station_test');
         }

@@ -68,7 +68,7 @@
         </div>
         <h2 class="mt-2 station-subheading">{{ $station->name }}</h2>
         <div id="mainContent" class="p-0">
-            <div id="{{ $user ? '' : 'forceQr' }}" class="mt-4 icon-container">
+            <div id="{{ $stationDone ? '' : 'forceQr' }}" class="mt-4 icon-container">
             </div>
             <img class="mt-2 station-image station-img-{{ $station->id }}"
                 src="{{ asset('files/station/' . $station->id . '.webp') }}" alt="Station Image">
@@ -129,7 +129,7 @@
             @endif
 
 
-        @if ($user != true && $station->id == 5)
+        @if ($stationDone != true && $station->id == 5)
             @if (count($selectedProduct) > 0)
                 {{-- For Station 5, trigger product modal --}}
                 <button id="start-scanner" type="button" class="mx-auto mt-2 btn btn-info camera-btn">
@@ -140,7 +140,7 @@
                     <i class="fa-solid fa-camera"></i>
                 </button>
             @endif
-        @elseif ($user != true)
+        @elseif ($stationDone != true)
             {{-- For other stations when user is not logged in (and station is not 3 or 5) --}}
             <button id="start-scanner" class="mx-auto mt-2 camera-btn">
                 <i class="fa-solid fa-camera"></i>
@@ -160,7 +160,7 @@
                 </a>
             </div> --}}
     </div>
-    @if ($user != true)
+    @if ($stationDone != true)
         <p class="bottom-text mt-4 px-4 font-medium main-color small-width">Scan the QR code to proceed</p>
     @else
         <p class="bottom-text mt-4 font-medium main-color">Checked In</p>

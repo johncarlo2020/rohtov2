@@ -424,49 +424,14 @@ class StationController extends Controller
 
     public function index(Station $station)
     {
-
-        $stationDescription = [
-            1 => 'Experience the ocean’s wonder—and the urgent reality beneath the waves',
-            2 => 'Drop off your used plastics here and discover how they’re transformed — not just recycled, but upcycled',
-            3 => 'Experience a moment of indulgence — nourishing your skin with rich almond oil for a smoother body, softer skin, and a soothed sense',
-            4 => 'Experience a personalised skin consultation and begin your journey to radiant skin',
-            5 => 'Experience a personalised hair and scalp analysis designed to uncover your unique needs',
-            6 => 'Redeem your complimentary 5-piece sample kit— beauty essentials crafted with care for a conscious choice',
-        ];
-
-
-        $selectedStationDescription = $stationDescription[$station->id];
-
-        $user = StationUser::where('user_id', auth()->id())
+       // get station data
+       $stationDone = StationUser::where('user_id', auth()->id())
             ->where('station_id', $station->id)
             ->exists();
 
-
-        // It seems there was a logic issue here. If station is 2 and user is true,
-        // we still need to pass all relevant data for the station view.
-        // Let's ensure all necessary data is passed regardless of this specific condition if it renders the same 'station' view.
-
-
-
-        // Fetch user's selected product from user_products table
-        // The user might have multiple entries in UserProducts if they change their selection.
-        // We'll take the latest one based on creation order.
-        $userProductEntries = UserProducts::where('user_id', Auth::id())->latest()->get();
-
-        $selectedProduct = Products::whereIn('id', $userProductEntries->pluck('products_id'))->get();
-      //  dd($selectedProduct);
-
-        $products = Products::whereNotIn('id', $userProductEntries->pluck('products_id'))->get(); // Fetch all products
-
-
-        // dd($selectedProduct); // Original debug line, commented out as part of the fix
-
         return view('station', compact(
             'station',
-            'user',
-            'selectedStationDescription',
-            'products',         // Pass products to the view
-            'selectedProduct'   // Pass selected product to the view
+            'stationDone'
         ));
     }
 

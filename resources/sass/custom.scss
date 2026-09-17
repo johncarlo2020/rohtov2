@@ -489,18 +489,19 @@ ol {
 
     .map-pin {
         display: block;
-        width: 7vw;
-        height: 7vw;
+        width: 5vw;
+        height: 5vw;
         background-color: #ffcc00;
         color: #002f5f;
-        font-weight: 700;
-        font-size: 12px;
+        font-weight: 500;
+        font-size: 14px;
         text-decoration: none;
         text-align: center;
-        line-height: 29px;
+        line-height: 20px;
         border-radius: 50%;
-        box-shadow: 0 0 0 5px #002f5f;
+        box-shadow: 0 0 0 5px #ffcc00;
         position: absolute;
+        outline: 3px solid #000000;
 
         &.completed {
             display: flex;
@@ -577,14 +578,14 @@ ol {
     .map-pin::after {
         content: "";
         position: absolute;
-        bottom: -13px;
+        bottom: -19px;
         left: 50%;
         transform: translateX(-50%);
         width: 0;
         height: 0;
-        border-left: 7px solid transparent;
-        border-right: 7px solid transparent;
-        border-top: 12px solid #002f5f; /* Triangle pointer */
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 16px solid #ffcc00; /* Triangle pointer */
     }
 
     .start-pin::after {
@@ -847,3 +848,64 @@ ol {
     }
 
 }
+
+
+ @keyframes blink {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .blink {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes breathing {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .breathing {
+            animation: breathing 2s infinite;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .map-text {
+            font-size: 25px;
+            font-weight: 300;
+            margin-bottom: 2vh;
+            text-align: center;
+            margin-top: 8vh;
+        }

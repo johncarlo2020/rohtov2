@@ -8,6 +8,7 @@ body {
     box-sizing: border-box;
     overflow: hidden;
     font-family: $main-font;
+    background-color: $main-background;
 }
 
 p,
@@ -25,7 +26,7 @@ li,
 ul,
 ol {
     font-family: $main-font;
-    line-height: 1.5;
+    line-height: 1.2;
     color: $text;
 }
 
@@ -43,6 +44,8 @@ ol {
     border-radius: 6px;
     text-align: center;
     font-weight: bold;
+    //capitalize text
+    text-transform: capitalize;
 
     &:active,
     &:focus {
@@ -76,6 +79,13 @@ ol {
 
     &-danger {
         background: $danger;
+        color: $white;
+    }
+
+    //for outlined buttons
+    &-outlined {
+        background: transparent;
+        border: 1px solid $primary;
         color: $white;
     }
 }
@@ -119,16 +129,14 @@ ol {
 }
 
 .main-background {
-    background-image: url("../images/loccitane_dj.webp");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+    background-color: $main-background;
+    padding-top: 2vh;
 }
 
 .branding {
     width: 100%;
     height: 40px;
+    margin-top: 6vh;
 
     img {
         width: 100%;
@@ -141,16 +149,8 @@ ol {
     width: 100%;
     height: 100svh;
     overflow-y: auto;
-    padding-top: 7vh;
+    padding:0 25px;
     padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 100px);
-    // on big screens
-    @media (min-width: 768px) {
-        width: 600px;
-        height: 844px;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        margin: 10vh auto;
-    }
 }
 
 .underlined {
@@ -818,4 +818,36 @@ ol {
     z-index: 10;
     width: 100%;
     margin-top: -116px;
+}
+
+.welcome-content {
+    text-align: center;
+
+    p {
+        font-size: 20px;
+        font-weight: 300;
+    }
+
+    .discover-text {
+        font-size: 30px;
+        font-weight: 500;
+        margin-bottom: 0px;
+        margin-top: 7vh;
+        line-height: 1;
+    }
+
+    .more-text {
+        font-size: 52px;
+        font-weight: 700;
+        line-height: 0.8;
+        margin-bottom: 4vh;
+        color: #FFB700;
+    }
+
+    .card-img {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+    }
+
 }

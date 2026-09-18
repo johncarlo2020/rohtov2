@@ -981,3 +981,122 @@ ol {
         }
 
 
+
+// Maybank event map. Keep dimensions relative to the map, including on desktop.
+#map-page {
+    background: #000;
+    padding: 40px 0 max(30px, env(safe-area-inset-bottom));
+    color: #fff;
+
+    [hidden] { display: none !important; }
+
+    .map-shell { width: min(100%, 390px); margin: 0 auto; }
+    .map-brand { display: block; width: 165px; margin: 0 auto; }
+    .map-brand img { display: block; width: 100%; }
+    .map-heading {
+        text-align: center;
+        margin: 56px 0 26px;
+        p { font-size: 21px; font-weight: 400; margin: 0 0 14px; }
+        h1 { font-size: 30px; font-weight: 500; line-height: 1.1; margin: 0; }
+        strong { display: block; color: #ffbf00; font-size: 52px; font-weight: 800; line-height: 1; }
+    }
+    .journey-map { position: relative; width: 94%; margin: 0 auto; }
+    .journey-map-image { display: block; width: 100%; height: auto; }
+    .journey-pin, .card-map-pin {
+        position: absolute;
+        left: var(--pin-left);
+        top: var(--pin-top);
+        transform: translate(-50%, -50%);
+        z-index: 1;
+        transition: scale 220ms ease, filter 220ms ease;
+        animation: map-pin-appear 300ms ease-out both;
+    }
+    .journey-pin {
+        --pin-color: #ffbf00;
+        width: 30px; height: 30px;
+        display: grid; place-items: center;
+        background: var(--pin-color);
+        border: 2px solid #000;
+        border-radius: 50%;
+        text-decoration: none;
+        &::after {
+            content: ''; position: absolute; z-index: -1;
+            top: 24px; left: 7px;
+            border-left: 6px solid transparent; border-right: 6px solid transparent;
+            border-top: 17px solid var(--pin-color);
+        }
+        span { display: grid; place-items: center; width: 21px; height: 21px; border: 1.5px solid #000; border-radius: 50%; color: #000; font-size: 16px; }
+        &.reward-pin { --pin-color: #bdb9e9; }
+        &.is-selected { filter: drop-shadow(0 0 5px var(--pin-color)); scale: 1.12; z-index: 2; }
+    }
+    .card-map-pin {
+        width: 39px; height: 27px; padding: 0; border: 2px solid #c9f1ff;
+        border-radius: 2px; background: #171717;
+        img { width: 100%; height: 100%; object-fit: cover; }
+        &::after { content: ''; position: absolute; top: 24px; left: 12px; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 13px solid #c9f1ff; }
+        &.is-selected { filter: drop-shadow(0 0 5px #c9f1ff); }
+    }
+    .map-legend-wrap { position: relative; width: 77%; margin: 40px auto 0; }
+    .map-legend { border: 1.5px solid #ffda44; border-radius: 11px; padding: 29px 8px 10px 19px; animation: map-panel-appear 320ms ease-out both; }
+    &[data-view='journey'] { --panel-offset: -12px; }
+    &[data-view='rewards'] { --panel-offset: 12px; }
+    .map-legend h2 { font-size: 20px; font-weight: 700; text-align: center; margin: 0 10px 22px 0; }
+    .legend-scroll {
+        max-height: 390px; overflow-y: scroll; padding-right: 6px;
+        scrollbar-width: thin; scrollbar-color: #ffbf00 #fff;
+        &::-webkit-scrollbar { width: 5px; }
+        &::-webkit-scrollbar-track { background: #fff; border-radius: 5px; }
+        &::-webkit-scrollbar-thumb { background: #ffbf00; border-radius: 5px; }
+    }
+    .legend-banner { font-size: 14px; font-weight: 700; text-align: center; color: #000; background: #ffbf00; padding: 8px 3px; border-radius: 6px; margin: 0 0 5px; white-space: nowrap; }
+    .legend-banner-card { background: #caf0fc; margin-top: 5px; font-size: 12px; }
+    .legend-location {
+        display: flex; align-items: center; gap: 8px; width: 100%; min-height: 48px;
+        border: 0; border-radius: 7px; background: transparent; padding: 7px;
+        text-align: left; font-size: 11px;
+        transition: background-color 200ms ease;
+        span { color: #fff; transition: color 200ms ease; }
+        .legend-number { flex: 0 0 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; background: #ffbf00; color: #000; font-size: 15px; }
+        &.is-selected { background: #fff9cf; span { color: #000; } }
+    }
+    .legend-booth { min-height: 47px; padding: 2px 5px; img { width: 55px; height: 40px; object-fit: contain; } &.is-selected { background: #fff; } }
+    .map-view-toggle {
+        position: absolute; top: 38%; right: -39px; width: 35px; height: 48px; border: 0; background: transparent;
+        transition: translate 200ms ease, opacity 200ms ease;
+        &:active { opacity: 0.65; }
+        span { display: block; width: 23px; height: 23px; border-top: 2px solid #ffbf00; border-right: 2px solid #ffbf00; border-radius: 1px; transform: rotate(45deg); }
+    }
+    .rewards-legend { padding-top: 18px; padding-bottom: 17px; }
+    .rewards-card { display: block; width: 128px; height: 91px; object-fit: contain; margin: 0 auto; filter: drop-shadow(0 0 5px #777); }
+    .rewards-card-caption { font-size: 12px; text-align: center; margin: 5px 8px 20px 0; }
+    .rewards-legend .legend-scroll { max-height: 202px; }
+    .rewards-legend h2 { margin: 10px 0 20px; }
+    .rewards-legend .legend-number { background: #bdb9e9; }
+    &[data-view='rewards'] .map-view-toggle { right: auto; left: -37px; span { transform: rotate(-135deg); margin-left: 8px; } }
+    button:focus-visible, a:focus-visible, .legend-scroll:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+    @media (hover: hover) {
+        .map-view-toggle:hover { translate: 3px 0; }
+        &[data-view='rewards'] .map-view-toggle:hover { translate: -3px 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .map-legend, .journey-pin, .card-map-pin { animation: none; }
+        .journey-pin, .card-map-pin, .legend-location, .legend-location span, .map-view-toggle { transition: none; }
+        .map-view-toggle:hover { translate: none; }
+        &[data-view='rewards'] .map-view-toggle:hover { translate: none; }
+    }
+    @media (max-width: 360px) {
+        .legend-banner { font-size: 12px; }
+        .legend-banner-card { font-size: 10px; }
+        .map-view-toggle { right: -32px; }
+    }
+}
+
+@keyframes map-panel-appear {
+    from { opacity: 0; transform: translateX(var(--panel-offset, 12px)); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes map-pin-appear {
+    from { opacity: 0; translate: 0 -6px; }
+    to { opacity: 1; translate: 0 0; }
+}

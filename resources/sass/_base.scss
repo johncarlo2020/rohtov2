@@ -18,13 +18,11 @@
 // Establish base body styles for typography and background.
 body,
 html {
-    // Use the font family variable defined in _variables.scss
     font-family: $font-family;
-    // Use the paragraph size for the default font size
     font-size: $paragraph;
-    // A standard line-height for readability
     line-height: $line-height;
-    color: $text;
+    color: #ffffff;
+    background-color: #F00B0B;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     width: 100vw;
@@ -78,7 +76,7 @@ input,
 textarea,
 select {
     font-family: $font-family;
-    color: $text;
+    color: inherit;
     line-height: $line-height;
     margin: 0;
     letter-spacing: $letter-spacing;
@@ -156,7 +154,7 @@ input[type="radio"] {
     position: fixed;
 }
 
-.card {
+.card:not(.modal-content):not(.modal-parent) {
 
     p,
     h1,

@@ -4,9 +4,7 @@
 @import "variables";
 
 .main-background {
-    background-image: $main-background;
-    background-size: cover;
-    background-position: bottom;
+    background-color: #F00B0B;
 }
 
 .weekday-background {
@@ -23,10 +21,29 @@
 .station-page {
     position: relative;
     /* make sure parent is relative */
-    background-image: $stamping-background;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    background-color: #F00b0b !important;
+    background-image: none !important;
+    color: #ffffff;
+
+    h1, h2, h3, h4, h5, h6, p, span, label {
+        color: #ffffff;
+    }
+
+    .scan-label {
+        color: #ffffff !important;
+    }
+
+    .scan-icon i {
+        color: #F00b0b !important;
+    }
+
+    .modal-content {
+        color: #212529;
+
+        h1, h2, h3, h4, h5, h6, p, span, label {
+            color: #212529;
+        }
+    }
 }
 
 .main-content {

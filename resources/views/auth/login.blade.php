@@ -41,9 +41,9 @@
                 </div>
 
                 <div class="bottom-text">
-                    <p class="already-register">Haven't Registered?</p>
-                    <p class="already-register">
-                        Click <a href="{{ route('register') }}">here</a> to register
+                    <p class="already-register text-white">Haven't Registered?</p>
+                    <p class="already-register text-white">
+                        Click <a href="{{ route('register') }}" class="text-white">here</a> to register
                     </p>
                 </div>
             </div>

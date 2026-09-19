@@ -138,12 +138,12 @@
 /* icon */
 .scan-icon i {
     font-size: 18px;
-    color: #2f5ea8;
+    color: #F00b0b;
 }
 
 /* text */
 .scan-label {
-    color: #2f5ea8;
+    color: #ffffff;
     font-size: 14px;
     font-weight: 500;
 }

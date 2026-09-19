@@ -1,1 +1,31 @@
-// All modal styles will be here
+// All modal styles
+.modal,
+.custom-modal,
+.modal-content,
+.modal-parent {
+    color: #000000 !important;
+
+    h1, h2, h3, h4, h5, h6, p, span, div, strong, small, b, td, th {
+        color: #000000 !important;
+    }
+
+    .custom-btn,
+    .custom-btn-primary,
+    .custom-btn-secondary,
+    .btn-primary,
+    .btn-secondary,
+    .btn,
+    button:not(.btn-close) {
+        background-color: #F00B0B !important;
+        color: #ffffff !important;
+        border-color: #F00B0B !important;
+
+        &:hover,
+        &:focus,
+        &:active {
+            background-color: darken(#F00B0B, 5%) !important;
+            color: #ffffff !important;
+            border-color: darken(#F00B0B, 5%) !important;
+        }
+    }
+}

@@ -5,7 +5,7 @@
                 @include('components.branding')
             </div>
             <div class="mt-3 px-2 w-100">
-                <h1 class="mt-5 mb-3 text-center fw-bold heading-dutch">SIGN UP</h1>
+                <h1 class="mt-5 mb-3 text-center fw-bold heading-dutch text-white">SIGN UP</h1>
                 <div class="px-4 py-5 pt-1 register-form-parent">
                     <form id="form" method="POST" action="{{ route('register') }}">
                         @csrf
@@ -210,6 +210,57 @@
                             @enderror
                         </div>
 
+                        {{-- Which of the following best describes you? --}}
+                        <div class="mb-3">
+                            <label>WHICH OF THE FOLLOWING BEST DESCRIBES YOU?</label>
+                            @php
+                                $races = [
+                                    'Malaysian',
+                                    'Malaysian working in Singapore',
+                                    'Singaporean',
+                                    'Other',
+                                ];
+                            @endphp
+                            <div x-data="{
+                                open: false,
+                                selected: '{{ old('race', '') }}',
+                                options: {{ json_encode($races) }}
+                            }" @click.outside="open = false" class="custom-select-wrapper">
+
+                                <input type="hidden" name="race" :value="selected" required>
+
+                                <button type="button" @click="open = !open" class="custom-select-trigger"
+                                    :class="{ 'active': open }">
+                                    <span x-show="!selected" class="select-placeholder">Select 1 of the list</span>
+                                    <span x-show="selected" class="select-value" x-text="selected"></span>
+                                    <svg class="chevron" :class="{ 'rotate': open }" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+
+                                <div x-show="open" x-transition:enter="transition ease-out duration-100"
+                                    x-transition:enter-start="opacity-0 scale-95"
+                                    x-transition:enter-end="opacity-100 scale-100"
+                                    x-transition:leave="transition ease-in duration-75"
+                                    x-transition:leave-start="opacity-100 scale-100"
+                                    x-transition:leave-end="opacity-0 scale-95" class="custom-select-dropdown">
+                                    <template x-for="option in options" :key="option">
+                                        <div class="custom-select-option"
+                                            :class="{ 'is-selected': selected === option }"
+                                            @click="selected = option; open = false">
+                                            <span x-text="option"></span>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                            @error('race')
+                                <span class="text-danger small">{{ $message }}</span>
+                            @enderror
+                        </div>
+
                         <hr>
 
                         {{-- Privacy Policy --}}
@@ -218,13 +269,13 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="privacy_policy"
                                         value="1" id="privacyPolicy" x-model="agreed" required />
-                                    <small class="text-dark form-check-label" for="privacyPolicy">
+                                    <small class="text-white form-check-label" for="privacyPolicy">
                                         I have read and agree to the
                                         <a href="https://www.iproperty.com.my/privacy-policy/"
-                                            class="text-primary">Privacy Policy</a>.
+                                            class="text-white text-decoration-underline">Privacy Policy</a>.
                                         and
                                         <a href="https://www.iproperty.com.my/terms-and-conditions/"
-                                            class="text-primary">Terms
+                                            class="text-white text-decoration-underline">Terms
                                             and Conditions</a>
                                     </small>
                                 </div>
@@ -241,10 +292,10 @@
                     </form>
                 </div>
 
-                <div class="bottom-text">
-                    <p class="already-register">Already Registered</p>
-                    <p class="already-register">
-                        Please Login <a href="{{ route('login') }}">here</a>
+                <div class="bottom-text text-white">
+                    <p class="already-register text-white">Already Registered</p>
+                    <p class="already-register text-white">
+                        Please Login <a href="{{ route('login') }}" class="text-white text-decoration-underline">here</a>
                     </p>
                 </div>
             </div>

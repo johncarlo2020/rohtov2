@@ -16,7 +16,7 @@
         }
 
         .station-card {
-            background: #3b5080;
+            background: #ffffff;
             border-radius: 18px;
             width: 90px;
             height: 90px;
@@ -30,6 +30,7 @@
             transition: transform 0.25s ease, box-shadow 0.25s ease;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
         }
 
         .station-card:hover {
@@ -98,8 +99,8 @@
         .station-title {
             font-size: 10px;
             text-align: center;
-            color: #fff;
-            font-weight: 600;
+            color: #F00b0b;
+            font-weight: 700;
             letter-spacing: 0.3px;
         }
 
@@ -169,8 +170,8 @@
                 bottom: -15px;
                 width: 130px;
                 height: 55px;
-                background: #2d67c8;
-                color: #fff;
+                background: #ffffff;
+                color: #F00b0b;
                 border-radius: 30px 0 0 30px;
                 display: flex;
                 align-items: center;
@@ -190,6 +191,8 @@
                 font-size: 11px;
                 text-align: center;
                 line-height: 1.2;
+                color: #F00b0b;
+                font-weight: 700;
             }
 
             /* Overlay */
@@ -285,7 +288,7 @@
                                         </p>
                                     @else
                                     
-                                        <p> 8 August 2026, (Saturday) </p>
+                                        <p> 26 & 27 September 2026 (Saturday & Sunday) </p>
                                         <p>
                                             50 cups at 12PM | 50 cups at 6PM
                                         </p>

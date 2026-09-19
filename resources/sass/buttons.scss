@@ -33,28 +33,29 @@
 
 // Primary button - for the main call to action
 .custom-btn-primary {
-    background-color: $primary;
+    background-color: $white;
     border-radius: 12px;
-    color: $white;
+    color: #F00B0B;
     letter-spacing: 1.4px;
     width: 100%;
+    font-weight: 700;
 
     &:hover {
-        background-color: darken($primary, 1%);
-        color: $white;
-        border-color: darken($primary, 1%);
+        background-color: darken($white, 5%);
+        color: #F00B0B;
+        border-color: darken($white, 5%);
     }
 
     &:active {
-        background-color: darken($primary, 1%);
-        color: $white;
-        border-color: darken($primary, 1%);
+        background-color: darken($white, 10%);
+        color: #F00B0B;
+        border-color: darken($white, 10%);
     }
 
     &:disabled {
-        background-color: darken($primary, 1%);
-        color: $white;
-        border-color: darken($primary, 1%);
+        background-color: rgba(255, 255, 255, 0.6);
+        color: #F00B0B;
+        border-color: transparent;
         cursor: not-allowed;
     }
 }

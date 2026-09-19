@@ -122,7 +122,7 @@
     border: 1px solid rgba(255,255,255,0.5);
     background: linear-gradient(145deg, #e9eef5, #dfe6ee);
 
-    color: #2f5ea8;
+    color: #000000;
     font-weight: 600;
     font-size: 14px;
 

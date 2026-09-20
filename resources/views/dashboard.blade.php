@@ -115,16 +115,14 @@
             letter-spacing: 2px;
         }
 
-        /* developers — glassmorphism */
+        /* developers — white card style */
         .developer-card {
-            background: rgba(255, 255, 255, 0.28);
-            backdrop-filter: blur(12px) saturate(130%);
-            -webkit-backdrop-filter: blur(12px) saturate(130%);
-            border-radius: 16px;
-            padding: 28px 22px;
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 24px 20px;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.35);
-            box-shadow: 0 10px 30px rgba(9, 30, 66, 0.10);
+            border: none;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
             transition: transform 0.25s ease, box-shadow 0.25s ease;
             position: relative;
             overflow: hidden;
@@ -140,26 +138,11 @@
             object-fit: contain;
             display: block;
             margin: 0 auto;
-            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.08));
-        }
-
-        /* top-left highlight sheen */
-        .developer-card::after {
-            content: '';
-            position: absolute;
-            top: -30%;
-            left: -30%;
-            width: 80%;
-            height: 80%;
-            background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0) 45%);
-            transform: rotate(-15deg);
-            pointer-events: none;
-            mix-blend-mode: screen;
         }
 
         .developer-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 20px 40px rgba(9, 30, 66, 0.13);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
         }
 
          /* Floating voucher button */

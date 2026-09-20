@@ -66,7 +66,7 @@
         }
 
         #banner .top{
-            margin: 25% 0%;
+            margin: 10% 0% 5% 0%;
         }
     </style>
 </head>
@@ -86,31 +86,27 @@
                 </div>
             </div>
         </div>
-                <div id="banner" class="col-10 mx-auto d-flex flex-column justify-content-center animate-entry">
-                <div class="top">
-                    <div class="row">
-                        <div class="col-12">
-                            <h4 class="text-center text-white mb-3">Congratulations!<br>You've completed the journey of</h4>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <img class="discover_img w-100" src="{{ asset('images/brand/masthead.webp') }}"
-                        alt="" />
-                    </div>
-                </div>
-                        <!-- Bottom CTA -->
-                <div class="row mb-5">
-                    <div class="col-12 text-center">
-                        <div class="d-block  mb-2">
-                            <div class="colanimate-entry delay-2 btn-wrapperx px-5 mt-4">
-                                <a href="{{ route('dashboard') }}" class="custom-btn custom-btn-secondary pulse-slow">
-                                    COMPLETE
-                                </a>
-                            </div>
+        <div id="banner" class="col-11 col-md-10 mx-auto d-flex flex-column justify-content-center animate-entry text-center text-white">
+            <div class="top">
+                <h2 class="fw-normal mb-1" style="font-size: clamp(1.4rem, 5vw, 2.2rem);">Congratulations!</h2>
+                <p class="fs-4 mb-3 fw-normal" style="font-size: clamp(1.2rem, 4.5vw, 1.6rem);">You’ve completed the journey of</p>
+                <h1 class="fw-bold mb-3" style="font-size: clamp(1.8rem, 6.5vw, 2.8rem); font-weight: 800; line-height: 1.2;">PropertyGuru New Homes Expo</h1>
+                <p class="fs-5 mb-2" style="font-size: clamp(1rem, 3.8vw, 1.35rem);">26-28 September 2026 | 10AM - 10PM</p>
+                <h3 class="fw-bold fs-4 mb-0" style="font-size: clamp(1.25rem, 4.8vw, 1.7rem); font-weight: 700;">KSL City Johor Bahru</h3>
+            </div>
+            <!-- Bottom CTA -->
+            <div class="row mb-5">
+                <div class="col-12 text-center">
+                    <div class="d-block mb-2">
+                        <div class="colanimate-entry delay-2 btn-wrapperx px-5 mt-4">
+                            <a href="{{ route('dashboard') }}" class="custom-btn custom-btn-secondary pulse-slow" style="font-weight: 800; color: #F00b0b; background: #ffffff;">
+                                COMPLETE
+                            </a>
                         </div>
                     </div>
                 </div>
-                </div>
+            </div>
+        </div>
         <div class="bottom-container">
             <!-- Bottom CTA -->
             <div class="row mb-5">

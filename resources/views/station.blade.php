@@ -247,7 +247,7 @@
                 @else
                     <div class="text-content mt-3">
                         <a href="{{ route('station.stamping', $station->id);}}" id="routeBtn"
-                            class="custom-btn w-auto px-5 fw-regular custom-btn-primary text-white">
+                            class="custom-btn w-auto px-5 fw-regular custom-btn-primary">
                             I'M THERE
                         </a>
                     </div>

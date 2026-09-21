@@ -1,7 +1,7 @@
 <x-app-layout>
     @php
         $journey = [1 => ['Shop for More', 83, 29], 2 => ['More to Enjoy', 47, 9], 3 => ['More to Unwind', 64, 12], 4 => ['More to Stream', 35, 17], 5 => ['Maybank Cafe', 15, 6]];
-        $rewards = [6 => ['Flight Simulator', 56, 6], 7 => ['Giant Gashapon Surprise', 94, 11], 8 => ['Exclusive Merchandise', 85, 3]];
+        $rewards = [6 => ['Flight Simulator', 57, -2], 7 => ['Giant Gashapon Surprise', 95, 4], 8 => ['Exclusive Merchandise', 87, -6]];
         $lockedStationIds = $user->isCardApply ? [] : $stations->where('is_mandatory', false)->pluck('id')->all();
         $completedStationIds = $stations->where('status', true)->pluck('id')->all();
         $booths = [[23, 33], [46, 52], [79, 67], [23, 87], [83, 0]];

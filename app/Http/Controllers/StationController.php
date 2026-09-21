@@ -73,27 +73,8 @@ class StationController extends Controller
             $station->status = $userHasStation;
         }
 
-        $claimed = StationUser::where('user_id', auth()->id())
-            ->where('station_id', 7)
-            ->exists();
 
-        $charmData = $this->isCharmCountFull();
-
-        $userCreatedDate = $user->created_at;
-
-
-        if ($claimed) {
-            $is2000 = false;
-        } else {
-            $is2000 = $userCreatedDate < Carbon::create(2025, 8, 18, 17, 30, 0);
-        }
-
-        // find the next station that the user has not completed
-        $nextStation = $stations->firstWhere(function ($station) use ($user) {
-            return !$user->stationUser()->where('station_id', $station->id)->exists();
-        });
-
-        return view('map', compact('canStation6','stations', 'stationDone', 'is2000', 'user', 'nextStation'));
+        return view('map', compact('canStation6','stations', 'stationDone', 'user'));
     }
 
     public function editUser(Request $request)

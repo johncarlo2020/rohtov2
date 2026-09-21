@@ -8,14 +8,21 @@ if (mapPage) {
         locations.forEach(location => {
             const selected = location.dataset.location === id;
             location.classList.toggle('is-selected', selected);
-            if (location.tagName === 'BUTTON') {
+            if (location.tagName === 'BUTTON' && !location.dataset.stationUrl) {
                 location.setAttribute('aria-pressed', String(selected));
             }
         });
     }
 
     locations.forEach(location => {
-        location.addEventListener('click', () => selectLocation(location.dataset.location));
+        location.addEventListener('click', () => {
+            if (location.disabled) return;
+            if (location.dataset.stationUrl) {
+                window.location.assign(location.dataset.stationUrl);
+                return;
+            }
+            selectLocation(location.dataset.location);
+        });
         if (location.tagName === 'A') {
             location.addEventListener('focus', () => selectLocation(location.dataset.location));
         }

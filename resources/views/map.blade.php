@@ -27,6 +27,9 @@
                                 @if (!in_array($id, $lockedStationIds)) href="{{ route('station', $id) }}" @else aria-disabled="true" tabindex="-1" @endif data-location="{{ $id }}"
                                 style="--pin-left: {{ $left }}%; --pin-top: {{ $top }}%"
                                 aria-label="{{ $label }} — {{ $isCompleted ? 'completed' : 'open station' }}">
+                                <svg class="journey-pin-shape" viewBox="0 0 30 48" aria-hidden="true" focusable="false">
+                                    <path d="M15 1C7.27 1 1 7.27 1 15c0 6 3.8 11.3 9.5 13.3L15 46l4.5-17.7C25.2 26.3 29 21 29 15 29 7.27 22.73 1 15 1Z" />
+                                </svg>
                                 <span aria-hidden="true">@if ($isCompleted)<i class="fa-solid fa-check"></i>@else{{ $view === 'rewards' ? $loop->iteration : $id }}@endif</span>
                             </a>
                         @endforeach
@@ -48,7 +51,7 @@
                     <div class="legend-scroll" tabindex="0" aria-label="Journey locations">
                         <h3 class="legend-banner">Your Journey Begins Here!</h3>
                         @foreach ($journey as $id => [$label])
-                            <button type="button" class="legend-location" data-location="{{ $id }}" aria-pressed="false" @disabled(in_array($id, $lockedStationIds))>
+                            <button type="button" class="legend-location" data-location="{{ $id }}" data-station-url="{{ route('station', $id) }}" @disabled(in_array($id, $lockedStationIds))>
                                 <span class="legend-number">{{ $id }}</span><span>{{ $label }}</span>@if (in_array($id, $lockedStationIds))<i class="fa-solid fa-lock station-lock" aria-label="Locked"></i>@endif
                             </button>
                         @endforeach
@@ -67,7 +70,7 @@
                     <div class="legend-scroll" tabindex="0" aria-label="Reward locations">
                         <h2 id="rewards-title">MORE REWARDS</h2>
                         @foreach ($rewards as $id => [$label])
-                            <button type="button" class="legend-location" data-location="{{ $id }}" aria-pressed="false" @disabled(in_array($id, $lockedStationIds))>
+                            <button type="button" class="legend-location" data-location="{{ $id }}" data-station-url="{{ route('station', $id) }}" @disabled(in_array($id, $lockedStationIds))>
                                 <span class="legend-number">{{ $id }}</span><span>{{ $label }}</span>@if (in_array($id, $lockedStationIds))<i class="fa-solid fa-lock station-lock" aria-label="Locked"></i>@endif
                             </button>
                         @endforeach

@@ -1,10 +1,10 @@
 <x-app-layout>
     @php
-        $journey = [1 => ['Shop for More', 83, 36], 2 => ['More to Enjoy', 47, 19], 3 => ['More to Unwind', 64, 21], 4 => ['More to Stream', 17, 17], 5 => ['Maybank Cafe', 9, 11]];
+        $journey = [1 => ['Shop for More', 83, 29], 2 => ['More to Enjoy', 47, 9], 3 => ['More to Unwind', 64, 12], 4 => ['More to Stream', 35, 17], 5 => ['Maybank Cafe', 15, 6]];
         $rewards = [6 => ['Flight Simulator', 56, 6], 7 => ['Giant Gashapon Surprise', 94, 11], 8 => ['Exclusive Merchandise', 85, 3]];
         $lockedStationIds = $user->isCardApply ? [] : $stations->where('is_mandatory', false)->pluck('id')->all();
         $completedStationIds = $stations->where('status', true)->pluck('id')->all();
-        $booths = [[22, 43], [45, 59], [79, 76], [23, 94], [83, 10]];
+        $booths = [[23, 33], [46, 52], [79, 67], [23, 87], [83, 0]];
         $iscardApplied = $user->isCardApply;
     @endphp
     <main id="map-page" class="content-box" data-view="journey">

@@ -253,6 +253,14 @@
             alertMsg.textContent = 'Customer verified on ' + (booking.attended_at || 'earlier');
             alertMsg.classList.remove('d-none', 'alert-warning', 'alert-danger');
             alertMsg.classList.add('alert-success');
+        } else if (!booking.is_today) {
+            badgeElem.textContent = 'STATUS: NOT YET ATTENDED';
+            badgeElem.className = 'badge px-4 py-2 font-weight-bold text-uppercase status-badge-pending';
+            attendingBtn.disabled = true;
+            attendingBtn.classList.add('opacity-50');
+            alertMsg.textContent = 'Attendance can only be marked on the actual booking date (' + (booking.date || 'scheduled date') + ').';
+            alertMsg.classList.remove('d-none', 'alert-success', 'alert-danger');
+            alertMsg.classList.add('alert-warning');
         } else if (status === 'Missed') {
             badgeElem.textContent = 'STATUS: MISSED';
             badgeElem.className = 'badge px-4 py-2 font-weight-bold text-uppercase status-badge-missed';

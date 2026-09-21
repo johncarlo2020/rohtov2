@@ -251,7 +251,7 @@ class BookingController extends Controller
      */
     public function lookup(Request $request)
     {
-        $queryStr = trim($request->input('qrCodeMessage', $request->input('query', '')));
+        $queryStr = trim($request->input('qrCodeMessage', $request->input('query', $request->input('email', ''))));
 
         if (!$queryStr) {
             return response()->json(['status' => 'error', 'message' => 'Please scan a QR code or enter an email / reference number.'], 400);
@@ -298,8 +298,23 @@ class BookingController extends Controller
                 'message' => 'No booking found matching "' . $queryStr . '".'
             ], 404);
         }
-
         $computedStatus = $booking->computed_status; // 'Attended', 'Missed', or 'Not Yet Attended'
+        $isAttended = ($computedStatus === 'Attended');
+
+        $dateStr = 'N/A';
+        $isToday = false;
+        $rawDate = null;
+        if ($booking->bookingDate && $booking->bookingDate->date) {
+            $dateObj = Carbon::parse($booking->bookingDate->date);
+            $dateStr = $booking->bookingDate->display_date ?? $dateObj->format('D, d M Y');
+            $isToday = $dateObj->isToday();
+            $rawDate = $dateObj->format('Y-m-d');
+        }
+
+        $timeStr = 'N/A';
+        if ($booking->bookingSlot) {
+            $timeStr = $booking->bookingSlot->display_time;
+        }
 
         return response()->json([
             'status' => 'success',
@@ -311,10 +326,14 @@ class BookingController extends Controller
                 'venue' => $booking->venue ?? 'LONGCHAMP POP UP STORE',
                 'pax' => $booking->pax ?? 1,
                 'date' => $dateStr,
+                'raw_date' => $rawDate,
+                'is_today' => $isToday,
                 'time' => $timeStr,
-                'status' => $isAttended ? 'Attended' : 'Not Yet Attended',
+                'status' => $computedStatus,
                 'attended_at' => $booking->attended_at ? Carbon::parse($booking->attended_at)->format('M d, Y h:i A') : null,
                 'is_attended' => $isAttended,
+                'ref' => $booking->reference_no,
+                'reference_no' => $booking->reference_no,
             ]
         ]);
     }

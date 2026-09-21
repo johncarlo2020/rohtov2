@@ -56,7 +56,19 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // Initialize QuaggaJS
+        // Intercept manual email key-in form submission
+        const formElem = document.querySelector('.form-container form');
+        if (formElem) {
+            formElem.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const emailInput = document.getElementById('email');
+                if (emailInput && emailInput.value.trim()) {
+                    sendMessage(emailInput.value.trim());
+                }
+            });
+        }
+
+        // Initialize QuaggaJS / Html5Qrcode
         const html5QrCode = new Html5Qrcode("reader");
 
         html5QrCode.start({
@@ -64,7 +76,7 @@
         }, {
             fps: 10,
             qrbox: 200,
-            aspectRatio: 2 / 2 // Set the aspect ratio to 16:9
+            aspectRatio: 2 / 2
         },
             qrCodeMessage => {
                 sendMessage(`${qrCodeMessage}`);
@@ -78,29 +90,27 @@
             });
     });
 
-
-
     function sendMessage(message) {
-        // Fetch the CSRF token from the meta tag
         var csrfToken = $('meta[name="csrf-token"]').attr('content');
-        console.log(message);
 
         $.ajax({
-            url: '{{ route('workshop.scan') }}', // Using Laravel's route() helper function
+            url: '{{ route('workshop.scan') }}',
             type: 'POST',
             headers: {
-                'X-CSRF-TOKEN': csrfToken, // Include the CSRF token in the headers
+                'X-CSRF-TOKEN': csrfToken,
             },
             data: {
                 qrCodeMessage: message,
+                email: message,
             },
             success: function (response) {
-                // You can customize this based on your actual response
                 console.log(response);
                 let message = '';
 
-                if (response.status === 'success') {
-                    message = '✅ Scanned Successfully ';
+                if (response.message) {
+                    message = response.message;
+                } else if (response.status === 'success') {
+                    message = '✅ Scanned Successfully';
                 } else if (response.status === 'already_redeemed') {
                     message = '⚠️ Already Attended';
                 } else if (response.status === 'invalid') {
@@ -109,13 +119,16 @@
                     message = 'ℹ️ Unknown response';
                 }
 
-
                 $("#responseMessage").text(message);
                 $("#responseModal").modal('show');
             },
             error: function (xhr, status, error) {
                 console.error('Error:', error);
-                $("#responseMessage").text('❌ An error occurred while processing the QR code.');
+                let errText = '❌ An error occurred while processing.';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errText = xhr.responseJSON.message;
+                }
+                $("#responseMessage").text(errText);
                 $("#responseModal").modal('show');
             }
         });

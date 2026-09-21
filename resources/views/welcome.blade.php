@@ -18,22 +18,22 @@
             </div>
 
             <!-- Middle Content -->
-            <div class="mid">
-                <div class="text-center">
-                    <h1 class="text-dark text-uppercase mb-3" style="font-size: 1.15rem; line-height: 1.45; letter-spacing: 0.5px; font-weight:400;">
+            <div class="mid d-flex flex-column justify-content-center my-auto">
+                <div class="text-center py-2">
+                    <h1 class="text-dark text-uppercase mb-5" style="font-size: 1.15rem; line-height: 1.45; letter-spacing: 0.5px; font-weight:400;">
                         LONGCHAMP INVITES YOU TO "<strong class="fw-bold">BE CREATIVE</strong>" <br>
                         THIS WINTER 2026, EXCLUSIVELY IN MALAYSIA
                     </h1>
 
-                    <p class="text-dark mb-4" style="font-size: 0.725rem; line-height: 1.55; letter-spacing: 0.3px; color: #444444;">
+                    <p class="text-dark" style="font-size: 0.725rem; line-height: 1.55; letter-spacing: 0.3px; color: #444444; margin-bottom:10vh;">
                         The creative experience extends beyond the collection. In this workshop, discover the art of collage through an interactive activity inspired by <strong>Caroline Hélain’s expressive landscapes.</strong> Create your own layered landscape using paper, colour and texture to bring your composition to life.
                     </p>
 
                     <div class="d-flex flex-column gap-2 align-items-center mb-3">
-                        <a href="{{ route('register') }}" class="custom-btn custom-btn-primary" style="max-width: 220px; width: 100%;">
+                        <a href="{{ route('register') }}" class="custom-btn custom-btn-primary" style="max-width: 220px; width: 100%; height: 44px;">
                             REGISTER
                         </a>
-                        <a href="{{ route('login') }}" class="custom-btn custom-btn-primary" style="max-width: 220px; width: 100%;">
+                        <a href="{{ route('login') }}" class="custom-btn custom-btn-primary" style="max-width: 220px; width: 100%; height: 44px;">
                             LOGIN
                         </a>
                     </div>

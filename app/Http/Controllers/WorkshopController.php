@@ -91,7 +91,7 @@ class WorkshopController extends Controller
 
     public function scan(Request $request)
     {
-        $qrCodeMessage = trim($request->input('qrCodeMessage', ''));
+        $qrCodeMessage = trim($request->input('qrCodeMessage', $request->input('email', $request->input('query', ''))));
 
         if (!$qrCodeMessage) {
             return response()->json(['status' => 'invalid', 'message' => 'Missing QR code value.'], 400);

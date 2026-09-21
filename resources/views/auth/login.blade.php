@@ -18,7 +18,7 @@
             </div>
 
             <!-- Middle Content -->
-            <div class="mid">
+            <div class="mid d-flex flex-column justify-content-center my-auto">
                 <h1 class="mb-4 text-center fw-bold text-dark text-uppercase" style="font-size: 1.5rem; letter-spacing: 1px;">
                     LOGIN
                 </h1>
@@ -26,10 +26,10 @@
                 <div class="register-form-parent">
                     <x-auth-session-status class="mb-3" :status="session('status')" />
 
-                    <form method="POST" action="{{ route('login') }}">
+                    <form method="POST" action="{{ route('login') }}" class="d-flex flex-column align-items-center">
                         @csrf
 
-                        <div class="mb-4">
+                        <div class="w-100" style="margin-bottom:10vh;">
                             <input id="email" type="email"
                                 class="form-control input-text @error('email') is-invalid @enderror" name="email"
                                 value="{{ old('email') }}" required autocomplete="email"
@@ -48,13 +48,13 @@
 
                         <input type="hidden" name="password" value="password" />
 
-                        <div class="text-center mb-3">
-                            <button type="submit" class="custom-btn custom-btn-primary" style="max-width: 220px; width: 100%;">
+                        <div class="text-center mb-3 w-100" style="max-width: 320px;">
+                            <button type="submit" class="custom-btn custom-btn-primary w-100">
                                 {{ __('LOGIN') }}
                             </button>
                         </div>
 
-                        <div class="bottom-text text-center mt-3">
+                        <div class="bottom-text text-center mt-2">
                             <span class="text-dark text-uppercase" style="font-size: 11px; letter-spacing: 0.8px;">HAVEN'T? </span>
                             <a href="{{ route('register') }}" class="text-dark text-uppercase fw-bold text-decoration-none" style="font-size: 11px; letter-spacing: 0.8px;">
                                 REGISTER HERE

@@ -18,7 +18,7 @@
             </div>
 
             <!-- Middle Content -->
-            <div class="mid">
+            <div class="mid d-flex flex-column justify-content-center my-auto">
                 <form method="POST" action="{{ route('verify.otp') }}">
                     @csrf
                     <div class="text-center mb-4">
@@ -36,7 +36,7 @@
                     </div>
 
                     <!-- 6 OTP Input Boxes -->
-                    <div class="d-flex justify-content-center otp-inputs mb-4" style="gap: 8px;">
+                    <div class="d-flex justify-content-center otp-inputs" style="gap: 8px; margin-bottom:10vh;">
                         @for($i = 0; $i < 6; $i++)
                             <input type="text" name="otp[]" class="form-control otp-input text-center"
                                 maxlength="1" pattern="[0-9]" inputmode="numeric" required
@@ -46,7 +46,7 @@
 
                     <!-- Submit Button & Timer -->
                     <div class="d-flex flex-column align-items-center justify-content-center mt-4">
-                        <button type="submit" class="custom-btn custom-btn-primary mb-3" style="max-width: 220px; width: 100%;">
+                        <button type="submit" class="custom-btn custom-btn-primary mb-3" style="max-width: 220px; width: 100%; height: 44px;">
                             SUBMIT OTP
                         </button>
 

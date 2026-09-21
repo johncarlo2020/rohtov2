@@ -18,7 +18,7 @@
             </div>
 
             <!-- Middle Content -->
-            <div class="mid">
+            <div class="mid d-flex flex-column justify-content-center my-auto">
                 <h1 class="mb-3 text-center fw-bold text-dark text-uppercase" style="font-size: 1.35rem; letter-spacing: 1px;">
                     WORKSHOP <br> REGISTRATION
                 </h1> 

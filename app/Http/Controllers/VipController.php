@@ -56,7 +56,23 @@ class VipController extends Controller
             ->latest()
             ->get();
 
-        return view('admin.vip.index', compact('users', 'bookingDates', 'bookingSlots', 'publicCounts', 'vipBookings'));
+        $vipGroups = \App\Services\VipGroupService::getVipGroups();
+
+        // 5. List of fully booked slots for validation
+        $fullSlots = BookingSlot::with('bookingDate')
+            ->get()
+            ->filter(function ($slot) {
+                return $slot->capacity > 0 && $slot->booked_count >= $slot->capacity;
+            })
+            ->map(function ($slot) {
+                return [
+                    'date' => $slot->bookingDate->date ?? '',
+                    'start_time' => substr($slot->start_time, 0, 5),
+                ];
+            })
+            ->values();
+
+        return view('admin.vip.index', compact('users', 'bookingDates', 'bookingSlots', 'publicCounts', 'vipBookings', 'vipGroups', 'fullSlots'));
     }
 
     public function store(Request $request)
@@ -173,5 +189,140 @@ class VipController extends Controller
         );
 
         return redirect()->back()->with('success', 'VIP Booking deleted successfully.');
+    }
+
+    /**
+     * Update or Create a VIP Group Preset.
+     */
+    public function updateGroupPreset(\Illuminate\Http\Request $request)
+    {
+        $request->validate([
+            'original_key' => 'nullable|string',
+            'name' => 'required|string|max:255',
+            'entries' => 'required|array|min:1',
+            'entries.*.date' => 'required|date_format:Y-m-d',
+            'entries.*.start_time' => 'required|string',
+            'entries.*.end_time' => 'nullable|string',
+            'entries.*.pax' => 'required|integer|min:1|max:200',
+        ]);
+
+        // Validation Check: Prevent modification if a date & time slot is fully booked or if new pax is less than already booked count
+        foreach ($request->input('entries') as $entry) {
+            $dateStr = trim($entry['date'] ?? '');
+            $startTime = trim($entry['start_time'] ?? '');
+            $pax = (int) ($entry['pax'] ?? 1);
+
+            if (empty($dateStr) || empty($startTime)) continue;
+
+            if (strlen($startTime) === 5) {
+                $startTime .= ':00';
+            }
+
+            $bookingDate = \App\Models\BookingDate::where('date', $dateStr)->first();
+            if ($bookingDate) {
+                $slot = \App\Models\BookingSlot::where('booking_date_id', $bookingDate->id)
+                    ->where('start_time', 'LIKE', substr($startTime, 0, 5) . '%')
+                    ->first();
+
+                if ($slot) {
+                    $startFmt = \Carbon\Carbon::parse($startTime)->format('g:i A');
+                    $dateFmt = \Carbon\Carbon::parse($dateStr)->format('M d, Y');
+
+                    if ($slot->capacity > 0 && $slot->booked_count >= $slot->capacity) {
+                        return redirect()->back()
+                            ->withInput()
+                            ->withErrors(['entries' => "Modification not allowed: The time slot {$startFmt} on {$dateFmt} is fully booked ({$slot->booked_count}/{$slot->capacity})."]);
+                    }
+
+                    if ($pax < $slot->booked_count) {
+                        return redirect()->back()
+                            ->withInput()
+                            ->withErrors(['entries' => "Modification not allowed: The time slot {$startFmt} on {$dateFmt} already has {$slot->booked_count} bookings, exceeding requested capacity ({$pax})."]);
+                    }
+                }
+            }
+        }
+
+        \App\Services\VipGroupService::updateVipGroup(
+            $request->input('original_key'),
+            $request->input('name'),
+            $request->input('entries')
+        );
+
+        // Ensure slots exist for all dates & times defined in the entries
+        foreach ($request->input('entries') as $entry) {
+            $dateStr = trim($entry['date']);
+            $startTime = trim($entry['start_time']);
+            $endTime = trim($entry['end_time'] ?? '');
+            $pax = (int) ($entry['pax'] ?? 1);
+
+            if (empty($dateStr) || empty($startTime)) continue;
+
+            if (strlen($startTime) === 5) {
+                $startTime .= ':00';
+            }
+
+            if (empty($endTime)) {
+                $endTime = \Carbon\Carbon::parse($startTime)->addHour()->format('H:i:s');
+            } elseif (strlen($endTime) === 5) {
+                $endTime .= ':00';
+            }
+
+            $bookingDate = \App\Models\BookingDate::firstOrCreate(
+                ['date' => $dateStr],
+                ['is_available' => true]
+            );
+
+            $slot = \App\Models\BookingSlot::where('booking_date_id', $bookingDate->id)
+                ->where('start_time', 'LIKE', substr($startTime, 0, 5) . '%')
+                ->first();
+
+            if ($slot) {
+                $slot->update([
+                    'capacity' => max($slot->capacity, $pax),
+                    'end_time' => $endTime
+                ]);
+            } else {
+                \App\Models\BookingSlot::create([
+                    'booking_date_id' => $bookingDate->id,
+                    'start_time' => $startTime,
+                    'end_time' => $endTime,
+                    'capacity' => $pax,
+                    'booked_count' => 0,
+                    'is_available' => true,
+                ]);
+            }
+        }
+
+        \App\Services\HistoryLogService::log(
+            'UPDATE_VIP_GROUP_PRESET',
+            "Updated VIP Group Preset '{$request->input('name')}'",
+            'VipGroup',
+            0
+        );
+
+        return redirect()->back()->with('success', "VIP Group Preset '{$request->input('name')}' updated successfully.");
+    }
+
+    /**
+     * Delete a VIP Group Preset.
+     */
+    public function deleteGroupPreset(\Illuminate\Http\Request $request)
+    {
+        $request->validate([
+            'key' => 'required|string',
+        ]);
+
+        $key = $request->input('key');
+        \App\Services\VipGroupService::deleteVipGroup($key);
+
+        \App\Services\HistoryLogService::log(
+            'DELETE_VIP_GROUP_PRESET',
+            "Deleted VIP Group Preset '{$key}'",
+            'VipGroup',
+            0
+        );
+
+        return redirect()->back()->with('success', "VIP Group Preset '{$key}' deleted successfully.");
     }
 }

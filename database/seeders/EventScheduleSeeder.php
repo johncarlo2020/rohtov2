@@ -17,39 +17,44 @@ class EventScheduleSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Sync Operating Hours (Wed, Thu, Fri, Sat OPEN; Sun, Mon, Tue CLOSED)
+        // 1. Sync Operating Hours (Wed, Thu, Fri, Sat OPEN; Sun, Mon CLOSED; Tue Special for Oct 13)
         $daysConfig = [
-            1 => ['is_open' => false, 'sessions' => []], // Monday
-            2 => ['is_open' => false, 'sessions' => []], // Tuesday
-            3 => [ // Wednesday
+            1 => ['is_open' => false, 'sessions' => []], // Monday: CLOSED
+            2 => [ // Tuesday: OPEN for Oct 13 VIP session
                 'is_open' => true,
                 'sessions' => [
-                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 1],
-                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 1],
+                    ['start_time' => '11:00:00', 'end_time' => '13:00:00', 'capacity' => 10],
                 ]
             ],
-            4 => [ // Thursday
+            3 => [ // Wednesday: Public Workshop Sessions
                 'is_open' => true,
                 'sessions' => [
-                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 1],
-                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 1],
+                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 6],
+                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 6],
                 ]
             ],
-            5 => [ // Friday
+            4 => [ // Thursday: Public Workshop Sessions
                 'is_open' => true,
                 'sessions' => [
-                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 1],
-                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 1],
+                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 6],
+                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 6],
                 ]
             ],
-            6 => [ // Saturday
+            5 => [ // Friday: Public Workshop Sessions
                 'is_open' => true,
                 'sessions' => [
-                    ['start_time' => '11:00:00', 'end_time' => '12:00:00', 'capacity' => 1],
-                    ['start_time' => '16:00:00', 'end_time' => '17:00:00', 'capacity' => 1],
+                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 6],
+                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 6],
                 ]
             ],
-            7 => ['is_open' => false, 'sessions' => []], // Sunday
+            6 => [ // Saturday: Public Workshop Sessions
+                'is_open' => true,
+                'sessions' => [
+                    ['start_time' => '11:00:00', 'end_time' => '12:00:00', 'capacity' => 6],
+                    ['start_time' => '16:00:00', 'end_time' => '17:00:00', 'capacity' => 6],
+                ]
+            ],
+            7 => ['is_open' => false, 'sessions' => []], // Sunday: CLOSED
         ];
 
         foreach ($daysConfig as $dayOfWeek => $config) {
@@ -71,132 +76,148 @@ class EventScheduleSeeder extends Seeder
             }
         }
 
-        // 2. Specific Date & Time Slot Schedule (Sept 30 to Oct 17)
+        // 2. Specific Date & Time Slot Schedule (Sept 30 to Oct 18)
         $schedule = [
-            // --- VIP: WEDNESDAY 30 SEPTEMBER ---
+            // --- WEDNESDAY 30 SEPTEMBER (VIP Only) ---
             '2026-09-30' => [
                 'is_available' => true,
                 'slots' => [
-                    ['start_time' => '11:00:00', 'end_time' => '12:00:00', 'capacity' => 20],
-                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 20],
-                    ['start_time' => '13:00:00', 'end_time' => '14:00:00', 'capacity' => 20],
-                    ['start_time' => '14:00:00', 'end_time' => '15:00:00', 'capacity' => 20],
-                    ['start_time' => '15:00:00', 'end_time' => '16:00:00', 'capacity' => 10],
-                    ['start_time' => '16:00:00', 'end_time' => '17:00:00', 'capacity' => 10],
-                    ['start_time' => '17:00:00', 'end_time' => '18:00:00', 'capacity' => 6],
-                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 6],
-                    ['start_time' => '19:00:00', 'end_time' => '20:00:00', 'capacity' => 10],
-                    ['start_time' => '20:00:00', 'end_time' => '21:00:00', 'capacity' => 10],
-                    ['start_time' => '21:00:00', 'end_time' => '22:00:00', 'capacity' => 10],
+                    ['start_time' => '11:00:00', 'end_time' => '12:00:00', 'capacity' => 20], // Media & Influencer x20
+                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 20], // Media & Influencer x20
+                    ['start_time' => '13:00:00', 'end_time' => '14:00:00', 'capacity' => 20], // Media & Influencer x20
+                    ['start_time' => '14:00:00', 'end_time' => '15:00:00', 'capacity' => 20], // Media & Influencer x20
+                    ['start_time' => '15:00:00', 'end_time' => '16:00:00', 'capacity' => 10], // LC VIC x10
+                    ['start_time' => '16:00:00', 'end_time' => '17:00:00', 'capacity' => 10], // LC VIC x10
+                    ['start_time' => '17:00:00', 'end_time' => '18:00:00', 'capacity' => 6],  // The Gardens Emerald Members x6
+                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 6],  // The Gardens Emerald Members x6
+                    ['start_time' => '19:00:00', 'end_time' => '20:00:00', 'capacity' => 10], // Maybank Premium Customer x10
+                    ['start_time' => '20:00:00', 'end_time' => '21:00:00', 'capacity' => 10], // Maybank Premium Customer x10
+                    ['start_time' => '21:00:00', 'end_time' => '22:00:00', 'capacity' => 10], // Maybank Premium Customer x10
                 ]
             ],
 
-            // --- VIP: THURSDAY 1 OCTOBER ---
+            // --- THURSDAY 1 OCTOBER ---
             '2026-10-01' => [
                 'is_available' => true,
                 'slots' => [
-                    ['start_time' => '11:00:00', 'end_time' => '12:00:00', 'capacity' => 10],
-                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 10],
-                    ['start_time' => '13:00:00', 'end_time' => '14:00:00', 'capacity' => 6],
-                    ['start_time' => '14:00:00', 'end_time' => '15:00:00', 'capacity' => 6],
-                    ['start_time' => '15:00:00', 'end_time' => '16:00:00', 'capacity' => 6],
-                    ['start_time' => '16:00:00', 'end_time' => '17:00:00', 'capacity' => 6],
+                    ['start_time' => '11:00:00', 'end_time' => '12:00:00', 'capacity' => 6],  // Workshop for Public x6
+                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 6],  // Workshop for Public x6
+                    ['start_time' => '13:00:00', 'end_time' => '14:00:00', 'capacity' => 6],  // Pin Prestige x6
+                    ['start_time' => '14:00:00', 'end_time' => '15:00:00', 'capacity' => 6],  // Pin Prestige x6
+                    ['start_time' => '15:00:00', 'end_time' => '16:00:00', 'capacity' => 6],  // The Gardens Emerald Members x6
+                    ['start_time' => '16:00:00', 'end_time' => '17:00:00', 'capacity' => 6],  // The Gardens Emerald Members x6
                 ]
             ],
 
-            // --- PUBLIC: 1ST WEEK ---
-            // Friday 2 Oct
+            // --- FRIDAY 2 OCTOBER ---
             '2026-10-02' => [
                 'is_available' => true,
                 'slots' => [
-                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 1],
-                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 1],
+                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 6],  // Workshop for Public x6
+                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 6],  // Workshop for Public x6
                 ]
             ],
-            // Saturday 3 Oct
+
+            // --- SATURDAY 3 OCTOBER ---
             '2026-10-03' => [
                 'is_available' => true,
                 'slots' => [
-                    ['start_time' => '11:00:00', 'end_time' => '12:00:00', 'capacity' => 1],
-                    ['start_time' => '16:00:00', 'end_time' => '17:00:00', 'capacity' => 1],
+                    ['start_time' => '11:00:00', 'end_time' => '12:00:00', 'capacity' => 6],  // Workshop for Public x6
+                    ['start_time' => '16:00:00', 'end_time' => '17:00:00', 'capacity' => 6],  // Workshop for Public x6
                 ]
             ],
-            // Closed Days
-            '2026-10-04' => ['is_available' => false, 'slots' => []],
-            '2026-10-05' => ['is_available' => false, 'slots' => []],
-            '2026-10-06' => ['is_available' => false, 'slots' => []],
 
-            // --- PUBLIC: 2ND WEEK ---
-            // Wednesday 7 Oct
+            // --- CLOSED DAYS ---
+            '2026-10-04' => ['is_available' => false, 'slots' => []], // Sun
+            '2026-10-05' => ['is_available' => false, 'slots' => []], // Mon
+            '2026-10-06' => ['is_available' => false, 'slots' => []], // Tue
+
+            // --- WEDNESDAY 7 OCTOBER ---
             '2026-10-07' => [
                 'is_available' => true,
                 'slots' => [
-                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 1],
-                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 1],
+                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 6],  // Workshop for Public x6
+                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 6],  // Workshop for Public x6
                 ]
             ],
-            // Thursday 8 Oct
+
+            // --- THURSDAY 8 OCTOBER ---
             '2026-10-08' => [
                 'is_available' => true,
                 'slots' => [
-                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 1],
-                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 1],
+                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 6],  // Workshop for Public x6
+                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 6],  // Workshop for Public x6
                 ]
             ],
-            // Friday 9 Oct
+
+            // --- FRIDAY 9 OCTOBER ---
             '2026-10-09' => [
                 'is_available' => true,
                 'slots' => [
-                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 1],
-                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 1],
+                    ['start_time' => '17:30:00', 'end_time' => '20:00:00', 'capacity' => 30], // Private Shopping Session: Ferhat (30 pax)
                 ]
             ],
-            // Saturday 10 Oct
+
+            // --- SATURDAY 10 OCTOBER ---
             '2026-10-10' => [
                 'is_available' => true,
                 'slots' => [
-                    ['start_time' => '11:00:00', 'end_time' => '12:00:00', 'capacity' => 1],
-                    ['start_time' => '16:00:00', 'end_time' => '17:00:00', 'capacity' => 1],
+                    ['start_time' => '11:00:00', 'end_time' => '12:00:00', 'capacity' => 6],  // Workshop for Public x6
+                    ['start_time' => '16:00:00', 'end_time' => '17:00:00', 'capacity' => 6],  // Workshop for Public x6
                 ]
             ],
-            // Closed Days
-            '2026-10-11' => ['is_available' => false, 'slots' => []],
-            '2026-10-12' => ['is_available' => false, 'slots' => []],
-            '2026-10-13' => ['is_available' => false, 'slots' => []],
 
-            // --- PUBLIC: 3RD WEEK ---
-            // Wednesday 14 Oct
+            // --- CLOSED DAYS ---
+            '2026-10-11' => ['is_available' => false, 'slots' => []], // Sun
+            '2026-10-12' => ['is_available' => false, 'slots' => []], // Mon
+
+            // --- TUESDAY 13 OCTOBER ---
+            '2026-10-13' => [
+                'is_available' => true,
+                'slots' => [
+                    ['start_time' => '11:00:00', 'end_time' => '13:00:00', 'capacity' => 10], // GLAM reader (10 pax)
+                ]
+            ],
+
+            // --- WEDNESDAY 14 OCTOBER ---
             '2026-10-14' => [
                 'is_available' => true,
                 'slots' => [
-                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 1],
-                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 1],
+                    ['start_time' => '11:00:00', 'end_time' => '12:00:00', 'capacity' => 5],  // GLAM reader x5 (VIP)
+                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 5],  // GLAM reader x5 (VIP)
+                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 6],  // Workshop for Public x6
                 ]
             ],
-            // Thursday 15 Oct
+
+            // --- THURSDAY 15 OCTOBER ---
             '2026-10-15' => [
                 'is_available' => true,
                 'slots' => [
-                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 1],
-                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 1],
+                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 6],  // Workshop for Public x6
+                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 6],  // Workshop for Public x6
                 ]
             ],
-            // Friday 16 Oct
+
+            // --- FRIDAY 16 OCTOBER ---
             '2026-10-16' => [
                 'is_available' => true,
                 'slots' => [
-                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 1],
-                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 1],
+                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 6],  // Workshop for Public x6
+                    ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 6],  // Workshop for Public x6
                 ]
             ],
-            // Saturday 17 Oct
+
+            // --- SATURDAY 17 OCTOBER ---
             '2026-10-17' => [
                 'is_available' => true,
                 'slots' => [
-                    ['start_time' => '11:00:00', 'end_time' => '12:00:00', 'capacity' => 1],
-                    ['start_time' => '16:00:00', 'end_time' => '17:00:00', 'capacity' => 1],
+                    ['start_time' => '11:00:00', 'end_time' => '12:00:00', 'capacity' => 6],  // Workshop for Public x6
+                    ['start_time' => '16:00:00', 'end_time' => '17:00:00', 'capacity' => 6],  // Workshop for Public x6
                 ]
             ],
+
+            // --- CLOSED DAY ---
+            '2026-10-18' => ['is_available' => false, 'slots' => []], // Sun
         ];
 
         foreach ($schedule as $dateStr => $dateData) {

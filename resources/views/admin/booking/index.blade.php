@@ -575,11 +575,9 @@
                         </label>
                         <select id="vip_group_preset_modal" name="vip_name" class="form-select font-weight-bold border-warning text-dark" style="border-width: 2px;" required>
                             <option value="" disabled selected>-- Select VIP Group Preset --</option>
-                            <option value="KOL AND MEDIA INFLUENCER">KOL AND MEDIA INFLUENCER (80 Pax: Sep 30 & Oct 1)</option>
-                            <option value="LONGCHAMP VIC">LONGCHAMP VIC (20 Pax: Sep 30)</option>
-                            <option value="THE GARDENS EMERALD MEMBER">THE GARDENS EMERALD MEMBER (24 Pax: Sep 30 & Oct 1)</option>
-                            <option value="MAYBANK PREMIUM CUSTOMER">MAYBANK PREMIUM CUSTOMER (30 Pax: Sep 30)</option>
-                            <option value="PIN PRESTIGE">PIN PRESTIGE (12 Pax: Oct 1)</option>
+                            @foreach($vipGroups as $key => $group)
+                                <option value="{{ $key }}">{{ $group['name'] }} ({{ $group['pax_summary'] }}: {{ $group['date_summary'] }})</option>
+                            @endforeach
                         </select>
                         <div class="form-text text-xxs text-muted">Selecting a VIP group filters available dates, slots & pre-fills pax count automatically.</div>
                     </div>
@@ -798,7 +796,7 @@
 
         async function fetchWalkinDateAvailabilities() {
             try {
-                const res = await fetch('/api/booking/dates?start_date=2026-10-02&end_date=2026-10-17');
+                const res = await fetch('/api/booking/dates?start_date=2026-10-01&end_date=2026-10-17');
                 const data = await res.json();
                 walkinState.dateAvailabilities = data;
                 renderWalkinDateDropdown(data);
@@ -864,7 +862,7 @@
                 } else if (item.status === 'available') {
                     statusSpan = `<span class="text-xs font-weight-bold text-success">AVAILABLE</span>`;
                 } else if (item.status === 'full') {
-                    statusSpan = `<span class="text-xs font-weight-bold text-muted">FULLY BOOKED</span>`;
+                    statusSpan = `<span class="text-xs font-weight-bold text-danger">SLOT FULL</span>`;
                 } else {
                     statusSpan = `<span class="text-xs font-weight-bold text-muted">CLOSED</span>`;
                 }
@@ -1084,49 +1082,7 @@
         // VIP Modal Custom Dropdown & Capacity Validation Logic
         const vipDbDatesModal = @json($bookingDates);
 
-        const vipGroupScheduleMapModal = {
-            'KOL AND MEDIA INFLUENCER': {
-                '2026-09-30': [
-                    { start_time: '11:00', pax: 20 },
-                    { start_time: '12:00', pax: 20 },
-                    { start_time: '13:00', pax: 20 },
-                    { start_time: '14:00', pax: 20 }
-                ],
-                '2026-10-01': [
-                    { start_time: '11:00', pax: 10 },
-                    { start_time: '12:00', pax: 10 }
-                ]
-            },
-            'LONGCHAMP VIC': {
-                '2026-09-30': [
-                    { start_time: '15:00', pax: 10 },
-                    { start_time: '16:00', pax: 10 }
-                ]
-            },
-            'THE GARDENS EMERALD MEMBER': {
-                '2026-09-30': [
-                    { start_time: '17:00', pax: 6 },
-                    { start_time: '18:00', pax: 6 }
-                ],
-                '2026-10-01': [
-                    { start_time: '15:00', pax: 6 },
-                    { start_time: '16:00', pax: 6 }
-                ]
-            },
-            'MAYBANK PREMIUM CUSTOMER': {
-                '2026-09-30': [
-                    { start_time: '19:00', pax: 10 },
-                    { start_time: '20:00', pax: 10 },
-                    { start_time: '21:00', pax: 10 }
-                ]
-            },
-            'PIN PRESTIGE': {
-                '2026-10-01': [
-                    { start_time: '13:00', pax: 6 },
-                    { start_time: '14:00', pax: 6 }
-                ]
-            }
-        };
+        const vipGroupScheduleMapModal = @json(\App\Services\VipGroupService::getScheduleMap());
 
         let vipModalState = {
             dateAvailabilities: [],
@@ -1235,18 +1191,67 @@
                 validateVipModalPaxInput();
 
                 renderVipModalDateDropdown(vipModalState.dateAvailabilities);
+
+                // Auto-select date if only 1 date is mapped for this VIP group
+                if (val && vipGroupScheduleMapModal[val]) {
+                    const allowedDates = Object.keys(vipGroupScheduleMapModal[val]);
+                    if (allowedDates.length === 1) {
+                        const targetDate = allowedDates[0];
+                        vipModalState.selectedDateRaw = targetDate;
+                        const match = vipDbDatesModal.find(d => d.date === targetDate || (d.date && d.date.startsWith(targetDate)));
+                        const dateId = match ? match.id : targetDate;
+                        if (dateInput) dateInput.value = dateId;
+
+                        const formattedLabel = formatOrdinalDate(targetDate);
+                        if (dBoxText) {
+                            dBoxText.textContent = formattedLabel;
+                            dBoxText.className = 'text-dark font-weight-bold text-xs text-uppercase';
+                        }
+                        if (tTrigger) tTrigger.classList.remove('opacity-60', 'cursor-not-allowed');
+
+                        fetchVipModalSlots(targetDate);
+                    }
+                }
             });
         }
 
         async function fetchVipModalDateAvailabilities() {
             try {
-                const res = await fetch('/api/booking/dates?start_date=2026-09-30&end_date=2026-10-17');
+                const res = await fetch('/api/booking/dates?start_date=2026-09-30&end_date=2026-10-17&is_vip=1');
                 const data = await res.json();
                 vipModalState.dateAvailabilities = data;
                 renderVipModalDateDropdown(data);
             } catch (err) {
                 console.error('Error fetching VIP date availability:', err);
             }
+        }
+
+        function getVipGroupDateStatus(dateStr, groupName) {
+            const dbDate = vipDbDatesModal.find(d => d.date === dateStr || (d.date && d.date.startsWith(dateStr)));
+            if (!dbDate || !dbDate.is_available) return 'closed';
+
+            const allSlots = dbDate.slots || [];
+            if (allSlots.length === 0) return 'closed';
+
+            let relevantSlots = allSlots;
+            if (groupName && vipGroupScheduleMapModal[groupName] && vipGroupScheduleMapModal[groupName][dateStr]) {
+                const groupRules = vipGroupScheduleMapModal[groupName][dateStr];
+                const allowedTimes = groupRules.map(r => (r.start_time || '').substring(0, 5));
+                relevantSlots = allSlots.filter(s => {
+                    const sTimeStr = (s.start_time || s.label || '').substring(0, 5);
+                    return allowedTimes.some(at => sTimeStr.includes(at) || at.includes(sTimeStr));
+                });
+            }
+
+            if (relevantSlots.length === 0) return 'closed';
+
+            const hasAvailable = relevantSlots.some(s => {
+                const booked = s.booked_count || 0;
+                const cap = s.capacity || 0;
+                return s.is_available && (booked < cap);
+            });
+
+            return hasAvailable ? 'available' : 'full';
         }
 
         function renderVipModalDateDropdown(items) {
@@ -1268,15 +1273,16 @@
             filteredItems.forEach(item => {
                 const dateRow = document.createElement('div');
                 const isSelected = vipModalState.selectedDateRaw === item.date;
-                const isAvailable = item.status === 'available';
+                const dynamicStatus = getVipGroupDateStatus(item.date, vipModalState.selectedGroup);
+                const isAvailable = dynamicStatus === 'available';
                 const formattedLabel = formatOrdinalDate(item.date);
                 const dowStr = getDayOfWeek(item.date);
 
-                let rowClasses = 'date-row d-flex flex-column px-3 py-2 border mb-1 cursor-pointer transition text-uppercase rounded-1 ';
+                let rowClasses = 'date-row d-flex flex-column px-3 py-2 border mb-1 transition text-uppercase rounded-1 ';
                 if (isSelected) {
-                    rowClasses += 'selected-pill text-dark';
+                    rowClasses += 'selected-pill text-dark cursor-pointer';
                 } else if (isAvailable) {
-                    rowClasses += 'text-dark bg-white';
+                    rowClasses += 'text-dark bg-white cursor-pointer';
                 } else {
                     rowClasses += 'opacity-50 cursor-not-allowed text-muted bg-light';
                 }
@@ -1285,10 +1291,10 @@
                 let statusSpan = '';
                 if (isSelected) {
                     statusSpan = `<svg style="width: 18px; height: 18px;" class="brand-orange-text" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>`;
-                } else if (item.status === 'available') {
+                } else if (dynamicStatus === 'available') {
                     statusSpan = `<span class="text-xs font-weight-bold text-success">AVAILABLE</span>`;
-                } else if (item.status === 'full') {
-                    statusSpan = `<span class="text-xs font-weight-bold text-muted">FULLY BOOKED</span>`;
+                } else if (dynamicStatus === 'full') {
+                    statusSpan = `<span class="text-xs font-weight-bold text-danger">SLOT FULL</span>`;
                 } else {
                     statusSpan = `<span class="text-xs font-weight-bold text-muted">CLOSED</span>`;
                 }
@@ -1346,7 +1352,7 @@
 
         async function fetchVipModalSlots(dateStr) {
             try {
-                const res = await fetch(`/api/booking/dates/${dateStr}/slots`);
+                const res = await fetch(`/api/booking/dates/${dateStr}/slots?is_vip=1`);
                 const slotsData = await res.json();
                 vipModalState.slots = slotsData;
                 renderVipModalSlotDropdown(slotsData);
@@ -1365,12 +1371,47 @@
                 const dateMap = vipGroupScheduleMapModal[vipModalState.selectedGroup];
                 if (dateMap[vipModalState.selectedDateRaw]) {
                     const groupRules = dateMap[vipModalState.selectedDateRaw];
-                    const allowedTimes = groupRules.map(r => r.start_time);
+                    const allowedTimes = groupRules.map(r => (r.start_time || '').substring(0, 5));
                     filteredSlots = slots.filter(s => {
-                        const sTimeStr = s.start_time || s.label || '';
-                        return allowedTimes.some(at => sTimeStr.includes(at));
+                        const sTimeStr = (s.start_time || s.label || '').substring(0, 5);
+                        return allowedTimes.some(at => sTimeStr.includes(at) || at.includes(sTimeStr));
                     });
                 }
+            }
+
+            if (!filteredSlots || filteredSlots.length === 0) {
+                container.innerHTML = `<div class="py-2 text-center text-xs font-weight-bold text-muted">NO AVAILABLE SESSIONS FOR THIS VIP GROUP ON THIS DATE.</div>`;
+                return;
+            }
+
+            // Auto-select slot if only 1 matching slot is available
+            if (filteredSlots.length === 1 && filteredSlots[0].available) {
+                const autoSlot = filteredSlots[0];
+                vipModalState.selectedSlotId = autoSlot.id;
+                vipModalState.selectedSlotObject = autoSlot;
+                const slotInput = document.getElementById('vip_modal_booking_slot_id');
+                if (slotInput) slotInput.value = autoSlot.id;
+
+                const timeBoxText = document.getElementById('vip-modal-time-box-text');
+                if (timeBoxText) {
+                    timeBoxText.textContent = autoSlot.label;
+                    timeBoxText.className = 'text-dark font-weight-bold text-xs text-uppercase';
+                }
+
+                if (vipModalState.selectedGroup && vipModalState.selectedDateRaw && vipGroupScheduleMapModal[vipModalState.selectedGroup]) {
+                    const dateMap = vipGroupScheduleMapModal[vipModalState.selectedGroup];
+                    if (dateMap[vipModalState.selectedDateRaw]) {
+                        const groupRules = dateMap[vipModalState.selectedDateRaw];
+                        const sPrefix = (autoSlot.start_time || '').substring(0, 5);
+                        const matchedRule = groupRules.find(r => (r.start_time || '').substring(0, 5) === sPrefix);
+                        if (matchedRule && paxInputModal) {
+                            paxInputModal.value = matchedRule.pax;
+                        }
+                    }
+                }
+
+                updateVipModalPaxHelpText(autoSlot);
+                validateVipModalPaxInput();
             }
 
             if (!filteredSlots || filteredSlots.length === 0) {

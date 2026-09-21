@@ -29,8 +29,9 @@ class BookingApiController extends Controller
     {
         $startDate = $request->query('start_date', '2026-09-30');
         $endDate = $request->query('end_date', '2026-10-17');
+        $isVip = $request->boolean('is_vip');
 
-        $availabilities = $this->availabilityService->getDateAvailabilities($startDate, $endDate);
+        $availabilities = $this->availabilityService->getDateAvailabilities($startDate, $endDate, $isVip);
 
         return response()->json($availabilities);
     }
@@ -39,13 +40,14 @@ class BookingApiController extends Controller
      * GET /api/booking/dates/{date}/slots
      * Load available sessions for a given date.
      */
-    public function getSlots(string $date): JsonResponse
+    public function getSlots(string $date, Request $request): JsonResponse
     {
         if (!strtotime($date)) {
             return response()->json(['message' => 'Invalid date format.'], 422);
         }
+        $isVip = $request->boolean('is_vip');
 
-        $slots = $this->availabilityService->getSlotsForDate($date);
+        $slots = $this->availabilityService->getSlotsForDate($date, $isVip);
 
         return response()->json($slots);
     }

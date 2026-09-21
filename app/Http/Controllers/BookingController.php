@@ -158,9 +158,9 @@ class BookingController extends Controller
             }
         }
 
-        // Walk-in Customer Dropdown Data (Formatted same as front page: Oct 2 to Oct 17)
+        // Walk-in Customer Dropdown Data (Formatted same as front page: Oct 1 to Oct 17)
         $walkinDates = BookingDate::where('is_available', true)
-            ->whereBetween('date', ['2026-10-02', '2026-10-17'])
+            ->whereBetween('date', ['2026-10-01', '2026-10-17'])
             ->orderBy('date', 'asc')
             ->get();
 
@@ -182,7 +182,8 @@ class BookingController extends Controller
                 ];
             });
 
-        $bookingDates = BookingDate::orderBy('date', 'asc')->get();
+        $bookingDates = BookingDate::with('slots')->orderBy('date', 'asc')->get();
+        $vipGroups = \App\Services\VipGroupService::getVipGroups();
 
         return view('admin.booking.index', compact(
             'bookings',
@@ -197,7 +198,8 @@ class BookingController extends Controller
             'matrixCells',
             'walkinDates',
             'walkinSlots',
-            'bookingDates'
+            'bookingDates',
+            'vipGroups'
         ));
     }
 

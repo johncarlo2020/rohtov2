@@ -192,7 +192,7 @@
                                         <div id="date-dropdown-box" class="d-none dropdown-overlay p-3">
                                             <div class="small fw-bold text-dark text-uppercase pb-2 mb-2 border-bottom d-flex justify-content-between align-items-center">
                                                 <span>DATE SELECTION</span>
-                                                <span>2 OCT – 17 OCT 2026</span>
+                                                <span>1 OCT – 17 OCT 2026</span>
                                             </div>
 
                                             <!-- Date Items List -->
@@ -244,7 +244,7 @@
 
                                 <!-- Terms Link -->
                                 <div class="text-center mt-3">
-                                    <a href="{{ url('/terms-and-conditions') }}" class="text-dark text-uppercase fw-bold text-decoration-underline" style="font-size: 11px; letter-spacing: 0.8px;">
+                                    <a href="{{ asset('pdf/terms.pdf') }}" target="_blank" class="text-dark text-uppercase fw-bold text-decoration-underline" style="font-size: 11px; letter-spacing: 0.8px;">
                                         TERMS & CONDITIONS
                                     </a>
                                 </div>
@@ -398,7 +398,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
 
-            const START_DATE = '2026-10-02';
+            const START_DATE = '2026-10-01';
             const END_DATE = '2026-10-17';
 
             let state = {
@@ -582,7 +582,7 @@
                         } else if (isAvailable) {
                             statusSpan = `<span class="small fw-bold text-success text-uppercase">AVAILABLE</span>`;
                         } else if (item.status === 'full') {
-                            statusSpan = `<span class="small fw-bold text-muted text-uppercase">FULLY BOOKED</span>`;
+                            statusSpan = `<span class="small fw-bold text-muted text-uppercase">SLOT FULL</span>`;
                         } else {
                             statusSpan = `<span class="small fw-bold text-muted text-uppercase">CLOSED</span>`;
                         }

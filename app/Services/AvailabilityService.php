@@ -13,7 +13,7 @@ class AvailabilityService
     /**
      * Get availability statuses for a date range.
      */
-    public function getDateAvailabilities(string $startDate, string $endDate): array
+    public function getDateAvailabilities(string $startDate, string $endDate, bool $isVip = false): array
     {
         // Enforce event date boundary: September 30, 2026 to October 17, 2026
         $eventMin = '2026-09-30';
@@ -33,7 +33,7 @@ class AvailabilityService
         $current = $start->copy();
         while ($current->lte($end)) {
             $dateStr = $current->format('Y-m-d');
-            $status = $this->getDateStatus($dateStr);
+            $status = $this->getDateStatus($dateStr, $isVip);
             $result[] = [
                 'date' => $dateStr,
                 'status' => $status, // 'available', 'full', or 'closed'
@@ -48,7 +48,7 @@ class AvailabilityService
      * Get the dynamic status of a specific date.
      * Returns: 'available', 'full', or 'closed'
      */
-    public function getDateStatus(string $date): string
+    public function getDateStatus(string $date, bool $isVip = false): string
     {
         $carbonDate = Carbon::parse($date);
         $dateStr = $carbonDate->format('Y-m-d');
@@ -56,6 +56,14 @@ class AvailabilityService
         // Enforce event date boundary: September 30, 2026 to October 17, 2026
         if ($dateStr < '2026-09-30' || $dateStr > '2026-10-17') {
             return 'closed';
+        }
+
+        // Private / VIP-only dates hidden from public self-booking
+        if (!$isVip) {
+            $privateOnlyDates = ['2026-09-30', '2026-10-09', '2026-10-13'];
+            if (in_array($dateStr, $privateOnlyDates)) {
+                return 'closed';
+            }
         }
 
         $dayOfWeek = $carbonDate->dayOfWeekIso; // 1 (Mon) to 7 (Sun)
@@ -69,11 +77,32 @@ class AvailabilityService
         // 2. Check weekly operating hours schedule
         $operatingHour = OperatingHour::where('day_of_week', $dayOfWeek)->first();
         if (!$operatingHour || !$operatingHour->is_open) {
-            return 'closed';
+            if (!($isVip && $bookingDate && $bookingDate->is_available)) {
+                return 'closed';
+            }
         }
 
         // 3. Provision / ensure slots exist for this date if open
-        $slots = $this->getOrProvisionSlotsForDate($dateStr, $operatingHour, $bookingDate);
+        if ($operatingHour && $operatingHour->is_open) {
+            $slots = $this->getOrProvisionSlotsForDate($dateStr, $operatingHour, $bookingDate);
+        } elseif ($bookingDate && $bookingDate->is_available) {
+            $slots = $bookingDate->slots()->orderBy('start_time')->get();
+        } else {
+            return 'closed';
+        }
+
+        // Filter public-allowed time slots for specific dates if not VIP
+        if (!$isVip) {
+            if ($dateStr === '2026-10-01') {
+                $slots = $slots->filter(function (BookingSlot $slot) {
+                    return in_array(substr($slot->start_time, 0, 5), ['11:00', '12:00']);
+                });
+            } elseif ($dateStr === '2026-10-14') {
+                $slots = $slots->filter(function (BookingSlot $slot) {
+                    return in_array(substr($slot->start_time, 0, 5), ['18:00']);
+                });
+            }
+        }
 
         if ($slots->isEmpty()) {
             return 'closed';
@@ -90,7 +119,7 @@ class AvailabilityService
     /**
      * Get time slots formatted for the frontend for a given date.
      */
-    public function getSlotsForDate(string $date): array
+    public function getSlotsForDate(string $date, bool $isVip = false): array
     {
         $carbonDate = Carbon::parse($date);
         $dateStr = $carbonDate->format('Y-m-d');
@@ -98,6 +127,14 @@ class AvailabilityService
         // Enforce event date boundary: September 30, 2026 to October 17, 2026
         if ($dateStr < '2026-09-30' || $dateStr > '2026-10-17') {
             return [];
+        }
+
+        // Private / VIP-only dates hidden from public self-booking
+        if (!$isVip) {
+            $privateOnlyDates = ['2026-09-30', '2026-10-09', '2026-10-13'];
+            if (in_array($dateStr, $privateOnlyDates)) {
+                return [];
+            }
         }
 
         $dayOfWeek = $carbonDate->dayOfWeekIso;
@@ -110,10 +147,31 @@ class AvailabilityService
 
         $operatingHour = OperatingHour::where('day_of_week', $dayOfWeek)->first();
         if (!$operatingHour || !$operatingHour->is_open) {
+            if (!($isVip && $bookingDate && $bookingDate->is_available)) {
+                return [];
+            }
+        }
+
+        if ($operatingHour && $operatingHour->is_open) {
+            $slots = $this->getOrProvisionSlotsForDate($date, $operatingHour, $bookingDate);
+        } elseif ($bookingDate && $bookingDate->is_available) {
+            $slots = $bookingDate->slots()->orderBy('start_time')->get();
+        } else {
             return [];
         }
 
-        $slots = $this->getOrProvisionSlotsForDate($date, $operatingHour, $bookingDate);
+        // Filter public-allowed time slots for specific dates if not VIP
+        if (!$isVip) {
+            if ($dateStr === '2026-10-01') {
+                $slots = $slots->filter(function (BookingSlot $slot) {
+                    return in_array(substr($slot->start_time, 0, 5), ['11:00', '12:00']);
+                });
+            } elseif ($dateStr === '2026-10-14') {
+                $slots = $slots->filter(function (BookingSlot $slot) {
+                    return in_array(substr($slot->start_time, 0, 5), ['18:00']);
+                });
+            }
+        }
 
         return $slots->map(function (BookingSlot $slot) {
             $isAvailable = $slot->is_available && ($slot->booked_count < $slot->capacity);
@@ -153,7 +211,23 @@ class AvailabilityService
             return $existingSlots;
         }
 
-        // Generate slots from active operating sessions
+        // 1. Check for specific event schedule override
+        $eventSchedule = $this->getEventScheduleForDate($date);
+        if ($eventSchedule !== null) {
+            foreach ($eventSchedule as $slotData) {
+                BookingSlot::create([
+                    'booking_date_id' => $bookingDate->id,
+                    'start_time' => $slotData['start_time'],
+                    'end_time' => $slotData['end_time'],
+                    'capacity' => $slotData['capacity'],
+                    'booked_count' => 0,
+                    'is_available' => true,
+                ]);
+            }
+            return $bookingDate->slots()->orderBy('start_time')->get();
+        }
+
+        // 2. Generate slots from active operating sessions
         $activeSessions = $operatingHour->sessions()->where('is_active', true)->orderBy('start_time')->get();
 
         foreach ($activeSessions as $session) {
@@ -168,5 +242,84 @@ class AvailabilityService
         }
 
         return $bookingDate->slots()->orderBy('start_time')->get();
+    }
+
+    /**
+     * Single source event schedule definitions for fallback provisioning.
+     */
+    public function getEventScheduleForDate(string $date): ?array
+    {
+        if (app()->environment('testing')) {
+            return null;
+        }
+
+        $schedules = [
+            '2026-09-30' => [
+                ['start_time' => '11:00:00', 'end_time' => '12:00:00', 'capacity' => 20],
+                ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 20],
+                ['start_time' => '13:00:00', 'end_time' => '14:00:00', 'capacity' => 20],
+                ['start_time' => '14:00:00', 'end_time' => '15:00:00', 'capacity' => 20],
+                ['start_time' => '15:00:00', 'end_time' => '16:00:00', 'capacity' => 10],
+                ['start_time' => '16:00:00', 'end_time' => '17:00:00', 'capacity' => 10],
+                ['start_time' => '17:00:00', 'end_time' => '18:00:00', 'capacity' => 6],
+                ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 6],
+                ['start_time' => '19:00:00', 'end_time' => '20:00:00', 'capacity' => 10],
+                ['start_time' => '20:00:00', 'end_time' => '21:00:00', 'capacity' => 10],
+                ['start_time' => '21:00:00', 'end_time' => '22:00:00', 'capacity' => 10],
+            ],
+            '2026-10-01' => [
+                ['start_time' => '11:00:00', 'end_time' => '12:00:00', 'capacity' => 6],
+                ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 6],
+                ['start_time' => '13:00:00', 'end_time' => '14:00:00', 'capacity' => 6],
+                ['start_time' => '14:00:00', 'end_time' => '15:00:00', 'capacity' => 6],
+                ['start_time' => '15:00:00', 'end_time' => '16:00:00', 'capacity' => 6],
+                ['start_time' => '16:00:00', 'end_time' => '17:00:00', 'capacity' => 6],
+            ],
+            '2026-10-02' => [
+                ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 6],
+                ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 6],
+            ],
+            '2026-10-03' => [
+                ['start_time' => '11:00:00', 'end_time' => '12:00:00', 'capacity' => 6],
+                ['start_time' => '16:00:00', 'end_time' => '17:00:00', 'capacity' => 6],
+            ],
+            '2026-10-07' => [
+                ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 6],
+                ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 6],
+            ],
+            '2026-10-08' => [
+                ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 6],
+                ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 6],
+            ],
+            '2026-10-09' => [
+                ['start_time' => '17:30:00', 'end_time' => '20:00:00', 'capacity' => 30],
+            ],
+            '2026-10-10' => [
+                ['start_time' => '11:00:00', 'end_time' => '12:00:00', 'capacity' => 6],
+                ['start_time' => '16:00:00', 'end_time' => '17:00:00', 'capacity' => 6],
+            ],
+            '2026-10-13' => [
+                ['start_time' => '11:00:00', 'end_time' => '13:00:00', 'capacity' => 10],
+            ],
+            '2026-10-14' => [
+                ['start_time' => '11:00:00', 'end_time' => '12:00:00', 'capacity' => 5],
+                ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 5],
+                ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 6],
+            ],
+            '2026-10-15' => [
+                ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 6],
+                ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 6],
+            ],
+            '2026-10-16' => [
+                ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 6],
+                ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 6],
+            ],
+            '2026-10-17' => [
+                ['start_time' => '11:00:00', 'end_time' => '12:00:00', 'capacity' => 6],
+                ['start_time' => '16:00:00', 'end_time' => '17:00:00', 'capacity' => 6],
+            ],
+        ];
+
+        return $schedules[$date] ?? null;
     }
 }

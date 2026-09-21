@@ -530,7 +530,7 @@ class BookingSystemTest extends TestCase
         $admin = \App\Models\User::factory()->create(['fname' => 'Admin', 'lname' => 'User']);
         $admin->assignRole('admin');
 
-        $this->getJson('/api/booking/dates/2026-09-30/slots');
+        (new \Database\Seeders\EventScheduleSeeder())->run();
         $dateObj = \App\Models\BookingDate::where('date', '2026-09-30')->first();
         $slot = $dateObj->slots()->first();
         $slot->capacity = 20;

@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('register');
 })->name('welcome');
 
 
@@ -114,16 +114,21 @@ Route::group(['middleware' => ['admin']], function () {
 
 
 Route::group(['middleware' => ['client']], function () {
+    Route::view('/landing', 'landing')->name('landing');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/station/{station}', 'App\Http\Controllers\StationController@index')->name('station');
     Route::get('/dashboard', 'App\Http\Controllers\StationController@welcome')->name('dashboard');
+    Route::view('/congrats', 'congrats')->name('congrats');
     Route::get('/discover', 'App\Http\Controllers\StationController@discover')->name('discover');
     Route::get('/giftselection', 'App\Http\Controllers\StationController@giftSelection')->name('station.giftselection');
     Route::post('/giftselection/redeem', 'App\Http\Controllers\StationController@redeemGift')->name('giftselection.redeem');
     Route::post('/process_qr_code', 'App\Http\Controllers\StationController@scan')->name('process_qr_code');
     Route::post('/process_stamp', 'App\Http\Controllers\StationController@stamp')->name('process_stamp');
+    Route::get('/bonus/{bonus}', 'App\Http\Controllers\StationController@bonusStamping')->name('bonus.stamp');
+    Route::post('/process_bonus_stamp', 'App\Http\Controllers\StationController@stampBonus')->name('process_bonus_stamp');
     Route::get('/station/{station}/stamping', 'App\Http\Controllers\StationController@stamping')->name('station.stamping');
 
 
@@ -156,9 +161,7 @@ Route::group(['middleware' => ['client']], function () {
     Route::get('/resend-otp', 'App\Http\Controllers\StationController@resend')->name('resend.otp');
     Route::post('/verify-otp', 'App\Http\Controllers\StationController@verify')->name('verify.otp');
 
-     Route::get('/register-welcome', function () {
-        return view('registerSuccess');
-    })->name('register.welcome');
+    Route::redirect('/register-welcome', '/landing')->name('register.welcome');
 
 });
 

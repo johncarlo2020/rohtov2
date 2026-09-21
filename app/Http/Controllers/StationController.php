@@ -298,7 +298,7 @@ class StationController extends Controller
         $stationDone = $user->stationUser->count();
         $stations = Station::get();
 
-        $completedStationIds = $user->stationUser->pluck('id')->toArray();
+            $completedStationIds = $user->stationUser->pluck('station_id')->toArray();
 
         // Add status flag to each station
         foreach ($stations as $station) {
@@ -312,11 +312,18 @@ class StationController extends Controller
             ->where('is_redeemed', true)
             ->exists();
 
+        $redemptionStamped = (bool) $user->redemption_stamped;
+        $inStoreStamped = (bool) $user->in_store_stamped;
+
+        if ($stationDone >= 4 && $redemptionStamped && $inStoreStamped) {
+            return redirect()->route('congrats');
+        }
+
         $nextStation = $stations->firstWhere(function ($station) use ($user) {
             return !$user->stationUser()->where('station_id', $station->id)->exists();
         });
 
-        return view('dashboard', compact('stations', 'stationDone', 'canAccessStation3', 'completedStationIds', 'nextStation','isRedeemed'));
+        return view('dashboard', compact('stations', 'stationDone', 'canAccessStation3', 'completedStationIds', 'nextStation', 'isRedeemed', 'redemptionStamped', 'inStoreStamped'));
 
     }
 
@@ -763,6 +770,32 @@ class StationController extends Controller
 
     }
 
+    public function bonusStamping(string $bonus)
+    {
+        abort_unless(in_array($bonus, ['redemption', 'in-store'], true), 404);
+
+        $user = auth()->user();
+        abort_if($bonus === 'redemption' && $user->stationUser()->count() < 4, 403);
+        $flag = $bonus === 'redemption' ? 'redemption_stamped' : 'in_store_stamped';
+
+        return view('bonus-stamping', [
+            'bonus' => $bonus,
+            'alreadyStamped' => (bool) auth()->user()->{$flag},
+        ]);
+    }
+
+    public function stampBonus(Request $request)
+    {
+        $validated = $request->validate([
+            'bonus' => ['required', 'in:redemption,in-store'],
+        ]);
+
+        $flag = $validated['bonus'] === 'redemption' ? 'redemption_stamped' : 'in_store_stamped';
+        auth()->user()->update([$flag => true]);
+
+        return response()->json(['message' => 'Bonus stamp collected'], 200);
+    }
+
 
     public function discover()
     {
@@ -822,12 +855,14 @@ class StationController extends Controller
 
     public function stamp(Request $request)
     {
-       
-        // Get the last character of the QR code message
-        $station_id = $request->station;
+        $validated = $request->validate([
+            'station' => ['required', 'integer', 'exists:stations,id'],
+        ]);
+        $station_id = $validated['station'];
 
-
-        // Assume that `$station_id` is validated before this point
+        if (StationUser::where('user_id', auth()->id())->where('station_id', $station_id)->exists()) {
+            return response()->json(['message' => 'Station already completed'], 200);
+        }
 
         try {
             DB::beginTransaction();

@@ -19,7 +19,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'heard','follow','appeal','existing','social_media','existing', 'email','otp','company','otp_verified','name','number','find','dob','password','last_login_at','race','country','baby_img','baby_name','charname','marketing'
+        'code','heard','follow','appeal','existing','social_media','existing', 'email','otp','company','otp_verified','name','number','find','dob','password','last_login_at','race','country','baby_img','baby_name','charname','marketing','redemption_stamped','in_store_stamped'
     ];
     /**
      * The attributes that should be hidden for serialization.
@@ -39,6 +39,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'marketing' => 'boolean',
+        'redemption_stamped' => 'boolean',
+        'in_store_stamped' => 'boolean',
     ];
 
 

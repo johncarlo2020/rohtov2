@@ -21,17 +21,22 @@ class StationSeeder extends Seeder
     public function run()
     {
         Station::create([
-            'name' => 'Treasure Spot 1',
+            'name' => 'Speed Tap Showdown',
             'question' => 'Which fertilizer practice helps support ESG goals in oil palm farming?',
         ]);
 
         Station::create([
-            'name' => 'Treasure Spot 2',
+            'name' => 'Race Reflex',
             'question' => 'Can Yield Booster Prophycient help control Ganoderma disease in oil palm?',
         ]);
 
         Station::create([
-            'name' => 'Treasure Spot 3',
+            'name' => 'Drive to Triumph',
+            'question' => 'Which of the following services are offered by Agri Analytics & Services (AAS)',
+        ]);
+
+        Station::create([
+            'name' => 'Snapshot Zone',
             'question' => 'Which of the following services are offered by Agri Analytics & Services (AAS)',
         ]);
 

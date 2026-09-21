@@ -1,32 +1,59 @@
 <x-app-layout>
-    <div class="container-fluid congrats start completed-screen main-content main-background with-scroll pt-4">
-        <div class="congrats-container">
-            <div class="product-image px-5 text-center">
-                <div class="mb-2">
-                    <span class="sub-heading-text">Click on the logo</span>
-                </div>
-                <div class="row">
-                    {{-- <a href="https://www.behnmeyer.com/" class="mt-5">
-                            <img class="logo "
-                                src="{{ asset('images/brand/logo_congrats.webp') }}" alt="bm Logo" />
-                        </a> --}}
+    @push('styles')
+        <style>
+            @font-face {
+                font-family: 'Altone';
+                src: url('{{ asset('tommy_assets/Altone-Bold.ttf') }}') format('truetype');
+                font-weight: 700;
+                font-display: swap;
+            }
 
-                    <div class="two-logo-container">
-                        <a href="https://www.behnmeyer.com/" class="left-logo">
-                            <img class="logo " src="{{ asset('images/bm_logo.webp') }}" alt="bm Logo" />
-                        </a>
-                          <a href="https://www.acgt.com/" class="right-logo">
-                            <img class="logo " src="{{ asset('images/acgt_logo.webp') }}" alt="acgt Logo" />
-                        </a>
-                    </div>
-                </div>
+            .tommy-congrats-page {
+                min-height: 100svh;
+                display: grid;
+                place-items: center;
+                overflow: hidden;
+                padding: 24px;
+                background: url('{{ asset('tommy_assets/Tommy X Cadillac_background_2x.webp') }}') center / cover fixed;
+                color: #000;
+                font-family: 'Altone', Arial, sans-serif;
+            }
 
-                <div class="mt-2">
-                    <span class="sub-heading-text">for more information</span>
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
-    <x-footer />
+            .tommy-congrats-content {
+                display: grid;
+                justify-items: center;
+                text-align: center;
+                transform: translateY(-2%);
+            }
+
+            .tommy-congrats-text {
+                margin: 0;
+                font-size: clamp(20px, 5vw, 27px);
+                font-weight: 400;
+                line-height: 1.2;
+                 font-family: 'Altone', Arial, sans-serif;
+            }
+
+            .tommy-congrats-logo {
+                display: block;
+                width: min(34vw, 145px);
+                height: auto;
+                margin: 14px 0 12px;
+                transition: transform .2s ease;
+            }
+
+            .tommy-congrats-logo:hover,
+            .tommy-congrats-logo:focus-visible { transform: scale(1.04); }
+        </style>
+    @endpush
+
+    <main class="tommy-congrats-page">
+        <section class="tommy-congrats-content" aria-label="Tommy Hilfiger information">
+            <p class="tommy-congrats-text">Click on the logo</p>
+            <a href="https://global.tommy.com/" target="_blank" rel="noopener noreferrer" aria-label="Tommy Hilfiger website">
+                <img class="tommy-congrats-logo" src="{{ asset('tommy_assets/TOMMY-HIL_logo_2x.webp') }}" alt="Tommy Hilfiger">
+            </a>
+            <p class="tommy-congrats-text">for more information</p>
+        </section>
+    </main>
 </x-app-layout>

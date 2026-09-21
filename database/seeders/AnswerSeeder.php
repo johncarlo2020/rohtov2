@@ -15,7 +15,7 @@ class AnswerSeeder extends Seeder
     public function run(): void
     {
         // Station 1 Answers
-        $station1 = Station::where('name', 'Treasure Spot 1')->first();
+        $station1 = Station::where('name', 'Speed Tap Showdown')->first();
         $a1 = Answer::create(['station_id' => $station1->id, 'text' => 'Using low-carbon eco-friendly fertilizers.']);  // wrong
         $a2 = Answer::create(['station_id' => $station1->id, 'text' => 'Using fertilizers that cause high carbon emissions.']);   // correct
         $a3 = Answer::create(['station_id' => $station1->id, 'text' => 'Ignoring the environmental impact of  fertilizers']);    // wrong
@@ -25,7 +25,7 @@ class AnswerSeeder extends Seeder
         $station1->save();
 
         // Station 2 Answers
-        $station2 = Station::where('name', 'Treasure Spot 2')->first();
+        $station2 = Station::where('name', 'Race Reflex')->first();
         $b1 = Answer::create(['station_id' => $station2->id, 'text' => 'Yes']);      // correct
         $b2 = Answer::create(['station_id' => $station2->id, 'text' => 'No']);     // wrong
 
@@ -33,7 +33,7 @@ class AnswerSeeder extends Seeder
         $station2->save();
 
         // Station 3 Answers
-        $station3 = Station::where('name', 'Treasure Spot 3')->first();
+        $station3 = Station::where('name', 'Drive to Triumph')->first();
         $c1 = Answer::create(['station_id' => $station3->id, 'text' => 'Palm Counting']);       // wrong
         $c2 = Answer::create(['station_id' => $station3->id, 'text' => 'Stress Diagnostic']);          // wrong
         $c3 = Answer::create(['station_id' => $station3->id, 'text' => 'Yield Prediction']);         // wrong

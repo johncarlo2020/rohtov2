@@ -44,6 +44,13 @@ if (mapPage) {
         showView(mapPage.dataset.view === 'journey' ? 'rewards' : 'journey');
     });
 
+    const legendBooth = mapPage.querySelector('.legend-booth');
+    if (legendBooth) {
+        legendBooth.addEventListener('click', () => {
+            showView(mapPage.dataset.view === 'journey' ? 'rewards' : 'journey');
+        });
+    }
+
     mapPage.querySelector('[data-show-rewards]').addEventListener('click', () => {
         showView('rewards');
         const destination = mapPage.querySelector('#card-apply-open') ||

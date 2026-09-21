@@ -1,29 +1,259 @@
 .station-journey {
     --station-accent: #ffbf00;
-    min-height: 100svh; background: #000; color: #fff; display: flex; flex-direction: column;
-    width: 100%; margin: 0 auto; text-align: center;
-    &.is-reward { --station-accent: #bdb9e9; }
-    [hidden] { display: none !important; }
-    .station-journey-header { position: relative; flex-shrink: 0; width: min(100%, 430px); margin: 0 auto; padding: 44px 60px 54px; img { display: block; width: 165px; max-width: 100%; margin: 0 auto; } }
-    .station-back { position: absolute; left: 24px; top: 44px; width: 40px; height: 40px; border-radius: 50%; background: #ffbf00; color: #000; display: grid; place-items: center; font-size: 24px; text-decoration: none; }
-    .station-journey-details { width: min(100%, 430px); margin: 0 auto; padding: 0 24px; }
-    .station-journey-number { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; margin: 0 auto 22px; background: var(--station-accent); color: #000; font-size: 23px; font-weight: 500; }
-    h1 { color: #fff; font-size: 20px; font-weight: 700; margin: 0 0 56px; }
-    .station-journey-art { width: 145px; height: 145px; display: block; object-fit: contain; margin: 0 auto 30px; }
-    .station-journey-instructions p { color: #fff; font-size: 23px; line-height: 1.4; font-weight: 400; margin: 0 0 16px; strong { font-weight: 700; } }
-    .station-journey-footer { margin-top: auto; padding: 70px 24px max(48px, env(safe-area-inset-bottom)); p { color: #fff; font-size: 14px; font-weight: 400; margin: 22px 0 0; } }
-    .station-scan-button { display: grid; place-items: center; margin: 0 auto; border: 0; border-radius: 24px; width: 80px; height: 36px; background: #ffbf00; color: #000; font-size: 18px; }
-    .station-action { display: block; width: 220px; max-width: 100%; margin: 20px auto 0; padding: 10px 16px; border: 0; border-radius: 8px; background: #ffbf00; color: #000; font-size: 14px; font-weight: 700; text-decoration: none; }
-    &.is-scanning { height: 100dvh; min-height: 0; .station-journey-header { padding-bottom: 44px; } .station-journey-footer { padding-top: 18px; padding-bottom: max(36px, env(safe-area-inset-bottom)); } }
-    .station-camera { flex: 1; min-height: 0; background: #d9d9d9; overflow: hidden; }
-    #station-reader { height: 100%; width: 100%; video { max-height: 100%; object-fit: contain; } }
-    .station-result { width: min(300px, calc(100% - 64px)); padding: 36px 30px 24px; border: 0; border-radius: 6px; margin: auto; background: #fff; color: #000; text-align: center;
-        &::backdrop { background: #1c2329a8; }
-        .station-result-icon { width: 42px; height: 42px; border: 2px solid #ff1744; color: #ff1744; border-radius: 50%; display: grid; place-items: center; margin: 0 auto 28px; font-size: 27px; }
-        &.is-success .station-result-icon { color: #00d900; border-color: #00d900; }
-        p { color: #000; font-size: 14px; font-weight: 400; line-height: 1.4; margin: 0 0 30px; }
-        .station-action { width: 100%; }
+    min-height: 100svh;
+    background: #000;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+
+    &.is-reward {
+        --station-accent: #bdb9e9;
     }
-    a:focus-visible, button:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
-    @media (max-width: 374px) { .station-journey-header { padding-top: 34px; padding-bottom: 42px; img { width: 145px; } } .station-back { top: 32px; left: 18px; width: 36px; height: 36px; } .station-journey-number { width: 34px; height: 34px; font-size: 20px; margin-bottom: 20px; } h1 { font-size: 17px; margin-bottom: 45px; } .station-journey-art { width: 125px; height: 125px; } .station-journey-instructions p { font-size: 20px; } .station-journey-footer { padding-top: 45px; } }
+
+    [hidden] {
+        display: none !important;
+    }
+
+    .station-journey-header {
+        position: relative;
+        flex-shrink: 0;
+        width: min(100%, 430px);
+        margin: 0 auto;
+        padding: 44px 60px 54px;
+
+        img {
+            display: block;
+            width: 165px;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+    }
+
+    .station-back {
+        position: absolute;
+        left: 24px;
+        top: 44px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #ffbf00;
+        color: #000;
+        display: grid;
+        place-items: center;
+        font-size: 24px;
+        text-decoration: none;
+    }
+
+    .station-journey-details {
+        width: min(100%, 430px);
+        margin: 0 auto;
+        padding: 0 24px;
+    }
+
+    .station-journey-number {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        margin: 0 auto 22px;
+        background: var(--station-accent);
+        color: #000;
+        font-size: 23px;
+        font-weight: 500;
+    }
+
+    h1 {
+        color: #fff;
+        font-size: 20px;
+        font-weight: 700;
+        margin: 0 0 56px;
+    }
+
+    .station-journey-art {
+        width: 145px;
+        height: 145px;
+        display: block;
+        object-fit: contain;
+        margin: 0 auto 30px;
+    }
+
+    .station-journey-instructions p {
+        color: #fff;
+        font-size: 23px;
+        line-height: 1.4;
+        font-weight: 300;
+        margin: 0 0 16px;
+
+        strong {
+            font-weight: 700;
+        }
+    }
+
+    .station-journey-footer {
+        margin-top: auto;
+        padding: 70px 24px max(48px, env(safe-area-inset-bottom));
+
+        p {
+            color: #fff;
+            font-size: 14px;
+            font-weight: 400;
+            margin: 22px 0 0;
+        }
+    }
+
+    .station-scan-button {
+        display: grid;
+        place-items: center;
+        margin: 0 auto;
+        border: 0;
+        border-radius: 24px;
+        width: 80px;
+        height: 36px;
+        background: #ffbf00;
+        color: #000;
+        font-size: 18px;
+    }
+
+    .station-action {
+        display: block;
+        width: 220px;
+        max-width: 100%;
+        margin: 20px auto 0;
+        padding: 10px 16px;
+        border: 0;
+        border-radius: 8px;
+        background: #ffbf00;
+        color: #000;
+        font-size: 14px;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    &.is-scanning {
+        height: 100dvh;
+        min-height: 0;
+
+        .station-journey-header {
+            padding-bottom: 44px;
+        }
+
+        .station-journey-footer {
+            padding-top: 18px;
+            padding-bottom: max(36px, env(safe-area-inset-bottom));
+        }
+    }
+
+    .station-camera {
+        flex: 1;
+        min-height: 0;
+        background: #d9d9d9;
+        overflow: hidden;
+    }
+
+    #station-reader {
+        height: 100%;
+        width: 100%;
+
+        video {
+            max-height: 100%;
+            object-fit: contain;
+        }
+    }
+
+    .station-result {
+        width: min(300px, calc(100% - 64px));
+        padding: 36px 30px 24px;
+        border: 0;
+        border-radius: 6px;
+        margin: auto;
+        background: #fff;
+        color: #000;
+        text-align: center;
+
+        &::backdrop {
+            background: #1c2329a8;
+        }
+
+        .station-result-icon {
+            width: 42px;
+            height: 42px;
+            border: 2px solid #ff1744;
+            color: #ff1744;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            margin: 0 auto 28px;
+            font-size: 27px;
+        }
+
+        &.is-success .station-result-icon {
+            color: #00d900;
+            border-color: #00d900;
+        }
+
+        p {
+            color: #000;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1.4;
+            margin: 0 0 30px;
+        }
+
+        .station-action {
+            width: 100%;
+        }
+    }
+
+    a:focus-visible,
+    button:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 4px;
+    }
+
+    @media (max-width: 374px) {
+        .station-journey-header {
+            padding-top: 34px;
+            padding-bottom: 42px;
+
+            img {
+                width: 145px;
+            }
+        }
+
+        .station-back {
+            top: 32px;
+            left: 18px;
+            width: 36px;
+            height: 36px;
+        }
+
+        .station-journey-number {
+            width: 34px;
+            height: 34px;
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 17px;
+            margin-bottom: 45px;
+        }
+
+        .station-journey-art {
+            width: 125px;
+            height: 125px;
+        }
+
+        .station-journey-instructions p {
+            font-size: 20px;
+        }
+
+        .station-journey-footer {
+            padding-top: 45px;
+        }
+    }
 }

@@ -1,126 +1,70 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-        <title>Ocean or Plastic</title>
-
-        @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-        <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-            integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-            crossorigin="anonymous"
-        />
-        @include('components.fonts')
-    </head>
-
-    <body class="main admin-login">
-        <div class="contaniner wrapper d-flex justify-container-center">
-            <div class="branding-container">
-                @include('components.branding')
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin sign in | Maybank</title>
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    @include('components.fonts')
+</head>
+<body class="admin-signin">
+    <main class="admin-signin-shell">
+        <section class="admin-signin-brand" aria-label="Maybank event administration">
+            <a href="{{ url('/') }}" class="admin-signin-logo" aria-label="Maybank home">
+                <img src="{{ asset('files/main/logo.webp') }}" alt="Maybank" width="165" />
+            </a>
+            <div class="admin-signin-story">
+                <p class="admin-signin-eyebrow">THE EXPERIENCE STARTS HERE</p>
+                <h1>Behind every <br>journey.<br><span>More possibilities.</span></h1>
+                <p>Bring the Maybank experience to life.<br>Your event, all in one place.</p>
+                <img class="admin-signin-map" src="{{ asset('files/main/map.webp') }}" alt="" />
             </div>
-            <div
-                class="p-4 mx-auto bg-white border rounded shadow-sm form-container"
-            >
-                <h1 class="mb-4">Welcome!</h1>
-                <h2>Sign in to</h2>
-                <p class="mb-4">{{env('APP_NAME')}} Admin Panel</p>
-                <form
-                    method="POST"
-                    id="loginForm"
-                    action="{{ route('authenticateAdmin') }}"
-                >
+            <div class="admin-signin-brand-footer"><span></span> MAYBANK EVENT MANAGEMENT</div>
+        </section>
+
+        <section class="admin-signin-form-panel" aria-labelledby="admin-signin-title">
+            <div class="admin-signin-form-wrap">
+                <span class="admin-signin-badge">ADMIN PORTAL</span>
+                <h2 id="admin-signin-title">Welcome back.</h2>
+                <p class="admin-signin-intro">Sign in to manage your event experience.</p>
+
+                @if ($errors->any())
+                    <div class="admin-signin-error" role="alert">{{ $errors->first() }}</div>
+                @endif
+                @if (session('status'))
+                    <p role="status">{{ session('status') }}</p>
+                @endif
+
+                <form method="POST" action="{{ route('authenticateAdmin') }}">
                     @csrf
-                    <div class="mb-4">
-                        <label for="exampleInputEmail1" class="form-label"
-                            >Email</label
-                        >
-                        <input
-                            placeholder="Enter your email"
-                            type="email"
-                            name="email"
-                            class="form-control"
-                            id="exampleInputEmail1"
-                            aria-describedby="emailHelp"
-                        />
+                    <div class="admin-signin-field">
+                        <label for="admin-email">Email address</label>
+                        <input id="admin-email" type="email" name="email" value="{{ old('email') }}"
+                            placeholder="Enter your admin email" autocomplete="username" required
+                            @if ($errors->has('email')) aria-invalid="true" @endif />
                     </div>
-                    <div class="mb-4">
-                        <label for="exampleInputPassword1" class="form-label"
-                            >Password</label
-                        >
-                        <input
-                            placeholder="Enter your password"
-                            type="password"
-                            name="password"
-                            class="form-control"
-                            id="exampleInputPassword1"
-                        />
+                    <div class="admin-signin-field" x-data="{ showPassword: false }">
+                        <label for="admin-password">Password</label>
+                        <div class="admin-signin-password">
+                            <input id="admin-password" type="password" :type="showPassword ? 'text' : 'password'"
+                                name="password" placeholder="Enter your password" autocomplete="current-password" required
+                                @if ($errors->has('password')) aria-invalid="true" @endif />
+                            <button type="button" @click="showPassword = !showPassword" :aria-pressed="showPassword.toString()"
+                                aria-controls="admin-password" x-text="showPassword ? 'Hide' : 'Show'">Show</button>
+                        </div>
                     </div>
-
-                    <div class="checkbox-container">
-                        <input type="checkbox" id="remember" name="remember" />
-                        <label for="remember"> </label>
-                        <p>Remember me</p>
-                    </div>
-                    <button type="submit" class="btn button">Login</button>
+                    <button class="admin-signin-submit" type="submit">Sign in <span aria-hidden="true">→</span></button>
                 </form>
+                <p class="admin-signin-help">Need access? Contact your event administrator.</p>
             </div>
-            <p class="copy-text">Wowsome © Copyright 2024</p>
-        </div>
-        <script
-            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-            crossorigin="anonymous"
-        ></script>
-        <script>
-            document.addEventListener("DOMContentLoaded", (event) => {
-                const emailField =
-                    document.getElementById("exampleInputEmail1");
-                const passwordField = document.getElementById(
-                    "exampleInputPassword1"
-                );
-                const rememberCheckbox = document.getElementById("remember");
-
-                if (getCookie("email") && getCookie("password")) {
-                    emailField.value = getCookie("email");
-                    passwordField.value = getCookie("password");
-                    rememberCheckbox.checked = true;
-                }
-
-                document
-                    .getElementById("loginForm")
-                    .addEventListener("submit", function (event) {
-                        if (rememberCheckbox.checked) {
-                            setCookie("email", emailField.value, 30);
-                            setCookie("password", passwordField.value, 30);
-                        } else {
-                            setCookie("email", "", 0);
-                            setCookie("password", "", 0);
-                        }
-                    });
-
-                function setCookie(name, value, days) {
-                    const date = new Date();
-                    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-                    const expires = "expires=" + date.toUTCString();
-                    document.cookie =
-                        name + "=" + value + ";" + expires + ";path=/";
-                }
-
-                function getCookie(name) {
-                    const nameEQ = name + "=";
-                    const ca = document.cookie.split(";");
-                    for (let i = 0; i < ca.length; i++) {
-                        let c = ca[i];
-                        while (c.charAt(0) == " ") c = c.substring(1, c.length);
-                        if (c.indexOf(nameEQ) == 0)
-                            return c.substring(nameEQ.length, c.length);
-                    }
-                    return null;
-                }
-            });
-        </script>
-    </body>
+            <footer class="admin-signin-footer">© {{ date('Y') }} Maybank. <span>Event administration</span></footer>
+        </section>
+    </main>
+    <script>
+        // Remove credentials saved by the previous login page.
+        ['email', 'password'].forEach(name => {
+            document.cookie = `${name}=; Max-Age=0; path=/`;
+        });
+    </script>
+</body>
 </html>

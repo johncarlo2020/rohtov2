@@ -241,6 +241,11 @@
                     station: {{ $station->id }}
                 },
                 success: function(response) {
+                    if (response.redirect_url) {
+                        window.location.assign(response.redirect_url);
+                        return;
+                    }
+
                     // Create a new canvas element for confetti
                     const confettiCanvas = document.createElement('canvas');
                     confettiCanvas.style.position = 'fixed';

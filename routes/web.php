@@ -57,8 +57,12 @@ Route::get('/admin/login', function () {
 });
 
 Route::get('/congrats', function () {
+    if (! auth()->user()->hasCompletedMandatoryStations()) {
+        return redirect()->route('map');
+    }
+
     return view('congrats');
-})->name('congrats');
+})->middleware(['auth', 'client'])->name('congrats');
 
 Route::get('/voteyourfav', function () {
     return view('welcomeVote');

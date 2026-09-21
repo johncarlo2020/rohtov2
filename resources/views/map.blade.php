@@ -3,6 +3,7 @@
         $journey = [1 => ['Shop for More', 83, 36], 2 => ['More to Enjoy', 47, 19], 3 => ['More to Unwind', 64, 21], 4 => ['More to Stream', 17, 17], 5 => ['Maybank Cafe', 9, 11]];
         $rewards = [6 => ['Flight Simulator', 56, 6], 7 => ['Giant Gashapon Surprise', 94, 11], 8 => ['Exclusive Merchandise', 85, 3]];
         $lockedStationIds = $user->isCardApply ? [] : $stations->where('is_mandatory', false)->pluck('id')->all();
+        $completedStationIds = $stations->where('status', true)->pluck('id')->all();
         $booths = [[22, 43], [45, 59], [79, 76], [23, 94], [83, 10]];
     @endphp
     <main id="map-page" class="content-box" data-view="journey">
@@ -21,11 +22,12 @@
                     <div data-map-layer="{{ $view }}" @if ($view === 'rewards') hidden @endif>
                         @foreach ($locations as $id => [$label, $left, $top])
                             @continue(in_array($id, $lockedStationIds))
+                            @php($isCompleted = in_array($id, $completedStationIds))
                             <a class="journey-pin {{ $view === 'rewards' ? 'reward-pin' : '' }}"
                                 @if (!in_array($id, $lockedStationIds)) href="{{ route('station', $id) }}" @else aria-disabled="true" tabindex="-1" @endif data-location="{{ $id }}"
                                 style="--pin-left: {{ $left }}%; --pin-top: {{ $top }}%"
-                                aria-label="{{ $label }} — open station">
-                                <span>{{ $view === 'rewards' ? $loop->iteration : $id }}</span>
+                                aria-label="{{ $label }} — {{ $isCompleted ? 'completed' : 'open station' }}">
+                                <span aria-hidden="true">@if ($isCompleted)<i class="fa-solid fa-check"></i>@else{{ $view === 'rewards' ? $loop->iteration : $id }}@endif</span>
                             </a>
                         @endforeach
                         @if ($view === 'rewards')

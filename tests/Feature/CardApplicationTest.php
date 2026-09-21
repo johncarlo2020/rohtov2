@@ -31,6 +31,13 @@ class CardApplicationTest extends TestCase
             $table->boolean('is_mandatory');
             $table->timestamps();
         });
+        Schema::create('station_users', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('station_id');
+            $table->integer('time_spent')->default(0);
+            $table->timestamps();
+        });
         $this->withoutMiddleware(ClientMiddleware::class);
     }
 
@@ -38,6 +45,37 @@ class CardApplicationTest extends TestCase
     {
         DB::purge('card_test');
         parent::tearDown();
+    }
+
+    public function test_final_mandatory_scan_redirects_to_completion_page(): void
+    {
+        $user = User::create([])->fresh();
+        $first = Station::create(['name' => 'First', 'is_mandatory' => true]);
+        $last = Station::create(['name' => 'Last', 'is_mandatory' => true]);
+        $optional = Station::create(['name' => 'Optional', 'is_mandatory' => false]);
+        $this->assertFalse($user->hasCompletedMandatoryStations());
+        foreach ([$first, $first, $optional] as $station) {
+            DB::table('station_users')->insert([
+                'user_id' => $user->id, 'station_id' => $station->id,
+                'created_at' => now(), 'updated_at' => now(),
+            ]);
+        }
+        $this->assertFalse($user->hasCompletedMandatoryStations());
+        $this->actingAs($user)->get(route('congrats'))->assertRedirect(route('map'));
+        $payload = ['station' => $last->id, 'qrCodeMessage' => 'station'.$last->id];
+        $this->postJson(route('process_qr_code'), $payload)
+            ->assertOk()->assertJson(['redirect_url' => route('congrats')]);
+        $this->assertTrue($user->hasCompletedMandatoryStations());
+        $this->withoutVite();
+        $this->get(route('congrats'))->assertOk()->assertSee('CONTINUE JOURNEY')
+            ->assertSee('href="'.route('map').'"', false);
+        $this->postJson(route('process_qr_code'), $payload)
+            ->assertOk()->assertJson(['redirect_url' => null]);
+    }
+
+    public function test_no_mandatory_stations_does_not_count_as_completion(): void
+    {
+        $this->assertFalse(User::create([])->hasCompletedMandatoryStations());
     }
 
     public function test_booth_route_is_accepted_as_the_default_qr(): void

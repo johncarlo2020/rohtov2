@@ -54,6 +54,15 @@ class User extends Authenticatable
         'alliance_bank' => 'boolean',
     ];
 
+    public function hasCompletedMandatoryStations(): bool
+    {
+        $mandatory = Station::where('is_mandatory', true);
+
+        return (clone $mandatory)->exists() && ! $mandatory->whereNotIn(
+            'id', $this->stationUser()->select('station_id')
+        )->exists();
+    }
+
     public function stationUser()
     {
         return $this->hasMany(StationUser::class);

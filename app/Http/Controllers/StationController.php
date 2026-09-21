@@ -617,7 +617,7 @@ class StationController extends Controller
         //check if user complete atlist one station
 
 
-        if ($stationDone < 5) {
+        if (! $user->hasCompletedMandatoryStations()) {
             return view('dashboard', compact('stations', 'stationDone', 'canAccessStation5'));
         } else {
             return redirect()->route('congrats');
@@ -635,6 +635,7 @@ class StationController extends Controller
     {
         $request->validate(['station' => 'required|integer|exists:stations,id', 'qrCodeMessage' => 'required|string|max:2048']);
         $station = Station::findOrFail($request->station);
+        $journeyWasComplete = $request->user()->hasCompletedMandatoryStations();
         abort_unless($station->is_mandatory || $request->user()->isCardApply, 403, 'Head over to Card Sales Booth to unlock this station.');
         // Parse the URL to get the query string
 
@@ -736,7 +737,11 @@ class StationController extends Controller
             ];
             \Log::info('Station ID updated from user', $logData);
 
-            return response()->json(['message' => 'Station ID updated successfully'], 200);
+            return response()->json([
+                'message' => 'Station ID updated successfully',
+                'redirect_url' => ! $journeyWasComplete && $request->user()->hasCompletedMandatoryStations()
+                    ? route('congrats') : null,
+            ], 200);
         } catch (\Exception $e) {
             DB::rollback();
 

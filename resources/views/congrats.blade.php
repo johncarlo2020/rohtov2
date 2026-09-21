@@ -1,21 +1,12 @@
 <x-app-layout>
-    <div class="container-fluid home start completed-screen pt-4">
-        <div class="mb-3 branding-container">
-            @include('components.branding')
-        </div>
-        <div class="congrats-container">
-            <h1 class="text-center main-color font-medium mb-2">Visit</h1>
-            <div class="product-image mb-3 px-5">
-                <a href="">
-
-                <img class="" src="{{ asset('images/congrats.webp') }}" alt="" />
-
-                </a>
-            </div>
-           <p class="text-center main-color font-medium mb-3 ">
-             for more information
-           </p>
-        </div>
-    </div>
-    </div>
+    <main class="journey-complete">
+        <img class="journey-complete-logo" src="{{ asset('files/main/logo.webp') }}" alt="Maybank" />
+        <h1>DISCOVER <strong>MORE</strong></h1>
+        <p class="journey-complete-message">Congratulations!<br>You’ve completed the journey.</p>
+        <figure>
+            <img src="{{ asset('files/main/maybank_card.webp') }}" alt="Maybank Cash Back Mastercard Platinum" />
+            <figcaption>Maybank Cash Back<br>Mastercard Platinum</figcaption>
+        </figure>
+        <a class="journey-complete-continue" href="{{ route('map') }}">CONTINUE JOURNEY</a>
+    </main>
 </x-app-layout>

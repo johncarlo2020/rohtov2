@@ -14,30 +14,27 @@ class UserController extends Controller
 {
     public function users()
     {
-        $stations = Station::all();
+        $stations = Station::orderBy('id')->get();
         $permission = 'default'; // Replace with actual permission logic if available
         return view('users-datatable', ['data' => ['stations' => $stations], 'permission' => $permission]);
     }
 
     public function getUsersForDataTable(Request $request)
     {
-        $draw = $request->get('draw');
-        $start = $request->get("start");
-        $rowperpage = $request->get("length"); // Rows display per page
+        $draw = $request->integer('draw', 1);
+        $start = max(0, $request->integer('start', 0));
+        $rowperpage = min(100, max(1, $request->integer('length', 10)));
+        $columnIndex = $request->input('order.0.column', 0);
+        $columnName = $request->input("columns.$columnIndex.data", 'id');
+        $allowedColumns = ['id', 'name', 'email', 'number', 'country', 'email_consent',
+            'isCardApply', 'terms', 'marketing', 'age_confirmed', 'created_at'];
+        if (! in_array($columnName, $allowedColumns, true)) $columnName = 'id';
+        $columnSortOrder = $request->input('order.0.dir') === 'asc' ? 'asc' : 'desc';
+        $searchValue = trim((string) $request->input('search.value', ''));
 
-        $columnIndex_arr = $request->get('order');
-        $columnName_arr = $request->get('columns');
-        $order_arr = $request->get('order');
-        $search_arr = $request->get('search');
+        $totalRecords = User::participants()->count();
 
-        $columnIndex = $columnIndex_arr[0]['column']; // Column index
-        $columnName = $columnName_arr[$columnIndex]['data']; // Column name
-        $columnSortOrder = $order_arr[0]['dir']; // asc or desc
-        $searchValue = $search_arr['value']; // Search value
-
-        $totalRecords = User::count();
-
-        $query = User::query()->select('users.*');
+        $query = User::participants()->select('users.*');
 
         if (!empty($searchValue)) {
             $query->where(function($q) use ($searchValue) {
@@ -56,29 +53,30 @@ class UserController extends Controller
             $query->orderBy($columnName, $columnSortOrder);
         }
 
-        $records = $query->skip($start)
+        if ($columnName !== 'id') $query->orderBy('id', $columnSortOrder);
+
+        $records = $query->with('stationUser')->skip($start)
             ->take($rowperpage)
             ->get();
 
         $data_arr = array();
-        $stations = Station::all();
+        $stations = Station::orderBy('id')->get();
 
         foreach($records as $record){
 
             $user_stations = [];
             foreach ($stations as $station) {
-                $user_station_value = $record->stationUser()->where('station_id', $station->id)->first();
+                $user_station_value = $record->stationUser->firstWhere('station_id', $station->id);
                 $display_value = 'No';
 
                 if ($user_station_value) {
                     $date = \Carbon\Carbon::parse($user_station_value->created_at)->format('F j g:i A');
                     $display_value = 'Yes (' . $date . ')';
-                } elseif ($station->id == 6 && $record->hasRedeemed == 1) {
-                    // If it's station 6 and user has hasRedeemed flag, show as redeemed
-                    $display_value = 'Yes (Redeemed)';
                 }
 
                 $user_stations[] = [
+                    'id' => $station->id,
+                    'completed' => $user_station_value !== null,
                     'name' => $station->name,
                     'value' => $user_station_value ? $user_station_value->time_spent : null,
                     'display_value' => $display_value,
@@ -96,14 +94,14 @@ class UserController extends Controller
                 "name" => $record->fname . ' ' . $record->lname,
                 "fname" => $record->fname,
                 "lname" => $record->lname,
-                "dob" => $record->dob,
                 "email" => $record->email,
                 "number" => $record->number,
                 "country" => $record->country,
-                "utm_source" => $record->utm_source,
-                "sms_consent" => $record->sms_consent ? 'Yes' : 'No',
                 "email_consent" => $record->email_consent ? 'Yes' : 'No',
-                "alliance_bank" => $record->alliance_bank ? 'Yes' : 'No',
+                "isCardApply" => $record->isCardApply ? 'Yes' : 'No',
+                "terms" => $record->terms ? 'Yes' : 'No',
+                "marketing" => $record->marketing ? 'Yes' : 'No',
+                "age_confirmed" => $record->age_confirmed ? 'Yes' : 'No',
                 "created_at" => $record->created_at->format('Y-m-d H:i:s'),
                 "stations" => $user_stations,
             );
@@ -111,6 +109,9 @@ class UserController extends Controller
 
         $response = array(
             "draw" => intval($draw),
+            "recordsTotal" => $totalRecords,
+            "recordsFiltered" => $totalRecordswithFilter,
+            "data" => $data_arr,
             "iTotalRecords" => $totalRecords,
             "iTotalDisplayRecords" => $totalRecordswithFilter,
             "aaData" => $data_arr
@@ -121,7 +122,7 @@ class UserController extends Controller
 
     public function export(Request $request)
     {
-        $stations = Station::all();
+        $stations = Station::orderBy('id')->get();
         $headers = [
             'Content-Type' => 'text/csv',
             'Content-Disposition' => 'attachment; filename="users.csv"',
@@ -132,15 +133,15 @@ class UserController extends Controller
 
             // Add CSV headers
             $csv_headers = [
-                'ID', 'Name', 'Date of Birth', 'Email', 'Number', 'Country', 'UTM Source',
-                'SMS Consent', 'Email Consent', 'Alliance Bank', 'Created At'
+                'ID', 'Name', 'Email', 'Number', 'Country',
+                'Email Consent', 'Card applied', 'Terms accepted', 'Marketing consent', 'Age 21+ confirmed', 'Created At'
             ];
             foreach ($stations as $station) {
                 $csv_headers[] = $station->name;
             }
             fputcsv($handle, $csv_headers);
 
-            User::cursor()->each(function ($user) use ($handle, $stations) {
+            User::participants()->cursor()->each(function ($user) use ($handle, $stations) {
 
                 // Check if user was created after August 11, 2025
                 $cutoffDate = \Carbon\Carbon::create(2025, 8, 11, 23, 59, 59);
@@ -151,14 +152,14 @@ class UserController extends Controller
                 $data = [
                     $idWithBadge,
                     $user->fname . ' ' . $user->lname,
-                    $user->dob,
                     $user->email,
                     $user->number,
                     $user->country,
-                    $user->utm_source,
-                    $user->sms_consent ? 'Yes' : 'No',
                     $user->email_consent ? 'Yes' : 'No',
-                    $user->alliance_bank ? 'Yes' : 'No',
+                    $user->isCardApply ? 'Yes' : 'No',
+                    $user->terms ? 'Yes' : 'No',
+                    $user->marketing ? 'Yes' : 'No',
+                    $user->age_confirmed ? 'Yes' : 'No',
                     $user->created_at->format('Y-m-d H:i:s'),
                 ];
 

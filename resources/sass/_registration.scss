@@ -200,3 +200,26 @@
     .participant-welcome-card { height: 166px; display: flex; align-items: center; justify-content: center; }
     .participant-welcome-card img { width: 292px; max-width: 100%; transform: rotate(18deg); }
 }
+
+// The welcome screen scrolls with the document instead of the fixed-height event shell.
+html.welcome-document, body.welcome-document {
+    height: auto; min-height: 100%; overflow-x: hidden; overflow-y: auto;
+    background: #000;
+}
+body.welcome-document .participant-welcome {
+    .participant-welcome-shell {
+        padding: max(32px, env(safe-area-inset-top)) 24px max(36px, env(safe-area-inset-bottom));
+    }
+    .participant-welcome-actions a { min-height: 44px; }
+    @media (max-width: 374px) {
+        p, figure figcaption { font-size: 17px; }
+        .participant-welcome-logo { width: 150px; margin-bottom: 44px; }
+        h1 { font-size: 27px; strong { font-size: 46px; } }
+    }
+    @media (max-height: 740px) {
+        .participant-welcome-logo { margin-bottom: 32px; }
+        h1 { margin-bottom: 20px; }
+        p { margin-bottom: 18px; }
+        figure { margin-top: 20px; }
+    }
+}

@@ -98,23 +98,20 @@ class StationController extends Controller
 
     public function editUser(Request $request)
     {
+        $request->validate(['isCardApply' => 'required|boolean']);
         $user = User::find($request->id);
 
         if ($user) {
             $user->email = $request->email;
-            $user->alliance_bank = $request->alliance_bank;
-            if ($request->has('dob')) {
-                $user->dob = $request->dob;
-            }
+            $user->isCardApply = $request->boolean('isCardApply');
             $user->save();
 
             return response()->json([
                 'success' => true,
-                'message' => 'User email, DOB, and Alliance Bank status updated successfully',
+                'message' => 'User email and card application status updated successfully',
                 'data' => [
                     'email' => $user->email,
-                    'dob' => $user->dob,
-                    'alliance_bank' => $user->alliance_bank
+                    'isCardApply' => $user->isCardApply
                 ]
             ]);
         }
@@ -633,121 +630,39 @@ class StationController extends Controller
 
     public function scan(Request $request)
     {
-        $request->validate(['station' => 'required|integer|exists:stations,id', 'qrCodeMessage' => 'required|string|max:2048']);
-        $station = Station::findOrFail($request->station);
-        $journeyWasComplete = $request->user()->hasCompletedMandatoryStations();
+        $data = $request->validate([
+            'station' => 'required|integer|exists:stations,id',
+            'qrCodeMessage' => 'required|string|max:2048',
+        ]);
+        $station = Station::findOrFail($data['station']);
         abort_unless($station->is_mandatory || $request->user()->isCardApply, 403, 'Head over to Card Sales Booth to unlock this station.');
-        // Parse the URL to get the query string
 
-        $qrCodeMessage = trim($request->qrCodeMessage);
+        if (! hash_equals(route('station', $station), trim($data['qrCodeMessage']))) {
+            return response()->json(['message' => 'Invalid QR Code'], 422);
+        }
 
-        // Get the last character of the QR code message
-        $station_id = substr($qrCodeMessage, -1);
-
-
-        // Assume that `$station_id` is validated before this point
-
-        try {
-            DB::beginTransaction();
-
-            if ($request->station == 7 && $request->user()->hasRole('admin')) {
-
-                $qrMessage = $request->qrCodeMessage;
-
-
-                $expectedBase = 'https://oceanorplastic.experienceloccitane.com/' . 'user?id=';
-                if (Str::startsWith($qrMessage, $expectedBase)) {
-                    $id = Str::after($qrMessage, $expectedBase);
-                }
-
-                // if (!Str::startsWith($qrMessage, $expectedBase)) {
-                //     return response()->json([
-                //         'message' => 'Invalid QR code. Please try again.',
-                //         'status' => 'invalid'
-                //     ], 200);
-                // }
-
-                abort_unless(isset($id) && ctype_digit((string) $id), 422, 'Invalid QR Code');
-                $targetUser = User::findOrFail($id);
-                abort_unless($station->is_mandatory || $targetUser->isCardApply, 403, 'Card application required.');
-                $check = StationUser::where('user_id', $id)->where('station_id', 7)->exists();
-                if ($check) {
-                    return response()->json([
-                        'message' => 'You have already redeemed this QR code.',
-                        'status' => 'already_redeemed'
-                    ], 200);
-                }
-
-                $stationUser = new StationUser();
-                $stationUser->user_id = $id;
-                $stationUser->station_id = $request->station;
-                $stationUser->time_spent = 0;
-                $stationUser->save();
-
-                DB::commit();
-
-                return response()->json([
-                    'message' => 'Successfully attended.',
-                    'status' => 'success'
-                ], 200);
+        return DB::transaction(function () use ($request, $station) {
+            // Serialize check-ins for this participant so repeated scans cannot add duplicate stamps.
+            $user = User::whereKey($request->user()->id)->lockForUpdate()->firstOrFail();
+            $journeyWasComplete = $user->hasCompletedMandatoryStations();
+            $existing = $user->stationUser()->where('station_id', $station->id)->exists();
+            if (! $existing) {
+                $lastStation = $user->stationUser()->latest('created_at')->first();
+                $startedAt = $lastStation?->created_at ?? $user->last_login_at ?? now();
+                $record = new StationUser();
+                $record->user_id = $user->id;
+                $record->station_id = $station->id;
+                $record->time_spent = max(0, (int) Carbon::parse($startedAt)->diffInSeconds(now()));
+                $record->save();
             }
-
-            if ($station_id != $request->station) {
-                return response()->json(['message' => 'Invalid Qr', 'status' => 'error'], 401);
-            }
-
-
-
-            $lastStation = StationUser::where('user_id', auth()->id())->orderBy('id', 'desc')->first();
-
-            if (empty($lastStation)) {
-                $lastLoginTime = Auth::user()->last_login_at;
-                $currentDateTime = Carbon::now();
-                $timeSpent = $currentDateTime->diff($lastLoginTime);
-                $minutesSpent = $timeSpent->i; // Minutes spent
-                $secondsDifference = $timeSpent->s; // Seconds
-
-                // Convert minutes to seconds
-                $secondsSpent = $minutesSpent * 60 + $secondsDifference;
-            } else {
-                $lastLoginTime = $lastStation->created_at;
-                $currentDateTime = Carbon::now();
-                $timeSpent = $currentDateTime->diff($lastLoginTime);
-                $minutesSpent = $timeSpent->i; // Minutes spent
-                $secondsDifference = $timeSpent->s; // Seconds
-                // Convert minutes to seconds
-                $secondsSpent = $minutesSpent * 60 + $secondsDifference;
-            }
-
-            $stationUser = new StationUser();
-            $stationUser->user_id = auth()->id();
-            $stationUser->station_id = $station_id;
-            $stationUser->time_spent = $secondsSpent;
-            $stationUser->save();
-            DB::commit();
-            // Success response
-
-
-            //logger
-            $logData = [
-                'user_id' => auth()->id(),
-                'station_id' => $station_id,
-                'time_spent' => $secondsSpent,
-                'created_at' => now(),
-            ];
-            \Log::info('Station ID updated from user', $logData);
 
             return response()->json([
-                'message' => 'Station ID updated successfully',
-                'redirect_url' => ! $journeyWasComplete && $request->user()->hasCompletedMandatoryStations()
+                'message' => 'Check-in Successful',
+                'completed' => true,
+                'redirect_url' => ! $journeyWasComplete && $user->hasCompletedMandatoryStations()
                     ? route('congrats') : null,
-            ], 200);
-        } catch (\Exception $e) {
-            DB::rollback();
-
-            // Handle the error, log it, or return an appropriate response
-            return response()->json(['error' => $e], 500);
-        }
+            ]);
+        });
     }
 
 
@@ -757,14 +672,14 @@ class StationController extends Controller
         $permission = $admin->getPermissionNames()->first();
         $today = Carbon::today();
         $startDate = Carbon::create(2024, 9, 24);
-        $data['users'] = User::with('stationUser')->take(4)->orderBy('id', 'desc')->get();
-        $data['usersCount'] = User::whereDate('created_at', '>=', $startDate->toDateString())->count();
-        $data['userToday'] = User::whereDate('created_at', $today)->count();
-        $data['country'] = User::selectRaw('country , COUNT(*) as count')->groupBy('country')->where('country' ,'!=','admin')->get();
+        $data['users'] = User::participants()->with('stationUser')->take(4)->orderBy('id', 'desc')->get();
+        $data['usersCount'] = User::participants()->whereDate('created_at', '>=', $startDate->toDateString())->count();
+        $data['userToday'] = User::participants()->whereDate('created_at', $today)->count();
+        $data['country'] = User::participants()->selectRaw('country , COUNT(*) as count')->groupBy('country')->where('country' ,'!=','admin')->get();
 
 
 
-        $usersWithSixStationUsers = User::with('stationUser')->whereDate('created_at', '>=', $startDate->toDateString())->has('stationUser', '>=', 5)->count();
+        $usersWithSixStationUsers = User::participants()->with('stationUser')->whereDate('created_at', '>=', $startDate->toDateString())->has('stationUser', '>=', 5)->count();
         // dd($usersWithSixStationUsers);
         $data['completedUsers'] = $usersWithSixStationUsers;
         // dd($usersWithSixStationUsers);
@@ -774,13 +689,13 @@ class StationController extends Controller
         } else {
             $data['percentage'] = 0; // Avoid division by zero
         }
-        $userCounts = User::selectRaw('DATE(created_at) as date, COUNT(*) as count')->groupBy('date')->orderBy('date')->get()->toArray();
+        $userCounts = User::participants()->selectRaw('DATE(created_at) as date, COUNT(*) as count')->groupBy('date')->orderBy('date')->get()->toArray();
 
         $userCountsArray = [];
-        $data['dates'] = User::select(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as date'))->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())->groupBy('date')->get();
+        $data['dates'] = User::participants()->select(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as date'))->where(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'), '>=', $startDate->toDateString())->groupBy('date')->get();
 
         //   dd($data['where']);
-        $data['registrationsPerHour'] = User::select(
+        $data['registrationsPerHour'] = User::participants()->select(
                 DB::raw('DATE(created_at) as date'),
                 DB::raw('LOWER(DATE_FORMAT(created_at, "%l%p")) as hour'),
                 DB::raw('COUNT(*) as registrations')
@@ -798,9 +713,9 @@ class StationController extends Controller
             }
         }
         $data['usersDaily'] = $userCountsArray;
-        // $completed = StationUser::w
+        // $completed = StationUser::participants()->w
 
-        $averageTimespentByStation = StationUser::select('station_id', \DB::raw('AVG(time_spent) as average_timespent'))->groupBy('station_id')->get()->keyBy('station_id');
+        $averageTimespentByStation = StationUser::participants()->select('station_id', \DB::raw('AVG(time_spent) as average_timespent'))->groupBy('station_id')->get()->keyBy('station_id');
 
         $stations = Station::pluck('name', 'id');
 
@@ -822,7 +737,7 @@ class StationController extends Controller
             $user->completed_count = $numStations;
         }
 
-        $data['stations'] = $stations->map(function ($name, $id) use ($userStations, $averageTimespentByStation) {
+        $data['stations'] = $stations->map(function ($name, $id) use ($averageTimespentByStation) {
             return [
                 'name' => $name,
                 'average_timespent' => number_format(($averageTimespentByStation->get($id)['average_timespent'] ?? 0) / 60, 2),
@@ -831,7 +746,7 @@ class StationController extends Controller
         });
 
 
-        $averagePlaytimeByUser = StationUser::select('user_id', DB::raw('SUM(time_spent) / 60 as total_playtime'))->groupBy('user_id')->get();
+        $averagePlaytimeByUser = StationUser::participants()->select('user_id', DB::raw('SUM(time_spent) / 60 as total_playtime'))->groupBy('user_id')->get();
 
         $totalAveragePlaytime = $averagePlaytimeByUser->avg('total_playtime');
         // dd($totalAveragePlaytime);
@@ -878,7 +793,7 @@ class StationController extends Controller
         $keyword = $request->get('keyword');
 
         $startDate = Carbon::create(2025, 6, 24);
-        $query = User::query();
+        $query = User::participants();
         // Apply date range filters
         $query->whereDate('created_at', '>=', $startDate->toDateString());
         if ($start_date) {
@@ -954,7 +869,7 @@ class StationController extends Controller
         $permission = auth()->user()->getPermissionNames()->first();
         $selectedDate = $date ? Carbon::parse($date) : null;
 
-        $query = User::query();
+        $query = User::participants();
 
         if ($keyword) {
             // If keyword is present, search by keyword and ignore date filter
@@ -1019,14 +934,14 @@ class StationController extends Controller
                 'id' => $user->id,
                 'fname' => $user->fname,
                 'lname' => $user->lname,
-                'dob' => $user->dob,
                 'email' => $user->email,
                 'number' => $user->number,
                 'country' => $user->country,
-                'utm_source' => $user->utm_source,
-                'sms_consent' => $user->sms_consent,
                 'email_consent' => $user->email_consent,
-                'alliance_bank' => $user->alliance_bank,
+                'isCardApply' => $user->isCardApply,
+                'terms' => $user->terms,
+                'marketing' => $user->marketing,
+                'age_confirmed' => $user->age_confirmed,
                 'created_at' => $user->created_at ? \Carbon\Carbon::parse($user->created_at)->format('d M h:i A') : 'N/A',
                 'stations' => $user_stations,
                 'redeem_date' => $redeem_date_string,

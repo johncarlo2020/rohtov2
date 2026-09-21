@@ -41,7 +41,8 @@
 
                 <div class="p-2 pb-0 card-header">
                     <div class="d-flex justify-content-between">
-                        <h6 class="mb-2">Customer</h6>
+                        <h6 class="mb-2">Participants</h6>
+                        <small>Stations: grey = pending · gold ✓ = completed</small>
                     </div>
                 </div>
                 <!-- Loader shown while DataTable initializes -->
@@ -57,19 +58,17 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Name</th>
-                                <th>Date of birth</th>
                                 <th>Email</th>
                                 <th>Number</th>
                                 <th>Country</th>
-                                <th>UTM Source</th>
-                                <th>SMS</th>
                                 <th>Email consent</th>
-                                <th>Alliance Bank</th>
+                                <th>Card applied</th>
+                                <th>Terms accepted</th>
+                                <th>Marketing consent</th>
+                                <th>Age 21+ confirmed</th>
 
                                 <th>Created At</th>
-                                @foreach ($data['stations'] as $station)
-                                    <th>{{ $station['name'] }}</th>
-                                @endforeach
+                                <th>Stations</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -118,27 +117,54 @@
                     }
                 },
                 { data: 'name', name: 'name' },
-                { data: 'dob', name: 'dob' },
                 { data: 'email', name: 'email' },
                 { data: 'number', name: 'number' },
                 { data: 'country', name: 'country' },
-                { data: 'utm_source', name: 'utm_source' },
-                { data: 'sms_consent', name: 'sms_consent' },
                 { data: 'email_consent', name: 'email_consent' },
-                { data: 'alliance_bank', name: 'alliance_bank' },
+                { data: 'isCardApply', name: 'isCardApply' },
+                { data: 'terms', name: 'terms' },
+                { data: 'marketing', name: 'marketing' },
+                { data: 'age_confirmed', name: 'age_confirmed' },
                 { data: 'created_at', name: 'created_at' },
-                    @foreach ($data['stations'] as $station)
-                        {
-                            data: 'stations.{{ $loop->index }}.display_value',
-                            name: 'stations.{{ $loop->index }}.display_value',
-                            orderable: false,
-                            searchable: false
-                        },
-                    @endforeach
+                {
+                    data: 'stations', orderable: false, searchable: false,
+                    render: function(stations, type) {
+                        if (type !== 'display') return stations.filter(station => station.completed).length;
+                        const group = document.createElement('div');
+                        group.className = 'participant-stations';
+                        stations.forEach(station => {
+                            const circle = document.createElement('span');
+                            circle.className = 'participant-station ' + (station.completed ? 'is-completed' : 'is-pending');
+                            circle.textContent = station.id;
+                            circle.title = station.name + ': ' + (station.completed ? 'Completed' : 'Pending');
+                            circle.setAttribute('aria-label', circle.title);
+                            if (station.completed) {
+                                const check = document.createElement('span');
+                                check.className = 'participant-station-check';
+                                check.textContent = '✓';
+                                check.setAttribute('aria-hidden', 'true');
+                                circle.appendChild(check);
+                            }
+                            group.appendChild(circle);
+                        });
+                        return group.outerHTML;
+                    }
+                },
             ],
-            dom: "<'row'<'col-sm-12 col-md-6'><'col-sm-12 col-md-6 d-flex justify-content-end'fB>>" +
-                 "<'row'<'col-sm-12 table-responsive my-2 custom-table'tr>>" +
-                 "<'row'<'col-sm-12 col-md-5'li><'col-sm-12 col-md-7'p>>",
+            dom: "<'participant-table-toolbar'lfB>" +
+                 "<'table-responsive custom-table'tr>" +
+                 "<'participant-table-footer'ip>",
+            pageLength: 10,
+            lengthMenu: [10, 25, 50, 100],
+            pagingType: 'simple_numbers',
+            language: {
+                lengthMenu: 'Show _MENU_',
+                info: '_START_–_END_ of _TOTAL_ participants',
+                infoEmpty: 'No participants',
+                paginate: { previous: 'Previous', next: 'Next' },
+                emptyTable: 'No participants yet',
+                zeroRecords: 'No matching participants'
+            },
             searching: true,
             buttons: [
                 {

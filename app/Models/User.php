@@ -54,6 +54,13 @@ class User extends Authenticatable
         'alliance_bank' => 'boolean',
     ];
 
+    public function scopeParticipants($query)
+    {
+        return $query->role('client')->whereDoesntHave('roles', function ($roles) {
+            $roles->where('name', 'admin');
+        });
+    }
+
     public function hasCompletedMandatoryStations(): bool
     {
         $mandatory = Station::where('is_mandatory', true);

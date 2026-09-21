@@ -65,19 +65,17 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Name</th>
-                                <th>Date of birth</th>
                                 <th>Email</th>
                                 <th>Number</th>
                                 <th>Country</th>
-                                <th>UTM Source</th>
-                                <th>SMS</th>
                                 <th>Email consent</th>
-                                <th>Alliance Bank</th>
+                                <th>Card applied</th>
+                                <th>Terms accepted</th>
+                                <th>Marketing consent</th>
+                                <th>Age 21+ confirmed</th>
 
                                 <th>Created At</th>
-                                @foreach ($data['stations'] as $station)
-                                    <th>{{ $station['name'] }}</th>
-                                @endforeach
+                                <th>Stations</th>
                                 <th>Redeem date</th>
                             </tr>
                         </thead>
@@ -86,24 +84,25 @@
                                 <tr data-user-id="{{ $user['id'] }}">
                                     <td>{{ $user['id'] }}</td>
                                     <td>{{ $user['fname'] }} {{ $user['lname'] }}</td>
-                                    <td>
-                                        {{ $user['dob'] }}
-                                    </td>
                                     <td>{{ $user['email'] }}</td>
                                     <td>{{ $user['number'] }}</td>
                                     <td>{{ $user['country'] }}</td>
-                                    <td>{{ $user['utm_source'] }}</td>
-                                    <td>{{ $user['sms_consent'] ? 'Yes' : 'No' }}</td>
                                     <td>{{ $user['email_consent'] ? 'Yes' : 'No' }}</td>
-                                    <td>{{ $user['alliance_bank'] ? 'Yes' : 'No' }}</td>
+                                    <td>{{ $user['isCardApply'] ? 'Yes' : 'No' }}</td>
+                                    <td>{{ $user['terms'] ? 'Yes' : 'No' }}</td>
+                                    <td>{{ $user['marketing'] ? 'Yes' : 'No' }}</td>
+                                    <td>{{ $user['age_confirmed'] ? 'Yes' : 'No' }}</td>
 
 
                                     <td>{{ $user['created_at'] }}</td>
-                                    @foreach ($user['stations'] as $station)
-                                        <td class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-danger' }}">
-                                            {{ $station['display_value'] }}
-                                        </td>
-                                    @endforeach
+                                    <td><div class="participant-stations">
+                                        @foreach ($user['stations'] as $station)
+                                            <span class="participant-station {{ $station['value'] ? 'is-completed' : 'is-pending' }}" title="{{ $station['name'] }}: {{ $station['value'] ? 'Completed' : 'Pending' }}">
+                                                {{ $station['id'] }}
+                                                @if($station['value'])<span class="participant-station-check" aria-label="Completed">✓</span>@endif
+                                            </span>
+                                        @endforeach
+                                    </div></td>
                                     <td>
                                         {{ $user['redeem_date'] }}
                                 </tr>

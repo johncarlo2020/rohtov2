@@ -22,6 +22,9 @@ class CardApplicationTest extends TestCase
         ]);
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->string('email')->nullable();
+            $table->string('dob')->nullable();
+            $table->boolean('alliance_bank')->default(false);
             $table->timestamps();
         });
         (require database_path('migrations/2026_09_21_000000_add_is_card_apply_to_users_table.php'))->up();
@@ -47,6 +50,23 @@ class CardApplicationTest extends TestCase
         parent::tearDown();
     }
 
+    public function test_admin_edit_saves_card_application_status(): void
+    {
+        $this->withoutMiddleware(\App\Http\Middleware\AdminMiddleware::class);
+        $user = User::create(['email' => 'participant@example.com']);
+        foreach (['1' => true, '0' => false] as $value => $expected) {
+            $this->postJson(route('editUser'), [
+                'id' => $user->id, 'email' => $user->email, 'isCardApply' => (string) $value,
+            ])->assertOk()->assertJsonPath('data.isCardApply', $expected);
+            $this->assertSame($expected, $user->fresh()->isCardApply);
+            $this->assertFalse($user->fresh()->alliance_bank);
+        }
+        $this->postJson(route('editUser'), [
+            'id' => $user->id, 'email' => $user->email, 'isCardApply' => 'invalid',
+        ])->assertUnprocessable();
+        $this->assertFalse($user->fresh()->isCardApply);
+    }
+
     public function test_final_mandatory_scan_redirects_to_completion_page(): void
     {
         $user = User::create([])->fresh();
@@ -62,15 +82,27 @@ class CardApplicationTest extends TestCase
         }
         $this->assertFalse($user->hasCompletedMandatoryStations());
         $this->actingAs($user)->get(route('congrats'))->assertRedirect(route('map'));
-        $payload = ['station' => $last->id, 'qrCodeMessage' => 'station'.$last->id];
+        $payload = ['station' => $last->id, 'qrCodeMessage' => route('station', $last)];
         $this->postJson(route('process_qr_code'), $payload)
             ->assertOk()->assertJson(['redirect_url' => route('congrats')]);
         $this->assertTrue($user->hasCompletedMandatoryStations());
+        $this->assertSame(1, $user->stationUser()->where('station_id', $last->id)->count());
         $this->withoutVite();
         $this->get(route('congrats'))->assertOk()->assertSee('CONTINUE JOURNEY')
             ->assertSee('href="'.route('map').'"', false);
         $this->postJson(route('process_qr_code'), $payload)
             ->assertOk()->assertJson(['redirect_url' => null]);
+        $this->assertSame(1, $user->stationUser()->where('station_id', $last->id)->count());
+    }
+
+    public function test_station_qr_must_match_the_full_station_url(): void
+    {
+        $user = User::create([]);
+        $station = Station::create(['name' => 'Shop for More', 'is_mandatory' => true]);
+        $this->actingAs($user)->postJson(route('process_qr_code'), [
+            'station' => $station->id, 'qrCodeMessage' => 'invalid'.$station->id,
+        ])->assertUnprocessable();
+        $this->assertSame(0, $user->stationUser()->count());
     }
 
     public function test_no_mandatory_stations_does_not_count_as_completion(): void

@@ -83,26 +83,27 @@
                                             <input class="form-control" type="text" disabled value="{{ $user->number }}">
                                         </div>
                                     </div>
-                                     <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="example-text-input" class="form-control-label">Date of birth</label>
-                                            <input id="dob" class="form-control" type="date" disabled value="{{ $user->dob }}">
+
+                                    @foreach (['terms' => 'Terms accepted', 'marketing' => 'Marketing consent', 'age_confirmed' => 'Age 21+ confirmed'] as $field => $label)
+                                        <div class="col-md-4 mb-3">
+                                            <span class="form-control-label d-block">{{ $label }}</span>
+                                            <span class="badge {{ $user->$field ? 'bg-success' : 'bg-secondary' }}">{{ $user->$field ? 'Yes' : 'No' }}</span>
                                         </div>
-                                    </div>
+                                    @endforeach
                                     <div class="form-group col-6">
-                                        <label for="allianceBankRadio" class="form-control-label">Alliance Bank</label>
+                                        <label id="cardAppliedLabel" class="form-control-label">Card applied</label>
                                         <div>
                                             <div class="form-check form-check-inline">
-                                                <input id="allianceBankYes" name="allianceBank" class="form-check-input"
-                                                    type="radio" value="1"
-                                                    {{ $user->alliance_bank ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="allianceBankYes">Yes</label>
+                                                <input id="cardAppliedYes" name="cardApplied" class="form-check-input"
+                                                    type="radio" value="1" disabled aria-labelledby="cardAppliedLabel cardAppliedYesLabel"
+                                                    {{ $user->isCardApply ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="cardAppliedYes" id="cardAppliedYesLabel">Yes</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input id="allianceBankNo" name="allianceBank" class="form-check-input"
-                                                    type="radio" value="0"
-                                                    {{ !$user->alliance_bank ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="allianceBankNo">No</label>
+                                                <input id="cardAppliedNo" name="cardApplied" class="form-check-input"
+                                                    type="radio" value="0" disabled aria-labelledby="cardAppliedLabel cardAppliedNoLabel"
+                                                    {{ !$user->isCardApply ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="cardAppliedNo" id="cardAppliedNoLabel">No</label>
                                             </div>
                                         </div>
                                     </div>
@@ -197,17 +198,15 @@
             $('#editBtn').click(function() {
                 console.log('Edit button clicked'); // Debug log
                 $('#emailInput').prop('disabled', false);
-                $('#dob').prop('disabled', false); // Enable DOB input
                 $('#submitBtn').removeClass('d-none');
                 console.log('Submit button should now be visible'); // Debug log
-                $('input[name="allianceBank"]').prop('disabled', false); // Enable radio buttons
+                $('input[name="cardApplied"]').prop('disabled', false); // Enable radio buttons
             });
 
             $('#submitBtn').click(function() {
                 var userId = {{ $user->id }};
                 var email = $('#emailInput').val();
-                var dob = $('#dob').val(); // Get DOB value
-                var allianceBank = $('input[name="allianceBank"]:checked').val(); // Get selected radio value
+                var cardApplied = $('input[name="cardApplied"]:checked').val(); // Get selected radio value
                 var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
                 $.ajax({
@@ -219,15 +218,13 @@
                     data: {
                         id: userId,
                         email: email,
-                        dob: dob, // Include DOB in the request
-                        alliance_bank: allianceBank // Include allianceBank in the request
+                        isCardApply: cardApplied // Include cardApplied in the request
                     },
                     success: function(response) {
                         if (response.success) {
                             $('#emailInput').prop('disabled', true);
-                            $('#dob').prop('disabled', true); // Disable DOB input
                             $('#submitBtn').addClass('d-none');
-                            $('input[name="allianceBank"]').prop('disabled', true); // Disable radio buttons again
+                            $('input[name="cardApplied"]').prop('disabled', true); // Disable radio buttons again
                             toastr.success('User details updated successfully!');
                         } else {
                             alert('Error: ' + response.message);

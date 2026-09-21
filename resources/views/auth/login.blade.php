@@ -27,7 +27,7 @@
                 <button class="registration-submit" type="submit">LOGIN</button>
             </form>
 
-            <p class="registration-login">Haven't Register?<br>
+            <p class="registration-login">Haven’t registered yet?<br>
                 Click <a href="{{ route('register') }}"><u>here</u></a> to register
             </p>
         </div>

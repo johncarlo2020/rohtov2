@@ -32,7 +32,7 @@ class RegistrationWithoutOtpTest extends TestCase
             $permissions->up();
             $this->assertSame(0, Role::count());
 
-            $this->post('/pre-reg', [
+            $this->post('/register', [
                 'full_name' => 'Test User', 'email' => 'test@example.com',
                 'number' => '012-345 6789', 'terms' => '1', 'age_confirmed' => '1',
             ])->assertSessionHasNoErrors()->assertRedirect(route('map'));
@@ -50,13 +50,13 @@ class RegistrationWithoutOtpTest extends TestCase
             $this->assertFalse($user->email_consent);
             $this->assertFalse($user->sms_consent);
 
-            $this->post('/pre-reg', [
+            $this->post('/register', [
                 'full_name' => 'Another User', 'email' => 'another@example.com',
                 'number' => '+60198765432',
             ])->assertSessionHasErrors(['terms', 'age_confirmed']);
             $this->assertSame(1, User::count());
 
-            $this->post('/pre-reg', [
+            $this->post('/register', [
                 'full_name' => 'SingleName', 'email' => 'optin@example.com',
                 'number' => '+60 19-876 5432', 'terms' => '1', 'age_confirmed' => '1', 'marketing' => '1',
             ])->assertRedirect(route('map'));

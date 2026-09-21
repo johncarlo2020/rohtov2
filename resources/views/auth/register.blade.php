@@ -39,7 +39,7 @@
                     @error('number') <p class="registration-error" id="number-error" role="alert">{{ $message }}</p> @enderror
                 </div>
 
-                <div class="mb-3 registration-consents">
+                <div class="registration-consents">
                     <label class="registration-check" for="terms">
                         <input id="terms" name="terms" type="checkbox" value="1" @checked(old('terms')) required>
                         <span>I have read and agree to the
@@ -61,11 +61,11 @@
                     @error('age_confirmed') <p class="registration-error" role="alert">{{ $message }}</p> @enderror
                 </div>
 
-                <button class="mt-4 w-100 button button-primary" type="submit">SUBMIT</button>
+                <button class="registration-submit" type="submit">SUBMIT</button>
             </form>
 
-            <p class="registration-login">Already Register?<br>
-                <a href="{{ route('login') }}">Please Login <u>here</u></a>
+            <p class="registration-login">Registered?<br>
+                <a href="{{ route('login') }}">Please login <u>here</u></a>
             </p>
         </div>
     </main>

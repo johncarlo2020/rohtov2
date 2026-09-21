@@ -105,27 +105,68 @@
             </div>
         </div>
     </div>
-    <div class="row mt-4 g-3 admin-station-grid">
-        @foreach ($data['stations'] as $station)
-            <div class="col-12 col-sm-6 col-xxl-3">
-                <div class="card h-100">
-                    <div class="card-body d-flex justify-content-between mb-2 rounded  p-2 ">
-                        <div class="d-flex align-items-center w-100 gap-2">
-                            <div class="icon-stations">
-                                <span class="admin-station-marker">{{ $station['id'] }}</span>
-                            </div>
-                            <div class="d-flex flex-column">
-                                <h6 class="mb-1 text-dark text-sm">{{ $station['name'] }}</h6>
-                                <span class="text-xs">Average Time : <span
-                                        class="font-weight-bold">{{ $station['average_timespent'] }}
-                                        minutes</span></span>
+    @php
+        $mandatoryStations    = collect($data['stations'])->where('is_mandatory', true)->values();
+        $nonMandatoryStations = collect($data['stations'])->where('is_mandatory', false)->values();
+    @endphp
+
+    {{-- Mandatory Stations --}}
+    <div class="mt-4">
+        <h6 class="text-uppercase text-xs font-weight-bold text-muted mb-2 ps-1">
+            <i class="fa-solid fa-circle-check me-1 text-success"></i> Mandatory Stations
+        </h6>
+        <div class="row g-3 admin-station-grid">
+            @foreach ($mandatoryStations as $station)
+                <div class="col-12 col-sm-6 col-xxl-3">
+                    <div class="card h-100">
+                        <div class="card-body d-flex justify-content-between mb-2 rounded p-2">
+                            <div class="d-flex align-items-center w-100 gap-2">
+                                <div class="icon-stations">
+                                    <span class="admin-station-marker">{{ $station['id'] }}</span>
+                                </div>
+                                <div class="d-flex flex-column">
+                                    <h6 class="mb-1 text-dark text-sm">{{ $station['name'] }}</h6>
+                                    <span class="text-xs">Average Time : <span
+                                            class="font-weight-bold">{{ $station['average_timespent'] }}
+                                            minutes</span></span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        @endforeach
+            @endforeach
+        </div>
     </div>
+
+    {{-- Non-Mandatory Stations --}}
+    @if ($nonMandatoryStations->isNotEmpty())
+        <div class="mt-3">
+            <h6 class="text-uppercase text-xs font-weight-bold text-muted mb-2 ps-1">
+                <i class="fa-solid fa-circle me-1 text-secondary"></i> Non-Mandatory Stations
+            </h6>
+            <div class="row g-3 admin-station-grid">
+                @foreach ($nonMandatoryStations as $station)
+                    <div class="col-12 col-sm-6 col-xxl-3">
+                        <div class="card h-100 border border-secondary-subtle">
+                            <div class="card-body d-flex justify-content-between mb-2 rounded p-2">
+                                <div class="d-flex align-items-center w-100 gap-2">
+                                    <div class="icon-stations">
+                                        <span class="admin-station-marker" style="opacity:.65">{{ $station['id'] }}</span>
+                                    </div>
+                                    <div class="d-flex flex-column">
+                                        <h6 class="mb-1 text-dark text-sm">{{ $station['name'] }}</h6>
+                                        <span class="text-xs">Average Time : <span
+                                                class="font-weight-bold">{{ $station['average_timespent'] }}
+                                                minutes</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    @endif
     <div class="row mt-4">
         <div class="col-lg-6 mb-lg-0 mb-4">
             <div class="card z-index-2 h-100">
@@ -317,7 +358,7 @@
         // Listen for change event on select element
 
 
-        var permissionName = "{{ $permission }}";
+        var isAdmin = {{ ($isAdmin ?? false) ? 'true' : 'false' }};
 
         var chart = @json($data['usersDaily']);
         console.log(chart);

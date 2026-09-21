@@ -52,8 +52,9 @@
                     <div class="legend-scroll" tabindex="0" aria-label="Journey locations">
                         <h3 class="legend-banner">Your Journey Begins Here!</h3>
                         @foreach ($journey as $id => [$label])
+                            @php($isCompleted = in_array($id, $completedStationIds))
                             <button type="button" class="legend-location" data-location="{{ $id }}" data-station-url="{{ route('station', $id) }}" @disabled(in_array($id, $lockedStationIds))>
-                                <span class="legend-number">{{ $id }}</span><span>{{ $label }}</span>@if (in_array($id, $lockedStationIds))<i class="fa-solid fa-lock station-lock" aria-label="Locked"></i>@endif
+                                <span class="legend-number">@if ($isCompleted)<i class="fa-solid fa-check"></i>@else{{ $id }}@endif</span><span>{{ $label }}</span>@if (in_array($id, $lockedStationIds))<i class="fa-solid fa-lock station-lock" aria-label="Locked"></i>@endif
                             </button>
                         @endforeach
                         <button type="button" class="legend-banner legend-banner-card" data-show-rewards aria-controls="rewards-panel">More Rewards When You Apply!</button>
@@ -71,8 +72,9 @@
                     <div class="legend-scroll" tabindex="0" aria-label="Reward locations">
                         <h2 id="rewards-title">MORE REWARDS</h2>
                         @foreach ($rewards as $id => [$label])
+                            @php($isCompleted = in_array($id, $completedStationIds))
                             <button type="button" class="legend-location" data-location="{{ $id }}" data-station-url="{{ route('station', $id) }}" @disabled(in_array($id, $lockedStationIds))>
-                                <span class="legend-number">{{ $id }}</span><span>{{ $label }}</span>@if (in_array($id, $lockedStationIds))<i class="fa-solid fa-lock station-lock" aria-label="Locked"></i>@endif
+                                <span class="legend-number">@if ($isCompleted)<i class="fa-solid fa-check"></i>@else{{ $id }}@endif</span><span>{{ $label }}</span>@if (in_array($id, $lockedStationIds))<i class="fa-solid fa-lock station-lock" aria-label="Locked"></i>@endif
                             </button>
                         @endforeach
                     </div>

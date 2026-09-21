@@ -22,4 +22,11 @@ class StationUser extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function scopeParticipants($query)
+    {
+        return $query->whereHas('user', function ($q) {
+            $q->participants();
+        });
+    }
 }

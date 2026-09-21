@@ -15,8 +15,8 @@ class UserController extends Controller
     public function users()
     {
         $stations = Station::orderBy('id')->get();
-        $permission = 'default'; // Replace with actual permission logic if available
-        return view('users-datatable', ['data' => ['stations' => $stations], 'permission' => $permission]);
+        $isAdmin = auth()->user()?->hasRole('admin') ?? false;
+        return view('users-datatable', ['data' => ['stations' => $stations], 'isAdmin' => $isAdmin]);
     }
 
     public function getUsersForDataTable(Request $request)

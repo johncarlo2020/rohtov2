@@ -102,7 +102,7 @@
     <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.print.min.js"></script>
 
     <script>
-        var permissionName = "{{ $permission }}";
+        var isAdmin = {{ ($isAdmin ?? false) ? 'true' : 'false' }};
         var table = $('#customer-table').DataTable({
             responsive: true,
             processing: true,

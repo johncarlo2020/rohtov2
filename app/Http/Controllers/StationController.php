@@ -650,7 +650,7 @@ class StationController extends Controller
     public function admin()
     {
         $admin = User::find(auth()->id());
-        $permission = $admin->getPermissionNames()->first();
+        $isAdmin = $admin->hasRole('admin');
         $today = Carbon::today();
         $startDate = Carbon::create(2024, 9, 24);
         $data['users'] = User::participants()->with('stationUser')->take(4)->orderBy('id', 'desc')->get();
@@ -698,7 +698,7 @@ class StationController extends Controller
 
         $averageTimespentByStation = StationUser::participants()->select('station_id', \DB::raw('AVG(time_spent) as average_timespent'))->groupBy('station_id')->get()->keyBy('station_id');
 
-        $stations = Station::pluck('name', 'id');
+        $stations = Station::orderBy('id')->get()->keyBy('id');
 
         $count = 0;
 
@@ -706,11 +706,12 @@ class StationController extends Controller
             $userStations = $user->stationUser->pluck('station_id')->toArray();
             $numStations = count($userStations);
 
-            $user->stations = $stations->map(function ($name, $id) use ($userStations, $averageTimespentByStation) {
+            $user->stations = $stations->map(function ($station) use ($userStations, $averageTimespentByStation) {
                 return [
-                    'name' => $name,
-                    'value' => in_array($id, $userStations),
-                    'id' => $id,
+                    'name' => $station->name,
+                    'value' => in_array($station->id, $userStations),
+                    'id' => $station->id,
+                    'is_mandatory' => $station->is_mandatory,
                 ];
             });
 
@@ -718,11 +719,12 @@ class StationController extends Controller
             $user->completed_count = $numStations;
         }
 
-        $data['stations'] = $stations->map(function ($name, $id) use ($averageTimespentByStation) {
+        $data['stations'] = $stations->map(function ($station) use ($averageTimespentByStation) {
             return [
-                'name' => $name,
-                'average_timespent' => number_format(($averageTimespentByStation->get($id)['average_timespent'] ?? 0) / 60, 2),
-                'id' => $id,
+                'name' => $station->name,
+                'average_timespent' => number_format(($averageTimespentByStation->get($station->id)['average_timespent'] ?? 0) / 60, 2),
+                'id' => $station->id,
+                'is_mandatory' => $station->is_mandatory,
             ];
         });
 
@@ -734,7 +736,7 @@ class StationController extends Controller
         //dd($data['users'][0]['stations']);
         //  dd($data);
 
-        return view('dashboardadmin', compact('data', 'permission'));
+        return view('dashboardadmin', compact('data', 'isAdmin'));
     }
 
 
@@ -767,7 +769,7 @@ class StationController extends Controller
     public function users(Request $request)
     {
         $today = Carbon::today();
-        $permission = auth()->user()->getPermissionNames()->first();
+        $isAdmin = auth()->user()->hasRole('admin');
         // Retrieve filter inputs as date range
         $start_date = $request->get('start_date');
         $end_date = $request->get('end_date');
@@ -842,12 +844,12 @@ class StationController extends Controller
             ->orderBy('date', 'desc')
             ->get();
         // Render view with selected filter values
-        return view('users', compact('data', 'permission', 'start_date', 'end_date', 'keyword'));
+        return view('users', compact('data', 'isAdmin', 'start_date', 'end_date', 'keyword'));
     }
 
       public function usersFilter(Request $request, $date, $keyword = null)
     {
-        $permission = auth()->user()->getPermissionNames()->first();
+        $isAdmin = auth()->user()->hasRole('admin');
         $selectedDate = $date ? Carbon::parse($date) : null;
 
         $query = User::participants();
@@ -949,17 +951,17 @@ class StationController extends Controller
             ->orderBy('date', 'desc')
             ->get();
 
-        return view('users', compact('data', 'permission', 'selectedDate', 'keyword'));
+        return view('users', compact('data', 'isAdmin', 'selectedDate', 'keyword'));
     }
 
     public function ambient()
     {
         $startDate = Carbon::create(2025, 5,15);
-        $permission = auth()->user()->getPermissionNames()->first();
+        $isAdmin = auth()->user()->hasRole('admin');
 
 
         $data['users'] = User::whereDate('created_at', '>=', $startDate->toDateString())->with('stationUser')->orderBy('id', 'desc')->get();
-        return view('ambient', compact('data'   , 'permission'));
+        return view('ambient', compact('data', 'isAdmin'));
     }
 
     public function embark()
@@ -1028,7 +1030,7 @@ class StationController extends Controller
     public function userData(User $user)
     {
         $averagePlaytimeByUser = StationUser::where('user_id', $user->id)->avg('time_spent');
-        $permission = auth()->user()->getPermissionNames()->first();
+        $isAdmin = auth()->user()->hasRole('admin');
 
         $stations = Station::pluck('name', 'id');
 
@@ -1070,7 +1072,7 @@ class StationController extends Controller
 
           $isRedeemed = $user->hasRedeemed || $hasStation6;
 
-        return view('userData', compact('user', 'totalMinutes', 'permission', 'isRedeemed', 'isOldUser'));
+        return view('userData', compact('user', 'totalMinutes', 'isAdmin', 'isRedeemed', 'isOldUser'));
     }
 
     public function check(Request $request)

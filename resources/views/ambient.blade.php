@@ -104,7 +104,7 @@
         //         ]
         //     });
         // });
-        var permissionName = "{{ $permission }}";
+        var isAdmin = {{ ($isAdmin ?? false) ? 'true' : 'false' }};
         var table = $('#customer-table').DataTable({
             responsive: true,
        dom: "<'row'<'col-sm-12 col-md-2'l><'col-sm-12 col-md-8 text-center'B><'col-sm-12 col-md-2'f>>" +

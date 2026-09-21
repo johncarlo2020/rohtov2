@@ -53,8 +53,10 @@
                         <div class="card-body">
                             <div class="header d-flex justify-content-between align-items-center mb-3">
                                 <p class="text-sm text-uppercase">User Information</p>
+                                @if ($isAdmin ?? false)
                                     <button id="editBtn" class="btn btn-secondary btn-sm px-3"><i
                                     class="fa-solid fa-pen-to-square"></i> Edit</button>
+                                @endif
                             </div>
                             <form id="userForm">
                                 <div class="row">
@@ -190,80 +192,59 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    @if ($isAdmin ?? false)
     <script>
-        var permissionName = "{{ $permission }}";
-        console.log('Permission Name:', permissionName); // Debug log
+        $('#editBtn').click(function() {
+            $('#emailInput').prop('disabled', false);
+            $('#submitBtn').removeClass('d-none');
+            $('input[name="cardApplied"]').prop('disabled', false);
+        });
 
-        if (permissionName === 'full') {
-            $('#editBtn').click(function() {
-                console.log('Edit button clicked'); // Debug log
-                $('#emailInput').prop('disabled', false);
-                $('#submitBtn').removeClass('d-none');
-                console.log('Submit button should now be visible'); // Debug log
-                $('input[name="cardApplied"]').prop('disabled', false); // Enable radio buttons
-            });
+        $('#submitBtn').click(function() {
+            var userId = {{ $user->id }};
+            var email = $('#emailInput').val();
+            var cardApplied = $('input[name="cardApplied"]:checked').val();
+            var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
-            $('#submitBtn').click(function() {
-                var userId = {{ $user->id }};
-                var email = $('#emailInput').val();
-                var cardApplied = $('input[name="cardApplied"]:checked').val(); // Get selected radio value
-                var csrfToken = $('meta[name="csrf-token"]').attr('content');
-
-                $.ajax({
-                    url: '{{ route('editUser') }}',
-                    type: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    data: {
-                        id: userId,
-                        email: email,
-                        isCardApply: cardApplied // Include cardApplied in the request
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            $('#emailInput').prop('disabled', true);
-                            $('#submitBtn').addClass('d-none');
-                            $('input[name="cardApplied"]').prop('disabled', true); // Disable radio buttons again
-                            toastr.success('User details updated successfully!');
-                        } else {
-                            alert('Error: ' + response.message);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        alert('An error occurred: ' + error);
+            $.ajax({
+                url: '{{ route('editUser') }}',
+                type: 'POST',
+                headers: { 'X-CSRF-TOKEN': csrfToken },
+                data: { id: userId, email: email, isCardApply: cardApplied },
+                success: function(response) {
+                    if (response.success) {
+                        $('#emailInput').prop('disabled', true);
+                        $('#submitBtn').addClass('d-none');
+                        $('input[name="cardApplied"]').prop('disabled', true);
+                        toastr.success('User details updated successfully!');
+                    } else {
+                        alert('Error: ' + response.message);
                     }
-                });
+                },
+                error: function(xhr, status, error) {
+                    alert('An error occurred: ' + error);
+                }
             });
+        });
 
-            $('.big-checkbox').change(function() {
-                var newState = $(this).prop('checked');
-                var user_id = {{ $user->id }};
-                var station_id = $(this).data('id');
-                var csrfToken = $('meta[name="csrf-token"]').attr('content');
+        $('.big-checkbox').change(function() {
+            var user_id = {{ $user->id }};
+            var station_id = $(this).data('id');
+            var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
-                $.ajax({
-                    url: '{{ route('check') }}',
-                    type: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken,
-                    },
-                    data: {
-                        user_id: user_id,
-                        station_id: station_id
-                    },
-                    success: function(response) {
-                        toastr.success('Station checkbox updated successfully!');
-                    },
-                    error: function(xhr, status, error) {
-                        toastr.error('An error occurred while updating the checkbox.');
-                    }
-                });
+            $.ajax({
+                url: '{{ route('check') }}',
+                type: 'POST',
+                headers: { 'X-CSRF-TOKEN': csrfToken },
+                data: { user_id: user_id, station_id: station_id },
+                success: function(response) {
+                    toastr.success('Station checkbox updated successfully!');
+                },
+                error: function(xhr, status, error) {
+                    toastr.error('An error occurred while updating the checkbox.');
+                }
             });
-        } else {
-            // Disable all input elements if permission is not 'full'
-            $('input').prop('disabled', true);
-        }
-
+        });
     </script>
+    @endif
 @endsection

@@ -17,7 +17,7 @@
                     <div class="row">
                         <div class="col-8">
                             <div class="numbers">
-                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Total Customers</p>
+                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Total participants</p>
                                 <h5 class="font-weight-bolder">
                                     {{ $data['usersCount'] }}
                                 </h5>
@@ -42,7 +42,7 @@
                     <div class="row">
                         <div class="col-8">
                             <div class="numbers">
-                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Today's Customer</p>
+                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Registrations today</p>
                                 <h5 class="font-weight-bolder">
                                     {{ $data['userToday'] }}
                                 </h5>
@@ -89,7 +89,7 @@
                     <div class="row">
                         <div class="col-8">
                             <div class="numbers">
-                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Customers Finished</p>
+                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Journeys completed</p>
                                 <h5 class="font-weight-bolder">
                                     {{ $data['completedUsers'] }}
                                 </h5>
@@ -105,15 +105,14 @@
             </div>
         </div>
     </div>
-    <div class="row mt-4 gap-3">
+    <div class="row mt-4 g-3 admin-station-grid">
         @foreach ($data['stations'] as $station)
-            <div class="col-2">
+            <div class="col-12 col-sm-6 col-xxl-3">
                 <div class="card h-100">
                     <div class="card-body d-flex justify-content-between mb-2 rounded  p-2 ">
                         <div class="d-flex align-items-center w-100 gap-2">
                             <div class="icon-stations">
-                                <img class="" src="{{ asset("files/station/{$station['id']}.webp") }}"
-                                    alt="Station Image">
+                                <span class="admin-station-marker">{{ $station['id'] }}</span>
                             </div>
                             <div class="d-flex flex-column">
                                 <h6 class="mb-1 text-dark text-sm">{{ $station['name'] }}</h6>
@@ -200,12 +199,7 @@
                                         <div class="station-icon-wrapper">
                                                 @foreach ($user['stations'] as $station)
                                             <div class="text-center">
-                                                <img src="{{ asset('files/station/' . $station['id'] . '.webp') }}"
-                                                     alt="{{ $station['name'] }}"
-                                                     title="{{ $station['name'] }}"
-                                                     class="station-image table-station-image {{ $station['value'] ? 'border-success' : 'border-secondary' }}"
-                                                     style="opacity: {{ $station['value'] ? '1' : '0.4' }};"
-                                                     data-bs-toggle="tooltip" data-bs-placement="bottom" />
+                                                <span class="admin-station-marker {{ $station['value'] ? 'is-complete' : 'is-pending' }}" title="{{ $station['name'] }}" aria-label="{{ $station['name'] }}: {{ $station['value'] ? 'completed' : 'pending' }}">{{ $station['value'] ? '✓' : $station['id'] }}</span>
                                             </div>
                                         @endforeach
                                         <div class="completed-count d-flex justify-content-center align-items-center gap-2">
@@ -301,6 +295,17 @@
 
 
     <script>
+        Highcharts.setOptions({
+            colors: ['#ffbf00', '#363d2d', '#cfb675', '#868f76', '#efe0ac', '#64604e'],
+            chart: { backgroundColor: '#ffffff', style: { fontFamily: 'Poppins, sans-serif' } },
+            title: { style: { color: '#24271f', fontSize: '15px', fontWeight: '600' } },
+            xAxis: { labels: { style: { color: '#747b69' } }, title: { style: { color: '#747b69' } }, lineColor: '#e5e8dc' },
+            yAxis: { labels: { style: { color: '#747b69' } }, title: { style: { color: '#747b69' } }, gridLineColor: '#edf0e6' },
+            legend: { itemStyle: { color: '#414837' } },
+            plotOptions: { series: { dataLabels: { style: { color: '#343b2a', textOutline: 'none' } } } }
+        });
+    </script>
+    <script>
         var labels = [];
         var labels2 = [];
 
@@ -366,7 +371,7 @@
                 height: 400
             },
             title: {
-                text: 'Hourly Customer Registrations by Date',
+                text: 'Hourly registrations',
                 align: 'left'
             },
             xAxis: {
@@ -434,7 +439,7 @@
                 type: 'line' // Set chart type to 'column'
             },
             title: {
-                text: 'Customers Overview',
+                text: 'Participant registrations',
                 align: 'left'
             },
             yAxis: {
@@ -746,8 +751,10 @@
         }
     </script>
     <script>
+        let chartColorIndex = 0;
         function getRandomColor() {
-            return '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+            const palette = Highcharts.getOptions().colors;
+            return palette[chartColorIndex++ % palette.length];
         }
 
         // Assign random colors to each data point

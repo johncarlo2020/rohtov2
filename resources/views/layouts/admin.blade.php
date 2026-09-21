@@ -18,10 +18,9 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('assets/img/apple-icon.png') }}" />
     <link rel="icon" type="image/png" href="{{ asset('files/main/logo.webp') }}" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <title>Ocean or Plastic</title>
+    <title>Maybank | Admin portal</title>
     <!--     Fonts and icons     -->
     <!-- Nucleo Icons -->
     <link href="{{ asset('assets/css/nucleo-icons.css') }}" rel="stylesheet" />
@@ -42,164 +41,56 @@
     <link id="pagestyle" href="{{ asset('assets/css/argon-dashboard.css?v=2.0.4') }}" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     @vite(['resources/sass/dashboard.scss'])
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="{{ asset('assets/js/core/bootstrap.min.js') }}"></script>
     @include('components.fonts')
 </head>
 
-<body class="g-sidenav-show bg-gray-100">
-    <div class="min-height-300 bg-primary position-absolute w-100"></div>
-    <aside
-        class="sidenav bg-white navbar navbar-vertical navbar-expand-xs collapse d-xl-block border-0 border-radius-xl my-3 fixed-start ms-4"
-        id="sidenav-main">
-        <div class="sidenav-header">
-            <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
-                aria-hidden="true" id="iconSidenav"></i>
-            <a class="navbar-brand m-0" href="" target="_blank">
-                <img src="{{ asset('files/main/logo.webp') }}" class="navbar-brand-img h-100" alt="main_logo" />
-            </a>
-        </div>
-        <hr class="horizontal dark mt-0" />
-        <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
-            <ul class="navbar-nav">
-                @canany(['full'])
-
-                <li class="nav-item">
-                    <a class="nav-link  w-100 {{ request()->routeIs('admin') ? 'active' : '' }}" href="{{ route('admin') }}">
-                        <div
-                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-tv-2 text-primary text-sm opacity-10"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Dashboard</span>
+<body class="maybank-admin">
+    @php
+        $adminPages = [
+            ['admin', 'Overview', 'fa-chart-simple', ['full']],
+            ['users', 'Participants', 'fa-users', ['full']],
+            ['admin.station-qrs', 'Station QR codes', 'fa-qrcode', ['view', 'full']],
+        ];
+        $pageTitle = collect($adminPages)->first(fn ($page) => request()->routeIs($page[0]))[1] ?? 'Participant details';
+        if (request()->routeIs('charmConfig')) $pageTitle = 'Reward settings';
+    @endphp
+    <aside class="admin-sidebar" aria-label="Admin navigation">
+        <a class="admin-brand" href="{{ auth()->user()->can('full') ? route('admin') : route('admin.station-qrs') }}">
+            <img src="{{ asset('files/main/logo.webp') }}" alt="Maybank" />
+        </a>
+        <p class="admin-nav-label">EVENT MANAGEMENT</p>
+        <nav>
+            @foreach ($adminPages as [$route, $label, $icon, $permissions])
+                @canany($permissions)
+                    <a href="{{ route($route) }}" class="admin-nav-link {{ request()->routeIs($route) || ($route === 'users' && request()->routeIs('userData', 'userFilter')) ? 'is-active' : '' }}"
+                        @if(request()->routeIs($route)) aria-current="page" @endif>
+                        <i class="fa-solid {{ $icon }}" aria-hidden="true"></i><span>{{ $label }}</span>
                     </a>
-                </li>
-                @endcan
-                @canany(['full'])
-
-                <li class="nav-item">
-                    {{-- <a class="nav-link {{ request()->routeIs('users') ? 'active' : '' }}" href="{{ route('userFilter', ['date' => now()->toDateString(), 'keyword' => null]) }}">
-                        <div
-                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Users</span>
-                    </a> --}}
-                       <a class="nav-link {{ request()->routeIs('users') ? 'active' : '' }}" href="{{ route('users') }}">
-                        <div
-                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Users</span>
-                    </a>
-                </li>
-                @endcan
-
-                @canany(['view', 'full'])
-
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('ambient') ? 'active' : '' }}" href="{{ route('ambient') }}">
-                        <div
-                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Ambient Display</span>
-                    </a>
-                </li>
-                @endcan
-
-                @canany(['view', 'full'])
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('admin.embark-new') ? 'active' : '' }}" href="{{ route('admin.embark-new') }}">
-                        <div
-                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Embark Journey</span>
-                    </a>
-                </li>
-                @endcan
-
-                @canany(['view', 'full'])
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('scanner') ? 'active' : '' }}" href="{{ route('scanner') }}">
-                        <div
-                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-mobile-button text-warning text-sm opacity-10"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Scanner</span>
-                    </a>
-                </li>
-                @endcan
-
-                @if(auth()->user()->email === 'admin@loccitane.com')
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('charmConfig') ? 'active' : '' }}" href="{{ route('charmConfig') }}">
-                        <div
-                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fa-solid fa-gear text-warning text-sm opacity-10"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Charm Config</span>
-                    </a>
-                </li>
-                @endif
-            </ul>
+                @endcanany
+            @endforeach
+            @if(auth()->user()->email === 'admin@loccitane.com')
+                <a class="admin-nav-link {{ request()->routeIs('charmConfig') ? 'is-active' : '' }}" href="{{ route('charmConfig') }}"><i class="fa-solid fa-gear" aria-hidden="true"></i>Reward settings</a>
+            @endif
+        </nav>
+        <div class="admin-sidebar-bottom">
+            <div class="admin-discover">DISCOVER <strong>MORE</strong></div>
+            <a href="{{ url('/') }}" class="admin-nav-link"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>Open event site</a>
+            <form method="POST" action="{{ route('logout') }}">@csrf<button class="admin-nav-link" type="submit"><i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>Sign out</button></form>
         </div>
     </aside>
-    <main class="main-content position-relative border-radius-lg">
-        <!-- Navbar -->
-        <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur"
-            data-scroll="false">
-            <div class="container-fluid py-1 px-3">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-                        <li class="breadcrumb-item text-sm">
-                            <a class="opacity-5 text-white" href="javascript:;">Pages</a>
-                        </li>
-                        <li class="breadcrumb-item text-sm text-white active" aria-current="page">
-                            Dashboard
-                        </li>
-                    </ol>
-                    <h6 class="font-weight-bolder text-white mb-0">
-                        Dashboard
-                    </h6>
-                </nav>
-            </div>
-        </nav>
-        <!-- End Navbar -->
-        <div class="container-fluid">@yield('content')</div>
-
-        <footer class="footer pt-3">
-            <div class="container-fluid">
-                <div class="row align-items-center justify-content-lg-between">
-                    <div class="col-lg-6 mb-lg-0 mb-4">
-                        <div class="copyright text-center text-sm text-muted text-lg-start">
-                            <a href="https://wowsome.com.my/" class="font-weight-bold" target="_blank">Wowsome</a>
-                            © Copyright 2024
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </footer>
+    <main class="admin-workspace">
+        <header class="admin-topbar">
+            <div><p>ADMIN PORTAL</p><h1>{{ $pageTitle }}</h1></div>
+            <div class="admin-account"><span class="admin-avatar" aria-hidden="true">{{ mb_substr(auth()->user()->fname ?: 'A', 0, 1) }}</span><span>{{ auth()->user()->fname ?: 'Administrator' }}<small>Event team</small></span></div>
+        </header>
+        <div class="admin-page-content">@yield('content')</div>
+        <footer class="admin-page-footer">© {{ date('Y') }} Maybank <span>Discover more. Manage with ease.</span></footer>
     </main>
-
-    <script>
-        var win = navigator.platform.indexOf("Win") > -1;
-        if (win && document.querySelector("#sidenav-scrollbar")) {
-            var options = {
-                damping: "0.5",
-            };
-            Scrollbar.init(
-                document.querySelector("#sidenav-scrollbar"),
-                options
-            );
-        }
-    </script>
-    <!-- Github buttons -->
-    <script async defer src="https://buttons.github.io/buttons.js"></script>
-    <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
-    <script src="{{ asset('assets/js/argon-dashboard.min.js?v=2.0.4') }}"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
+    @stack('scripts')
 </body>
-
 </html>

@@ -14,9 +14,9 @@
                 <img src="{{ asset('files/main/logo.webp') }}" alt="Maybank" width="165" />
             </a>
             <div class="admin-signin-story">
-                <p class="admin-signin-eyebrow">THE EXPERIENCE STARTS HERE</p>
-                <h1>Behind every <br>journey.<br><span>More possibilities.</span></h1>
-                <p>Bring the Maybank experience to life.<br>Your event, all in one place.</p>
+                <p class="admin-signin-eyebrow">MAYBANK EVENT MANAGEMENT</p>
+                <h1>DISCOVER<br><span>MORE</span></h1>
+                <p>Manage participants, station check-ins<br>and the event journey.</p>
                 <img class="admin-signin-map" src="{{ asset('files/main/map.webp') }}" alt="" />
             </div>
             <div class="admin-signin-brand-footer"><span></span> MAYBANK EVENT MANAGEMENT</div>

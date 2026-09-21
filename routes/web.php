@@ -88,6 +88,10 @@ Route::group(['middleware' => ['admin']], function () {
     Route::get('/admin/charmConfig', 'App\Http\Controllers\StationController@charmConfig')->name('charmConfig');
     Route::post('/admin/charmConfig/update', 'App\Http\Controllers\StationController@charmConfigUpdate')->name('charmConfig.update');
 
+    Route::get('/admin/station-qrs', function () {
+        return view('admin.station-qrs', ['stations' => \App\Models\Station::orderBy('id')->get()]);
+    })->name('admin.station-qrs');
+
     Route::get('/admin/{user}', 'App\Http\Controllers\StationController@userData')->name('userData');
     Route::post('/admin/check', 'App\Http\Controllers\StationController@check')->name('check');
     Route::post('/editUser', 'App\Http\Controllers\StationController@editUser')->name('editUser');

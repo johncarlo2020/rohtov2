@@ -46,7 +46,7 @@ class LoginController extends Controller
             }
 
             if ($user->can('view')) {
-                return redirect()->intended('admin/scanner');
+                return redirect()->intended(route('admin.station-qrs'));
             }
 
             Auth::logout();

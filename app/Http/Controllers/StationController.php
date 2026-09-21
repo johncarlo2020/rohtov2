@@ -61,7 +61,7 @@ class StationController extends Controller
         $canStation6 = $user->stationUser()->where('station_id', '!=', 7)
             ->where('station_id', '!=', 6)->count() == 5;
             // dd($canStation6);
-        $stations = Station::where('id', '!=', 7)->get();
+        $stations = Station::all();
 
 
         // Loop through each station and append a flag indicating if the user has it
@@ -424,6 +424,7 @@ class StationController extends Controller
 
     public function index(Station $station)
     {
+        abort_unless($station->is_mandatory || auth()->user()->isCardApply, 403, "Head over to Card Sales Booth to unlock this station.");
        // get station data
        $stationDone = StationUser::where('user_id', auth()->id())
             ->where('station_id', $station->id)
@@ -455,6 +456,7 @@ class StationController extends Controller
 
     public function extension(Station $station)
     {
+        abort_unless($station->is_mandatory || auth()->user()->isCardApply, 403, "Head over to Card Sales Booth to unlock this station.");
         return view('extension');
     }
 
@@ -465,6 +467,7 @@ class StationController extends Controller
 
     public function brand(Station $station)
     {
+        abort_unless($station->is_mandatory || auth()->user()->isCardApply, 403, "Head over to Card Sales Booth to unlock this station.");
         $brands = Brand::get();
         return view('brand', compact('brands'));
     }
@@ -630,6 +633,9 @@ class StationController extends Controller
 
     public function scan(Request $request)
     {
+        $request->validate(['station' => 'required|integer|exists:stations,id', 'qrCodeMessage' => 'required|string|max:2048']);
+        $station = Station::findOrFail($request->station);
+        abort_unless($station->is_mandatory || $request->user()->isCardApply, 403, 'Head over to Card Sales Booth to unlock this station.');
         // Parse the URL to get the query string
 
         $qrCodeMessage = trim($request->qrCodeMessage);
@@ -643,7 +649,7 @@ class StationController extends Controller
         try {
             DB::beginTransaction();
 
-            if($request->station == 7){
+            if ($request->station == 7 && $request->user()->hasRole('admin')) {
 
                 $qrMessage = $request->qrCodeMessage;
 
@@ -660,6 +666,9 @@ class StationController extends Controller
                 //     ], 200);
                 // }
 
+                abort_unless(isset($id) && ctype_digit((string) $id), 422, 'Invalid QR Code');
+                $targetUser = User::findOrFail($id);
+                abort_unless($station->is_mandatory || $targetUser->isCardApply, 403, 'Card application required.');
                 $check = StationUser::where('user_id', $id)->where('station_id', 7)->exists();
                 if ($check) {
                     return response()->json([

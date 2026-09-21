@@ -43,6 +43,7 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
+        'isCardApply' => 'boolean',
         'terms' => 'boolean',
         'age_confirmed' => 'boolean',
         'marketing' => 'boolean',

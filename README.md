@@ -64,3 +64,13 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Card application access
+
+Non-mandatory stations require `users.isCardApply`. New and existing users default to false. The map's “Click here to apply!” button opens the camera scanner; a matching booth QR sets the authenticated user's flag to true.
+
+Convert your deployed site’s `/card-application/booth` URL into the Card Sales Booth QR (named route: `card-application.booth`). Scanning that URL with the in-app scanner activates access. Opening the URL directly displays instructions without changing the user.
+
+Optionally set `CARD_APPLICATION_QR_CODE` in `.env` to override the accepted QR contents, then run `php artisan config:clear` (or rebuild the configuration cache). When unset, the booth route URL is accepted.
+
+Apply the migration with `php artisan migrate` and build assets with `npm run build`. Camera scanning requires HTTPS or localhost and camera permission.

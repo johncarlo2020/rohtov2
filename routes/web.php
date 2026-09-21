@@ -67,7 +67,8 @@ Route::get('/vote', 'App\Http\Controllers\StationController@vote')->name('vote')
 Route::post('/castVote', 'App\Http\Controllers\StationController@castVote')->name('castVote');
 Route::get('/voteData', 'App\Http\Controllers\StationController@voteData')->name('voteData');
 Route::get('/congratsVote', 'App\Http\Controllers\StationController@congratsVote')->name('congratsVote');
-Route::post('/process_qr_code', 'App\Http\Controllers\StationController@scan')->name('process_qr_code');
+Route::view('/card-application/booth', 'card-application-booth')->name('card-application.booth');
+Route::post('/process_qr_code', 'App\Http\Controllers\StationController@scan')->name('process_qr_code')->middleware('auth');
 
 Route::group(['middleware' => ['admin']], function () {
     Route::get('/admin', 'App\Http\Controllers\StationController@admin')->name('admin');
@@ -95,6 +96,7 @@ Route::group(['middleware' => ['client']], function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::post('/card-application/scan', 'App\Http\Controllers\CardApplicationController@scan')->middleware(['auth', 'throttle:20,1'])->name('card-application.scan');
     Route::get('/map', 'App\Http\Controllers\StationController@map')->name('map');
     Route::get('/station/{station}', 'App\Http\Controllers\StationController@index')->name('station');
     Route::get('/dashboard', 'App\Http\Controllers\StationController@welcome')->name('dashboard');

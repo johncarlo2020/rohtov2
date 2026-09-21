@@ -540,6 +540,7 @@ class StationController extends Controller
     $currentUser = auth()->user();
     $isAdmin = $currentUser && ($currentUser->isSuperAdmin() || $currentUser->hasRole('admin') || $currentUser->isProtectedAdmin() || $currentUser->isAdminOrStaff());
     $excludedRoles = $isAdmin ? ["admin", "superadmin"] : ["admin", "superadmin", "staff"];
+    $excludedCustomerRoles = ["admin", "superadmin", "staff"];
 
     $withStations = \Schema::hasTable('station_users') ? ["stationUser"] : [];
     $data["users"] = User::with($withStations)
@@ -559,8 +560,8 @@ class StationController extends Controller
       ">=",
       $startDate->toDateString()
     )
-      ->whereDoesntHave("roles", function ($q) use ($excludedRoles) {
-        $q->whereIn("name", $excludedRoles);
+      ->whereDoesntHave("roles", function ($q) use ($excludedCustomerRoles) {
+        $q->whereIn("name", $excludedCustomerRoles);
       })
       ->where(
         DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'),
@@ -631,8 +632,8 @@ class StationController extends Controller
     $data['missedCount'] = $missedCount;
 
     $data["userToday"] = User::whereDate("created_at", $today)
-      ->whereDoesntHave("roles", function ($q) use ($excludedRoles) {
-        $q->whereIn("name", $excludedRoles);
+      ->whereDoesntHave("roles", function ($q) use ($excludedCustomerRoles) {
+        $q->whereIn("name", $excludedCustomerRoles);
       })
       ->where(
         DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'),
@@ -641,8 +642,8 @@ class StationController extends Controller
       )
       ->count();
     $data["country"] = User::selectRaw("country , COUNT(*) as count")
-      ->whereDoesntHave("roles", function ($q) use ($excludedRoles) {
-        $q->whereIn("name", $excludedRoles);
+      ->whereDoesntHave("roles", function ($q) use ($excludedCustomerRoles) {
+        $q->whereIn("name", $excludedCustomerRoles);
       })
       ->where(
         DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'),
@@ -656,8 +657,8 @@ class StationController extends Controller
     //   dd($data['where']);
 
     $usersWithSixStationUsers = \Schema::hasTable('station_users')
-      ? User::whereDoesntHave("roles", function ($q) use ($excludedRoles) {
-          $q->whereIn("name", $excludedRoles);
+      ? User::whereDoesntHave("roles", function ($q) use ($excludedCustomerRoles) {
+          $q->whereIn("name", $excludedCustomerRoles);
         })
         ->whereDate("created_at", ">=", $startDate->toDateString())
         ->has("stationUser", ">=", 3)
@@ -676,8 +677,8 @@ class StationController extends Controller
       $data["percentage"] = 0; // Avoid division by zero
     }
     $userCounts = User::selectRaw("DATE(created_at) as date, COUNT(*) as count")
-      ->whereDoesntHave("roles", function ($q) use ($excludedRoles) {
-        $q->whereIn("name", $excludedRoles);
+      ->whereDoesntHave("roles", function ($q) use ($excludedCustomerRoles) {
+        $q->whereIn("name", $excludedCustomerRoles);
       })
       ->groupBy("date")
       ->orderBy("date")
@@ -688,8 +689,8 @@ class StationController extends Controller
     $data["dates"] = User::select(
       DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as date')
     )
-      ->whereDoesntHave("roles", function ($q) use ($excludedRoles) {
-        $q->whereIn("name", $excludedRoles);
+      ->whereDoesntHave("roles", function ($q) use ($excludedCustomerRoles) {
+        $q->whereIn("name", $excludedCustomerRoles);
       })
       ->where(
         DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'),
@@ -705,8 +706,8 @@ class StationController extends Controller
       DB::raw('LOWER(DATE_FORMAT(created_at, "%l%p")) as hour'),
       DB::raw("COUNT(*) as registrations")
     )
-      ->whereDoesntHave("roles", function ($q) use ($excludedRoles) {
-        $q->whereIn("name", $excludedRoles);
+      ->whereDoesntHave("roles", function ($q) use ($excludedCustomerRoles) {
+        $q->whereIn("name", $excludedCustomerRoles);
       })
       ->whereNotNull("created_at")
       ->whereDate("created_at", ">=", $startDate->toDateString())
@@ -902,6 +903,7 @@ class StationController extends Controller
     $currentUser = auth()->user();
     $isAdmin = $currentUser && ($currentUser->isSuperAdmin() || $currentUser->hasRole('admin') || $currentUser->isProtectedAdmin() || $currentUser->isAdminOrStaff());
     $excludedRoles = $isAdmin ? ["admin", "superadmin"] : ["admin", "superadmin", "staff"];
+    $excludedCustomerRoles = ["admin", "superadmin", "staff"];
 
     $data["users"] = User::whereDate(
       "created_at",
@@ -922,13 +924,13 @@ class StationController extends Controller
       ">=",
       $startDate->toDateString()
     )
-      ->whereDoesntHave("roles", function ($q) use ($excludedRoles) {
-        $q->whereIn("name", $excludedRoles);
+      ->whereDoesntHave("roles", function ($q) use ($excludedCustomerRoles) {
+        $q->whereIn("name", $excludedCustomerRoles);
       })
       ->count();
     $data["userToday"] = User::whereDate("created_at", $today)
-      ->whereDoesntHave("roles", function ($q) use ($excludedRoles) {
-        $q->whereIn("name", $excludedRoles);
+      ->whereDoesntHave("roles", function ($q) use ($excludedCustomerRoles) {
+        $q->whereIn("name", $excludedCustomerRoles);
       })
       ->count();
 
@@ -938,6 +940,9 @@ class StationController extends Controller
           ">=",
           $startDate->toDateString()
         )
+        ->whereDoesntHave("roles", function ($q) use ($excludedCustomerRoles) {
+          $q->whereIn("name", $excludedCustomerRoles);
+        })
         ->has("stationUser", ">=", 5)
         ->count()
       : 0;
@@ -1007,6 +1012,12 @@ class StationController extends Controller
       $user->booking_ref = $latestBooking ? $latestBooking->reference_no : null;
       $user->booking_date_text = ($latestBooking && $latestBooking->bookingDate) ? $latestBooking->bookingDate->display_date : 'No Booking';
       $user->booking_time_text = ($latestBooking && $latestBooking->bookingSlot) ? $latestBooking->bookingSlot->display_time : 'N/A';
+      $user->booking_time_from = ($latestBooking && $latestBooking->bookingSlot && $latestBooking->bookingSlot->start_time)
+        ? strtoupper(\Carbon\Carbon::parse($latestBooking->bookingSlot->start_time)->format('g:i A'))
+        : 'N/A';
+      $user->booking_time_to = ($latestBooking && $latestBooking->bookingSlot && $latestBooking->bookingSlot->end_time)
+        ? strtoupper(\Carbon\Carbon::parse($latestBooking->bookingSlot->end_time)->format('g:i A'))
+        : 'N/A';
       $user->booking_venue = $latestBooking ? ($latestBooking->venue ?? 'LONGCHAMP POP UP STORE THE GARDENS MALL') : 'N/A';
       $user->is_attended = $latestBooking ? ($latestBooking->status === 'attended' || $latestBooking->status === 'completed' || !is_null($latestBooking->attended_at)) : false;
       $user->attended_at_text = $latestBooking && $latestBooking->attended_at ? \Carbon\Carbon::parse($latestBooking->attended_at)->format('M d, Y h:i A') : null;

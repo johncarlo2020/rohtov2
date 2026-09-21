@@ -137,6 +137,11 @@
                             <th class="export-col d-none">consent_channels</th>
                             <th class="export-col d-none">communication_consent</th>
                             <th class="export-col d-none">newsletter_consent</th>
+                            <th class="export-col d-none">Booking Date</th>
+                            <th class="export-col d-none">Booking Time From</th>
+                            <th class="export-col d-none">Booking Time End</th>
+                            <th class="export-col d-none">Booking Time</th>
+                            <th class="export-col d-none">Attendance Status</th>
                             <th class="export-col d-none">created_at</th>
                         </tr>
                     </thead>
@@ -193,6 +198,11 @@
                             <td class="export-col d-none">{{ is_array($user->consent_channels) ? implode(', ', $user->consent_channels) : ($user->consent_channels ?? '') }}</td>
                             <td class="export-col d-none">{{ $user->communication_consent ? '1' : '0' }}</td>
                             <td class="export-col d-none">{{ $user->newsletter_consent ? '1' : '0' }}</td>
+                            <td class="export-col d-none">{{ $user->booking_date_text ?? 'No Booking' }}</td>
+                            <td class="export-col d-none">{{ $user->booking_time_from ?? 'N/A' }}</td>
+                            <td class="export-col d-none">{{ $user->booking_time_to ?? 'N/A' }}</td>
+                            <td class="export-col d-none">{{ $user->booking_time_text ?? 'N/A' }}</td>
+                            <td class="export-col d-none">{{ strtoupper($status) }}</td>
                             <td class="export-col d-none">{{ $user->created_at ? \Carbon\Carbon::parse($user->created_at)->toDateTimeString() : '' }}</td>
                         </tr>
                         @endforeach

@@ -5,6 +5,7 @@
         $lockedStationIds = $user->isCardApply ? [] : $stations->where('is_mandatory', false)->pluck('id')->all();
         $completedStationIds = $stations->where('status', true)->pluck('id')->all();
         $booths = [[22, 43], [45, 59], [79, 76], [23, 94], [83, 10]];
+        $iscardApplied = $user->isCardApply;
     @endphp
     <main id="map-page" class="content-box" data-view="journey">
         <div class="map-shell">
@@ -33,7 +34,7 @@
                                 <span aria-hidden="true">@if ($isCompleted)<i class="fa-solid fa-check"></i>@else{{ $view === 'rewards' ? $loop->iteration : $id }}@endif</span>
                             </a>
                         @endforeach
-                        @if ($view === 'rewards')
+                        @if ($view === 'rewards' && !$iscardApplied)
                             @foreach ($booths as [$left, $top])
                                 <button type="button" class="card-map-pin" data-location="booth"
                                     style="--pin-left: {{ $left }}%; --pin-top: {{ $top }}%" aria-label="Card Sales Booth" aria-pressed="false">

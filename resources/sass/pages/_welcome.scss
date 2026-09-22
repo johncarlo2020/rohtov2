@@ -1,13 +1,10 @@
-// .welcome-page {
-//     .branding {
-//         margin-bottom: 15vh;
-//     }
-
-//     .bottom-text-welcome {
-//         margin-top: 20vh;
-
-//         .login-text {
-//             margin-top: 10vh;
-//         }
-//     }
-// }
+.welcome-page {
+    .welcome_img_bottom{
+        object-fit: contain;
+        width: 100%;
+        height: auto;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+    }
+}

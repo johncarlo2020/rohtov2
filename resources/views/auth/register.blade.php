@@ -5,7 +5,7 @@
                 @include('components.branding')
             </div>
             <div class="mt-3 px-2 w-100">
-                <h1 class="mt-5 mb-3 text-center fw-bold heading-dutch text-white">SIGN UP</h1>
+                <h1 class="mt-5 mb-3 text-white text-center fw-bold heading-dutch">SIGN UP</h1>
                 <div class="px-4 py-5 pt-1 register-form-parent">
                     <form id="form" method="POST" action="{{ route('register') }}">
                         @csrf
@@ -283,7 +283,7 @@
                             <div class="mb-0 text-center">
                                 <button id="submitButton" type="submit"
                                     class="mt-4 custom-btn custom-btn-primary" :disabled="!agreed"
-                                    :class="{ 'opacity-50': !agreed }">
+                                    :class="{ 'opacity-10': !agreed }">
                                     {{ __('SUBMIT') }}
                                 </button>
                             </div>
@@ -292,8 +292,8 @@
                 </div>
 
                 <div class="bottom-text text-white">
-                    <p class="already-register text-white">Already Registered</p>
-                    <p class="already-register text-white">
+                    <p class="text-white already-register">Already Registered</p>
+                    <p class="text-white already-register">
                         Please Login <a href="{{ route('login') }}" class="text-white text-decoration-underline">here</a>
                     </p>
                 </div>

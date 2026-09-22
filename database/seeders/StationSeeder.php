@@ -10,21 +10,24 @@ class StationSeeder extends Seeder
     public function run(): void
     {
         $stations = [
-            'Shop for More' => true,
-            'More to Enjoy' => true,
-            'More to Unwind' => true,
-            'More to Stream' => true,
-            'Maybank Cafe' => true,
-            'Flight Simulator' => false,
-            'Gashapon Lucky Draw' => false,
-            'Merchandise' => false,
+            1 => ['name' => 'Shop for More', 'is_mandatory' => true],
+            2 => ['name' => 'More to Enjoy', 'is_mandatory' => true],
+            3 => ['name' => 'More to Unwind', 'is_mandatory' => true],
+            4 => ['name' => 'More to Stream', 'is_mandatory' => true],
+            5 => ['name' => 'Maybank Cafe', 'is_mandatory' => true],
+            6 => ['name' => 'Flight Simulator', 'is_mandatory' => false],
+            7 => ['name' => 'Gashapon Lucky Draw', 'is_mandatory' => false],
+            8 => ['name' => 'Merchandise', 'is_mandatory' => false],
         ];
 
-        foreach ($stations as $name => $isMandatory) {
-            Station::updateOrCreate(
-                ['name' => $name],
-                ['is_mandatory' => $isMandatory],
-            );
+        foreach ($stations as $id => $data) {
+            $station = Station::find($id);
+
+            if ($station) {
+                $station->update($data);
+            } else {
+                Station::create(array_merge(['id' => $id], $data));
+            }
         }
     }
 }

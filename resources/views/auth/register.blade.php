@@ -154,19 +154,18 @@
 
                         {{-- Socials --}}
                         <div class="mb-3">
-                            <label>How did you find out about the iProperty New homes Expo at paradigm mall johor bahru?</label>
+                            <label>How did you find out about the PropertyGuru New Homes Expo at KSL City Johor Bahru?</label>
                             @php
                                 $socials = [
-                                    'iProperty Facebook Ads',
+                                    'PropertyGuru Facebook Ads',
                                     'Google Ads',
-                                    'Facebook - Johor Now',
+                                    'Xiao Hong Shu (XHS) – KOC Post',
                                     'Outdoor Street Bunting',
-                                    'Outdoor Temp Board',
-                                    'iProperty Channels (EDM,Website)',
-                                    "Paradigm Mall JB's Facebook / Instagram Post",
-                                    'Mall Advertising (Outdoor Lamp Post, Pillar Wrap, Digital Screen)',
-                                    'Event Brite',
+                                    'PropertyGuru Channels (EDM, Website, Xiao Hong Shu)',
+                                    "KSL City JB’s Facebook / Instagram Post",
+                                    'Mall Advertising (Lift Poster, Walkway Poster)',
                                     'Developers Facebook Ads',
+                                    'Event Brite',
                                     'Walk-in',
                                 ];
                             @endphp
@@ -283,7 +282,7 @@
 
                             <div class="mb-0 text-center">
                                 <button id="submitButton" type="submit"
-                                    class="mt-4 custom-btn custom-btn-primary pulse-slow" :disabled="!agreed"
+                                    class="mt-4 custom-btn custom-btn-primary" :disabled="!agreed"
                                     :class="{ 'opacity-50': !agreed }">
                                     {{ __('SUBMIT') }}
                                 </button>

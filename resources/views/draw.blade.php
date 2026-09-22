@@ -190,7 +190,6 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: handPulse 1.8s ease-in-out infinite;
   position: relative;
 }
 
@@ -209,7 +208,7 @@ html, body {
   display: block;
 }
 
-@keyframes handPulse { 0%,100% { transform: scale(1);    } 50% { transform: scale(1.07); } }
+@keyframes handPulse { 0%,100% { transform: scale(1); } }
 @keyframes handTap   { 0%,100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
 @keyframes spinSlow  { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
@@ -424,10 +423,9 @@ html, body {
   font-size: clamp(16px, 1.8vh, 28px);
   color: var(--text-mid);
   letter-spacing: 0.5px;
-  animation: hintPulse 1.4s ease-in-out infinite;
 }
 
-@keyframes hintPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+@keyframes hintPulse { 0%,100% { opacity: 1; } }
 
 /* Logo header — outside card, top of screen */
 .screen-header-logo {
@@ -817,10 +815,40 @@ const CONFIG = {
  */
 const prizes = [
   {
-    id: 'aeon',
+    id: 'lanyard',
     dbId: 1,
-    dbName: 'AEON RM 10 Gift Voucher',
-    name: 'AEON RM10 Gift Voucher',
+    dbName: 'Phone Lanyard',
+    name: 'Phone Lanyard',
+    image: `${GIFT_IMAGE_BASE}/iProperty  Phone Lanyard_2x.webp`,
+    emoji: '📱',
+    color: '#E8F0FF',
+    weight: 12,
+  },
+  {
+    id: 'fan',
+    dbId: 2,
+    dbName: 'Neck Fan',
+    name: 'Neck Fan',
+    image: `${GIFT_IMAGE_BASE}/Neck Fan_2x.webp`,
+    emoji: '💨',
+    color: '#E3F2FD',
+    weight: 12,
+  },
+  {
+    id: 'notebook',
+    dbId: 3,
+    dbName: 'Notebook',
+    name: 'Notebook',
+    image: `${GIFT_IMAGE_BASE}/iProperty Notebook_2x.webp`,
+    emoji: '📓',
+    color: '#EDE7F6',
+    weight: 12,
+  },
+  {
+    id: 'aeon',
+    dbId: 4,
+    dbName: 'AEON Voucher RM10',
+    name: 'AEON Voucher RM10',
     image: `${GIFT_IMAGE_BASE}/AEON RM 10 Gift Voucher_2x.webp`,
     emoji: '🛒',
     color: '#E8F5E9',
@@ -828,63 +856,43 @@ const prizes = [
   },
   {
     id: 'br',
-    dbId: 2,
-    dbName: 'Baskin Robbins Voucher',
-    name: 'Baskin Robbins Voucher',
+    dbId: 5,
+    dbName: 'Baskin Robbins RM5',
+    name: 'Baskin Robbins RM5',
     image: `${GIFT_IMAGE_BASE}/Baskin Robbins Voucher_2x.webp`,
     emoji: '🍦',
     color: '#FFF3E0',
     weight: 12,
   },
   {
-    id: 'lanyard',
-    dbId: 9,
-    dbName: 'iProperty Phone Lanyard',
-    name: 'iProperty Phone Lanyard',
-    image: `${GIFT_IMAGE_BASE}/iProperty  Phone Lanyard_2x.webp`,
-    emoji: '📱',
-    color: '#E8F0FF',
-    weight: 12,
-  },
-  {
-    id: 'notebook',
-    dbId: 4,
-    dbName: 'iProperty Notebook',
-    name: 'iProperty Notebook',
-    image: `${GIFT_IMAGE_BASE}/iProperty Notebook_2x.webp`,
-    emoji: '📓',
-    color: '#EDE7F6',
-    weight: 12,
-  },
-  {
-    id: 'fan',
-    dbId: 3,
-    dbName: 'Neck Fan',
-    name: 'Neck Fan',
-    image: `${GIFT_IMAGE_BASE}/Neck Fan_2x.webp`,
-    emoji: '💨',
-    color: '#E3F2FD',
-    weight: 13,
-  },
-  {
     id: 'texas',
-    dbId: 7,
-    dbName: 'Texas Chicken RM 5 Cash Voucher',
-    name: 'Texas Chicken RM5 Cash Voucher',
+    dbId: 6,
+    dbName: 'Texas / SF Voucher RM5',
+    name: 'Texas / SF Voucher RM5',
     image: `${GIFT_IMAGE_BASE}/Texas Chicken RM 5 Cash Voucher_2x.webp`,
     emoji: '🍗',
     color: '#FFF3E0',
-    weight: 13,
+    weight: 12,
   },
   {
-    id: 'watsons',
-    dbId: 8,
-    dbName: 'Watsons RM 10 Gift Voucher',
-    name: 'Watsons RM10 Gift Voucher',
+    id: 'watson',
+    dbId: 7,
+    dbName: 'Watson RM10',
+    name: 'Watson RM10',
     image: `${GIFT_IMAGE_BASE}/Watsons RM 10 Gift Voucher _2x.webp`,
     emoji: '🧴',
     color: '#E8F5E9',
-    weight: 13,
+    weight: 12,
+  },
+  {
+    id: 'oriental',
+    dbId: 8,
+    dbName: 'Oriental Kopi RM10',
+    name: 'Oriental Kopi RM10',
+    image: `${GIFT_IMAGE_BASE}/Oriental Kopi  RM 10 Cash Voucher_2x.webp`,
+    emoji: '☕',
+    color: '#FFF8E1',
+    weight: 12,
   },
 ].map((prize) => ({
   ...prize,

@@ -222,7 +222,7 @@ if ($activeVoucher) {
         if ($activeVoucher->session == 1) {
 
             $voucherStatus = 'Session 1 Full';
-            $voucherMessage = 'Session 1 quota has been reached. Please come back at 6:00 PM for Session 2.';
+            $voucherMessage = 'Session 1 quota has been reached. Please come back tomorrow at 12:00 PM for Session 2.';
 
         } 
         else {

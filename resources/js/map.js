@@ -96,12 +96,12 @@ if (cardDialog && applyButton) {
         cardDialog.classList.add('is-scanning');
         cardDialog.showModal();
         try {
+            await new Promise(resolve => requestAnimationFrame(resolve));
             scanner = new window.Html5Qrcode('card-apply-reader');
             starting = scanner.start({ facingMode: 'environment' }, {
                 fps: 10,
-                aspectRatio: reader.clientWidth / reader.clientHeight,
                 qrbox: (width, height) => {
-                    const size = Math.floor(Math.min(width, height) * 0.8);
+                    const size = Math.floor(Math.min(width, height) * 0.75);
                     return { width: size, height: size };
                 },
             }, async decodedText => {

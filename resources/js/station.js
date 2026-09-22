@@ -79,10 +79,10 @@ if (page) {
         hint.hidden = false;
         page.classList.add('is-scanning');
         try {
+            await new Promise(resolve => requestAnimationFrame(resolve));
             scanner = new window.Html5Qrcode('station-reader');
             starting = scanner.start({ facingMode: 'environment' }, {
                 fps: 10,
-                aspectRatio: reader.clientWidth / reader.clientHeight,
                 qrbox: (width, height) => {
                     const size = Math.floor(Math.min(width, height) * 0.7);
                     return { width: size, height: size };

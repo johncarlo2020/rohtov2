@@ -150,17 +150,54 @@
     .station-camera {
         flex: 1;
         min-height: 0;
-        background: #d9d9d9;
+        background: #000;
+        position: relative;
         overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     #station-reader {
+        position: relative;
         height: 100%;
         width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+
+        div[id$="__scan_region"] {
+            position: relative !important;
+            width: 100% !important;
+            height: 100% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            overflow: hidden !important;
+        }
 
         video {
-            max-height: 100%;
-            object-fit: contain;
+            position: absolute !important;
+            inset: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            max-height: none !important;
+            object-fit: cover !important;
+        }
+
+        #qr-shaded-region {
+            position: absolute !important;
+            inset: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            pointer-events: none;
+            border-color: rgba(0, 0, 0, 0.55) !important;
+
+            > div {
+                border-color: var(--station-accent, #ffbf00) !important;
+                border-width: 4px !important;
+            }
         }
     }
 

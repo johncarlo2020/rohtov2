@@ -1,6 +1,53 @@
 @extends('layouts.admin') @section('content')
 <style>
+    #reader {
+        width: 100%;
+        max-width: 480px;
+        min-height: 360px;
+        height: 50vh;
+        max-height: 480px;
+        margin: 0 auto;
+        position: relative;
+        background: #000;
+        border-radius: 12px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
+    #reader div[id$="__scan_region"] {
+        position: relative !important;
+        width: 100% !important;
+        height: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        overflow: hidden !important;
+    }
+
+    #reader video {
+        position: absolute !important;
+        inset: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        max-height: none !important;
+        object-fit: cover !important;
+    }
+
+    #reader #qr-shaded-region {
+        position: absolute !important;
+        inset: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        pointer-events: none;
+        border-color: rgba(0, 0, 0, 0.55) !important;
+    }
+
+    #reader #qr-shaded-region > div {
+        border-color: #ffbf00 !important;
+        border-width: 4px !important;
+    }
 </style>
 <div class="mt-4 row justify-content-center">
     <div class="mb-4 col-lg-8 mb-lg-0">
@@ -59,15 +106,16 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // Initialize QuaggaJS
         const html5QrCode = new Html5Qrcode("reader");
 
         html5QrCode.start({
             facingMode: "environment"
         }, {
             fps: 10,
-            qrbox: 200,
-            aspectRatio: 2 / 2 // Set the aspect ratio to 16:9
+            qrbox: (width, height) => {
+                const size = Math.floor(Math.min(width, height) * 0.75);
+                return { width: size, height: size };
+            },
         },
             qrCodeMessage => {
                 sendMessage(`${qrCodeMessage}`);

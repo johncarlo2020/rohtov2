@@ -14,7 +14,7 @@ class StationSeeder extends Seeder
             'More to Enjoy' => true,
             'More to Unwind' => true,
             'More to Stream' => true,
-            'Enjoy More Cafe' => true,
+            'Maybank Cafe' => true,
             'Flight Simulator' => false,
             'Gashapon Lucky Draw' => false,
             'Merchandise' => false,

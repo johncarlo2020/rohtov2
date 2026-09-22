@@ -14,9 +14,6 @@
 
             /* Subtle elevation */
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-
-            /* Animations */
-            animation: scannerIdle 2.8s ease-in-out infinite;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
@@ -37,10 +34,14 @@
 
             /* Subtle elevation */
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-
-            /* Animations */
-            animation: scannerIdle 2.8s ease-in-out infinite;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .station-image {
+            background-color: #ffffff !important;
+            border-radius: 20px;
+            padding: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
         }
 
         /* Hover / Active */

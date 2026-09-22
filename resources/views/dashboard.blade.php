@@ -26,7 +26,6 @@
             justify-content: center;
             gap: 6px;
             cursor: pointer;
-            animation: floatIdle 3.5s ease-in-out infinite;
             transition: transform 0.25s ease, box-shadow 0.25s ease;
             position: relative;
             overflow: hidden;

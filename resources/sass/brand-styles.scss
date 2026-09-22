@@ -905,6 +905,23 @@ button.custom-btn.answer-btn.answer-btn-3 {
     background: #ffffff !important;
 }
 
+.station-image {
+    background-color: #ffffff !important;
+    border-radius: 20px;
+    padding: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.station-card {
+    animation: none !important;
+}
+
+#start-scanner,
+#start-quiz,
+#perfume-next-btn {
+    animation: none !important;
+}
+
 .stamping-page.active::before {
     filter: grayscale(0%);
 }

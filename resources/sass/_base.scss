@@ -22,7 +22,8 @@ html {
     font-size: $paragraph;
     line-height: $line-height;
     color: #ffffff;
-    background-color: #F00B0B;
+    // linear background C20000 FF0F0F
+    background: linear-gradient(135deg, #C20000 0%, #FF0F0F 100%);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     width: 100vw;

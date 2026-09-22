@@ -50,7 +50,7 @@
             z-index: 10;
         }
 
-        .btn-wrapper 
+        .btn-wrapper
         {
             margin-top: -5%;
         }
@@ -71,13 +71,14 @@
     </style>
 </head>
 
-<body class="antialiased welcome-page" style="background-image:url('{{ asset('images/brand/landing_bg2.webp') }}');">
+<body class="antialiased welcome-page">
+    <img class="welcome_img_store" src="{{ asset('images/brand/welcome_img.webp') }}" alt="Welcome Image" />
 
-    <div class="container-fluid main-content with-scroll py-4 px-0">
+    <div class="px-0 py-4 container-fluid main-content with-scroll">
         <div class="top-container">
             <!-- Branding (top area) -->
-            <div class="row flex-grow-1">
-                <div class="col-12 animate-entry mb-4">
+            <div class="flex-grow-1 row">
+                <div class="mb-4 animate-entry col-12">
                     <div>
                         <div class="branding">
                             <img onclick="window.location.href='{{ route('dashboard') }}'" class="logo" src="{{ asset('images/brand/logo_white.webp') }}" alt="Brand Logo" />
@@ -86,18 +87,18 @@
                 </div>
             </div>
         </div>
-        <div id="banner" class="col-11 col-md-10 mx-auto d-flex flex-column justify-content-center animate-entry text-center text-white">
+        <div id="banner" class="d-flex flex-column justify-content-center mx-auto text-white text-center animate-entry col-11 col-md-10">
             <div class="top">
-                <p class="fs-4 mb-3 fw-normal" style="font-size: clamp(1.2rem, 4.5vw, 1.6rem);">Welcome to the journey of</p>
-                <h1 class="fw-bold mb-3" style="font-size: clamp(1.8rem, 6.5vw, 2.8rem); font-weight: 800; line-height: 1.2;">PropertyGuru New Homes Expo</h1>
-                <p class="fs-5 mb-2" style="font-size: clamp(1rem, 3.8vw, 1.35rem);">26-28 September 2026 | 10AM - 10PM</p>
-                <h3 class="fw-bold fs-4 mb-0" style="font-size: clamp(1.25rem, 4.8vw, 1.7rem); font-weight: 700;">KSL City Johor Bahru</h3>
+                <p class="mb-3 fs-4 fw-normal" style="font-size: clamp(1.2rem, 4.5vw, 1.6rem);">Welcome to the journey of</p>
+                <h1 class="mb-3 fw-bold" style="font-size: clamp(1.8rem, 6.5vw, 2.8rem); font-weight: 800; line-height: 1.2;">PropertyGuru New Homes Expo</h1>
+                <p class="mb-2 fs-5" style="font-size: clamp(1rem, 3.8vw, 1.35rem);">26-28 September 2026 | 10AM - 10PM</p>
+                <h3 class="mb-0 fw-bold fs-4" style="font-size: clamp(1.25rem, 4.8vw, 1.7rem); font-weight: 700;">KSL City Johor Bahru</h3>
             </div>
             <!-- Bottom CTA -->
-            <div class="row mb-5">
-                <div class="col-12 text-center">
+            <div class="mb-5 row">
+                <div class="text-center col-12">
                     <div class="d-block mb-2">
-                        <div class="colanimate-entry delay-2 btn-wrapperx px-5 mt-4">
+                        <div class="mt-4 px-5 delay-2 colanimate-entry btn-wrapperx">
                             <a href="{{ route('register') }}" class="custom-btn custom-btn-secondary">
                                 JOIN NOW
                             </a>
@@ -108,10 +109,10 @@
         </div>
         <div class="bottom-container">
             <!-- Bottom CTA -->
-            <div class="row mb-5">
-                <div class="col-12 text-center">
-                    <div class="d-block  mb-2">
-                        <div class="colanimate-entry delay-2 btn-wrapperx px-5 mt-4 d-none">
+            <div class="mb-5 row">
+                <div class="text-center col-12">
+                    <div class="d-block mb-2">
+                        <div class="mt-4 px-5 delay-2 colanimate-entry btn-wrapperx d-none">
                             <a href="{{ route('register') }}" class="custom-btn custom-btn-seconday">
                                 JOIN NOW
                             </a>

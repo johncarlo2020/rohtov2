@@ -7,7 +7,7 @@
             <p>Explore the experiences,<br>collect digital stamps and<br>unlock rewards along the way.</p>
             <figure>
                 <div class="participant-welcome-card"><img src="{{ asset('files/main/maybank_card.webp') }}" alt="Maybank Cash Back Mastercard Platinum" /></div>
-                <figcaption>Maybank Cash Back<br>Mastercard Platinum</figcaption>
+                <figcaption>Maybank Cash Back<br>Mastercard Platinum Credit Card</figcaption>
             </figure>
             <div class="participant-welcome-actions">
                 <a href="{{ route('register') }}">REGISTER</a>

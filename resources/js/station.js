@@ -14,10 +14,11 @@ if (page) {
     let starting;
     let busy = false;
     let success = page.dataset.completed === 'true';
-    let redirectUrl = null;
+    //redirect to map page laravel route
+    let redirectUrl = window.mapRouteUrl;
 
     async function stopCamera() {
-        if (starting) await starting.catch(() => {});
+        if (starting) await starting.catch(() => { });
         if (scanner?.isScanning) await scanner.stop();
     }
 
@@ -59,7 +60,7 @@ if (page) {
             }
             const result = await response.json();
             success = true;
-            redirectUrl = result.redirect_url;
+            redirectUrl = result.redirect_url || window.mapRouteUrl;
             hint.hidden = true;
             completed.hidden = false;
             showResult('Check-in Successful', true);
@@ -87,7 +88,7 @@ if (page) {
                     const size = Math.floor(Math.min(width, height) * 0.7);
                     return { width: size, height: size };
                 },
-            }, onScan, () => {});
+            }, onScan, () => { });
             await starting;
         } catch {
             showResult('Camera unavailable. Allow camera access and try again.');
@@ -99,10 +100,13 @@ if (page) {
 
     function finishResult() {
         dialog.close();
+
         if (success && redirectUrl) {
+            //redirect to the URL
             window.location.assign(redirectUrl);
             return;
         }
+
         showDetails();
         (success ? completed.querySelector('a') : scanButton).focus();
     }
@@ -114,9 +118,9 @@ if (page) {
     page.querySelector('.station-back').addEventListener('click', async event => {
         if (!page.classList.contains('is-scanning')) return;
         event.preventDefault();
-        await stopCamera().catch(() => {});
+        await stopCamera().catch(() => { });
         showDetails();
         scanButton.focus();
     });
-    window.addEventListener('pagehide', () => { stopCamera().catch(() => {}); });
+    window.addEventListener('pagehide', () => { stopCamera().catch(() => { }); });
 }

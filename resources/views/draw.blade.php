@@ -514,7 +514,7 @@ html, body {
 .result-prize-name {
   font-size: clamp(20px, 5vw, 28px);
   font-weight: 700;
-  color: #ff3333;
+  color: white;
   text-align: center;
   line-height: 1.3;
   text-shadow: 0 1px 4px rgba(0,0,0,0.3);

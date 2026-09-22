@@ -81,16 +81,27 @@
         margin: 0 auto 30px;
     }
 
-    .station-journey-instructions p {
-        color: #fff;
-        font-size: 23px;
-        line-height: 1.4;
-        font-weight: 300;
-        margin: 0 0 16px;
+    .station-journey-instructions {
 
-        strong {
-            font-weight: 700;
+        .station-journey-note {
+            font-size: 14px;
+            line-height: 1.4;
+            text-align: center;
+            margin: 10px 0 0;
         }
+
+        p {
+            color: #fff;
+            font-size: 23px;
+            line-height: 1.4;
+            font-weight: 300;
+            margin: 0 0 16px;
+
+            strong {
+                font-weight: 700;
+            }
+        }
+
     }
 
     .station-journey-footer {
@@ -194,7 +205,7 @@
             pointer-events: none;
             border-color: rgba(0, 0, 0, 0.55) !important;
 
-            > div {
+            >div {
                 border-color: var(--station-accent, #ffbf00) !important;
                 border-width: 4px !important;
             }

@@ -3,7 +3,7 @@
         data-station-id="{{ $station->id }}" data-scan-url="{{ route('process_qr_code') }}"
         data-completed="{{ $stationDone ? 'true' : 'false' }}">
         <header class="station-journey-header">
-            <a href="{{ route('map') }}" class="station-back" aria-label="Back to map"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></a>
+            <a href="{{ route('map') }}" class="station-back" aria-label="Back to map"><i class="fa-chevron-left fa-solid" aria-hidden="true"></i></a>
             <img src="{{ asset('files/main/logo.webp') }}" alt="Maybank" />
         </header>
         <section class="station-journey-details" aria-labelledby="station-title">
@@ -13,6 +13,9 @@
                 alt="{{ $station->name }} event booth" width="145" height="145" />
             <div class="station-journey-instructions" @if($stationDone) hidden @endif>
                 <p>Proceed to</p><p><strong>{{ $station->name }}</strong></p><p>to begin your journey.</p>
+                @if ((int) $station->id === 5)
+                    <p class="station-journey-note">Redemption of Zus Coffee &amp; Krispy Kreme<br>( First 500 per day )</p>
+                @endif
             </div>
         </section>
         <section class="station-camera" hidden aria-label="Station QR camera">

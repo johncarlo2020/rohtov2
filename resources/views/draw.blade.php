@@ -237,7 +237,13 @@ html, body {
 
 .btn--white {
   background: var(--white);
-  color: var(--blue);
+  color:  #ff3333;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.btn--red {
+  background: #ff3333;;
+  color:  white;
   box-shadow: 0 4px 20px rgba(0,0,0,0.2);
 }
 .btn--white:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,0,0,0.26); }
@@ -310,7 +316,7 @@ html, body {
   justify-content: center;
   gap: 24px;
   padding: 36px 20px;
-  background: url('{{ asset('images/images/draw.webp') }}') center center / cover no-repeat;
+  background: url('{{ asset('images/images/draw.png') }}') center center / cover no-repeat;
 }
 
 /* Logo at top of shuffle screen */
@@ -321,7 +327,7 @@ html, body {
   justify-content: center;
 }
 .screen-logo img {
-  height: 36px;
+  height: 200px;
   width: auto;
   object-fit: contain;
 }
@@ -382,7 +388,7 @@ html, body {
   font-size: clamp(20px, 2.4vh, 36px);
   font-weight: 700;
   text-align: center;
-  color: var(--blue);
+  color: #ff3333;
   line-height: 1.3;
   width: 100%;
 }
@@ -510,7 +516,7 @@ html, body {
 .result-prize-name {
   font-size: clamp(20px, 5vw, 28px);
   font-weight: 700;
-  color: var(--white);
+  color: #ff3333;
   text-align: center;
   line-height: 1.3;
   text-shadow: 0 1px 4px rgba(0,0,0,0.3);
@@ -528,11 +534,12 @@ html, body {
 #screen-qr {
   justify-content: flex-start;
   align-items: center;
-  gap: 0;
-  padding: 0;
-  position: relative;
-  background: #C8D3E8;
-  background: radial-gradient(circle at 50% -20%, #abc8ee 0%, #d5e8fb 58%, #e3f2ff 100%);
+  gap: 24px;
+  padding-top: clamp(290px, 30.5vh, 586px);
+  padding-left: 32px;
+  padding-right: 32px;
+  padding-bottom: 40px;
+  background: url('{{ asset('images/images/winner.webp') }}') center center / cover no-repeat;
 }
 
 #screen-qr #btn-finish {
@@ -545,10 +552,10 @@ html, body {
   left: 50%;
   top: clamp(286px, 41vh, 788px);
   transform: translateX(-50%);
-  background: rgba(208, 226, 246, 0.58);
+  background: white;
   border-radius: 24px;
   border: 1px solid rgba(255, 255, 255, 0.52);
-  box-shadow: 0 20px 48px rgba(77, 118, 167, 0.24);
+  box-shadow: 0 20px 48px rgba(16, 36, 59, 0.24);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -562,7 +569,7 @@ html, body {
 .qr-instruction {
   font-size: clamp(28px, 2.9vh, 54px);
   font-weight: 700;
-  color: #2f62af;
+  color: #ff3333;
   text-align: center;
   line-height: 1.1;
 }
@@ -673,7 +680,7 @@ body.countdown-active #screen-shuffle .shuffle-hint {
 .countdown-number {
   font-size: clamp(84px, 24vw, 186px);
   font-weight: 900;
-  color: #2f62af;
+  color: #ff3333;
   line-height: 1;
   text-shadow: none;
   animation: countPop 0.4s cubic-bezier(.4,0,.2,1) both;
@@ -683,7 +690,7 @@ body.countdown-active #screen-shuffle .shuffle-hint {
   font-size: clamp(18px, 3.9vw, 48px);
   line-height: 1.1;
   font-weight: 800;
-  color: #17376c;
+  color: #ff3333;
   text-align: center;
   max-width: 90%;
   word-break: break-word;
@@ -708,7 +715,7 @@ body.countdown-active #screen-shuffle .shuffle-hint {
 
   <!-- ░░ SCREEN 2 – GUIDE ░░ -->
   <section id="screen-guide" class="screen">
-    <button class="btn btn--blue" id="btn-ready">I'M READY</button>
+    <button class="btn btn--white" id="btn-ready">I'M READY</button>
     <div class="hand-icon">
       <div class="hand-circle">
         <span class="hand-emoji">👆</span>
@@ -744,15 +751,14 @@ body.countdown-active #screen-shuffle .shuffle-hint {
 
   <!-- ░░ SCREEN 5 – QR ░░ -->
   <section id="screen-qr" class="screen">
-    <img class="screen-header-logo" src="{{ asset('images/images/logo_dark.webp') }}" alt="iProperty" onerror="this.style.display='none'" />
-    <button class="btn btn--blue btn--wide" id="btn-finish">FINISH</button>
+    <button class="btn btn--white btn--wide" id="btn-finish">FINISH</button>
     <div class="qr-card">
       <p class="qr-instruction">Scan this QR<br/>to claim your prize.</p>
       <div class="qr-box">
         <img id="qr-image" src="" alt="QR Code" onerror="this.style.display='none'" />
         <canvas id="qr-canvas"></canvas>
       </div>
-      <button class="btn btn--blue btn--sm" id="btn-redraw">REDRAW</button>
+      <button class="btn btn--red btn--wide" id="btn-redraw">REDRAW</button>
     </div>
   </section>
 
@@ -763,7 +769,6 @@ body.countdown-active #screen-shuffle .shuffle-hint {
       <div class="countdown-number-box">
         <span class="countdown-number" id="countdown-number">3</span>
       </div>
-      <p class="countdown-prize-name" id="countdown-prize-name"></p>
     </div>
   </div>
 
@@ -836,17 +841,17 @@ const prizes = [
     color: '#FFF3E0',
     weight: 12,
   },
-  {
-    id: 'lanyard',
-    dbId: 9,
-    dbName: 'iProperty Phone Lanyard',
-    name: 'iProperty Phone Lanyard',
-    image: `${GIFT_IMAGE_BASE}/iProperty  Phone Lanyard_2x.webp`,
-    emoji: '📱',
-    color: '#E8F0FF',
-    weight: 12,
+   {
+    id: 'fan',
+    dbId: 3,
+    dbName: 'Neck Fan',
+    name: 'Neck Fan',
+    image: `${GIFT_IMAGE_BASE}/Neck Fan_2x.webp`,
+    emoji: '💨',
+    color: '#E3F2FD',
+    weight: 13,
   },
-  {
+   {
     id: 'notebook',
     dbId: 4,
     dbName: 'iProperty Notebook',
@@ -857,18 +862,8 @@ const prizes = [
     weight: 12,
   },
   {
-    id: 'fan',
-    dbId: 3,
-    dbName: 'Neck Fan',
-    name: 'Neck Fan',
-    image: `${GIFT_IMAGE_BASE}/Neck Fan_2x.webp`,
-    emoji: '💨',
-    color: '#E3F2FD',
-    weight: 13,
-  },
-  {
     id: 'texas',
-    dbId: 7,
+    dbId: 5,
     dbName: 'Texas Chicken RM 5 Cash Voucher',
     name: 'Texas Chicken RM5 Cash Voucher',
     image: `${GIFT_IMAGE_BASE}/Texas Chicken RM 5 Cash Voucher_2x.webp`,
@@ -878,7 +873,7 @@ const prizes = [
   },
   {
     id: 'watsons',
-    dbId: 8,
+    dbId: 6,
     dbName: 'Watsons RM 10 Gift Voucher',
     name: 'Watsons RM10 Gift Voucher',
     image: `${GIFT_IMAGE_BASE}/Watsons RM 10 Gift Voucher _2x.webp`,
@@ -886,6 +881,26 @@ const prizes = [
     color: '#E8F5E9',
     weight: 13,
   },
+  {
+    id: 'lanyard',
+    dbId: 7,
+    dbName: 'iProperty Phone Lanyard',
+    name: 'iProperty Phone Lanyard',
+    image: `${GIFT_IMAGE_BASE}/iProperty  Phone Lanyard_2x.webp`,
+    emoji: '📱',
+    color: '#E8F0FF',
+    weight: 12,
+  },
+   {
+    id: 'oriental',
+    dbId: 8,
+    dbName: 'Oriental Kopi RM10',
+    name: 'Oriental Kopi RM10',
+    image: `${GIFT_IMAGE_BASE}/Oriental Kopi  RM 10 Cash Voucher_2x.webp`,
+    emoji: '☕',
+    color: '#E8F0FF',
+    weight: 12,
+  }
 ].map((prize) => ({
   ...prize,
   dbId: STOCKS_BY_NAME.get(normalizeGiftName(prize.dbName ?? prize.name))?.id ?? prize.dbId,
@@ -1204,7 +1219,6 @@ function showResult(prize) {
 }
 
 function setCountdownPreview(prize) {
-  const name = $('countdown-prize-name');
   if (!name || !prize) return;
 
   // Keep label only; no prize artwork in countdown panel.

@@ -783,4 +783,142 @@ class BookingSystemTest extends TestCase
         $response->assertSee('CANCELLED');
         $response->assertDontSee('MISSED');
     }
+
+    /** @test */
+    public function it_frees_slot_booked_count_when_admin_deletes_a_booking()
+    {
+        $adminRole = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'admin']);
+        $admin = \App\Models\User::factory()->create(['email' => 'admin_del_booking@example.com']);
+        $admin->assignRole($adminRole);
+
+        $slotsResponse = $this->getJson('/api/booking/dates/2026-10-06/slots');
+        $slotId = $slotsResponse->json()[0]['id'];
+        $slot = BookingSlot::find($slotId);
+
+        $booking = Booking::create([
+            'booking_date_id' => $slot->booking_date_id,
+            'booking_slot_id' => $slot->id,
+            'reference_no' => 'REF-DEL-CAP-123',
+            'customer_name' => 'Delete Cap User',
+            'customer_email' => 'delcap@example.com',
+            'customer_phone' => '09123456789',
+            'status' => 'confirmed',
+        ]);
+        $slot->increment('booked_count');
+        $this->assertEquals(1, $slot->fresh()->booked_count);
+
+        $response = $this->actingAs($admin)->delete("/admin/bookings/{$booking->id}");
+        $response->assertRedirect();
+
+        $this->assertDatabaseMissing('bookings', ['id' => $booking->id]);
+        $this->assertEquals(0, $slot->fresh()->booked_count);
+    }
+
+    /** @test */
+    public function it_prevents_modifying_or_cancelling_an_attended_booking()
+    {
+        $slotsResponse = $this->getJson('/api/booking/dates/2026-10-06/slots');
+        $slotId = $slotsResponse->json()[0]['id'];
+        $slot = BookingSlot::find($slotId);
+
+        $booking = Booking::create([
+            'booking_date_id' => $slot->booking_date_id,
+            'booking_slot_id' => $slot->id,
+            'reference_no' => 'REF-ATTENDED-123',
+            'customer_name' => 'Attended User',
+            'customer_email' => 'attended@example.com',
+            'customer_phone' => '09123456780',
+            'status' => 'attended',
+            'attended_at' => now(),
+        ]);
+        $slot->increment('booked_count');
+
+        // Attempt cancel via API
+        $cancelRes = $this->postJson("/api/bookings/{$booking->id}/cancel");
+        $cancelRes->assertStatus(422);
+        $cancelRes->assertJsonValidationErrors(['booking']);
+
+        // Attempt modify via API
+        $oct7Slots = $this->getJson('/api/booking/dates/2026-10-07/slots')->json();
+        $modifyRes = $this->postJson("/api/bookings/{$booking->id}/modify", [
+            'date' => '2026-10-07',
+            'slot_id' => $oct7Slots[0]['id'],
+        ]);
+        $modifyRes->assertStatus(422);
+        $modifyRes->assertJsonValidationErrors(['booking']);
+    }
+
+    /** @test */
+    public function it_blocks_staff_role_from_deleting_bookings_or_modifying_schedules()
+    {
+        $staffRole = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'staff']);
+        $staff = \App\Models\User::factory()->create(['email' => 'staff_unauth@example.com']);
+        $staff->assignRole($staffRole);
+
+        $slotsResponse = $this->getJson('/api/booking/dates/2026-10-06/slots');
+        $slotId = $slotsResponse->json()[0]['id'];
+        $slot = BookingSlot::find($slotId);
+
+        $booking = Booking::create([
+            'booking_date_id' => $slot->booking_date_id,
+            'booking_slot_id' => $slot->id,
+            'reference_no' => 'REF-STAFF-PROHIBIT-123',
+            'customer_name' => 'Prohibited Staff Test',
+            'customer_email' => 'staffprohabit@example.com',
+            'customer_phone' => '09123456781',
+            'status' => 'confirmed',
+        ]);
+
+        // Staff attempts to delete booking -> Redirects with error
+        $response1 = $this->actingAs($staff)->delete("/admin/bookings/{$booking->id}");
+        $response1->assertRedirect();
+        $response1->assertSessionHas('error', 'Unauthorized action. Staff members cannot delete bookings.');
+
+        // Staff attempts to toggle date availability -> Redirects with error
+        $response2 = $this->actingAs($staff)->post('/admin/schedule/toggle-date', [
+            'booking_date_id' => $slot->booking_date_id,
+        ]);
+        $response2->assertRedirect();
+        $response2->assertSessionHas('error', 'Unauthorized action. Staff members cannot block or unblock event dates.');
+    }
+
+    /** @test */
+    public function it_prevents_creating_duplicate_event_date()
+    {
+        $adminRole = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'admin']);
+        $admin = \App\Models\User::factory()->create(['email' => 'admin_dup_date@example.com']);
+        $admin->assignRole($adminRole);
+
+        // 2026-10-01 already has slots seeded
+        $this->getJson('/api/booking/dates/2026-10-01/slots');
+
+        // Admin attempts to create event date for 2026-10-01 with is_create = 1 -> FAILS validation
+        $response = $this->actingAs($admin)->post('/admin/schedule/update-public-slots', [
+            'date' => '2026-10-01',
+            'is_create' => 1,
+            'is_available' => 1,
+            'entries' => [
+                ['start_time' => '11:00', 'end_time' => '12:00', 'pax' => 6],
+            ],
+        ]);
+
+        $response->assertSessionHasErrors(['date']);
+
+        // Admin creates event date for 2026-10-25 (new date) with is_create = 1 -> SUCCEEDS
+        $validRes = $this->actingAs($admin)->post('/admin/schedule/update-public-slots', [
+            'date' => '2026-10-25',
+            'is_create' => 1,
+            'is_available' => 1,
+            'entries' => [
+                ['start_time' => '11:00', 'end_time' => '12:00', 'pax' => 6],
+            ],
+        ]);
+
+        $validRes->assertSessionHasNoErrors();
+        $validRes->assertSessionHas('success');
+    }
 }
+
+
+
+

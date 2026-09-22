@@ -121,21 +121,17 @@ class VipGroupService
             'GLAM READER' => [
                 'key' => 'GLAM READER',
                 'name' => 'GLAM READER',
-                'pax_summary' => '20 Pax',
-                'date_summary' => 'Oct 13 & Oct 14',
-                'badge' => 'Oct 13 & Oct 14',
+                'pax_summary' => '10 Pax',
+                'date_summary' => 'Oct 13',
+                'badge' => 'Oct 13',
                 'schedules' => [
                     '2026-10-13' => [
-                        ['start_time' => '11:00', 'end_time' => '13:00', 'pax' => 10],
-                    ],
-                    '2026-10-14' => [
                         ['start_time' => '11:00', 'end_time' => '12:00', 'pax' => 5],
                         ['start_time' => '12:00', 'end_time' => '13:00', 'pax' => 5],
                     ],
                 ],
                 'breakdown_details' => [
-                    '13 Oct: 11:00 AM - 1:00 PM (10 pax)',
-                    '14 Oct: 11:00 AM - 1:00 PM (2 x 5 pax = 10 pax)',
+                    '13 Oct: 11:00 AM - 1:00 PM (2 x 5 pax = 10 pax)',
                 ]
             ],
         ];
@@ -165,6 +161,15 @@ class VipGroupService
     public static function saveVipGroups(array $groups): void
     {
         Storage::put(self::$fileName, json_encode($groups, JSON_PRETTY_PRINT));
+    }
+
+    /**
+     * Reset VIP Groups to default configuration.
+     */
+    public static function resetToDefaults(): void
+    {
+        $defaults = self::getDefaultVipGroups();
+        self::saveVipGroups($defaults);
     }
 
     /**

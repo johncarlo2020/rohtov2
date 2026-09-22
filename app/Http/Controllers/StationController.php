@@ -443,6 +443,10 @@ class StationController extends Controller
 
   public function userDelete($id)
   {
+    if (auth()->check() && auth()->user()->hasRole('staff')) {
+      return redirect()->back()->with('error', 'Unauthorized action. Staff members cannot delete users.');
+    }
+
     try {
       $user = User::findOrFail($id);
 

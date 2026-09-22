@@ -82,6 +82,8 @@ Route::group(['middleware' => ['admin']], function () {
     Route::post('/admin/vip', [VipController::class, 'store'])->name('admin.vip.store');
     Route::post('/admin/vip/groups/update', [VipController::class, 'updateGroupPreset'])->name('admin.vip.group.update');
     Route::post('/admin/vip/groups/delete', [VipController::class, 'deleteGroupPreset'])->name('admin.vip.group.delete');
+    Route::post('/admin/schedule/toggle-date', [VipController::class, 'toggleDateAvailability'])->name('admin.schedule.toggle-date');
+    Route::post('/admin/schedule/update-public-slots', [VipController::class, 'updatePublicSlots'])->name('admin.schedule.update-public-slots');
     Route::post('/admin/vip/{id}/attend', [VipController::class, 'markAttended'])->name('admin.vip.attend');
     Route::delete('/admin/vip/{id}', [VipController::class, 'destroy'])->name('admin.vip.destroy');
 

@@ -28,7 +28,8 @@ class BookingApiController extends Controller
     public function getDates(Request $request): JsonResponse
     {
         $startDate = $request->query('start_date', '2026-09-30');
-        $endDate = $request->query('end_date', '2026-10-17');
+        $defaultEnd = $this->availabilityService->getEventMaxDate();
+        $endDate = $request->query('end_date', $defaultEnd);
         $isVip = $request->boolean('is_vip');
 
         $availabilities = $this->availabilityService->getDateAvailabilities($startDate, $endDate, $isVip);
@@ -87,7 +88,7 @@ class BookingApiController extends Controller
      * POST /api/bookings/{id}/cancel
      * Cancel an existing booking.
      */
-    public function cancel(int $id): JsonResponse
+    public function cancel(string|int $id): JsonResponse
     {
         $booking = $this->bookingService->cancelBooking($id);
 
@@ -105,7 +106,7 @@ class BookingApiController extends Controller
      * POST /api/bookings/{id}/modify
      * Reschedule an existing booking.
      */
-    public function modify(int $id, Request $request): JsonResponse
+    public function modify(string|int $id, Request $request): JsonResponse
     {
         $validated = $request->validate([
             'date' => 'required|date_format:Y-m-d',

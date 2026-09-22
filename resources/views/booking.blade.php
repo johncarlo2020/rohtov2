@@ -12,6 +12,19 @@
             background-color: rgba(242, 101, 34, 0.04) !important;
         }
 
+        .selected-pill-box {
+            border: 1.5px solid #F26522 !important;
+            border-radius: 8px !important;
+            background-color: #ffffff !important;
+            padding: 8px 12px !important;
+        }
+
+        .unselected-pill-box {
+            border: 1px solid transparent;
+            border-bottom: 1px solid #f1f5f9;
+            padding: 8px 12px !important;
+        }
+
         .dropdown-overlay {
             position: absolute;
             top: 100%;
@@ -177,22 +190,22 @@
 
                                 <!-- SECTION 1: DATE SELECTION -->
                                 <div id="date-selection-section" class="mb-3">
-                                    <label class="form-label small fw-bold text-uppercase text-dark mb-1" style="font-size: 11px; letter-spacing: 0.8px;">
-                                        DATE AVAILABLE:
+                                    <label class="form-label small fw-bold text-dark mb-1" style="font-size: 11px; letter-spacing: 0.8px;">
+                                        Date Available:
                                     </label>
 
                                     <div class="position-relative">
                                         <!-- Date Selection Box (Collapsed / Selected Display) -->
                                         <div id="date-trigger-box" class="form-control d-flex justify-content-between align-items-center py-2 px-3 bg-white border cursor-pointer rounded-0" style="min-height: 42px;">
-                                            <span id="date-box-text" class="text-muted fw-bold" style="font-size: 13px;">DATE SELECTION</span>
+                                            <span id="date-box-text" class="text-muted fw-normal" style="font-size: 13px;">Date Selection</span>
                                             <i data-lucide="chevron-down" id="date-chevron" class="text-muted" style="width: 16px; height: 16px; transition: transform 0.2s;"></i>
                                         </div>
 
                                         <!-- Date Selection Expanded Dropdown Box (Overlay) -->
                                         <div id="date-dropdown-box" class="d-none dropdown-overlay p-3">
-                                            <div class="small fw-bold text-dark text-uppercase pb-2 mb-2 border-bottom d-flex justify-content-between align-items-center">
-                                                <span>DATE SELECTION</span>
-                                                <span>1 OCT – 17 OCT 2026</span>
+                                            <div class="small fw-bold text-dark pb-2 mb-2 border-bottom d-flex justify-content-between align-items-center">
+                                                <span>Date Selection</span>
+                                                <span id="date-range-header" class="text-muted" style="font-size: 11px; font-weight: 500;">1st Oct – 17th Oct 2026</span>
                                             </div>
 
                                             <!-- Date Items List -->
@@ -205,21 +218,21 @@
 
                                 <!-- SECTION 2: TIME SLOTS SELECTION (Appears once Date is Selected) -->
                                 <div id="time-slots-section" class="d-none mb-3 step-fade">
-                                    <label class="form-label small fw-bold text-uppercase text-dark mb-1" style="font-size: 11px; letter-spacing: 0.8px;">
-                                        TIME SLOTS:
+                                    <label class="form-label small fw-bold text-dark mb-1" style="font-size: 11px; letter-spacing: 0.8px;">
+                                        Time Slots:
                                     </label>
 
                                     <div class="position-relative">
                                         <!-- Time Slot Trigger Box (Collapsed / Selected Display) -->
                                         <div id="time-trigger-box" class="form-control d-flex justify-content-between align-items-center py-2 px-3 bg-white border cursor-pointer rounded-0" style="min-height: 42px;">
-                                            <span id="time-box-text" class="text-muted fw-bold" style="font-size: 13px;">SELECT YOUR TIME SLOT</span>
+                                            <span id="time-box-text" class="text-muted fw-normal" style="font-size: 13px;">Select Your Time Slot</span>
                                             <i data-lucide="chevron-down" id="time-chevron" class="text-muted" style="width: 16px; height: 16px; transition: transform 0.2s;"></i>
                                         </div>
 
                                         <!-- Time Slot Expanded Dropdown Box (Overlay) -->
                                         <div id="time-dropdown-box" class="d-none dropdown-overlay p-3">
-                                            <div class="small fw-bold text-muted text-uppercase pb-2 mb-2 border-bottom">
-                                                <span id="sessions-per-day-header">2 SESSIONS PER DAY</span>
+                                            <div class="small text-muted pb-2 mb-2 border-bottom">
+                                                <span id="sessions-per-day-header" style="font-size: 11px; font-weight: 500;">2 Sessions Per Day</span>
                                             </div>
 
                                             <!-- Time Slot Items List -->
@@ -230,8 +243,8 @@
                                     </div>
 
                                     <!-- 1 Hour Session Note -->
-                                    <div id="session-note" class="mt-2 small brand-orange-text text-uppercase fw-bold" style="font-size: 11px; letter-spacing: 0.5px;">
-                                        * 1 HOUR SESSION
+                                    <div id="session-note" class="mt-2 small brand-orange-text fw-bold" style="font-size: 11px; letter-spacing: 0.5px;">
+                                        * 1 Hour Session
                                     </div>
                                 </div>
 
@@ -435,52 +448,78 @@
 
             // Ordinal Date Helper
             function getOrdinalSuffix(day) {
-                if (day > 3 && day < 21) return 'TH';
+                if (day > 3 && day < 21) return 'th';
                 switch (day % 10) {
-                    case 1:  return "ST";
-                    case 2:  return "ND";
-                    case 3:  return "RD";
-                    default: return "TH";
+                    case 1:  return "st";
+                    case 2:  return "nd";
+                    case 3:  return "rd";
+                    default: return "th";
                 }
             }
 
             function formatDateOrdinal(dateStr) {
-                const parts = dateStr.split('-');
-                const year = parseInt(parts[0]);
-                const month = parseInt(parts[1]) - 1;
-                const day = parseInt(parts[2]);
-                const d = new Date(year, month, day);
-                const monthName = d.toLocaleString('default', { month: 'long' }).toUpperCase();
-                return `${day}${getOrdinalSuffix(day)} ${monthName}`;
-            }
-
-            function formatDateFullWithDay(dateStr) {
                 if (!dateStr) return '';
                 const parts = dateStr.split('-');
                 const year = parseInt(parts[0]);
                 const month = parseInt(parts[1]) - 1;
                 const day = parseInt(parts[2]);
                 const d = new Date(year, month, day);
-                const dayOfWeek = d.toLocaleString('default', { weekday: 'long' }).toUpperCase();
-                const monthName = d.toLocaleString('default', { month: 'long' }).toUpperCase();
-                return `${dayOfWeek}, ${day}${getOrdinalSuffix(day)} ${monthName}`;
+                const monthName = d.toLocaleString('default', { month: 'long' });
+                return `${day}${getOrdinalSuffix(day)} ${monthName}`;
+            }
+
+            function formatDateDayOfWeek(dateStr) {
+                if (!dateStr) return '';
+                const parts = dateStr.split('-');
+                const year = parseInt(parts[0]);
+                const month = parseInt(parts[1]) - 1;
+                const day = parseInt(parts[2]);
+                const d = new Date(year, month, day);
+                return d.toLocaleString('default', { weekday: 'long' });
+            }
+
+            function formatDateFullWithDay(dateStr) {
+                if (!dateStr) return '';
+                const dayOfWeek = formatDateDayOfWeek(dateStr);
+                const ordinalDate = formatDateOrdinal(dateStr);
+                return `${dayOfWeek}, ${ordinalDate}`;
+            }
+
+            function formatTimeSingle(tStr) {
+                if (!tStr) return '';
+                let str = tStr.trim();
+                let ampm = '';
+                if (str.toLowerCase().includes('am')) ampm = 'AM';
+                else if (str.toLowerCase().includes('pm')) ampm = 'PM';
+
+                let cleanTime = str.replace(/am|pm/i, '').trim();
+                let parts = cleanTime.split(':');
+                let h = parseInt(parts[0]);
+                let m = parts[1] ? parseInt(parts[1]) : 0;
+
+                if (!ampm) {
+                    ampm = h >= 12 ? 'PM' : 'AM';
+                    if (h > 12) h -= 12;
+                    if (h === 0) h = 12;
+                }
+
+                let minStr = (m === 0) ? '' : `:${m < 10 ? '0' + m : m}`;
+                return `${h}${minStr} ${ampm}`;
             }
 
             function formatTimeRange(timeStr) {
                 if (!timeStr) return '';
                 if (timeStr.includes('-')) {
                     const parts = timeStr.split('-');
-                    const start = parts[0].trim().replace(/\s+/g, '').toUpperCase();
-                    const end = parts[1].trim().replace(/\s+/g, '').toUpperCase();
-                    return `${start} - ${end}`;
+                    return `${formatTimeSingle(parts[0])} - ${formatTimeSingle(parts[1])}`;
                 }
-                return timeStr.trim().replace(/\s+/g, '').toUpperCase();
+                return formatTimeSingle(timeStr);
             }
 
-            // Fetch Date Availabilities (30 Sep - 18 Oct 2026)
+            // Fetch Date Availabilities
             async function fetchDateAvailabilities() {
                 try {
-                    const res = await fetch(`/api/booking/dates?start_date=${START_DATE}&end_date=${END_DATE}`);
+                    const res = await fetch(`/api/booking/dates?start_date=${START_DATE}`);
                     if (!res.ok) {
                         if (res.status === 429) {
                             showAlert('Too many requests. Please wait a moment and refresh.');
@@ -494,6 +533,15 @@
                         return;
                     }
                     state.dateAvailabilities = data;
+
+                    if (data.length > 0) {
+                        const minD = data[0].date;
+                        const maxD = data[data.length - 1].date;
+                        const headerEl = document.getElementById('date-range-header');
+                        if (headerEl && minD && maxD) {
+                            headerEl.textContent = `${formatDateOrdinal(minD)} – ${formatDateOrdinal(maxD)} 2026`;
+                        }
+                    }
 
                     renderDateDropdown(data);
                 } catch (err) {
@@ -509,25 +557,10 @@
                 container.innerHTML = '';
 
                 let availableModifyCount = 0;
-
-                // Filter out closed dates from registration date dropdown
                 const filteredItems = items.filter(item => item.status !== 'closed');
 
-                // Group by Month
-                const grouped = {};
                 filteredItems.forEach(item => {
-                    const parts = item.date.split('-');
-                    const year = parts[0];
-                    const monthIdx = parseInt(parts[1]) - 1;
-                    const d = new Date(year, monthIdx, 1);
-                    const monthKey = d.toLocaleString('default', { month: 'long' }).toUpperCase();
-
-                    if (!grouped[monthKey]) grouped[monthKey] = [];
-                    grouped[monthKey].push(item);
-
-                    if (item.status === 'available') {
-                        availableModifyCount++;
-                    }
+                    if (item.status === 'available') availableModifyCount++;
                 });
 
                 const warningBox = document.getElementById('no-available-modify-dates-warning');
@@ -546,70 +579,64 @@
                     }
                 }
 
-                Object.keys(grouped).forEach(monthName => {
-                    const monthGroup = document.createElement('div');
-                    monthGroup.className = 'mb-2';
+                const listContainer = document.createElement('div');
+                listContainer.className = 'd-flex flex-column gap-2';
 
-                    const monthHeader = document.createElement('div');
-                    monthHeader.className = 'small fw-bold text-muted text-uppercase mb-1 px-1';
-                    monthHeader.textContent = monthName;
-                    monthGroup.appendChild(monthHeader);
+                filteredItems.forEach(item => {
+                    const dateItem = document.createElement('div');
+                    const isSelected = state.selectedDate === item.date;
+                    const isAvailable = (item.status === 'available');
+                    const dayOfWeek = formatDateDayOfWeek(item.date);
+                    const formattedLabel = formatDateOrdinal(item.date);
 
-                    const rowsContainer = document.createElement('div');
-                    rowsContainer.className = 'd-flex flex-column gap-1';
+                    let wrapperClasses = 'date-row px-3 py-2 transition ';
+                    if (isSelected) {
+                        wrapperClasses += 'selected-pill-box cursor-pointer';
+                    } else if (isAvailable) {
+                        wrapperClasses += 'unselected-pill-box cursor-pointer';
+                    } else {
+                        wrapperClasses += 'unselected-pill-box opacity-50 cursor-not-allowed text-muted';
+                    }
 
-                    grouped[monthName].forEach(item => {
-                        const dateRow = document.createElement('div');
-                        const isSelected = state.selectedDate === item.date;
-                        const isAvailable = (item.status === 'available');
-                        const formattedLabel = formatDateOrdinal(item.date);
+                    dateItem.className = wrapperClasses;
 
-                        let rowClasses = 'date-row d-flex align-items-center justify-content-between px-3 py-2 rounded-0 transition small fw-bold text-uppercase ';
+                    let statusSpan = '';
+                    if (isSelected) {
+                        statusSpan = `<svg style="width: 20px; height: 20px;" class="brand-orange-text" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>`;
+                    } else if (isAvailable) {
+                        statusSpan = `<span class="small fw-bold text-success" style="font-size: 11px;">Available</span>`;
+                    } else if (item.status === 'full') {
+                        statusSpan = `<span class="small fw-bold text-muted" style="font-size: 11px;">Slot Full</span>`;
+                    } else {
+                        statusSpan = `<span class="small fw-bold text-muted" style="font-size: 11px;">Closed</span>`;
+                    }
 
-                        if (isSelected) {
-                            rowClasses += 'selected-pill text-dark cursor-pointer';
-                        } else if (isAvailable) {
-                            rowClasses += 'text-dark cursor-pointer';
-                        } else {
-                            rowClasses += 'opacity-50 cursor-not-allowed text-muted';
-                        }
-
-                        dateRow.className = rowClasses;
-
-                        let statusSpan = '';
-                        if (isSelected) {
-                            statusSpan = `<svg style="width: 18px; height: 18px;" class="brand-orange-text" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>`;
-                        } else if (isAvailable) {
-                            statusSpan = `<span class="small fw-bold text-success text-uppercase">AVAILABLE</span>`;
-                        } else if (item.status === 'full') {
-                            statusSpan = `<span class="small fw-bold text-muted text-uppercase">SLOT FULL</span>`;
-                        } else {
-                            statusSpan = `<span class="small fw-bold text-muted text-uppercase">CLOSED</span>`;
-                        }
-
-                        dateRow.innerHTML = `
-                            <span>${formattedLabel}</span>
+                    dateItem.innerHTML = `
+                        <div class="small text-muted mb-1" style="font-size: 11px; color: #94a3b8 !important; font-weight: 500;">${dayOfWeek}</div>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <span class="fw-bold text-dark" style="font-size: 14px;">${formattedLabel}</span>
                             ${statusSpan}
-                        `;
+                        </div>
+                    `;
 
-                        if (isAvailable) {
-                            dateRow.addEventListener('click', () => {
-                                state.selectedDate = item.date;
-                                state.selectedDateFormatted = formattedLabel;
-                                document.getElementById('date-box-text').textContent = formattedLabel;
-                                document.getElementById('date-box-text').className = 'text-dark fw-bold';
-                                toggleDateDropdown(false);
+                    if (isAvailable) {
+                        dateItem.addEventListener('click', () => {
+                            state.selectedDate = item.date;
+                            const fullLabel = formatDateFullWithDay(item.date);
+                            state.selectedDateFormatted = fullLabel;
+                            document.getElementById('date-box-text').textContent = fullLabel;
+                            document.getElementById('date-box-text').className = 'text-dark fw-bold';
+                            toggleDateDropdown(false);
 
-                                loadSlotsForSelectedDate(item.date);
-                            });
-                        }
+                            renderDateDropdown(items);
+                            loadSlotsForSelectedDate(item.date);
+                        });
+                    }
 
-                        rowsContainer.appendChild(dateRow);
-                    });
-
-                    monthGroup.appendChild(rowsContainer);
-                    container.appendChild(monthGroup);
+                    listContainer.appendChild(dateItem);
                 });
+
+                container.appendChild(listContainer);
             }
 
             // Toggle Date Dropdown Open/Close
@@ -659,11 +686,11 @@
                     state.selectedSlotLabel = null;
 
                     const count = Array.isArray(data) ? data.length : 0;
-                    const headerText = `${count} SESSION${count === 1 ? '' : 'S'} PER DAY`;
+                    const headerText = `${count} Session${count === 1 ? '' : 's'} Per Day`;
                     document.getElementById('sessions-per-day-header').textContent = headerText;
 
-                    document.getElementById('time-box-text').textContent = 'SELECT YOUR TIME SLOT';
-                    document.getElementById('time-box-text').className = 'text-muted fw-bold';
+                    document.getElementById('time-box-text').textContent = 'Select Your Time Slot';
+                    document.getElementById('time-box-text').className = 'text-muted fw-normal';
                     toggleTimeDropdown(true);
 
                     renderTimeDropdown(data);
@@ -679,29 +706,32 @@
                 container.innerHTML = '';
 
                 if (!slots || slots.length === 0) {
-                    container.innerHTML = `<div class="py-3 text-center small fw-bold text-muted">NO AVAILABLE SESSIONS FOR THIS DATE.</div>`;
+                    container.innerHTML = `<div class="py-3 text-center small fw-bold text-muted">No Available Sessions For This Date.</div>`;
                     return;
                 }
 
+                const listContainer = document.createElement('div');
+                listContainer.className = 'd-flex flex-column gap-2';
+
                 slots.forEach(slot => {
-                    const slotRow = document.createElement('div');
+                    const slotItem = document.createElement('div');
                     const isCurrentSlot = state.isModifying && state.currentSlotId && (parseInt(slot.id) === parseInt(state.currentSlotId));
                     const isSelected = state.selectedSlotId === slot.id;
                     const isAvailable = slot.available && !isCurrentSlot;
+                    const formattedTime = formatTimeRange(slot.label);
 
-                    let rowClasses = 'slot-row d-flex align-items-center justify-content-between px-3 py-2 rounded-0 transition small fw-bold text-uppercase ';
-
+                    let wrapperClasses = 'slot-row px-3 py-2 transition ';
                     if (isCurrentSlot) {
-                        rowClasses += 'opacity-50 cursor-not-allowed text-muted bg-light';
+                        wrapperClasses += 'unselected-pill-box opacity-50 cursor-not-allowed bg-light';
                     } else if (isSelected) {
-                        rowClasses += 'selected-pill text-dark cursor-pointer';
+                        wrapperClasses += 'selected-pill-box text-dark cursor-pointer';
                     } else if (isAvailable) {
-                        rowClasses += 'text-dark cursor-pointer';
+                        wrapperClasses += 'unselected-pill-box text-dark cursor-pointer';
                     } else {
-                        rowClasses += 'opacity-50 cursor-not-allowed text-muted';
+                        wrapperClasses += 'unselected-pill-box opacity-50 cursor-not-allowed text-muted';
                     }
 
-                    slotRow.className = rowClasses;
+                    slotItem.className = wrapperClasses;
 
                     const bookedCount = slot.booked_count || 0;
                     const capacity = slot.capacity || 20;
@@ -710,28 +740,30 @@
 
                     let rightSpan = '';
                     if (isCurrentSlot) {
-                        rightSpan = `<span class="small fw-bold text-muted text-uppercase">YOUR CURRENT SLOT</span>`;
+                        rightSpan = `<span class="small fw-bold text-muted" style="font-size: 11px;">Current Slot</span>`;
                     } else if (isSelected) {
-                        rightSpan = `<svg style="width: 18px; height: 18px;" class="brand-orange-text" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>`;
+                        rightSpan = `<svg style="width: 20px; height: 20px;" class="brand-orange-text" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>`;
                     } else if (!isAvailable || remaining <= 0) {
-                        rightSpan = `<span class="small fw-bold text-danger text-uppercase">SLOT FULL</span>`;
+                        rightSpan = `<span class="small fw-bold text-danger" style="font-size: 11px;">Slot Full</span>`;
                     } else if (isHalfBooked) {
-                        rightSpan = `<span class="small fw-bold text-warning text-uppercase">LIMITED SLOTS</span>`;
+                        rightSpan = `<span class="small fw-bold text-warning" style="font-size: 11px;">Limited Slots</span>`;
                     } else {
-                        rightSpan = `<span class="small fw-bold text-success text-uppercase">AVAILABLE</span>`;
+                        rightSpan = `<span class="small fw-bold text-success" style="font-size: 11px;">Available</span>`;
                     }
 
-                    slotRow.innerHTML = `
-                        <span>${slot.label}</span>
-                        ${rightSpan}
+                    slotItem.innerHTML = `
+                        <div class="d-flex align-items-center justify-content-between">
+                            <span class="fw-bold text-dark" style="font-size: 14px;">${formattedTime}</span>
+                            ${rightSpan}
+                        </div>
                     `;
 
                     if (isAvailable && !isCurrentSlot) {
-                        slotRow.addEventListener('click', () => {
+                        slotItem.addEventListener('click', () => {
                             state.selectedSlotId = slot.id;
                             state.selectedSlotLabel = slot.label;
 
-                            document.getElementById('time-box-text').textContent = slot.label;
+                            document.getElementById('time-box-text').textContent = formattedTime;
                             document.getElementById('time-box-text').className = 'text-dark fw-bold';
                             toggleTimeDropdown(false);
 
@@ -740,8 +772,10 @@
                         });
                     }
 
-                    container.appendChild(slotRow);
+                    listContainer.appendChild(slotItem);
                 });
+
+                container.appendChild(listContainer);
             }
 
             // Toggle Time Dropdown Open/Close

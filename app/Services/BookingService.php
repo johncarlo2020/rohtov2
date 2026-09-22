@@ -21,10 +21,17 @@ class BookingService
             $slotId = $data['slot_id'];
             $requestedDate = $data['date'];
 
-            // Enforce event date boundary: September 30, 2026 to October 17, 2026
-            if ($requestedDate < '2026-09-30' || $requestedDate > '2026-10-17') {
+            // Enforce event date boundary dynamically
+            $maxDbDate = \App\Models\BookingDate::max('date');
+            if ($maxDbDate instanceof \Carbon\Carbon || $maxDbDate instanceof \DateTimeInterface) {
+                $maxDbDate = $maxDbDate->format('Y-m-d');
+            }
+            $eventMax = ($maxDbDate && $maxDbDate > '2026-10-17') ? (string)$maxDbDate : '2026-10-17';
+
+            if ($requestedDate < '2026-09-30' || $requestedDate > $eventMax) {
+                $maxFmt = Carbon::parse($eventMax)->format('F j, Y');
                 throw ValidationException::withMessages([
-                    'date' => ['Bookings are only available from September 30 to October 17, 2026.']
+                    'date' => ["Bookings are only available from September 30 to {$maxFmt}."]
                 ]);
             }
 
@@ -52,6 +59,23 @@ class BookingService
                 throw ValidationException::withMessages([
                     'date' => ['The selected date is closed for bookings.']
                 ]);
+            }
+
+            // Enforce VIP private date and slot restrictions for public self-bookings
+            if (empty($data['is_vip'])) {
+                $privateOnlyDates = ['2026-09-30', '2026-10-09', '2026-10-13'];
+                if (in_array($requestedDate, $privateOnlyDates)) {
+                    throw ValidationException::withMessages([
+                        'date' => ['The selected date is reserved for VIP private sessions only.']
+                    ]);
+                }
+
+                $startTime5 = substr($slot->start_time, 0, 5);
+                if ($requestedDate === '2026-10-01' && !in_array($startTime5, ['11:00', '12:00'])) {
+                    throw ValidationException::withMessages([
+                        'slot' => ['The selected time slot is reserved for VIP sessions.']
+                    ]);
+                }
             }
 
             // Verify day of week is operating day
@@ -146,6 +170,12 @@ class BookingService
                 return $booking;
             }
 
+            if ($booking->status === 'attended' || !empty($booking->attended_at)) {
+                throw ValidationException::withMessages([
+                    'booking' => ['Cannot cancel an already attended booking.']
+                ]);
+            }
+
             $booking->status = 'cancelled';
             $booking->save();
 
@@ -190,6 +220,12 @@ class BookingService
                 ]);
             }
 
+            if ($booking->status === 'attended' || !empty($booking->attended_at)) {
+                throw ValidationException::withMessages([
+                    'booking' => ['Cannot modify an already attended booking.']
+                ]);
+            }
+
             // Rule: You can only reschedule once
             if ($booking->reschedule_count >= 1) {
                 throw ValidationException::withMessages([
@@ -231,9 +267,16 @@ class BookingService
 
             // Verify new slot matches requested date and event boundaries
             $slotDate = Carbon::parse($newSlot->bookingDate->date)->format('Y-m-d');
-            if ($slotDate !== $newDate || $newDate < '2026-09-30' || $newDate > '2026-10-17') {
+            $maxDbDate = \App\Models\BookingDate::max('date');
+            if ($maxDbDate instanceof \Carbon\Carbon || $maxDbDate instanceof \DateTimeInterface) {
+                $maxDbDate = $maxDbDate->format('Y-m-d');
+            }
+            $eventMax = ($maxDbDate && $maxDbDate > '2026-10-17') ? (string)$maxDbDate : '2026-10-17';
+
+            if ($slotDate !== $newDate || $newDate < '2026-09-30' || $newDate > $eventMax) {
+                $maxFmt = Carbon::parse($eventMax)->format('F j, Y');
                 throw ValidationException::withMessages([
-                    'slot' => ['Rescheduling dates are only available from September 30 to October 17, 2026.']
+                    'slot' => ["Rescheduling dates are only available from September 30 to {$maxFmt}."]
                 ]);
             }
 

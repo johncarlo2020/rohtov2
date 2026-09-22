@@ -15,9 +15,9 @@ class AvailabilityService
      */
     public function getDateAvailabilities(string $startDate, string $endDate, bool $isVip = false): array
     {
-        // Enforce event date boundary: September 30, 2026 to October 17, 2026
+        // Enforce event date boundary dynamically: September 30, 2026 to latest configured event date
         $eventMin = '2026-09-30';
-        $eventMax = '2026-10-17';
+        $eventMax = $this->getEventMaxDate();
 
         $startStr = max($startDate, $eventMin);
         $endStr = min($endDate, $eventMax);
@@ -53,8 +53,8 @@ class AvailabilityService
         $carbonDate = Carbon::parse($date);
         $dateStr = $carbonDate->format('Y-m-d');
 
-        // Enforce event date boundary: September 30, 2026 to October 17, 2026
-        if ($dateStr < '2026-09-30' || $dateStr > '2026-10-17') {
+        // Enforce event date boundary dynamically: September 30, 2026 to latest event date
+        if ($dateStr < '2026-09-30' || $dateStr > $this->getEventMaxDate()) {
             return 'closed';
         }
 
@@ -97,10 +97,6 @@ class AvailabilityService
                 $slots = $slots->filter(function (BookingSlot $slot) {
                     return in_array(substr($slot->start_time, 0, 5), ['11:00', '12:00']);
                 });
-            } elseif ($dateStr === '2026-10-14') {
-                $slots = $slots->filter(function (BookingSlot $slot) {
-                    return in_array(substr($slot->start_time, 0, 5), ['18:00']);
-                });
             }
         }
 
@@ -124,8 +120,8 @@ class AvailabilityService
         $carbonDate = Carbon::parse($date);
         $dateStr = $carbonDate->format('Y-m-d');
 
-        // Enforce event date boundary: September 30, 2026 to October 17, 2026
-        if ($dateStr < '2026-09-30' || $dateStr > '2026-10-17') {
+        // Enforce event date boundary dynamically: September 30, 2026 to latest event date
+        if ($dateStr < '2026-09-30' || $dateStr > $this->getEventMaxDate()) {
             return [];
         }
 
@@ -165,10 +161,6 @@ class AvailabilityService
             if ($dateStr === '2026-10-01') {
                 $slots = $slots->filter(function (BookingSlot $slot) {
                     return in_array(substr($slot->start_time, 0, 5), ['11:00', '12:00']);
-                });
-            } elseif ($dateStr === '2026-10-14') {
-                $slots = $slots->filter(function (BookingSlot $slot) {
-                    return in_array(substr($slot->start_time, 0, 5), ['18:00']);
                 });
             }
         }
@@ -299,11 +291,11 @@ class AvailabilityService
                 ['start_time' => '16:00:00', 'end_time' => '17:00:00', 'capacity' => 6],
             ],
             '2026-10-13' => [
-                ['start_time' => '11:00:00', 'end_time' => '13:00:00', 'capacity' => 10],
-            ],
-            '2026-10-14' => [
                 ['start_time' => '11:00:00', 'end_time' => '12:00:00', 'capacity' => 5],
                 ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 5],
+            ],
+            '2026-10-14' => [
+                ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 6],
                 ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 6],
             ],
             '2026-10-15' => [
@@ -321,5 +313,17 @@ class AvailabilityService
         ];
 
         return $schedules[$date] ?? null;
+    }
+
+    /**
+     * Get the dynamic maximum event end date (at least 2026-10-17, or max date in DB).
+     */
+    public function getEventMaxDate(): string
+    {
+        $maxDbDate = BookingDate::max('date');
+        if ($maxDbDate instanceof \Carbon\Carbon || $maxDbDate instanceof \DateTimeInterface) {
+            $maxDbDate = $maxDbDate->format('Y-m-d');
+        }
+        return ($maxDbDate && $maxDbDate > '2026-10-17') ? (string)$maxDbDate : '2026-10-17';
     }
 }

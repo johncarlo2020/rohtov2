@@ -207,6 +207,6 @@ class CountriesTableSeeder extends Seeder
         ];
         
 
-        DB::table('countries')->insert($countries);
+        DB::table('countries')->insertOrIgnore($countries);
     }
 }

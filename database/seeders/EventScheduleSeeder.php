@@ -17,13 +17,17 @@ class EventScheduleSeeder extends Seeder
      */
     public function run(): void
     {
+        // 0. Reset VIP Groups JSON to default configuration
+        \App\Services\VipGroupService::resetToDefaults();
+
         // 1. Sync Operating Hours (Wed, Thu, Fri, Sat OPEN; Sun, Mon CLOSED; Tue Special for Oct 13)
         $daysConfig = [
             1 => ['is_open' => false, 'sessions' => []], // Monday: CLOSED
             2 => [ // Tuesday: OPEN for Oct 13 VIP session
                 'is_open' => true,
                 'sessions' => [
-                    ['start_time' => '11:00:00', 'end_time' => '13:00:00', 'capacity' => 10],
+                    ['start_time' => '11:00:00', 'end_time' => '12:00:00', 'capacity' => 5],
+                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 5],
                 ]
             ],
             3 => [ // Wednesday: Public Workshop Sessions
@@ -175,7 +179,8 @@ class EventScheduleSeeder extends Seeder
             '2026-10-13' => [
                 'is_available' => true,
                 'slots' => [
-                    ['start_time' => '11:00:00', 'end_time' => '13:00:00', 'capacity' => 10], // GLAM reader (10 pax)
+                    ['start_time' => '11:00:00', 'end_time' => '12:00:00', 'capacity' => 5],  // GLAM reader x5 (VIP)
+                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 5],  // GLAM reader x5 (VIP)
                 ]
             ],
 
@@ -183,8 +188,7 @@ class EventScheduleSeeder extends Seeder
             '2026-10-14' => [
                 'is_available' => true,
                 'slots' => [
-                    ['start_time' => '11:00:00', 'end_time' => '12:00:00', 'capacity' => 5],  // GLAM reader x5 (VIP)
-                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 5],  // GLAM reader x5 (VIP)
+                    ['start_time' => '12:00:00', 'end_time' => '13:00:00', 'capacity' => 6],  // Workshop for Public x6
                     ['start_time' => '18:00:00', 'end_time' => '19:00:00', 'capacity' => 6],  // Workshop for Public x6
                 ]
             ],

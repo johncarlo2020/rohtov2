@@ -796,7 +796,7 @@
 
         async function fetchWalkinDateAvailabilities() {
             try {
-                const res = await fetch('/api/booking/dates?start_date=2026-10-01&end_date=2026-10-17');
+                const res = await fetch('/api/booking/dates?start_date=2026-10-01');
                 const data = await res.json();
                 walkinState.dateAvailabilities = data;
                 renderWalkinDateDropdown(data);
@@ -1217,7 +1217,7 @@
 
         async function fetchVipModalDateAvailabilities() {
             try {
-                const res = await fetch('/api/booking/dates?start_date=2026-09-30&end_date=2026-10-17&is_vip=1');
+                const res = await fetch('/api/booking/dates?start_date=2026-09-30&is_vip=1');
                 const data = await res.json();
                 vipModalState.dateAvailabilities = data;
                 renderVipModalDateDropdown(data);

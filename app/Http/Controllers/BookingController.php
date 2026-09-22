@@ -158,9 +158,15 @@ class BookingController extends Controller
             }
         }
 
-        // Walk-in Customer Dropdown Data (Formatted same as front page: Oct 1 to Oct 17)
+        // Walk-in Customer Dropdown Data
+        $maxDbDate = BookingDate::max('date');
+        if ($maxDbDate instanceof \Carbon\Carbon || $maxDbDate instanceof \DateTimeInterface) {
+            $maxDbDate = $maxDbDate->format('Y-m-d');
+        }
+        $eventMax = ($maxDbDate && $maxDbDate > '2026-10-17') ? (string)$maxDbDate : '2026-10-17';
+
         $walkinDates = BookingDate::where('is_available', true)
-            ->whereBetween('date', ['2026-10-01', '2026-10-17'])
+            ->whereBetween('date', ['2026-10-01', $eventMax])
             ->orderBy('date', 'asc')
             ->get();
 
@@ -518,9 +524,24 @@ class BookingController extends Controller
      */
     public function destroy($id)
     {
-        $booking = Booking::findOrFail($id);
+        if (auth()->check() && auth()->user()->hasRole('staff')) {
+            if (request()->wantsJson()) {
+                return response()->json(['success' => false, 'message' => 'Unauthorized action.'], 403);
+            }
+            return redirect()->back()->with('error', 'Unauthorized action. Staff members cannot delete bookings.');
+        }
+
+        $booking = Booking::with('bookingSlot')->findOrFail($id);
         $refNo = $booking->reference_no;
         $name = $booking->customer_name;
+
+        // Decrement slot booked count to restore capacity
+        if ($booking->bookingSlot) {
+            $decrementPax = max(1, (int)($booking->pax ?? 1));
+            $newCount = max(0, $booking->bookingSlot->booked_count - $decrementPax);
+            $booking->bookingSlot->update(['booked_count' => $newCount]);
+        }
+
         $booking->delete();
 
         \App\Services\HistoryLogService::log(

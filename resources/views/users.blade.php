@@ -127,7 +127,9 @@
                             <th>Booking Time</th>
                             <th>Attendance Status</th>
                             <th>Registration Timestamp</th>
-                            <th>Action</th>
+                            @if(auth()->check() && !auth()->user()->hasRole('staff'))
+                                <th>Action</th>
+                            @endif
                             <th class="export-col d-none">title</th>
                             <th class="export-col d-none">fname</th>
                             <th class="export-col d-none">lname</th>
@@ -177,18 +179,20 @@
                                 @endif
                             </td>
                             <td>{{ \Carbon\Carbon::parse($user->created_at)->toDayDateTimeString() }}</td>
-                            <td class="button-delete text-center">
-                                @if($user->isProtectedAdmin())
-                                    <button class="btn btn-secondary btn-sm btn-protected" disabled 
-                                            title="This admin user is protected and cannot be deleted"
-                                            data-bs-toggle="tooltip" data-bs-placement="top">
-                                        <i class="fa fa-lock"></i> Protected
-                                    </button>
-                                @else
-                                    <button class="btn btn-danger btn-sm delete-user-btn" data-user-id="{{ $user->id }}"
-                                        data-user-name="{{ $user->fname }}">Delete</button>
-                                @endif
-                            </td>
+                            @if(auth()->check() && !auth()->user()->hasRole('staff'))
+                                <td class="button-delete text-center">
+                                    @if($user->isProtectedAdmin())
+                                        <button class="btn btn-secondary btn-sm btn-protected" disabled 
+                                                title="This admin user is protected and cannot be deleted"
+                                                data-bs-toggle="tooltip" data-bs-placement="top">
+                                            <i class="fa fa-lock"></i> Protected
+                                        </button>
+                                    @else
+                                        <button class="btn btn-danger btn-sm delete-user-btn" data-user-id="{{ $user->id }}"
+                                            data-user-name="{{ $user->fname }}">Delete</button>
+                                    @endif
+                                </td>
+                            @endif
                             <td class="export-col d-none">{{ $user->title ?? '' }}</td>
                             <td class="export-col d-none">{{ $user->fname ?? '' }}</td>
                             <td class="export-col d-none">{{ $user->lname ?? '' }}</td>

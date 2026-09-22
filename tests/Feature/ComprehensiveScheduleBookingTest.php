@@ -178,20 +178,21 @@ class ComprehensiveScheduleBookingTest extends TestCase
     }
 
     /** @test */
-    public function it_validates_october_14_glam_reader_vip_and_public_workshop_slots()
+    public function it_validates_october_13_glam_reader_vip_slots_and_october_14_public_workshop_slots()
     {
-        // Public API sees ONLY 6:00 PM (18:00) slot
-        $publicSlots = $this->getJson('/api/booking/dates/2026-10-14/slots')->json();
-        $this->assertCount(1, $publicSlots);
-        $this->assertEquals('18:00', $publicSlots[0]['start_time']);
-
-        // VIP API sees all 3 slots (11am GLAM 5 pax, 12pm GLAM 5 pax, 6pm Public 6 pax)
-        $vipSlots = $this->getJson('/api/booking/dates/2026-10-14/slots?is_vip=1')->json();
-        $this->assertCount(3, $vipSlots);
+        // Oct 13 VIP API sees 11:00 AM (5 pax) and 12:00 PM (5 pax) slots
+        $vipSlots = $this->getJson('/api/booking/dates/2026-10-13/slots?is_vip=1')->json();
+        $this->assertCount(2, $vipSlots);
         $this->assertEquals('11:00', $vipSlots[0]['start_time']);
         $this->assertEquals(5, $vipSlots[0]['capacity']);
         $this->assertEquals('12:00', $vipSlots[1]['start_time']);
         $this->assertEquals(5, $vipSlots[1]['capacity']);
+
+        // Oct 14 Public API sees 12:00 PM (12:00) and 6:00 PM (18:00) slots
+        $publicSlots = $this->getJson('/api/booking/dates/2026-10-14/slots')->json();
+        $this->assertCount(2, $publicSlots);
+        $this->assertEquals('12:00', $publicSlots[0]['start_time']);
+        $this->assertEquals('18:00', $publicSlots[1]['start_time']);
     }
 
     /** @test */

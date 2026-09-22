@@ -1,5 +1,8 @@
 @import '../variables';
 
+// input text color variable
+$input-text-color: #313131;
+
 .register-main {
     padding-bottom: 2rem;
 
@@ -37,7 +40,7 @@
             height: auto;
             border-radius: 8px;
             border: 1.5px solid $gray;
-            color: $text;
+            color: $input-text-color;
             background: $white;
             width: 100%;
 
@@ -91,12 +94,12 @@
         }
 
         .select-placeholder {
-            color: #61646B;
+            color: $input-text-color;
             font-weight: 400;
         }
 
         .select-value {
-            color: #F00b0b;
+            color: $input-text-color;
             font-weight: 600;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -108,7 +111,7 @@
             flex-shrink: 0;
             width: 18px;
             height: 18px;
-            color: #F00b0b;
+            color: $input-text-color;
             transition: transform 0.2s ease;
 
             &.rotate {
@@ -123,7 +126,7 @@
         left: 0;
         right: 0;
         background: $white;
-        border: 1.5px solid #F00b0b;
+        border: 1.5px solid $input-text-color;
         border-radius: 8px;
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
         z-index: 1050;
@@ -141,13 +144,13 @@
         font-size: 14px;
         font-family: $font-family;
         font-weight: 500;
-        color: #F00b0b !important;
+        color: $input-text-color !important;
         transition: background 0.15s;
         border-bottom: 1px solid rgba(240, 11, 11, 0.15);
 
         span {
             font-family: $font-family;
-            color: #F00b0b !important;
+            color: $input-text-color !important;
         }
 
         &:last-child {
@@ -156,20 +159,20 @@
 
         &:hover:not(.is-disabled) {
             background: rgba(240, 11, 11, 0.08);
-            color: #F00b0b !important;
+            color: $input-text-color !important;
 
             span {
-                color: #F00b0b !important;
+                color: $input-text-color !important;
             }
         }
 
         &.is-selected {
             background: rgba(240, 11, 11, 0.12);
-            color: #F00b0b !important;
+            color: $input-text-color !important;
             font-weight: 700;
 
             span {
-                color: #F00b0b !important;
+                color: $input-text-color !important;
                 font-weight: 700;
             }
         }

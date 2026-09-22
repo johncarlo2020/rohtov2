@@ -30,6 +30,7 @@ if (mapPage) {
 
     function showView(view) {
         mapPage.dataset.view = view;
+        sessionStorage.setItem('map-view', view);
         mapPage.querySelectorAll('[data-map-layer]').forEach(layer => {
             layer.hidden = layer.dataset.mapLayer !== view;
         });
@@ -39,6 +40,11 @@ if (mapPage) {
         toggle.setAttribute('aria-label', view === 'journey' ? 'Show more rewards' : 'Show map legend');
         selectLocation(null);
     }
+
+    const savedView = sessionStorage.getItem('map-view');
+    const returningFromApplication = sessionStorage.getItem('card-apply-show-rewards');
+    sessionStorage.removeItem('card-apply-show-rewards');
+    showView(returningFromApplication || savedView === 'rewards' ? 'rewards' : 'journey');
 
     toggle.addEventListener('click', () => {
         showView(mapPage.dataset.view === 'journey' ? 'rewards' : 'journey');
@@ -163,9 +169,4 @@ if (cardDialog && applyButton) {
         event.preventDefault();
         closeDialog();
     });
-}
-
-if (mapPage && sessionStorage.getItem('card-apply-show-rewards')) {
-    sessionStorage.removeItem('card-apply-show-rewards');
-    mapPage.querySelector('.map-view-toggle').click();
 }

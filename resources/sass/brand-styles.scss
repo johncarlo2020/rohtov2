@@ -901,6 +901,10 @@ button.custom-btn.answer-btn.answer-btn-3 {
     filter: grayscale(0%);
 }
 
+.stamping-page.active .touchBox-container {
+    background: #ffffff !important;
+}
+
 .stamping-page.active::before {
     filter: grayscale(0%);
 }

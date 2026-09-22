@@ -23,7 +23,13 @@
         .touchBox-container 
         {
             border-radius: 30px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.18), 0 10px 20px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.18);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.18), 0 10px 20px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: background 0.4s ease;
+        }
+
+        .stamping-page.active .touchBox-container {
+            background: #ffffff !important;
         }
     </style>
 
@@ -83,8 +89,8 @@
                 <div class="col-12 text-center">
                     <div class="d-block">
                         <div class="col mb-3 animate-entry delay-2">
-                            <button type="button" class="custom-btn custom-btn-primary d-none nextBtn">
-                                NEXT
+                            <button type="button" class="custom-btn custom-btn-secondary d-none nextBtn" style="font-weight: 800; color: #F00B0B; background: #ffffff;">
+                                DONE
                             </button>
                         </div>
                     </div>

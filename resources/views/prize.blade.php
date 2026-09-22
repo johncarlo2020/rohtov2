@@ -74,7 +74,7 @@
 
         {{-- CENTER --}}
         <div class="animate-entry delay-2 my-5 py-5">
-            <div class="row w-100">
+            <div class="w-100">
                 <div class="touchBox-container col-11 m-auto d-flex justify-content-center align-items-center p-0">
 
                     <div id="touchBox" class="d-block text-center">

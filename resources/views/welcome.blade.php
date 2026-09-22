@@ -23,9 +23,6 @@
             width: 100vw;
             height: 100vh;
             height: 100dvh; /* Correct for iOS Safari dynamic viewport */
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center;
             display: flex;
             flex-direction: column;
         }

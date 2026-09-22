@@ -57,7 +57,7 @@
                                 <span class="legend-number">@if ($isCompleted)<i class="fa-solid fa-check"></i>@else{{ $id }}@endif</span><span>{{ $label }}</span>@if (in_array($id, $lockedStationIds))<i class="fa-solid fa-lock station-lock" aria-label="Locked"></i>@endif
                             </button>
                         @endforeach
-                        <button type="button" class="legend-banner legend-banner-card" data-show-rewards aria-controls="rewards-panel">More Rewards When You Apply!</button>
+                        <button type="button" class="legend-banner legend-banner-card" data-show-rewards aria-controls="rewards-panel">More rewards when you apply!</button>
                         <button type="button" class="legend-location legend-booth" data-location="booth" aria-pressed="false">
                             <img src="{{ asset('files/main/maybank_card.webp') }}" alt="" /><span>Card Sales Booth</span>
                         </button>

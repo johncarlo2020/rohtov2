@@ -13,15 +13,13 @@ class GiftsSeeder extends Seeder
      */
     public function run(): void
     {
+        \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
+        DB::table('gifts')->truncate();
+        \Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();
+
         $gifts = [
             [
-                'name' => 'AEON RM 10 Gift Voucher',
-                'stock_level' => 10,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'name' => 'Baskin Robbins Voucher',
+                'name' => 'Phone Lanyard',
                 'stock_level' => 10,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -33,25 +31,37 @@ class GiftsSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'name' => 'iProperty Notebook',
+                'name' => 'Notebook',
                 'stock_level' => 10,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'name' => 'Texas Chicken RM 5 Cash Voucher',
+                'name' => 'AEON Voucher RM10',
                 'stock_level' => 10,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'name' => 'Watsons RM 10 Gift Voucher',
+                'name' => 'Baskin Robbins RM5',
                 'stock_level' => 10,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'name' => 'iProperty Phone Lanyard',
+                'name' => 'Texas / SF Voucher RM5',
+                'stock_level' => 10,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Watson RM10',
+                'stock_level' => 10,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Oriental Kopi RM10',
                 'stock_level' => 10,
                 'created_at' => now(),
                 'updated_at' => now(),

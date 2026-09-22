@@ -52,11 +52,15 @@
         }
 
         .touchBox-container {
-            border-radius: 30px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.18),
-                        0 10px 20px rgba(0,0,0,0.08),
-                        0 2px 4px rgba(0,0,0,0.05),
-                        inset 0 1px 0 rgba(255,255,255,0.7);
+            background: #ffffff !important;
+            border-radius: 28px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            padding: 24px 16px;
+        }
+
+        .booth-description {
+            color: #F00B0B !important;
+            font-weight: 700;
         }
     </style>
 
@@ -97,7 +101,7 @@
 
             <form method="POST" action="{{ route('prize.done') }}">
                 @csrf
-                <button type="submit" class="custom-btn custom-btn-primary">
+                <button type="submit" class="custom-btn custom-btn-secondary" style="font-weight: 800; color: #F00B0B; background: #ffffff;">
                     DONE
                 </button>
             </form>

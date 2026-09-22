@@ -44,6 +44,7 @@
             justify-content: center;
             gap: 16px;
             cursor: pointer;
+            flex-direction: row-reverse;
         }
 
         .tile-image-wrapper {
@@ -271,13 +272,10 @@
                                         </p>
                                     @else
                                     
-                                        <p> 26 & 27 September 2026 (Saturday & Sunday) </p>
-                                        <p>
-                                            50 cups at 12PM | 50 cups at 6PM
-                                        </p>
-                                        <p>
-                                            *First-come-first-served
-                                        </p>
+                                        <p>26 & 27 September</p>
+                                        <p>(Saturday & Sunday) 12 PM</p>
+                                        <p>50 cups/per day</p>
+                                        <p>*First-come-first-served</p>
                                     @endif
                                 </div>
                                 @else

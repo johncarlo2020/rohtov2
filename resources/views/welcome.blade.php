@@ -79,7 +79,7 @@
             <div class="row flex-grow-1">
                 <div class="col-12 animate-entry mb-4">
                     <div>
-                        <div class="branding pulse-slow">
+                        <div class="branding">
                             <img onclick="window.location.href='{{ route('dashboard') }}'" class="logo" src="{{ asset('images/brand/logo_white.webp') }}" alt="Brand Logo" />
                         </div>
                     </div>
@@ -98,7 +98,7 @@
                 <div class="col-12 text-center">
                     <div class="d-block mb-2">
                         <div class="colanimate-entry delay-2 btn-wrapperx px-5 mt-4">
-                            <a href="{{ route('register') }}" class="custom-btn custom-btn-secondary pulse-slow">
+                            <a href="{{ route('register') }}" class="custom-btn custom-btn-secondary">
                                 JOIN NOW
                             </a>
                         </div>
@@ -112,7 +112,7 @@
                 <div class="col-12 text-center">
                     <div class="d-block  mb-2">
                         <div class="colanimate-entry delay-2 btn-wrapperx px-5 mt-4 d-none">
-                            <a href="{{ route('register') }}" class="custom-btn custom-btn-seconday pulse-slow">
+                            <a href="{{ route('register') }}" class="custom-btn custom-btn-seconday">
                                 JOIN NOW
                             </a>
                         </div>

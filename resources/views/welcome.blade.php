@@ -72,7 +72,7 @@
 </head>
 
 <body class="antialiased welcome-page">
-    <img class="welcome_img_store" src="{{ asset('images/brand/welcome_img.webp') }}" alt="Welcome Image" />
+    <img class="welcome_img_bottom" src="{{ asset('images/brand/welcome_img.webp') }}" alt="Welcome Image" />
 
     <div class="px-0 py-4 container-fluid main-content with-scroll">
         <div class="top-container">

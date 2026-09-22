@@ -40,7 +40,6 @@
     @endpush
 
     @php
-        $requiredTouches = 1;
         $asset = $bonus === 'redemption' ? 'tommy_assets/REDEMPTION_2x.webp' : 'tommy_assets/IN-STORE_2x.webp';
         $completeAsset = $bonus === 'redemption' ? 'tommy_assets/REDEMPTION_COMPLETE_2x.webp' : 'tommy_assets/IN-STORE-COMPLETE_2x.webp';
         $title = $bonus === 'redemption' ? 'Redemption' : 'In-Store';

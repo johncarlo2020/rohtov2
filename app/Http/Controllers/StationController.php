@@ -9,6 +9,7 @@ use App\Models\StationUser;
 use App\Models\Brand;
 use App\Models\Vote;
 use App\Models\Gifts;
+use App\Models\Touchpoint;
 use App\Events\babyEvent;
 use DB;
 use Auth;
@@ -145,9 +146,12 @@ class StationController extends Controller
             ->where('id', $station->id)
             ->first();
 
+        $requiredTouches = Touchpoint::where('key', 'station_' . $station->id)
+            ->value('required_touches');
+
         $gifts = \App\Models\Gifts::get();
 
-         return view('station', compact('station', 'user', 'gifts','choices'));
+         return view('station', compact('station', 'user', 'gifts', 'choices', 'requiredTouches'));
 
     }
 
@@ -314,8 +318,9 @@ class StationController extends Controller
 
         $redemptionStamped = (bool) $user->redemption_stamped;
         $inStoreStamped = (bool) $user->in_store_stamped;
+        $totalStations = $stations->count();
 
-        if ($stationDone >= 4 && $redemptionStamped && $inStoreStamped) {
+        if ($stationDone >= $totalStations && $redemptionStamped && $inStoreStamped) {
             return redirect()->route('congrats');
         }
 
@@ -323,7 +328,7 @@ class StationController extends Controller
             return !$user->stationUser()->where('station_id', $station->id)->exists();
         });
 
-        return view('dashboard', compact('stations', 'stationDone', 'canAccessStation3', 'completedStationIds', 'nextStation', 'isRedeemed', 'redemptionStamped', 'inStoreStamped'));
+        return view('dashboard', compact('stations', 'stationDone', 'totalStations', 'canAccessStation3', 'completedStationIds', 'nextStation', 'isRedeemed', 'redemptionStamped', 'inStoreStamped'));
 
     }
 
@@ -775,12 +780,15 @@ class StationController extends Controller
         abort_unless(in_array($bonus, ['redemption', 'in-store'], true), 404);
 
         $user = auth()->user();
-        abort_if($bonus === 'redemption' && $user->stationUser()->count() < 4, 403);
+        $totalStations = Station::count();
+        abort_if($bonus === 'redemption' && $user->stationUser()->count() < $totalStations, 403);
         $flag = $bonus === 'redemption' ? 'redemption_stamped' : 'in_store_stamped';
+        $requiredTouches = Touchpoint::where('key', $bonus)->value('required_touches');
 
         return view('bonus-stamping', [
             'bonus' => $bonus,
             'alreadyStamped' => (bool) auth()->user()->{$flag},
+            'requiredTouches' => $requiredTouches,
         ]);
     }
 

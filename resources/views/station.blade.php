@@ -148,7 +148,6 @@
 
     @php
         $stationAsset = 'tommy_assets/TMXC-Pitstop ' . $station->id . '_2x.webp';
-        $requiredTouches = 1;
     @endphp
 
     <main class="tommy-station-page">
@@ -199,7 +198,7 @@
                 const fingerStatus = document.getElementById('fingerStatus');
                 const doneButton = document.getElementById('doneButton');
                 const activePointers = new Set();
-                const requiredTouches = 1;
+                const requiredTouches = @json($requiredTouches ?? 1);
                 let submitting = false;
 
                 startButton.addEventListener('click', function () {

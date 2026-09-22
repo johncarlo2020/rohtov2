@@ -160,14 +160,14 @@
             <div class="tommy-counter tommy-counter-redemption">
                     <a
                         class="tommy-redemption-link"
-                        href="{{ $stationDone === 4 ? route('bonus.stamp', ['bonus' => 'redemption']) : '#' }}"
-                        @if ($stationDone < 4)
+                        href="{{ $stationDone >= $totalStations ? route('bonus.stamp', ['bonus' => 'redemption']) : '#' }}"
+                        @if ($stationDone < $totalStations)
                             onclick="event.preventDefault(); showRedemptionModal();"
                         @endif
                     >
-                        <img class="tommy-counter-image" src="{{ asset($stationDone === 4 ? 'tommy_assets/REDEMPTION_COMPLETE_2x.webp' : 'tommy_assets/REDEMPTION_2x.webp') }}" alt="Redemption">
+                        <img class="tommy-counter-image" src="{{ asset($stationDone >= $totalStations ? 'tommy_assets/REDEMPTION_COMPLETE_2x.webp' : 'tommy_assets/REDEMPTION_2x.webp') }}" alt="Redemption">
                     </a>
-                <span class="tommy-counter-value">{{ $stationDone }}/4</span>
+                <span class="tommy-counter-value">{{ $stationDone }}/{{ $totalStations }}</span>
             </div>
 
             <div class="tommy-counter tommy-counter-store">

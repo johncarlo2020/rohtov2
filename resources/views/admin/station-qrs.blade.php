@@ -12,7 +12,7 @@
                 <span class="admin-station-marker"><i class="fa-solid fa-credit-card" aria-hidden="true"></i></span>
                 <span class="station-qr-type">Card application</span>
             </div>
-            <img class="station-qr-logo" src="{{ asset('files/main/logo.webp') }}" alt="Maybank" />
+            <img class="station-qr-logo" src="{{ asset('files/main/logo-space.svg') }}" alt="" aria-hidden="true" />
             <h3>Card Sales Booth</h3>
             <div class="station-qr-image" data-qr-url="{{ config('card_application.qr_code') ?: route('card-application.booth') }}" role="img" aria-label="Card application activation QR"></div>
             <button type="button" class="btn btn-primary station-qr-download d-print-none" data-qr-filename="card-sales-booth-qr.png" disabled>Download PNG</button>
@@ -25,7 +25,7 @@
                     <span class="admin-station-marker">{{ $station->id }}</span>
                     <span class="station-qr-type">{{ $station->is_mandatory ? 'Mandatory' : 'Card applicants' }}</span>
                 </div>
-                <img class="station-qr-logo" src="{{ asset('files/main/logo.webp') }}" alt="Maybank" />
+                <img class="station-qr-logo" src="{{ asset('files/main/logo-space.svg') }}" alt="" aria-hidden="true" />
                 <h3>{{ $station->name }}</h3>
                 <div class="station-qr-image" data-qr-url="{{ route('station', $station) }}" role="img" aria-label="Check-in QR for {{ $station->name }}"></div>
                 <button type="button" class="btn btn-primary station-qr-download d-print-none" data-qr-filename="station-{{ $station->id }}-{{ \Illuminate\Support\Str::slug($station->name) }}-qr.png" disabled>Download PNG</button>

@@ -1,10 +1,10 @@
 <x-guest-layout>
     <main class="registration-page login-page">
         <div class="registration-shell">
-            <a class="registration-brand" href="{{ route('welcome') }}" aria-label="Maybank home">
-                <img src="{{ asset('files/main/logo.webp') }}" alt="Maybank" />
-            </a>
 
+            <div class="registration-brand" aria-hidden="true">
+                <img src="{{ asset('files/main/logo-space.svg') }}" alt="" aria-hidden="true" />
+            </div>
             <h1>LOGIN</h1>
 
             <form method="POST" action="{{ route('login') }}" class="registration-form">

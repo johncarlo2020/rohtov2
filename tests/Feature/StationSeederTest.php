@@ -38,7 +38,7 @@ class StationSeederTest extends TestCase
             $this->assertSame(8, Station::count());
             $this->assertSame([
                 'Shop for More', 'More to Enjoy', 'More to Unwind',
-                'More to Stream', 'Maybank Cafe',
+                'More to Stream', 'Cafe',
             ], Station::where('is_mandatory', true)->orderBy('id')->pluck('name')->all());
             $this->assertSame([
                 'Flight Simulator', 'Gashapon Lucky Draw', 'Merchandise',

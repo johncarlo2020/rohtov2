@@ -14,7 +14,12 @@
         display: block;
         width: 188px;
         margin: 0 auto;
-        img { display: block; width: 100%; height: auto; }
+
+        img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
     }
 
     h1 {
@@ -28,7 +33,8 @@
 
     .registration-field {
         margin-bottom: 20px;
-        > label {
+
+        >label {
             display: block;
             margin-bottom: 5px;
             font-size: 12px;
@@ -49,14 +55,26 @@
         background: #fff;
         color: #161616;
         font-size: 14px;
-        &::placeholder { color: #919191; opacity: 1; }
-        &:focus { outline: 2px solid #ffb700; outline-offset: 3px; }
+
+        &::placeholder {
+            color: #919191;
+            opacity: 1;
+        }
+
+        &:focus {
+            outline: 2px solid #ffb700;
+            outline-offset: 3px;
+        }
     }
 
     .registration-phone {
         position: relative;
-        input { padding-left: 67px !important; }
+
+        input {
+            padding-left: 67px !important;
+        }
     }
+
     .registration-flag {
         position: absolute;
         top: 50%;
@@ -81,7 +99,12 @@
         padding-left: 7px;
         font-size: 12px;
         cursor: pointer;
-        span { line-height: 1.5; color: #fff; }
+
+        span {
+            line-height: 1.5;
+            color: #fff;
+        }
+
         input {
             flex: 0 0 23px;
             width: 23px;
@@ -91,13 +114,21 @@
             border: 1px solid #aeb3ba;
             border-radius: 4px;
             background: #fff;
+
             &:checked {
                 background: #ffb700 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%23000' stroke-width='3' d='m5 12 4 4 10-10'/%3E%3C/svg%3E") center / 19px no-repeat;
                 border-color: #ffb700;
             }
+
             cursor: pointer;
         }
-        a, .registration-policy { color: #fff; font-weight: 700; text-decoration: underline; }
+
+        a,
+        .registration-policy {
+            color: #fff;
+            font-weight: 700;
+            text-decoration: underline;
+        }
     }
 
     .registration-submit {
@@ -110,7 +141,10 @@
         color: #000;
         font-size: 18px;
         font-weight: 500;
-        &:hover { background: #ffc529; }
+
+        &:hover {
+            background: #ffc529;
+        }
     }
 
     .registration-login {
@@ -120,16 +154,37 @@
         line-height: 1.5;
         letter-spacing: .4px;
         font-weight: 400;
-        a { color: #fff; font-weight: 600; text-decoration: none; }
+
+        a {
+            color: #fff;
+            font-weight: 600;
+            text-decoration: none;
+        }
     }
-    .registration-error { margin: 7px 0 0; color: #ff9c9c; font-size: 12px; line-height: 1.5; }
-    a:focus-visible, button:focus-visible, input[type="checkbox"]:focus-visible {
+
+    .registration-error {
+        margin: 7px 0 0;
+        color: #ff9c9c;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    a:focus-visible,
+    button:focus-visible,
+    input[type="checkbox"]:focus-visible {
         outline: 2px solid #ffb700;
         outline-offset: 4px;
     }
+
     @media (max-width: 374px) {
-        .registration-shell { padding-right: 24px; padding-left: 24px; }
-        .registration-check { gap: 10px; }
+        .registration-shell {
+            padding-right: 24px;
+            padding-left: 24px;
+        }
+
+        .registration-check {
+            gap: 10px;
+        }
     }
 }
 
@@ -142,13 +197,30 @@
         padding-bottom: max(60px, 14svh);
     }
 
-    .registration-brand { width: 175px; }
-    h1 { margin-top: 74px; margin-bottom: 38px; font-weight: 700; }
+    .registration-brand {
+        width: 175px;
+    }
+
+    h1 {
+        margin-top: 74px;
+        margin-bottom: 38px;
+        font-weight: 700;
+    }
+
     .registration-field {
         margin-bottom: 11px;
-        > label { font-size: 13px; font-weight: 600; }
+
+        >label {
+            font-size: 13px;
+            font-weight: 600;
+        }
     }
-    input[type="email"] { height: 50px; border-radius: 10px; }
+
+    input[type="email"] {
+        height: 50px;
+        border-radius: 10px;
+    }
+
     .registration-submit {
         min-height: 43px;
         margin-top: 0;
@@ -156,6 +228,7 @@
         font-size: 16px;
         font-weight: 700;
     }
+
     .registration-login {
         margin-top: auto;
         padding-top: 60px;
@@ -164,62 +237,274 @@
     }
 }
 
-// Participant entry screens share the proportions of the Maybank reference.
+// Participant entry screens share the proportions of the reference.
 .registration-page {
-    height: auto; min-height: 100svh; overflow: visible;
-    .registration-shell { width: min(100%, 390px); padding: 46px 36px 54px; }
-    .registration-brand { width: 165px; }
-    h1 { margin: 68px 0 38px; font-size: 24px; font-weight: 700; }
-    .registration-field { margin-bottom: 30px; > label { font-size: 13px; font-weight: 600; } }
-    input:not([type="checkbox"]):not([type="hidden"]) { height: 48px; border-radius: 9px; font-size: 14px; }
-    .registration-consents { padding-top: 46px; margin-top: 38px; border-color: #777; }
-    .registration-check { gap: 17px; padding-left: 6px; font-size: 10px; margin-bottom: 15px; input { width: 20px; height: 20px; flex-basis: 20px; border-radius: 4px; } }
-    .registration-submit { min-height: 40px; margin-top: 24px; border-radius: 9px; background: #ffbf00; font-size: 15px; font-weight: 700; }
-    .registration-login { margin-top: 92px; font-size: 16px; line-height: 1.6; }
+    height: auto;
+    min-height: 100svh;
+    overflow: visible;
+
+    .registration-shell {
+        width: min(100%, 390px);
+        padding: 46px 36px 54px;
+    }
+
+    .registration-brand {
+        width: 165px;
+    }
+
+    h1 {
+        margin: 68px 0 38px;
+        font-size: 24px;
+        font-weight: 700;
+    }
+
+    .registration-field {
+        margin-bottom: 30px;
+
+        >label {
+            font-size: 13px;
+            font-weight: 600;
+        }
+    }
+
+    input:not([type="checkbox"]):not([type="hidden"]) {
+        height: 48px;
+        border-radius: 9px;
+        font-size: 14px;
+    }
+
+    .registration-consents {
+        padding-top: 46px;
+        margin-top: 38px;
+        border-color: #777;
+    }
+
+    .registration-check {
+        gap: 17px;
+        padding-left: 6px;
+        font-size: 10px;
+        margin-bottom: 15px;
+
+        input {
+            width: 20px;
+            height: 20px;
+            flex-basis: 20px;
+            border-radius: 4px;
+        }
+    }
+
+    .registration-submit {
+        min-height: 40px;
+        margin-top: 24px;
+        border-radius: 9px;
+        background: #ffbf00;
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    .registration-login {
+        margin-top: 92px;
+        font-size: 16px;
+        line-height: 1.6;
+    }
 }
+
 .registration-page.login-page {
-    .registration-shell { padding-top: 46px; padding-bottom: max(100px, 14svh); }
-    .registration-brand { width: 165px; }
-    h1 { margin: 68px 0 38px; }
-    .registration-field { margin-bottom: 10px; }
-    .registration-submit { margin-top: 0; min-height: 40px; border-radius: 10px; font-size: 15px; }
-    .registration-login { font-size: 16px; }
-}
-.participant-welcome {
-    min-height: 100svh; background: #000; color: #fff; text-align: center;
-    .participant-welcome-shell { width: min(100%, 390px); padding: 46px 28px 86px; margin: 0 auto; }
-    .participant-welcome-logo { display: block; width: 165px; margin: 0 auto 64px; }
-    h1 { margin: 0 0 28px; color: #fff; font-size: 30px; font-weight: 500; line-height: 1.08; strong { display: block; color: #ffbf00; font-size: 52px; font-weight: 800; } }
-    p { color: #fff; font-size: 20px; line-height: 1.08; margin: 0 0 24px; }
-    figure { margin: 28px 0 22px; img { width: 242px; max-width: 100%; height: auto; } figcaption { color: #fff; font-size: 20px; line-height: 1.08; margin-top: 22px; } }
-    .participant-welcome-actions { width: 206px; max-width: 100%; margin: 0 auto; display: grid; gap: 12px; a { display: grid; place-items: center; min-height: 41px; border: 1px solid #ffbf00; border-radius: 7px; background: #ffbf00; color: #000; font-size: 15px; font-weight: 700; text-decoration: none; } a.is-outlined { background: transparent; color: #fff; } a:focus-visible { outline: 2px solid #fff; outline-offset: 4px; } }
+    .registration-shell {
+        padding-top: 46px;
+        padding-bottom: max(100px, 14svh);
+    }
+
+    .registration-brand {
+        width: 165px;
+    }
+
+    h1 {
+        margin: 68px 0 38px;
+    }
+
+    .registration-field {
+        margin-bottom: 10px;
+    }
+
+    .registration-submit {
+        margin-top: 0;
+        min-height: 40px;
+        border-radius: 10px;
+        font-size: 15px;
+    }
+
+    .registration-login {
+        font-size: 16px;
+    }
 }
 
 .participant-welcome {
-    p, figcaption { font-weight: 400; }
-    .participant-welcome-card { height: 166px; display: flex; align-items: center; justify-content: center; }
-    .participant-welcome-card img { width: 292px; max-width: 100%; transform: rotate(18deg); }
+    min-height: 100svh;
+    background: #000;
+    color: #fff;
+    text-align: center;
+
+    .participant-welcome-shell {
+        width: min(100%, 390px);
+        padding: 46px 28px 86px;
+        margin: 0 auto;
+    }
+
+    .participant-welcome-logo {
+        display: block;
+        width: 165px;
+        margin: 0 auto 64px;
+    }
+
+    h1 {
+        margin: 0 0 28px;
+        color: #fff;
+        font-size: 30px;
+        font-weight: 500;
+        line-height: 1.08;
+
+        strong {
+            display: block;
+            color: #ffbf00;
+            font-size: 52px;
+            font-weight: 800;
+        }
+    }
+
+    p {
+        color: #fff;
+        font-size: 20px;
+        line-height: 1.08;
+        margin: 0 0 24px;
+    }
+
+    figure {
+        margin: 28px 0 22px;
+
+        img {
+            width: 242px;
+            max-width: 100%;
+            height: auto;
+        }
+
+        figcaption {
+            color: #fff;
+            font-size: 20px;
+            line-height: 1.08;
+            margin-top: 22px;
+        }
+    }
+
+    .participant-welcome-actions {
+        width: 206px;
+        max-width: 100%;
+        margin: 0 auto;
+        display: grid;
+        gap: 12px;
+        margin-top: 10vh;
+
+        a {
+            display: grid;
+            place-items: center;
+            min-height: 41px;
+            border: 1px solid #ffbf00;
+            border-radius: 7px;
+            background: #ffbf00;
+            color: #000;
+            font-size: 15px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        a.is-outlined {
+            background: transparent;
+            color: #fff;
+        }
+
+        a:focus-visible {
+            outline: 2px solid #fff;
+            outline-offset: 4px;
+        }
+    }
+}
+
+.participant-welcome {
+
+    p,
+    figcaption {
+        font-weight: 400;
+    }
+
+    .participant-welcome-card {
+        height: 166px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .participant-welcome-card img {
+        width: 292px;
+        max-width: 100%;
+        transform: rotate(18deg);
+    }
 }
 
 // The welcome screen scrolls with the document instead of the fixed-height event shell.
-html.welcome-document, body.welcome-document {
-    height: auto; min-height: 100%; overflow-x: hidden; overflow-y: auto;
+html.welcome-document,
+body.welcome-document {
+    height: auto;
+    min-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
     background: #000;
 }
+
 body.welcome-document .participant-welcome {
     .participant-welcome-shell {
         padding: max(32px, env(safe-area-inset-top)) 24px max(36px, env(safe-area-inset-bottom));
     }
-    .participant-welcome-actions a { min-height: 44px; }
-    @media (max-width: 374px) {
-        p, figure figcaption { font-size: 17px; }
-        .participant-welcome-logo { width: 150px; margin-bottom: 44px; }
-        h1 { font-size: 27px; strong { font-size: 46px; } }
+
+    .participant-welcome-actions a {
+        min-height: 44px;
     }
+
+    @media (max-width: 374px) {
+
+        p,
+        figure figcaption {
+            font-size: 17px;
+        }
+
+        .participant-welcome-logo {
+            width: 150px;
+            margin-bottom: 44px;
+        }
+
+        h1 {
+            font-size: 27px;
+
+            strong {
+                font-size: 46px;
+            }
+        }
+    }
+
     @media (max-height: 740px) {
-        .participant-welcome-logo { margin-bottom: 32px; }
-        h1 { margin-bottom: 20px; }
-        p { margin-bottom: 18px; }
-        figure { margin-top: 20px; }
+        .participant-welcome-logo {
+            margin-bottom: 32px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        p {
+            margin-bottom: 18px;
+        }
+
+        figure {
+            margin-top: 20px;
+        }
     }
 }

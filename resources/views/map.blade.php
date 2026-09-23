@@ -5,7 +5,7 @@
             2 => ['More to Enjoy', 47, 9],
             3 => ['More to Unwind', 64, 12],
             4 => ['More to Stream', 35, 17],
-            5 => ['Maybank Cafe', 15, 6],
+            5 => ['Cafe', 15, 6],
         ];
         $rewards = [
             6 => ['Flight Simulator', 57, -2],
@@ -19,16 +19,16 @@
     @endphp
     <main id="map-page" class="content-box" data-view="journey">
         <div class="map-shell">
-            <a class="map-brand" href="{{ route('map') }}" aria-label="Maybank map">
-                <img src="{{ asset('files/main/logo.webp') }}" alt="Maybank" />
-            </a>
+            <div class="map-brand" aria-hidden="true">
+                <img src="{{ asset('files/main/logo-space.svg') }}" alt="" aria-hidden="true" />
+            </div>
             <header class="map-heading">
                 <p>Begin your journey</p>
                 <h1>DISCOVER <strong>MORE</strong></h1>
             </header>
 
             <div class="journey-map">
-                <img class="journey-map-image" src="{{ asset('files/main/map.webp') }}" alt="Maybank event floor map" />
+                <img class="journey-map-image" src="{{ asset('files/main/map.webp') }}" alt="event floor map" />
                 @foreach (['journey' => $journey, 'rewards' => $rewards] as $view => $locations)
                     <div data-map-layer="{{ $view }}" @if ($view === 'rewards') hidden @endif>
                         @foreach ($locations as $id => [$label, $left, $top])
@@ -88,16 +88,13 @@
                             aria-controls="rewards-panel">More rewards when you apply!</button>
                         <button type="button" class="legend-location legend-booth" data-location="booth"
                             aria-pressed="false">
-                            <img src="{{ asset('files/main/maybank_card.webp') }}" alt="" /><span>Card Sales
+                            <span>Card Sales
                                 Booth</span>
                         </button>
                     </div>
                 </section>
                 <section id="rewards-panel" class="map-legend rewards-legend" data-map-panel="rewards"
                     aria-labelledby="rewards-title" hidden>
-                    <img class="rewards-card" src="{{ asset('files/main/maybank_card.webp') }}"
-                        alt="Maybank Cash Back Mastercard Platinum Credit Card" />
-                    <p class="rewards-card-caption">Maybank Cash Back Mastercard<br>Platinum Credit Card</p>
                     @if (!$user->isCardApply)
                         <button type="button" class="card-apply-button" id="card-apply-open">Click here to
                             apply!</button>

@@ -18,9 +18,8 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <link rel="icon" type="image/png" href="{{ asset('files/main/logo.webp') }}" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <title>Maybank | Admin portal</title>
+    <title>Admin portal</title>
     <!--     Fonts and icons     -->
     <!-- Nucleo Icons -->
     <link href="{{ asset('assets/css/nucleo-icons.css') }}" rel="stylesheet" />
@@ -46,7 +45,7 @@
     @include('components.fonts')
 </head>
 
-<body class="maybank-admin">
+<body class="event-admin">
     @php
         $adminPages = [
             ['admin', 'Overview', 'fa-chart-simple', ['full']],
@@ -57,9 +56,9 @@
         if (request()->routeIs('charmConfig')) $pageTitle = 'Reward settings';
     @endphp
     <aside class="admin-sidebar" aria-label="Admin navigation">
-        <a class="admin-brand" href="{{ auth()->user()->can('full') ? route('admin') : route('admin.station-qrs') }}">
-            <img src="{{ asset('files/main/logo.webp') }}" alt="Maybank" />
-        </a>
+        <div class="admin-brand" aria-hidden="true">
+            <img src="{{ asset('files/main/logo-space.svg') }}" alt="" aria-hidden="true" />
+        </div>
         <p class="admin-nav-label">EVENT MANAGEMENT</p>
         <nav>
             @foreach ($adminPages as [$route, $label, $icon, $permissions])
@@ -86,7 +85,7 @@
             <div class="admin-account"><span class="admin-avatar" aria-hidden="true">{{ mb_substr(auth()->user()->fname ?: 'A', 0, 1) }}</span><span>{{ auth()->user()->fname ?: 'Administrator' }}<small>Event team</small></span></div>
         </header>
         <div class="admin-page-content">@yield('content')</div>
-        <footer class="admin-page-footer">© {{ date('Y') }} Maybank <span>Discover more. Manage with ease.</span></footer>
+        <footer class="admin-page-footer">© {{ date('Y') }} <span>Discover more. Manage with ease.</span></footer>
     </main>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>

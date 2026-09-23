@@ -999,7 +999,7 @@ ol {
 
 
 
-// Maybank event map. Keep dimensions relative to the map, including on desktop.
+// event map. Keep dimensions relative to the map, including on desktop.
 #map-page {
     background: #000;
     padding: 40px 0 max(30px, env(safe-area-inset-bottom));
@@ -1131,6 +1131,7 @@ ol {
         border: 2px solid #c9f1ff;
         border-radius: 2px;
         background: #171717;
+        color: #fff;
 
         img {
             width: 100%;
@@ -1706,5 +1707,7 @@ ol {
     text-align: center;
     margin: 0 0 20px;
 }
+
+
 
 

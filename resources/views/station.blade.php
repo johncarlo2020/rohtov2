@@ -5,7 +5,7 @@
         <header class="station-journey-header">
             <a href="{{ route('map') }}" class="station-back" aria-label="Back to map"><i class="fa-chevron-left fa-solid"
                     aria-hidden="true"></i></a>
-            <img src="{{ asset('files/main/logo.webp') }}" alt="Maybank" />
+            <img src="{{ asset('files/main/logo-space.svg') }}" alt="" aria-hidden="true" />
         </header>
         <section class="station-journey-details" aria-labelledby="station-title">
             <span class="station-journey-number">{{ $station->id }}</span>

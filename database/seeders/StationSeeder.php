@@ -14,7 +14,7 @@ class StationSeeder extends Seeder
             2 => ['name' => 'More to Enjoy', 'is_mandatory' => true],
             3 => ['name' => 'More to Unwind', 'is_mandatory' => true],
             4 => ['name' => 'More to Stream', 'is_mandatory' => true],
-            5 => ['name' => 'Maybank Cafe', 'is_mandatory' => true],
+            5 => ['name' => 'Cafe', 'is_mandatory' => true],
             6 => ['name' => 'Flight Simulator', 'is_mandatory' => false],
             7 => ['name' => 'Gashapon Lucky Draw', 'is_mandatory' => false],
             8 => ['name' => 'Merchandise', 'is_mandatory' => false],

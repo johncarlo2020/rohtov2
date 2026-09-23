@@ -3,23 +3,23 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Admin sign in | Maybank</title>
+    <title>Admin sign in</title>
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     @include('components.fonts')
 </head>
 <body class="admin-signin">
     <main class="admin-signin-shell">
-        <section class="admin-signin-brand" aria-label="Maybank event administration">
-            <a href="{{ url('/') }}" class="admin-signin-logo" aria-label="Maybank home">
-                <img src="{{ asset('files/main/logo.webp') }}" alt="Maybank" width="165" />
-            </a>
+        <section class="admin-signin-brand" aria-label="event administration">
+            <div class="admin-signin-logo" aria-hidden="true">
+                <img src="{{ asset('files/main/logo-space.svg') }}" alt="" aria-hidden="true" width="165" />
+            </div>
             <div class="admin-signin-story">
-                <p class="admin-signin-eyebrow">MAYBANK EVENT MANAGEMENT</p>
+                <p class="admin-signin-eyebrow">EVENT MANAGEMENT</p>
                 <h1>DISCOVER<br><span>MORE</span></h1>
                 <p>Manage participants, station check-ins<br>and the event journey.</p>
                 <img class="admin-signin-map" src="{{ asset('files/main/map.webp') }}" alt="" />
             </div>
-            <div class="admin-signin-brand-footer"><span></span> MAYBANK EVENT MANAGEMENT</div>
+            <div class="admin-signin-brand-footer"><span></span> EVENT MANAGEMENT</div>
         </section>
 
         <section class="admin-signin-form-panel" aria-labelledby="admin-signin-title">
@@ -57,7 +57,7 @@
                 </form>
                 <p class="admin-signin-help">Need access? Contact your event administrator.</p>
             </div>
-            <footer class="admin-signin-footer">© {{ date('Y') }} Maybank. <span>Event administration</span></footer>
+            <footer class="admin-signin-footer">© {{ date('Y') }}  <span>Event administration</span></footer>
         </section>
     </main>
     <script>

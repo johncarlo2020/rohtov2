@@ -1,10 +1,10 @@
 <x-guest-layout>
     <main class="registration-page">
         <div class="registration-shell">
-            <a class="registration-brand" href="{{ route('welcome') }}" aria-label="Maybank home">
-                <img src="{{ asset('files/main/logo.webp') }}" alt="Maybank" />
-            </a>
 
+            <div class="registration-brand" aria-hidden="true">
+                <img src="{{ asset('files/main/logo-space.svg') }}" alt="" aria-hidden="true" />
+            </div>
             <h1>SIGN UP</h1>
 
             <form method="POST" action="{{ route('register') }}" class="registration-form">
@@ -51,7 +51,7 @@
 
                     <label class="registration-check" for="marketing">
                         <input id="marketing" name="marketing" type="checkbox" value="1" @checked(old('marketing'))>
-                        <span>I agree to receive marketing communications from Maybank.</span>
+                        <span>I agree to receive marketing communications from the event organizer.</span>
                     </label>
 
                     <label class="registration-check" for="age_confirmed">

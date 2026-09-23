@@ -43,7 +43,7 @@
                     <label class="registration-check" for="terms">
                         <input id="terms" name="terms" type="checkbox" value="1" @checked(old('terms')) required>
                         <span>I have read and agree to the
-                            <a href="#" onclick="event.preventDefault()">Terms and Conditions</a>
+                            <a href="{{ asset('files/Maybank_Your_Journey_for_More_PDPA_Revised.pdf') }}" target="_blank" rel="noopener noreferrer">Terms and Conditions</a>
                             and <a href="#" onclick="event.preventDefault()">Privacy Policy</a>.
                         </span>
                     </label>

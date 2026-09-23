@@ -53,13 +53,6 @@
                                 {{ __('LOGIN') }}
                             </button>
                         </div>
-
-                        <div class="bottom-text text-center mt-2">
-                            <span class="text-dark text-uppercase" style="font-size: 11px; letter-spacing: 0.8px;">HAVEN'T? </span>
-                            <a href="{{ route('register') }}" class="text-dark text-uppercase fw-bold text-decoration-none" style="font-size: 11px; letter-spacing: 0.8px;">
-                                REGISTER HERE
-                            </a>
-                        </div>
                     </form>
                 </div>
             </div>

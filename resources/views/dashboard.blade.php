@@ -79,7 +79,7 @@
                                                 case 3: $sfx = 'RD'; break;
                                             }
                                         }
-                                        $formattedDateStr = strtoupper($d->format('l')) . ', ' . $dayNum . $sfx . ' ' . strtoupper($d->format('F'));
+                                        $formattedDateStr = strtoupper($d->format('l')) . ', ' . $dayNum . $sfx . ' ' . strtoupper($d->format('F')) . ', ' . $d->format('Y');
                                     }
 
                                     if ($userBooking->bookingSlot) {
@@ -122,7 +122,7 @@
                                     <div class="mb-1"><span class="fw-bold text-dark">DATE:</span> <span id="confirmed-ticket-date" class="text-dark">{{ $formattedDateStr }}</span></div>
                                     <div class="mb-1"><span class="fw-bold text-dark">TIME:</span> <span id="confirmed-ticket-time" class="text-dark">{{ $formattedTimeStr }}</span></div>
                                     <div class="text-dark">
-                                        <span class="fw-bold text-dark">VENUE:</span> LONGCHAMP POP UP STORE<br>THE GARDENS MALL
+                                        <span class="fw-bold text-dark">VENUE:</span> LONGCHAMP POP-UP STORE<br>THE GARDENS MALL
                                     </div>
                                 </div>
                             </div>

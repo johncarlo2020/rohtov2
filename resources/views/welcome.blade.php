@@ -21,8 +21,7 @@
             <div class="mid d-flex flex-column justify-content-center my-auto">
                 <div class="text-center py-2">
                     <h1 class="text-dark text-uppercase mb-5" style="font-size: 1.15rem; line-height: 1.45; letter-spacing: 0.5px; font-weight:400;">
-                        LONGCHAMP INVITES YOU TO "<strong class="fw-bold">BE CREATIVE</strong>" <br>
-                        THIS WINTER 2026, EXCLUSIVELY IN MALAYSIA
+                        LONGCHAMP INVITES YOU TO "<strong class="fw-bold" style="white-space: nowrap;">BE CREATIVE</strong>" THIS WINTER 2026, EXCLUSIVELY IN MALAYSIA
                     </h1>
 
                     <p class="text-dark" style="font-size: 0.725rem; line-height: 1.55; letter-spacing: 0.3px; color: #444444; margin-bottom:10vh;">
@@ -32,9 +31,6 @@
                     <div class="d-flex flex-column gap-2 align-items-center mb-3">
                         <a href="{{ route('register') }}" class="custom-btn custom-btn-primary" style="max-width: 220px; width: 100%; height: 44px;">
                             REGISTER
-                        </a>
-                        <a href="{{ route('login') }}" class="custom-btn custom-btn-primary" style="max-width: 220px; width: 100%; height: 44px;">
-                            LOGIN
                         </a>
                     </div>
                 </div>

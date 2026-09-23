@@ -270,15 +270,38 @@ class GlobalHelper
 
         $customerName = e($booking->customer_name ?? 'Valued Guest');
 
-        $dateFormatted = $booking->bookingDate
-            ? strtoupper(\Carbon\Carbon::parse($booking->bookingDate->date)->format('jS F'))
-            : 'N/A';
+        if ($booking->bookingDate) {
+            $d = \Carbon\Carbon::parse($booking->bookingDate->date);
+            $dayOfWeek = $d->format('l');
+            $dayNum = $d->day;
+            $sfx = 'th';
+            if (!in_array($dayNum, [11, 12, 13])) {
+                switch ($dayNum % 10) {
+                    case 1: $sfx = 'st'; break;
+                    case 2: $sfx = 'nd'; break;
+                    case 3: $sfx = 'rd'; break;
+                }
+            }
+            $monthName = $d->format('F');
+            $year = $d->format('Y');
+            $dateFormatted = "{$dayOfWeek}, {$dayNum}{$sfx} {$monthName}, {$year}";
+        } else {
+            $dateFormatted = 'N/A';
+        }
 
-        $timeFormatted = $booking->bookingSlot
-            ? strtoupper(\Carbon\Carbon::parse($booking->bookingSlot->start_time)->format('g:i A'))
-            : 'N/A';
+        if ($booking->bookingSlot) {
+            $startCarbon = \Carbon\Carbon::parse($booking->bookingSlot->start_time);
+            $endCarbon = \Carbon\Carbon::parse($booking->bookingSlot->end_time);
 
-        $venue = 'LONGCHAMP POP UP STORE THE GARDENS MALL';
+            $startStr = $startCarbon->minute === 0 ? $startCarbon->format('g A') : $startCarbon->format('g:i A');
+            $endStr = $endCarbon->minute === 0 ? $endCarbon->format('g A') : $endCarbon->format('g:i A');
+
+            $timeFormatted = "{$startStr} - {$endStr}";
+        } else {
+            $timeFormatted = 'N/A';
+        }
+
+        $venue = 'LONGCHAMP POP-UP STORE THE GARDENS MALL';
 
         // Retrieve user ID if available
         $user = \App\Models\User::where('email', $email)->first();

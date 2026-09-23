@@ -292,10 +292,10 @@
 
                                     <!-- Details List -->
                                     <div class="small fw-bold text-dark text-uppercase" style="font-size: 0.725rem; line-height: 1.6; letter-spacing: 0.03em;">
-                                        <div class="mb-1"><span class="text-muted">DATE:</span> <span id="confirmed-ticket-date" class="text-dark">SATURDAY, 3RD OCTOBER</span></div>
+                                        <div class="mb-1"><span class="text-muted">DATE:</span> <span id="confirmed-ticket-date" class="text-dark">SATURDAY, 3RD OCTOBER, 2026</span></div>
                                         <div class="mb-1"><span class="text-muted">TIME:</span> <span id="confirmed-ticket-time" class="text-dark">4:00PM - 5:00PM</span></div>
                                         <div>
-                                            <span class="text-muted">VENUE:</span> LONGCHAMP POP UP<br>South Palm, Ground Floor, The Gardens Mall
+                                            <span class="text-muted">VENUE:</span> LONGCHAMP POP-UP<br>South Palm, Ground Floor, The Gardens Mall
                                         </div>
                                     </div>
                                 </div>
@@ -353,7 +353,7 @@
             <div class="mb-4 text-center">
                 <div class="mb-3">
                     <div class="small text-muted text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.05em;">DATE:</div>
-                    <div id="modal-review-date" class="fw-bold text-dark text-uppercase" style="font-size: 0.85rem;">SATURDAY, 3RD OCTOBER</div>
+                    <div id="modal-review-date" class="fw-bold text-dark text-uppercase" style="font-size: 0.85rem;">SATURDAY, 3RD OCTOBER, 2026</div>
                 </div>
 
                 <div class="mb-3">
@@ -364,7 +364,7 @@
                 <div>
                     <div class="small text-muted text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.05em;">VENUE:</div>
                     <div class="fw-bold text-dark" style="font-size: 0.85rem;">
-                        LONGCHAMP POP UP <br>
+                        LONGCHAMP POP-UP <br>
                         South Palm, Ground Floor, The Gardens Mall
                     </div>
                 </div>
@@ -480,9 +480,11 @@
 
             function formatDateFullWithDay(dateStr) {
                 if (!dateStr) return '';
+                const parts = dateStr.split('-');
+                const year = parts[0];
                 const dayOfWeek = formatDateDayOfWeek(dateStr);
                 const ordinalDate = formatDateOrdinal(dateStr);
-                return `${dayOfWeek}, ${ordinalDate}`;
+                return `${dayOfWeek}, ${ordinalDate}, ${year}`;
             }
 
             function formatTimeSingle(tStr) {

@@ -196,7 +196,7 @@ class BookingViewController extends Controller
                 }
                 $dayOfWeek = strtoupper($dateObj->format('l'));
                 $monthName = strtoupper($dateObj->format('F'));
-                $dateFormatted = $dayOfWeek . ', ' . $day . $suffix . ' ' . $monthName;
+                $dateFormatted = $dayOfWeek . ', ' . $day . $suffix . ' ' . $monthName . ', ' . $dateObj->format('Y');
 
                 $startTime = Carbon::parse($slot->start_time)->format('g:iA');
                 $endTime = Carbon::parse($slot->end_time)->format('g:iA');
@@ -364,7 +364,7 @@ class BookingViewController extends Controller
             }
             $dayOfWeek = strtoupper($dateObj->format('l'));
             $monthName = strtoupper($dateObj->format('F'));
-            $dateFormatted = $dayOfWeek . ', ' . $day . $suffix . ' ' . $monthName;
+            $dateFormatted = $dayOfWeek . ', ' . $day . $suffix . ' ' . $monthName . ', ' . $dateObj->format('Y');
 
             $startTime = Carbon::parse($slot->start_time)->format('g:iA');
             $endTime = Carbon::parse($slot->end_time)->format('g:iA');

@@ -72,7 +72,6 @@
             font-size: 15px;
             font-weight: 700;
             letter-spacing: 0.5px;
-            text-transform: uppercase;
             color: #111111;
             line-height: 1.4;
         }
@@ -160,7 +159,7 @@
                 <div class="detail-group" style="margin-bottom: 10px;">
                     <div class="detail-label">VENUE:</div>
                     <div class="detail-value">
-                        LONGCHAMP POP UP<br>
+                        LONGCHAMP POP-UP<br>
                         South Palm, Ground Floor, The Gardens Mall
                     </div>
                 </div>

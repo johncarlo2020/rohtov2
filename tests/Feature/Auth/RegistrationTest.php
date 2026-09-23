@@ -47,8 +47,9 @@ class RegistrationTest extends TestCase
 
         $user = \App\Models\User::where('email', 'registered_user@example.com')->first();
         $this->assertNotNull($user);
+        $this->assertEquals(1, $user->otp_verified);
 
-        $response->assertRedirect(route('otp', ['user' => $user->id]));
+        $response->assertRedirect(route('dashboard'));
     }
 
     public function test_new_users_can_register_with_new_mockup_fields(): void
@@ -77,8 +78,9 @@ class RegistrationTest extends TestCase
         $this->assertTrue((bool)$user->marketing);
         $this->assertContains('whatsapp', $user->consent_channels);
         $this->assertContains('email', $user->consent_channels);
+        $this->assertEquals(1, $user->otp_verified);
 
-        $response->assertRedirect(route('otp', ['user' => $user->id]));
+        $response->assertRedirect(route('dashboard'));
     }
 
     public function test_new_users_prefer_not_to_be_contacted(): void

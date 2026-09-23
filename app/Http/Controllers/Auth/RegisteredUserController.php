@@ -106,7 +106,6 @@ class RegisteredUserController extends Controller
           : false;
 
       $marketing = $newsletterConsent || $communicationConsent;
-      $otp = random_int(100000, 999999);
 
       $user = User::create([
           'title' => $request->input('title'),
@@ -119,7 +118,7 @@ class RegisteredUserController extends Controller
           'preferred_contact' => $preferredContact,
           'communication_consent' => $communicationConsent,
           'marketing' => $marketing,
-          'otp' => $otp,
+          'otp_verified' => 1,
           'created_at' => Carbon::now(),
           'last_login_at' => Carbon::now(),
           'password' => Hash::make('password'),
@@ -129,18 +128,6 @@ class RegisteredUserController extends Controller
 
       Auth::login($user);
 
-      GlobalHelper::sendOtpEmail(
-          $user->email,
-          $otp,
-          trim(($user->fname ?? '') . ' ' . ($user->lname ?? '')),
-          $otpType = 'Registration'
-      );
-
-      // Optional SMS OTP
-      // GlobalHelper::sendOtpSms($phoneNumber, $otp);
-
-      return redirect()
-          ->route('otp', ['user' => $user->id])
-          ->with('success', 'A verification code has been sent to your email.');
+      return redirect()->intended(route('dashboard'));
   }
 }

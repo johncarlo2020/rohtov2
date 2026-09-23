@@ -34,15 +34,7 @@ class AuthenticationTest extends TestCase
         ]);
 
         $this->assertAuthenticated();
-        $response->assertRedirect(route('otp', ['user' => $user->id]));
-
-        $user->refresh();
-        $this->assertNotNull($user->otp);
-
-        // 2. Submit OTP verification code
-        $otpResponse = $this->actingAs($user)->post('/verify-otp', [
-            'otp' => str_split((string)$user->otp),
-        ]);
+        $response->assertRedirect(route('dashboard'));
 
         $user->refresh();
         $this->assertEquals(1, $user->otp_verified);

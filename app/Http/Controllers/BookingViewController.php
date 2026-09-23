@@ -32,10 +32,6 @@ class BookingViewController extends Controller
 
         $user = auth()->user();
 
-        if ($user && !$user->isProtectedAdmin() && !$user->hasRole('admin') && !$user->otp_verified) {
-            return redirect()->route('otp');
-        }
-
         $existingBooking = null;
 
         if ($user) {
@@ -414,11 +410,6 @@ class BookingViewController extends Controller
         }
 
         $user = auth()->user();
-
-        if ($user && !$user->isProtectedAdmin() && !$user->hasRole('admin') && !$user->otp_verified) {
-            session()->put('url.intended', $request->fullUrl());
-            return redirect()->route('otp');
-        }
 
         $ref = $request->query('ref');
         $booking = null;

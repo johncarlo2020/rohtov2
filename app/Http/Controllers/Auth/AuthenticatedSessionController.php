@@ -30,22 +30,13 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
 
         $user = Auth::user();
-        $otp = random_int(100000, 999999);
 
         $user->update([
-            'otp' => $otp,
-            'otp_verified' => 0,
+            'otp_verified' => 1,
             'last_login_at' => Carbon::now(),
         ]);
 
-        // Send OTP email
-        try {
-            \App\Helpers\GlobalHelper::sendOtpEmail($user->email, $otp, $user->fname ?? $user->name);
-        } catch (\Throwable $e) {
-            \Log::error('Failed to send login OTP email: ' . $e->getMessage());
-        }
-
-        return redirect()->route('otp', ['user' => $user->id]);
+        return redirect()->intended(RouteServiceProvider::HOME);
     }
 
     /**

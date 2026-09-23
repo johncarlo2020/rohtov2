@@ -138,10 +138,6 @@ class StationController extends Controller
       ->where("id", $userId)
       ->first();
 
-    if ($user && !$user->isProtectedAdmin() && !$user->hasRole('admin') && !$user->otp_verified) {
-        return redirect()->route('otp');
-    }
-
     $stationDone = ($hasStationUsers && $user && $user->relationLoaded('stationUser')) ? $user->stationUser->count() : 0;
     $stations = $hasStations ? Station::get() : collect();
 

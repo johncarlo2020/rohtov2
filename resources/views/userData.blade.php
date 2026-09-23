@@ -91,6 +91,12 @@
                                             <input id="dob" class="form-control" type="date" disabled value="{{ $user->dob }}">
                                         </div>
                                     </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="example-text-input" class="form-control-label">Which best describes you?</label>
+                                            <input class="form-control" type="text" disabled value="{{ $user->race }}">
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="d-flex justify-content-end">
                                     <button type="button" id="submitBtn"

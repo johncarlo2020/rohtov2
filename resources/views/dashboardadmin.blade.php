@@ -668,7 +668,7 @@
             });
             Highcharts.chart(getPieChartConfig({
                 renderTo: 'raceChart',
-                title: 'Race Distribution',
+                title: 'Which Best Describes You',
                 data: raceData
             }));
 

@@ -120,6 +120,7 @@
                             <th>Email</th>
                             <th>Preferred Location</th>
                             <th>Property Budget</th>
+                            <th>Which best describes you?</th>
                             <th>Marketing</th>
                             <th>Registration Timestamp</th>
                             <th>Chagee Voucher</th>
@@ -149,6 +150,7 @@
                                 @endforeach
                             </td>
                             <td>{{ $user->property_budget }}</td>
+                            <td>{{ $user->race }}</td>
                             <td>{{ $user->marketing }}</td>
                             <td>{{ \Carbon\Carbon::parse($user->created_at)->toDayDateTimeString() }}</td>
                             <td>
@@ -736,8 +738,8 @@
         let start = $('#startDate').val();
         let end = $('#endDate').val();
 
-        // Registration Timestamp is always at column index 5
-        let rowDate = new Date(data[6]);
+        // Registration Timestamp is at column index 7
+        let rowDate = new Date(data[7]);
 
         // Convert row date to YYYY-MM-DD (DATE ONLY)
         let rowDateOnly = rowDate.getFullYear() + '-' +

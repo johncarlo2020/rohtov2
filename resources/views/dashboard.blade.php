@@ -16,9 +16,17 @@
                 font-display: swap;
             }
 
+            html, body {
+                width: auto;
+                height: auto;
+                overflow: auto !important;
+            }
+
             .tommy-dashboard {
-                min-height: 100svh;
+                min-height: 100dvh;
                 overflow-x: hidden;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
                 padding: 18px 10px 24px;
                 background: url('{{ asset('tommy_assets/Tommy X Cadillac_background_2x.webp') }}') center / cover fixed;
                 color: #050505;
@@ -84,6 +92,16 @@
             .tommy-counter-store { right: 0; }
             .tommy-counter-image { display: block; width: 100%; height: auto; }
             .tommy-counter-value { margin-top: 3px; font-size: clamp(10px, 2.9vw, 14px); line-height: 1; color:black;}
+            .tommy-counter-status {
+                margin-top: 4px;
+                font-size: clamp(7px, 1.8vw, 10px);
+                line-height: 1.1;
+                letter-spacing: .04em;
+                color: #000;
+                text-transform: uppercase;
+                font-weight: 700;   
+                font-family: 'Altone', Arial, sans-serif;
+            }
             .tommy-dashboard-note { margin: 3px auto 0; text-align: center; font-size: clamp(9px, 2.4vw, 12px); font-family: 'Altone', Arial, sans-serif; color: #000; }
                 .tommy-redemption-link { display: grid; justify-items: center; color: inherit; text-decoration: none; cursor: pointer; }
                 .tommy-redemption-link:hover { color: inherit; }
@@ -155,7 +173,7 @@
         </header>
 
         <section class="tommy-track-shell" aria-label="Tommy Hilfiger and Cadillac pit stop track">
-            <img class="tommy-track-map" src="{{ asset('tommy_assets/THXC_map_2x.webp') }}" alt="Pit stop track map">
+            <img class="tommy-track-map" src="{{ asset('tommy_assets/THXC_map_2x.webp') }}" alt="Pit stop track map" loading="lazy" decoding="async">
 
             <div class="tommy-counter tommy-counter-redemption">
                     <a
@@ -165,9 +183,13 @@
                             onclick="event.preventDefault(); showRedemptionModal();"
                         @endif
                     >
-                        <img class="tommy-counter-image" src="{{ asset($stationDone >= $totalStations ? 'tommy_assets/REDEMPTION_COMPLETE_2x.webp' : 'tommy_assets/REDEMPTION_2x.webp') }}" alt="Redemption">
+                        <img class="tommy-counter-image" src="{{ asset($stationDone >= $totalStations ? 'tommy_assets/REDEMPTION_COMPLETE_2x.webp' : 'tommy_assets/REDEMPTION_2x.webp') }}" alt="Redemption" loading="lazy" decoding="async">
                     </a>
+                    <span class="tommy-counter-status">Complete</span>
+
                 <span class="tommy-counter-value">{{ $stationDone }}/{{ $totalStations }}</span>
+               
+             
             </div>
 
             <div class="tommy-counter tommy-counter-store">
@@ -175,8 +197,10 @@
                     class="tommy-redemption-link"
                     href="{{ route('bonus.stamp', ['bonus' => 'in-store']) }}"
                 >
-                    <img class="tommy-counter-image" src="{{ asset($inStoreStamped ? 'tommy_assets/IN-STORE-COMPLETE_2x.webp' : 'tommy_assets/IN-STORE_2x.webp') }}" alt="In-store">
+                    <img class="tommy-counter-image" src="{{ asset($inStoreStamped ? 'tommy_assets/IN-STORE-COMPLETE_2x.webp' : 'tommy_assets/IN-STORE_2x.webp') }}" alt="In-store" loading="lazy" decoding="async">
                 </a>
+                    <span class="tommy-counter-status">Complete</span>
+
                 <span class="tommy-counter-value">{{ $inStoreStamped ? '1/1' : '0/1' }}</span>
             </div>
 
@@ -194,7 +218,7 @@
                             onclick="event.preventDefault(); showTommyAccessMessage();"
                         @endif
                     >
-                        <img class="tommy-station-image" src="{{ asset($stationAsset) }}" alt="Pit stop {{ $station->id }}: {{ $station->name }}">
+                        <img class="tommy-station-image" src="{{ asset($stationAsset) }}" alt="Pit stop {{ $station->id }}: {{ $station->name }}" loading="lazy" decoding="async">
                         <span class="tommy-station-copy">
                             <span class="tommy-station-number">PITSTOP {{ $station->id }}</span>
                             <span class="tommy-station-name">{{ strtoupper($station->name) }}</span>

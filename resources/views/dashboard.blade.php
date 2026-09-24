@@ -183,7 +183,7 @@
                             onclick="event.preventDefault(); showRedemptionModal();"
                         @endif
                     >
-                        <img class="tommy-counter-image" src="{{ asset($stationDone >= $totalStations ? 'tommy_assets/REDEMPTION_COMPLETE_2x.webp' : 'tommy_assets/REDEMPTION_2x.webp') }}" alt="Redemption" loading="lazy" decoding="async">
+                        <img class="tommy-counter-image" src="{{ asset($redemptionStamped ? 'tommy_assets/REDEMPTION_COMPLETE_2x.webp' : 'tommy_assets/REDEMPTION_2x.webp') }}" alt="Redemption" loading="lazy" decoding="async">
                     </a>
                     <span class="tommy-counter-status">Complete</span>
 
@@ -195,7 +195,10 @@
             <div class="tommy-counter tommy-counter-store">
                 <a
                     class="tommy-redemption-link"
-                    href="{{ route('bonus.stamp', ['bonus' => 'in-store']) }}"
+                    href="{{ $stationDone >= $totalStations && $redemptionStamped ? route('bonus.stamp', ['bonus' => 'in-store']) : '#' }}"
+                    @if ($stationDone < $totalStations || !$redemptionStamped)
+                        onclick="event.preventDefault(); showInStoreModal();"
+                    @endif
                 >
                     <img class="tommy-counter-image" src="{{ asset($inStoreStamped ? 'tommy_assets/IN-STORE-COMPLETE_2x.webp' : 'tommy_assets/IN-STORE_2x.webp') }}" alt="In-store" loading="lazy" decoding="async">
                 </a>
@@ -254,6 +257,19 @@
             </div>
         </div>
 
+        <div class="modal fade tommy-redemption-modal" id="inStoreModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered w-75 m-auto">
+                <div class="modal-content">
+                    <div class="modal-body text-center">
+                        <button type="button" class="tommy-modal-close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+                        <h2 class="modal-title">BONUS LAP</h2>
+                        <p class="modal-message">Visit us at Level #03-15 to<br>unlock your extra reward.</p>
+                        <button type="button" class="tommy-modal-done" data-bs-dismiss="modal">DONE</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     @push('scripts')
@@ -265,6 +281,11 @@
 
                 function showRedemptionModal() {
                     const modal = document.getElementById('redemptionModal');
+                    if (modal && window.bootstrap) new bootstrap.Modal(modal).show();
+                }
+
+                function showInStoreModal() {
+                    const modal = document.getElementById('inStoreModal');
                     if (modal && window.bootstrap) new bootstrap.Modal(modal).show();
                 }
 

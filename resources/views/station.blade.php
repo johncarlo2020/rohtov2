@@ -3,6 +3,13 @@
         <style>
             @font-face {
                 font-family: 'Altone';
+                src: url('{{ asset('tommy_assets/Altone-Regular.ttf') }}') format('truetype');
+                font-weight: 400;
+                font-display: swap;
+            }
+
+            @font-face {
+                font-family: 'Altone';
                 src: url('{{ asset('tommy_assets/Altone-Bold.ttf') }}') format('truetype');
                 font-weight: 700;
                 font-display: swap;
@@ -84,6 +91,11 @@
                 user-select: none;
             }
 
+            .tommy-station-stamp-target {
+                width: min(68vw, 290px);
+                margin-top: clamp(34px, 7vh, 60px);
+            }
+
             .tommy-station-name {
                 margin: clamp(28px, 5vh, 46px) 0 0;
                 color: #000;
@@ -97,9 +109,12 @@
             .tommy-station-description {
                 max-width: 300px;
                 margin: 16px 0 0;
-                font-family: Arial, sans-serif;
                 font-size: clamp(14px, 3.8vw, 18px);
+               
                 line-height: 1.3;
+                color: #000;
+                font-family: 'Altone', Arial, sans-serif;
+                 font-weight: 400;
             }
 
             .tommy-station-hint {
@@ -108,6 +123,8 @@
                 font-family: Arial, sans-serif;
                 font-size: clamp(17px, 4vw, 21px);
                 line-height: 1.25;
+                font-family: 'Altone', Arial, sans-serif;
+                 font-weight: 400;
             }
 
             .tommy-station-action {
@@ -162,10 +179,10 @@
                 <h2 class="tommy-station-name">{{ $station->name }}</h2>
                 <p class="tommy-station-description">
                     @switch($station->id)
-                        @case(1) Pick Team Pérez or Team Bottas.<br>Hit the button as close to 30 seconds as possible. @break
-                        @case(2) Get ready to put your skills to the test. @break
-                        @case(3) Take the wheel and show your racing instinct. @break
-                        @default Capture the moment and complete the pitstop. @break
+                        @case(1) Pick Team Pérez or Team Bottas.<br>Hit the button as close to 10 seconds as possible. @break
+                        @case(2) Catch as many falling sticks as you can  within 10 seconds to score points! <br> <br>The Top 3 players on the leaderboard win exclusive Tommy Hilfiger prizes.  @break
+                        @case(3) Race the Singapore F1® track and set your fastest lap on the simulator. <br> <br> The Top 3 fastest driver on the leaderboard win exclusive Tommy Hilfiger prizes. @break
+                        @default Strike a pose and capture your ultimate F1 moment! @break
                     @endswitch
                 </p>
                 <button id="startButton" class="tommy-station-action" type="button">Start</button>
@@ -173,7 +190,7 @@
 
             <div id="stationWaiting" class="tommy-station-state d-none">
                 <p class="tommy-station-hint">Earn a digital passport<br>stamp upon completion.</p>
-                <button id="stampTarget" class="tommy-station-image-button" type="button" aria-label="Touch the station image to stamp">
+                <button id="stampTarget" class="tommy-station-image-button tommy-station-stamp-target" type="button" aria-label="Touch the station image to stamp">
                     <img src="{{ asset($stationAsset) }}" alt="Touch the station image to stamp">
                 </button>
 
@@ -245,7 +262,7 @@
                         });
                 }
 
-                document.addEventListener('pointerdown', function (event) {
+                document.getElementById('stampTarget').addEventListener('pointerdown', function (event) {
                     if (event.pointerType === 'mouse' || submitting || waiting.classList.contains('d-none')) return;
                     event.preventDefault();
                     activePointers.add(event.pointerId);

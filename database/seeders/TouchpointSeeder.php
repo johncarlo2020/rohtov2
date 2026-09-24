@@ -14,8 +14,8 @@ class TouchpointSeeder extends Seeder
             ['key' => 'station_2', 'label' => 'Station 2', 'required_touches' => 4],
             ['key' => 'station_3', 'label' => 'Station 3', 'required_touches' => 5],
             ['key' => 'station_4', 'label' => 'Station 4', 'required_touches' => 5],
-            ['key' => 'redemption', 'label' => 'Redemption', 'required_touches' => 6],
-            ['key' => 'in-store', 'label' => 'In-store', 'required_touches' => 6],
+            ['key' => 'redemption', 'label' => 'Redemption', 'required_touches' => 5],
+            ['key' => 'in-store', 'label' => 'In-store', 'required_touches' => 5],
         ];
 
         foreach ($touchpoints as $touchpoint) {

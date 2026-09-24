@@ -50,7 +50,7 @@
     <main class="tommy-congrats-page">
         <section class="tommy-congrats-content" aria-label="Tommy Hilfiger information">
             <p class="tommy-congrats-text">Click on the logo</p>
-            <a href="https://global.tommy.com/" target="_blank" rel="noopener noreferrer" aria-label="Tommy Hilfiger website">
+            <a href="https://sg.tommy.com/en/gender-inclusive/tommy-hilfiger-x--cadillac-formula-1%C2%AE-team/?srsltid=AU7gw4WhRwfWT27to9b6YYmUloRiKX0snAqyWN0IDlb-7YlEEwBSvBBe" target="_blank" rel="noopener noreferrer" aria-label="Tommy Hilfiger website">
                 <img class="tommy-congrats-logo" src="{{ asset('tommy_assets/TOMMY-HIL_logo_2x.webp') }}" alt="Tommy Hilfiger">
             </a>
             <p class="tommy-congrats-text">for more information</p>

@@ -69,7 +69,7 @@
 </head>
 
 <body class="antialiased welcome-page" style="background-image:url('{{ asset('images/brand/landing_bg2.webp') }}');">
-
+<img class="welcome_img_bottom" src="{{ asset('images/brand/welcome_img.webp') }}" alt="Welcome Image" />
     <div class="px-0 py-4 container-fluid main-content with-scroll">
         <div class="top-container">
             <!-- Branding (top area) -->

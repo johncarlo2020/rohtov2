@@ -22,6 +22,10 @@
                 overflow: auto !important;
             }
 
+            body.modal-open {
+                overflow: hidden !important;
+            }
+
             .tommy-dashboard {
                 min-height: 100dvh;
                 overflow-x: hidden;
@@ -112,9 +116,8 @@
                     overflow: hidden;
                     border: 0;
                     border-radius: 9px;
-                    background: rgba(248, 251, 252, .9);
+                    background: #f8fbfc;
                     box-shadow: 0 10px 30px rgba(0, 0, 0, .18);
-                    backdrop-filter: blur(14px);
                 }
                 .tommy-redemption-modal .modal-body { padding: 25px 24px 28px; }
                 .tommy-redemption-modal .modal-title {
@@ -232,63 +235,63 @@
         </section>
 
         <p class="tommy-dashboard-note">Complete the challenge and light up the icon.</p>
-
-        <div class="modal fade custom-modal tommy-modal" id="notAllowedModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered w-75 m-auto">
-                <div class="modal-content card">
-                    <div class="modal-body text-center">
-                        <p class="message text-dark">Complete Pitstop 1 and Pitstop 2 to unlock Pitstop 3.</p>
-                        <button type="button" class="custom-btn custom-btn-primary" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade tommy-redemption-modal" id="redemptionModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered w-75 m-auto">
-                <div class="modal-content">
-                    <div class="modal-body text-center">
-                        <button type="button" class="tommy-modal-close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
-                        <h2 class="modal-title">REDEMPTION</h2>
-                        <p class="modal-message">Complete all 4 pit stops<br>to claim your exclusive gift.</p>
-                        <button type="button" class="tommy-modal-done" data-bs-dismiss="modal">DONE</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade tommy-redemption-modal" id="inStoreModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered w-75 m-auto">
-                <div class="modal-content">
-                    <div class="modal-body text-center">
-                        <button type="button" class="tommy-modal-close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
-                        <h2 class="modal-title">BONUS LAP</h2>
-                        <p class="modal-message">Visit us at Level #03-15 to<br>unlock your extra reward.</p>
-                        <button type="button" class="tommy-modal-done" data-bs-dismiss="modal">DONE</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </main>
+
+    {{-- Keep fixed modals outside the dashboard's scrolling container. --}}
+
+    <div class="modal fade custom-modal tommy-modal" id="notAllowedModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered w-75 m-auto">
+            <div class="modal-content card">
+                <div class="modal-body text-center">
+                    <p class="message text-dark">Complete Pitstop 1 and Pitstop 2 to unlock Pitstop 3.</p>
+                    <button type="button" class="custom-btn custom-btn-primary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade tommy-redemption-modal" id="redemptionModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <button type="button" class="tommy-modal-close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+                    <h2 class="modal-title">REDEMPTION</h2>
+                    <p class="modal-message">Complete all 4 pit stops<br>to claim your exclusive gift.</p>
+                    <button type="button" class="tommy-modal-done" data-bs-dismiss="modal">DONE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade tommy-redemption-modal" id="inStoreModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <button type="button" class="tommy-modal-close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+                    <h2 class="modal-title">BONUS LAP</h2>
+                    <p class="modal-message">Visit us at Level #03-15 to<br>unlock your extra reward.</p>
+                    <button type="button" class="tommy-modal-done" data-bs-dismiss="modal">DONE</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     @push('scripts')
         <script>
             function showTommyAccessMessage() {
                 const modal = document.getElementById('notAllowedModal');
-                if (modal && window.bootstrap) new bootstrap.Modal(modal).show();
+                if (modal && window.bootstrap) bootstrap.Modal.getOrCreateInstance(modal).show();
             }
 
-                function showRedemptionModal() {
-                    const modal = document.getElementById('redemptionModal');
-                    if (modal && window.bootstrap) new bootstrap.Modal(modal).show();
-                }
+            function showRedemptionModal() {
+                const modal = document.getElementById('redemptionModal');
+                if (modal && window.bootstrap) bootstrap.Modal.getOrCreateInstance(modal).show();
+            }
 
-                function showInStoreModal() {
-                    const modal = document.getElementById('inStoreModal');
-                    if (modal && window.bootstrap) new bootstrap.Modal(modal).show();
-                }
-
+            function showInStoreModal() {
+                const modal = document.getElementById('inStoreModal');
+                if (modal && window.bootstrap) bootstrap.Modal.getOrCreateInstance(modal).show();
+            }
         </script>
     @endpush
 </x-app-layout>

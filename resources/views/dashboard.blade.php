@@ -22,6 +22,7 @@
                 min-height: 100vh;
                 min-height: 100dvh;
                 overflow: auto !important;
+                overscroll-behavior-y: none;
                 background-color: #a5a7a8;
             }
 

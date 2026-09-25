@@ -16,23 +16,28 @@
                 font-display: swap;
             }
 
-            html, body {
+            html:root, body.dashboard {
                 width: auto;
-                height: auto;
+                height: auto !important;
+                min-height: 100vh;
+                min-height: 100dvh;
                 overflow: auto !important;
+                background-color: #a5a7a8;
             }
 
-            body.modal-open {
+            body.dashboard {
+                background: #a5a7a8 url('{{ asset('tommy_assets/Tommy X Cadillac_background_2x.webp') }}') center / cover no-repeat;
+            }
+
+            body.dashboard.modal-open {
                 overflow: hidden !important;
             }
 
             .tommy-dashboard {
+                min-height: 100vh;
                 min-height: 100dvh;
-                overflow-x: hidden;
-                overflow-y: auto;
-                -webkit-overflow-scrolling: touch;
                 padding: 18px 10px 24px;
-                background: url('{{ asset('tommy_assets/Tommy X Cadillac_background_2x.webp') }}') center / cover fixed;
+                padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
                 color: #050505;
                 font-family: 'Altone', Arial, sans-serif;
             }

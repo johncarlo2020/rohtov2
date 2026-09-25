@@ -204,10 +204,8 @@
             <div class="tommy-counter tommy-counter-store">
                 <a
                     class="tommy-redemption-link"
-                    href="{{ $stationDone >= $totalStations && $redemptionStamped ? route('bonus.stamp', ['bonus' => 'in-store']) : '#' }}"
-                    @if ($stationDone < $totalStations || !$redemptionStamped)
-                        onclick="event.preventDefault(); showInStoreModal();"
-                    @endif
+                    href="{{ route('bonus.stamp', ['bonus' => 'in-store']) }}"
+              
                 >
                     <img class="tommy-counter-image" src="{{ asset($inStoreStamped ? 'tommy_assets/IN-STORE-COMPLETE_2x.webp' : 'tommy_assets/IN-STORE_2x.webp') }}" alt="In-store" loading="lazy" decoding="async">
                 </a>
@@ -226,7 +224,7 @@
                     @endphp
 
                     <a class="tommy-station" href="{{ $stationUrl }}"
-                        @if (!$station->status && $station->id === 3 && !$canAccessStation3)
+                        @if (!$station->status && $station->id === 99 && !$canAccessStation3)
                             onclick="event.preventDefault(); showTommyAccessMessage();"
                         @endif
                     >

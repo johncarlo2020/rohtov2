@@ -782,7 +782,6 @@ class StationController extends Controller
         $user = auth()->user();
         $totalStations = Station::count();
         abort_if($bonus === 'redemption' && $user->stationUser()->count() < $totalStations, 403);
-        abort_if($bonus === 'in-store' && ($user->stationUser()->count() < $totalStations || !$user->redemption_stamped), 403);
         $flag = $bonus === 'redemption' ? 'redemption_stamped' : 'in_store_stamped';
         $requiredTouches = Touchpoint::where('key', $bonus)->value('required_touches');
 

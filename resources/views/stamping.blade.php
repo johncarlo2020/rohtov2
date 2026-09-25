@@ -157,7 +157,7 @@
                 // Toggle grayscale removal
                 // Only trigger once
 
-                let requiredCount = 1;
+                let requiredCount = 3;
 
                 // if (stationid == 2) 
                 // {

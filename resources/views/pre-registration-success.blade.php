@@ -8,9 +8,9 @@
                      {{-- success container (TOP) --}}
                     <div class="success-content">
                         <div class="mb-5 d-flex justify-content-center">
-                            <img src="{{ asset('images/check.png') }}" class="check-img">
+                            <img src="{{ asset('images/check.png') }}" class="check-img w-25">
                         </div>
-                        <h2 class="text-center5">Redeemed successfully!</h2>
+                        <h2 class="text-center">Redeemed successfully!</h2>
                     </div>
                     {{-- home button --}}
                     <div class="col-8 colanimate-entry delay-2 mt-4 mb-5">

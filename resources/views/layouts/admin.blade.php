@@ -81,8 +81,8 @@
     </aside>
     <main class="admin-workspace">
         <header class="admin-topbar">
-            <div><p>ADMIN PORTAL</p><h1>{{ $pageTitle }}</h1></div>
-            <div class="admin-account"><span class="admin-avatar" aria-hidden="true">{{ mb_substr(auth()->user()->fname ?: 'A', 0, 1) }}</span><span>{{ auth()->user()->fname ?: 'Administrator' }}<small>Event team</small></span></div>
+            <h1>{{ $pageTitle }}</h1>
+            <div class="admin-account"><span>{{ auth()->user()->fname ?: 'Administrator' }}</span></div>
         </header>
         <div class="admin-page-content">@yield('content')</div>
         <footer class="admin-page-footer">© {{ date('Y') }} <span>Discover more. Manage with ease.</span></footer>

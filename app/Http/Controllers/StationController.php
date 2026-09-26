@@ -660,15 +660,21 @@ class StationController extends Controller
 
 
 
-        $usersWithSixStationUsers = User::participants()->with('stationUser')->whereDate('created_at', '>=', $startDate->toDateString())->has('stationUser', '>=', 5)->count();
-        // dd($usersWithSixStationUsers);
-        $data['completedUsers'] = $usersWithSixStationUsers;
-        // dd($usersWithSixStationUsers);
-
-        if ($data['usersCount'] > 0) {
-            $data['percentage'] = number_format(($usersWithSixStationUsers / $data['usersCount']) * 100, 2);
-        } else {
-            $data['percentage'] = 0; // Avoid division by zero
+        foreach ([
+            [true, 'completedUsers', 'percentage'],
+            [false, 'nonMandatoryCompletedUsers', 'nonMandatoryPercentage'],
+        ] as [$isMandatory, $countKey, $percentageKey]) {
+            $stationIds = Station::where('is_mandatory', $isMandatory)->pluck('id');
+            $data[$countKey] = $stationIds->isEmpty() ? 0 : User::participants()
+                ->whereDate('created_at', '>=', $startDate->toDateString())
+                ->whereIn('id', StationUser::select('user_id')
+                    ->whereIn('station_id', $stationIds)
+                    ->groupBy('user_id')
+                    ->havingRaw('COUNT(DISTINCT station_id) = ?', [$stationIds->count()]))
+                ->count();
+            $data[$percentageKey] = $data['usersCount'] > 0
+                ? number_format(($data[$countKey] / $data['usersCount']) * 100, 2)
+                : 0;
         }
         $userCounts = User::participants()->selectRaw('DATE(created_at) as date, COUNT(*) as count')->groupBy('date')->orderBy('date')->get()->toArray();
 

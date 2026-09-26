@@ -11,7 +11,7 @@
                 </a>
             </div>
         </div>
-        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+        <div class="col-md-4 col-sm-6 mb-md-0 mb-3">
             <div class="card">
                 <div class="card-body p-3">
                     <div class="row">
@@ -36,7 +36,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+        <div class="col-md-4 col-sm-6 mb-md-0 mb-3">
             <div class="card">
                 <div class="card-body p-3">
                     <div class="row">
@@ -61,29 +61,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-            <div class="card">
-                <div class="card-body p-3">
-                    <div class="row">
-                        <div class="col-8">
-                            <div class="numbers">
-                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Completion Rate</p>
-                                <h5 class="font-weight-bolder">
-                                    {{ $data['percentage'] }}%
-                                </h5>
-
-                            </div>
-                        </div>
-                        <div class="col-4 text-end">
-                            <div class="icon icon-shape bg-gradient-success shadow-success text-center rounded-circle">
-                                <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-sm-6">
+        <div class="col-md-4 col-sm-12">
             <div class="card">
                 <div class="card-body p-3">
                     <div class="row">
@@ -105,68 +83,46 @@
             </div>
         </div>
     </div>
-    @php
-        $mandatoryStations    = collect($data['stations'])->where('is_mandatory', true)->values();
-        $nonMandatoryStations = collect($data['stations'])->where('is_mandatory', false)->values();
-    @endphp
-
-    {{-- Mandatory Stations --}}
-    <div class="mt-4">
-        <h6 class="text-uppercase text-xs font-weight-bold text-muted mb-2 ps-1">
-            <i class="fa-solid fa-circle-check me-1 text-success"></i> Mandatory Stations
-        </h6>
-        <div class="row g-3 admin-station-grid">
-            @foreach ($mandatoryStations as $station)
-                <div class="col-12 col-sm-6 col-xxl-3">
-                    <div class="card h-100">
-                        <div class="card-body d-flex justify-content-between mb-2 rounded p-2">
-                            <div class="d-flex align-items-center w-100 gap-2">
-                                <div class="icon-stations">
-                                    <span class="admin-station-marker">{{ $station['id'] }}</span>
-                                </div>
-                                <div class="d-flex flex-column">
-                                    <h6 class="mb-1 text-dark text-sm">{{ $station['name'] }}</h6>
-                                    <span class="text-xs">Average Time : <span
-                                            class="font-weight-bold">{{ $station['average_timespent'] }}
-                                            minutes</span></span>
-                                </div>
-                            </div>
+    <div class="row mt-4 g-3">
+        <div class="col-12 col-xl-5">
+            <div class="card h-100">
+                <div class="card-body p-4">
+                    <h6 class="mb-1">Completion rate</h6>
+                    <p class="text-xs text-muted mb-3">Participants who completed every station in each category.</p>
+                    <div id="completion-rate-chart"></div>
+                    <div class="d-flex flex-wrap justify-content-between gap-3 mb-3 text-sm">
+                        <div><span style="color: #526b35;">●</span> Mandatory · outer ring<br/>
+                            <strong>{{ $data['percentage'] }}%</strong>
+                            <span class="text-xs text-muted">({{ $data['completedUsers'] }}/{{ $data['usersCount'] }})</span>
+                        </div>
+                        <div><span style="color: #bd8b24;">●</span> Non-mandatory · inner ring<br/>
+                            <strong>{{ $data['nonMandatoryPercentage'] }}%</strong>
+                            <span class="text-xs text-muted">({{ $data['nonMandatoryCompletedUsers'] }}/{{ $data['usersCount'] }})</span>
                         </div>
                     </div>
+                    <p class="text-xs text-muted mb-2">Colored segments show completed participants; pale segments show remaining participants.</p>
+                    <p class="text-xs text-muted mb-0">Based on {{ number_format($data['usersCount']) }} total participants. Repeat check-ins count once.</p>
                 </div>
-            @endforeach
-        </div>
-    </div>
-
-    {{-- Non-Mandatory Stations --}}
-    @if ($nonMandatoryStations->isNotEmpty())
-        <div class="mt-3">
-            <h6 class="text-uppercase text-xs font-weight-bold text-muted mb-2 ps-1">
-                <i class="fa-solid fa-circle me-1 text-secondary"></i> Non-Mandatory Stations
-            </h6>
-            <div class="row g-3 admin-station-grid">
-                @foreach ($nonMandatoryStations as $station)
-                    <div class="col-12 col-sm-6 col-xxl-3">
-                        <div class="card h-100 border border-secondary-subtle">
-                            <div class="card-body d-flex justify-content-between mb-2 rounded p-2">
-                                <div class="d-flex align-items-center w-100 gap-2">
-                                    <div class="icon-stations">
-                                        <span class="admin-station-marker" style="opacity:.65">{{ $station['id'] }}</span>
-                                    </div>
-                                    <div class="d-flex flex-column">
-                                        <h6 class="mb-1 text-dark text-sm">{{ $station['name'] }}</h6>
-                                        <span class="text-xs">Average Time : <span
-                                                class="font-weight-bold">{{ $station['average_timespent'] }}
-                                                minutes</span></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
             </div>
         </div>
-    @endif
+        <div class="col-12 col-xl-7">
+            <div class="card h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+                        <div>
+                            <h6 class="mb-1">Average time by station</h6>
+                            <p class="text-xs text-muted mb-0">Minutes per recorded participant check-in.</p>
+                        </div>
+                        <div class="d-flex flex-wrap gap-3 text-xs" aria-label="Station categories">
+                            <span><span aria-hidden="true" style="color: #526b35;">●</span> Mandatory</span>
+                            <span><span aria-hidden="true" style="color: #bd8b24;">●</span> Non-mandatory</span>
+                        </div>
+                    </div>
+                    <div id="station-time-chart"></div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row mt-4">
         <div class="col-lg-6 mb-lg-0 mb-4">
             <div class="card z-index-2 h-100">
@@ -344,6 +300,79 @@
             yAxis: { labels: { style: { color: '#747b69' } }, title: { style: { color: '#747b69' } }, gridLineColor: '#edf0e6' },
             legend: { itemStyle: { color: '#414837' } },
             plotOptions: { series: { dataLabels: { style: { color: '#343b2a', textOutline: 'none' } } } }
+        });
+
+        const completionTotal = @json($data['usersCount']);
+        const completionPoints = [
+            { name: 'Mandatory', y: Number(@json($data['percentage'])), completed: @json($data['completedUsers']), color: '#526b35' },
+            { name: 'Non-mandatory', y: Number(@json($data['nonMandatoryPercentage'])), completed: @json($data['nonMandatoryCompletedUsers']), color: '#bd8b24' }
+        ];
+        Highcharts.chart('completion-rate-chart', {
+            chart: { type: 'pie', height: 280 },
+            title: { text: null },
+            subtitle: completionTotal === 0 ? {
+                text: 'No participants yet', verticalAlign: 'middle', y: 0
+            } : { text: null },
+            credits: { enabled: false },
+            exporting: { enabled: false },
+            legend: { enabled: false },
+            tooltip: {
+                formatter: function () {
+                    if (completionTotal === 0) return 'No participants yet';
+                    return '<b>' + this.series.name + '</b><br/>' + this.point.name + ': ' +
+                        this.y + ' of ' + completionTotal + ' (' +
+                        Highcharts.numberFormat(this.y / completionTotal * 100, 2) + '%)';
+                }
+            },
+            plotOptions: {
+                pie: {
+                    borderWidth: 0, dataLabels: { enabled: false },
+                    slicedOffset: 0, startAngle: -90,
+                    accessibility: { point: { valueSuffix: ' participants' } }
+                }
+            },
+            series: completionPoints.map(function (category, index) {
+                return {
+                    name: category.name,
+                    size: index === 0 ? '100%' : '70%',
+                    innerSize: index === 0 ? '78%' : '68%',
+                    center: ['50%', '50%'],
+                    data: completionTotal === 0 ? [
+                        { name: 'No participants yet', y: 1, color: '#edf0e6' }
+                    ] : [
+                        { name: 'Completed', y: category.completed, color: category.color },
+                        { name: 'Remaining', y: completionTotal - category.completed,
+                            color: index === 0 ? '#eef3e7' : '#fff5db' }
+                    ]
+                };
+            })
+        });
+
+        const stationTimePoints = Object.values(@json($data['stations'])).map(function (station) {
+            return {
+                name: station.name,
+                y: Number(String(station.average_timespent).replace(/,/g, '')),
+                color: station.is_mandatory ? '#526b35' : '#bd8b24',
+                custom: { category: station.is_mandatory ? 'Mandatory' : 'Non-mandatory' }
+            };
+        });
+        Highcharts.chart('station-time-chart', {
+            chart: { type: 'bar', height: Math.max(320, stationTimePoints.length * 38 + 65), spacingRight: 55 },
+            title: { text: null },
+            credits: { enabled: false },
+            exporting: { enabled: false },
+            legend: { enabled: false },
+            xAxis: { type: 'category', lineWidth: 0, tickWidth: 0 },
+            yAxis: { min: 0, softMax: 1, title: { text: 'Minutes' } },
+            tooltip: { pointFormat: '{point.custom.category}<br/><b>{point.y:.2f} minutes</b> per check-in' },
+            plotOptions: {
+                bar: {
+                    borderRadius: 4, borderWidth: 0, pointWidth: 18,
+                    dataLabels: { enabled: true, format: '{y:.2f} min', crop: false, overflow: 'allow' }
+                }
+            },
+            series: [{ name: 'Average time', data: stationTimePoints }],
+            lang: { noData: 'No stations configured' }
         });
     </script>
     <script>

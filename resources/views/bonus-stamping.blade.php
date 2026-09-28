@@ -69,7 +69,7 @@
     @endpush
 
     @php
-        $asset = $bonus === 'redemption' ? 'tommy_assets/REDEMPTION_2x.webp' : 'tommy_assets/IN-STORE_2x.webp';
+        $asset = $bonus === 'redemption' ? 'tommy_assets/REDEMPTION_2x.webp' : 'tommy_assets/in_store.webp';
         $completeAsset = $bonus === 'redemption' ? 'tommy_assets/REDEMPTION_COMPLETE_2x.webp' : 'tommy_assets/IN-STORE-COMPLETE_2x.webp';
         $title = $bonus === 'redemption' ? 'Redemption' : 'In-Store';
     @endphp
@@ -99,7 +99,7 @@
             </div>
 
             <div id="bonusWaiting" class="bonus-stamp-state d-none">
-                <p class="bonus-stamp-hint">Earn a digital passport<br>stamp upon completion.<span id="bonusTouchStatus" class="bonus-stamp-touch-status"></span></p>
+                <p class="bonus-stamp-hint">Earn a digital passport<br>stamp upon completion.</p>
                 <button id="bonusStampTarget" class="bonus-stamp-target" type="button" aria-label="Touch the stamp to collect it">
                     <img class="bonus-stamp-image {{ $bonus === 'redemption' ? 'bonus-redemption-stamp-image' : '' }}" src="{{ asset($asset) }}" alt="">
                 </button>
@@ -129,21 +129,12 @@
                 const stampTarget = document.getElementById('bonusStampTarget');
                 const activePointers = new Set();
                 const requiredTouches = Math.max(1, Number(@json($requiredTouches)) || 1);
-                const touchStatus = document.getElementById('bonusTouchStatus');
                 let submitting = false;
-
-                function updateTouchStatus() {
-                    if (!touchStatus) return;
-                    touchStatus.textContent = activePointers.size >= requiredTouches
-                        ? 'Stamping...'
-                        : `Touches: ${activePointers.size}/${requiredTouches}`;
-                }
 
                 document.getElementById('bonusStart')?.addEventListener('click', function () {
                     intro.classList.add('d-none');
                     waiting.classList.remove('d-none');
                     page.classList.add('stamping-active');
-                    updateTouchStatus();
                 });
 
                 function submitBonusStamp() {
@@ -175,14 +166,12 @@
                     event.preventDefault();
                     stampTarget.setPointerCapture(event.pointerId);
                     activePointers.add(event.pointerId);
-                    updateTouchStatus();
                     if (activePointers.size >= requiredTouches) submitBonusStamp();
                 }, { passive: false });
 
                 ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(function (eventName) {
                     document.addEventListener(eventName, function (event) {
                         activePointers.delete(event.pointerId);
-                        if (!submitting) updateTouchStatus();
                     });
                 });
 

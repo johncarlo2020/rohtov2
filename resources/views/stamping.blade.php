@@ -92,11 +92,6 @@
                 </div>
             </div>
    
-            <div id="countDisplay" class="text-center mt-3 d-none">
-                Touches inside count: <span id="countNum">0</span>
-            </div>
-
-
             <!-- Bottom CTA -->
             <div class="row">
                 <div class="col-12 text-center">
@@ -123,7 +118,6 @@
 
         document.addEventListener("DOMContentLoaded", () => {
             const box = document.getElementById("touchBox");
-            const countDisplay = document.getElementById("countNum");
             const stampingPage = document.querySelector(".stamping-page");
             const stationid = stampingPage ? parseInt(stampingPage.dataset.id) : null;
             const activeInside = new Map();
@@ -158,7 +152,6 @@
             }
 
             function updateDisplay() {
-                countDisplay.textContent = activeInside.size;
                 // Toggle grayscale removal
                 // Only trigger once
                 const requiredCount = 3;

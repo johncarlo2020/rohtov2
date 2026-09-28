@@ -212,7 +212,6 @@
                 const complete = document.getElementById('stationComplete');
                 const stationPage = document.querySelector('.tommy-station-page');
                 const startButton = document.getElementById('startButton');
-                const fingerStatus = document.getElementById('fingerStatus');
                 const doneButton = document.getElementById('doneButton');
                 const activePointers = new Set();
                 const requiredTouches = @json($requiredTouches ?? 1);
@@ -224,19 +223,9 @@
                     stationPage.classList.add('stamping-active');
                 });
 
-                function updateFingerStatus() {
-                    const count = activePointers.size;
-                    if (fingerStatus) {
-                        fingerStatus.textContent = count >= requiredTouches
-                            ? 'Stamping...'
-                            : `Place ${requiredTouches} finger${requiredTouches === 1 ? '' : 's'} on the image at the same time. (${count}/${requiredTouches})`;
-                    }
-                }
-
                 function submitStamp() {
                     if (submitting) return;
                     submitting = true;
-                    if (fingerStatus) fingerStatus.textContent = 'Stamping...';
 
                     fetch('{{ route('process_stamp') }}', {
                         method: 'POST',
@@ -258,7 +247,6 @@
                         })
                         .catch(function () {
                             submitting = false;
-                            if (fingerStatus) fingerStatus.textContent = 'Stamp failed. Please try again.';
                         });
                 }
 
@@ -266,14 +254,12 @@
                     if (event.pointerType === 'mouse' || submitting || waiting.classList.contains('d-none')) return;
                     event.preventDefault();
                     activePointers.add(event.pointerId);
-                    updateFingerStatus();
                     if (activePointers.size >= requiredTouches) submitStamp();
                 }, { passive: false });
 
                 ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(function (eventName) {
                     document.addEventListener(eventName, function (event) {
                         activePointers.delete(event.pointerId);
-                        if (!submitting) updateFingerStatus();
                     });
                 });
 

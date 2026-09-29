@@ -121,6 +121,8 @@
                             @foreach ($data['stations'] as $station)
                             <th>{{ $station['name'] }}</th>
                             @endforeach
+                            <th>Redemption</th>
+                            <th>In Store</th>
                             <th>Timestamp</th>
                             <th>Action</th>
 
@@ -144,6 +146,13 @@
                             <td class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-danger' }}">
                                 {{ $station['value'] ? 'Yes' : 'No' }}</td>
                             @endforeach
+
+                            <td class="text-sm mb-0 {{ $user->redemption_stamped ? 'text-success' : 'text-danger' }}">
+                                {{ $user->redemption_stamped ? 'Yes' : 'No' }}
+                            </td>
+                            <td class="text-sm mb-0 {{ $user->in_store_stamped ? 'text-success' : 'text-danger' }}">
+                                {{ $user->in_store_stamped ? 'Yes' : 'No' }}
+                            </td>
 
                             <td class="button-delete">
                                 @if($user->isProtectedAdmin())

@@ -459,6 +459,12 @@ class StationController extends Controller
         $usersWithSixStationUsers = User::with('stationUser')->whereDate('created_at', '>=', $startDate->toDateString())->has('stationUser', '>=', 3)->count();
         // dd($usersWithSixStationUsers);
         $data['completedUsers'] = $usersWithSixStationUsers;
+        $data['redemptionCount'] = User::whereDate('created_at', '>=', $startDate->toDateString())
+            ->where('redemption_stamped', true)
+            ->count();
+        $data['inStoreCount'] = User::whereDate('created_at', '>=', $startDate->toDateString())
+            ->where('in_store_stamped', true)
+            ->count();
         // dd($usersWithSixStationUsers);
 
         if ($data['usersCount'] > 0) {
@@ -531,21 +537,6 @@ class StationController extends Controller
 
         $totalAveragePlaytime = $averagePlaytimeByUser->avg('total_playtime');
 
-
-        // get all users race column for pie chart
-        $data['race'] = User::where('race', '!=', 'admin')
-            ->whereDate('created_at', '>=', $startDate->toDateString())
-            ->selectRaw('race, COUNT(*) as count')
-            ->groupBy('race')
-            ->get()
-            ->map(function($item) {
-                return [
-                    'race' => $item->race,
-                    'count' => $item->count
-                ];
-            })
-            ->values()
-            ->toArray();
 
         return view('dashboardadmin', compact('data', 'permission'));
     }

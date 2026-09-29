@@ -1,9 +1,14 @@
 @import "../variables";
 
+$tommy-red: #d71920;
+$tommy-navy: #0b1f3a;
+$cadillac-silver: #a5a7a8;
+
 .admin-login {
     height: 100vh;
     width: 100%;
-    background-color: lighten($primary, 67%);
+    background-color: $cadillac-silver;
+    color: #111111;
 
     label {
         font-size: 14px;
@@ -23,6 +28,7 @@
         height: 70vh;
         overflow: hidden;
         border-radius: var(--bs-border-radius);
+        background-color: $white;
     }
 
     .branding-container  .branding img{
@@ -34,6 +40,13 @@
 
         .form-control {
             border-radius: var(--bs-border-radius) !important;
+            color: #111111;
+            border-color: #c7c9cc;
+
+            &:focus {
+                border-color: $tommy-navy;
+                box-shadow: 0 0 0 0.2rem rgba($tommy-navy, 0.16);
+            }
         }
     }
 
@@ -59,7 +72,7 @@
         background: transparent;
         border: none;
         z-index: 4;
-        color: #adb5bd;
+        color: #66717d;
     }
 
     #password-toggle {
@@ -69,7 +82,7 @@
         transform: translateY(-50%);
         cursor: pointer;
         z-index: 5;
-        color: #adb5bd;
+        color: #66717d;
     }
 
     .input-group:focus-within {
@@ -83,10 +96,21 @@
     }
 
     .login-button {
-      background-color: $primary;
-      color: $text;
+            background-color: $tommy-red;
+            border-color: $tommy-red;
+            color: $white;
       height: 50px;
       border-radius: var(--bs-border-radius);
+
+            &:hover,
+            &:focus-visible {
+                background-color: #b5121b;
+                border-color: #b5121b;
+            }
+
+            &:focus-visible {
+                box-shadow: 0 0 0 0.2rem rgba($tommy-navy, 0.24);
+            }
     }
 }
 
@@ -94,7 +118,7 @@
     .admin-login {
         height: auto;
         min-height: 100vh;
-        background-color:#ffffff !important;
+        background-color: $cadillac-silver !important;
 
         .main-content {
             padding: 2rem 1rem;
@@ -168,7 +192,7 @@
     .admin-login {
            height: 100vh;
     width: 100%;
-    background-color: lighten($primary, 67%);
+    background-color: $cadillac-silver;
 
     .main-content {
         overflow: hidden;

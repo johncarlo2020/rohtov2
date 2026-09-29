@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="row pt-2">
-        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+        <div class="col-xl-2 col-sm-6 mb-xl-0 mb-4">
             <div class="card">
                 <div class="card-body p-3">
                     <div class="row">
@@ -27,7 +27,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+        <div class="col-xl-2 col-sm-6 mb-xl-0 mb-4">
             <div class="card">
                 <div class="card-body p-3">
                     <div class="row">
@@ -52,7 +52,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+        <div class="col-xl-2 col-sm-6 mb-xl-0 mb-4">
             <div class="card">
                 <div class="card-body p-3">
                     <div class="row">
@@ -73,7 +73,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xl-3 col-sm-6">
+        <div class="col-xl-2 col-sm-6 mb-xl-0 mb-4">
             <div class="card">
                 <div class="card-body p-3">
                     <div class="row">
@@ -94,6 +94,44 @@
                 </div>
             </div>
         </div>
+        <div class="col-xl-2 col-sm-6 mb-xl-0 mb-4">
+            <div class="card">
+                <div class="card-body p-3">
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="numbers">
+                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Redemption Stamped</p>
+                                <h5 class="font-weight-bolder">{{ $data['redemptionCount'] }}</h5>
+                            </div>
+                        </div>
+                        <div class="col-4 text-end">
+                            <div class="icon icon-shape bg-gradient-danger shadow-danger text-center rounded-circle">
+                                <i class="fa-solid fa-gift text-lg opacity-10" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-2 col-sm-6">
+            <div class="card">
+                <div class="card-body p-3">
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="numbers">
+                                <p class="text-sm mb-0 text-uppercase font-weight-bold">In-Store Stamped</p>
+                                <h5 class="font-weight-bolder">{{ $data['inStoreCount'] }}</h5>
+                            </div>
+                        </div>
+                        <div class="col-4 text-end">
+                            <div class="icon icon-shape bg-gradient-info shadow-info text-center rounded-circle">
+                                <i class="fa-solid fa-store text-lg opacity-10" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="row mt-4">
         @foreach ($data['stations'] as $station)
@@ -102,7 +140,7 @@
                     <div class="card-body d-flex justify-content-between rounded  p-3">
                         <div class="d-flex align-items-center w-100">
                             <div class="icon-stations">
-                                <img class="" src="{{ asset("images/station/STBM{$station['id']}.webp") }}" alt="Gift Image">
+                                <img class="" src="{{ asset("tommy_assets/TMXC-Pitstop {$station['id']}_2x.webp") }}" alt="Gift Image">
                             </div>
                             <div class="d-flex flex-column">
                                 <h6 class="mb-1 text-sm">{{ $station['name'] }}</h6>
@@ -149,7 +187,7 @@
                     <table class="table align-items-center border">
                         <thead>
                             <tr>
-                                <th >ID</th>
+                                <th>ID</th>
                                 <th>Name</th>
                                 <th>Station completed</th>
                             </tr>
@@ -164,12 +202,11 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td >
+                                    <td>
                                         <div class="">
                                             <div class="ms-4">
                                                 <p class="text-xs font-weight-bold mb-0">Name</p>
-                                                <h6 class="text-sm mb-0">{{ $user->name }}
-                                                </h6>
+                                                <h6 class="text-sm mb-0">{{ $user->name }}</h6>
                                             </div>
                                         </div>
                                     </td>
@@ -177,7 +214,7 @@
                                         <div class="station-icon-wrapper">
                                             @foreach ($user['stations'] as $station)
                                                 <div class="text-center">
-                                                    <img src="{{ asset("images/station/STBM{$station['id']}.webp") }}"
+                                                    <img src="{{ asset("tommy_assets/TMXC-Pitstop {$station['id']}_2x.webp") }}"
                                                         alt="{{ $station['name'] }}"
                                                         title="{{ $station['name'] }}"
                                                         class="station-image table-station-image {{ $station['value'] ? 'border-success' : 'border-secondary' }}"
@@ -186,7 +223,7 @@
                                                 </div>
                                             @endforeach
                                             <div class="completed-count d-flex justify-content-center align-items-center gap-2">
-                                                <p class="m-0 p-0">Completed  <span>{{ $user->completed_count }}</span></p>
+                                                <p class="m-0 p-0">Completed <span>{{ $user->completed_count }}</span></p>
                                             </div>
                                         </div>
                                     </td>
@@ -194,13 +231,6 @@
                             @endforeach
                         </tbody>
                     </table>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-6 mb-3">
-            <div class="card h-100 mb-3">
-                <div class="card-body p-3">
-                    <div id="raceChart"></div>
                 </div>
             </div>
         </div>
@@ -438,123 +468,6 @@
                 }]
             }
         });
-
-        // Utility to generate a random color in hex format
-        function getRandomColor() {
-            return '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
-        }
-        // Assign random colors to each data point
-        function assignRandomColors(data) {
-            return data.map(function(point) {
-                return Object.assign({}, point, {
-                    color: getRandomColor()
-                });
-            });
-        }
-        // Shared pie chart config
-        function getPieChartConfig({
-            renderTo,
-            title,
-            data
-        }) {
-            return {
-                chart: {
-                    renderTo: renderTo,
-                    type: 'pie',
-                    height: 400
-                },
-                title: {
-                    text: title,
-                    align: 'left'
-                },
-                tooltip: {
-                    pointFormat: '{series.name}: <b>{point.y}</b> ({point.percentage:.1f}%)'
-                },
-                accessibility: {
-                    point: {
-                        valueSuffix: '%'
-                    }
-                },
-                legend: {
-                    enabled: true,
-                    layout: 'vertical',
-                    align: 'right',
-                    verticalAlign: 'middle',
-                    maxHeight: 500,
-                    navigation: {
-                        enabled: true
-                    }
-                },
-                plotOptions: {
-                    pie: {
-                        allowPointSelect: true,
-                        cursor: 'pointer',
-                        dataLabels: {
-                            enabled: true,
-                            format: '<b>{point.name}</b>: {point.y} ({point.percentage:.1f}%)',
-                            distance: 20
-                        },
-                        showInLegend: true
-                    }
-                },
-                series: [{
-                    name: 'Count',
-                    colorByPoint: true,
-                    data: assignRandomColors(data)
-                }],
-                credits: {
-                    enabled: false
-                },
-                responsive: {
-                    rules: [{
-                        condition: {
-                            maxWidth: 700
-                        },
-                        chartOptions: {
-                            chart: {
-                                height: 300
-                            },
-                            legend: {
-                                layout: 'horizontal',
-                                align: 'center',
-                                verticalAlign: 'bottom',
-                                maxHeight: 100
-                            },
-                            plotOptions: {
-                                pie: {
-                                    dataLabels: {
-                                        distance: 10
-                                    }
-                                }
-                            }
-                        }
-                    }]
-                }
-            };
-        }
-
-        (function() {
-            // Pie chart for raceChart only
-            var races = @json($data['race']);
-            var raceData = races.map(function(item) {
-                return {
-                    name: item.race || item.name || item.label || '',
-                    y: item.count || 0
-                };
-            });
-            Highcharts.chart(getPieChartConfig({
-                renderTo: 'raceChart',
-                title: 'Race Distribution',
-                data: raceData
-            }));
-
-
-            // Highcharts.chart(getPieChartConfig({
-            //     renderTo: 'findEventChart',
-            //     title: 'How did you find this event?',
-            //     data: findEventData
-            // }));
-        })();
 
     </script>
 @endsection

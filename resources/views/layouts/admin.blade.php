@@ -54,7 +54,7 @@
             {{-- <i class="fas fa-times cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
                 aria-hidden="true" id="iconSidenav"></i> --}}
             <a class="navbar-brand m-0 d-flex w-100 justify-content-center align-items-center" href="" target="_blank">
-                <img src="{{ asset('images/brand/logo.webp') }}" class="navbar-brand-img h-100" alt="main_logo" />
+                <img src="{{ asset('tommy_assets/THXCDL_logo_horizontal_2x.webp') }}" class="navbar-brand-img h-100" alt="main_logo" />
             </a>
         </div>
         <hr class="horizontal dark mt-0" />
@@ -78,16 +78,16 @@
                         <span class="nav-link-text ms-1">Users</span>
                     </a>
                 </li>
-
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('scanner') ? 'active' : '' }}" href="{{ route('scanner') }}">
+                    <a class="nav-link {{ request()->routeIs('admin.touchpoints.*') ? 'active' : '' }}" href="{{ route('admin.touchpoints.index') }}">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fa-solid fa-barcode text-warning text-sm opacity-10"></i>
+                            <i class="fa-solid fa-hand-pointer text-warning text-sm opacity-10"></i>
                         </div>
-                        <span class="nav-link-text ms-1">Scanner</span>
+                        <span class="nav-link-text ms-1">Touchpoints</span>
                     </a>
                 </li>
+
 
                 <!-- <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('admin.gifts*') ? 'active' : '' }}" href="{{ route('admin.gifts') }}">
@@ -99,15 +99,7 @@
                     </a>
                 </li> -->
 
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('admin.user.gifts') ? 'active' : '' }}" href="{{ route('admin.user.gifts') }}">
-                        <div
-                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fa-solid fa-list-check text-warning text-sm opacity-10"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">User Gifts</span>
-                    </a>
-                </li>
+                
             </ul>
         </div>
     </aside>
@@ -251,7 +243,7 @@
                     <div class="col-lg-6 mb-lg-0 mb-4">
                         <div class="copyright text-center text-sm text-muted text-lg-start">
                             <a href="https://wowsome.com.my/" class="font-weight-bold" target="_blank">Wowsome</a>
-                            © Copyright 2025
+                            © Copyright 2026
                         </div>
                     </div>
                 </div>

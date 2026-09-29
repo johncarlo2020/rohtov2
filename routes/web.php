@@ -5,6 +5,8 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\IpadController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\AdminStampingController;
+use App\Http\Controllers\AdminTouchpointController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -87,6 +89,14 @@ Route::get('/congratsVote', 'App\Http\Controllers\StationController@congratsVote
 Route::group(['middleware' => ['admin']], function () {
     Route::get('/admin', 'App\Http\Controllers\StationController@admin')->name('admin');
     Route::get('/admin/users', 'App\Http\Controllers\StationController@users')->name('users');
+    Route::get('/admin/stamping', [AdminStampingController::class, 'index'])->name('admin.stamping.index');
+    Route::post('/admin/stamping', [AdminStampingController::class, 'store'])->name('admin.stamping.store');
+    Route::put('/admin/stamping/{stamp}', [AdminStampingController::class, 'update'])->name('admin.stamping.update');
+    Route::delete('/admin/stamping/{stamp}', [AdminStampingController::class, 'destroy'])->name('admin.stamping.destroy');
+    Route::get('/admin/touchpoints', [AdminTouchpointController::class, 'index'])->name('admin.touchpoints.index');
+    Route::post('/admin/touchpoints', [AdminTouchpointController::class, 'store'])->name('admin.touchpoints.store');
+    Route::put('/admin/touchpoints/{touchpoint}', [AdminTouchpointController::class, 'update'])->name('admin.touchpoints.update');
+    Route::delete('/admin/touchpoints/{touchpoint}', [AdminTouchpointController::class, 'destroy'])->name('admin.touchpoints.destroy');
     Route::get('/admin/scanner', 'App\Http\Controllers\StationController@scanner')->name('scanner');
 
     Route::post('verify-otp-admin', 'App\Http\Controllers\StationController@verifyAdmin')->name('verifyAdmin');

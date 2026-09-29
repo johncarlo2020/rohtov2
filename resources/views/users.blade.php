@@ -117,11 +117,7 @@
                         <tr>
                             <th>ID</th>
                             <th class="sticky-action">Name</th>
-                            <th>Email</th>
-                            <th>Company</th>
-                            <th>Number</th>
-                            <th>Race</th>
-                            <th>Country</th>
+                            <th>Code</th>
                             @foreach ($data['stations'] as $station)
                             <th>{{ $station['name'] }}</th>
                             @endforeach
@@ -142,12 +138,8 @@
                                     </span>
                                 @endif
                             </td>
-                            <td>{{ $user->email }}</td>
-                            <td>{{ $user->company }}</td>
-                            <td>{{ $user->number }}</td>
-                            <td>{{ $user->race }}</td>
-                            <td>{{ $user->country }}</td>
-
+                            <td>{{ $user->code }}</td>
+                           
                             @foreach ($user['stations'] as $station)
                             <td class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-danger' }}">
                                 {{ $station['value'] ? 'Yes' : 'No' }}</td>

@@ -849,7 +849,7 @@ class BookingSystemTest extends TestCase
     }
 
     /** @test */
-    public function it_blocks_staff_role_from_deleting_bookings_or_modifying_schedules()
+    public function it_allows_staff_role_to_delete_bookings_but_blocks_modifying_schedules()
     {
         $staffRole = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'staff']);
         $staff = \App\Models\User::factory()->create(['email' => 'staff_unauth@example.com']);
@@ -869,10 +869,10 @@ class BookingSystemTest extends TestCase
             'status' => 'confirmed',
         ]);
 
-        // Staff attempts to delete booking -> Redirects with error
+        // Staff attempts to delete booking -> Succeeds
         $response1 = $this->actingAs($staff)->delete("/admin/bookings/{$booking->id}");
         $response1->assertRedirect();
-        $response1->assertSessionHas('error', 'Unauthorized action. Staff members cannot delete bookings.');
+        $this->assertDatabaseMissing('bookings', ['id' => $booking->id]);
 
         // Staff attempts to toggle date availability -> Redirects with error
         $response2 = $this->actingAs($staff)->post('/admin/schedule/toggle-date', [

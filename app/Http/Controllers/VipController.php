@@ -228,10 +228,6 @@ class VipController extends Controller
 
     public function destroy($id)
     {
-        if (auth()->check() && auth()->user()->hasRole('staff')) {
-            return redirect()->back()->with('error', 'Unauthorized action. Staff members cannot delete VIP bookings.');
-        }
-
         $booking = Booking::with('bookingSlot')->findOrFail($id);
         if ($booking->bookingSlot) {
             $decrementPax = max(1, (int)($booking->pax ?? 1));

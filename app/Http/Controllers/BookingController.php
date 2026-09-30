@@ -524,13 +524,6 @@ class BookingController extends Controller
      */
     public function destroy($id)
     {
-        if (auth()->check() && auth()->user()->hasRole('staff')) {
-            if (request()->wantsJson()) {
-                return response()->json(['success' => false, 'message' => 'Unauthorized action.'], 403);
-            }
-            return redirect()->back()->with('error', 'Unauthorized action. Staff members cannot delete bookings.');
-        }
-
         $booking = Booking::with('bookingSlot')->findOrFail($id);
         $refNo = $booking->reference_no;
         $name = $booking->customer_name;

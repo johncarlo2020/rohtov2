@@ -56,6 +56,7 @@
             .bonus-redemption-intro-image { width: min(30vw, 130px); height: auto; }
             .bonus-redemption-intro-heading { margin: clamp(24px, 5vh, 38px) 0 0; color: #000; font-family: 'Altone', Arial, sans-serif; font-size: clamp(20px, 5.8vw, 30px); font-weight: 700; line-height: 1; }
             .bonus-redemption-intro-copy { max-width: 290px; margin: clamp(30px, 6vh, 46px) 0 0; color: #000; font-family: 'Altone', Arial, sans-serif; font-size: clamp(13px, 3.5vw, 16px); font-weight: 400; line-height: 1.25; }
+            .bonus-stock-note { margin: 8px 0 0; color: black; font-family: 'Altone', Arial, sans-serif; font-size: 10px; font-weight: 400; line-height: 1.25; }
             .bonus-redemption-intro-action { margin-top: auto; min-width: 190px; font-size: 10px; }
             .bonus-redemption-stamp-image { width: min(68vw, 290px); margin-top: clamp(34px, 7vh, 60px); }
             .bonus-in-store-intro-title { margin-bottom: clamp(26px, 5vh, 38px); }
@@ -84,12 +85,14 @@
                     <img class="bonus-redemption-intro-image" src="{{ asset($asset) }}" alt="Redemption stamp">
                     <h2 class="bonus-redemption-intro-heading">You Made It!</h2>
                     <p class="bonus-redemption-intro-copy">Head over to our <strong>Redemption Counter</strong><br>to claim your exclusive gift.</p>
+                    <p class="bonus-stock-note">*while stock last</p>
                     <button id="bonusStart" class="bonus-stamp-action bonus-redemption-intro-action" type="button">Head to Redemption Counter</button>
                 @elseif ($bonus === 'in-store')
                     <h1 class="bonus-stamp-title bonus-in-store-intro-title">In-Store</h1>
                     <img class="bonus-in-store-intro-image" src="{{ asset($asset) }}" alt="In-store stamp">
                     <h2 class="bonus-in-store-intro-heading">Bonus Lap Reward!</h2>
                     <p class="bonus-in-store-intro-copy">Visit Tommy Hilfiger store #03-15 to<br>get your stamp and claim your<br>extra reward.</p>
+                    <p class="bonus-stock-note">*while stock last</p>
                     <button id="bonusStart" class="bonus-stamp-action bonus-in-store-intro-action" type="button">I'm at the store</button>
                 @else
                     <h1 class="bonus-stamp-title">{{ $title }}</h1>
@@ -150,14 +153,22 @@
                         },
                         body: JSON.stringify({ bonus: @json($bonus) })
                     }).then(function (response) {
-                        if (!response.ok) throw new Error('Bonus stamp failed');
+                        if (!response.ok) {
+                            return response.json().catch(function () { return {}; }).then(function (body) {
+                                throw new Error(body.message || 'Bonus stamp failed');
+                            });
+                        }
                         return response.json();
                     }).then(function () {
                         page.classList.remove('stamping-active');
                         waiting.classList.add('d-none');
                         complete.classList.remove('d-none');
-                    }).catch(function () {
+                    }).catch(function (error) {
                         submitting = false;
+                        if (error && error.message && error.message !== 'Bonus stamp failed') {
+                            alert(error.message);
+                            window.location.href = '{{ route('dashboard') }}';
+                        }
                     });
                 }
 

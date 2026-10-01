@@ -115,6 +115,9 @@
             .tommy-dashboard-note { margin: 3px auto 0; text-align: center; font-size: clamp(9px, 2.4vw, 12px); font-family: 'Altone', Arial, sans-serif; color: #000; }
                 .tommy-redemption-link { display: grid; justify-items: center; color: inherit; text-decoration: none; cursor: pointer; }
                 .tommy-redemption-link:hover { color: inherit; }
+                .tommy-counter-maxed .tommy-counter-image { filter: grayscale(1); opacity: .55; }
+                .tommy-counter-maxed .tommy-redemption-link,
+                .tommy-counter-maxed .tommy-counter-link-disabled { cursor: not-allowed; pointer-events: none; }
             .tommy-modal { font-family: 'Altone', Arial, sans-serif; }
                 .tommy-redemption-modal .modal-dialog { width: min(88vw, 330px); margin: auto; }
                 .tommy-redemption-modal .modal-content {
@@ -184,7 +187,13 @@
         <section class="tommy-track-shell" aria-label="Tommy Hilfiger and Cadillac pit stop track">
             <img class="tommy-track-map" src="{{ asset('tommy_assets/THXC_map_2x.webp') }}" alt="Pit stop track map" loading="lazy" decoding="async">
 
-            <div class="tommy-counter tommy-counter-redemption">
+            <div class="tommy-counter tommy-counter-redemption {{ $redemptionMaxReached ? 'tommy-counter-maxed' : '' }}">
+                @if ($redemptionMaxReached)
+                    <span class="tommy-counter-link-disabled">
+                        <img class="tommy-counter-image" src="{{ asset('tommy_assets/REDEMPTION_2x.webp') }}" alt="Redemption" loading="lazy" decoding="async">
+                    </span>
+                    <span class="tommy-counter-status">Fully Redeemed</span>
+                @else
                     <a
                         class="tommy-redemption-link"
                         href="{{ $stationDone >= $totalStations ? route('bonus.stamp', ['bonus' => 'redemption']) : '#' }}"
@@ -195,24 +204,33 @@
                         <img class="tommy-counter-image" src="{{ asset($redemptionStamped ? 'tommy_assets/REDEMPTION_COMPLETE_2x.webp' : 'tommy_assets/REDEMPTION_2x.webp') }}" alt="Redemption" loading="lazy" decoding="async">
                     </a>
                     <span class="tommy-counter-status">Complete</span>
+                @endif
 
                 <span class="tommy-counter-value">{{ $stationDone }}/{{ $totalStations }}</span>
                
              
             </div>
 
-            <div class="tommy-counter tommy-counter-store">
-                <a
-                    class="tommy-redemption-link"
-                    href="{{ route('bonus.stamp', ['bonus' => 'in-store']) }}"
-              
-                >
-                    <img class="tommy-counter-image" src="{{ asset($inStoreStamped ? 'tommy_assets/IN-STORE-COMPLETE_2x.webp' : 'tommy_assets/IN-STORE_2x.webp') }}" alt="In-store" loading="lazy" decoding="async">
-                </a>
+            <div class="tommy-counter tommy-counter-store {{ $inStoreMaxReached ? 'tommy-counter-maxed' : '' }}">
+                @if ($inStoreMaxReached)
+                    <span class="tommy-counter-link-disabled">
+                        <img class="tommy-counter-image" src="{{ asset('tommy_assets/IN-STORE_2x.webp') }}" alt="In-store" loading="lazy" decoding="async">
+                    </span>
+                    <span class="tommy-counter-status">Fully Redeemed</span>
+                @else
+                    <a
+                        class="tommy-redemption-link"
+                        href="{{ route('bonus.stamp', ['bonus' => 'in-store']) }}"
+                  
+                    >
+                        <img class="tommy-counter-image" src="{{ asset($inStoreStamped ? 'tommy_assets/IN-STORE-COMPLETE_2x.webp' : 'tommy_assets/IN-STORE_2x.webp') }}" alt="In-store" loading="lazy" decoding="async">
+                    </a>
                     <span class="tommy-counter-status">Complete</span>
+                @endif
 
                 <span class="tommy-counter-value">{{ $inStoreStamped ? '1/1' : '0/1' }}</span>
             </div>
+
 
             <div class="tommy-station-list">
                 @foreach ($stations as $station)

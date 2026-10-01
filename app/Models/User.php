@@ -41,6 +41,8 @@ class User extends Authenticatable
         'marketing' => 'boolean',
         'redemption_stamped' => 'boolean',
         'in_store_stamped' => 'boolean',
+        'redemption_stamped_at' => 'datetime',
+        'in_store_stamped_at' => 'datetime',
     ];
 
 

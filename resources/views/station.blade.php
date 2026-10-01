@@ -180,8 +180,8 @@
                 <p class="tommy-station-description">
                     @switch($station->id)
                         @case(1) Pick Team Pérez or Team Bottas.<br>Hit the button as close to 10 seconds as possible. @break
-                        @case(2) Catch as many falling sticks as you can  within 10 seconds to score points! <br> <br>The Top 3 players on the leaderboard win exclusive Tommy Hilfiger prizes.  @break
-                        @case(3) Race the Singapore F1® track and set your fastest lap on the simulator. <br> <br> The Top 3 fastest driver on the leaderboard win exclusive Tommy Hilfiger prizes. @break
+                        @case(2) Catch as many falling sticks as you can  within 10 seconds to score points! <br> <br>The Top 3 players on the leaderboard win exclusive Tommy Hilfiger merchandise.  @break
+                        @case(3) Race the Singapore F1® track and set your fastest lap on the simulator. <br> <br> The Top 3 fastest driver on the leaderboard win exclusive Tommy Hilfiger merchandise. @break
                         @default Strike a pose and capture your ultimate F1 moment! @break
                     @endswitch
                 </p>

@@ -21,6 +21,8 @@ use App\Helpers\GlobalHelper;
 
 class StationController extends Controller
 {
+    const REDEMPTION_DAILY_LIMIT = 100;
+    const IN_STORE_DAILY_LIMIT = 45;
 
     public function uploadBaby(Request $request)
     {
@@ -320,6 +322,15 @@ class StationController extends Controller
         $inStoreStamped = (bool) $user->in_store_stamped;
         $totalStations = $stations->count();
 
+        $redemptionCountToday = User::whereDate('redemption_stamped_at', Carbon::today())
+            ->where('redemption_stamped', true)
+            ->count();
+        $inStoreCountToday = User::whereDate('in_store_stamped_at', Carbon::today())
+            ->where('in_store_stamped', true)
+            ->count();
+        $redemptionMaxReached = !$redemptionStamped && $redemptionCountToday >= self::REDEMPTION_DAILY_LIMIT;
+        $inStoreMaxReached = !$inStoreStamped && $inStoreCountToday >= self::IN_STORE_DAILY_LIMIT;
+
         if ($stationDone >= $totalStations && $redemptionStamped && $inStoreStamped) {
             return redirect()->route('congrats');
         }
@@ -328,7 +339,7 @@ class StationController extends Controller
             return !$user->stationUser()->where('station_id', $station->id)->exists();
         });
 
-        return view('dashboard', compact('stations', 'stationDone', 'totalStations', 'canAccessStation3', 'completedStationIds', 'nextStation', 'isRedeemed', 'redemptionStamped', 'inStoreStamped'));
+        return view('dashboard', compact('stations', 'stationDone', 'totalStations', 'canAccessStation3', 'completedStationIds', 'nextStation', 'isRedeemed', 'redemptionStamped', 'inStoreStamped', 'redemptionMaxReached', 'inStoreMaxReached'));
 
     }
 
@@ -774,11 +785,17 @@ class StationController extends Controller
         $totalStations = Station::count();
         abort_if($bonus === 'redemption' && $user->stationUser()->count() < $totalStations, 403);
         $flag = $bonus === 'redemption' ? 'redemption_stamped' : 'in_store_stamped';
+        $alreadyStamped = (bool) $user->{$flag};
+
+        if (!$alreadyStamped && $this->bonusDailyLimitReached($bonus)) {
+            return redirect()->route('dashboard')->with('error', 'Today\'s redemption quota has been reached. Please try again tomorrow.');
+        }
+
         $requiredTouches = Touchpoint::where('key', $bonus)->value('required_touches');
 
         return view('bonus-stamping', [
             'bonus' => $bonus,
-            'alreadyStamped' => (bool) auth()->user()->{$flag},
+            'alreadyStamped' => $alreadyStamped,
             'requiredTouches' => $requiredTouches,
         ]);
     }
@@ -789,11 +806,31 @@ class StationController extends Controller
             'bonus' => ['required', 'in:redemption,in-store'],
         ]);
 
-        $flag = $validated['bonus'] === 'redemption' ? 'redemption_stamped' : 'in_store_stamped';
-        auth()->user()->update([$flag => true]);
+        $bonus = $validated['bonus'];
+        $flag = $bonus === 'redemption' ? 'redemption_stamped' : 'in_store_stamped';
+        $stampedAtField = $bonus === 'redemption' ? 'redemption_stamped_at' : 'in_store_stamped_at';
+        $user = auth()->user();
+
+        if (!$user->{$flag} && $this->bonusDailyLimitReached($bonus)) {
+            return response()->json(['message' => 'Today\'s redemption quota has been reached.'], 422);
+        }
+
+        $user->update([$flag => true, $stampedAtField => now()]);
 
         return response()->json(['message' => 'Bonus stamp collected'], 200);
     }
+
+    private function bonusDailyLimitReached(string $bonus): bool
+    {
+        $flag = $bonus === 'redemption' ? 'redemption_stamped' : 'in_store_stamped';
+        $stampedAtField = $bonus === 'redemption' ? 'redemption_stamped_at' : 'in_store_stamped_at';
+        $limit = $bonus === 'redemption' ? self::REDEMPTION_DAILY_LIMIT : self::IN_STORE_DAILY_LIMIT;
+
+        return User::whereDate($stampedAtField, Carbon::today())
+            ->where($flag, true)
+            ->count() >= $limit;
+    }
+
 
 
     public function discover()

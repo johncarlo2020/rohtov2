@@ -110,7 +110,7 @@ class StationController extends Controller
 
   public function welcome()
   {
-      $stations = Station::all();
+      $stations = Station::orderBy('id')->get(['id', 'name', 'slug', 'is_redemption']);
       $completedStationIds = [];
 
       if (Auth::check()) {

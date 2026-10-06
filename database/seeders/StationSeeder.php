@@ -21,8 +21,8 @@ class StationSeeder extends Seeder
                 'is_redemption' => false,
             ],
             [
-                'name' => '37 AT DAWN',
-                'slug' => '37-at-dawn',
+                'name' => 'UP AT DAWN',
+                'slug' => 'up-at-dawn',
                 'description' => 'Fresh early morning dew and soft light captured in scent.',
                 'is_redemption' => false,
             ],
@@ -33,8 +33,8 @@ class StationSeeder extends Seeder
                 'is_redemption' => false,
             ],
             [
-                'name' => 'CHASING SUNSETS',
-                'slug' => 'chasing-sunsets',
+                'name' => 'CHASING SUNSET',
+                'slug' => 'chasing-sunset',
                 'description' => 'Golden hour memories infused with warm amber and floral notes.',
                 'is_redemption' => false,
             ],
@@ -45,8 +45,8 @@ class StationSeeder extends Seeder
                 'is_redemption' => false,
             ],
             [
-                'name' => 'LAST SUNDAY MORNING',
-                'slug' => 'last-sunday-morning',
+                'name' => 'LAZY SUNDAY MORNING',
+                'slug' => 'lazy-sunday-morning',
                 'description' => 'Clean linen, white musk, and delicate lily of the valley.',
                 'is_redemption' => false,
             ],
@@ -56,12 +56,7 @@ class StationSeeder extends Seeder
                 'description' => 'An immersive olfactory journey exploring memory notes.',
                 'is_redemption' => false,
             ],
-            [
-                'name' => 'PHOTOBOOTH',
-                'slug' => 'photobooth',
-                'description' => 'Capture your Maison Margiela memory photo moment.',
-                'is_redemption' => false,
-            ],
+
             [
                 'name' => 'REDEMPTION COUNTER',
                 'slug' => 'redemption-counter',

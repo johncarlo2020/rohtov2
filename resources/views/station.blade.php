@@ -81,24 +81,24 @@
         </div>
 
         {{-- SCREEN 2: ACTIVE QR SCANNER VIEW --}}
-        <div id="scannerSection" class="w-100 px-3 pb-4 flex-grow-1 d-flex flex-column justify-content-between d-none">
-            <div>
-                <div class="text-center my-2" style="font-family: 'Courier Prime', monospace; font-size: 0.85rem; letter-spacing: 1px; font-weight: 700; color: #111;">
+        <div id="scannerSection" class="w-100 px-3 pb-4 flex-grow-1 d-flex flex-column justify-content-between align-items-center d-none" style="min-height: calc(100vh - 200px);">
+            <div class="w-100 d-flex flex-column align-items-center justify-content-center my-auto py-3">
+                <div class="text-center mb-3" style="font-family: 'Courier Prime', monospace; font-size: 1rem; letter-spacing: 2px; font-weight: 700; color: #111; text-transform: uppercase;">
                     SCANNING AREA
                 </div>
 
-                {{-- Scanner Frame --}}
-                <div class="mx-auto my-3" style="width: 280px; height: 280px; background-color: #FFFFFF; border: 1px solid #DED8CE; border-radius: 12px; overflow: hidden; position: relative;">
+                {{-- Scanner Frame: Flat square, No Border, No Radius --}}
+                <div class="position-relative mx-auto my-2" style="width: 100%; max-width: 350px; aspect-ratio: 1 / 1; height: auto; min-height: 320px; background-color: #000000; border-radius: 0; overflow: hidden; border: none;">
                     <div id="reader" style="width: 100%; height: 100%;"></div>
                 </div>
 
-                <div class="text-center mt-3" style="font-family: 'Courier Prime', monospace; font-size: 0.75rem; color: #555555;">
+                <div class="text-center mt-3" style="font-family: 'Courier Prime', monospace; font-size: 0.85rem; color: #555555; letter-spacing: 0.5px;">
                     Find the QR code & scan to proceed
                 </div>
             </div>
 
-            <div class="mt-4 px-2">
-                <button type="button" onclick="cancelQRScanner()" class="mm-btn-black" style="background-color: #444444;">
+            <div class="w-100 mt-auto px-2">
+                <button type="button" onclick="cancelQRScanner()" class="mm-btn-black" style="background-color: #111111; border-radius: 8px;">
                     CANCEL
                 </button>
             </div>
@@ -140,8 +140,46 @@
         </div>
     </div>
 
+    <style>
+        #reader {
+            width: 100% !important;
+            height: 100% !important;
+            border: none !important;
+            padding: 0 !important;
+            position: relative;
+            background-color: #000000;
+            overflow: hidden;
+            border-radius: 0 !important;
+        }
+        #reader video {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            border-radius: 0 !important;
+            display: block;
+        }
+        #reader__scan_region {
+            width: 100% !important;
+            height: 100% !important;
+            min-height: 100% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        #reader__scan_region video {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+        }
+        #reader__dashboard_section,
+        #reader__dashboard_section_csr,
+        #reader__header_message,
+        #reader img {
+            display: none !important;
+        }
+    </style>
+
     @push('scripts')
-    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <script>
         let html5QrCode = null;
 
@@ -152,7 +190,15 @@
             html5QrCode = new Html5Qrcode("reader");
             html5QrCode.start(
                 { facingMode: "environment" },
-                { fps: 10, qrbox: 220 },
+                { 
+                    fps: 15,
+                    qrbox: function(viewfinderWidth, viewfinderHeight) {
+                        const edge = Math.min(viewfinderWidth, viewfinderHeight);
+                        const boxSize = Math.floor(edge * 0.8);
+                        return { width: boxSize, height: boxSize };
+                    },
+                    aspectRatio: 1.0
+                },
                 onScanSuccess,
                 onScanFailure
             ).catch(err => {

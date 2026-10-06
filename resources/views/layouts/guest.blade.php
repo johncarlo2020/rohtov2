@@ -19,15 +19,13 @@
     <!-- Common CDN packages (CSS, etc.) -->
     <x-appCdnPackages />
 
-    {{-- @include('components.fonts') --}}
-
     <!-- Vite assets (compiled CSS and JS) -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 
 <body class="main-background">
     <!-- Main content area where page-specific content will be injected -->
-    <main class="container-fluid p-0 m-0 w-100 min-vh-100">
+    <main class="container-fluid p-0 m-0 w-100 min-vh-100 with-scroll">
         {{ $slot }}
     </main>
 

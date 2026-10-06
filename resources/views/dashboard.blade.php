@@ -1,146 +1,230 @@
 <x-guest-layout>
-    <div class="mm-mobile-container justify-content-between p-0" style="max-width: 440px; margin: 0 auto; background-color: #F4F0EA; min-height: 100vh;">
+    <div class="mm-mobile-container justify-content-between p-0" style="max-width: 440px; margin: 0 auto; background-color: #F4F0EA; min-height: 100vh; overflow-y: auto;">
         
         {{-- VIEW 1: MEMORY MAP PAGE --}}
-        <div id="mapViewSection" class="w-100 px-3 pb-5">
-            {{-- Header --}}
+        <div id="mapViewSection" class="w-100 px-3 pt-3 pb-5">
+            {{-- Header Logo --}}
             @include('components.branding')
 
             {{-- Title --}}
-            <div class="mm-page-title mt-2 mb-3">
+            <div class="mm-page-title mt-2 mb-4 text-center">
                 YOUR MEMORY MAP
             </div>
 
-            {{-- Memory Map Visual Graphic --}}
-            <div class="mm-map-wrapper text-center my-3" style="background-color: #FAF8F5; border: 1px solid #E0DDD7; border-radius: 4px; padding: 1.5rem 1rem; position: relative;">
-                <svg viewBox="0 0 320 420" width="100%" height="auto" style="max-height: 52vh; display: block; margin: 0 auto;">
-                    <!-- Outer Floorplan Walls -->
-                    <rect x="20" y="20" width="280" height="380" fill="#F4F0EA" stroke="#333333" stroke-width="2" rx="4"/>
-                    
-                    <!-- Rooms & Divider Walls -->
-                    <!-- Top Room (Photobooth & Redemption) -->
-                    <line x1="20" y1="90" x2="300" y2="90" stroke="#333333" stroke-width="1.5" stroke-dasharray="4,2"/>
-                    <line x1="160" y1="20" x2="160" y2="90" stroke="#333333" stroke-width="1.5"/>
-                    
-                    <!-- Middle Section Rooms -->
-                    <line x1="20" y1="180" x2="300" y2="180" stroke="#333333" stroke-width="1.5" stroke-dasharray="4,2"/>
-                    <line x1="180" y1="90" x2="180" y2="180" stroke="#333333" stroke-width="1.5"/>
-                    
-                    <!-- Lower Section Rooms -->
-                    <line x1="20" y1="290" x2="300" y2="290" stroke="#333333" stroke-width="1.5" stroke-dasharray="4,2"/>
-                    <line x1="140" y1="180" x2="140" y2="290" stroke="#333333" stroke-width="1.5"/>
+            {{-- Memory Map Visual Floorplan with Background Image --}}
+            <div class="mm-map-container my-3" style="position: relative; width: 100%; max-width: 360px; margin: 0 auto;">
+                <div style="position: relative; width: 100%; overflow: hidden; background-color: #F4F0EA;">
+                    {{-- Floorplan Image Background --}}
+                    <img src="{{ asset('images/brand/dashboard_bg.webp') }}" 
+                         alt="House of Memories Map" 
+                         fetchpriority="high"
+                         decoding="async"
+                         style="width: 100%; height: auto; display: block;">
 
-                    <!-- Room Text Labels -->
-                    <text x="90" y="45" font-family="Courier Prime, monospace" font-size="9" font-weight="bold" fill="#555" text-anchor="middle">PHOTOBOOTH</text>
-                    <text x="230" y="45" font-family="Courier Prime, monospace" font-size="8" font-weight="bold" fill="#777" text-anchor="middle">REDEMPTION COUNTER</text>
-
-                    <text x="100" y="125" font-family="Courier Prime, monospace" font-size="9" font-weight="bold" fill="#555" text-anchor="middle">LAST SUNDAY MORNING</text>
-                    <text x="240" y="125" font-family="Courier Prime, monospace" font-size="9" font-weight="bold" fill="#555" text-anchor="middle">SCENTSORIUM</text>
-
-                    <text x="80" y="220" font-family="Courier Prime, monospace" font-size="9" font-weight="bold" fill="#555" text-anchor="middle">JAZZ CLUB</text>
-                    <text x="220" y="235" font-family="Courier Prime, monospace" font-size="9" font-weight="bold" fill="#555" text-anchor="middle">BY THE FIREPLACE</text>
-
-                    <text x="80" y="325" font-family="Courier Prime, monospace" font-size="9" font-weight="bold" fill="#555" text-anchor="middle">REPLICA CAFE</text>
-                    <text x="220" y="340" font-family="Courier Prime, monospace" font-size="9" font-weight="bold" fill="#555" text-anchor="middle">37 AT DAWN</text>
-
-                    <text x="160" y="275" font-family="Courier Prime, monospace" font-size="9" font-weight="bold" fill="#555" text-anchor="middle">CHASING SUNSETS</text>
-
-                    <!-- Interactive Station Markers (Dots) -->
+                    {{-- Station Pin Overlays — Plain text labels + solid black circles (final design) --}}
                     @foreach($stations as $stn)
                         @php
                             $isCompleted = in_array($stn->id, $completedStationIds);
-                            // Define coordinates for map pins based on station name/slug
+
+                            /**
+                             * isVertical = true  → vertical text (writing-mode top→bottom), label above circle
+                             * isVertical = false → horizontal text, circle left of label
+                             * left/top = position of the combined element center on the floorplan image
+                             */
                             $coords = match($stn->slug) {
-                                'photobooth' => ['x' => 90, 'y' => 62],
-                                'redemption-counter' => ['x' => 230, 'y' => 62],
-                                'last-sunday-morning' => ['x' => 100, 'y' => 145],
-                                'scentsorium' => ['x' => 240, 'y' => 145],
-                                'jazz-club' => ['x' => 80, 'y' => 240],
-                                'by-the-fireplace' => ['x' => 220, 'y' => 255],
-                                'chasing-sunsets' => ['x' => 160, 'y' => 295],
-                                'replica-cafe' => ['x' => 80, 'y' => 355],
-                                '37-at-dawn' => ['x' => 220, 'y' => 365],
-                                default => ['x' => 160, 'y' => 200],
+
+                                'redemption-counter' => [
+                                    'left' => '68%', 'top' => '12%',
+                                    'isVertical' => true,
+                                    'displayName' => "REDEMPTION\nCOUNTER",
+                                ],
+                                'lazy-sunday-morning', 'last-sunday-morning' => [
+                                    'left' => '27%', 'top' => '26%',
+                                    'isVertical' => true,
+                                    'displayName' => "LAZY SUNDAY\nMORNING",
+                                ],
+                                'scentsorium' => [
+                                    'left' => '70%', 'top' => '39%',
+                                    'isVertical' => true,
+                                    'displayName' => "SCENTSORIUM",
+                                ],
+                                'jazz-club' => [
+                                    'left' => '55%', 'top' => '51%',
+                                    'isVertical' => false,
+                                    'displayName' => 'JAZZ CLUB',
+                                ],
+                                'chasing-sunset', 'chasing-sunsets' => [
+                                    'left' => '20%', 'top' => '59%',
+                                    'isVertical' => true,
+                                    'displayName' => "CHASING SUNSET",
+                                ],
+                                'by-the-fireplace' => [
+                                    'left' => '55%', 'top' => '66%',
+                                    'isVertical' => false,
+                                    'displayName' => "BY THE\nFIREPLACE",
+                                ],
+                                'up-at-dawn', '37-at-dawn' => [
+                                    'left' => '50%', 'top' => '79%',
+                                    'isVertical' => false,
+                                    'displayName' => 'UP AT DAWN',
+                                ],
+                                'replica-cafe' => [
+                                    'left' => '22%', 'top' => '87%',
+                                    'isVertical' => true,
+                                    'displayName' => "REPLICA CAFE",
+                                ],
+                                default => [
+                                    'left' => '50%', 'top' => '50%',
+                                    'isVertical' => false,
+                                    'displayName' => strtoupper($stn->name),
+                                ],
                             };
+
+                            $isVert   = $coords['isVertical'];
+                            $circleBg = $isCompleted ? '#666666' : '#000000';
                         @endphp
 
-                        <g class="station-pin-group" onclick="handleStationClick({{ $stn->id }}, '{{ addslashes($stn->name) }}', {{ $stn->is_redemption ? 'true' : 'false' }})" style="cursor: pointer;">
-                            <circle cx="{{ $coords['x'] }}" cy="{{ $coords['y'] }}" r="8" fill="{{ $isCompleted ? '#000000' : '#111111' }}" stroke="#FFFFFF" stroke-width="2"/>
-                            @if($isCompleted)
-                                <text x="{{ $coords['x'] }}" y="{{ $coords['y'] + 3 }}" font-family="sans-serif" font-size="8" fill="#FFFFFF" text-anchor="middle" font-weight="bold">✓</text>
+                        {{-- PIN WRAPPER --}}
+                        <div onclick="handleStationClick({{ $stn->id }}, '{{ addslashes($stn->name) }}', {{ $stn->is_redemption ? 'true' : 'false' }})"
+                             style="position: absolute;
+                                    left: {{ $coords['left'] }};
+                                    top: {{ $coords['top'] }};
+                                    transform: translate(-50%, -50%);
+                                    cursor: pointer;
+                                    z-index: 10;
+                                    display: flex;
+                                    flex-direction: {{ $isVert ? 'column' : 'row' }};
+                                    align-items: center;
+                                    gap: {{ $isVert ? '2px' : '4px' }};">
+
+                            @if($isVert)
+                                {{-- VERTICAL LABEL: top-to-bottom flow, no border --}}
+                                <div style="font-family: 'Courier Prime', monospace;
+                                            font-size: 1rem;
+                                            font-weight: 700;
+                                            text-transform: uppercase;
+                                            color: #111111;
+                                            letter-spacing: 0.5px;
+                                            line-height: 1.1;
+                                            white-space: pre-line;
+                                            writing-mode: vertical-lr;
+                                            text-orientation: mixed;">{{ $coords['displayName'] }}</div>
                             @else
-                                <circle cx="{{ $coords['x'] }}" cy="{{ $coords['y'] }}" r="3" fill="#FFFFFF"/>
+                                {{-- HORIZONTAL LABEL: standard text, no border --}}
+                                <div style="font-family: 'Courier Prime', monospace;
+                                            font-size: 1rem;
+                                            font-weight: 700;
+                                            text-transform: uppercase;
+                                            color: #111111;
+                                            letter-spacing: 0.5px;
+                                            line-height: 1.25;
+                                            white-space: pre-line;
+                                            order: 2;">{{ $coords['displayName'] }}</div>
                             @endif
-                        </g>
+
+                            {{-- SOLID BLACK CIRCLE PIN --}}
+                            <div style="width: 16px;
+                                        height: 16px;
+                                        min-width: 16px;
+                                        border-radius: 50%;
+                                        background-color: {{ $circleBg }};
+                                        position: relative;
+                                        flex-shrink: 0;
+                                        {{ !$isVert ? 'order: 1;' : '' }}">
+                                @if($isCompleted)
+                                    <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 8px; line-height: 1; font-weight: 700;">✓</span>
+                                @endif
+                            </div>
+                        </div>
                     @endforeach
-                </svg>
+                </div>
             </div>
 
             {{-- Sticky Footer Button --}}
-            <div class="mt-4 px-2">
-                <button type="button" onclick="showPassportView()" class="mm-btn-black">
+            <div class="mt-4 px-1">
+                <button type="button" onclick="showPassportView()" class="mm-btn-black py-3" style="width: 100%; border-radius: 8px;">
                     MY MEMORY PASSPORT
                 </button>
             </div>
         </div>
 
         {{-- VIEW 2: MEMORY PASSPORT LIST PAGE ("YOUR HOUSE OF MEMORIES") --}}
-        <div id="passportViewSection" class="w-100 px-3 pb-5 d-none">
+        <div id="passportViewSection" class="w-100 pb-5 d-none">
             {{-- Top Bar with Back Arrow --}}
-            <div class="d-flex align-items-center justify-content-between pt-3 pb-2">
-                <button type="button" onclick="showMapView()" class="btn p-0 border-0" style="font-size: 1.25rem; font-weight: 700; color: #111;">
-                    ←
+            <div class="d-flex align-items-center justify-content-between pt-3 pb-2 px-3">
+                <button type="button" onclick="showMapView()" class="btn p-0 border-0" style="font-size: 1.6rem; font-weight: 400; color: #111; text-decoration: none; line-height: 1;">
+                    ‹
                 </button>
-                <div class="flex-grow-1 text-center pe-4">
+                <div class="flex-grow-1 text-center pe-5">
                     @include('components.branding')
                 </div>
             </div>
 
             {{-- Title --}}
-            <div class="mm-page-title mt-1 mb-4">
-                YOUR HOUSE OF MEMORIES
+            <div class="mm-page-title mt-2 mb-3 text-center px-3" style="font-size: 1.4rem; letter-spacing: 3px; line-height: 1.3;">
+                YOUR HOUSE<br>OF MEMORIES
             </div>
 
-            {{-- Station Cards List --}}
-            <div class="px-1">
+            {{-- Station Flat List --}}
+            <div style="margin-top: 1.25rem;">
                 @foreach($stations as $stn)
-                    @php
-                        $isCompleted = in_array($stn->id, $completedStationIds);
-                        // Mock thumbnail background colors or imagery
-                        $bgGradient = match($stn->slug) {
-                            'replica-cafe' => 'linear-gradient(135deg, #E6D7C3 0%, #CBB396 100%)',
-                            '37-at-dawn' => 'linear-gradient(135deg, #E2E4E9 0%, #BCC3D0 100%)',
-                            'by-the-fireplace' => 'linear-gradient(135deg, #D9B18F 0%, #9E6A47 100%)',
-                            'chasing-sunsets' => 'linear-gradient(135deg, #F4C493 0%, #D88358 100%)',
-                            'jazz-club' => 'linear-gradient(135deg, #A89B91 0%, #5E5249 100%)',
-                            'last-sunday-morning' => 'linear-gradient(135deg, #F7F5F0 0%, #DED8CC 100%)',
-                            'scentsorium' => 'linear-gradient(135deg, #3A3735 0%, #1A1817 100%)',
-                            'photobooth' => 'linear-gradient(135deg, #D4C9BC 0%, #A39788 100%)',
-                            'redemption-counter' => 'linear-gradient(135deg, #ECE6DD 0%, #C4B9A9 100%)',
-                            default => '#CCCCCC',
-                        };
-                    @endphp
+                    @php $isCompleted = in_array($stn->id, $completedStationIds); @endphp
 
-                    <div class="mm-passport-card {{ $isCompleted ? 'completed' : '' }}" onclick="handleStationClick({{ $stn->id }}, '{{ addslashes($stn->name) }}', {{ $stn->is_redemption ? 'true' : 'false' }})" style="cursor: pointer;">
-                        {{-- Thumbnail --}}
-                        <div class="mm-passport-thumb" style="background: {{ $bgGradient }}; display: flex; align-items: center; justify-content: center; color: #555; font-size: 10px; font-weight: bold;">
-                            {{ substr($stn->name, 0, 2) }}
+                    {{-- Row: [image] [name] [circle] --}}
+                    <div onclick="handleStationClick({{ $stn->id }}, '{{ addslashes($stn->name) }}', {{ $stn->is_redemption ? 'true' : 'false' }})"
+                         style="display: flex;
+                                align-items: center;
+                                gap: 14px;
+                                padding: 10px 16px;
+                                cursor: pointer;
+                                border-bottom: 1px solid #E4E0D8;
+                                background-color: #F4F0EA;">
+
+                        {{-- Station Photo Thumbnail --}}
+                        <div style="width: 72px; height: 54px; flex-shrink: 0; border-radius: 3px; overflow: hidden; background-color: #DDD;">
+                            <img src="{{ asset('images/station/ST' . $stn->id . '.webp') }}"
+                                 loading="lazy"
+                                 decoding="async"
+                                 onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1547887537-6158d64c35b3?auto=format&fit=crop&w=200&q=60';"
+                                 alt="{{ $stn->name }}"
+                                 style="width: 100%; height: 100%; object-fit: cover; display: block;">
                         </div>
 
-                        {{-- Name --}}
-                        <div class="mm-passport-name">
+                        {{-- Station Name --}}
+                        <div style="flex: 1;
+                                    font-family: 'Courier Prime', monospace;
+                                    font-size: 0.65rem;
+                                    font-weight: 700;
+                                    text-transform: uppercase;
+                                    letter-spacing: 1.5px;
+                                    color: #111111;
+                                    line-height: 1.4;">
                             {{ $stn->name }}
                         </div>
 
-                        {{-- Checkbox Circle --}}
-                        <div class="mm-passport-status {{ $isCompleted ? 'checked' : '' }}"></div>
+                        {{-- Status Circle --}}
+                        <div style="width: 26px;
+                                    height: 26px;
+                                    min-width: 26px;
+                                    border-radius: 50%;
+                                    flex-shrink: 0;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    {{ $isCompleted
+                                        ? 'background-color: #111111; border: 1.5px solid #111111;'
+                                        : 'background-color: transparent; border: 1.5px solid #AAAAAA;' }}">
+                            @if($isCompleted)
+                                <span style="color: #FFFFFF; font-size: 11px; font-weight: 700; line-height: 1;">✓</span>
+                            @endif
+                        </div>
                     </div>
                 @endforeach
             </div>
 
             {{-- Back to map button --}}
-            <div class="mt-4 px-1">
-                <button type="button" onclick="showMapView()" class="mm-btn-black">
+            <div class="mt-4 px-3">
+                <button type="button" onclick="showMapView()" class="mm-btn-black py-3" style="border-radius: 8px;">
                     BACK TO MAP
                 </button>
             </div>
@@ -148,9 +232,9 @@
 
     </div>
 
-    {{-- MODAL ALERT FOR GIFT REDEMPTION (IMAGE 4) --}}
+    {{-- MODAL ALERT FOR GIFT REDEMPTION --}}
     <div class="modal fade" id="redemptionAlertModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered px-3" style="max-width: 360px;">
+        <div class="modal-dialog modal-dialog-centered px-3" style="max-width: 380px;">
             <div class="modal-content text-center p-4" style="background-color: #FFFFFF; border-radius: 4px; border: 1px solid #111;">
                 {{-- Exclamation Icon --}}
                 <div class="mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; border-radius: 50%; border: 2px solid #111; font-family: 'Courier Prime', monospace; font-size: 1.5rem; font-weight: bold; color: #111;">

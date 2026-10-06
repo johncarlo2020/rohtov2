@@ -1,364 +1,211 @@
 <x-guest-layout>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <div class="mm-mobile-container justify-content-between p-0" style="max-width: 440px; margin: 0 auto; background-color: #F4F0EA; min-height: 100vh;">
+        
+        {{-- VIEW 1: MEMORY MAP PAGE --}}
+        <div id="mapViewSection" class="w-100 px-3 pb-5">
+            {{-- Header --}}
+            @include('components.branding')
 
-    <style>
-        .brand-orange-text { color: #e86034 !important; }
-        .brand-orange-bg { background-color: #e86034 !important; color: #ffffff !important; border: none; }
-        .brand-orange-bg:hover, .brand-orange-bg:focus { background-color: #d44f25 !important; color: #ffffff !important; }
+            {{-- Title --}}
+            <div class="mm-page-title mt-2 mb-3">
+                YOUR MEMORY MAP
+            </div>
 
-        .ticket-box {
-            padding: 1.25rem 1rem;
-            background: #ffffff;
-        }
+            {{-- Memory Map Visual Graphic --}}
+            <div class="mm-map-wrapper text-center my-3" style="background-color: #FAF8F5; border: 1px solid #E0DDD7; border-radius: 4px; padding: 1.5rem 1rem; position: relative;">
+                <svg viewBox="0 0 320 420" width="100%" height="auto" style="max-height: 52vh; display: block; margin: 0 auto;">
+                    <!-- Outer Floorplan Walls -->
+                    <rect x="20" y="20" width="280" height="380" fill="#F4F0EA" stroke="#333333" stroke-width="2" rx="4"/>
+                    
+                    <!-- Rooms & Divider Walls -->
+                    <!-- Top Room (Photobooth & Redemption) -->
+                    <line x1="20" y1="90" x2="300" y2="90" stroke="#333333" stroke-width="1.5" stroke-dasharray="4,2"/>
+                    <line x1="160" y1="20" x2="160" y2="90" stroke="#333333" stroke-width="1.5"/>
+                    
+                    <!-- Middle Section Rooms -->
+                    <line x1="20" y1="180" x2="300" y2="180" stroke="#333333" stroke-width="1.5" stroke-dasharray="4,2"/>
+                    <line x1="180" y1="90" x2="180" y2="180" stroke="#333333" stroke-width="1.5"/>
+                    
+                    <!-- Lower Section Rooms -->
+                    <line x1="20" y1="290" x2="300" y2="290" stroke="#333333" stroke-width="1.5" stroke-dasharray="4,2"/>
+                    <line x1="140" y1="180" x2="140" y2="290" stroke="#333333" stroke-width="1.5"/>
 
-        .cursor-pointer { cursor: pointer; }
-    </style>
+                    <!-- Room Text Labels -->
+                    <text x="90" y="45" font-family="Courier Prime, monospace" font-size="9" font-weight="bold" fill="#555" text-anchor="middle">PHOTOBOOTH</text>
+                    <text x="230" y="45" font-family="Courier Prime, monospace" font-size="8" font-weight="bold" fill="#777" text-anchor="middle">REDEMPTION COUNTER</text>
 
-    <div class="register-main with-scroll row">
-        <!-- Desktop Left Branding Image -->
-        <div class="col-lg-8 desktop-image-main">
-            <img src="{{ asset('images/brand/main_img.webp') }}" alt="Login Image" srcset="">
+                    <text x="100" y="125" font-family="Courier Prime, monospace" font-size="9" font-weight="bold" fill="#555" text-anchor="middle">LAST SUNDAY MORNING</text>
+                    <text x="240" y="125" font-family="Courier Prime, monospace" font-size="9" font-weight="bold" fill="#555" text-anchor="middle">SCENTSORIUM</text>
+
+                    <text x="80" y="220" font-family="Courier Prime, monospace" font-size="9" font-weight="bold" fill="#555" text-anchor="middle">JAZZ CLUB</text>
+                    <text x="220" y="235" font-family="Courier Prime, monospace" font-size="9" font-weight="bold" fill="#555" text-anchor="middle">BY THE FIREPLACE</text>
+
+                    <text x="80" y="325" font-family="Courier Prime, monospace" font-size="9" font-weight="bold" fill="#555" text-anchor="middle">REPLICA CAFE</text>
+                    <text x="220" y="340" font-family="Courier Prime, monospace" font-size="9" font-weight="bold" fill="#555" text-anchor="middle">37 AT DAWN</text>
+
+                    <text x="160" y="275" font-family="Courier Prime, monospace" font-size="9" font-weight="bold" fill="#555" text-anchor="middle">CHASING SUNSETS</text>
+
+                    <!-- Interactive Station Markers (Dots) -->
+                    @foreach($stations as $stn)
+                        @php
+                            $isCompleted = in_array($stn->id, $completedStationIds);
+                            // Define coordinates for map pins based on station name/slug
+                            $coords = match($stn->slug) {
+                                'photobooth' => ['x' => 90, 'y' => 62],
+                                'redemption-counter' => ['x' => 230, 'y' => 62],
+                                'last-sunday-morning' => ['x' => 100, 'y' => 145],
+                                'scentsorium' => ['x' => 240, 'y' => 145],
+                                'jazz-club' => ['x' => 80, 'y' => 240],
+                                'by-the-fireplace' => ['x' => 220, 'y' => 255],
+                                'chasing-sunsets' => ['x' => 160, 'y' => 295],
+                                'replica-cafe' => ['x' => 80, 'y' => 355],
+                                '37-at-dawn' => ['x' => 220, 'y' => 365],
+                                default => ['x' => 160, 'y' => 200],
+                            };
+                        @endphp
+
+                        <g class="station-pin-group" onclick="handleStationClick({{ $stn->id }}, '{{ addslashes($stn->name) }}', {{ $stn->is_redemption ? 'true' : 'false' }})" style="cursor: pointer;">
+                            <circle cx="{{ $coords['x'] }}" cy="{{ $coords['y'] }}" r="8" fill="{{ $isCompleted ? '#000000' : '#111111' }}" stroke="#FFFFFF" stroke-width="2"/>
+                            @if($isCompleted)
+                                <text x="{{ $coords['x'] }}" y="{{ $coords['y'] + 3 }}" font-family="sans-serif" font-size="8" fill="#FFFFFF" text-anchor="middle" font-weight="bold">✓</text>
+                            @else
+                                <circle cx="{{ $coords['x'] }}" cy="{{ $coords['y'] }}" r="3" fill="#FFFFFF"/>
+                            @endif
+                        </g>
+                    @endforeach
+                </svg>
+            </div>
+
+            {{-- Sticky Footer Button --}}
+            <div class="mt-4 px-2">
+                <button type="button" onclick="showPassportView()" class="mm-btn-black">
+                    MY MEMORY PASSPORT
+                </button>
+            </div>
         </div>
 
-        <!-- Right Content Parent -->
-        <div class="flex-parent col-lg-4 d-flex flex-column justify-content-between">
-            <div class="top">
-                <div class="d-flex justify-content-center col-12">
+        {{-- VIEW 2: MEMORY PASSPORT LIST PAGE ("YOUR HOUSE OF MEMORIES") --}}
+        <div id="passportViewSection" class="w-100 px-3 pb-5 d-none">
+            {{-- Top Bar with Back Arrow --}}
+            <div class="d-flex align-items-center justify-content-between pt-3 pb-2">
+                <button type="button" onclick="showMapView()" class="btn p-0 border-0" style="font-size: 1.25rem; font-weight: 700; color: #111;">
+                    ←
+                </button>
+                <div class="flex-grow-1 text-center pe-4">
                     @include('components.branding')
                 </div>
             </div>
 
-            <!-- Main Content Container -->
-            <div class="mid">
-                <div class="px-2 w-100 m-auto">
-                    <main>
-                        <!-- BOOKING CONFIRMED SUCCESS DISPLAY -->
-                        <div id="confirmation-success-screen" class="text-center py-2 step-fade">
-                            
-                            <!-- Title -->
-                            <h2 class="h4 fw-semi-bold brand-orange-text text-uppercase mb-3" style="letter-spacing: 0.05em;">
-                                BOOKING CONFIRMED!
-                            </h2>
-
-                            @php
-                                $firstName = 'CUSTOMER';
-                                $fullName = 'CUSTOMER';
-                                $formattedDateStr = '';
-                                $formattedTimeStr = '';
-                                $refNo = null;
-                                $canModify = true;
-                                $resCount = 0;
-
-                                if (isset($userBooking) && $userBooking) {
-                                    $refNo = $userBooking->reference_no;
-                                    $resCount = (int) $userBooking->reschedule_count;
-                                    $slotDateStr = $userBooking->bookingDate ? \Carbon\Carbon::parse($userBooking->bookingDate->date)->format('Y-m-d') : null;
-                                    $slotTimeStr = $userBooking->bookingSlot ? $userBooking->bookingSlot->start_time : '00:00:00';
-                                    
-                                    if ($resCount >= 1 || !$slotDateStr) {
-                                        $canModify = false;
-                                    } else {
-                                        $slotDateTime = \Carbon\Carbon::parse($slotDateStr . ' ' . $slotTimeStr);
-                                        $canModify = now()->lessThan($slotDateTime->copy()->subDays(7));
-                                    }
-
-                                    if ($userBooking->customer_name) {
-                                        $fullName = strtoupper($userBooking->customer_name);
-                                        $firstName = strtoupper(explode(' ', trim($userBooking->customer_name))[0]);
-                                    }
-
-                                    if ($userBooking->bookingDate) {
-                                        $d = \Carbon\Carbon::parse($userBooking->bookingDate->date);
-                                        $dayNum = $d->day;
-                                        $sfx = 'TH';
-                                        if (!in_array($dayNum, [11, 12, 13])) {
-                                            switch ($dayNum % 10) {
-                                                case 1: $sfx = 'ST'; break;
-                                                case 2: $sfx = 'ND'; break;
-                                                case 3: $sfx = 'RD'; break;
-                                            }
-                                        }
-                                        $formattedDateStr = strtoupper($d->format('l')) . ', ' . $dayNum . $sfx . ' ' . strtoupper($d->format('F')) . ', ' . $d->format('Y');
-                                    }
-
-                                    if ($userBooking->bookingSlot) {
-                                        $start = \Carbon\Carbon::parse($userBooking->bookingSlot->start_time)->format('g:iA');
-                                        $end = \Carbon\Carbon::parse($userBooking->bookingSlot->end_time)->format('g:iA');
-                                        $formattedTimeStr = strtoupper($start . ' - ' . $end);
-                                    }
-                                } elseif (auth()->check()) {
-                                    $fullName = strtoupper(trim((auth()->user()->fname ?? '') . ' ' . (auth()->user()->lname ?? '')));
-                                    if (empty($fullName)) {
-                                        $fullName = strtoupper(auth()->user()->name ?? 'CUSTOMER');
-                                    }
-                                    $firstName = strtoupper(auth()->user()->fname ?? explode(' ', $fullName)[0]);
-                                }
-                            @endphp
-
-                            <!-- Subtitle 1 -->
-                            <p class="small fw-semi-bold text-dark text-uppercase mb-3" style="letter-spacing: 0.03em; font-size: 0.85rem;">
-                                HI <span id="confirmed-greeting-name" class="text-dark">{{ $firstName }}</span>, YOUR RESERVATION IS CONFIRMED
-                            </p>
-
-                            <!-- Subtitle 2 -->
-                            <p class="small text-dark text-uppercase mb-4 mx-auto" style="letter-spacing: 0.02em; font-size: 0.8rem; line-height: 1.45; max-width: 320px;">
-                                PLEASE CHECK YOUR EMAIL FOR YOUR CONFIRMATION DETAILS AND PRESENT THIS QR CODE UPON ARRIVAL.
-                            </p>
-
-                            <!-- Ticket Container (Boxed QR Code + Details) -->
-                            <div id="ticket-container" class="ticket-box d-inline-block w-100 mb-4 text-center" style="max-width: 290px; padding: 1.25rem 1rem; background: #ffffff;">
-                                
-                                <!-- Dynamic QR Code Image -->
-                                <img id="qr-code-img" src="{{ $refNo ? 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' . urlencode($refNo) : '' }}" alt="Booking QR Code" class="img-fluid mb-2" style="width: 170px; height: 170px; margin: auto; object-fit: contain; display: block;" crossorigin="anonymous">
-
-                                <!-- Customer Name -->
-                                <div id="confirmed-ticket-name" class="fw-bold text-dark text-uppercase my-2" style="font-size: 0.95rem; letter-spacing: 0.05em;">
-                                    {{ $fullName }}
-                                </div>
-
-                                <!-- Details List -->
-                                <div class="small fw-bold text-dark text-uppercase" style="font-size: 0.725rem; line-height: 1.5; letter-spacing: 0.03em;">
-                                    <div class="mb-1"><span class="fw-bold text-dark">DATE:</span> <span id="confirmed-ticket-date" class="text-dark">{{ $formattedDateStr }}</span></div>
-                                    <div class="mb-1"><span class="fw-bold text-dark">TIME:</span> <span id="confirmed-ticket-time" class="text-dark">{{ $formattedTimeStr }}</span></div>
-                                    <div class="text-dark">
-                                        <span class="fw-bold text-dark">VENUE:</span> LONGCHAMP POP-UP STORE<br>THE GARDENS MALL
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Action Buttons (MODIFY / DOWNLOAD) -->
-                            <div class="d-flex flex-column gap-2 mx-auto mb-4">
-                                @if($canModify)
-                                    <a id="modify-btn" href="{{ url('/reservation-create?modify=1') }}" class="custom-btn custom-btn-primary w-50 m-auto text-decoration-none d-block text-center" style="border-radius: 0; padding: 0.7rem 1rem; font-weight: bold; letter-spacing: 0.05em;">
-                                        MODIFY
-                                    </a>
-                                @else
-                                    <div id="no-modify-notice" class="small fw-bold text-muted text-uppercase my-1 text-center" style="font-size: 0.7rem;">
-                                        @if(isset($resCount) && $resCount >= 1)
-                                            * YOU HAVE ALREADY RESCHEDULED YOUR BOOKING ONCE.
-                                        @else
-                                            * RESCHEDULING NOT AVAILABLE (NO DATES AVAILABLE AT LEAST 1 WEEK PRIOR TO YOUR SLOT)
-                                        @endif
-                                    </div>
-                                @endif
-                                <a id="cancel-btn" href="{{ url('/reservation-cancel' . ($refNo ? '?ref=' . urlencode($refNo) : '')) }}" onclick="return confirm('Are you sure you want to cancel your booking?');" class="custom-btn custom-btn-primary w-50 m-auto text-decoration-none d-block text-center" style="border-radius: 0; padding: 0.7rem 1rem; font-weight: bold; letter-spacing: 0.05em; background-color: #333333 !important; border-color: #333333 !important; color: #ffffff !important;">
-                                    CANCEL BOOKING
-                                </a>
-                                <button id="download-btn" type="button" class="custom-btn custom-btn-primary w-50 m-auto" style="border-radius: 0; padding: 0.7rem 1rem; font-weight: bold; letter-spacing: 0.05em;">
-                                    DOWNLOAD
-                                </button>
-                            </div>
-
-                        </div>
-                    </main>
-                </div>
+            {{-- Title --}}
+            <div class="mm-page-title mt-1 mb-4">
+                YOUR HOUSE OF MEMORIES
             </div>
 
-            <!-- Bottom Brand Logo -->
-            <div class="col-12 bot">
-                <div class="logo-bot d-flex justify-content-center mt-4">
-                    <img src="{{ asset('images/brand/bot_logo.webp') }}" class="img-fluid w-25" alt="Login Image" srcset="">
+            {{-- Station Cards List --}}
+            <div class="px-1">
+                @foreach($stations as $stn)
+                    @php
+                        $isCompleted = in_array($stn->id, $completedStationIds);
+                        // Mock thumbnail background colors or imagery
+                        $bgGradient = match($stn->slug) {
+                            'replica-cafe' => 'linear-gradient(135deg, #E6D7C3 0%, #CBB396 100%)',
+                            '37-at-dawn' => 'linear-gradient(135deg, #E2E4E9 0%, #BCC3D0 100%)',
+                            'by-the-fireplace' => 'linear-gradient(135deg, #D9B18F 0%, #9E6A47 100%)',
+                            'chasing-sunsets' => 'linear-gradient(135deg, #F4C493 0%, #D88358 100%)',
+                            'jazz-club' => 'linear-gradient(135deg, #A89B91 0%, #5E5249 100%)',
+                            'last-sunday-morning' => 'linear-gradient(135deg, #F7F5F0 0%, #DED8CC 100%)',
+                            'scentsorium' => 'linear-gradient(135deg, #3A3735 0%, #1A1817 100%)',
+                            'photobooth' => 'linear-gradient(135deg, #D4C9BC 0%, #A39788 100%)',
+                            'redemption-counter' => 'linear-gradient(135deg, #ECE6DD 0%, #C4B9A9 100%)',
+                            default => '#CCCCCC',
+                        };
+                    @endphp
+
+                    <div class="mm-passport-card {{ $isCompleted ? 'completed' : '' }}" onclick="handleStationClick({{ $stn->id }}, '{{ addslashes($stn->name) }}', {{ $stn->is_redemption ? 'true' : 'false' }})" style="cursor: pointer;">
+                        {{-- Thumbnail --}}
+                        <div class="mm-passport-thumb" style="background: {{ $bgGradient }}; display: flex; align-items: center; justify-content: center; color: #555; font-size: 10px; font-weight: bold;">
+                            {{ substr($stn->name, 0, 2) }}
+                        </div>
+
+                        {{-- Name --}}
+                        <div class="mm-passport-name">
+                            {{ $stn->name }}
+                        </div>
+
+                        {{-- Checkbox Circle --}}
+                        <div class="mm-passport-status {{ $isCompleted ? 'checked' : '' }}"></div>
+                    </div>
+                @endforeach
+            </div>
+
+            {{-- Back to map button --}}
+            <div class="mt-4 px-1">
+                <button type="button" onclick="showMapView()" class="mm-btn-black">
+                    BACK TO MAP
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    {{-- MODAL ALERT FOR GIFT REDEMPTION (IMAGE 4) --}}
+    <div class="modal fade" id="redemptionAlertModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered px-3" style="max-width: 360px;">
+            <div class="modal-content text-center p-4" style="background-color: #FFFFFF; border-radius: 4px; border: 1px solid #111;">
+                {{-- Exclamation Icon --}}
+                <div class="mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; border-radius: 50%; border: 2px solid #111; font-family: 'Courier Prime', monospace; font-size: 1.5rem; font-weight: bold; color: #111;">
+                    !
                 </div>
+
+                {{-- Modal Header --}}
+                <div style="font-family: 'Courier Prime', monospace; font-size: 1.05rem; letter-spacing: 2px; font-weight: 700; text-transform: uppercase; color: #111; margin-bottom: 1rem;">
+                    YOUR HOUSE OF MEMORIES
+                </div>
+
+                {{-- Modal Body Message --}}
+                <p style="font-family: 'Courier Prime', monospace; font-size: 0.8rem; line-height: 1.5; color: #444444; margin-bottom: 1.75rem;">
+                    Kindly complete 5 station in Memory Map to proceed to Gift Redemption station
+                </p>
+
+                {{-- Close Button --}}
+                <button type="button" class="mm-btn-black py-2" data-bs-dismiss="modal">
+                    CLOSE
+                </button>
             </div>
         </div>
     </div>
 
     @push('scripts')
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const modifyBtn = document.getElementById('modify-btn');
-            const downloadBtn = document.getElementById('download-btn');
-            const refNo = @json($refNo);
-            const qrImgElem = document.getElementById('qr-code-img');
+        const completedCount = {{ $completedCount }};
 
-            if (qrImgElem && refNo) {
-                if (typeof QRCode !== 'undefined') {
-                    const tempDiv = document.createElement('div');
-                    new QRCode(tempDiv, {
-                        text: refNo,
-                        width: 200,
-                        height: 200,
-                        correctLevel: QRCode.CorrectLevel.M
-                    });
-                    setTimeout(() => {
-                        const generatedImg = tempDiv.querySelector('img') || tempDiv.querySelector('canvas');
-                        if (generatedImg) {
-                            qrImgElem.src = generatedImg.tagName === 'CANVAS' ? generatedImg.toDataURL('image/png') : generatedImg.src;
-                        }
-                    }, 50);
+        function showPassportView() {
+            document.getElementById('mapViewSection').classList.add('d-none');
+            document.getElementById('passportViewSection').classList.remove('d-none');
+            window.scrollTo(0, 0);
+        }
+
+        function showMapView() {
+            document.getElementById('passportViewSection').classList.add('d-none');
+            document.getElementById('mapViewSection').classList.remove('d-none');
+            window.scrollTo(0, 0);
+        }
+
+        function handleStationClick(stationId, stationName, isRedemption) {
+            if (isRedemption) {
+                if (completedCount < 5) {
+                    const modal = new bootstrap.Modal(document.getElementById('redemptionAlertModal'));
+                    modal.show();
+                    return;
+                } else {
+                    window.location.href = "{{ route('thankyou') }}";
+                    return;
                 }
             }
 
-            if (modifyBtn) {
-                modifyBtn.addEventListener('click', () => {
-                    if (refNo) {
-                        localStorage.setItem('latest_booking_ref', refNo);
-                    }
-                });
-            }
-
-            if (downloadBtn) {
-                downloadBtn.addEventListener('click', () => {
-                    const activeRefNo = refNo || localStorage.getItem('latest_booking_ref') || 'ticket';
-                    
-                    const customerName = document.getElementById('confirmed-ticket-name')?.textContent.trim() || 'CUSTOMER';
-                    const dateText = document.getElementById('confirmed-ticket-date')?.textContent.trim() || '';
-                    const timeText = document.getElementById('confirmed-ticket-time')?.textContent.trim() || '';
-
-                    downloadBtn.disabled = true;
-                    downloadBtn.textContent = 'GENERATING JPEG...';
-
-                    // Create offscreen canvas (450x430)
-                    const canvas = document.createElement('canvas');
-                    canvas.width = 450;
-                    canvas.height = 430;
-                    const ctx = canvas.getContext('2d');
-
-                    // Fill white background
-                    ctx.fillStyle = '#ffffff';
-                    ctx.fillRect(0, 0, 450, 430);
-
-                    const formatTitleCase = (str) => {
-                        if (!str) return '';
-                        return str.toLowerCase().replace(/\b[a-z]/g, (char, index, fullStr) => {
-                            if (index > 0 && /\d/.test(fullStr[index - 1])) {
-                                return char;
-                            }
-                            return char.toUpperCase();
-                        });
-                    };
-
-                    const formatTime = (str) => {
-                        if (!str) return '';
-                        return str.toLowerCase().trim().replace(/\s+/g, ' ');
-                    };
-
-                    const renderCanvasContent = (loadedQrImage) => {
-                        let yCursor = 35;
-
-                        // 1. QR Code (Centered 210x210)
-                        if (loadedQrImage) {
-                            const qrSize = 210;
-                            const qrX = (450 - qrSize) / 2;
-                            ctx.drawImage(loadedQrImage, qrX, yCursor, qrSize, qrSize);
-                            yCursor += qrSize + 32;
-                        } else {
-                            yCursor += 242;
-                        }
-
-                        // 2. Customer Name (Bold, Centered, ALL CAPS)
-                        ctx.fillStyle = '#000000';
-                        ctx.font = 'bold 22px "Helvetica Neue", Helvetica, Arial, sans-serif';
-                        ctx.textAlign = 'center';
-                        ctx.fillText(customerName.toUpperCase(), 225, yCursor);
-                        yCursor += 36;
-
-                        // 3. Date Line (Centered - Title Case)
-                        ctx.font = 'bold 14px "Helvetica Neue", Helvetica, Arial, sans-serif';
-                        ctx.fillStyle = '#000000';
-                        ctx.fillText(`Date: ${formatTitleCase(dateText)}`, 225, yCursor);
-                        yCursor += 25;
-
-                        // 4. Time Line (Centered - Lowercase AM/PM)
-                        ctx.fillText(`Time: ${formatTime(timeText)}`, 225, yCursor);
-                        yCursor += 25;
-
-                        // 5. Venue Lines (Centered - Title Case)
-                        ctx.fillText('Venue: Longchamp Pop Up Store', 225, yCursor);
-                        yCursor += 22;
-                        ctx.fillText('The Gardens Mall', 225, yCursor);
-
-                        // Convert Canvas to JPEG Blob & Trigger iOS Web Share or Download
-                        canvas.toBlob(async (blob) => {
-                            if (!blob) {
-                                downloadBtn.disabled = false;
-                                downloadBtn.textContent = 'DOWNLOAD';
-                                return;
-                            }
-
-                            const fileName = `Reservation_${activeRefNo}.jpg`;
-                            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-
-                            const finishDownload = () => {
-                                downloadBtn.disabled = false;
-                                downloadBtn.textContent = 'DOWNLOAD';
-                            };
-
-                            // 1. Try iOS Mobile Web Share API first
-                            if (isIOS && navigator.canShare) {
-                                try {
-                                    const file = new File([blob], fileName, { type: 'image/jpeg' });
-                                    if (navigator.canShare({ files: [file] })) {
-                                        await navigator.share({
-                                            files: [file],
-                                            title: 'Reservation Ticket',
-                                            text: `Longchamp Workshop Reservation - ${activeRefNo}`
-                                        });
-                                        finishDownload();
-                                        return;
-                                    }
-                                } catch (shareErr) {
-                                    console.log('Share dismissed or not supported:', shareErr);
-                                    if (shareErr.name === 'AbortError') {
-                                        finishDownload();
-                                        return;
-                                    }
-                                }
-                            }
-
-                            // 2. iOS Fallback: Open image in new window/tab for user to long-press & save
-                            if (isIOS) {
-                                const blobUrl = URL.createObjectURL(blob);
-                                const newWin = window.open(blobUrl, '_blank');
-                                if (!newWin) {
-                                    window.location.href = blobUrl;
-                                }
-                                finishDownload();
-                                return;
-                            }
-
-                            // 3. Desktop / Android Download Link
-                            const blobUrl = URL.createObjectURL(blob);
-                            const link = document.createElement('a');
-                            link.download = fileName;
-                            link.href = blobUrl;
-                            document.body.appendChild(link);
-                            link.click();
-                            document.body.removeChild(link);
-
-                            setTimeout(() => {
-                                URL.revokeObjectURL(blobUrl);
-                            }, 1000);
-
-                            finishDownload();
-                        }, 'image/jpeg', 0.95);
-                    };
-
-                    // Load QR Image
-                    if (qrImgElem && qrImgElem.src) {
-                        const qrImg = new Image();
-                        qrImg.crossOrigin = 'anonymous';
-                        qrImg.onload = () => {
-                            renderCanvasContent(qrImg);
-                        };
-                        qrImg.onerror = () => {
-                            const fallbackQr = new Image();
-                            fallbackQr.onload = () => {
-                                renderCanvasContent(fallbackQr);
-                            };
-                            fallbackQr.onerror = () => {
-                                renderCanvasContent(null);
-                            };
-                            fallbackQr.src = qrImgElem.src;
-                        };
-                        qrImg.src = qrImgElem.src;
-                    } else {
-                        renderCanvasContent(null);
-                    }
-                });
-            }
-        });
+            // Redirect each station to its own scanning area using station.blade.php template
+            window.location.href = "{{ url('/station') }}/" + stationId;
+        }
     </script>
     @endpush
 </x-guest-layout>

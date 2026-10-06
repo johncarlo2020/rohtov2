@@ -1,46 +1,37 @@
 <x-guest-layout>
-    <div class="register-main with-scroll">
-        <!-- Desktop Left Hero Image -->
-        <div class="desktop-image-main">
-            <img src="{{ asset('images/brand/main_img.webp') }}" alt="Longchamp Workshop">
-        </div>
+    <div class="mm-mobile-container justify-content-between">
+        <div>
+            {{-- Header --}}
+            @include('components.branding')
 
-        <!-- Mobile Top Hero Image -->
-        <div class="mobile-image-main">
-            <img src="{{ asset('images/brand/main_img.webp') }}" alt="Longchamp Workshop">
-        </div>
-
-        <!-- Right / Bottom Content Area -->
-        <div class="flex-parent">
-            <!-- Top Logo (Desktop Only) -->
-            <div class="top">
-                @include('components.branding')
+            {{-- Title Box --}}
+            <div class="mm-box-header mt-4 mb-2">
+                HOUSE OF MEMORIES
             </div>
 
-            <!-- Middle Content -->
-            <div class="mid d-flex flex-column justify-content-center my-auto">
-                <div class="text-center py-2">
-                    <h1 class="text-dark text-uppercase mb-5" style="font-size: 1.15rem; line-height: 1.45; letter-spacing: 0.5px; font-weight:400;">
-                        LONGCHAMP INVITES YOU TO "<strong class="fw-bold" style="white-space: nowrap;">BE CREATIVE</strong>" THIS WINTER 2026, EXCLUSIVELY IN MALAYSIA
-                    </h1>
+            {{-- Divider --}}
+            <div class="mm-divider"></div>
 
-                    <p class="text-dark" style="font-size: 0.725rem; line-height: 1.55; letter-spacing: 0.3px; color: #444444; margin-bottom:10vh;">
-                        The creative experience extends beyond the collection. In this workshop, discover the art of collage through an interactive activity inspired by <strong>Caroline Hélain’s expressive landscapes.</strong> Create your own layered landscape using paper, colour and texture to bring your composition to life.
-                    </p>
+            {{-- Text content --}}
+            <div class="text-center px-2 my-4">
+                <p style="font-family: 'Courier Prime', monospace; font-size: 0.85rem; line-height: 1.6; color: #333333; margin-bottom: 2rem;">
+                    Step into a world of memories inspired by iconic REPLICA fragrances.
+                </p>
 
-                    <div class="d-flex flex-column gap-2 align-items-center mb-3">
-                        <a href="{{ route('register') }}" class="custom-btn custom-btn-primary" style="max-width: 220px; width: 100%; height: 44px;">
-                            REGISTER
-                        </a>
-                    </div>
-                </div>
+                <p style="font-family: 'Courier Prime', monospace; font-size: 0.8rem; line-height: 1.5; color: #555555; margin-bottom: 3rem;">
+                    Collect each memory as you explore the <span style="color: #D93838; text-decoration: underline;">login</span>.
+                </p>
             </div>
+        </div>
 
-            <!-- Bottom Horse Logo -->
-            <div class="col-12 bot">
-                <div class="logo-bot d-flex justify-content-center mt-3">
-                    <img src="{{ asset('images/brand/bot_logo.webp') }}" class="img-fluid" alt="Footer Image" srcset="" style="width: 4rem;">
-                </div>
+        {{-- Actions --}}
+        <div class="w-100 mb-4">
+            <a href="{{ route('register') }}" class="mm-btn-black mb-3">
+                REGISTER
+            </a>
+
+            <div class="mm-link-sub">
+                ALREADY REGISTERED? <a href="{{ route('login') }}">LOGIN HERE</a>
             </div>
         </div>
     </div>

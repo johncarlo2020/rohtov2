@@ -1,5 +1,8 @@
-<div class="branding-header desktop-only-logo d-none">
-    <div class="branding text-center mb-5">
-        <img class="logo" src="{{ asset('images/brand/logo.webp') }}" alt="Longchamp" />
+<div class="mm-branding-container text-center py-4">
+    <div class="mm-logo-title">
+        Maison Margiela
+    </div>
+    <div class="mm-logo-subtitle">
+        PARIS
     </div>
 </div>

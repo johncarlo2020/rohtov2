@@ -1121,3 +1121,380 @@ p.footer {
 img#badge {
     width: clamp(24px, 10vw, 44px);
 }
+
+/* ==========================================================================
+   MAISON MARGIELA PARIS - HOUSE OF MEMORIES BRANDING STYLES
+   ========================================================================== */
+
+:root {
+    --mm-bg: #F4F0EA;
+    --mm-card-bg: #FAF8F5;
+    --mm-text-dark: #1A1A1A;
+    --mm-text-muted: #555555;
+    --mm-red: #D93838;
+    --mm-border: #E0DDD7;
+    --mm-black: #000000;
+}
+
+body.main-background,
+.mm-page-bg {
+    background-color: var(--mm-bg) !important;
+    color: var(--mm-text-dark);
+    font-family: 'Courier Prime', 'Courier New', monospace;
+    min-height: 100vh;
+}
+
+.mm-branding-container {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+
+    .mm-logo-title {
+        font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+        font-size: 1.85rem;
+        letter-spacing: 1px;
+        font-weight: 500;
+        color: var(--mm-text-dark);
+        line-height: 1.1;
+    }
+
+    .mm-logo-subtitle {
+        font-family: 'Courier Prime', 'Courier New', monospace;
+        font-size: 0.75rem;
+        letter-spacing: 5px;
+        font-weight: 700;
+        color: #444444;
+        text-transform: uppercase;
+        margin-top: 4px;
+    }
+}
+
+.mm-mobile-container {
+    max-width: 440px;
+    margin: 0 auto;
+    padding: 0 1.25rem 2.5rem 1.25rem;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.mm-box-header {
+    border: 1px solid #222222;
+    padding: 10px 16px;
+    text-align: center;
+    font-family: 'Courier Prime', monospace;
+    font-size: 1.15rem;
+    letter-spacing: 2px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin: 1.5rem auto 1rem auto;
+    width: fit-content;
+    max-width: 90%;
+}
+
+.mm-divider {
+    width: 60px;
+    height: 1px;
+    background-color: #999999;
+    margin: 1rem auto 1.5rem auto;
+}
+
+.mm-page-title {
+    font-family: 'Courier Prime', monospace;
+    font-size: 1.1rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-align: center;
+    font-weight: 700;
+    margin-bottom: 1.75rem;
+    color: var(--mm-text-dark);
+}
+
+.mm-label {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.725rem;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #222222;
+    margin-bottom: 0.4rem;
+    display: block;
+}
+
+.mm-input {
+    width: 100%;
+    height: 46px;
+    background-color: #FFFFFF;
+    border: 1px solid var(--mm-border);
+    border-radius: 0px;
+    padding: 0.6rem 1rem;
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.85rem;
+    color: #111111;
+    transition: border-color 0.2s ease;
+
+    &:focus {
+        outline: none;
+        border-color: #000000;
+        box-shadow: none !important;
+    }
+
+    &::placeholder {
+        color: #AAAAAA;
+        font-size: 0.8rem;
+    }
+}
+
+.mm-helper-text {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.7rem;
+    color: var(--mm-red);
+    margin-top: 6px;
+    line-height: 1.4;
+    font-style: normal;
+}
+
+.mm-error-text {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.725rem;
+    color: var(--mm-red);
+    margin-top: 6px;
+    line-height: 1.4;
+    font-weight: 700;
+}
+
+.mm-checkbox-label {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.725rem;
+    line-height: 1.45;
+    color: #333333;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    cursor: pointer;
+
+    input[type="checkbox"] {
+        appearance: none;
+        width: 16px;
+        height: 16px;
+        border: 1px solid #444444;
+        border-radius: 2px;
+        margin-top: 2px;
+        flex-shrink: 0;
+        cursor: pointer;
+        display: grid;
+        place-content: center;
+
+        &:checked {
+            background-color: #000000;
+            border-color: #000000;
+
+            &::before {
+                content: "✓";
+                color: #ffffff;
+                font-size: 11px;
+                font-weight: bold;
+            }
+        }
+    }
+
+    a {
+        color: #111111;
+        text-decoration: underline;
+        font-weight: 700;
+    }
+}
+
+.mm-btn-black {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 46px;
+    background-color: #000000;
+    color: #FFFFFF !important;
+    border-radius: 23px;
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.825rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: none;
+    text-decoration: none !important;
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.1s ease;
+
+    &:hover, &:focus {
+        opacity: 0.88;
+        color: #FFFFFF !important;
+    }
+
+    &:active {
+        transform: scale(0.99);
+    }
+}
+
+.mm-btn-grey {
+    background-color: #7D7D7D;
+    color: #FFFFFF !important;
+    border-radius: 23px;
+}
+
+.mm-link-sub {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #333333;
+    text-align: center;
+    margin-top: 1.25rem;
+
+    a {
+        color: #000000;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+}
+
+/* OTP Digits Container */
+.mm-otp-inputs {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin: 1.5rem 0;
+
+    .mm-otp-digit {
+        width: 44px;
+        height: 48px;
+        background-color: #FFFFFF;
+        border: 1px solid #D8D4CB;
+        border-bottom: 2px solid #000000;
+        text-align: center;
+        font-family: 'Courier Prime', monospace;
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: #000000;
+        border-radius: 2px;
+
+        &:focus {
+            outline: none;
+            border-color: #000000;
+            box-shadow: none;
+        }
+    }
+}
+
+/* Memory Map & Passport */
+.mm-map-wrapper {
+    position: relative;
+    width: 100%;
+    background: #FFFFFF;
+    border: 1px solid var(--mm-border);
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+}
+
+.mm-passport-card {
+    display: flex;
+    align-items: center;
+    padding: 0.85rem 1rem;
+    background-color: #FFFFFF;
+    border: 1px solid var(--mm-border);
+    margin-bottom: 0.75rem;
+    border-radius: 4px;
+    gap: 12px;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+
+    &.completed {
+        border-color: #000000;
+        background-color: #FAF9F6;
+    }
+
+    .mm-passport-thumb {
+        width: 54px;
+        height: 54px;
+        border-radius: 4px;
+        object-fit: cover;
+        background-color: #EFECE6;
+        flex-shrink: 0;
+    }
+
+    .mm-passport-name {
+        font-family: 'Courier Prime', monospace;
+        font-size: 0.8rem;
+        letter-spacing: 1.5px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #111111;
+        flex-grow: 1;
+    }
+
+    .mm-passport-status {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        border: 1px solid #777777;
+        display: grid;
+        place-content: center;
+        flex-shrink: 0;
+
+        &.checked {
+            border-color: #000000;
+            background-color: #000000;
+            color: #FFFFFF;
+
+            &::after {
+                content: "✓";
+                font-size: 12px;
+            }
+        }
+    }
+}
+
+/* Thank You Feature Buttons */
+.mm-thankyou-icons {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin: 2.5rem 0;
+
+    .mm-circle-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-decoration: none;
+
+        .mm-circle-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #000000;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+            svg {
+                width: 34px;
+                height: 34px;
+                stroke-width: 1.5;
+            }
+        }
+
+        &:hover .mm-circle-icon {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        .mm-circle-label {
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            color: #333333;
+            margin-top: 10px;
+            text-align: center;
+            max-width: 110px;
+        }
+    }
+}

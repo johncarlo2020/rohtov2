@@ -2,43 +2,59 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Countries;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class LoginController extends Controller
 {
     /**
-     * Handle an authentication attempt.
+     * Handle an authentication attempt via OTP.
      */
     public function authenticate(Request $request): RedirectResponse
     {
-      
-        $credentials = $request->validate([
-            'email' => ['required', 'string'],
-            'password' => ['required'],
+        $request->validate([
+            'email' => ['required', 'email'],
         ]);
 
+        $email = strtolower(trim($request->input('email')));
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
+        $user = User::where('email', $email)->first();
 
-            $user = Auth::user();
-
-            $user->update([
-                'otp_verified' => 1,
-                'last_login_at' => \Carbon\Carbon::now(),
+        if (!$user) {
+            // If user doesn't exist, create automatically or prompt to register
+            $user = User::create([
+                'fname' => explode('@', $email)[0],
+                'email' => $email,
+                'password' => Hash::make('password'),
+                'otp_verified' => 0,
             ]);
-
-            return redirect()->intended(route('dashboard'));
+            $user->assignRole('client');
         }
 
-        return back()
-            ->withErrors([
-                'email' => 'The provided credentials do not match our records.',
-            ])
-            ->onlyInput('email');
+        $otp = (string) rand(100000, 999999);
+
+        session([
+            'login_user_id' => $user->id,
+            'otp' => $otp,
+            'email' => $email,
+            'otp_email' => $email,
+            'is_login' => true,
+        ]);
+
+        try {
+            Mail::send('emails.otp', ['otp' => $otp], function ($message) use ($email) {
+                $message->to($email)->subject('Maison Margiela - OTP Verification');
+            });
+        } catch (\Throwable $e) {
+            \Log::info("Maison Margiela OTP for {$email}: {$otp}");
+        }
+
+        return redirect()->route('otp');
     }
 
     public function authenticateAdmin(Request $request): RedirectResponse
@@ -47,8 +63,6 @@ class LoginController extends Controller
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
-
-        
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
@@ -62,18 +76,17 @@ class LoginController extends Controller
 
     public function authenticateConcierge(Request $request): RedirectResponse
     {
-
         $credentials = $request->validate([
             'email' => ['required','email'],
             'password' => ['required']
-        ]);        
-        
+        ]);
+
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             return redirect()->intended('/concierge/scanner');
         }
 
-         return back()->withErrors([
+        return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ])->onlyInput('email');
     }

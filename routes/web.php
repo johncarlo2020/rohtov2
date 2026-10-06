@@ -164,6 +164,10 @@ Route::group(['middleware' => ['client']], function () {
         return view('congrats');
     })->name('congrats');
 
+    Route::get('/thankyou', function () {
+        return view('thankyou');
+    })->name('thankyou');
+
 
 
 
@@ -184,15 +188,6 @@ Route::group(['middleware' => ['client']], function () {
     })->name('promotion');
 
 
-    Route::post('/upload', 'App\Http\Controllers\StationController@uploadBaby')->name('upload.baby');
-
-    Route::get('/otp', function () {
-        return view('auth.otp');
-    })->name('otp');
-
-    Route::get('/resend-otp', 'App\Http\Controllers\StationController@resend')->name('resend.otp');
-    Route::post('/verify-otp', 'App\Http\Controllers\StationController@verify')->name('verify.otp');
-
     Route::get('/reservation-create', [BookingViewController::class, 'index'])->name('reservation.create');
     Route::post('/reservation-create', [BookingViewController::class, 'store'])->name('reservation.store');
     Route::post('/reservation-create/modify', [BookingViewController::class, 'modify'])->name('reservation.modify');
@@ -204,6 +199,14 @@ Route::group(['middleware' => ['client']], function () {
     Route::get('/booking/cancel', [BookingViewController::class, 'cancel'])->name('booking.cancel');
 
 });
+
+// Public OTP & Verification Routes
+Route::get('/otp', function () {
+    return view('auth.otp');
+})->name('otp');
+
+Route::get('/resend-otp', 'App\Http\Controllers\StationController@resend')->name('resend.otp');
+Route::post('/verify-otp', 'App\Http\Controllers\StationController@verify')->name('verify.otp');
 
 require __DIR__ . '/auth.php';
 

@@ -1144,7 +1144,25 @@ body.main-background,
     min-height: 100vh;
 }
 
-p, h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, a, span, label, input, textarea, select {
+p,
+h1,
+.h1,
+h2,
+.h2,
+h3,
+.h3,
+h4,
+.h4,
+h5,
+.h5,
+h6,
+.h6,
+a,
+span,
+label,
+input,
+textarea,
+select {
     font-family: 'Courier New', Courier, monospace;
     line-height: normal;
     color: #111111;
@@ -1192,6 +1210,26 @@ p, h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, a, span, label, input, 
     &.justify-content-between {
         justify-content: flex-start !important;
         gap: 1.25rem;
+    }
+
+    @media (max-height: 700px) {
+        padding-bottom: 1.25rem !important;
+    }
+
+    @media (min-height: 701px) and (max-height: 859px) {
+        padding-bottom: 2.5rem !important;
+    }
+
+    @media (min-height: 860px) and (max-height: 899px) {
+        padding-bottom: 4.5rem !important;
+    }
+
+    @media (min-height: 900px) and (max-height: 949px) {
+        padding-bottom: 5.5rem !important;
+    }
+
+    @media (min-height: 950px) {
+        padding-bottom: 7.5rem !important;
     }
 }
 

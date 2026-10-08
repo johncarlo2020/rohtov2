@@ -16,6 +16,7 @@
 
 .desktop-only-logo {
     display: block;
+
     @media (max-width: 991px) {
         display: none !important;
     }
@@ -23,6 +24,7 @@
 
 .mobile-only-logo {
     display: none;
+
     @media (max-width: 991px) {
         display: block !important;
     }

@@ -15,8 +15,6 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(CountriesTableSeeder::class);
         $this->call(AdminUserSeeder::class);
-        $this->call(OperatingHoursSeeder::class);
-        $this->call(EventScheduleSeeder::class);
         $this->call(StationSeeder::class);
     }
 }

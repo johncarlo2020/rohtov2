@@ -678,10 +678,12 @@ if ($activeVoucher) {
     ->where('session', 1)
     ->first();
 
-    $session1Claimed = VoucherClaim::where(
-        'voucher_id',
-        $session1->id
-    )->count();
+    $session1Claimed = $session1
+        ? VoucherClaim::where(
+            'voucher_id',
+            $session1->id
+        )->count()
+        : 0;
 
     $voucherSessions = Voucher::where('name', 'CHAGEE')
         ->orderBy('session')
@@ -698,6 +700,7 @@ if ($activeVoucher) {
 
             if (
                   $voucher->session == 2 &&
+                  $session1 &&
                   $session1->ends_at &&
                   now()->gt($session1->ends_at)
               ) {

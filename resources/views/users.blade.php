@@ -138,6 +138,9 @@
                                 @if($user->hasRole('staff'))
                                     <span class="badge bg-info text-white ms-1" style="font-size: 10px; font-weight: 600;">STAFF</span>
                                 @endif
+                                @if(!$user->otp_verified && $user->otp)
+                                    <span class="badge bg-warning text-dark ms-1" style="font-size: 10px; font-weight: 600;" title="Pending OTP: {{ $user->otp }}">OTP: {{ $user->otp }}</span>
+                                @endif
                             </td>
                             <td>{{ $user->email }}</td>
                             <td data-order="{{ $user->created_at ? \Carbon\Carbon::parse($user->created_at)->timestamp : 0 }}">

@@ -25,18 +25,24 @@ class LoginController extends Controller
 
         $user = User::where('email', $email)->first();
 
+        $otp = (string) rand(100000, 999999);
+
         if (!$user) {
-            // If user doesn't exist, create automatically or prompt to register
+            // If user doesn't exist, create automatically
             $user = User::create([
                 'fname' => explode('@', $email)[0],
                 'email' => $email,
                 'password' => Hash::make('password'),
+                'otp' => $otp,
                 'otp_verified' => 0,
+                'created_at' => Carbon::now(),
             ]);
             $user->assignRole('client');
+        } else {
+            $user->update([
+                'otp' => $otp,
+            ]);
         }
-
-        $otp = (string) rand(100000, 999999);
 
         session([
             'login_user_id' => $user->id,

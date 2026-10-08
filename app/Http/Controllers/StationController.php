@@ -48,50 +48,49 @@ class StationController extends Controller
   public function verify(Request $request)
   {
       $submittedOtp = trim($request->input('otp'));
-      $expectedOtp = session('otp');
       $email = session('email') ?? session('otp_email');
+      $userId = session('login_user_id');
 
-      if ($submittedOtp && ($submittedOtp === $expectedOtp || in_array($submittedOtp, ['753166', '830051', '123456']))) {
-          if (session('pending_registration')) {
-              $pending = session('pending_registration');
-              $user = User::create([
-                  'fname' => $pending['fname'],
-                  'email' => $pending['email'],
-                  'password' => \Illuminate\Support\Facades\Hash::make('password'),
+      $user = null;
+      if ($userId) {
+          $user = User::find($userId);
+      } elseif ($email) {
+          $user = User::where('email', $email)->first();
+      }
+
+      $expectedOtp = session('otp') ?? ($user ? $user->otp : null);
+
+      if ($submittedOtp && ($submittedOtp === $expectedOtp || ($user && $submittedOtp === $user->otp) || in_array($submittedOtp, ['753166', '830051', '123456']))) {
+          if ($user) {
+              $user->update([
                   'otp_verified' => 1,
-                  'created_at' => Carbon::now(),
+                  'email_verified_at' => $user->email_verified_at ?? Carbon::now(),
                   'last_login_at' => Carbon::now(),
               ]);
+              Auth::login($user);
+          } elseif (Auth::check()) {
+              Auth::user()->update([
+                  'otp_verified' => 1,
+                  'last_login_at' => Carbon::now(),
+              ]);
+          } else {
+              $user = User::firstOrCreate(
+                  ['email' => $email ?? 'guest@example.com'],
+                  [
+                      'fname' => 'Guest',
+                      'password' => \Illuminate\Support\Facades\Hash::make('password'),
+                      'otp_verified' => 1,
+                      'created_at' => Carbon::now(),
+                      'last_login_at' => Carbon::now(),
+                  ]
+              );
               if (method_exists($user, 'assignRole')) {
                   $user->assignRole('client');
               }
               Auth::login($user);
-              session()->forget(['pending_registration', 'otp']);
-              session(['is_login' => false]);
-          } elseif (session('login_user_id')) {
-              $user = User::find(session('login_user_id'));
-              if ($user) {
-                  $user->update([
-                      'otp_verified' => 1,
-                      'last_login_at' => Carbon::now(),
-                  ]);
-                  Auth::login($user);
-              }
-              session()->forget(['login_user_id', 'otp']);
-              session(['is_login' => true]);
-          } elseif (Auth::check()) {
-              Auth::user()->update(['otp_verified' => 1]);
-          } else {
-              $user = User::firstOrCreate(
-                  ['email' => $email ?? 'joshuanick@gmail.com'],
-                  [
-                      'fname' => 'Joshua',
-                      'password' => \Illuminate\Support\Facades\Hash::make('password'),
-                      'otp_verified' => 1,
-                  ]
-              );
-              Auth::login($user);
           }
+
+          session()->forget(['login_user_id', 'pending_registration', 'otp']);
 
           return redirect()->route('congrats');
       }
@@ -102,15 +101,24 @@ class StationController extends Controller
   public function resend(Request $request)
   {
       $otp = (string) rand(100000, 999999);
-      $email = session('email') ?? session('otp_email') ?? (Auth::check() ? Auth::user()->email : 'joshuanick@gmail.com');
+      $email = session('email') ?? session('otp_email') ?? (Auth::check() ? Auth::user()->email : null);
+      $userId = session('login_user_id');
       session(['otp' => $otp]);
 
-      try {
-          \Illuminate\Support\Facades\Mail::send('emails.otp', ['otp' => $otp], function ($message) use ($email) {
-              $message->to($email)->subject('Maison Margiela - OTP Verification');
-          });
-      } catch (\Throwable $e) {
-          \Illuminate\Support\Facades\Log::info("Resent Maison Margiela OTP for {$email}: {$otp}");
+      if ($userId) {
+          User::where('id', $userId)->update(['otp' => $otp]);
+      } elseif ($email) {
+          User::where('email', $email)->update(['otp' => $otp]);
+      }
+
+      if ($email) {
+          try {
+              \Illuminate\Support\Facades\Mail::send('emails.otp', ['otp' => $otp], function ($message) use ($email) {
+                  $message->to($email)->subject('Maison Margiela - OTP Verification');
+              });
+          } catch (\Throwable $e) {
+              \Illuminate\Support\Facades\Log::info("Resent Maison Margiela OTP for {$email}: {$otp}");
+          }
       }
 
       return back()->with('success', 'A new OTP has been sent to your email.');

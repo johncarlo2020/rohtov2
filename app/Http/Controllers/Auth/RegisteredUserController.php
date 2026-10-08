@@ -34,26 +34,44 @@ class RegisteredUserController extends Controller
 
         $email = strtolower(trim($request->input('email')));
         $fname = $request->input('fname') ?? $request->input('name') ?? 'Guest';
+        $otp = (string) rand(100000, 999999);
 
         // Check if email already exists
         $existingUser = User::where('email', $email)->first();
         if ($existingUser) {
-            return back()
-                ->withInput()
-                ->withErrors([
-                    'email' => 'Looks like you already have an account! Please log in to continue.',
-                ]);
-        }
+            if ($existingUser->otp_verified) {
+                return back()
+                    ->withInput()
+                    ->withErrors([
+                        'email' => 'Looks like you already have an account! Please log in to continue.',
+                    ]);
+            }
 
-        // Generate 6-digit OTP code
-        $otp = (string) rand(100000, 999999);
-
-        // Store pending user registration data in session
-        session([
-            'pending_registration' => [
+            // If not yet verified, update OTP and name
+            $existingUser->update([
+                'fname' => $fname,
+                'otp' => $otp,
+            ]);
+            $user = $existingUser;
+        } else {
+            // Create user in database immediately with OTP
+            $user = User::create([
                 'fname' => $fname,
                 'email' => $email,
-            ],
+                'password' => Hash::make('password'),
+                'otp' => $otp,
+                'otp_verified' => 0,
+                'created_at' => Carbon::now(),
+            ]);
+
+            if (method_exists($user, 'assignRole')) {
+                $user->assignRole('client');
+            }
+        }
+
+        // Store session data
+        session([
+            'login_user_id' => $user->id,
             'otp' => $otp,
             'email' => $email,
             'otp_email' => $email,

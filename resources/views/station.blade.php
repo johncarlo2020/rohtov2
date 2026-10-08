@@ -33,7 +33,7 @@
 
                 {{-- IF USER HAS NOT CHECKED IN YET (SCREEN 1) --}}
                 @if(!$user)
-                    <div class="text-center my-auto py-4 px-2 d-flex flex-column justify-content-center">
+                    <div class="text-center my-3 py-2 px-2 d-flex flex-column justify-content-center">
                         @if($isReplicaCafe || $isRedemption)
                             <p style="font-family: 'Courier Prime', monospace; font-size: 0.85rem; color: #555555; margin-bottom: 6px; letter-spacing: 0.5px;">
                                 Proceed to
@@ -62,7 +62,7 @@
                     </div>
                 @else
                     {{-- SCREEN 5: MEMORY UNLOCKED CARD (POST CHECK-IN STATE) --}}
-                    <div class="my-4 p-4 text-center" style="background-color: #FAF8F5; border: 1px solid #DED8CE; border-radius: 8px;">
+                    <div class="my-3 p-4 text-center" style="background-color: #FAF8F5; border: 1px solid #DED8CE; border-radius: 8px;">
                         <div class="mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 42px; height: 42px; border-radius: 50%; border: 1.5px solid #111; font-family: 'Courier Prime', monospace; font-size: 1.3rem; font-weight: bold; color: #111;">
                             ✓
                         </div>
@@ -77,7 +77,7 @@
             </div>
 
             {{-- Bottom Responsive Action Area (Pinned to Bottom) --}}
-            <div class="w-100 mt-auto pt-4 pb-2">
+            <div class="w-100 mt-auto pt-3 pb-1">
                 @if(!$user)
                     {{-- Camera Scan Button --}}
                     <div class="text-center">

@@ -7,18 +7,18 @@
         </div>
 
         {{-- Center Content Block --}}
-        <div class="w-100 my-auto py-4 d-flex flex-column align-items-center justify-content-center">
+        <div class="w-100 my-3 d-flex flex-column align-items-center justify-content-center">
             {{-- Title --}}
             <h1 class="mm-page-title">
                 HOUSE OF MEMORIES
             </h1>
 
             {{-- Divider Line --}}
-            <div style="width: 64px; height: 1px; background-color: #A09C94; margin: 0 auto 2.5rem auto;"></div>
+            <div style="width: 64px; height: 1px; background-color: #A09C94; margin: 0 auto 1.5rem auto;"></div>
 
             {{-- Text Content --}}
             <div style="max-width: 320px; margin: 0 auto;">
-                <p style="font-family: 'Courier Prime', monospace; font-size: 0.95rem; line-height: 1.5; color: #222222; text-align: center; margin-bottom: 2.25rem;">
+                <p style="font-family: 'Courier Prime', monospace; font-size: 0.95rem; line-height: 1.5; color: #222222; text-align: center; margin-bottom: 1.5rem;">
                     Step into a world of<br>memories inspired by<br>iconic REPLICA fragrances.
                 </p>
 
@@ -29,7 +29,7 @@
         </div>
 
         {{-- Bottom Actions --}}
-        <div class="w-100" style="margin-top: auto; padding-top: 1.5rem;">
+        <div class="w-100 mt-auto pt-3">
             <a href="{{ route('register') }}" class="mm-btn-black py-3 mb-3 w-100" style="border-radius: 8px; font-family: 'Courier Prime', monospace; font-size: 0.9rem; font-weight: 700; letter-spacing: 2px; text-decoration: none; display: flex; align-items: center; justify-content: center;">
                 REGISTER
             </a>

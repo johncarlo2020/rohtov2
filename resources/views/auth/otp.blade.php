@@ -1,5 +1,5 @@
 <x-guest-layout>
-    <div class="mm-mobile-container justify-content-between">
+    <div class="mm-mobile-container">
         <div>
             {{-- Header --}}
             @include('components.branding')
@@ -10,14 +10,14 @@
             </h1>
 
             {{-- Subtitle --}}
-            <div class="text-center mb-3">
-                <div style="font-family: 'Courier Prime', monospace; font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; color: #333333; margin-bottom: 0.75rem;">
+            <div class="text-center mb-2">
+                <div style="font-family: 'Courier Prime', monospace; font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; color: #333333; margin-bottom: 0.5rem;">
                     ENTER YOUR OTP
                 </div>
-                <p style="font-family: 'Courier Prime', monospace; font-size: 0.75rem; line-height: 1.5; color: #444444; margin-bottom: 0.5rem; padding: 0 0.5rem;">
+                <p style="font-family: 'Courier Prime', monospace; font-size: 0.75rem; line-height: 1.5; color: #444444; margin-bottom: 0.35rem; padding: 0 0.5rem;">
                     An OTP (One Time Passcode) has been sent to <strong style="color: #000000;">{{ session('email') ?? session('otp_email') ?? 'joshuanick@gmail.com' }}</strong>.
                 </p>
-                <p style="font-family: 'Courier Prime', monospace; font-size: 0.725rem; line-height: 1.4; color: #666666; margin-bottom: 1rem;">
+                <p style="font-family: 'Courier Prime', monospace; font-size: 0.725rem; line-height: 1.4; color: #666666; margin-bottom: 0.75rem;">
                     Please enter the OTP below to verify your contact details.
                 </p>
             </div>

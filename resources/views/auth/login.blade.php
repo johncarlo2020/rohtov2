@@ -1,5 +1,5 @@
 <x-guest-layout>
-    <div class="mm-mobile-container justify-content-between">
+    <div class="mm-mobile-container">
         <div>
             {{-- Header --}}
             @include('components.branding')
@@ -40,11 +40,11 @@
                     </button>
                 </div>
             </form>
-        </div>
 
-        {{-- Footer Link --}}
-        <div class="mm-link-sub">
-            HAVEN'T? <a href="{{ route('register') }}">REGISTER HERE</a>
+            {{-- Footer Link --}}
+            <div class="mm-link-sub mt-4">
+                HAVEN'T? <a href="{{ route('register') }}">REGISTER HERE</a>
+            </div>
         </div>
     </div>
 

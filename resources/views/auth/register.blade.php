@@ -67,11 +67,11 @@
                     </button>
                 </div>
             </form>
-        </div>
 
-        {{-- Footer Link --}}
-        <div class="mm-link-sub" style="font-family: 'Courier Prime', monospace; font-size: 0.725rem; letter-spacing: 1px; color: #111111;">
-            ALREADY REGISTERED? <a href="{{ route('login') }}" style="color: #111111; font-weight: 700; text-decoration: underline;">LOGIN HERE</a>
+            {{-- Footer Link --}}
+            <div class="mm-link-sub mt-4" style="font-family: 'Courier Prime', monospace; font-size: 0.725rem; letter-spacing: 1px; color: #111111;">
+                ALREADY REGISTERED? <a href="{{ route('login') }}" style="color: #111111; font-weight: 700; text-decoration: underline;">LOGIN HERE</a>
+            </div>
         </div>
     </div>
 

@@ -8,12 +8,12 @@
                 @include('components.branding')
 
                 {{-- Title --}}
-                <div class="mm-page-title mt-2 mb-4 text-center">
+                <div class="mm-page-title mt-1 mb-2 text-center">
                     YOUR MEMORY MAP
                 </div>
 
                 {{-- Memory Map Visual Floorplan with Background Image --}}
-                <div class="mm-map-container my-3" style="position: relative; width: 100%; max-width: 360px; margin: 0 auto;">
+                <div class="mm-map-container my-2" style="position: relative; width: 100%; max-width: 380px; margin: 0 auto;">
                     <div style="position: relative; width: 100%; overflow: hidden; background-color: #F4F0EA;">
                         {{-- Floorplan Image Background --}}
                         <img src="{{ asset('images/brand/dashboard_bg.webp') }}" 

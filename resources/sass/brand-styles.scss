@@ -1171,13 +1171,19 @@ body.main-background,
 .mm-mobile-container {
     max-width: 440px;
     margin: 0 auto;
-    padding: 2.25rem 1.5rem 2.25rem 1.5rem;
+    padding: 1.5rem 1.25rem 1.5rem 1.25rem;
     min-height: 100vh;
+    min-height: 100dvh;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
     background-color: #F4F0EA;
     box-sizing: border-box;
+
+    &.justify-content-between {
+        justify-content: flex-start !important;
+        gap: 1.25rem;
+    }
 }
 
 .mm-box-header {
@@ -1189,7 +1195,7 @@ body.main-background,
     letter-spacing: 2px;
     font-weight: 700;
     text-transform: uppercase;
-    margin: 1.5rem auto 1rem auto;
+    margin: 1.25rem auto 1rem auto;
     width: fit-content;
     max-width: 90%;
 }
@@ -1198,18 +1204,18 @@ body.main-background,
     width: 60px;
     height: 1px;
     background-color: #999999;
-    margin: 1rem auto 1.5rem auto;
+    margin: 0.75rem auto 1.25rem auto;
 }
 
 .mm-page-title {
     font-family: 'Courier Prime', monospace;
-    font-size: 2rem;
+    font-size: 1.75rem;
     font-weight: 400;
     letter-spacing: 2px;
     text-transform: uppercase;
     text-align: center;
     color: #111111;
-    margin: 2.25rem 0;
+    margin: 1.25rem 0 1.25rem 0;
     line-height: 1.25;
 }
 

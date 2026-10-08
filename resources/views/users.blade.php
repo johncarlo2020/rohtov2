@@ -124,21 +124,9 @@
                             <th>Email Address</th>
                             <th>Registration Timestamp</th>
                             <th>Action</th>
-                            <th class="export-col d-none">title</th>
-                            <th class="export-col d-none">fname</th>
-                            <th class="export-col d-none">lname</th>
-                            <th class="export-col d-none">number</th>
-                            <th class="export-col d-none">email</th>
-                            <th class="export-col d-none">preferred_contact</th>
-                            <th class="export-col d-none">consent_channels</th>
-                            <th class="export-col d-none">communication_consent</th>
-                            <th class="export-col d-none">newsletter_consent</th>
-                            <th class="export-col d-none">Booking Date</th>
-                            <th class="export-col d-none">Booking Time From</th>
-                            <th class="export-col d-none">Booking Time End</th>
-                            <th class="export-col d-none">Booking Time</th>
-                            <th class="export-col d-none">Attendance Status</th>
-                            <th class="export-col d-none">created_at</th>
+                            <th class="export-col d-none">Full Name</th>
+                            <th class="export-col d-none">Email Address</th>
+                            <th class="export-col d-none">Registration Timestamp</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -167,20 +155,8 @@
                                         data-user-name="{{ $user->fname }}">Delete</button>
                                 @endif
                             </td>
-                            <td class="export-col d-none">{{ $user->title ?? '' }}</td>
-                            <td class="export-col d-none">{{ $user->fname ?? '' }}</td>
-                            <td class="export-col d-none">{{ $user->lname ?? '' }}</td>
-                            <td class="export-col d-none">{{ $user->number ?? '' }}</td>
+                            <td class="export-col d-none">{{ trim(($user->title ? $user->title . ' ' : '') . $user->fname . ' ' . $user->lname) ?: $user->fname }}</td>
                             <td class="export-col d-none">{{ $user->email ?? '' }}</td>
-                            <td class="export-col d-none">{{ $user->preferred_contact ?? '' }}</td>
-                            <td class="export-col d-none">{{ is_array($user->consent_channels) ? implode(', ', $user->consent_channels) : ($user->consent_channels ?? '') }}</td>
-                            <td class="export-col d-none">{{ $user->communication_consent ? '1' : '0' }}</td>
-                            <td class="export-col d-none">{{ $user->newsletter_consent ? '1' : '0' }}</td>
-                            <td class="export-col d-none">{{ $user->booking_date_text ?? 'No Booking' }}</td>
-                            <td class="export-col d-none">{{ $user->booking_time_from ?? 'N/A' }}</td>
-                            <td class="export-col d-none">{{ $user->booking_time_to ?? 'N/A' }}</td>
-                            <td class="export-col d-none">{{ $user->booking_time_text ?? 'N/A' }}</td>
-                            <td class="export-col d-none">{{ strtoupper($user->attendance_status ?? ($user->is_attended ? 'attended' : 'upcoming')) }}</td>
                             <td class="export-col d-none">{{ $user->created_at ? \Carbon\Carbon::parse($user->created_at)->toDateTimeString() : '' }}</td>
                         </tr>
                         @endforeach

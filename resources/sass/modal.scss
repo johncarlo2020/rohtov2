@@ -1,1 +1,44 @@
-// All modal styles will be here
+// All modal styles with iOS Safari compatibility fixes
+
+.modal-backdrop {
+    z-index: 1050 !important;
+}
+
+.modal {
+    z-index: 1060 !important;
+    -webkit-overflow-scrolling: touch;
+    touch-action: manipulation;
+
+    &.show {
+        display: block !important;
+        pointer-events: auto !important;
+    }
+}
+
+.modal-dialog {
+    position: relative !important;
+    z-index: 1065 !important;
+    pointer-events: auto !important;
+}
+
+.modal-content {
+    position: relative !important;
+    z-index: 1070 !important;
+    pointer-events: auto !important;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+
+    button,
+    a,
+    input,
+    select,
+    textarea,
+    [data-bs-dismiss="modal"] {
+        pointer-events: auto !important;
+        cursor: pointer !important;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+        position: relative;
+        z-index: 1080 !important;
+    }
+}

@@ -61,15 +61,15 @@
                 </div>
 
                 {{-- Submit Button --}}
-                <div class="mt-4 pt-1">
-                    <button id="submitBtn" type="submit" class="mm-btn-black" disabled>
+                <div class="mt-4 pt-1 text-center">
+                    <button id="submitBtn" type="submit" class="mm-btn-black mx-auto" style="width: 60%;" disabled>
                         SUBMIT
                     </button>
                 </div>
             </form>
 
             {{-- Footer Link --}}
-            <div class="mm-link-sub mt-4" style="font-family: 'Courier Prime', monospace; font-size: 0.725rem; letter-spacing: 1px; color: #111111;">
+            <div class="mm-link-sub mt-4" style="font-size: 0.725rem; letter-spacing: 1px; color: #111111;">
                 ALREADY REGISTERED? <a href="{{ route('login') }}" style="color: #111111; font-weight: 700; text-decoration: underline;">LOGIN HERE</a>
             </div>
         </div>

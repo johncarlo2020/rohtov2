@@ -19,7 +19,7 @@
         <div id="stationDetailView" class="w-100 flex-grow-1 d-flex flex-column justify-content-between">
             <div class="d-flex flex-column flex-grow-1">
                 {{-- Station Hero Image --}}
-                <div class="my-2 text-center" style="border-radius: 8px; overflow: hidden; border: 1px solid #E0DDD7; background-color: #FAF8F5;">
+                <div class="mt-5 text-center" style="border-radius: 8px; overflow: hidden; border: 1px solid #E0DDD7; background-color: #FAF8F5;">
                     <img src="{{ asset('images/station/ST' . $station->id . '.webp') }}" 
                          onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1547887537-6158d64c35b3?auto=format&fit=crop&w=600&q=80';"
                          alt="{{ $station->name }}" 
@@ -27,76 +27,69 @@
                 </div>
 
                 {{-- Station Title --}}
-                <div class="mm-page-title mt-3 mb-2">
+                <div class="mm-page-title text-center">
                     {{ strtoupper($station->name) }}
                 </div>
 
                 {{-- IF USER HAS NOT CHECKED IN YET (SCREEN 1) --}}
                 @if(!$user)
-                    <div class="text-center my-3 py-2 px-2 d-flex flex-column justify-content-center">
+                    <div class="text-center my-2 py-1 px-2 d-flex flex-column justify-content-center">
                         @if($isReplicaCafe || $isRedemption)
-                            <p style="font-family: 'Courier Prime', monospace; font-size: 0.85rem; color: #555555; margin-bottom: 6px; letter-spacing: 0.5px;">
+                            <p style="font-size: 1rem; color: #555555; margin-bottom: 6px; letter-spacing: 0.5px;">
                                 Proceed to
                             </p>
-                            <p style="font-family: 'Courier Prime', monospace; font-size: 0.95rem; font-weight: 700; color: #111111; margin-bottom: 6px; letter-spacing: 1px; text-transform: uppercase;">
+                            <p style="font-size: 1.5rem; font-weight: 700; color: #111111; margin-bottom: 6px; letter-spacing: 1px; text-transform: uppercase;">
                                 {{ $station->name }}
                             </p>
-                            <p style="font-family: 'Courier Prime', monospace; font-size: 0.85rem; color: #555555; margin: 0; letter-spacing: 0.5px;">
+                            <p style="font-size: 1rem; color: #555555; margin: 0; letter-spacing: 0.5px;">
                                 to begin your journey.
                             </p>
                         @elseif($station->description)
-                            <div style="font-family: 'Courier Prime', monospace; font-size: 0.8rem; line-height: 1.65; color: #333333; max-width: 340px; margin: 0 auto; text-align: center;">
+                            <div style="font-size: 1rem; color: #333333; max-width: 340px; margin: 0 auto; text-align: center;">
                                 {!! nl2br(e($station->description)) !!}
                             </div>
                         @else
-                            <p style="font-family: 'Courier Prime', monospace; font-size: 0.85rem; color: #555555; margin-bottom: 6px;">
+                            <p style="font-size: 1rem; color: #555555; margin-bottom: 6px;">
                                 Proceed to
                             </p>
-                            <p style="font-family: 'Courier Prime', monospace; font-size: 0.95rem; font-weight: 700; color: #111111; margin-bottom: 6px; text-transform: uppercase;">
+                            <p style="font-size: 1.5rem; font-weight: 700; color: #111111; margin-bottom: 6px; text-transform: uppercase;">
                                 {{ $station->name }}
                             </p>
-                            <p style="font-family: 'Courier Prime', monospace; font-size: 0.85rem; color: #555555; margin: 0;">
+                            <p style="font-size: 1rem; color: #555555; margin: 0;">
                                 to begin your journey.
                             </p>
                         @endif
                     </div>
-                @else
-                    {{-- SCREEN 5: MEMORY UNLOCKED CARD (POST CHECK-IN STATE) --}}
-                    <div class="my-3 p-4 text-center" style="background-color: #FAF8F5; border: 1px solid #DED8CE; border-radius: 8px;">
-                        <div class="mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 42px; height: 42px; border-radius: 50%; border: 1.5px solid #111; font-family: 'Courier Prime', monospace; font-size: 1.3rem; font-weight: bold; color: #111;">
-                            ✓
-                        </div>
-                        <div style="font-family: 'Courier Prime', monospace; font-size: 0.9rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #111; margin-bottom: 0.6rem;">
-                            MEMORY UNLOCKED
-                        </div>
-                        <p style="font-family: 'Courier Prime', monospace; font-size: 0.775rem; line-height: 1.55; color: #555555; margin: 0; padding: 0 0.5rem;">
-                            A new memory has been added to your passport.
-                        </p>
-                    </div>
-                @endif
-            </div>
 
-            {{-- Bottom Responsive Action Area (Pinned to Bottom) --}}
-            <div class="w-100 mt-auto pt-3 pb-1">
-                @if(!$user)
-                    {{-- Camera Scan Button --}}
-                    <div class="text-center">
+                    {{-- Camera Scan Button (Directly below text with matching top spacing) --}}
+                    <div class="text-center mt-4 pt-1">
                         <button type="button" onclick="startQRScanner()" class="mx-auto border-0 d-flex align-items-center justify-content-center" style="width: 76px; height: 38px; background-color: #000000; border-radius: 20px; cursor: pointer;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#FFFFFF" viewBox="0 0 16 16">
                                 <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
                                 <path d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0z"/>
                             </svg>
                         </button>
-                        <div style="font-family: 'Courier Prime', monospace; font-size: 0.725rem; color: #666666; margin-top: 10px;">
+                        <div style="font-size: 0.725rem; color: #666666; margin-top: 10px;">
                             Scan the QR code to proceed
                         </div>
                     </div>
                 @else
-                    <div class="w-100 text-center">
-                        <div class="mb-3" style="font-family: 'Courier Prime', monospace; font-size: 0.725rem; color: #666666;">
-                            Checked-In Successful
+                    {{-- SCREEN 5: MEMORY UNLOCKED CARD (POST CHECK-IN STATE) --}}
+                    <div class="my-3 p-4 text-center" style="background-color: #FAF8F5; border: 1px solid #DED8CE; border-radius: 8px;">
+                        <div class="mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 42px; height: 42px; border-radius: 50%; border: 1.5px solid #111; font-size: 1.3rem; font-weight: bold; color: #111;">
+                            ✓
                         </div>
-                        <a href="{{ route('dashboard') }}" class="mm-btn-black">
+                        <div style="font-size: 0.9rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #111; margin-bottom: 0.6rem;">
+                            MEMORY UNLOCKED
+                        </div>
+                        <p style="font-size: 0.775rem; color: #555555; margin: 0; padding: 0 0.5rem;">
+                            A new memory has been added to your passport.
+                        </p>
+                    </div>
+
+                    {{-- Back to Dashboard Button --}}
+                    <div class="w-100 mt-4 text-center">
+                        <a href="{{ route('dashboard') }}" class="mm-btn-black mx-auto" style="width: 60%;">
                             BACK
                         </a>
                     </div>
@@ -116,7 +109,7 @@
                     <div id="reader" style="width: 100%; height: 100%;"></div>
                 </div>
 
-                <div class="text-center mt-3" style="font-family: 'Courier Prime', monospace; font-size: 0.85rem; color: #555555; letter-spacing: 0.5px;">
+                <div class="text-center mt-3" style="font-family: 'Courier New', monospace; font-size: 1rem; color: #555555; letter-spacing: 0.5px;">
                     Find the QR code & scan to proceed
                 </div>
             </div>
@@ -134,13 +127,13 @@
     <div class="modal fade" id="invalidQrModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered px-3" style="max-width: 340px;margin:auto;">
             <div class="modal-content text-center p-4" style="background-color: #FFFFFF; border-radius: 6px; border: 1px solid #111;">
-                <div class="mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; border-radius: 50%; border: 2px solid #D93838; color: #D93838; font-family: 'Courier Prime', monospace; font-size: 1.4rem; font-weight: bold;">
+                <div class="mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; border-radius: 50%; border: 2px solid #D93838; color: #D93838; font-size: 1.4rem; font-weight: bold;">
                     i
                 </div>
-                <div style="font-family: 'Courier Prime', monospace; font-size: 0.9rem; font-weight: 700; letter-spacing: 1px; color: #111; margin-bottom: 1.5rem;">
+                <div style="font-size: 0.9rem; font-weight: 700; letter-spacing: 1px; color: #111; margin-bottom: 1.5rem;">
                     Invalid QR Code
                 </div>
-                <button type="button" class="mm-btn-black py-2" data-bs-dismiss="modal">
+                <button type="button" class="mm-btn-black" data-bs-dismiss="modal" onclick="bootstrap.Modal.getInstance(document.getElementById('invalidQrModal'))?.hide();">
                     DONE
                 </button>
             </div>
@@ -151,13 +144,13 @@
     <div class="modal fade" id="successQrModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered px-3" style="max-width: 340px;margin:auto">
             <div class="modal-content text-center p-4" style="background-color: #FFFFFF; border-radius: 6px; border: 1px solid #111;">
-                <div class="mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; border-radius: 50%; border: 2px solid #2E7D32; color: #2E7D32; font-family: 'Courier Prime', monospace; font-size: 1.4rem; font-weight: bold;">
+                <div class="mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; border-radius: 50%; border: 2px solid #2E7D32; color: #2E7D32; font-size: 1.4rem; font-weight: bold;">
                     ✓
                 </div>
-                <div style="font-family: 'Courier Prime', monospace; font-size: 0.9rem; font-weight: 700; letter-spacing: 1px; color: #111; margin-bottom: 1.5rem;">
+                <div style="font-size: 0.9rem; font-weight: 700; letter-spacing: 1px; color: #111; margin-bottom: 1.5rem;">
                     Check-in Successful
                 </div>
-                <button id="successDoneBtn" type="button" class="mm-btn-black py-2" onclick="window.location.reload();">
+                <button id="successDoneBtn" type="button" class="mm-btn-black" onclick="window.location.reload();">
                     DONE
                 </button>
             </div>

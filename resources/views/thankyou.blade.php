@@ -4,10 +4,10 @@
         <div class="w-100 my-auto py-3">
             {{-- Title Box --}}
             <div class="text-center mb-3">
-                <h1 style="font-family: 'Courier Prime', monospace; font-size: 1.85rem; letter-spacing: 3px; font-weight: 400; text-transform: uppercase; color: #111111; line-height: 1.2; margin-bottom: 0.75rem;">
+                <h1 style="font-size: 1.85rem; letter-spacing: 3px; font-weight: 400; text-transform: uppercase; color: #111111; margin-bottom: 0.75rem;">
                     THANK YOU
                 </h1>
-                <p style="font-family: 'Courier Prime', monospace; font-size: 0.95rem; letter-spacing: 1.5px; font-weight: 400; text-transform: uppercase; color: #333333; line-height: 1.35; margin: 0;">
+                <p style="font-size: 0.95rem; letter-spacing: 1.5px; font-weight: 400; text-transform: uppercase; color: #333333; margin: 0;">
                     FOR VISITING<br>HOUSE OF MEMORIES
                 </p>
             </div>

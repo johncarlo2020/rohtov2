@@ -8,12 +8,12 @@
                 @include('components.branding')
 
                 {{-- Title --}}
-                <div class="mm-page-title mt-1 mb-2 text-center">
+                <div class="mm-page-title text-center">
                     YOUR MEMORY MAP
                 </div>
 
-                {{-- Memory Map Visual Floorplan with Background Image --}}
-                <div class="mm-map-container my-2" style="position: relative; width: 100%; max-width: 380px; margin: 0 auto;">
+                {{-- Memory Map Visual Floorplan with Background Image (Enlarged by 20%) --}}
+                <div class="mm-map-container my-2" style="position: relative; width: 100%; max-width: 456px; margin: 0 auto;">
                     <div style="position: relative; width: 100%; overflow: hidden; background-color: #F4F0EA;">
                         {{-- Floorplan Image Background --}}
                         <img src="{{ asset('images/brand/dashboard_bg.webp') }}" 
@@ -22,129 +22,187 @@
                              decoding="async"
                              style="width: 100%; height: auto; display: block;">
 
-                        {{-- Station Pin Overlays — Plain text labels + solid black circles (final design) --}}
+                        {{-- Station Pin Overlays (Matching Design Image) --}}
                         @foreach($stations as $stn)
                             @php
                                 $isCompleted = in_array($stn->id, $completedStationIds);
 
                                 /**
-                                 * isVertical = true  → sideways-lr text (vertical flow)
-                                 * isVertical = false → horizontal text (by the fireplace, up at dawn, jazz club)
-                                 * left/top = position of the combined element center on the floorplan image
+                                 * Exact coordinates & orientation matching new design reference:
+                                 * - isVertical: true for stacked upright text, false for horizontal
+                                 * - circlePosition: 'top' | 'bottom'
                                  */
                                 $coords = match($stn->slug) {
 
                                     'redemption-counter', 'redemption-room' => [
-                                        'left' => '78%', 'top' => '12%',
+                                        'left' => '75%', 'top' => '17%',
                                         'isVertical' => true,
-                                        'displayName' => "REDEMPTION\nCOUNTER",
+                                        'circlePosition' => 'bottom',
+                                        'textAlign' => 'start',
+                                        'displayName' => "REDEMPTION<br>ROOM",
                                     ],
                                     'lazy-sunday-morning', 'last-sunday-morning' => [
-                                        'left' => '35%', 'top' => '26%',
+                                        'left' => '34%', 'top' => '27%',
                                         'isVertical' => true,
-                                        'displayName' => "LAZY SUNDAY\nMORNING",
+                                        'circlePosition' => 'bottom',
+                                        'textAlign' => 'start',
+                                        'displayName' => "LAZY SUNDAY<br>MORNING",
                                     ],
                                     'scentsorium' => [
-                                        'left' => '83%', 'top' => '35%',
+                                        'left' => '74%', 'top' => '36%',
                                         'isVertical' => true,
+                                        'circlePosition' => 'bottom',
                                         'displayName' => "SCENTSORIUM",
                                     ],
                                     'jazz-club' => [
-                                        'left' => '69%', 'top' => '48%',
+                                        'left' => '75%', 'top' => '50%',
                                         'isVertical' => false,
+                                        'circlePosition' => 'top',
                                         'displayName' => 'JAZZ CLUB',
                                     ],
                                     'chasing-sunset', 'chasing-sunsets' => [
-                                        'left' => '25%', 'top' => '62%',
+                                        'left' => '33%', 'top' => '61%',
                                         'isVertical' => true,
+                                        'circlePosition' => 'bottom',
                                         'displayName' => "CHASING SUNSET",
                                     ],
                                     'by-the-fireplace' => [
-                                        'left' => '55%', 'top' => '66%',
+                                        'left' => '63%', 'top' => '65%',
                                         'isVertical' => false,
-                                        'displayName' => "BY THE\nFIREPLACE",
+                                        'circlePosition' => 'top',
+                                        'displayName' => "BY THE<br>FIREPLACE",
                                     ],
                                     'up-at-dawn', '37-at-dawn' => [
-                                        'left' => '55%', 'top' => '81%',
+                                        'left' => '62%', 'top' => '79%',
                                         'isVertical' => false,
+                                        'circlePosition' => 'top',
                                         'displayName' => 'UP AT DAWN',
                                     ],
                                     'replica-cafe' => [
-                                        'left' => '22%', 'top' => '87%',
+                                        'left' => '27%', 'top' => '86%',
                                         'isVertical' => true,
+                                        'circlePosition' => 'bottom',
                                         'displayName' => "REPLICA CAFE",
                                     ],
                                     default => [
                                         'left' => '50%', 'top' => '50%',
                                         'isVertical' => false,
+                                        'circlePosition' => 'bottom',
                                         'displayName' => strtoupper($stn->name),
                                     ],
                                 };
-
-                                $isVert   = $coords['isVertical'];
-                                $circleBg = $isCompleted ? '#666666' : '#000000';
                             @endphp
 
                             {{-- PIN WRAPPER --}}
-                            <div onclick="handleStationClick({{ $stn->id }}, '{{ addslashes($stn->name) }}', {{ $stn->is_redemption ? 'true' : 'false' }})"
+                            <div class="mm-station-pin"
+                                 onclick="handleStationClick({{ $stn->id }}, '{{ addslashes($stn->name) }}', {{ $stn->is_redemption ? 'true' : 'false' }})"
                                  style="position: absolute;
                                         left: {{ $coords['left'] }};
                                         top: {{ $coords['top'] }};
                                         transform: translate(-50%, -50%);
-                                        cursor: pointer;
-                                        z-index: 10;
                                         display: flex;
-                                        flex-direction: {{ $isVert ? 'column' : 'row' }};
+                                        flex-direction: column;
                                         align-items: center;
-                                        gap: {{ $isVert ? '4px' : '4px' }};">
+                                        gap: 3px;
+                                        z-index: 10;">
 
-                                @if($isVert)
-                                    {{-- SIDEWAYS-LR LABEL --}}
-                                    <div style="font-family: 'Courier Prime', monospace;
-                                                font-size: 1rem;
-                                                font-weight: 700;
-                                                text-transform: uppercase;
-                                                color: #111111;
-                                                letter-spacing: 0.5px;
-                                                line-height: 1.1;
-                                                white-space: pre-line;
-                                                writing-mode: sideways-lr;
-                                                -webkit-writing-mode: sideways-lr;">{{ $coords['displayName'] }}</div>
-                                @else
-                                    {{-- HORIZONTAL LABEL: standard text, no border --}}
-                                    <div style="font-family: 'Courier Prime', monospace;
-                                                font-size: 1rem;
-                                                font-weight: 700;
-                                                text-transform: uppercase;
-                                                color: #111111;
-                                                letter-spacing: 0.5px;
-                                                line-height: 1.25;
-                                                white-space: pre-line;
-                                                order: 2;">{{ $coords['displayName'] }}</div>
+                                @if($coords['circlePosition'] === 'top')
+                                    <div class="pin-circle {{ $isCompleted ? 'completed' : 'uncompleted' }}">
+                                        @if($isCompleted)
+                                            <span>✓</span>
+                                        @endif
+                                    </div>
                                 @endif
 
-                                {{-- SOLID BLACK CIRCLE PIN --}}
-                                <div style="width: 16px;
-                                            height: 16px;
-                                            min-width: 16px;
-                                            border-radius: 50%;
-                                            background-color: {{ $circleBg }};
-                                            position: relative;
-                                            flex-shrink: 0;
-                                            {{ !$isVert ? 'order: 1;' : '' }}">
-                                    @if($isCompleted)
-                                        <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 8px; line-height: 1; font-weight: 700;">✓</span>
-                                    @endif
+                                {{-- White Boxed Label (Not bold) --}}
+                                <div class="pin-label {{ $coords['isVertical'] ? 'vertical' : 'horizontal' }}"
+                                     style="{{ isset($coords['textAlign']) ? 'text-align: ' . $coords['textAlign'] . ' !important;' : '' }}">
+                                    {!! $coords['displayName'] !!}
                                 </div>
+
+                                @if($coords['circlePosition'] === 'bottom')
+                                    <div class="pin-circle {{ $isCompleted ? 'completed' : 'uncompleted' }}">
+                                        @if($isCompleted)
+                                            <span>✓</span>
+                                        @endif
+                                    </div>
+                                @endif
                             </div>
                         @endforeach
                     </div>
                 </div>
             </div>
 
+            <style>
+                .mm-station-pin {
+                    cursor: pointer;
+                    user-select: none;
+                    transition: transform 0.2s ease;
+                }
+                .mm-station-pin .pin-label {
+                    background-color: #FFFFFF;
+                    color: #000000;
+                    font-size: 16px;
+                    font-weight: 400 !important;
+                    line-height: 1.2;
+                    letter-spacing: 0.5px;
+                    text-align: center;
+                    padding: 3px 6px;
+                    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+                    border: none;
+                    white-space: nowrap;
+                }
+                .mm-station-pin .pin-label.vertical {
+                    writing-mode: vertical-rl;
+                    -webkit-writing-mode: vertical-rl;
+                    transform: rotate(180deg);
+                    padding: 4px 4px;
+                }
+                .mm-station-pin .pin-label.horizontal {
+                    text-transform: uppercase;
+                }
+                .mm-station-pin .pin-circle {
+                    width: 20px;
+                    height: 20px;
+                    min-width: 20px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+                    position: relative;
+                }
+                .mm-station-pin .pin-circle.uncompleted {
+                    background-color: #000000;
+                    border: none;
+                }
+                .mm-station-pin .pin-circle.completed {
+                    background-color: #FFFFFF;
+                    border: 1.5px solid #000000;
+                    color: #000000;
+                    font-size: 11px;
+                    font-weight: 700;
+                    line-height: 1;
+                }
+                /* Blur animation on hover */
+                .mm-station-pin:hover .pin-circle {
+                    animation: mmPinBlurGlow 1.2s infinite alternate ease-in-out;
+                }
+                @keyframes mmPinBlurGlow {
+                    0% {
+                        filter: blur(0.5px) drop-shadow(0 0 4px rgba(0, 0, 0, 0.5));
+                        transform: scale(1.12);
+                    }
+                    100% {
+                        filter: blur(2px) drop-shadow(0 0 10px rgba(0, 0, 0, 0.9));
+                        transform: scale(1.24);
+                    }
+                }
+            </style>
+
             {{-- Sticky Footer Button --}}
             <div class="mt-4 w-100">
-                <button type="button" onclick="showPassportView()" class="mm-btn-black py-3" style="width: 100%; border-radius: 8px;">
+                <button type="button" onclick="showPassportView()" class="mm-btn-black" style="width: 100%; border-radius: 8px;">
                     MY MEMORY PASSPORT
                 </button>
             </div>
@@ -183,7 +241,7 @@
                                     background-color: #F4F0EA;">
 
                             {{-- Station Photo Thumbnail --}}
-                            <div style="width: 72px; height: 54px; flex-shrink: 0; border-radius: 3px; overflow: hidden; background-color: #DDD;">
+                            <div style="width: 88px; height: 65px; flex-shrink: 0; border-radius: 4px; overflow: hidden; background-color: #DDD;">
                                 <img src="{{ asset('images/station/ST' . $stn->id . '.webp') }}"
                                      loading="lazy"
                                      decoding="async"
@@ -194,8 +252,7 @@
 
                             {{-- Station Name --}}
                             <div style="flex: 1;
-                                        font-family: 'Courier Prime', monospace;
-                                        font-size: 0.65rem;
+                                        font-size: 0.8rem;
                                         font-weight: 700;
                                         text-transform: uppercase;
                                         letter-spacing: 1.5px;
@@ -205,9 +262,9 @@
                             </div>
 
                             {{-- Status Circle --}}
-                            <div style="width: 26px;
-                                        height: 26px;
-                                        min-width: 26px;
+                            <div style="width: 31px;
+                                        height: 31px;
+                                        min-width: 31px;
                                         border-radius: 50%;
                                         flex-shrink: 0;
                                         display: flex;
@@ -218,7 +275,7 @@
                                             ? 'border: 1.5px solid #111111;'
                                             : 'border: 1.5px solid #AAAAAA;' }}">
                                 @if($isCompleted)
-                                    <span style="color: #111111; font-size: 11px; font-weight: 700; line-height: 1;">✓</span>
+                                    <span style="color: #111111; font-size: 13px; font-weight: 700; line-height: 1;">✓</span>
                                 @endif
                             </div>
                         </div>
@@ -228,7 +285,7 @@
 
             {{-- Back to map button --}}
             <div class="mt-4 w-100">
-                <button type="button" onclick="showMapView()" class="mm-btn-black py-3" style="width: 100%; border-radius: 8px;">
+                <button type="button" onclick="showMapView()" class="mm-btn-black" style="width: 100%; border-radius: 8px;">
                     BACK TO MAP
                 </button>
             </div>
@@ -241,22 +298,22 @@
         <div class="modal-dialog modal-dialog-centered px-3" style="max-width: 380px;">
             <div class="modal-content text-center p-4" style="background-color: #FFFFFF; border-radius: 4px; border: 1px solid #111;">
                 {{-- Exclamation Icon --}}
-                <div class="mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; border-radius: 50%; border: 2px solid #111; font-family: 'Courier Prime', monospace; font-size: 1.5rem; font-weight: bold; color: #111;">
+                <div class="mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; border-radius: 50%; border: 2px solid #111; font-size: 1.5rem; font-weight: bold; color: #111;">
                     !
                 </div>
 
                 {{-- Modal Header --}}
-                <div style="font-family: 'Courier Prime', monospace; font-size: 1.05rem; letter-spacing: 2px; font-weight: 700; text-transform: uppercase; color: #111; margin-bottom: 1rem;">
+                <div style="font-size: 1.05rem; letter-spacing: 2px; font-weight: 700; text-transform: uppercase; color: #111; margin-bottom: 1rem;">
                     YOUR HOUSE OF MEMORIES
                 </div>
 
                 {{-- Modal Body Message --}}
-                <p style="font-family: 'Courier Prime', monospace; font-size: 0.8rem; line-height: 1.5; color: #444444; margin-bottom: 1.75rem;">
+                <p style="font-size: 0.8rem; line-height: 1.5; color: #444444; margin-bottom: 1.75rem;">
                     Complete all stations in the <br> Memory Map to proceed to the <br>Redemption Room
                 </p>
 
                 {{-- Close Button --}}
-                <button type="button" class="mm-btn-black py-2" data-bs-dismiss="modal">
+                <button type="button" class="mm-btn-black" data-bs-dismiss="modal" onclick="closeRedemptionModal()">
                     CLOSE
                 </button>
             </div>
@@ -266,6 +323,15 @@
     @push('scripts')
     <script>
         const completedCount = {{ $completedCount }};
+        let redemptionModalInstance = null;
+
+        function closeRedemptionModal() {
+            const modalEl = document.getElementById('redemptionAlertModal');
+            const instance = bootstrap.Modal.getInstance(modalEl) || redemptionModalInstance;
+            if (instance) {
+                instance.hide();
+            }
+        }
 
         function showPassportView() {
             document.getElementById('mapViewSection').classList.add('d-none');
@@ -282,8 +348,14 @@
         function handleStationClick(stationId, stationName, isRedemption) {
             if (isRedemption) {
                 if (completedCount < 5) {
-                    const modal = new bootstrap.Modal(document.getElementById('redemptionAlertModal'));
-                    modal.show();
+                    const modalEl = document.getElementById('redemptionAlertModal');
+                    if (!redemptionModalInstance) {
+                        redemptionModalInstance = new bootstrap.Modal(modalEl);
+                    }
+                    redemptionModalInstance.show();
+                    return;
+                } else {
+                    window.location.href = "{{ route('thankyou') }}";
                     return;
                 }
             }

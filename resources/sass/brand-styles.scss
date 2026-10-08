@@ -946,7 +946,6 @@ button.custom-btn.answer-btn.answer-btn-3 {
 //     border-radius: 2px !important;
 // }
 
-input::placeholder,
 p.footer {
     font-family: "Brevia";
     color: black;
@@ -1140,13 +1139,20 @@ body.main-background,
 .mm-page-bg {
     background-color: var(--mm-bg) !important;
     color: var(--mm-text-dark);
-    font-family: 'Courier Prime', 'Courier New', monospace;
+    font-family: 'Courier New', Courier, monospace;
+    line-height: normal;
     min-height: 100vh;
+}
+
+p, h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, a, span, label, input, textarea, select {
+    font-family: 'Courier New', Courier, monospace;
+    line-height: normal;
+    color: #111111;
 }
 
 .mm-branding-container {
     padding-top: 0;
-    padding-bottom: 1.25rem;
+    padding-bottom: 0 !important;
 
     .mm-logo-title {
         font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
@@ -1158,17 +1164,20 @@ body.main-background,
     }
 
     .mm-logo-subtitle {
-        font-family: 'Courier Prime', 'Courier New', monospace;
+        font-family: 'Courier New', Courier, monospace;
         font-size: 0.75rem;
         letter-spacing: 5px;
         font-weight: 700;
         color: #444444;
         text-transform: uppercase;
         margin-top: 4px;
+        line-height: normal;
     }
 }
 
 .mm-mobile-container {
+    font-family: 'Courier New', Courier, monospace;
+    line-height: normal;
     max-width: 440px;
     margin: 0 auto;
     padding: 1.5rem 1.25rem 1.5rem 1.25rem;
@@ -1190,7 +1199,7 @@ body.main-background,
     border: 1px solid #222222;
     padding: 10px 16px;
     text-align: center;
-    font-family: 'Courier Prime', monospace;
+    font-family: 'Courier New', Courier, monospace;
     font-size: 1.15rem;
     letter-spacing: 2px;
     font-weight: 700;
@@ -1198,6 +1207,7 @@ body.main-background,
     margin: 1.25rem auto 1rem auto;
     width: fit-content;
     max-width: 90%;
+    line-height: normal;
 }
 
 .mm-divider {
@@ -1208,19 +1218,19 @@ body.main-background,
 }
 
 .mm-page-title {
-    font-family: 'Courier Prime', monospace;
-    font-size: 1.75rem;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.75rem !important;
     font-weight: 400;
     letter-spacing: 2px;
     text-transform: uppercase;
     text-align: center;
     color: #111111;
-    margin: 1.25rem 0 1.25rem 0;
-    line-height: 1.25;
+    margin: 1.75rem 0 !important;
+    line-height: normal;
 }
 
 .mm-label {
-    font-family: 'Courier Prime', monospace;
+    font-family: 'Courier New', Courier, monospace;
     font-size: 0.8rem;
     letter-spacing: 1px;
     font-weight: 700;
@@ -1238,7 +1248,7 @@ body.main-background,
     border-bottom: 2px solid #222222;
     border-radius: 0px;
     padding: 0.6rem 1rem;
-    font-family: 'Courier Prime', monospace;
+    font-family: 'Courier New', Courier, monospace;
     font-size: 0.875rem;
     color: #111111;
     box-sizing: border-box;
@@ -1251,13 +1261,36 @@ body.main-background,
     }
 
     &::placeholder {
+        font-family: 'Courier New', Courier, monospace !important;
         color: #999999;
         font-size: 0.825rem;
     }
 }
 
+/* Global placeholder font-family */
+input::placeholder,
+textarea::placeholder,
+.form-control::placeholder,
+.mm-input::placeholder {
+    font-family: 'Courier New', Courier, monospace !important;
+}
+
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder,
+.form-control::-webkit-input-placeholder,
+.mm-input::-webkit-input-placeholder {
+    font-family: 'Courier New', Courier, monospace !important;
+}
+
+input::-moz-placeholder,
+textarea::-moz-placeholder,
+.form-control::-moz-placeholder,
+.mm-input::-moz-placeholder {
+    font-family: 'Courier New', Courier, monospace !important;
+}
+
 .mm-helper-text {
-    font-family: 'Courier Prime', monospace;
+    font-family: 'Courier New', Courier, monospace;
     font-size: 0.725rem;
     color: #D93838;
     margin-top: 0.45rem;
@@ -1266,7 +1299,7 @@ body.main-background,
 }
 
 .mm-error-text {
-    font-family: 'Courier Prime', monospace;
+    font-family: 'Courier New', Courier, monospace;
     font-size: 0.725rem;
     color: #D93838;
     margin-top: 0.45rem;
@@ -1275,7 +1308,7 @@ body.main-background,
 }
 
 .mm-checkbox-label {
-    font-family: 'Courier Prime', monospace;
+    font-family: 'Courier New', Courier, monospace;
     font-size: 0.725rem;
     line-height: 1.5;
     color: #444444;
@@ -1322,12 +1355,15 @@ body.main-background,
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 48px;
+    height: 35px !important;
+    min-height: 35px !important;
+    max-height: 35px !important;
+    padding: 0 1rem !important;
     background-color: #000000;
     color: #FFFFFF !important;
     border-radius: 8px !important;
-    font-family: 'Courier Prime', monospace;
-    font-size: 0.875rem;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.85rem;
     font-weight: 700;
     letter-spacing: 2px;
     text-transform: uppercase;
@@ -1358,13 +1394,20 @@ body.main-background,
 }
 
 .mm-btn-grey {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 35px !important;
+    min-height: 35px !important;
+    max-height: 35px !important;
+    padding: 0 1rem !important;
     background-color: #7D7D7D;
     color: #FFFFFF !important;
     border-radius: 23px;
 }
 
 .mm-link-sub {
-    font-family: 'Courier Prime', monospace;
+    font-family: 'Courier New', Courier, monospace;
     font-size: 0.7rem;
     letter-spacing: 1px;
     text-transform: uppercase;
@@ -1393,7 +1436,7 @@ body.main-background,
         border: 1px solid #D8D4CB;
         border-bottom: 2px solid #000000;
         text-align: center;
-        font-family: 'Courier Prime', monospace;
+        font-family: 'Courier New', Courier, monospace;
         font-size: 1.35rem;
         font-weight: 700;
         color: #000000;
@@ -1444,7 +1487,7 @@ body.main-background,
     }
 
     .mm-passport-name {
-        font-family: 'Courier Prime', monospace;
+        font-family: 'Courier New', Courier, monospace;
         font-size: 0.8rem;
         letter-spacing: 1.5px;
         font-weight: 700;
@@ -1512,7 +1555,7 @@ body.main-background,
         }
 
         .mm-circle-label {
-            font-family: 'Courier Prime', monospace;
+            font-family: 'Courier New', Courier, monospace;
             font-size: 0.7rem;
             letter-spacing: 1px;
             color: #333333;

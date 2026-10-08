@@ -252,7 +252,7 @@
 
                 {{-- Modal Body Message --}}
                 <p style="font-family: 'Courier Prime', monospace; font-size: 0.8rem; line-height: 1.5; color: #444444; margin-bottom: 1.75rem;">
-                    Kindly complete 5 stations in Memory Map to proceed to Gift Redemption station
+                    Complete all stations in the <br> Memory Map to proceed to the <br>Redemption Room
                 </p>
 
                 {{-- Close Button --}}

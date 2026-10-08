@@ -1,93 +1,18 @@
 @extends('layouts.admin')
 
 @section('content')
-    {{-- Event Attendance Summary Cards --}}
+    {{-- Customer Metric Summary Cards --}}
     <div class="row pt-2 mb-3">
-        <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
-            <div class="card shadow-sm border-0">
-                <div class="card-body p-3">
-                    <div class="row">
-                        <div class="col-8">
-                            <div class="numbers">
-                                <p class="text-xs mb-1 text-uppercase font-weight-bold text-muted">Upcoming Summary</p>
-                                <h4 class="font-weight-bolder text-primary mb-0">
-                                    {{ $data['upcomingSummaryCount'] ?? 0 }}
-                                </h4>
-                                <span class="text-xs text-secondary">Attending after current session</span>
-                            </div>
-                        </div>
-                        <div class="col-4 text-end">
-                            <div class="icon icon-shape bg-gradient-info shadow-info text-center rounded-circle">
-                                <i class="fa-solid fa-clock-rotate-left text-lg opacity-10" aria-hidden="true"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
-            <div class="card shadow-sm border-0">
-                <div class="card-body p-3">
-                    <div class="row">
-                        <div class="col-8">
-                            <div class="numbers">
-                                <p class="text-xs mb-1 text-uppercase font-weight-bold text-muted">Today Total Pax</p>
-                                <h4 class="font-weight-bolder text-success mb-0">
-                                    {{ $data['todayTotalPax'] ?? 0 }}
-                                </h4>
-                                <span class="text-xs text-secondary">Time slot basis total count</span>
-                            </div>
-                        </div>
-                        <div class="col-4 text-end">
-                            <div class="icon icon-shape bg-gradient-success shadow-success text-center rounded-circle">
-                                <i class="fa-solid fa-users text-lg opacity-10" aria-hidden="true"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
-            <div class="card shadow-sm border-0">
-                <div class="card-body p-3">
-                    <div class="row">
-                        <div class="col-8">
-                            <div class="numbers">
-                                <p class="text-xs mb-1 text-uppercase font-weight-bold text-muted">Missed Count</p>
-                                <h4 class="font-weight-bolder text-danger mb-0">
-                                    {{ $data['missedCount'] ?? 0 }}
-                                </h4>
-                                <span class="text-xs text-secondary">Accumulated past slots</span>
-                            </div>
-                        </div>
-                        <div class="col-4 text-end">
-                            <div class="icon icon-shape bg-gradient-danger shadow-danger text-center rounded-circle">
-                                <i class="fa-solid fa-user-slash text-lg opacity-10" aria-hidden="true"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row pt-2 d-none">
         <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-            <div class="card">
+            <div class="card shadow-sm border-0">
                 <div class="card-body p-3">
                     <div class="row">
                         <div class="col-8">
                             <div class="numbers">
-                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Total Customers</p>
-                                <h5 class="font-weight-bolder">
+                                <p class="text-xs mb-1 text-uppercase font-weight-bold text-muted">Total Customers</p>
+                                <h4 class="font-weight-bolder mb-0">
                                     {{ $data['usersCount'] }}
-                                </h5>
-                                {{-- <p class="mb-0">
-                                <span class="text-success text-sm font-weight-bolder">+55%</span>
-                                since yesterday
-                            </p> --}}
+                                </h4>
                             </div>
                         </div>
                         <div class="col-4 text-end">
@@ -100,19 +25,15 @@
             </div>
         </div>
         <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-            <div class="card">
+            <div class="card shadow-sm border-0">
                 <div class="card-body p-3">
                     <div class="row">
                         <div class="col-8">
                             <div class="numbers">
-                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Today's Customer</p>
-                                <h5 class="font-weight-bolder">
+                                <p class="text-xs mb-1 text-uppercase font-weight-bold text-muted">Today's Customer</p>
+                                <h4 class="font-weight-bolder mb-0">
                                     {{ $data['userToday'] }}
-                                </h5>
-                                {{-- <p class="mb-0">
-                                <span class="text-success text-sm font-weight-bolder">+3%</span>
-                                since last week
-                            </p> --}}
+                                </h4>
                             </div>
                         </div>
                         <div class="col-4 text-end">
@@ -125,19 +46,19 @@
             </div>
         </div>
         <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-            <div class="card">
+            <div class="card shadow-sm border-0">
                 <div class="card-body p-3">
                     <div class="row">
                         <div class="col-8">
                             <div class="numbers">
-                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Completion Rate</p>
-                                <h5 class="font-weight-bolder">
+                                <p class="text-xs mb-1 text-uppercase font-weight-bold text-muted">Completion Rate</p>
+                                <h4 class="font-weight-bolder mb-0">
                                     {{ $data['percentage'] }}%
-                                </h5>
+                                </h4>
                             </div>
                         </div>
                         <div class="col-4 text-end">
-                            <div class="icon icon-shape bg-gradient-success shadow-success text-center rounded-circle">
+                            <div class="icon icon-shape text-center rounded-circle text-white" style="background: linear-gradient(310deg, #11cdef 0%, #1171ef 100%) !important; box-shadow: 0 4px 6px -1px rgba(17, 205, 239, 0.4), 0 2px 4px -1px rgba(17, 205, 239, 0.2);">
                                 <i class="fa-solid fa-percent text-lg opacity-10" aria-hidden="true"></i>
                             </div>
                         </div>
@@ -146,15 +67,15 @@
             </div>
         </div>
         <div class="col-xl-3 col-sm-6">
-            <div class="card">
+            <div class="card shadow-sm border-0">
                 <div class="card-body p-3">
                     <div class="row">
                         <div class="col-8">
                             <div class="numbers">
-                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Customers Finished</p>
-                                <h5 class="font-weight-bolder">
+                                <p class="text-xs mb-1 text-uppercase font-weight-bold text-muted">Customers Finished</p>
+                                <h4 class="font-weight-bolder mb-0">
                                     {{ $data['completedUsers'] }}
-                                </h5>
+                                </h4>
                             </div>
                         </div>
                         <div class="col-4 text-end">
@@ -167,6 +88,33 @@
             </div>
         </div>
     </div>
+
+    {{-- Stations Overview --}}
+    @if(isset($data['stationList']) && count($data['stationList']) > 0)
+    <div class="row mb-3">
+        <div class="col-12 mb-2">
+            <h6 class="text-secondary font-weight-bolder ps-1 mb-0" style="font-size: 0.95rem;">Stations</h6>
+        </div>
+        @foreach ($data['stationList'] as $station)
+            <div class="col-xl-4 col-md-6 col-12 mb-3">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body p-3 d-flex align-items-center">
+                        <div class="me-3 flex-shrink-0" style="width: 52px; height: 52px; border-radius: 8px; overflow: hidden; background-color: #f8f9fa; display: flex; align-items: center; justify-content: center; border: 1px solid #edf2f7;">
+                            <img src="{{ asset('images/station/ST' . $station->id . '.webp') }}" 
+                                 onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1547887537-6158d64c35b3?auto=format&fit=crop&w=200&q=60';"
+                                 alt="{{ $station->name }}" 
+                                 style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div class="d-flex flex-column justify-content-center">
+                            <h6 class="text-xs font-weight-bold mb-1 text-uppercase text-dark" style="letter-spacing: 0.5px;">{{ $station->name }}</h6>
+                            <span class="text-xs text-secondary font-weight-bold">{{ $station->completed_users_count }} Users Completed</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+    @endif
 
 
 

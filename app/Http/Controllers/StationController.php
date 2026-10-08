@@ -30,11 +30,19 @@ class StationController extends Controller
 {
   public function index(Station $station)
   {
-    $user = StationUser::where("user_id", auth()->id())
+    $userId = auth()->id() ?? 1;
+    $user = StationUser::where("user_id", $userId)
       ->where("station_id", $station->id)
       ->exists();
 
-    return view("station", compact("station", "user"));
+    $totalStations = 8;
+    $completedCount = StationUser::where('user_id', $userId)
+      ->distinct('station_id')
+      ->count('station_id');
+
+    $allCompleted = ($completedCount >= 8);
+
+    return view("station", compact("station", "user", "allCompleted", "completedCount", "totalStations"));
   }
 
   public function verify(Request $request)
@@ -136,19 +144,42 @@ class StationController extends Controller
           ]);
       }
 
+      $totalStations = 8;
+      $completedCount = StationUser::where('user_id', $userId)
+          ->distinct('station_id')
+          ->count('station_id');
+
+      $isAllCompleted = ($completedCount >= 8);
+
       return response()->json([
           'success' => true,
           'message' => 'Station stamped successfully',
+          'is_all_completed' => $isAllCompleted,
+          'completed_count' => $completedCount,
+          'total_stations' => 8,
+          'redirect_url' => $isAllCompleted ? route('thankyou') : route('dashboard'),
       ]);
   }
 
   public function scan(Request $request)
   {
       $stationId = $request->input('station') ?? $request->input('station_id');
-      $qrCodeMessage = $request->input('qrCodeMessage');
+      $qrCodeMessage = trim((string)$request->input('qrCodeMessage'));
       $userId = Auth::id() ?? 1;
 
-      if ($qrCodeMessage && str_contains(strtolower($qrCodeMessage), 'invalid')) {
+      // Extract station ID from scanned QR message (e.g., "STATION_1", "1", "station/1", "ST1")
+      $scannedStationId = null;
+      if (is_numeric($qrCodeMessage)) {
+          $scannedStationId = (int)$qrCodeMessage;
+      } elseif (preg_match('/(?:station[_\-\/]|st[_\-\/]?)(\d+)/i', $qrCodeMessage, $matches)) {
+          $scannedStationId = (int)$matches[1];
+      } elseif ($matchedStation = Station::where('slug', strtolower($qrCodeMessage))->orWhere('name', 'LIKE', $qrCodeMessage)->first()) {
+          $scannedStationId = $matchedStation->id;
+      }
+
+      // If scanned station does not match the current station ID, reject as Invalid QR Code
+      if (($scannedStationId !== null && (int)$scannedStationId !== (int)$stationId) ||
+          ($qrCodeMessage && str_contains(strtolower($qrCodeMessage), 'invalid'))) {
           return response()->json([
               'success' => false,
               'message' => 'Invalid QR Code',
@@ -162,10 +193,26 @@ class StationController extends Controller
           ]);
       }
 
+      $currentStation = Station::find($stationId);
+      $totalStations = 8;
+      $completedCount = StationUser::where('user_id', $userId)
+          ->distinct('station_id')
+          ->count('station_id');
+
+      $isAllCompleted = ($completedCount >= 8);
+
+      // It must strictly be 8 completed stations to redirect to thank you:
+      $redirectUrl = ($isAllCompleted)
+          ? route('thankyou')
+          : route('station', ['station' => $stationId]);
+
       return response()->json([
           'success' => true,
           'message' => 'Check-in Successful',
-          'redirect_url' => route('station', ['station' => $stationId]),
+          'is_all_completed' => $isAllCompleted,
+          'completed_count' => $completedCount,
+          'total_stations' => 8,
+          'redirect_url' => $redirectUrl,
       ]);
   }
 
@@ -484,25 +531,26 @@ class StationController extends Controller
 
     //   dd($data['where']);
 
-    $usersWithSixStationUsers = \Schema::hasTable('station_users')
+    $totalStationsCount = \Schema::hasTable('stations') ? Station::count() : 8;
+
+    $customersFinishedAll = \Schema::hasTable('station_users')
       ? User::whereDoesntHave("roles", function ($q) use ($excludedCustomerRoles) {
           $q->whereIn("name", $excludedCustomerRoles);
         })
         ->whereDate("created_at", ">=", $startDate->toDateString())
-        ->has("stationUser", ">=", 3)
+        ->has("stationUser", ">=", $totalStationsCount)
         ->count()
       : 0;
-    // dd($usersWithSixStationUsers);
-    $data["completedUsers"] = $usersWithSixStationUsers;
-    // dd($usersWithSixStationUsers);
+
+    $data["completedUsers"] = $customersFinishedAll;
 
     if ($data["usersCount"] > 0) {
       $data["percentage"] = number_format(
-        ($usersWithSixStationUsers / $data["usersCount"]) * 100,
+        ($customersFinishedAll / $data["usersCount"]) * 100,
         2
       );
     } else {
-      $data["percentage"] = 0; // Avoid division by zero
+      $data["percentage"] = "0.00";
     }
     $userCounts = User::selectRaw("DATE(created_at) as date, COUNT(*) as count")
       ->whereDoesntHave("roles", function ($q) use ($excludedCustomerRoles) {
@@ -551,10 +599,19 @@ class StationController extends Controller
       }
     }
     $data["usersDaily"] = $userCountsArray;
-    // $completed = StationUser::w
 
     $hasStationUsers = \Schema::hasTable('station_users');
     $hasStations = \Schema::hasTable('stations');
+
+    $stationList = $hasStations
+      ? Station::orderBy('id')->get()->map(function ($stn) use ($hasStationUsers) {
+          $stn->completed_users_count = $hasStationUsers
+            ? StationUser::where('station_id', $stn->id)->distinct('user_id')->count('user_id')
+            : 0;
+          return $stn;
+        })
+      : collect();
+    $data['stationList'] = $stationList;
 
     $averageTimespentByStation = $hasStationUsers
       ? StationUser::select(
@@ -762,7 +819,9 @@ class StationController extends Controller
       })
       ->count();
 
-    $usersWithSixStationUsers = \Schema::hasTable('station_users')
+    $totalStationsCount = \Schema::hasTable('stations') ? Station::count() : 8;
+
+    $customersFinishedAll = \Schema::hasTable('station_users')
       ? User::whereDate(
           "created_at",
           ">=",
@@ -771,18 +830,18 @@ class StationController extends Controller
         ->whereDoesntHave("roles", function ($q) use ($excludedCustomerRoles) {
           $q->whereIn("name", $excludedCustomerRoles);
         })
-        ->has("stationUser", ">=", 5)
+        ->has("stationUser", ">=", $totalStationsCount)
         ->count()
       : 0;
-    $data["completedUsers"] = $usersWithSixStationUsers;
+    $data["completedUsers"] = $customersFinishedAll;
 
     if ($data["usersCount"] > 0) {
       $data["percentage"] = number_format(
-        ($usersWithSixStationUsers / $data["usersCount"]) * 100,
+        ($customersFinishedAll / $data["usersCount"]) * 100,
         2
       );
     } else {
-      $data["percentage"] = 0; // Avoid division by zero
+      $data["percentage"] = "0.00"; // Avoid division by zero
     }
 
     $averageTimespentByStation = \Schema::hasTable('station_users')

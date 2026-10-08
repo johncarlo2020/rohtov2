@@ -1,44 +1,54 @@
 <x-guest-layout>
-    <div class="mm-mobile-container justify-content-between">
-        <div>
-            {{-- Header --}}
-            @include('components.branding')
-
+    <div class="mm-mobile-container justify-content-between text-center">
+        {{-- Main Center Area --}}
+        <div class="w-100 my-auto py-2">
             {{-- Title Box --}}
-            <div class="text-center mt-4 mb-2">
-                <h1 style="font-family: 'Courier Prime', monospace; font-size: 1.25rem; letter-spacing: 2px; font-weight: 700; text-transform: uppercase; color: #111111; line-height: 1.4;">
+            <div class="text-center mb-3">
+                <h1 style="font-family: 'Courier Prime', monospace; font-size: 2rem; letter-spacing: 3px; font-weight: 400; text-transform: uppercase; color: #111111; line-height: 1.2; margin-bottom: 0.75rem;">
                     THANK YOU
                 </h1>
-                <p style="font-family: 'Courier Prime', monospace; font-size: 0.85rem; letter-spacing: 1.5px; font-weight: 700; text-transform: uppercase; color: #444444; margin-top: 4px;">
+                <p style="font-family: 'Courier Prime', monospace; font-size: 0.95rem; letter-spacing: 1.5px; font-weight: 400; text-transform: uppercase; color: #333333; line-height: 1.35; margin: 0;">
                     FOR VISITING<br>HOUSE OF MEMORIES
                 </p>
             </div>
 
             {{-- Divider Line --}}
-            <div class="mm-divider" style="margin: 1.5rem auto 2.5rem auto;"></div>
+            <div style="width: 54px; height: 1px; background-color: #888888; margin: 2rem auto 2.5rem auto;"></div>
 
-            {{-- Two Feature Icons (Image 5) --}}
-            <div class="mm-thankyou-icons">
+            {{-- Two Feature Icons --}}
+            <div class="mm-thankyou-icons" style="margin: 2rem 0; gap: 2.25rem;">
                 {{-- 1. Purchase Fragrance --}}
                 <a href="https://line.me/R/ti/p/@572ucrnz" target="_blank" rel="noopener noreferrer" class="mm-circle-btn">
-                    <div class="mm-circle-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                    <div class="mm-circle-icon" style="width: 86px; height: 86px; background-color: #000000; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 8h12l-1.5 12H7.5L6 8z"></path>
+                            <path d="M9 8V6a3 3 0 0 1 6 0v2"></path>
                         </svg>
                     </div>
-                    <div class="mm-circle-label">
+                    <div class="mm-circle-label" style="font-family: 'Courier Prime', monospace; font-size: 0.7rem; color: #666666; margin-top: 10px; text-transform: none;">
                         Purchase fragrance
                     </div>
                 </a>
 
-                {{-- 2. Store Around Me / Masterclass --}}
+                {{-- 2. Store Around Me --}}
                 <a href="{{ route('reservation.create') }}" class="mm-circle-btn">
-                    <div class="mm-circle-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    <div class="mm-circle-icon" style="width: 86px; height: 86px; background-color: #000000; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 32 32" fill="none" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M7 11h18"></path>
+                            <path d="M9 11V9a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v2"></path>
+                            <path d="M12 8V6.5a0.5 0.5 0 0 1 0.5-0.5h7a0.5 0.5 0 0 1 0.5 0.5V8"></path>
+                            <rect x="7" y="11" width="18" height="4" rx="0.5"></rect>
+                            <line x1="14" y1="13" x2="18" y2="13" stroke-width="1.2"></line>
+                            <path d="M8 15v11"></path>
+                            <path d="M13 15v11"></path>
+                            <path d="M19 15v11"></path>
+                            <path d="M24 15v11"></path>
+                            <line x1="8" y1="19" x2="13" y2="19"></line>
+                            <line x1="19" y1="19" x2="24" y2="19"></line>
+                            <path d="M6 26h20"></path>
                         </svg>
                     </div>
-                    <div class="mm-circle-label">
+                    <div class="mm-circle-label" style="font-family: 'Courier Prime', monospace; font-size: 0.7rem; color: #666666; margin-top: 10px; text-transform: none;">
                         Store around me
                     </div>
                 </a>
@@ -46,7 +56,7 @@
         </div>
 
         {{-- Bottom Logo --}}
-        <div class="w-100 mb-4 text-center">
+        <div class="w-100 text-center pb-2">
             @include('components.branding')
         </div>
     </div>

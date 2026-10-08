@@ -40,7 +40,7 @@ class AdminUserSeeder extends Seeder
                 'lname' => 'Admin',
                 'number' => '0123456788',
                 'country' => 'Malaysia',
-                'password' => Hash::make('LongChamp2026!'),
+                'password' => Hash::make('MaisonMargiela2026!'),
                 'marketing' => false,
                 'otp_verified' => true,
                 'email_verified_at' => now(),

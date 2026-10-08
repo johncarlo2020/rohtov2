@@ -121,11 +121,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Full Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Booking Date</th>
-                            <th>Booking Time</th>
-                            <th>Attendance Status</th>
+                            <th>Email Address</th>
                             <th>Registration Timestamp</th>
                             <th>Action</th>
                             <th class="export-col d-none">title</th>
@@ -156,27 +152,9 @@
                                 @endif
                             </td>
                             <td>{{ $user->email }}</td>
-                            <td>{{ $user->number ?? '-' }}</td>
-                            <td><span class="badge bg-light text-dark border">{{ $user->booking_date_text }}</span></td>
-                            <td><span class="badge bg-light text-dark border">{{ $user->booking_time_text }}</span></td>
-                            <td>
-                                @php
-                                    $status = $user->attendance_status ?? ($user->is_attended ? 'attended' : 'upcoming');
-                                @endphp
-                                @if($status === 'attended')
-                                    <span class="badge bg-success badge-attendance"><i class="fa-solid fa-check-circle me-1"></i>ATTENDED</span>
-                                    @if($user->attended_at_text)
-                                        <br><small class="text-muted" style="font-size: 10px;">{{ $user->attended_at_text }}</small>
-                                    @endif
-                                @elseif($status === 'cancelled')
-                                    <span class="badge bg-secondary badge-attendance"><i class="fa-solid fa-ban me-1"></i>CANCELLED</span>
-                                @elseif($status === 'missed')
-                                    <span class="badge bg-danger badge-attendance"><i class="fa-solid fa-circle-xmark me-1"></i>MISSED</span>
-                                @else
-                                    <span class="badge bg-warning text-dark badge-attendance"><i class="fa-solid fa-clock me-1"></i>UPCOMING</span>
-                                @endif
+                            <td data-order="{{ $user->created_at ? \Carbon\Carbon::parse($user->created_at)->timestamp : 0 }}">
+                                {{ \Carbon\Carbon::parse($user->created_at)->toDayDateTimeString() }}
                             </td>
-                            <td>{{ \Carbon\Carbon::parse($user->created_at)->toDayDateTimeString() }}</td>
                             <td class="button-delete text-center">
                                 @if($user->isProtectedAdmin())
                                     <button class="btn btn-secondary btn-sm btn-protected" disabled 
@@ -202,7 +180,7 @@
                             <td class="export-col d-none">{{ $user->booking_time_from ?? 'N/A' }}</td>
                             <td class="export-col d-none">{{ $user->booking_time_to ?? 'N/A' }}</td>
                             <td class="export-col d-none">{{ $user->booking_time_text ?? 'N/A' }}</td>
-                            <td class="export-col d-none">{{ strtoupper($status) }}</td>
+                            <td class="export-col d-none">{{ strtoupper($user->attendance_status ?? ($user->is_attended ? 'attended' : 'upcoming')) }}</td>
                             <td class="export-col d-none">{{ $user->created_at ? \Carbon\Carbon::parse($user->created_at)->toDateTimeString() : '' }}</td>
                         </tr>
                         @endforeach
@@ -562,12 +540,7 @@
         columnDefs: [
             {
                 orderable: false,
-                targets: 8 // Action/Delete column
-            },
-            {
-                targets: 4, // Preferred Location / Booking Date
-                width: '220px',
-                className: 'preferred-location-col'
+                targets: 4 // Action/Delete column
             }
         ],
 
@@ -745,9 +718,13 @@
         let start = $('#startDate').val();
         let end = $('#endDate').val();
 
-        // Registration Timestamp is at column index 7
-        let rawDateStr = data[7] ? String(data[7]).trim().replace(' ', 'T') : '';
+        // Registration Timestamp is at column index 3
+        let rawDateStr = data[3] ? String(data[3]).trim().replace(' ', 'T') : '';
         let rowDate = new Date(rawDateStr);
+
+        if (isNaN(rowDate.getTime())) {
+            return true;
+        }
 
         // Convert row date to YYYY-MM-DD (DATE ONLY)
         let rowDateOnly = rowDate.getFullYear() + '-' +

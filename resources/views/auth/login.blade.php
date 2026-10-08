@@ -5,9 +5,9 @@
             @include('components.branding')
 
             {{-- Title --}}
-            <div class="mm-page-title mt-2">
+            <h1 class="mm-page-title">
                 LOGIN
-            </div>
+            </h1>
 
             {{-- Login Form --}}
             <form method="POST" action="{{ route('login') }}">
@@ -35,7 +35,7 @@
 
                 {{-- Submit Button --}}
                 <div class="mt-4">
-                    <button type="submit" class="mm-btn-black">
+                    <button id="loginSubmitBtn" type="submit" class="mm-btn-black" disabled>
                         LOGIN
                     </button>
                 </div>
@@ -43,8 +43,32 @@
         </div>
 
         {{-- Footer Link --}}
-        <div class="mm-link-sub mb-3">
+        <div class="mm-link-sub">
             HAVEN'T? <a href="{{ route('register') }}">REGISTER HERE</a>
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const emailInput = document.getElementById('email');
+            const loginBtn = document.getElementById('loginSubmitBtn');
+
+            function isValidEmail(email) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            }
+
+            function checkLoginValidity() {
+                if (isValidEmail(emailInput.value.trim())) {
+                    loginBtn.disabled = false;
+                } else {
+                    loginBtn.disabled = true;
+                }
+            }
+
+            emailInput.addEventListener('input', checkLoginValidity);
+            checkLoginValidity();
+        });
+    </script>
+    @endpush
 </x-guest-layout>

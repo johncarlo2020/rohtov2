@@ -1,8 +1,5 @@
-<div class="mm-branding-container text-center py-4">
-    <div class="mm-logo-title">
-        Maison Margiela
-    </div>
-    <div class="mm-logo-subtitle">
-        PARIS
+<div>
+    <div class="branding mm-branding-container">
+        <img onclick="window.location.href='{{ route('dashboard') }}'" class="logo" src="{{ asset('images/brand/logo.webp') }}" alt="Brand Logo" />
     </div>
 </div>

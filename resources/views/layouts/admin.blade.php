@@ -78,47 +78,7 @@
                         </div>
                         <span class="nav-link-text ms-1">Users</span>
                     </a>
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('bookings') ? 'active' : '' }}" href="{{ route('bookings') }}">
-                        <div
-                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fa-solid fa-calendar-days text-primary text-sm opacity-10"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Bookings Calendar</span>
-                    </a>
                 </li>
-
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('scanner') ? 'active' : '' }}" href="{{ route('scanner') }}">
-                        <div
-                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fa-solid fa-barcode text-warning text-sm opacity-10"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Scanner</span>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('admin.vip*') ? 'active' : '' }}" href="{{ route('admin.vip') }}">
-                        <div
-                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fa-solid fa-crown text-warning text-sm opacity-10"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">VIP Management</span>
-                    </a>
-                </li>
-
-                @if(auth()->check() && auth()->user()->isSuperAdmin())
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('history.logs') ? 'active' : '' }}" href="{{ route('history.logs') }}">
-                        <div
-                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fa-solid fa-clock-rotate-left text-warning text-sm opacity-10"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">History Logs</span>
-                    </a>
-                </li>
-                @endif
             </ul>
         </div>
     </aside>

@@ -5,9 +5,9 @@
             @include('components.branding')
 
             {{-- Title --}}
-            <div class="mm-page-title mt-2">
+            <h1 class="mm-page-title">
                 VERIFY YOUR EMAIL
-            </div>
+            </h1>
 
             {{-- Subtitle --}}
             <div class="text-center mb-3">
@@ -50,8 +50,8 @@
 
                 {{-- Timer & Resend --}}
                 <div class="text-center mb-4">
-                    <span id="resendContainer" style="font-family: 'Courier Prime', monospace; font-size: 0.725rem; color: #666666;">
-                        Resend OTP in <span id="timer">60</span>s
+                    <span id="resendContainer" style="font-family: 'Courier Prime', monospace; font-size: 0.725rem; color: #555555;">
+                        Resend OTP in <span id="timer" style="color: #111111; font-weight: 700;">60</span>s
                     </span>
                     <a id="resendBtn" href="{{ route('resend.otp') }}" class="d-none" style="font-family: 'Courier Prime', monospace; font-size: 0.725rem; color: #000000; font-weight: 700; text-decoration: underline;">
                         Resend OTP Now
@@ -60,7 +60,7 @@
 
                 {{-- Submit Button --}}
                 <div class="mt-4">
-                    <button type="submit" class="mm-btn-black">
+                    <button id="verifyOtpBtn" type="submit" class="mm-btn-black" disabled>
                         VERIFY OTP
                     </button>
                 </div>
@@ -80,12 +80,18 @@
         document.addEventListener('DOMContentLoaded', function () {
             const digits = document.querySelectorAll('.mm-otp-digit');
             const hiddenInput = document.getElementById('fullOtpInput');
+            const verifyBtn = document.getElementById('verifyOtpBtn');
             const otpForm = document.getElementById('otpForm');
 
             function updateHiddenInput() {
                 let code = '';
-                digits.forEach(d => code += d.value);
+                digits.forEach(d => code += d.value.trim());
                 hiddenInput.value = code;
+                if (code.length === 6) {
+                    verifyBtn.disabled = false;
+                } else {
+                    verifyBtn.disabled = true;
+                }
             }
 
             digits.forEach((digit, index) => {

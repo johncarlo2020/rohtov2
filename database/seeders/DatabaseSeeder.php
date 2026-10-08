@@ -16,10 +16,8 @@ class DatabaseSeeder extends Seeder
         $this->call(StationSeeder::class);
         $this->call(CountriesTableSeeder::class);
         $this->call(AdminUserSeeder::class);
-        $this->call(PerfumeSeeder::class);
         $this->call(DeveloperProjectSeeder::class);
         $this->call(QuestionSeeder::class);
         $this->call(GiftsSeeder::class);
-        $this->call(VoucherSeeder::class);
     }
 }

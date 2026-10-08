@@ -25,7 +25,7 @@
 html, body {
   width: 100%;
   height: 100%;
-  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-family: 'Mulish', sans-serif;
   background: #D0D8E8;
   overflow: hidden;
 }
@@ -292,7 +292,7 @@ html, body {
    SCREEN TITLE  (shared by shuffle / result)
 ============================================================ */
 .screen-title {
-  font-family: 'Segoe UI Black', 'Arial Black', sans-serif;
+  font-family: 'Mulish', sans-serif;
   font-size: clamp(26px, 6.5vw, 42px);
   font-weight: 900;
   letter-spacing: 3px;

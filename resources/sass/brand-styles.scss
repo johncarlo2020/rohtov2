@@ -932,12 +932,12 @@ button.custom-btn.answer-btn.answer-btn-3 {
 
 input::placeholder,
 p.footer {
-    font-family: "Brevia";
+    font-family: $font-family;
     color: black; /* placeholder color */
 }
 
 .footer-wrapper p {
-    font-family: "Brevia";
+    font-family: $font-family;
     font-size: 10px;
     font-weight: 700;
 }
@@ -1117,4 +1117,509 @@ p.footer {
 
 img#badge {
     width: clamp(24px, 10vw, 44px);
+}
+
+/* ==========================================================================
+   MAISON MARGIELA PARIS - HOUSE OF MEMORIES BRANDING STYLES
+   ========================================================================== */
+
+:root {
+    --mm-bg: #F3F0EB;
+    --mm-card-bg: #F3F0EB;
+    --mm-text-dark: #1A1A1A;
+    --mm-text-muted: #555555;
+    --mm-red: #D93838;
+    --mm-border: #E0DDD7;
+    --mm-black: #000000;
+}
+
+html,
+body.main-background,
+.mm-page-bg {
+    background-color: var(--mm-bg) !important;
+    color: var(--mm-text-dark);
+    font-family: $font-family;
+    line-height: normal;
+    width: 100%;
+    min-height: 100%;
+    height: auto !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+}
+
+p,
+h1,
+.h1,
+h2,
+.h2,
+h3,
+.h3,
+h4,
+.h4,
+h5,
+.h5,
+h6,
+.h6,
+a,
+span,
+label,
+input,
+textarea,
+select {
+    font-family: $font-family;
+    line-height: normal;
+    color: #111111;
+}
+
+.mm-branding-container {
+    padding-top: 0;
+    padding-bottom: 0 !important;
+
+    .mm-logo-title {
+        font-family: $font-family;
+        font-size: 1.85rem;
+        letter-spacing: 1px;
+        font-weight: 500;
+        color: var(--mm-text-dark);
+        line-height: 1.1;
+    }
+
+    .mm-logo-subtitle {
+        font-family: $font-family;
+        font-size: 0.75rem;
+        letter-spacing: 5px;
+        font-weight: 700;
+        color: #444444;
+        text-transform: uppercase;
+        margin-top: 4px;
+        line-height: normal;
+    }
+}
+
+.mm-mobile-container {
+    font-family: $font-family;
+    line-height: normal;
+    max-width: 440px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 1.25rem 1.25rem 2rem 1.25rem;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    background-color: #F4F0EA;
+    box-sizing: border-box;
+
+    &.justify-content-between {
+        justify-content: flex-start !important;
+        gap: 1.25rem;
+    }
+
+    @media (max-height: 700px) {
+        padding-bottom: 1.25rem !important;
+    }
+
+    @media (min-height: 701px) and (max-height: 859px) {
+        padding-bottom: 2.5rem !important;
+    }
+
+    @media (min-height: 860px) and (max-height: 899px) {
+        padding-bottom: 4.5rem !important;
+    }
+
+    @media (min-height: 900px) and (max-height: 949px) {
+        padding-bottom: 5.5rem !important;
+    }
+
+    @media (min-height: 950px) and (max-height: 999px) {
+        padding-bottom: 7.5rem !important;
+    }
+
+    @media (min-height: 1000px) {
+        padding-bottom: 8.5rem !important;
+    }
+}
+
+.mm-box-header {
+    border: 1px solid #222222;
+    padding: 10px 16px;
+    text-align: center;
+    font-family: $font-family;
+    font-size: 1.15rem;
+    letter-spacing: 2px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin: 1.25rem auto 1rem auto;
+    width: fit-content;
+    max-width: 90%;
+    line-height: normal;
+}
+
+.mm-divider {
+    width: 60px;
+    height: 1px;
+    background-color: #999999;
+    margin: 0.75rem auto 1.25rem auto;
+}
+
+.mm-page-title {
+    font-family: $font-family;
+    font-size: 1.75rem !important;
+    font-weight: 400;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-align: center;
+    color: #111111;
+    margin: 1.75rem 0 !important;
+    line-height: normal;
+}
+
+.mm-label {
+    font-family: $font-family;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #111111;
+    margin-bottom: 0.45rem;
+    display: block;
+}
+
+.mm-input,
+.mm-select {
+    width: 100%;
+    height: 48px;
+    background-color: #FFFFFF;
+    border: none;
+    border-bottom: 2px solid #222222;
+    border-radius: 0px;
+    padding: 0.6rem 1rem;
+    font-family: $font-family;
+    font-size: 0.875rem;
+    color: #111111;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease;
+
+    &:focus {
+        outline: none;
+        border-bottom-color: #000000;
+        box-shadow: none !important;
+    }
+
+    &::placeholder {
+        font-family: $font-family !important;
+        color: #999999;
+        font-size: 0.825rem;
+    }
+}
+
+.mm-select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23111111' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 14px 14px;
+    cursor: pointer;
+}
+
+/* Global placeholder font-family */
+input::placeholder,
+textarea::placeholder,
+.form-control::placeholder,
+.mm-input::placeholder {
+    font-family: $font-family !important;
+}
+
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder,
+.form-control::-webkit-input-placeholder,
+.mm-input::-webkit-input-placeholder {
+    font-family: $font-family !important;
+}
+
+input::-moz-placeholder,
+textarea::-moz-placeholder,
+.form-control::-moz-placeholder,
+.mm-input::-moz-placeholder {
+    font-family: $font-family !important;
+}
+
+.mm-helper-text {
+    font-family: $font-family;
+    font-size: 0.725rem;
+    color: #D93838;
+    margin-top: 0.45rem;
+    line-height: 1.4;
+    font-style: normal;
+}
+
+.mm-error-text {
+    font-family: $font-family;
+    font-size: 0.725rem;
+    color: #D93838;
+    margin-top: 0.45rem;
+    line-height: 1.4;
+    font-weight: 700;
+}
+
+.mm-checkbox-label {
+    font-family: $font-family;
+    font-size: 0.725rem;
+    line-height: 1.5;
+    color: #444444;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+
+    input[type="checkbox"] {
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        border: 1px solid #777777;
+        background-color: #FFFFFF;
+        border-radius: 0px;
+        margin-top: 2px;
+        flex-shrink: 0;
+        cursor: pointer;
+        display: grid;
+        place-content: center;
+
+        &:checked {
+            background-color: #000000;
+            border-color: #000000;
+
+            &::before {
+                content: "✓";
+                color: #ffffff;
+                font-size: 11px;
+                font-weight: bold;
+            }
+        }
+    }
+
+    a {
+        color: #111111;
+        text-decoration: underline;
+        font-weight: 700;
+    }
+}
+
+.mm-btn-black {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 35px !important;
+    min-height: 35px !important;
+    max-height: 35px !important;
+    padding: 0 1rem !important;
+    background-color: #000000;
+    color: #FFFFFF !important;
+    border-radius: 8px !important;
+    font-family: $font-family;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: none;
+    text-decoration: none !important;
+    cursor: pointer;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+
+    &:hover,
+    &:focus {
+        background-color: #000000;
+        color: #FFFFFF !important;
+    }
+
+    &:active {
+        transform: scale(0.99);
+    }
+
+    &:disabled,
+    &.disabled,
+    &[disabled] {
+        background-color: #82807D !important;
+        color: #FFFFFF !important;
+        cursor: not-allowed !important;
+        pointer-events: none !important;
+        opacity: 1 !important;
+    }
+}
+
+.mm-btn-grey {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 35px !important;
+    min-height: 35px !important;
+    max-height: 35px !important;
+    padding: 0 1rem !important;
+    background-color: #7D7D7D;
+    color: #FFFFFF !important;
+    border-radius: 23px;
+}
+
+.mm-link-sub {
+    font-family: $font-family;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #333333;
+    text-align: center;
+    margin-top: 1.25rem;
+
+    a {
+        color: #000000;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+}
+
+/* OTP Digits Container */
+.mm-otp-inputs {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin: 1.5rem 0;
+
+    .mm-otp-digit {
+        width: 44px;
+        height: 48px;
+        background-color: #FFFFFF;
+        border: 1px solid #D8D4CB;
+        border-bottom: 2px solid #000000;
+        text-align: center;
+        font-family: $font-family;
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: #000000;
+        border-radius: 2px;
+
+        &:focus {
+            outline: none;
+            border-color: #000000;
+            box-shadow: none;
+        }
+    }
+}
+
+/* Memory Map & Passport */
+.mm-map-wrapper {
+    position: relative;
+    width: 100%;
+    background: #FFFFFF;
+    border: 1px solid var(--mm-border);
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+}
+
+.mm-passport-card {
+    display: flex;
+    align-items: center;
+    padding: 0.85rem 1rem;
+    background-color: #FFFFFF;
+    border: 1px solid var(--mm-border);
+    margin-bottom: 0.75rem;
+    border-radius: 4px;
+    gap: 12px;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+
+    &.completed {
+        border-color: #000000;
+        background-color: #FAF9F6;
+    }
+
+    .mm-passport-thumb {
+        width: 54px;
+        height: 54px;
+        border-radius: 4px;
+        object-fit: cover;
+        background-color: #EFECE6;
+        flex-shrink: 0;
+    }
+
+    .mm-passport-name {
+        font-family: $font-family;
+        font-size: 0.8rem;
+        letter-spacing: 1.5px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #111111;
+        flex-grow: 1;
+    }
+
+    .mm-passport-status {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        border: 1px solid #777777;
+        display: grid;
+        place-content: center;
+        flex-shrink: 0;
+
+        &.checked {
+            border-color: #000000;
+            background-color: #000000;
+            color: #FFFFFF;
+
+            &::after {
+                content: "✓";
+                font-size: 12px;
+            }
+        }
+    }
+}
+
+/* Thank You Feature Buttons */
+.mm-thankyou-icons {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin: 2.5rem 0;
+
+    .mm-circle-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-decoration: none;
+
+        .mm-circle-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #000000;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+            svg {
+                width: 34px;
+                height: 34px;
+                stroke-width: 1.5;
+            }
+        }
+
+        &:hover .mm-circle-icon {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .mm-circle-label {
+            font-family: $font-family;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            color: #333333;
+            margin-top: 10px;
+            text-align: center;
+            max-width: 110px;
+        }
+    }
 }

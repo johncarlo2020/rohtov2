@@ -6,7 +6,7 @@
         .login-page p,
         .login-page a,
         .login-page span {
-            font-family: 'GothamBold' !important;
+            font-family: 'Mulish', sans-serif !important;
         }
     </style>
     <div class="login-page vh-100">

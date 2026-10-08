@@ -28,7 +28,12 @@ class StationSeeder extends Seeder
         ]);
 
         Station::create([
-            'name' => 'Game',
+            'name' => 'Game - Goyang to win',
+            'description' => 'Visit our game booth <br> to join the fun',
+        ]);
+
+        Station::create([
+            'name' => 'Game - Catch the Beat',
             'description' => 'Visit our game booth <br> to join the fun',
         ]);
 

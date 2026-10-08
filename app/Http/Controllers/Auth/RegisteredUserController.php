@@ -36,54 +36,26 @@ class RegisteredUserController extends Controller
 
     //April 30 - May 11
       $default = [
-      "Bandar Dato' Onn",
-      "Bandar Tiram",
-      "Jalan Tun Abdul Razak",
-      "Danga Bay",
-      "Seri Austin",
-      "Taman Pelangi",
-      "Pasir Gudang",
-      "Skudai",
-      "Plaza Sentosa, Jalan Sutera, Taman Sentosa",
-      "Bandar UDA Utama",
-      "Taman Sedili, Kota Tinggi",
-      "Puteri Harbour, Iskandar Puteri",
-      "Taman Impian Emas, Skudai",
-      "Terra Heights @ Bukit Amber, Johor Bahru",
-      "R&F Tanjung Puteri",
-      "Taman Daya (TD)",
-      "Bandar Baru Kangkar Pulai (BBKP)",
-      "Tanjong Puteri Resort (TPR), Pasir Gudang",
-      "Bangsar South, Kuala Lumpur",
-      "Bukit Jalil, Kuala Lumpur",
-      "Bandar Johor Bahru",
-      "Taman Molek",
-      "Iskandar Puteri",
-      "Bandar Sunway Iskandar Puteri",
-      "Horizon Hills, Iskandar Puteri",
-      "Taman Sutera Utama, Skudai",
-      "Genting Indahputra, Kulai",
-      "Taman Bayu Damai, Pengerang, Johor",
-      "Bayu Puteri, Johor Bahru",
-      "Kota Syahbandar, Melaka",
-  ];
+          "Puchong Jaya",
+          "Bandar Klang",
+          "Cyberjaya",
+          "Petaling Jaya",
+          "Gamuda Cove",
+          "twentyfive7",
+          "Puncak Alam, Selangor",
+      ];
     
+      $allowedLocations = Project::query()
+          ->whereHas('developer')
+          ->distinct()
+          ->pluck('address')
+          ->all();
 
-  
-    $allowedLocations = collect($default)
-      ->shuffle()
-      ->all();
+      if (empty($allowedLocations)) {
+          $allowedLocations = $default;
+      }
 
-    $locations = Project::query()
-    ->whereIn('address', $allowedLocations)
-    ->whereHas('developer')
-    ->select('address')
-    ->distinct()
-    ->orderByRaw(
-        'FIELD(address,' . implode(',', array_fill(0, count($allowedLocations), '?')) . ')',
-        $allowedLocations
-    )
-    ->pluck('address');
+    $locations = collect($allowedLocations)->shuffle()->values()->all();
 
     return view("auth.register", compact("locations"));
   }
@@ -95,44 +67,25 @@ class RegisteredUserController extends Controller
    */
   public function store(Request $request): RedirectResponse
   {
-     $today = Carbon::today();
-
-      //April 30 - May 11
       $default = [
-      "Bandar Dato' Onn",
-      "Bandar Tiram",
-      "Jalan Tun Abdul Razak",
-      "Danga Bay",
-      "Seri Austin",
-      "Taman Pelangi",
-      "Pasir Gudang",
-      "Skudai",
-      "Plaza Sentosa, Jalan Sutera, Taman Sentosa",
-      "Bandar UDA Utama",
-      "Taman Sedili, Kota Tinggi",
-      "Puteri Harbour, Iskandar Puteri",
-      "Taman Impian Emas, Skudai",
-      "Terra Heights @ Bukit Amber, Johor Bahru",
-      "R&F Tanjung Puteri",
-      "Taman Daya (TD)",
-      "Bandar Baru Kangkar Pulai (BBKP)",
-      "Tanjong Puteri Resort (TPR), Pasir Gudang",
-      "Bangsar South, Kuala Lumpur",
-      "Bukit Jalil, Kuala Lumpur",
-      "Bandar Johor Bahru",
-      "Taman Molek",
-      "Iskandar Puteri",
-      "Bandar Sunway Iskandar Puteri",
-      "Horizon Hills, Iskandar Puteri",
-      "Taman Sutera Utama, Skudai",
-      "Genting Indahputra, Kulai",
-      "Taman Bayu Damai, Pengerang, Johor",
-      "Bayu Puteri, Johor Bahru",
-      "Kota Syahbandar, Melaka",
-  ];
+          "Puchong Jaya",
+          "Bandar Klang",
+          "Cyberjaya",
+          "Petaling Jaya",
+          "Gamuda Cove",
+          "twentyfive7",
+          "Puncak Alam, Selangor",
+      ];
 
-  
-      $allowedLocations = $default;
+      $allowedLocations = Project::query()
+          ->whereHas('developer')
+          ->distinct()
+          ->pluck('address')
+          ->all();
+
+      if (empty($allowedLocations)) {
+          $allowedLocations = $default;
+      }
 
     $validated = $request->validate([
       "fname" => ["required", "string", "max:255"],
@@ -141,6 +94,7 @@ class RegisteredUserController extends Controller
       "locations.*" => ["required", "string", Rule::in($allowedLocations)],
       "property_budget" => ["required", "string"],
       "marketing" => ["required", "string"],
+      "race" => ["required", "string"],
     ]);
 
     //check if user is an early bird
@@ -154,6 +108,7 @@ class RegisteredUserController extends Controller
       "email" => $validated["email"],
       "property_budget" => $validated["property_budget"],
       "marketing" => $validated["marketing"],
+      "race" => $validated["race"],
       "password" => Hash::make("password"),
       "is_early_bird" => !!$earlyBird,
       "source_of_channel" => $earlyBird?->source_of_channel,

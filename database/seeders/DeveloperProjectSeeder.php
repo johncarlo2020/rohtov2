@@ -17,173 +17,65 @@ class DeveloperProjectSeeder extends Seeder
         $developers = [
 
             1 => [
-                'name' => 'JLG',
+                'name' => 'L&G',
                 'projects' => [
-                    ['Sanubari', "Bandar Dato' Onn"],
-                    ['Onn Eight -3 Storey Shop Office N8', "Bandar Dato' Onn"],
-                    ['2 Storey Terrace Tiram', 'Bandar Tiram'],
+                    ['The WYN Residences', 'Puchong Jaya'],
                 ],
             ],
-            
+
             2 => [
-                'name' => 'WCT',
+                'name' => 'Paramount',
                 'projects' => [
-                    ['Adison @ W City Larkinton', 'Jalan Tun Abdul Razak'],
+                    ['Uptown Residences 2 @ Berkeley Uptown', 'Bandar Klang'],
+                    ['Sejati Residences', 'Cyberjaya'],
+                    ['The Atera', 'Petaling Jaya'],
                 ],
             ],
 
             3 => [
-                'name' => 'PGB',
+                'name' => 'Gamuda Land',
                 'projects' => [
-                    ['Calia Residences by PGB', 'Danga Bay'],
+                    ['The Clove', 'Gamuda Cove'],
+                    ['Mori Pines', 'Gamuda Cove'],
+                    ['Mio Spring', 'Gamuda Cove'],
+                    ['Quayside Plazas', 'Gamuda Cove'],
+                    ['Luxura Designer Courtyard', 'twentyfive7'],
+                    ['Link Villas', 'twentyfive7'],
+                    ['Levane Residences', 'twentyfive7'],
+                    ['The Clove Signature', 'twentyfive7'],
                 ],
             ],
 
             4 => [
-                'name' => 'MahSing',
+                'name' => 'Tropicana Alam',
                 'projects' => [
-                    ['M Minori', 'Seri Austin'],
-                    ['M Grand Minori', 'Taman Pelangi'],
-                    ['Meridin East', 'Pasir Gudang'],
-                    ['M Tiara', 'Skudai'],
-                ],
-            ],
-
-            5 => [
-                'name' => 'TSLaw',
-                'projects' => [
-                    ['Skyline (Eastside) @ OneSentosa', 'Plaza Sentosa, Jalan Sutera, Taman Sentosa'],
-                ],
-            ],
-
-            6 => [
-                'name' => 'UDA',
-                'projects' => [
-                    ['UDA Heights', 'Bandar UDA Utama'],
-                    ['UDA Sedili Residensi', 'Taman Sedili, Kota Tinggi'],
-                    ['UDA Mutiara Residence', 'Bandar UDA Utama'],
-                ],
-            ],
-
-            7 => [
-                'name' => 'Southern Marina',
-                'projects' => [
-                    ['Southern Marina Residences', 'Puteri Harbour, Iskandar Puteri'],
-                ],
-            ],
-
-            8 => [
-                'name' => 'Maxim',
-                'projects' => [
-                    ['Maxim The Address JB', 'Taman Pelangi'],
-                ],
-            ],
-
-            9 => [
-                'name' => 'Gunung Impian',
-                'projects' => [
-                    ['Iconia Garden Residence 2-Storey Terrace', 'Taman Impian Emas, Skudai'],
-                    ['Honeydale Residence 2-Storey Cluster', 'Taman Impian Emas, Skudai'],
-                ],
-            ],
-
-            10 => [
-                'name' => 'Tong Tor',
-                'projects' => [
-                    ['Rosewood II (Double Storey Terrace House)', 'Terra Heights @ Bukit Amber, Johor Bahru'],
-                    ['Rosewood I (Double Storey Semi-D Homes)', 'Terra Heights @ Bukit Amber, Johor Bahru'],
-                ],
-            ],
-
-            11 => [
-                'name' => 'R&F',
-                'projects' => [
-                    ['R&F Princess Cove', 'R&F Tanjung Puteri'],
-                ],
-            ],
-
-            12 => [
-                'name' => 'Keck Seng',
-                'projects' => [
-                    ['Daya 1 Residences - Serviced Apartments', 'Taman Daya (TD)'],
-                    ['Greenwoods Residence - 2 Storey Clusters, Semi-Dees & Link Bungalows', 'Taman Daya (TD)'],
-                    ['TD@CTIVE Lifestyle Square @ TD Central', 'Taman Daya (TD)'],
-                    ['TD Street - 2 Storey Shop Offices', 'Taman Daya (TD)'],
-                    ['Ruby Hills III - 2 Storey Clusters', 'Bandar Baru Kangkar Pulai (BBKP)'],
-                    ['Citrine Hills III - 2 Storey Terraces', 'Bandar Baru Kangkar Pulai (BBKP)'],
-                    ['Alysia III - 2 Storey Terraces', 'Tanjong Puteri Resort (TPR), Pasir Gudang'],
-                    ['Aster III - 1 Storey Terraces', 'Tanjong Puteri Resort (TPR), Pasir Gudang'],
-                ],
-            ],
-
-            13 => [
-                'name' => 'Malton',
-                'projects' => [
-                    ['River Park Bangsar South', 'Bangsar South, Kuala Lumpur'],
-                    ['Park Green Pavilion Bukit Jalil', 'Bukit Jalil, Kuala Lumpur'],
-                ],
-            ],
-
-            14 => [
-                'name' => 'Sunway',
-                'projects' => [
-                    ['Sunway Majestic', 'Bandar Johor Bahru'],
-                    ['Sunway LakeHills', 'Taman Molek'],
-                    ['Sunway Citrine Residences', 'Iskandar Puteri'],
-                    ['Sunway Sakura 2', 'Bandar Sunway Iskandar Puteri'],
-                ],
-            ],
-
-            15 => [
-                'name' => 'Horizon Hills',
-                'projects' => [
-                    ['Pavilion 2', 'Horizon Hills, Iskandar Puteri'],
-                ],
-            ],
-
-            16 => [
-                'name' => 'Tanah Sutera',
-                'projects' => [
-                    ['The Seed', 'Taman Sutera Utama, Skudai'],
-                    ['Sutera Garden Village (SGV)', 'Taman Sutera Utama, Skudai'],
-                ],
-            ],
-
-            17 => [
-                'name' => 'Genting',
-                'projects' => [
-                    ['Bayu Idaman', 'Genting Indahputra, Kulai'],
-                ],
-            ],
-
-            18 => [
-                'name' => 'KPRJ',
-                'projects' => [
-                    ['Jauhar Bayu Damai', 'Taman Bayu Damai, Pengerang, Johor'],
-                ],
-            ],
-
-            20 => [
-                'name' => 'Webest',
-                'projects' => [
-                    ['Southbay', 'Bayu Puteri, Johor Bahru'],
-                    ['29 Reserve', 'Kota Syahbandar, Melaka'],
+                    ['Avisa Residences', 'Puncak Alam, Selangor'],
                 ],
             ],
 
         ];
 
+        $newIds = array_keys($developers);
+        Project::whereNotIn('developer_id', $newIds)->delete();
+        Developer::whereNotIn('id', $newIds)->delete();
+
         foreach ($developers as $id => $data) {
 
-            $developer = Developer::create([
-                'id' => $id, // 👈 fixed custom ID
-                'name' => $data['name'],
-            ]);
+            $developer = Developer::updateOrCreate(
+                ['id' => $id],
+                ['name' => $data['name']]
+            );
+
+            $projectNames = collect($data['projects'])->pluck(0)->all();
+            Project::where('developer_id', $developer->id)
+                ->whereNotIn('name', $projectNames)
+                ->delete();
 
             foreach ($data['projects'] as $project) {
-                Project::create([
+                Project::updateOrCreate([
                     'developer_id' => $developer->id,
                     'name' => $project[0],
+                ], [
                     'address' => $project[1],
                 ]);
             }

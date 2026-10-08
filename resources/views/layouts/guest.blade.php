@@ -26,6 +26,8 @@
         {{ $slot }}
     </main>
 
+    @include('components.footer')
+
     <!-- Common JavaScript packages -->
     <x-scriptPackages />
 

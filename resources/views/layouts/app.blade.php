@@ -29,6 +29,8 @@
     <!-- Main content area where page-specific content will be injected -->
      {{ $slot }}
 
+    @include('components.footer')
+
     <!-- Common JavaScript packages -->
     <x-scriptPackages />
 

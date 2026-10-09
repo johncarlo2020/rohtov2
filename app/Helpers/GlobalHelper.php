@@ -116,13 +116,41 @@ class GlobalHelper
      */
     private static function sendOtpViaBrevo($email, $otp, $name = null, $otpType = 'Verification')
     {
-        $htmlContent = self::otpEmailContent($otp, $name,$otpType);
+        $baseUrl = config('app.url');
+        if (empty($baseUrl) || str_contains($baseUrl, '.test') || str_contains($baseUrl, 'localhost')) {
+            $baseUrl = 'https://houseofmemoriespassport.com';
+        }
 
-        $response = Http::withHeaders([
-            'accept' => 'application/json',
-            'api-key' => config('services.brevo.api_key'),
-            'content-type' => 'application/json',
-        ])->post('https://api.brevo.com/v3/smtp/email', [
+        $attachments = [];
+        $logoFile = public_path('images/brand/logo.webp');
+
+        if (file_exists($logoFile)) {
+            $im = @imagecreatefromwebp($logoFile);
+            if ($im !== false) {
+                ob_start();
+                imagepng($im);
+                $pngData = ob_get_clean();
+                imagedestroy($im);
+
+                $attachments[] = [
+                    'name' => 'logo.png',
+                    'content' => base64_encode($pngData),
+                ];
+                $logoUrl = 'cid:logo.png';
+            } else {
+                $logoUrl = rtrim($baseUrl, '/') . '/images/brand/logo.webp';
+            }
+        } else {
+            $logoUrl = rtrim($baseUrl, '/') . '/images/brand/logo.webp';
+        }
+
+        try {
+            $htmlContent = view('emails.otp', ['otp' => $otp, 'logoUrl' => $logoUrl])->render();
+        } catch (\Throwable $e) {
+            $htmlContent = self::otpEmailContent($otp, $name, $otpType);
+        }
+
+        $brevoPayload = [
             'sender' => [
                 'name' => config('services.brevo.from_name'),
                 'email' => config('services.brevo.from_email'),
@@ -135,13 +163,23 @@ class GlobalHelper
                 ],
             ],
 
-            'subject' => "Your {$otpType} OTP",
+            'subject' => "House of Memories - OTP Verification",
             'htmlContent' => $htmlContent,
             'textContent' => "Your {$otpType} OTP is: {$otp}. This code will expire in 10 minutes.",
             'tags' => [
                 'registration-otp',
             ],
-        ]);
+        ];
+
+        if (!empty($attachments)) {
+            $brevoPayload['attachment'] = $attachments;
+        }
+
+        $response = Http::withHeaders([
+            'accept' => 'application/json',
+            'api-key' => config('services.brevo.api_key'),
+            'content-type' => 'application/json',
+        ])->post('https://api.brevo.com/v3/smtp/email', $brevoPayload);
 
         if ($response->failed()) {
             throw new \Exception(
@@ -174,20 +212,30 @@ class GlobalHelper
     private static function otpEmailContent($otp, $name = null, $otpType = 'Verification')
     {
         $name = e($name ?? 'there');
+        $logoUrl = asset('images/brand/logo.webp');
 
         return "
+            <!DOCTYPE html>
             <html>
-                <body>
-                    <h2>Email Verification</h2>
-                    <p>Hello {$name},</p>
-                    <p>Your verification code is:</p>
-                    <h1 style=\"letter-spacing: 5px;\">{$otp}</h1>
-                    <p>This OTP will expire in 10 minutes.</p>
-                    <p>
-                        If you did not request this code,
-                        please ignore this email.
-                    </p>
-                </body>
+            <head>
+                <style>
+                    body, div, p, h1, h2, span { font-family: 'Courier New', Courier, monospace !important; }
+                </style>
+            </head>
+            <body style=\"font-family: 'Courier New', Courier, monospace; background-color: #F4F0EA; margin: 0; padding: 40px 10px; color: #111111;\">
+                <div style=\"max-width: 440px; margin: 0 auto; background-color: #FAF8F5; border: 1px solid #E0DDD7; padding: 35px 25px; text-align: center;\">
+                    <img src=\"{$logoUrl}\" alt=\"Logo\" style=\"max-width: 160px; height: auto; margin: 0 auto 25px auto; display: block;\" />
+                    <div style=\"font-size: 13px; text-align: left; margin-bottom: 20px;\">Dear {$name},</div>
+                    <div style=\"font-size: 12px; line-height: 1.6; color: #333333; margin-bottom: 30px;\">
+                        You recently requested a One-Time Pin (OTP) for verification.<br>
+                        Enter the OTP shown below to proceed.
+                    </div>
+                    <div style=\"font-size: 32px; letter-spacing: 8px; font-weight: bold; color: #000000; margin: 25px 0;\">{$otp}</div>
+                    <div style=\"font-size: 11px; color: #777777; margin-top: 30px;\">
+                        This OTP is valid for 10 minutes.<br>Thank you
+                    </div>
+                </div>
+            </body>
             </html>
         ";
     }
@@ -301,7 +349,7 @@ class GlobalHelper
             $timeFormatted = 'N/A';
         }
 
-        $venue = 'LONGCHAMP POP-UP STORE THE GARDENS MALL';
+        $venue = 'HOUSE OF MEMORIES';
 
         // Retrieve user ID if available
         $user = \App\Models\User::where('email', $email)->first();
@@ -325,12 +373,12 @@ class GlobalHelper
         $actionText = $isModification ? 'UPDATED' : 'CONFIRMED';
 
         $subject = $isModification
-            ? 'Booking Modification - Longchamp x Caroline Helain'
-            : 'Booking Confirmation - Longchamp x Caroline Helain';
+            ? 'Booking Modification - House of Memories'
+            : 'Booking Confirmation - House of Memories';
 
         $baseUrl = config('app.url');
         if (empty($baseUrl) || str_contains($baseUrl, '.test') || str_contains($baseUrl, 'localhost')) {
-            $baseUrl = 'https://workshopbooking.longchamppopupmy.com';
+            $baseUrl = 'https://houseofmemoriespassport.com';
         }
 
         // Prepare inline CID attachments for Brevo API so images render natively in Gmail/Yahoo
@@ -383,12 +431,12 @@ class GlobalHelper
         ])->render();
 
         $textContent = $isModification
-            ? "Your Longchamp x Caroline Hélain booking has been updated. "
+            ? "Your House of Memories booking has been updated. "
             . "Date: {$dateFormatted}. "
             . "Time: {$timeFormatted}. "
             . "Reference: {$booking->reference_no}. "
             . "Venue: {$venue}."
-            : "Your Longchamp x Caroline Hélain booking is confirmed. "
+            : "Your House of Memories booking is confirmed. "
             . "Date: {$dateFormatted}. "
             . "Time: {$timeFormatted}. "
             . "Reference: {$booking->reference_no}. "

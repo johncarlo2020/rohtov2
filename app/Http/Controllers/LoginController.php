@@ -53,11 +53,9 @@ class LoginController extends Controller
         ]);
 
         try {
-            Mail::send('emails.otp', ['otp' => $otp], function ($message) use ($email) {
-                $message->to($email)->subject('Maison Margiela - OTP Verification');
-            });
+            \App\Helpers\GlobalHelper::sendOtpEmail($email, $otp, $user->fname ?? 'Customer', 'Verification');
         } catch (\Throwable $e) {
-            \Log::info("Maison Margiela OTP for {$email}: {$otp}");
+            \Log::error("[LOGIN OTP FAILED] {$email}: " . $e->getMessage());
         }
 
         return redirect()->route('otp');

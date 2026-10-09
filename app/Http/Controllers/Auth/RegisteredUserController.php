@@ -78,13 +78,11 @@ class RegisteredUserController extends Controller
             'is_login' => false,
         ]);
 
-        // Attempt sending email (catch exceptions to avoid breaking dev environment)
+        // Attempt sending email via GlobalHelper (Brevo API)
         try {
-            Mail::send('emails.otp', ['otp' => $otp], function ($message) use ($email) {
-                $message->to($email)->subject('Maison Margiela - OTP Verification');
-            });
+            \App\Helpers\GlobalHelper::sendOtpEmail($email, $otp, $fname, 'Verification');
         } catch (\Throwable $e) {
-            \Log::info("Maison Margiela OTP for {$email}: {$otp}");
+            \Log::error("[REGISTER OTP FAILED] {$email}: " . $e->getMessage());
         }
 
         return redirect()->route('otp');

@@ -385,15 +385,12 @@ class GlobalHelper
         $attachments = [];
         $bannerFile  = public_path('images/brand/email_banner.jpg');
         if (!file_exists($bannerFile)) {
-            $bannerFile = public_path('images/brand/email_banner.webp');
+            $bannerFile = public_path('images/brand/email_banner.png');
         }
 
-        $logoFile = public_path('images/brand/bot_logo.png');
-        if (!file_exists($logoFile)) {
-            $logoFile = public_path('images/brand/bot_logo.webp');
-        }
+        $logoFile = public_path('images/brand/logo.webp');
 
-        if (file_exists($bannerFile)) {
+        if (file_exists($bannerFile) && !str_ends_with(strtolower($bannerFile), '.webp')) {
             $bannerName = basename($bannerFile);
             $attachments[] = [
                 'name' => $bannerName,
@@ -405,14 +402,23 @@ class GlobalHelper
         }
 
         if (file_exists($logoFile)) {
-            $logoName = basename($logoFile);
-            $attachments[] = [
-                'name' => $logoName,
-                'content' => base64_encode(file_get_contents($logoFile)),
-            ];
-            $bottomLogo = 'cid:' . $logoName;
+            $im = @imagecreatefromwebp($logoFile);
+            if ($im !== false) {
+                ob_start();
+                imagepng($im);
+                $pngData = ob_get_clean();
+                imagedestroy($im);
+
+                $attachments[] = [
+                    'name' => 'logo.png',
+                    'content' => base64_encode($pngData),
+                ];
+                $bottomLogo = 'cid:logo.png';
+            } else {
+                $bottomLogo = rtrim($baseUrl, '/') . '/images/brand/logo.webp';
+            }
         } else {
-            $bottomLogo = rtrim($baseUrl, '/') . '/images/brand/bot_logo.webp';
+            $bottomLogo = rtrim($baseUrl, '/') . '/images/brand/logo.webp';
         }
 
         $qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' . urlencode($qrRawData);

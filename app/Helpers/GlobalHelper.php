@@ -103,12 +103,20 @@ class GlobalHelper
     public static function sendOtpEmail($email, $otp, $name = null, $otpType = 'Verification')
     {
         $provider = config('services.mail_otp_provider', 'mailtrap');
+        \Log::info("[OTP EMAIL] Attempting to send OTP email to {$email} using provider [{$provider}]");
 
-        if ($provider === 'brevo') {
-            return self::sendOtpViaBrevo($email, $otp, $name,$otpType);
+        try {
+            if ($provider === 'brevo') {
+                return self::sendOtpViaBrevo($email, $otp, $name, $otpType);
+            }
+            return self::sendOtpViaMailtrap($email, $otp, $name, $otpType);
+        } catch (\Throwable $e) {
+            \Log::error("[OTP EMAIL EXCEPTION] Failed sending OTP email to {$email}: " . $e->getMessage(), [
+                'email' => $email,
+                'provider' => $provider,
+            ]);
+            throw $e;
         }
-
-        return self::sendOtpViaMailtrap($email, $otp, $name,$otpType);
     }
 
     /**
@@ -116,6 +124,22 @@ class GlobalHelper
      */
     private static function sendOtpViaBrevo($email, $otp, $name = null, $otpType = 'Verification')
     {
+        $apiKey = config('services.brevo.api_key');
+        $fromEmail = config('services.brevo.from_email');
+        $fromName = config('services.brevo.from_name');
+
+        if (empty($apiKey)) {
+            $msg = "[BREVO OTP ERROR] BREVO_API_KEY is empty or missing! Please check your live .env file and run 'php artisan config:clear'.";
+            \Log::error($msg);
+            throw new \Exception($msg);
+        }
+
+        if (empty($fromEmail)) {
+            $msg = "[BREVO OTP ERROR] BREVO_FROM_EMAIL / MAIL_FROM_ADDRESS is empty! Check your live .env.";
+            \Log::error($msg);
+            throw new \Exception($msg);
+        }
+
         $baseUrl = config('app.url');
         if (empty($baseUrl) || str_contains($baseUrl, '.test') || str_contains($baseUrl, 'localhost')) {
             $baseUrl = 'https://houseofmemoriespassport.com';
@@ -147,13 +171,14 @@ class GlobalHelper
         try {
             $htmlContent = view('emails.otp', ['otp' => $otp, 'logoUrl' => $logoUrl])->render();
         } catch (\Throwable $e) {
+            \Log::warning("[BREVO OTP WARNING] Failed to render view('emails.otp'): " . $e->getMessage() . ". Using fallback template.");
             $htmlContent = self::otpEmailContent($otp, $name, $otpType);
         }
 
         $brevoPayload = [
             'sender' => [
-                'name' => config('services.brevo.from_name'),
-                'email' => config('services.brevo.from_email'),
+                'name' => $fromName ?: 'House of Memories',
+                'email' => $fromEmail,
             ],
 
             'to' => [
@@ -175,19 +200,36 @@ class GlobalHelper
             $brevoPayload['attachment'] = $attachments;
         }
 
+        \Log::info("[BREVO OTP REQUEST] Sending request to Brevo API for {$email}...", [
+            'sender_email' => $fromEmail,
+            'sender_name' => $fromName,
+            'api_key_snippet' => substr($apiKey, 0, 10) . '...'
+        ]);
+
         $response = Http::withHeaders([
             'accept' => 'application/json',
-            'api-key' => config('services.brevo.api_key'),
+            'api-key' => $apiKey,
             'content-type' => 'application/json',
-        ])->post('https://api.brevo.com/v3/smtp/email', $brevoPayload);
+        ])
+        ->connectTimeout(5)
+        ->timeout(15)
+        ->post('https://api.brevo.com/v3/smtp/email', $brevoPayload);
 
         if ($response->failed()) {
-            throw new \Exception(
-                'Brevo failed to send OTP email: ' . $response->body()
-            );
+            $errorMsg = "[BREVO OTP API FAILED] HTTP {$response->status()}: " . $response->body();
+            \Log::error($errorMsg, [
+                'recipient' => $email,
+                'sender' => $fromEmail,
+                'response_status' => $response->status(),
+                'response_body' => $response->body()
+            ]);
+            throw new \Exception($errorMsg);
         }
 
-        return $response->json();
+        $resData = $response->json();
+        \Log::info("[BREVO OTP SUCCESS] Successfully sent OTP to {$email}. Brevo Message ID: " . ($resData['messageId'] ?? 'N/A'));
+
+        return $resData;
     }
 
     /**

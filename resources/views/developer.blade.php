@@ -191,8 +191,8 @@
         }
 
         .station-image {
-            width: 70vw;
-            height: 25vh;
+            width: 50vw;
+            height: 15vh;
             object-fit: contain;
         }
     </style>

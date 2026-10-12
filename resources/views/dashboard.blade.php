@@ -184,13 +184,12 @@
                 <div class="modal-content card modal-parent">
                     <div class="modal-body">
                         <div class="text-center content">
-                            {{-- <img class="mx-auto mb-4 check" id="badge" src="{{ asset('images/error.png') }}"
-                                style="filter:brightness(0);"> --}}
-
                             <div class="mt-4 mb-4 text-content">
-                                <p>
-                                    Unlock this by completing<br>
-                                    your visits to 3 developer stations.
+                                <p style="color: #205493; font-weight: 500; font-size: 0.95rem; line-height: 1.45;">
+                                    Complete<br>
+                                    3 Developers' Booth Quizzes<br>
+                                    + 2 Game + Lucky Draw to<br>
+                                    complete the journey.
                                 </p>
                             </div>
 
@@ -257,11 +256,11 @@
                     @php
                         $image = asset("images/station/ST{$station->id}.webp");
 
-                        $isLocked = ($station->id == 1 && !$canAccessStation);
+                        $isLocked = ($station->id == 2 && !$canAccessStation);
                     @endphp
 
-                    {{-- 🚫 HIDE station 3 if NOT early bird --}}
-                    @if ($station->id == 3 && !auth()->user()->is_early_bird)
+                    {{-- 🚫 HIDE station 1 if NOT early bird --}}
+                    @if ($station->id == 1 && !auth()->user()->is_early_bird)
                         @continue
                     @endif
 
@@ -305,7 +304,7 @@
 
         @php
             $earlyBird = auth()->user()->is_early_bird;
-            $completedStation4 = auth()->user()->stationUser()->where('station_id', 3)->exists();
+            $completedStation4 = auth()->user()->stationUser()->where('station_id', 1)->exists();
             $showEarlyBirdModal = $earlyBird;
         @endphp
 
@@ -342,44 +341,32 @@
         @endif
 
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                let canAccessStation5 = @json($canAccessStation5);
-                let canAccessStation = @json($canAccessStation);
+            let canAccessStation5 = @json($canAccessStation5 ?? false);
+            let canAccessStation = @json($canAccessStation ?? false);
 
-            
-                
+            window.gotoStamping = function(id) {
+                var url = "{{ route('station', ['station' => ':id']) }}".replace(":id", id);
+                window.location.href = url;
+            };
 
-                window.gotoStamping = function(id, ) {
-                    var url = "{{ route('station', ['station' => ':id']) }}".replace(
-                        ":id", id
-                    );
-                    window.location.href = url;
-                }
+            window.gotoQuiz = function(id) {
+                var url = "{{ route('developer', ['developer' => ':id']) }}".replace(":id", id);
+                window.location.href = url;
+            };
 
-                window.gotoQuiz = function(id, ) {
-                    var url = "{{ route('developer', ['developer' => ':id']) }}".replace(
-                        ":id", id
-                    );
-                    // Redirect to the generated URL
-                    window.location.href = url;
-                }
-
-                window.gotoStation = function(id, ) {
-                    var url = "{{ route('station', ['station' => ':id']) }}".replace(
-                        ":id",
-                        id
-                    );
-
-                    if (id == 1 && !canAccessStation) {
-                        // Show the not allowed modal if trying to access station 3 without permission
-                        var notAllowedModal = new bootstrap.Modal(document.getElementById('notAllowedModal'));
+            window.gotoStation = function(id) {
+                if (id == 2 && !canAccessStation) {
+                    var modalEl = document.getElementById('notAllowedModal');
+                    if (modalEl) {
+                        var notAllowedModal = bootstrap.Modal.getOrCreateInstance(modalEl);
                         notAllowedModal.show();
-                        return;
                     }
-
-                    // Redirect to the generated URL
-                    window.location.href = url;
+                    return;
                 }
+
+                var url = "{{ route('station', ['station' => ':id']) }}".replace(":id", id);
+                window.location.href = url;
+            };
         </script>
     @endpush
 </x-app-layout>

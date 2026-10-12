@@ -19,20 +19,6 @@
     }
 }
 
-@keyframes breathing {
-    0% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.1);
-    }
-
-    100% {
-        transform: scale(1);
-    }
-}
-
 .animate-entry {
     animation: fadeInUp 0.8s ease-out forwards;
     opacity: 0; // Start hidden, animation will make it visible
@@ -43,7 +29,7 @@
 }
 
 .breathing {
-    animation: breathing 2s infinite;
+    animation: none !important;
 }
 
 /* Animation Delay Utilities */

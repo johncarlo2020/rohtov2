@@ -55,10 +55,10 @@
             Stamp Collected!</h2> --}}
         </div>
         <div class="station-selection-container mb-2 animate-entry delay-2">
-            @if(request()->segment(2) == 2)
-                <h2 class="text-center mb-3 mt-5 booth-description">Win the game and get a stamp <br> to unlock a prize</h2>
-            @else
+            @if(request()->segment(3) == 2)
                 <h2 class="text-center mb-3 mt-5 booth-description">Lucky Draw Booth</h2>  
+            @else
+               <h2 class="text-center mb-3 mt-5 booth-description">Win the game and get a stamp <br> to unlock a prize</h2>
             @endif
             <!-- Center image (middle area) -->
             <div class="row">
@@ -111,7 +111,7 @@
                     stampingPage.classList.add("active");
                     const text = document.querySelector(".booth-description");
                     const doneBooth = document.querySelector(".done-booth");
-                        if(stationid == 2)
+                        if(stationid == 3 || stationid == 4)
                         {
                             text.innerHTML = "Conratulations!<br>You've won the game.";
                             doneBooth.innerHTML = "Please redeem the prize from our crew";
@@ -151,7 +151,7 @@
                 // Toggle grayscale removal
                 // Only trigger once
 
-                let requiredCount = 3;
+                let requiredCount = 1;
 
                 // if (stationid == 2) 
                 // {
@@ -199,7 +199,7 @@
                             const text = document.querySelector(".booth-description");
                             const doneBooth = document.querySelector(".done-booth");
 
-                            if(stationid == 2)
+                            if(stationid == 3 || stationid == 4)
                             {
                                 text.innerHTML = "Congratulations!<br>You've won the game.";
                                 doneBooth.innerHTML = "Please redeem the prize from our crew";

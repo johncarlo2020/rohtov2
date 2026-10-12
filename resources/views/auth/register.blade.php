@@ -278,7 +278,7 @@
 
                             <div class="mb-0 text-center">
                                 <button id="submitButton" type="submit"
-                                    class="mt-4 custom-btn custom-btn-primary pulse-slow" :disabled="!agreed"
+                                    class="mt-4 custom-btn custom-btn-primary" :disabled="!agreed"
                                     :class="{ 'opacity-50': !agreed }">
                                     {{ __('SUBMIT') }}
                                 </button>

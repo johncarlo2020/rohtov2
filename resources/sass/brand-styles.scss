@@ -954,23 +954,8 @@ p.footer {
     margin: auto;
 }
 
-@keyframes slow-pulse {
-    0% {
-        transform: scale(1);
-        opacity: 1;
-    }
-    50% {
-        transform: scale(1.03); /* smaller scale for subtle effect */
-        opacity: 0.85;
-    }
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
 .pulse-slow {
-    animation: slow-pulse 3s infinite; /* slower duration */
+    animation: none !important;
 }
 
 .dashboard {
@@ -1169,7 +1154,6 @@ textarea,
 select {
     font-family: $font-family;
     line-height: normal;
-    color: #111111;
 }
 
 .mm-branding-container {

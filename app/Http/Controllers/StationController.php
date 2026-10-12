@@ -40,6 +40,14 @@ class StationController extends Controller
 
     $perfumes = Perfume::select("id", "title")->get();
 
+    if ($station->id == 1) {
+      $developersCompleted = auth()->user()->developers->isNotEmpty() && auth()->user()->developers->every(fn($d) => $d->pivot->isCompleted == 1);
+      $gamesCompleted = auth()->user()->stationUser()->whereIn('station_id', [2, 3])->distinct('station_id')->count('station_id') >= 2;
+      if (!$developersCompleted || !$gamesCompleted) {
+        return redirect()->route('dashboard');
+      }
+    }
+
     if ($station->id == 9 && $user == true) {
       return view("congrats");
     }
@@ -163,11 +171,13 @@ class StationController extends Controller
       return !$user->stationUser()->where("station_id", $station->id)->exists();
     });
 
-    $canAccessStation = auth()
-      ->user()
-      ->developers->every(function ($developer) {
-        return $developer->pivot->isCompleted == 1;
-      });
+    $developersCompleted = auth()->user()->developers->isNotEmpty() && auth()->user()->developers->every(function ($developer) {
+      return $developer->pivot->isCompleted == 1;
+    });
+
+    $gamesCompleted = auth()->user()->stationUser()->whereIn('station_id', [3,4])->distinct('station_id')->count('station_id') >= 2;
+
+    $canAccessStation = $developersCompleted && $gamesCompleted;
     
     // $first50UserIds = User::orderBy('created_at')
     //     ->skip(4)
@@ -179,7 +189,7 @@ class StationController extends Controller
 
 $user = auth()->user();
 
-$requiredStations = [1];
+$requiredStations = [3];
 
 $completedJourney = $user->stationUser()
     ->whereIn('station_id', $requiredStations)
@@ -320,9 +330,9 @@ if ($activeVoucher) {
         // ✅ Station check (only skip for prize maybe — your logic choice)
         $station_id = $request->station;
 
-        if ((int) $station_id === 2 && $isEarlyBird) {
+        if ((int) $station_id === 1 && $isEarlyBird) {
             return response()->json([
-                "message" => "Station 2 skipped",
+                "message" => "Station 1 skipped",
                 "status" => "success",
             ], 200);
         }
@@ -381,7 +391,7 @@ if ($activeVoucher) {
       ];
 
         // Handle gift selection for station 1
-        if ($station_id == 1 && $route == 'prize') {
+        if ($station_id == 2 && $route == 'prize') {
 
           $gift = \App\Models\Gifts::find($prize_id);
 
@@ -421,7 +431,7 @@ if ($activeVoucher) {
 
      
       // Special case: station 3
-      if ($station_id == 1) {
+      if ($station_id == 2) {
           $response["type"] = "prize";
           $response["redirect_url"] = route('prize.id', ['prize_id' => $prize_id]);
       }
@@ -1288,7 +1298,7 @@ if ($activeVoucher) {
 
       $isVideoBoothDay = in_array($today, $videoBoothDates);
 
-      $totalRequired = $user->is_early_bird ? 3 : 2;
+      $totalRequired = $user->is_early_bird ? 4 : 3;
 
       DB::commit();
       // 🎉 CHECK IF FINISHED

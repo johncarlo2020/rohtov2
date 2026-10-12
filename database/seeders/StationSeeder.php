@@ -21,26 +21,30 @@ class StationSeeder extends Seeder
     public function run()
     {
 
+        Station::create([
+            'id' => 1,
+            'name' => 'Early Bird',
+            'description' => 'Redeem your <br> pre-registration gift!',
+        ]);
 
         Station::create([
+            'id' => 2,
             'name' => 'Lucky Draw',
             'description' => 'Visit our lucky draw  <br> to claim your prizes',
         ]);
 
         Station::create([
+            'id' => 3,
             'name' => 'Game - Goyang to win',
             'description' => 'Visit our game booth <br> to join the fun',
         ]);
 
         Station::create([
+            'id' => 4,
             'name' => 'Game - Catch the Beat',
             'description' => 'Visit our game booth <br> to join the fun',
         ]);
 
-        Station::create([
-            'name' => 'Early Bird',
-            'description' => 'Redeem your <br> pre-registration gift!',
-        ]);
 
         
 

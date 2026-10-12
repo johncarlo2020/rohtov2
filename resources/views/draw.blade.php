@@ -190,7 +190,6 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: handPulse 1.8s ease-in-out infinite;
   position: relative;
 }
 
@@ -209,7 +208,6 @@ html, body {
   display: block;
 }
 
-@keyframes handPulse { 0%,100% { transform: scale(1);    } 50% { transform: scale(1.07); } }
 @keyframes handTap   { 0%,100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
 @keyframes spinSlow  { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
@@ -424,10 +422,7 @@ html, body {
   font-size: clamp(16px, 1.8vh, 28px);
   color: var(--text-mid);
   letter-spacing: 0.5px;
-  animation: hintPulse 1.4s ease-in-out infinite;
 }
-
-@keyframes hintPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
 
 /* Logo header — outside card, top of screen */
 .screen-header-logo {

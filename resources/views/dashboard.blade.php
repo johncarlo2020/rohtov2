@@ -47,17 +47,17 @@
                                     'label' => "JAZZ CLUB",
                                 ],
                                 'chasing-sunset' => [
-                                    'relX' => 30.1, 'relY' => 69.2,
+                                    'relX' => 30.1, 'relY' => 65,
                                     'side' => 'left',
                                     'label' => "CHASING<br>SUNSETS",
                                 ],
                                 'by-the-fireplace' => [
-                                    'relX' => 64.7, 'relY' => 71.4,
+                                    'relX' => 64.7, 'relY' => 68,
                                     'side' => 'right',
                                     'label' => "BY THE<br>FIREPLACE",
                                 ],
                                 'up-at-dawn' => [
-                                    'relX' => 64.0, 'relY' => 86.1,
+                                    'relX' => 64.0, 'relY' => 82,
                                     'side' => 'right',
                                     'label' => "UP AT DAWN",
                                 ],
@@ -72,6 +72,8 @@
                         @foreach($stations as $stn)
                             @php
                                 $isCompleted = in_array($stn->id, $completedStationIds);
+                                $isRedemption = !empty($stn->is_redemption) || $stn->id == 8 || $stn->slug === 'complimentary-gift' || $stn->slug === 'redemption-counter';
+                                $isLocked = $isRedemption && empty($isLastStationUnlocked) && !$isCompleted;
                                 
                                 $cfg = null;
                                 if ($stn->is_redemption) {
@@ -93,14 +95,19 @@
                                 $isRight = ($cfg['side'] === 'right');
                             @endphp
 
-                            <div class="mm-station-node"
-                                 onclick="handleStationClick({{ $stn->id }}, '{{ addslashes($stn->name) }}', {{ $stn->is_redemption ? 'true' : 'false' }})"
+                            <div class="mm-station-node {{ $isLocked ? 'locked' : '' }}"
+                                 @if(!$isLocked) onclick="handleStationClick({{ $stn->id }}, '{{ addslashes($stn->name) }}', {{ $stn->is_redemption ? 'true' : 'false' }})" @endif
                                  title="{{ $stn->name }}">
                                 
                                 {{-- 1. Pin Circle on the room --}}
-                                <div class="mm-node-pin {{ $isCompleted ? 'completed' : 'uncompleted' }}"
+                                <div class="mm-node-pin {{ $isCompleted ? 'completed' : ($isLocked ? 'locked' : 'uncompleted') }}"
                                      style="left: {{ number_format($pinX, 2) }}%; top: {{ number_format($pinY, 2) }}%;">
-                                    @if($isCompleted)
+                                    @if($isLocked)
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                        </svg>
+                                    @elseif($isCompleted)
                                         <span class="mm-check">✓</span>
                                     @endif
                                 </div>
@@ -137,7 +144,7 @@
                 </div>
 
                 {{-- Subtext below map --}}
-                <p class="text-center mm-map-subtext" style="font-size: 0.65rem; color: #555555; letter-spacing: 0.4px; margin: 1rem auto 1rem auto; font-family: 'Courier New', Courier, monospace; line-height: 1.4;">
+                <p class="text-center mm-map-subtext" style="font-size: 0.6rem; color: #555555; margin: 1rem auto 1rem auto; font-family: 'Courier New', Courier, monospace; line-height: 1.4;">
                     Complete all stations to redeem your complimentary fragrance samples.
                 </p>
             </div>
@@ -170,10 +177,16 @@
                     border: 1.5px solid #111111;
                     color: #111111;
                 }
+                .mm-node-pin.locked {
+                    width: 14px;
+                    height: 14px;
+                    background-color: #888888;
+                    border: none;
+                    cursor: not-allowed;
+                }
                 .mm-node-pin .mm-check {
                     font-size: 9px;
                     font-weight: 800;
-                    line-height: 1;
                 }
                 .mm-node-line {
                     position: absolute;
@@ -228,6 +241,29 @@
                 .mm-station-node:hover .mm-node-label {
                     color: #000000;
                 }
+                .mm-station-node.locked {
+                    cursor: not-allowed;
+                }
+                .mm-station-node.locked .mm-node-line {
+                    background-color: #AAAAAA;
+                }
+                .mm-station-node.locked .mm-arrow-head.right {
+                    border-left-color: #AAAAAA;
+                }
+                .mm-station-node.locked .mm-arrow-head.left {
+                    border-right-color: #AAAAAA;
+                }
+                .mm-station-node.locked .mm-node-label {
+                    color: #888888 !important;
+                    cursor: not-allowed;
+                }
+                .mm-station-node.locked:hover .mm-node-pin {
+                    transform: translate(-50%, -50%) !important;
+                    box-shadow: none !important;
+                }
+                .mm-station-node.locked:hover .mm-node-label {
+                    color: #888888 !important;
+                }
             </style>
 
             {{-- Action Button: MY MEMORY PASSPORT (font-size: 1rem, no arrow) --}}
@@ -259,19 +295,24 @@
                 {{-- Station Flat List --}}
                 <div style="margin-top: 1.25rem;">
                     @foreach($stations as $stn)
-                        @php $isCompleted = in_array($stn->id, $completedStationIds); @endphp
+                        @php
+                            $isCompleted = in_array($stn->id, $completedStationIds);
+                            $isRedemption = !empty($stn->is_redemption) || $stn->id == 8 || $stn->slug === 'complimentary-gift' || $stn->slug === 'redemption-counter';
+                            $isLocked = $isRedemption && empty($isLastStationUnlocked) && !$isCompleted;
+                        @endphp
 
                         {{-- Row: [image] [name] [circle] --}}
-                        <div onclick="handleStationClick({{ $stn->id }}, '{{ addslashes($stn->name) }}', {{ $stn->is_redemption ? 'true' : 'false' }})"
+                        <div @if(!$isLocked) onclick="handleStationClick({{ $stn->id }}, '{{ addslashes($stn->name) }}', {{ $stn->is_redemption ? 'true' : 'false' }})" @endif
                              style="display: flex;
                                     align-items: center;
                                     gap: 14px;
                                     padding: 10px 0;
-                                    cursor: pointer;
-                                    background-color: #F4F0EA;">
+                                    cursor: {{ $isLocked ? 'not-allowed' : 'pointer' }};
+                                    background-color: #F4F0EA;
+                                    {{ $isLocked ? 'opacity: 0.5;' : '' }}">
 
                             {{-- Station Photo Thumbnail --}}
-                            <div style="width: 88px; height: 65px; flex-shrink: 0; border-radius: 4px; overflow: hidden; background-color: #DDD;">
+                            <div style="width: 88px; height: 65px; flex-shrink: 0; border-radius: 4px; overflow: hidden; background-color: #DDD; {{ $isLocked ? 'filter: grayscale(100%); opacity: 0.7;' : '' }}">
                                 <img src="{{ asset('images/station/STD' . $stn->id . '.webp') }}"
                                      loading="lazy"
                                      decoding="async"
@@ -286,7 +327,7 @@
                                         font-weight: 700;
                                         text-transform: uppercase;
                                         letter-spacing: 1.5px;
-                                        color: #111111;
+                                        color: {{ $isLocked ? '#888888' : '#111111' }};
                                         line-height: 1.4;">
                                 {{ $stn->name }}
                             </div>
@@ -300,11 +341,14 @@
                                         display: flex;
                                         align-items: center;
                                         justify-content: center;
-                                        background-color: transparent;
-                                        {{ $isCompleted
-                                            ? 'border: 1.5px solid #111111;'
-                                            : 'border: 1.5px solid #AAAAAA;' }}">
-                                @if($isCompleted)
+                                        background-color: {{ $isLocked ? '#EAE6DF' : 'transparent' }};
+                                        border: 1.5px solid {{ $isCompleted ? '#111111' : ($isLocked ? '#888888' : '#AAAAAA') }};">
+                                @if($isLocked)
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#666666" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                    </svg>
+                                @elseif($isCompleted)
                                     <span style="color: #111111; font-size: 13px; font-weight: 700; line-height: 1;">✓</span>
                                 @endif
                             </div>
@@ -323,45 +367,9 @@
 
     </div>
 
-    {{-- MODAL ALERT FOR GIFT REDEMPTION --}}
-    <div class="modal fade" id="redemptionAlertModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered px-3" style="max-width: 380px;">
-            <div class="modal-content text-center p-4" style="background-color: #FFFFFF; border-radius: 4px; border: 1px solid #111;">
-                {{-- Exclamation Icon --}}
-                <div class="mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; border-radius: 50%; border: 2px solid #111; font-size: 1.5rem; font-weight: bold; color: #111;">
-                    !
-                </div>
-
-                {{-- Modal Header --}}
-                <div style="font-size: 1.05rem; letter-spacing: 2px; font-weight: 700; text-transform: uppercase; color: #111; margin-bottom: 1rem;">
-                    YOUR HOUSE OF MEMORIES
-                </div>
-
-                {{-- Modal Body Message --}}
-                <p style="font-size: 0.8rem; line-height: 1.5; color: #444444; margin-bottom: 1.75rem;">
-                    Complete all stations in the <br> Memory Map to proceed to the <br>Redemption Room
-                </p>
-
-                {{-- Close Button --}}
-                <button type="button" class="mm-btn-black" data-bs-dismiss="modal" onclick="closeRedemptionModal()">
-                    CLOSE
-                </button>
-            </div>
-        </div>
-    </div>
-
     @push('scripts')
     <script>
-        const completedCount = {{ $completedCount }};
-        let redemptionModalInstance = null;
-
-        function closeRedemptionModal() {
-            const modalEl = document.getElementById('redemptionAlertModal');
-            const instance = bootstrap.Modal.getInstance(modalEl) || redemptionModalInstance;
-            if (instance) {
-                instance.hide();
-            }
-        }
+        const isLastStationUnlocked = {{ !empty($isLastStationUnlocked) ? 'true' : 'false' }};
 
         function showPassportView() {
             document.getElementById('mapViewSection').classList.add('d-none');
@@ -376,18 +384,8 @@
         }
 
         function handleStationClick(stationId, stationName, isRedemption) {
-            if (isRedemption) {
-                if (completedCount < 5) {
-                    const modalEl = document.getElementById('redemptionAlertModal');
-                    if (!redemptionModalInstance) {
-                        redemptionModalInstance = new bootstrap.Modal(modalEl);
-                    }
-                    redemptionModalInstance.show();
-                    return;
-                } else {
-                    window.location.href = "{{ route('thankyou') }}";
-                    return;
-                }
+            if (isRedemption && !isLastStationUnlocked) {
+                return; // Locked and not clickable
             }
 
             // Redirect each station to its own scanning area using station.blade.php template

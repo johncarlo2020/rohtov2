@@ -31,6 +31,20 @@ class StationController extends Controller
   public function index(Station $station)
   {
     $userId = auth()->id() ?? 1;
+
+    // Guard last station: redirect to dashboard if other stations are not finished
+    if ($station->is_redemption || $station->id == 8 || $station->slug === 'complimentary-gift') {
+      $nonRedemptionStations = Station::where('is_redemption', false)->pluck('id');
+      $completedCount = StationUser::where('user_id', $userId)
+        ->whereIn('station_id', $nonRedemptionStations)
+        ->distinct('station_id')
+        ->count('station_id');
+
+      if ($completedCount < $nonRedemptionStations->count()) {
+        return redirect()->route('dashboard');
+      }
+    }
+
     $user = StationUser::where("user_id", $userId)
       ->where("station_id", $station->id)
       ->exists();
@@ -152,7 +166,14 @@ class StationController extends Controller
 
       $completedCount = count($completedStationIds);
 
-      return view('dashboard', compact('stations', 'completedStationIds', 'completedCount'));
+      $nonRedemptionStations = $stations->filter(function ($s) {
+          return empty($s->is_redemption) && $s->id != 8 && $s->slug !== 'complimentary-gift' && $s->slug !== 'redemption-counter';
+      });
+      $nonRedemptionCount = $nonRedemptionStations->count();
+      $completedNonRedemptionCount = $nonRedemptionStations->whereIn('id', $completedStationIds)->count();
+      $isLastStationUnlocked = ($nonRedemptionCount > 0 && $completedNonRedemptionCount >= $nonRedemptionCount);
+
+      return view('dashboard', compact('stations', 'completedStationIds', 'completedCount', 'isLastStationUnlocked'));
   }
 
   public function stamp(Request $request)

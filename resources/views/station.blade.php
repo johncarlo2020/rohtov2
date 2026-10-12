@@ -33,7 +33,7 @@
                 {{-- IF USER HAS NOT CHECKED IN YET (SCREEN 1) --}}
                 @if(!$user)
                     <div class="text-center my-2 py-1 px-2 d-flex flex-column justify-content-center">
-                        @if($isReplicaCafe || $isRedemption)
+                        @if($isReplicaCafe)
                             <div class="station-desc">
                                 <p class="mb-1 text-muted">Proceed to</p>
                                 <p class="h4 font-weight-bold text-dark mb-1 text-uppercase">{{ $station->name }}</p>
@@ -73,13 +73,6 @@
                     </div>
                 @else
                     {{-- SCREEN 5: MEMORY UNLOCKED CARD (POST CHECK-IN STATE) --}}
-                    @if($station->id == 7 || $station->slug === 'scentsorium' || strtoupper($station->name) === 'SCENTSORIUM')
-                        <div class="mb-3 text-center">
-                            <img src="{{ asset('images/station/7ST.webp') }}" 
-                                 alt="{{ $station->name }}" 
-                                 class="station-collection-img">
-                        </div>
-                    @endif
                     <div class="station-unlocked-card">
                         <div class="station-unlocked-check">✓</div>
                         <div class="station-unlocked-title">MEMORY UNLOCKED</div>

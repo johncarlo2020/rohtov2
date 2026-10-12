@@ -60,7 +60,7 @@ class StationSeeder extends Seeder
             [
                 'name' => 'COMPLIMENTARY GIFT',
                 'slug' => 'complimentary-gift',
-                'description' => "Proceed to\nREDEMPTION COUNTER\nto begin your journey.",
+                'description' => "Find your signature scent.\nRedeem a complimentary REPLICA Mystery Sample Box*.\n\n*Limited to the first 500 redemptions per day.",
                 'is_redemption' => true,
             ],
         ];

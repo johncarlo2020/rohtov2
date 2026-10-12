@@ -14,6 +14,10 @@ class Station extends Model
         'answer_id',
     ];
 
+    protected $casts = [
+        'is_redemption' => 'boolean',
+    ];
+
     public function stationUser()
     {
         return $this->hasMany(StationUser::class);

@@ -254,13 +254,6 @@
                                         NEXT
                                     </button>
                                 </div>
-
-                                <!-- Terms Link -->
-                                <div class="text-center mt-3">
-                                    <a href="{{ asset('pdf/terms.pdf') }}" target="_blank" class="text-dark text-uppercase fw-bold text-decoration-underline" style="font-size: 11px; letter-spacing: 0.8px;">
-                                        TERMS & CONDITIONS
-                                    </a>
-                                </div>
                             </form>
 
                             <!-- BOOKING CONFIRMED SUCCESS SCREEN -->

@@ -52,7 +52,7 @@
                     <label class="mm-checkbox-label">
                         <input id="termsCheckbox" type="checkbox" name="terms" value="1" required>
                         <span style="font-family: 'Courier Prime', monospace; font-size: 0.725rem; color: #444444; line-height: 1.5;">
-                            I have read and agree to the <a href="#" onclick="event.preventDefault();" style="color: #111111; font-weight: 700; text-decoration: underline;">Terms and Conditions</a> and <a href="#" onclick="event.preventDefault();" style="color: #111111; font-weight: 700; text-decoration: underline;">Privacy Policy</a>.
+                            I have read and agree to the <a href="{{ asset('pdf/terms_and_conditions.pdf') }}" target="_blank" rel="noopener noreferrer" style="color: #111111; font-weight: 700; text-decoration: underline;">Terms and Conditions</a> and <a href="{{ asset('pdf/privacy_policy.pdf') }}" target="_blank" rel="noopener noreferrer" style="color: #111111; font-weight: 700; text-decoration: underline;">Privacy Policy</a>.
                         </span>
                     </label>
                     @error('terms')

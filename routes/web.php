@@ -165,6 +165,20 @@ Route::group(['middleware' => ['client']], function () {
     })->name('congrats');
 
     Route::get('/thankyou', function () {
+        $userId = \Illuminate\Support\Facades\Auth::id();
+        if (!$userId) {
+            return redirect()->route('dashboard');
+        }
+
+        $totalStations = \App\Models\Station::count();
+        $completedCount = \App\Models\StationUser::where('user_id', $userId)
+            ->distinct('station_id')
+            ->count('station_id');
+
+        if ($completedCount < $totalStations) {
+            return redirect()->route('dashboard');
+        }
+
         return view('thankyou');
     })->name('thankyou');
 

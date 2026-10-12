@@ -36,7 +36,7 @@ return [
     'brevo' => [
         'api_key' => env('BREVO_API_KEY'),
         'from_email' => env('BREVO_FROM_EMAIL', env('MAIL_FROM_ADDRESS')),
-        'from_name' => env('BREVO_FROM_NAME', env('MAIL_FROM_NAME', 'Longchamp Workshop Booking')),
+        'from_name' => env('BREVO_FROM_NAME', env('MAIL_FROM_NAME', 'House of Memories')),
     ],
 
     'mailtrap' => [

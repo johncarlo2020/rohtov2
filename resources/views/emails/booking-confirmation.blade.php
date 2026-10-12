@@ -132,7 +132,7 @@
     <div class="email-wrapper">
         <div class="email-card">
             <!-- Header Image Placeholder -->
-            <img class="header-image" src="{{ $headerImage ?? asset('images/brand/email_banner.jpg') }}" alt="Longchamp Event Banner">
+            <img class="header-image" src="{{ $headerImage ?? asset('images/brand/email_banner.jpg') }}" alt="House of Memories Event Banner">
 
             <div class="content-body">
                 <!-- Status Title -->
@@ -141,7 +141,7 @@
                 <!-- Greeting -->
                 <div class="greeting">Dear {{ $customerName }},</div>
                 <div class="intro-text">
-                    We are delighted to confirm your booking for the Longchamp x Caroline Hélain event.<br>
+                    We are delighted to confirm your booking for the House of Memories event.<br>
                     Please find your booking details below for your reference.
                 </div>
 
@@ -159,8 +159,7 @@
                 <div class="detail-group" style="margin-bottom: 10px;">
                     <div class="detail-label">VENUE:</div>
                     <div class="detail-value">
-                        LONGCHAMP POP-UP<br>
-                        South Palm, Ground Floor, The Gardens Mall
+                        HOUSE OF MEMORIES
                     </div>
                 </div>
 

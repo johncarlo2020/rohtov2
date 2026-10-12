@@ -12,197 +12,227 @@
                     YOUR MEMORY MAP
                 </div>
 
-                {{-- Memory Map Visual Floorplan with Background Image (Enlarged by 20%) --}}
-                <div class="mm-map-container my-2" style="position: relative; width: 100%; max-width: 456px; margin: 0 auto;">
-                    <div style="position: relative; width: 100%; overflow: hidden; background-color: #F4F0EA;">
-                        {{-- Floorplan Image Background --}}
+                {{-- Memory Map Visual Floorplan with Leader Lines --}}
+                <div class="mm-map-container my-1" style="position: relative; width: 100%; max-width: 440px; margin: 0 auto; user-select: none;">
+                    <div class="mm-floorplan-stage" style="position: relative; width: 100%; overflow: visible; background-color: #F4F0EA;">
+                        
+                        {{-- Centered 3D Floorplan Image --}}
                         <img src="{{ asset('images/brand/dashboard_bg.webp') }}" 
                              alt="House of Memories Map" 
                              fetchpriority="high"
                              decoding="async"
-                             style="width: 100%; height: auto; display: block;">
+                             style="width: 54%; height: auto; display: block; margin: 0 auto; user-select: none; pointer-events: none;">
 
-                        {{-- Station Pin Overlays (Matching Design Image) --}}
+                        {{-- Stations Overlay --}}
+                        @php
+                            $stationConfigs = [
+                                'redemption-counter' => [
+                                    'relX' => 80.1, 'relY' => 12.5,
+                                    'side' => 'right',
+                                    'label' => "COMPLIMENTARY<br>GIFT",
+                                ],
+                                'lazy-sunday-morning' => [
+                                    'relX' => 35.3, 'relY' => 25.8,
+                                    'side' => 'left',
+                                    'label' => "LAZY<br>SUNDAY<br>MORNING",
+                                ],
+                                'scentsorium' => [
+                                    'relX' => 80.1, 'relY' => 36.4,
+                                    'side' => 'right',
+                                    'label' => "SCENTSORIUM",
+                                ],
+                                'jazz-club' => [
+                                    'relX' => 83.8, 'relY' => 52.5,
+                                    'side' => 'right',
+                                    'label' => "JAZZ CLUB",
+                                ],
+                                'chasing-sunset' => [
+                                    'relX' => 30.1, 'relY' => 69.2,
+                                    'side' => 'left',
+                                    'label' => "CHASING<br>SUNSETS",
+                                ],
+                                'by-the-fireplace' => [
+                                    'relX' => 64.7, 'relY' => 71.4,
+                                    'side' => 'right',
+                                    'label' => "BY THE<br>FIREPLACE",
+                                ],
+                                'up-at-dawn' => [
+                                    'relX' => 64.0, 'relY' => 86.1,
+                                    'side' => 'right',
+                                    'label' => "UP AT DAWN",
+                                ],
+                                'replica-cafe' => [
+                                    'relX' => 21.3, 'relY' => 87,
+                                    'side' => 'left',
+                                    'label' => "REPLICA<br>CAFE",
+                                ],
+                            ];
+                        @endphp
+
                         @foreach($stations as $stn)
                             @php
                                 $isCompleted = in_array($stn->id, $completedStationIds);
+                                
+                                $cfg = null;
+                                if ($stn->is_redemption) {
+                                    $cfg = $stationConfigs['redemption-counter'];
+                                } elseif (isset($stationConfigs[$stn->slug])) {
+                                    $cfg = $stationConfigs[$stn->slug];
+                                } else {
+                                    $normalizedSlug = str_replace(['sunsets', 'sunset'], 'sunset', $stn->slug);
+                                    $cfg = $stationConfigs[$normalizedSlug] ?? [
+                                        'relX' => 50, 'relY' => 50,
+                                        'side' => 'right',
+                                        'label' => strtoupper($stn->name),
+                                    ];
+                                }
 
-                                /**
-                                 * Exact coordinates & orientation matching new design reference:
-                                 * - isVertical: true for stacked upright text, false for horizontal
-                                 * - circlePosition: 'top' | 'bottom'
-                                 */
-                                $coords = match($stn->slug) {
-
-                                    'redemption-counter', 'redemption-room' => [
-                                        'left' => '75%', 'top' => '17%',
-                                        'isVertical' => true,
-                                        'circlePosition' => 'bottom',
-                                        'textAlign' => 'start',
-                                        'displayName' => "REDEMPTION<br>ROOM",
-                                    ],
-                                    'lazy-sunday-morning', 'last-sunday-morning' => [
-                                        'left' => '34%', 'top' => '27%',
-                                        'isVertical' => true,
-                                        'circlePosition' => 'bottom',
-                                        'textAlign' => 'start',
-                                        'displayName' => "LAZY SUNDAY<br>MORNING",
-                                    ],
-                                    'scentsorium' => [
-                                        'left' => '74%', 'top' => '36%',
-                                        'isVertical' => true,
-                                        'circlePosition' => 'bottom',
-                                        'displayName' => "SCENTSORIUM",
-                                    ],
-                                    'jazz-club' => [
-                                        'left' => '75%', 'top' => '50%',
-                                        'isVertical' => false,
-                                        'circlePosition' => 'top',
-                                        'displayName' => 'JAZZ CLUB',
-                                    ],
-                                    'chasing-sunset', 'chasing-sunsets' => [
-                                        'left' => '33%', 'top' => '61%',
-                                        'isVertical' => true,
-                                        'circlePosition' => 'bottom',
-                                        'displayName' => "CHASING SUNSET",
-                                    ],
-                                    'by-the-fireplace' => [
-                                        'left' => '63%', 'top' => '65%',
-                                        'isVertical' => false,
-                                        'circlePosition' => 'top',
-                                        'displayName' => "BY THE<br>FIREPLACE",
-                                    ],
-                                    'up-at-dawn', '37-at-dawn' => [
-                                        'left' => '62%', 'top' => '79%',
-                                        'isVertical' => false,
-                                        'circlePosition' => 'top',
-                                        'displayName' => 'UP AT DAWN',
-                                    ],
-                                    'replica-cafe' => [
-                                        'left' => '27%', 'top' => '86%',
-                                        'isVertical' => true,
-                                        'circlePosition' => 'bottom',
-                                        'displayName' => "REPLICA CAFE",
-                                    ],
-                                    default => [
-                                        'left' => '50%', 'top' => '50%',
-                                        'isVertical' => false,
-                                        'circlePosition' => 'bottom',
-                                        'displayName' => strtoupper($stn->name),
-                                    ],
-                                };
+                                // Container geometry: building width = 54%, centered (offset = 23%)
+                                $pinX = 23 + ($cfg['relX'] * 0.54);
+                                $pinY = $cfg['relY'];
+                                $isRight = ($cfg['side'] === 'right');
                             @endphp
 
-                            {{-- PIN WRAPPER --}}
-                            <div class="mm-station-pin"
+                            <div class="mm-station-node"
                                  onclick="handleStationClick({{ $stn->id }}, '{{ addslashes($stn->name) }}', {{ $stn->is_redemption ? 'true' : 'false' }})"
-                                 style="position: absolute;
-                                        left: {{ $coords['left'] }};
-                                        top: {{ $coords['top'] }};
-                                        transform: translate(-50%, -50%);
-                                        display: flex;
-                                        flex-direction: column;
-                                        align-items: center;
-                                        gap: 3px;
-                                        z-index: 10;">
-
-                                @if($coords['circlePosition'] === 'top')
-                                    <div class="pin-circle {{ $isCompleted ? 'completed' : 'uncompleted' }}">
-                                        @if($isCompleted)
-                                            <span>✓</span>
-                                        @endif
-                                    </div>
-                                @endif
-
-                                {{-- White Boxed Label (Not bold) --}}
-                                <div class="pin-label {{ $coords['isVertical'] ? 'vertical' : 'horizontal' }}"
-                                     style="{{ isset($coords['textAlign']) ? 'text-align: ' . $coords['textAlign'] . ' !important;' : '' }}">
-                                    {!! $coords['displayName'] !!}
+                                 title="{{ $stn->name }}">
+                                
+                                {{-- 1. Pin Circle on the room --}}
+                                <div class="mm-node-pin {{ $isCompleted ? 'completed' : 'uncompleted' }}"
+                                     style="left: {{ number_format($pinX, 2) }}%; top: {{ number_format($pinY, 2) }}%;">
+                                    @if($isCompleted)
+                                        <span class="mm-check">✓</span>
+                                    @endif
                                 </div>
 
-                                @if($coords['circlePosition'] === 'bottom')
-                                    <div class="pin-circle {{ $isCompleted ? 'completed' : 'uncompleted' }}">
-                                        @if($isCompleted)
-                                            <span>✓</span>
-                                        @endif
+                                {{-- 2. Leader Line with Arrowhead --}}
+                                @if($isRight)
+                                    {{-- Right line: starts at pinX, ends at 78%, arrow pointing right --}}
+                                    <div class="mm-node-line right"
+                                         style="left: {{ number_format($pinX, 2) }}%; width: calc(78% - {{ number_format($pinX, 2) }}%); top: {{ number_format($pinY, 2) }}%;">
+                                        <span class="mm-arrow-head right"></span>
+                                    </div>
+
+                                    {{-- 3. Label on Right --}}
+                                    <div class="mm-node-label right"
+                                         style="left: 79%; top: {{ number_format($pinY, 2) }}%;">
+                                        {!! $cfg['label'] !!}
+                                    </div>
+                                @else
+                                    {{-- Left line: starts at 22%, ends at pinX, arrow pointing left --}}
+                                    <div class="mm-node-line left"
+                                         style="left: 22%; width: calc({{ number_format($pinX, 2) }}% - 22%); top: {{ number_format($pinY, 2) }}%;">
+                                        <span class="mm-arrow-head left"></span>
+                                    </div>
+
+                                    {{-- 3. Label on Left --}}
+                                    <div class="mm-node-label left"
+                                         style="right: calc(100% - 21%); top: {{ number_format($pinY, 2) }}%;">
+                                        {!! $cfg['label'] !!}
                                     </div>
                                 @endif
                             </div>
                         @endforeach
                     </div>
                 </div>
+
+                {{-- Subtext below map --}}
+                <p class="text-center mm-map-subtext" style="font-size: 0.65rem; color: #555555; letter-spacing: 0.4px; margin: 1rem auto 1rem auto; font-family: 'Courier New', Courier, monospace; line-height: 1.4;">
+                    Complete all stations to redeem your complimentary fragrance samples.
+                </p>
             </div>
 
             <style>
-                .mm-station-pin {
+                .mm-station-node {
                     cursor: pointer;
                     user-select: none;
-                    transition: transform 0.2s ease;
                 }
-                .mm-station-pin .pin-label {
-                    background-color: #FFFFFF;
-                    color: #000000;
-                    font-size: 16px;
-                    font-weight: 400 !important;
-                    line-height: 1.2;
-                    letter-spacing: 0.5px;
-                    text-align: center;
-                    padding: 3px 6px;
-                    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-                    border: none;
-                    white-space: nowrap;
-                }
-                .mm-station-pin .pin-label.vertical {
-                    writing-mode: vertical-rl;
-                    -webkit-writing-mode: vertical-rl;
-                    transform: rotate(180deg);
-                    padding: 4px 4px;
-                }
-                .mm-station-pin .pin-label.horizontal {
-                    text-transform: uppercase;
-                }
-                .mm-station-pin .pin-circle {
-                    width: 20px;
-                    height: 20px;
-                    min-width: 20px;
+                .mm-node-pin {
+                    position: absolute;
+                    transform: translate(-50%, -50%);
                     border-radius: 50%;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-                    position: relative;
+                    z-index: 10;
+                    transition: transform 0.2s ease, box-shadow 0.2s ease;
                 }
-                .mm-station-pin .pin-circle.uncompleted {
-                    background-color: #000000;
+                .mm-node-pin.uncompleted {
+                    width: 12px;
+                    height: 12px;
+                    background-color: #111111;
                     border: none;
                 }
-                .mm-station-pin .pin-circle.completed {
+                .mm-node-pin.completed {
+                    width: 14px;
+                    height: 14px;
                     background-color: #FFFFFF;
-                    border: 1.5px solid #000000;
-                    color: #000000;
-                    font-size: 11px;
-                    font-weight: 700;
+                    border: 1.5px solid #111111;
+                    color: #111111;
+                }
+                .mm-node-pin .mm-check {
+                    font-size: 9px;
+                    font-weight: 800;
                     line-height: 1;
                 }
-                /* Blur animation on hover */
-                .mm-station-pin:hover .pin-circle {
-                    animation: mmPinBlurGlow 1.2s infinite alternate ease-in-out;
+                .mm-node-line {
+                    position: absolute;
+                    height: 1px;
+                    background-color: #222222;
+                    transform: translateY(-50%);
+                    pointer-events: none;
+                    z-index: 5;
                 }
-                @keyframes mmPinBlurGlow {
-                    0% {
-                        filter: blur(0.5px) drop-shadow(0 0 4px rgba(0, 0, 0, 0.5));
-                        transform: scale(1.12);
-                    }
-                    100% {
-                        filter: blur(2px) drop-shadow(0 0 10px rgba(0, 0, 0, 0.9));
-                        transform: scale(1.24);
-                    }
+                .mm-arrow-head {
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    width: 0;
+                    height: 0;
+                }
+                .mm-arrow-head.right {
+                    right: 0;
+                    border-top: 3px solid transparent;
+                    border-bottom: 3px solid transparent;
+                    border-left: 4.5px solid #222222;
+                }
+                .mm-arrow-head.left {
+                    left: 0;
+                    border-top: 3px solid transparent;
+                    border-bottom: 3px solid transparent;
+                    border-right: 4.5px solid #222222;
+                }
+                .mm-node-label {
+                    position: absolute;
+                    transform: translateY(-50%);
+                    font-family: 'Courier New', Courier, monospace;
+                    font-size: clamp(8px, 2.5vw, 11.5px);
+                    font-weight: 400;
+                    line-height: 1.15;
+                    letter-spacing: 0.5px;
+                    color: #222222;
+                    white-space: nowrap;
+                    z-index: 8;
+                    transition: color 0.15s ease;
+                }
+                .mm-node-label.left {
+                    text-align: right;
+                }
+                .mm-node-label.right {
+                    text-align: left;
+                }
+                .mm-station-node:hover .mm-node-pin {
+                    transform: translate(-50%, -50%) scale(1.25);
+                    box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+                }
+                .mm-station-node:hover .mm-node-label {
+                    color: #000000;
                 }
             </style>
 
-            {{-- Sticky Footer Button --}}
-            <div class="mt-4 w-100">
-                <button type="button" onclick="showPassportView()" class="mm-btn-black" style="width: 100%; border-radius: 8px;">
+            {{-- Action Button: MY MEMORY PASSPORT (font-size: 1rem, no arrow) --}}
+            <div class="mt-2 mb-2 w-100">
+                <button type="button" onclick="showPassportView()" class="mm-btn-black">
                     MY MEMORY PASSPORT
                 </button>
             </div>
@@ -242,7 +272,7 @@
 
                             {{-- Station Photo Thumbnail --}}
                             <div style="width: 88px; height: 65px; flex-shrink: 0; border-radius: 4px; overflow: hidden; background-color: #DDD;">
-                                <img src="{{ asset('images/station/ST' . $stn->id . '.webp') }}"
+                                <img src="{{ asset('images/station/STD' . $stn->id . '.webp') }}"
                                      loading="lazy"
                                      decoding="async"
                                      onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1547887537-6158d64c35b3?auto=format&fit=crop&w=200&q=60';"

@@ -19,15 +19,14 @@
         <div id="stationDetailView" class="w-100 flex-grow-1 d-flex flex-column justify-content-between">
             <div class="d-flex flex-column flex-grow-1">
                 {{-- Station Hero Image --}}
-                <div class="mt-5 text-center" style="border-radius: 8px; overflow: hidden; border: 1px solid #E0DDD7; background-color: #FAF8F5;">
+                <div class="mt-5 text-center station-hero-card">
                     <img src="{{ asset('images/station/ST' . $station->id . '.webp') }}" 
                          onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1547887537-6158d64c35b3?auto=format&fit=crop&w=600&q=80';"
-                         alt="{{ $station->name }}" 
-                         style="width: 100%; max-height: 240px; object-fit: cover; display: block;">
+                         alt="{{ $station->name }}">
                 </div>
 
                 {{-- Station Title --}}
-                <div class="mm-page-title text-center">
+                <div class="mm-page-title station-title text-center">
                     {{ strtoupper($station->name) }}
                 </div>
 
@@ -35,56 +34,56 @@
                 @if(!$user)
                     <div class="text-center my-2 py-1 px-2 d-flex flex-column justify-content-center">
                         @if($isReplicaCafe || $isRedemption)
-                            <p style="font-size: 1rem; color: #555555; margin-bottom: 6px; letter-spacing: 0.5px;">
-                                Proceed to
-                            </p>
-                            <p style="font-size: 1.5rem; font-weight: 700; color: #111111; margin-bottom: 6px; letter-spacing: 1px; text-transform: uppercase;">
-                                {{ $station->name }}
-                            </p>
-                            <p style="font-size: 1rem; color: #555555; margin: 0; letter-spacing: 0.5px;">
-                                to begin your journey.
-                            </p>
+                            <div class="station-desc">
+                                <p class="mb-1 text-muted">Proceed to</p>
+                                <p class="h4 font-weight-bold text-dark mb-1 text-uppercase">{{ $station->name }}</p>
+                                <p class="mb-0 text-muted">to begin your journey.</p>
+                            </div>
                         @elseif($station->description)
-                            <div style="font-size: 1rem; color: #333333; max-width: 340px; margin: 0 auto; text-align: center;">
+                            <div class="station-desc">
                                 {!! nl2br(e($station->description)) !!}
                             </div>
+                            @if($station->id == 7 || $station->slug === 'scentsorium' || strtoupper($station->name) === 'SCENTSORIUM')
+                                <div class="mt-3 text-center">
+                                    <img src="{{ asset('images/station/7ST.webp') }}" 
+                                         alt="{{ $station->name }}" 
+                                         class="station-collection-img">
+                                </div>
+                            @endif
                         @else
-                            <p style="font-size: 1rem; color: #555555; margin-bottom: 6px;">
-                                Proceed to
-                            </p>
-                            <p style="font-size: 1.5rem; font-weight: 700; color: #111111; margin-bottom: 6px; text-transform: uppercase;">
-                                {{ $station->name }}
-                            </p>
-                            <p style="font-size: 1rem; color: #555555; margin: 0;">
-                                to begin your journey.
-                            </p>
+                            <div class="station-desc">
+                                <p class="mb-1 text-muted">Proceed to</p>
+                                <p class="h4 font-weight-bold text-dark mb-1 text-uppercase">{{ $station->name }}</p>
+                                <p class="mb-0 text-muted">to begin your journey.</p>
+                            </div>
                         @endif
                     </div>
 
                     {{-- Camera Scan Button (Directly below text with matching top spacing) --}}
                     <div class="text-center mt-4 pt-1">
-                        <button type="button" onclick="startQRScanner()" class="mx-auto border-0 d-flex align-items-center justify-content-center" style="width: 76px; height: 38px; background-color: #000000; border-radius: 20px; cursor: pointer;">
+                        <button type="button" onclick="startQRScanner()" class="station-camera-btn">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#FFFFFF" viewBox="0 0 16 16">
                                 <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
                                 <path d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0z"/>
                             </svg>
                         </button>
-                        <div style="font-size: 0.725rem; color: #666666; margin-top: 10px;">
+                        <div class="station-scan-hint">
                             Scan the QR code to proceed
                         </div>
                     </div>
                 @else
                     {{-- SCREEN 5: MEMORY UNLOCKED CARD (POST CHECK-IN STATE) --}}
-                    <div class="my-3 p-4 text-center" style="background-color: #FAF8F5; border: 1px solid #DED8CE; border-radius: 8px;">
-                        <div class="mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 42px; height: 42px; border-radius: 50%; border: 1.5px solid #111; font-size: 1.3rem; font-weight: bold; color: #111;">
-                            ✓
+                    @if($station->id == 7 || $station->slug === 'scentsorium' || strtoupper($station->name) === 'SCENTSORIUM')
+                        <div class="mb-3 text-center">
+                            <img src="{{ asset('images/station/7ST.webp') }}" 
+                                 alt="{{ $station->name }}" 
+                                 class="station-collection-img">
                         </div>
-                        <div style="font-size: 0.9rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #111; margin-bottom: 0.6rem;">
-                            MEMORY UNLOCKED
-                        </div>
-                        <p style="font-size: 0.775rem; color: #555555; margin: 0; padding: 0 0.5rem;">
-                            A new memory has been added to your passport.
-                        </p>
+                    @endif
+                    <div class="station-unlocked-card">
+                        <div class="station-unlocked-check">✓</div>
+                        <div class="station-unlocked-title">MEMORY UNLOCKED</div>
+                        <p class="station-unlocked-sub">A new memory has been added to your passport.</p>
                     </div>
 
                     {{-- Back to Dashboard Button --}}

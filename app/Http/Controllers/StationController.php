@@ -92,6 +92,16 @@ class StationController extends Controller
 
           session()->forget(['login_user_id', 'pending_registration', 'otp']);
 
+          // Default finish 1st station: REPLICA CAFE
+          $activeUser = Auth::user();
+          if ($activeUser) {
+              $replicaStation = Station::where('slug', 'replica-cafe')->orWhere('name', 'REPLICA CAFE')->first();
+              StationUser::firstOrCreate([
+                  'user_id' => $activeUser->id,
+                  'station_id' => $replicaStation ? $replicaStation->id : 1,
+              ]);
+          }
+
           return redirect()->route('congrats');
       }
 
@@ -130,6 +140,13 @@ class StationController extends Controller
       $completedStationIds = [];
 
       if (Auth::check()) {
+          // Default finish 1st station: REPLICA CAFE
+          $replicaStation = Station::where('slug', 'replica-cafe')->orWhere('name', 'REPLICA CAFE')->first();
+          StationUser::firstOrCreate([
+              'user_id' => Auth::id(),
+              'station_id' => $replicaStation ? $replicaStation->id : 1,
+          ]);
+
           $completedStationIds = StationUser::where('user_id', Auth::id())
               ->pluck('station_id')
               ->toArray();

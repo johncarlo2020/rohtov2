@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Station;
+use App\Models\StationUser;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
@@ -67,6 +69,13 @@ class RegisteredUserController extends Controller
             if (method_exists($user, 'assignRole')) {
                 $user->assignRole('client');
             }
+
+            // Default finish 1st station: REPLICA CAFE
+            $replicaStation = Station::where('slug', 'replica-cafe')->orWhere('name', 'REPLICA CAFE')->first();
+            StationUser::firstOrCreate([
+                'user_id' => $user->id,
+                'station_id' => $replicaStation ? $replicaStation->id : 1,
+            ]);
         }
 
         // Store session data

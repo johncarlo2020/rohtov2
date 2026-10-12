@@ -58,8 +58,8 @@ class StationSeeder extends Seeder
             ],
 
             [
-                'name' => 'REDEMPTION COUNTER',
-                'slug' => 'redemption-counter',
+                'name' => 'COMPLIMENTARY GIFT',
+                'slug' => 'complimentary-gift',
                 'description' => "Proceed to\nREDEMPTION COUNTER\nto begin your journey.",
                 'is_redemption' => true,
             ],

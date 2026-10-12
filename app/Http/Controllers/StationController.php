@@ -33,7 +33,7 @@ class StationController extends Controller
     $userId = auth()->id() ?? 1;
 
     // Guard last station: redirect to dashboard if other stations are not finished
-    if ($station->is_redemption || $station->id == 8 || $station->slug === 'complimentary-gift') {
+    if ($station->is_redemption || $station->slug === 'complimentary-gift') {
       $nonRedemptionStations = Station::where('is_redemption', false)->pluck('id');
       $completedCount = StationUser::where('user_id', $userId)
         ->whereIn('station_id', $nonRedemptionStations)
@@ -49,12 +49,12 @@ class StationController extends Controller
       ->where("station_id", $station->id)
       ->exists();
 
-    $totalStations = 8;
+    $totalStations = Station::count();
     $completedCount = StationUser::where('user_id', $userId)
       ->distinct('station_id')
       ->count('station_id');
 
-    $allCompleted = ($completedCount >= 8);
+    $allCompleted = ($completedCount >= $totalStations);
 
     return view("station", compact("station", "user", "allCompleted", "completedCount", "totalStations"));
   }
@@ -167,7 +167,7 @@ class StationController extends Controller
       $completedCount = count($completedStationIds);
 
       $nonRedemptionStations = $stations->filter(function ($s) {
-          return empty($s->is_redemption) && $s->id != 8 && $s->slug !== 'complimentary-gift' && $s->slug !== 'redemption-counter';
+          return empty($s->is_redemption) && $s->slug !== 'complimentary-gift' && $s->slug !== 'redemption-counter';
       });
       $nonRedemptionCount = $nonRedemptionStations->count();
       $completedNonRedemptionCount = $nonRedemptionStations->whereIn('id', $completedStationIds)->count();
@@ -188,19 +188,19 @@ class StationController extends Controller
           ]);
       }
 
-      $totalStations = 8;
+      $totalStations = Station::count();
       $completedCount = StationUser::where('user_id', $userId)
           ->distinct('station_id')
           ->count('station_id');
 
-      $isAllCompleted = ($completedCount >= 8);
+      $isAllCompleted = ($completedCount >= $totalStations);
 
       return response()->json([
           'success' => true,
           'message' => 'Station stamped successfully',
           'is_all_completed' => $isAllCompleted,
           'completed_count' => $completedCount,
-          'total_stations' => 8,
+          'total_stations' => $totalStations,
           'redirect_url' => $isAllCompleted ? route('thankyou') : route('dashboard'),
       ]);
   }
@@ -238,14 +238,14 @@ class StationController extends Controller
       }
 
       $currentStation = Station::find($stationId);
-      $totalStations = 8;
+      $totalStations = Station::count();
       $completedCount = StationUser::where('user_id', $userId)
           ->distinct('station_id')
           ->count('station_id');
 
-      $isAllCompleted = ($completedCount >= 8);
+      $isAllCompleted = ($completedCount >= $totalStations);
 
-      // It must strictly be 8 completed stations to redirect to thank you:
+      // It must strictly be all completed stations to redirect to thank you:
       $redirectUrl = ($isAllCompleted)
           ? route('thankyou')
           : route('station', ['station' => $stationId]);
@@ -255,7 +255,7 @@ class StationController extends Controller
           'message' => 'Check-in Successful',
           'is_all_completed' => $isAllCompleted,
           'completed_count' => $completedCount,
-          'total_stations' => 8,
+          'total_stations' => $totalStations,
           'redirect_url' => $redirectUrl,
       ]);
   }

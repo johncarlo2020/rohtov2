@@ -14,7 +14,7 @@
         {{-- SCREEN 1 & 5: PRE-SCAN OR MEMORY UNLOCKED VIEW --}}
         @php
             $isReplicaCafe = ($station->id == 1 || $station->slug === 'replica-cafe' || strtoupper($station->name) === 'REPLICA CAFE');
-            $isRedemption = ($station->id == 8 || $station->slug === 'redemption-counter' || !empty($station->is_redemption));
+            $isRedemption = ($station->slug === 'redemption-counter' || $station->slug === 'complimentary-gift' || !empty($station->is_redemption));
         @endphp
         <div id="stationDetailView" class="w-100 flex-grow-1 d-flex flex-column justify-content-between">
             <div class="d-flex flex-column flex-grow-1">

@@ -58,6 +58,13 @@ class StationSeeder extends Seeder
             ],
 
             [
+                'name' => 'PHOTOBOOTH',
+                'slug' => 'photobooth',
+                'description' => "Take home an exclusive Maison Margiela\n\n Fragrances photo moment",
+                'is_redemption' => false,
+            ],
+
+            [
                 'name' => 'COMPLIMENTARY GIFT',
                 'slug' => 'complimentary-gift',
                 'description' => "Find your signature scent.\nRedeem a complimentary REPLICA Mystery Sample Box*.\n\n*Limited to the first 500 redemptions per day.",

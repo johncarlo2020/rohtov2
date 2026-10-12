@@ -26,7 +26,17 @@
                         {{-- Stations Overlay --}}
                         @php
                             $stationConfigs = [
+                                'photobooth' => [
+                                    'relX' => 35.3, 'relY' => 12.5,
+                                    'side' => 'left',
+                                    'label' => "PHOTOBOOTH",
+                                ],
                                 'redemption-counter' => [
+                                    'relX' => 80.1, 'relY' => 12.5,
+                                    'side' => 'right',
+                                    'label' => "COMPLIMENTARY<br>GIFT",
+                                ],
+                                'complimentary-gift' => [
                                     'relX' => 80.1, 'relY' => 12.5,
                                     'side' => 'right',
                                     'label' => "COMPLIMENTARY<br>GIFT",
@@ -72,7 +82,7 @@
                         @foreach($stations as $stn)
                             @php
                                 $isCompleted = in_array($stn->id, $completedStationIds);
-                                $isRedemption = !empty($stn->is_redemption) || $stn->id == 8 || $stn->slug === 'complimentary-gift' || $stn->slug === 'redemption-counter';
+                                $isRedemption = !empty($stn->is_redemption) || $stn->slug === 'complimentary-gift' || $stn->slug === 'redemption-counter';
                                 $isLocked = $isRedemption && empty($isLastStationUnlocked) && !$isCompleted;
                                 
                                 $cfg = null;
@@ -297,7 +307,7 @@
                     @foreach($stations as $stn)
                         @php
                             $isCompleted = in_array($stn->id, $completedStationIds);
-                            $isRedemption = !empty($stn->is_redemption) || $stn->id == 8 || $stn->slug === 'complimentary-gift' || $stn->slug === 'redemption-counter';
+                            $isRedemption = !empty($stn->is_redemption) || $stn->slug === 'complimentary-gift' || $stn->slug === 'redemption-counter';
                             $isLocked = $isRedemption && empty($isLastStationUnlocked) && !$isCompleted;
                         @endphp
 

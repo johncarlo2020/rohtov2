@@ -144,7 +144,7 @@
                 </div>
 
                 {{-- Subtext below map --}}
-                <p class="text-center mm-map-subtext" style="font-size: 0.6rem; color: #555555; margin: 1rem auto 1rem auto; font-family: 'Courier New', Courier, monospace; line-height: 1.4;">
+                <p class="text-center mm-map-subtext fw-bold" style="font-size: 0.8rem; color: #555555; margin: 1rem auto 1rem auto; font-family: 'Courier New', Courier, monospace; line-height: 1.4;">
                     Complete all stations to redeem your complimentary fragrance samples.
                 </p>
             </div>

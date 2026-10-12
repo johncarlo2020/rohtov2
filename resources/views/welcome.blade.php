@@ -90,12 +90,11 @@
                 <div class="top">
                     <div class="row">
                         <div class="col-12">
-                            <h3 class="text-center text-white mb-3">Welcome to the journey of</h3>
+                            <h3 class="text-center text-white mb-2">Welcome to the journey of</h3>
+                            <h1 class="text-center text-white fw-bold mb-3" style="font-size: 1.85rem; line-height: 1.25;">
+                                iProperty Bumiputera<br>New Homes Expo
+                            </h1>
                         </div>
-                    </div>
-                    <div class="row">
-                        <img class="discover_img w-100" src="{{ asset('images/brand/masthead.webp') }}"
-                        alt="" />
                     </div>
                 </div>
                         <!-- Bottom CTA -->

@@ -74,7 +74,8 @@ Route::group(['middleware' => ['admin']], function () {
 
     Route::get('/admin/earlybird', 'App\Http\Controllers\StationController@earlybird')->name('earlybird');
 
-    Route::get('/admin/scanner', 'App\Http\Controllers\StationController@scanner')->name('scanner');
+    Route::get('/admin/scanner', [\App\Http\Controllers\Admin\BookingScanController::class, 'index'])->name('scanner');
+    Route::post('/admin/scanner/scan', [\App\Http\Controllers\Admin\BookingScanController::class, 'store'])->name('admin.scanner.scan');
     Route::post('/admin/scanner/lookup', [BookingController::class, 'lookup'])->name('admin.scanner.lookup');
     Route::post('/admin/scanner/attend', [BookingController::class, 'markAttendingNow'])->name('admin.scanner.attend');
 

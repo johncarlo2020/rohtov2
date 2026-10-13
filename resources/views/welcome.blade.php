@@ -35,7 +35,7 @@
             <img class="welcome-rsvp-logo" src="{{ asset('images/brand/logo.webp') }}" alt="Maison Margiela Paris">
             <h1 class="welcome-rsvp-title">HOUSE OF MEMORIES<br>MASTERCLASS</h1>
         </header>
-        <img class="welcome-rsvp-image" src="{{ asset('RSVP_landing_2x.webp') }}" alt="REPLICA fragrance jar beside a white mortar and pestle" fetchpriority="high">
+        <img class="welcome-rsvp-image" src="{{ asset('RSVP_landing_2x2.webp') }}" alt="REPLICA fragrance jar beside a white mortar and pestle" fetchpriority="high">
         <section class="welcome-rsvp-content" aria-labelledby="welcome-rsvp-heading">
             <div class="welcome-rsvp-copy">
                 <h2 class="welcome-rsvp-heading" id="welcome-rsvp-heading">An exploration of scent and memory.</h2>

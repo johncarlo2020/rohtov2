@@ -25,6 +25,16 @@
         .rsvp-back { background: transparent; border: 0; font-family: inherit; font-size: 13px; padding: 12px 20px; margin: 2px auto 10px; }
         .rsvp-confirmation .rsvp-next { margin: 4px auto 0; }
         .rsvp-terms { display: block; text-align: center; color: #111; text-decoration: none; font-size: 12px; font-weight: 700; letter-spacing: 1px; }
+        @media (max-width: 767px) {
+            .rsvp-intro { font-size: 16px; }
+            .rsvp-notice { font-size: 15px; }
+            .rsvp-label { font-size: 16px; }
+            .rsvp-select, .rsvp-time { font-size: 16px; }
+            .rsvp-terms { font-size: 14px; }
+            .rsvp-confirmation h2 { font-size: 26px; }
+            .rsvp-confirmation-intro, .rsvp-confirmation dl { font-size: 16px; letter-spacing: 1.5px; line-height: 1.5; }
+            .rsvp-back { font-size: 15px; }
+        }
         @media (max-width: 380px) { .rsvp-dashboard { padding-left: 20px; padding-right: 20px; } .rsvp-title { font-size: 27px; } }
         @media (min-width: 768px) {
             .rsvp-dashboard { min-height: 100dvh; padding: 35px 40px 50px; }

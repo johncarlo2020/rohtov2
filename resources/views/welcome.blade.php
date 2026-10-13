@@ -12,6 +12,11 @@
         .welcome-rsvp-signup { display: flex; align-items: center; justify-content: center; width: 176px; min-height: 35px; margin: 22px auto 0; padding: 8px 12px; border-radius: 5px; background: #000; color: #fff; font-family: inherit; font-size: 13px; font-weight: 700; text-decoration: none; }
         .welcome-rsvp-signup:hover { color: #fff; background: #222; }
         .welcome-rsvp-signup:focus-visible { outline: 2px solid #111; outline-offset: 4px; }
+        @media (max-width: 767px) {
+            .welcome-rsvp-heading { font-size: 16px; }
+            .welcome-rsvp-copy p { font-size: 15px; line-height: 1.5; }
+            .welcome-rsvp-signup { min-height: 44px; font-size: 16px; }
+        }
         @media (min-width: 768px) {
             .welcome-rsvp { grid-template-columns: 1fr 1fr; grid-template-rows: auto 1fr; grid-template-areas: 'image header' 'image content'; }
             .welcome-rsvp-image { height: 100%; min-height: 100dvh; aspect-ratio: auto; }

@@ -1,5 +1,14 @@
 <x-guest-layout>
     <style>
+        @media (max-width: 767px) {
+            .rsvp-otp-page .rsvp-otp-label { font-size: 1rem !important; }
+            .rsvp-otp-page .rsvp-otp-copy { font-size: .95rem !important; line-height: 1.5 !important; }
+            .rsvp-otp-page .rsvp-otp-help { font-size: .9rem !important; line-height: 1.5 !important; }
+            .rsvp-otp-page .rsvp-otp-status { font-size: .9rem !important; }
+            .rsvp-otp-page .rsvp-otp-timer, .rsvp-otp-page .rsvp-otp-resend { font-size: .9rem !important; }
+            .rsvp-otp-page .rsvp-otp-back { font-size: .95rem !important; }
+            .rsvp-otp-page .mm-otp-digit { font-size: 22px; }
+        }
         @media (min-width: 768px) {
             .rsvp-otp-page { min-height: 100dvh; background: #f2efe9; padding: 35px 40px 50px; }
             .rsvp-otp-page .mm-mobile-container { max-width: 420px; min-height: auto; padding: 0; background: transparent; }
@@ -25,13 +34,13 @@
 
             {{-- Subtitle --}}
             <div class="text-center mb-2">
-                <div style="font-family: 'Courier Prime', monospace; font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; color: #333333; margin-bottom: 0.5rem;">
+                <div class="rsvp-otp-label" style="font-family: 'Courier Prime', monospace; font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; color: #333333; margin-bottom: 0.5rem;">
                     ENTER YOUR OTP
                 </div>
-                <p style="font-family: 'Courier Prime', monospace; font-size: 0.75rem; line-height: 1.5; color: #444444; margin-bottom: 0.35rem; padding: 0 0.5rem;">
+                <p class="rsvp-otp-copy" style="font-family: 'Courier Prime', monospace; font-size: 0.75rem; line-height: 1.5; color: #444444; margin-bottom: 0.35rem; padding: 0 0.5rem;">
                     An OTP (One Time Passcode) has been sent to <strong style="color: #000000;">{{ session('email') ?? session('otp_email') ?? 'joshuanick@gmail.com' }}</strong>.
                 </p>
-                <p style="font-family: 'Courier Prime', monospace; font-size: 0.725rem; line-height: 1.4; color: #666666; margin-bottom: 0.75rem;">
+                <p class="rsvp-otp-help" style="font-family: 'Courier Prime', monospace; font-size: 0.725rem; line-height: 1.4; color: #666666; margin-bottom: 0.75rem;">
                     Please enter the OTP below to verify your contact details.
                 </p>
             </div>
@@ -44,7 +53,7 @@
                     <div class="mm-error-text text-center mb-3">{{ session('error') }}</div>
                 @endif
                 @if(session('success'))
-                    <div style="font-family: 'Courier Prime', monospace; font-size: 0.75rem; color: #2E7D32; text-align: center; margin-bottom: 1rem;">
+                    <div class="rsvp-otp-status" style="font-family: 'Courier Prime', monospace; font-size: 0.75rem; color: #2E7D32; text-align: center; margin-bottom: 1rem;">
                         {{ session('success') }}
                     </div>
                 @endif
@@ -64,10 +73,10 @@
 
                 {{-- Timer & Resend --}}
                 <div class="text-center mb-4">
-                    <span id="resendContainer" style="font-family: 'Courier Prime', monospace; font-size: 0.725rem; color: #555555;">
+                    <span id="resendContainer" class="rsvp-otp-timer" style="font-family: 'Courier Prime', monospace; font-size: 0.725rem; color: #555555;">
                         Resend OTP in <span id="timer" style="color: #111111; font-weight: 700;">60</span>s
                     </span>
-                    <a id="resendBtn" href="{{ route('resend.otp') }}" class="d-none" style="font-family: 'Courier Prime', monospace; font-size: 0.725rem; color: #000000; font-weight: 700; text-decoration: underline;">
+                    <a id="resendBtn" href="{{ route('resend.otp') }}" class="d-none rsvp-otp-resend" style="font-family: 'Courier Prime', monospace; font-size: 0.725rem; color: #000000; font-weight: 700; text-decoration: underline;">
                         Resend OTP Now
                     </a>
                 </div>
@@ -82,7 +91,7 @@
 
             {{-- Back button --}}
             <div class="text-center mt-3">
-                <a href="{{ route('register') }}" style="font-family: 'Courier Prime', monospace; font-size: 0.75rem; color: #444444; text-decoration: none;">
+                <a class="rsvp-otp-back" href="{{ route('register') }}" style="font-family: 'Courier Prime', monospace; font-size: 0.75rem; color: #444444; text-decoration: none;">
                     Back
                 </a>
             </div>

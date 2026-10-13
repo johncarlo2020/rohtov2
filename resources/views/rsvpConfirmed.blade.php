@@ -11,6 +11,11 @@
         .rsvp-pass-details { text-align: left; font-size: 11px; line-height: 1.7; margin: 0 auto; max-width: 310px; }
         .rsvp-save { display: block; width: 230px; margin: 22px auto 0; padding: 12px; border: 0; border-radius: 6px; background: #000; color: #fff; font-family: inherit; font-weight: 700; }
         .rsvp-save:disabled { opacity: .5; }
+        @media (max-width: 767px) {
+            .rsvp-pass p { font-size: 15px; line-height: 1.6; }
+            .rsvp-pass-details { font-size: 14px; }
+            .rsvp-save { min-height: 44px; font-size: 16px; }
+        }
         @media (min-width: 768px) {
             .rsvp-pass-page { min-height: 100dvh; padding: 35px 40px 50px; }
             .rsvp-pass { max-width: 420px; padding-bottom: 10px; }

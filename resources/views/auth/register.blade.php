@@ -16,6 +16,14 @@
         .rsvp-registration #submitBtn { display: block; width: 176px; max-width: 100%; min-height: 35px; margin: 0 auto; padding: 8px; background: #000; color: #fff; border: 0; border-radius: 6px; font-family: inherit; font-size: 13px; font-weight: 700; }
         .rsvp-registration #submitBtn:disabled { background: #999; cursor: not-allowed; opacity: 1; }
         .rsvp-registration .mm-link-sub { text-align: center; font-size: 10px; letter-spacing: .5px; margin-top: 20px; }
+        @media (max-width: 767px) {
+            .rsvp-registration .mm-label { font-size: 14px; }
+            .rsvp-registration .mm-input { min-height: 48px; font-size: 16px; }
+            .rsvp-registration .mm-helper-text, .rsvp-registration .mm-error-text { font-size: 14px; }
+            .rsvp-registration .rsvp-consent { font-size: 14px; }
+            .rsvp-registration #submitBtn { min-height: 44px; font-size: 16px; }
+            .rsvp-registration .mm-link-sub { font-size: 13px; line-height: 1.5; }
+        }
         @media (min-width: 768px) {
             .rsvp-registration { padding-top: 35px; }
             .rsvp-registration-inner { max-width: 420px; }

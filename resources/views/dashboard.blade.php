@@ -186,10 +186,9 @@
                         <div class="text-center content">
                             <div class="mt-4 mb-4 text-content">
                                 <p style="color: #205493; font-weight: 500; font-size: 0.95rem; line-height: 1.45;">
-                                    Complete<br>
-                                    3 Developers' Booth Quizzes<br>
-                                    + 2 Game + Lucky Draw to<br>
-                                    complete the journey.
+                                    Complete 3 developers'<br>
+                                    booth quizzes to unlock<br>
+                                    the lucky draw.
                                 </p>
                             </div>
 

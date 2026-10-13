@@ -45,11 +45,10 @@ class StationController extends Controller
       return redirect()->route('dashboard');
     }
 
-    // Lucky Draw (Station 2): requires 3 developer quizzes and 2 games (stations 3 & 4)
+    // Lucky Draw (Station 2): requires 3 developer quizzes (games are optional)
     if ($station->id == 2) {
       $developersCompleted = auth()->user()->developers->isNotEmpty() && auth()->user()->developers->every(fn($d) => $d->pivot->isCompleted == 1);
-      $gamesCompleted = auth()->user()->stationUser()->whereIn('station_id', [3, 4])->distinct('station_id')->count('station_id') >= 2;
-      if (!$developersCompleted || !$gamesCompleted) {
+      if (!$developersCompleted) {
         return redirect()->route('dashboard');
       }
     }
@@ -181,9 +180,7 @@ class StationController extends Controller
       return $developer->pivot->isCompleted == 1;
     });
 
-    $gamesCompleted = auth()->user()->stationUser()->whereIn('station_id', [3,4])->distinct('station_id')->count('station_id') >= 2;
-
-    $canAccessStation = $developersCompleted && $gamesCompleted;
+    $canAccessStation = $developersCompleted;
     
     // $first50UserIds = User::orderBy('created_at')
     //     ->skip(4)

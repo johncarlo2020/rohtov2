@@ -28,9 +28,14 @@
             .rsvp-registration { padding-top: 35px; }
             .rsvp-registration-inner { max-width: 420px; }
             .rsvp-registration-logo { width: 180px; margin-bottom: 46px; }
-            .rsvp-registration-title { font-size: 25px; margin-bottom: 20px; }
-            .rsvp-registration-subtitle { font-size: 21px; margin-bottom: 25px; }
-            .rsvp-registration #submitBtn { width: 100%; }
+            .rsvp-registration-title { font-size: 28px; margin-bottom: 22px; }
+            .rsvp-registration-subtitle { font-size: 23px; margin-bottom: 25px; }
+            .rsvp-registration .mm-label { font-size: 14px; }
+            .rsvp-registration .mm-input { min-height: 48px; font-size: 14px; }
+            .rsvp-registration .mm-helper-text, .rsvp-registration .mm-error-text { font-size: 12px; }
+            .rsvp-registration .rsvp-consent { font-size: 12px; }
+            .rsvp-registration #submitBtn { width: 100%; min-height: 44px; font-size: 15px; }
+            .rsvp-registration .mm-link-sub { font-size: 12px; }
         }
     </style>
     <div class="rsvp-registration">

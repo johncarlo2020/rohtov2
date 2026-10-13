@@ -40,18 +40,23 @@
             .rsvp-dashboard { min-height: 100dvh; padding: 35px 40px 50px; }
             .rsvp-content { max-width: 420px; }
             .rsvp-logo { width: 180px; margin-bottom: 40px; }
-            .rsvp-title { font-size: 25px; margin: 0 0 25px; }
-            .rsvp-greeting { font-size: 18px; margin-bottom: 14px; }
+            .rsvp-title { font-size: 28px; margin: 0 0 28px; }
+            .rsvp-greeting { font-size: 20px; margin-bottom: 16px; }
+            .rsvp-intro { font-size: 14px; }
+            .rsvp-notice { font-size: 14px; }
             .rsvp-availability { margin-bottom: 26px; }
-            .rsvp-label { font-size: 13px; }
-            .rsvp-select { min-height: 44px; font-size: 13px; }
+            .rsvp-label { font-size: 14px; }
+            .rsvp-select { min-height: 48px; font-size: 15px; }
             .rsvp-time-label { margin-top: 22px; }
-            .rsvp-time { font-size: 13px; padding-top: 12px; margin-bottom: 22px; }
-            .rsvp-next { width: 100%; padding: 10px; border-radius: 5px; font-size: 14px; margin-top: 24px; }
+            .rsvp-time { font-size: 15px; padding-top: 12px; margin-bottom: 22px; }
+            .rsvp-next { width: 100%; min-height: 44px; padding: 10px; border-radius: 5px; font-size: 16px; margin-top: 24px; }
             .rsvp-confirmation { max-width: 480px; padding: 40px 40px 30px; max-height: calc(100dvh - 60px); overflow-y: auto; }
-            .rsvp-confirmation-intro { letter-spacing: 1.5px; line-height: 1.5; }
-            .rsvp-confirmation dl { letter-spacing: 1.5px; line-height: 1.5; }
+            .rsvp-confirmation h2 { font-size: 26px; }
+            .rsvp-confirmation-intro { font-size: 16px; letter-spacing: 1.5px; line-height: 1.5; }
+            .rsvp-confirmation dl { font-size: 16px; letter-spacing: 1.5px; line-height: 1.5; }
+            .rsvp-back { font-size: 15px; }
             .rsvp-confirmation .rsvp-next { width: 260px; }
+            .rsvp-terms { font-size: 13px; }
         }
     </style>
 

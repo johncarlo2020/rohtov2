@@ -25,9 +25,9 @@
             .welcome-rsvp-title { font-size: clamp(24px, 2.4vw, 36px); }
             .welcome-rsvp-content { padding: 36px 30px 60px; }
             .welcome-rsvp-copy { max-width: 400px; }
-            .welcome-rsvp-heading { font-size: 15px; margin-bottom: 16px; }
-            .welcome-rsvp-copy p { font-size: 12px; line-height: 1.25; margin-bottom: 18px; }
-            .welcome-rsvp-signup { margin-top: 40px; }
+            .welcome-rsvp-heading { font-size: 17px; margin-bottom: 18px; }
+            .welcome-rsvp-copy p { font-size: 14px; line-height: 1.5; margin-bottom: 20px; }
+            .welcome-rsvp-signup { min-height: 44px; margin-top: 40px; font-size: 15px; }
         }
     </style>
     <div class="welcome-rsvp">

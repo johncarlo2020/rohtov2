@@ -20,12 +20,12 @@
             .rsvp-pass-page { min-height: 100dvh; padding: 35px 40px 50px; }
             .rsvp-pass { max-width: 420px; padding-bottom: 10px; }
             .rsvp-pass-logo { width: 180px; margin-bottom: 40px; }
-            .rsvp-pass h1 { font-size: 25px; margin-bottom: 25px; }
-            .rsvp-pass h2 { font-size: 16px; margin-bottom: 14px; }
-            .rsvp-pass p { margin-bottom: 16px; }
+            .rsvp-pass h1 { font-size: 27px; margin-bottom: 25px; }
+            .rsvp-pass h2 { font-size: 18px; margin-bottom: 14px; }
+            .rsvp-pass p { font-size: 14px; line-height: 1.6; margin-bottom: 16px; }
             #rsvp-qr { margin-top: 25px; margin-bottom: 22px; }
-            .rsvp-pass-details { max-width: 380px; font-size: 12px; line-height: 1.8; overflow-wrap: anywhere; }
-            .rsvp-save { width: 420px; max-width: 100%; min-height: 38px; margin-top: 22px; font-size: 14px; }
+            .rsvp-pass-details { max-width: 380px; font-size: 14px; line-height: 1.8; overflow-wrap: anywhere; }
+            .rsvp-save { width: 420px; max-width: 100%; min-height: 44px; margin-top: 22px; font-size: 16px; }
         }
     </style>
     <div class="rsvp-pass-page">

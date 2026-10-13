@@ -280,10 +280,10 @@
                             {{ $station->name }}
                         </div>
 
-                        {{-- ✅ Redeemed (priority) --}}
+                        {{-- ✅ Status Overlay --}}
                         @if ($station->status)
                             <div class="overlay">
-                                <span class="text-white" style="font-size:10px;">REDEEMED</span>
+                                <span class="text-white" style="font-size:10px;">{{ !in_array($station->id, [1, 2]) ? 'COMPLETED' : 'REDEEMED' }}</span>
                             </div>
 
                         {{-- 🔒 LOCK (Station 3 or Video Booth) --}}

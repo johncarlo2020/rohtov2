@@ -68,11 +68,21 @@
         #banner .top{
             margin: 25% 0%;
         }
+        
+        .welcome-page .welcome_img_bottom {
+            -o-object-fit: contain;
+            object-fit: contain;
+            width: 100%;
+            height: auto;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+        }
     </style>
 </head>
 
 <body class="antialiased welcome-page" style="background-image:url('{{ asset('images/brand/landing_bg2.webp') }}');">
-
+    <img class="welcome_img_bottom" src="{{ asset('images/brand/welcome_img.webp') }}" alt="Welcome Image">
     <div class="container-fluid main-content with-scroll py-4 px-0">
         <div class="top-container">
             <!-- Branding (top area) -->

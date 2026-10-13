@@ -68,11 +68,21 @@
         #banner .top{
             margin: 25% 0%;
         }
+
+        .welcome_img_bottom {
+            -o-object-fit: contain;
+            object-fit: contain;
+            width: 100%;
+            height: auto;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+        }
     </style>
 </head>
 
 <body class="antialiased welcome-page" style="background-image:url('{{ asset('images/brand/landing_bg2.webp') }}');">
-
+    <img class="welcome_img_bottom" src="{{ asset('images/brand/welcome_img.webp') }}" alt="Welcome Image">
     <div class="container-fluid main-content with-scroll py-4 px-0">
         <div class="top-container">
             <!-- Branding (top area) -->
@@ -90,12 +100,15 @@
                 <div class="top">
                     <div class="row">
                         <div class="col-12">
-                            <h4 class="text-center text-white mb-3">Congratulations!<br>You've completed the journey of</h4>
+                            <h5 class="text-center text-white mb-3">Congratulations!<br>You've completed the journey of</h5>
                         </div>
                     </div>
                     <div class="row">
-                        <img class="discover_img w-100" src="{{ asset('images/brand/masthead.webp') }}"
-                        alt="" />
+                        <div class="col-12">
+                            <h1 class="text-center text-white fw-bold mb-3" style="font-size: 1.85rem; line-height: 1.25;">
+                                iProperty Bumiputera<br>New Homes Expo
+                            </h1>
+                        </div>
                     </div>
                 </div>
                         <!-- Bottom CTA -->

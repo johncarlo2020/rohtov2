@@ -40,9 +40,15 @@ class StationController extends Controller
 
     $perfumes = Perfume::select("id", "title")->get();
 
-    if ($station->id == 1) {
+    // Early Bird (Station 1): only pre-registered early bird users can access
+    if ($station->id == 1 && !auth()->user()->is_early_bird) {
+      return redirect()->route('dashboard');
+    }
+
+    // Lucky Draw (Station 2): requires 3 developer quizzes and 2 games (stations 3 & 4)
+    if ($station->id == 2) {
       $developersCompleted = auth()->user()->developers->isNotEmpty() && auth()->user()->developers->every(fn($d) => $d->pivot->isCompleted == 1);
-      $gamesCompleted = auth()->user()->stationUser()->whereIn('station_id', [2, 3])->distinct('station_id')->count('station_id') >= 2;
+      $gamesCompleted = auth()->user()->stationUser()->whereIn('station_id', [3, 4])->distinct('station_id')->count('station_id') >= 2;
       if (!$developersCompleted || !$gamesCompleted) {
         return redirect()->route('dashboard');
       }
@@ -330,9 +336,9 @@ if ($activeVoucher) {
         // ✅ Station check (only skip for prize maybe — your logic choice)
         $station_id = $request->station;
 
-        if ((int) $station_id === 1 && $isEarlyBird) {
+        if ((int) $station_id === 2 && $isEarlyBird) {
             return response()->json([
-                "message" => "Station 1 skipped",
+                "message" => "Station 2 skipped",
                 "status" => "success",
             ], 200);
         }
@@ -430,7 +436,7 @@ if ($activeVoucher) {
         }
 
      
-      // Special case: station 3
+      // Special case: station 1
       if ($station_id == 2) {
           $response["type"] = "prize";
           $response["redirect_url"] = route('prize.id', ['prize_id' => $prize_id]);

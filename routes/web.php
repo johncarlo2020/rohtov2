@@ -8,6 +8,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\VipController;
 use App\Http\Controllers\Api\GiftController;
 use App\Http\Controllers\BookingViewController;
+use App\Http\Controllers\RsvpDashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
@@ -140,7 +141,9 @@ Route::group(['middleware' => ['client']], function () {
     Route::get('/developer/{developer}', 'App\Http\Controllers\StationController@developer')->name('developer');
     Route::get('/developer/{developer}/quiz', 'App\Http\Controllers\StationController@quiz')->name('developer.quiz');
 
-    Route::get('/dashboard', 'App\Http\Controllers\StationController@welcome')->name('dashboard');
+    Route::get('/dashboard', [RsvpDashboardController::class, 'index'])->name('dashboard');
+    Route::post('/rsvp', [RsvpDashboardController::class, 'store'])->name('rsvp.store');
+    Route::get('/rsvp/confirmed/{reference}', [RsvpDashboardController::class, 'confirmed'])->name('rsvp.confirmed');
     Route::get('/discover', 'App\Http\Controllers\StationController@discover')->name('discover');
     Route::get('/giftselection', 'App\Http\Controllers\StationController@giftSelection')->name('station.giftselection');
     Route::post('/giftselection/redeem', 'App\Http\Controllers\StationController@redeemGift')->name('giftselection.redeem');

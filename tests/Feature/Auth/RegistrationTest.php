@@ -31,6 +31,27 @@ class RegistrationTest extends TestCase
         $response->assertSee('COMMUNICATION CONSENT*');
     }
 
+    public function test_existing_users_are_logged_in_when_registering(): void
+    {
+        foreach ([false, true] as $verified) {
+            $user = \App\Models\User::factory()->create([
+                'email' => $verified ? 'verified@example.com' : 'unverified@example.com',
+                'otp_verified' => $verified,
+            ]);
+
+            $response = $this->post('/register', [
+                'email' => strtoupper($user->email),
+                'fname' => 'Replacement name',
+            ]);
+
+            $this->assertAuthenticatedAs($user);
+            $response->assertRedirect(route('dashboard'));
+            $this->assertSame($user->fname, $user->fresh()->fname);
+            $this->assertSame(1, \App\Models\User::where('email', $user->email)->count());
+            $this->app['auth']->forgetGuards();
+        }
+    }
+
     public function test_new_users_can_register_with_legacy_payload(): void
     {
         $response = $this->post('/register', [

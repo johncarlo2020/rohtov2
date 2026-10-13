@@ -41,20 +41,11 @@ class RegisteredUserController extends Controller
         // Check if email already exists
         $existingUser = User::where('email', $email)->first();
         if ($existingUser) {
-            if ($existingUser->otp_verified) {
-                return back()
-                    ->withInput()
-                    ->withErrors([
-                        'email' => 'Looks like you already have an account! Please log in to continue.',
-                    ]);
-            }
+            Auth::login($existingUser);
+            $request->session()->regenerate();
+            $request->session()->forget(['login_user_id', 'otp', 'email', 'otp_email', 'is_login']);
 
-            // If not yet verified, update OTP and name
-            $existingUser->update([
-                'fname' => $fname,
-                'otp' => $otp,
-            ]);
-            $user = $existingUser;
+            return redirect()->route('dashboard');
         } else {
             // Create user in database immediately with OTP
             $user = User::create([
@@ -70,12 +61,6 @@ class RegisteredUserController extends Controller
                 $user->assignRole('client');
             }
 
-            // Default finish 1st station: REPLICA CAFE
-            $replicaStation = Station::where('slug', 'replica-cafe')->orWhere('name', 'REPLICA CAFE')->first();
-            StationUser::firstOrCreate([
-                'user_id' => $user->id,
-                'station_id' => $replicaStation ? $replicaStation->id : 1,
-            ]);
         }
 
         // Store session data

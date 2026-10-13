@@ -150,7 +150,7 @@
                            
                             @foreach ($user['stations'] as $station)
                                 <td class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-danger' }}">
-                                    @if($station['id'] == 3)
+                                    @if($station['id'] == 1)
 
                                         {{ $station['value'] ? 'Yes' : 'No' }}
 
@@ -161,7 +161,7 @@
                                             </small>
                                         @endif
 
-                                   @elseif($station['id'] == 1 && $station['value'])
+                                   @elseif($station['id'] == 2 && $station['value'])
 
                                         {{ $user->userGift?->gift?->name ?? 'No Gift' }}
 

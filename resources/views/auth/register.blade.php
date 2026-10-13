@@ -1,13 +1,38 @@
 <x-guest-layout>
-    <div class="mm-mobile-container">
-        <div>
+    <style>
+        .rsvp-registration { min-height: 100dvh; background: #f2efe9; color: #111; padding: 35px 31px 60px; font-family: 'Courier New', Courier, monospace; }
+        .rsvp-registration-inner { max-width: 340px; margin: 0 auto; }
+        .rsvp-registration-logo { display: block; width: 220px; max-width: 85%; margin: 0 auto 46px; }
+        .rsvp-registration-title { text-align: center; font-family: inherit; font-size: 25px; font-weight: 400; line-height: 1.25; margin: 0 -10px 24px; }
+        .rsvp-registration-subtitle { text-align: center; font-family: inherit; font-size: 22px; font-weight: 400; margin: 0 0 26px; }
+        .rsvp-registration .mm-label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 5px; }
+        .rsvp-registration .mm-input { display: block; box-sizing: border-box; width: 100%; min-height: 41px; padding: 11px; background: #fff; border: 0; border-bottom: 1px solid #111; border-radius: 0; font-family: inherit; font-size: 11px; }
+        .rsvp-registration .mm-input::placeholder { color: #999; opacity: 1; }
+        .rsvp-registration .mm-helper-text, .rsvp-registration .mm-error-text { color: #ff5555; font-size: 10px; line-height: 1.6; margin-top: 9px; }
+        .rsvp-registration .mm-checkbox-label { display: flex; align-items: flex-start; gap: 16px; }
+        .rsvp-registration .mm-checkbox-label input { flex-shrink: 0; width: 17px; height: 17px; margin: 3px 0 0 5px; accent-color: #111; }
+        .rsvp-registration .rsvp-consent { font-family: inherit; font-size: 10px; color: #444; line-height: 1.5; }
+        .rsvp-registration-divider { border-top: 1px solid #777; margin: 30px 0 34px; }
+        .rsvp-registration #submitBtn { display: block; width: 176px; max-width: 100%; min-height: 35px; margin: 0 auto; padding: 8px; background: #000; color: #fff; border: 0; border-radius: 6px; font-family: inherit; font-size: 13px; font-weight: 700; }
+        .rsvp-registration #submitBtn:disabled { background: #999; cursor: not-allowed; opacity: 1; }
+        .rsvp-registration .mm-link-sub { text-align: center; font-size: 10px; letter-spacing: .5px; margin-top: 20px; }
+        @media (min-width: 768px) {
+            .rsvp-registration { padding-top: 35px; }
+            .rsvp-registration-inner { max-width: 420px; }
+            .rsvp-registration-logo { width: 180px; margin-bottom: 46px; }
+            .rsvp-registration-title { font-size: 25px; margin-bottom: 20px; }
+            .rsvp-registration-subtitle { font-size: 21px; margin-bottom: 25px; }
+            .rsvp-registration #submitBtn { width: 100%; }
+        }
+    </style>
+    <div class="rsvp-registration">
+        <div class="rsvp-registration-inner">
             {{-- Header --}}
-            @include('components.branding')
+            <img class="rsvp-registration-logo" src="{{ asset('images/brand/logo.webp') }}" alt="Maison Margiela Paris">
 
             {{-- Title --}}
-            <h1 class="mm-page-title">
-                REGISTER
-            </h1>
+            <h1 class="rsvp-registration-title">HOUSE OF MEMORIES<br>MASTERCLASS</h1>
+            <h2 class="rsvp-registration-subtitle">REGISTRATION</h2>
 
             {{-- Registration Form --}}
             <form id="registerForm" method="POST" action="{{ route('register') }}">
@@ -35,7 +60,7 @@
 
                     @error('email')
                         <div class="mm-error-text">
-                            *Looks like you already have an account! Please <a href="{{ route('login') }}" style="color: #D93838; text-decoration: underline; font-weight: 700;">log in</a> to continue.
+                            {{ $message }}
                         </div>
                     @else
                         <div class="mm-helper-text">
@@ -45,13 +70,13 @@
                 </div>
 
                 {{-- Divider Line --}}
-                <div style="width: 100%; height: 1px; background-color: #666666; margin: 1.75rem 0 1.5rem 0;"></div>
+                <div class="rsvp-registration-divider"></div>
 
                 {{-- Terms & Privacy Checkbox --}}
                 <div class="mb-4">
                     <label class="mm-checkbox-label">
-                        <input id="termsCheckbox" type="checkbox" name="terms" value="1" required>
-                        <span style="font-family: 'Courier Prime', monospace; font-size: 0.725rem; color: #444444; line-height: 1.5;">
+                        <input id="termsCheckbox" type="checkbox" name="terms" value="1" required @checked(old('terms'))>
+                        <span class="rsvp-consent">
                             I have read and agree to the <a href="{{ asset('pdf/terms_and_conditions.pdf') }}" target="_blank" rel="noopener noreferrer" style="color: #111111; font-weight: 700; text-decoration: underline;">Terms and Conditions</a> and <a href="{{ asset('pdf/privacy_policy.pdf') }}" target="_blank" rel="noopener noreferrer" style="color: #111111; font-weight: 700; text-decoration: underline;">Privacy Policy</a>.
                         </span>
                     </label>
@@ -62,14 +87,14 @@
 
                 {{-- Submit Button --}}
                 <div class="mt-4 pt-1 text-center">
-                    <button id="submitBtn" type="submit" class="mm-btn-black mx-auto" style="width: 60%;" disabled>
+                    <button id="submitBtn" type="submit" disabled>
                         SUBMIT
                     </button>
                 </div>
             </form>
 
             {{-- Footer Link --}}
-            <div class="mm-link-sub mt-4" style="font-size: 0.725rem; letter-spacing: 1px; color: #111111;">
+            <div class="mm-link-sub">
                 ALREADY REGISTERED? <a href="{{ route('login') }}" style="color: #111111; font-weight: 700; text-decoration: underline;">LOGIN HERE</a>
             </div>
         </div>

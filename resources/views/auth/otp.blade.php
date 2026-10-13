@@ -1,4 +1,18 @@
 <x-guest-layout>
+    <style>
+        @media (min-width: 768px) {
+            .rsvp-otp-page { min-height: 100dvh; background: #f2efe9; padding: 35px 40px 50px; }
+            .rsvp-otp-page .mm-mobile-container { max-width: 420px; min-height: auto; padding: 0; background: transparent; }
+            .rsvp-otp-page .branding { text-align: center; margin: 0 0 40px; padding: 0; }
+            .rsvp-otp-page .branding .logo { display: block; width: 180px; max-width: 100%; height: auto; margin: 0 auto; }
+            .rsvp-otp-page .mm-page-title { font-size: 25px; font-weight: 400; line-height: 1.25; margin: 0 0 28px; text-align: center; }
+            .rsvp-otp-page .mm-otp-inputs { display: flex; justify-content: center; gap: 12px; margin: 28px 0 24px; }
+            .rsvp-otp-page .mm-otp-digit { width: 48px; height: 52px; border: 0; border-bottom: 1px solid #111; border-radius: 0; background: #fff; text-align: center; font-size: 22px; }
+            .rsvp-otp-page #verifyOtpBtn { width: 100%; min-height: 38px; padding: 10px; border-radius: 5px; font-size: 14px; }
+            .rsvp-otp-page #verifyOtpBtn:disabled { background: #999; opacity: 1; }
+        }
+    </style>
+    <div class="rsvp-otp-page">
     <div class="mm-mobile-container">
         <div>
             {{-- Header --}}
@@ -73,6 +87,8 @@
                 </a>
             </div>
         </div>
+    </div>
+
     </div>
 
     @push('scripts')

@@ -11,6 +11,17 @@
         .rsvp-pass-details { text-align: left; font-size: 11px; line-height: 1.7; margin: 0 auto; max-width: 310px; }
         .rsvp-save { display: block; width: 230px; margin: 22px auto 0; padding: 12px; border: 0; border-radius: 6px; background: #000; color: #fff; font-family: inherit; font-weight: 700; }
         .rsvp-save:disabled { opacity: .5; }
+        @media (min-width: 768px) {
+            .rsvp-pass-page { min-height: 100dvh; padding: 35px 40px 50px; }
+            .rsvp-pass { max-width: 420px; padding-bottom: 10px; }
+            .rsvp-pass-logo { width: 180px; margin-bottom: 40px; }
+            .rsvp-pass h1 { font-size: 25px; margin-bottom: 25px; }
+            .rsvp-pass h2 { font-size: 16px; margin-bottom: 14px; }
+            .rsvp-pass p { margin-bottom: 16px; }
+            #rsvp-qr { margin-top: 25px; margin-bottom: 22px; }
+            .rsvp-pass-details { max-width: 380px; font-size: 12px; line-height: 1.8; overflow-wrap: anywhere; }
+            .rsvp-save { width: 420px; max-width: 100%; min-height: 38px; margin-top: 22px; font-size: 14px; }
+        }
     </style>
     <div class="rsvp-pass-page">
         @if (session('email_warning'))

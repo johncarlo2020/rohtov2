@@ -12,11 +12,13 @@ class BookingDate extends Model
 
     protected $fillable = [
         'date',
+        'capacity',
         'is_available',
         'reason',
     ];
 
     protected $casts = [
+        'capacity' => 'integer',
         'is_available' => 'boolean',
         'date' => 'date:Y-m-d',
     ];

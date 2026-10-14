@@ -869,19 +869,20 @@ class StationController extends Controller
           ->keyBy("station_id")
       : collect();
 
-    $stations = \Schema::hasTable('stations') ? Station::pluck('name', 'id') : collect();
+    $stations = \Schema::hasTable('stations') ? Station::orderBy('id')->pluck('name', 'id') : collect();
 
     $developers = collect();
     
 
     $hasStationUsers = \Schema::hasTable('station_users');
     foreach ($data["users"] as $user) {
-      $userStations = ($hasStationUsers && $user->relationLoaded('stationUser'))
-        ? $user->stationUser->pluck("station_id")->toArray()
+      $userStations = $hasStationUsers
+        ? ($user->relationLoaded('stationUser')
+            ? $user->stationUser->pluck("station_id")->toArray()
+            : $user->stationUser()->pluck("station_id")->toArray())
         : [];
       $user->stations = $stations->map(function ($name, $id) use (
-        $userStations,
-        $averageTimespentByStation
+        $userStations
       ) {
         return [
           "id" => $id,
@@ -968,6 +969,7 @@ class StationController extends Controller
       $averageTimespentByStation
     ) {
       return [
+        "id" => $id,
         "name" => $name,
         "average_timespent" => number_format(
           ($averageTimespentByStation->get($id)["average_timespent"] ?? 0) / 60,

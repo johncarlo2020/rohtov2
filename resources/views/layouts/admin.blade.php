@@ -88,6 +88,14 @@
                         <span class="ms-1 nav-link-text">Scan</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('booking-dates.*') ? 'active' : '' }}" href="{{ route('booking-dates.index') }}">
+                        <div class="d-flex align-items-center justify-content-center me-2 border-radius-md text-center icon icon-shape icon-sm">
+                            <i class="opacity-10 text-warning text-sm fa-solid fa-calendar-days"></i>
+                        </div>
+                        <span class="ms-1 nav-link-text">Booking Dates</span>
+                    </a>
+                </li>
             </ul>
         </div>
     </aside>

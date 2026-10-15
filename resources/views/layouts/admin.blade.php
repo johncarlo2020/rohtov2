@@ -231,7 +231,7 @@
                     <div class="mb-4 mb-lg-0 col-lg-6">
                         <div class="text-muted text-sm text-lg-start text-center copyright">
                             <a href="https://wowsome.com.my/" class="font-weight-bold" target="_blank">Wowsome</a>
-                            © Copyright 2025
+                            © Copyright {{ date('Y') }}
                         </div>
                     </div>
                 </div>

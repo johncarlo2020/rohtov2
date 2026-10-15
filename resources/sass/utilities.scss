@@ -125,10 +125,12 @@
     margin: auto;
     overflow-y: auto;
     overflow-x: hidden;
-    max-height: 100vh;
+    max-height: 100svh;
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
     overscroll-behavior-y: contain;
+    padding-bottom: calc(2.5rem + env(safe-area-inset-bottom, 0px)) !important;
+
 }
 
 @media (max-width: 768px) {

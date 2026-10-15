@@ -490,61 +490,32 @@ class StationController extends Controller
       ->count();
     // ─── Dashboard Summary Cards Calculations ───────────────────────────────
     $todayDateStr = now()->format('Y-m-d');
-    $currentHourStr = now()->format('H:00:00');
+    $currentTimeStr = now()->format('H:i:s');
 
-    // 1. Today Total Pax (time slot basis count)
+    // Each RSVP booking reserves one place in the fixed 2–3PM session.
     $todayTotalPax = \App\Models\Booking::where('status', '!=', 'cancelled')
-        ->whereHas('bookingDate', function ($q) use ($todayDateStr) {
-            $q->where('date', $todayDateStr);
-        })->sum('pax');
-    if ($todayTotalPax == 0) {
-        $todayTotalPax = \App\Models\Booking::where('status', '!=', 'cancelled')
-            ->whereHas('bookingDate', function ($q) use ($todayDateStr) {
-                $q->where('date', $todayDateStr);
-            })->count();
-    }
+        ->whereHas('bookingDate', fn ($query) => $query->where('date', $todayDateStr))
+        ->count();
 
-    // 2. Upcoming Summary Total Count (customers attending after current session on hour basis)
     $upcomingSummaryCount = \App\Models\Booking::where('status', '!=', 'cancelled')
-        ->where(function ($query) use ($todayDateStr, $currentHourStr) {
-            $query->whereHas('bookingDate', function ($q) use ($todayDateStr) {
-                $q->where('date', '>', $todayDateStr);
-            })->orWhere(function ($q2) use ($todayDateStr, $currentHourStr) {
-                $q2->whereHas('bookingDate', function ($q) use ($todayDateStr) {
-                    $q->where('date', $todayDateStr);
-                })->whereHas('bookingSlot', function ($q) use ($currentHourStr) {
-                    $q->where('start_time', '>', $currentHourStr);
-                });
-            });
-        })->sum('pax');
-
-    if ($upcomingSummaryCount == 0) {
-        $upcomingSummaryCount = \App\Models\Booking::where('status', '!=', 'cancelled')
-            ->where(function ($query) use ($todayDateStr, $currentHourStr) {
-                $query->whereHas('bookingDate', function ($q) use ($todayDateStr) {
-                    $q->where('date', '>', $todayDateStr);
-                })->orWhere(function ($q2) use ($todayDateStr, $currentHourStr) {
-                    $q2->whereHas('bookingDate', function ($q) use ($todayDateStr) {
-                        $q->where('date', $todayDateStr);
-                    })->whereHas('bookingSlot', function ($q) use ($currentHourStr) {
-                        $q->where('start_time', '>', $currentHourStr);
-                    });
-                });
-            })->count();
-    }
-
-    // 3. Accumulated Missed Count (every hour basis)
-    $allBookingsList = \App\Models\Booking::where('status', '!=', 'cancelled')
-        ->with(['bookingDate', 'bookingSlot'])
-        ->get();
-    $missedCount = $allBookingsList->filter(function ($b) {
-        return $b->computed_status === 'Missed';
-    })->sum('pax');
-    if ($missedCount == 0) {
-        $missedCount = $allBookingsList->filter(function ($b) {
-            return $b->computed_status === 'Missed';
+        ->whereHas('bookingDate', function ($query) use ($todayDateStr, $currentTimeStr) {
+            $query->where('date', '>', $todayDateStr);
+            if ($currentTimeStr < '14:00:00') {
+                $query->orWhere('date', $todayDateStr);
+            }
         })->count();
-    }
+
+    $missedCount = \App\Models\Booking::whereNotIn('status', ['cancelled', 'attended', 'completed'])
+        ->whereNull('attended_at')
+        ->where(function ($query) use ($todayDateStr, $currentTimeStr) {
+            $query->where('status', 'no_show')
+                ->orWhereHas('bookingDate', function ($dates) use ($todayDateStr, $currentTimeStr) {
+                    $dates->where('date', '<', $todayDateStr);
+                    if ($currentTimeStr > '15:00:00') {
+                        $dates->orWhere('date', $todayDateStr);
+                    }
+                });
+        })->count();
 
     $data['todayTotalPax'] = $todayTotalPax;
     $data['upcomingSummaryCount'] = $upcomingSummaryCount;
@@ -898,19 +869,20 @@ class StationController extends Controller
           ->keyBy("station_id")
       : collect();
 
-    $stations = \Schema::hasTable('stations') ? Station::pluck('name', 'id') : collect();
+    $stations = \Schema::hasTable('stations') ? Station::orderBy('id')->pluck('name', 'id') : collect();
 
     $developers = collect();
     
 
     $hasStationUsers = \Schema::hasTable('station_users');
     foreach ($data["users"] as $user) {
-      $userStations = ($hasStationUsers && $user->relationLoaded('stationUser'))
-        ? $user->stationUser->pluck("station_id")->toArray()
+      $userStations = $hasStationUsers
+        ? ($user->relationLoaded('stationUser')
+            ? $user->stationUser->pluck("station_id")->toArray()
+            : $user->stationUser()->pluck("station_id")->toArray())
         : [];
       $user->stations = $stations->map(function ($name, $id) use (
-        $userStations,
-        $averageTimespentByStation
+        $userStations
       ) {
         return [
           "id" => $id,
@@ -997,6 +969,7 @@ class StationController extends Controller
       $averageTimespentByStation
     ) {
       return [
+        "id" => $id,
         "name" => $name,
         "average_timespent" => number_format(
           ($averageTimespentByStation->get($id)["average_timespent"] ?? 0) / 60,

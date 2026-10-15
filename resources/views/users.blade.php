@@ -123,10 +123,16 @@
                             <th>Full Name</th>
                             <th>Email Address</th>
                             <th>Registration Timestamp</th>
-                            <th>Action</th>
+                            @foreach ($data['stations'] as $station)
+                                <th class="text-center text-nowrap">{!! strtoupper($station['name']) !!}</th>
+                            @endforeach
+                            <th class="text-center no-sort" data-orderable="false">Action</th>
                             <th class="export-col d-none">Full Name</th>
                             <th class="export-col d-none">Email Address</th>
                             <th class="export-col d-none">Registration Timestamp</th>
+                            @foreach ($data['stations'] as $station)
+                                <th class="export-col d-none">{!! strtoupper($station['name']) !!}</th>
+                            @endforeach
                         </tr>
                     </thead>
                     <tbody>
@@ -146,6 +152,19 @@
                             <td data-order="{{ $user->created_at ? \Carbon\Carbon::parse($user->created_at)->timestamp : 0 }}">
                                 {{ \Carbon\Carbon::parse($user->created_at)->toDayDateTimeString() }}
                             </td>
+                            @foreach ($data['stations'] as $station)
+                                @php
+                                    $userStation = $user->stations[$station['id']] ?? null;
+                                    $isCompleted = !empty($userStation['value']);
+                                @endphp
+                                <td class="text-center font-weight-bold" data-order="{{ $isCompleted ? 1 : 0 }}">
+                                    @if($isCompleted)
+                                        <span class="badge bg-success text-white px-2 py-1" style="font-size: 11px; font-weight: 600;">Yes</span>
+                                    @else
+                                        <span class="badge bg-secondary text-white px-2 py-1" style="font-size: 11px; font-weight: 600;">No</span>
+                                    @endif
+                                </td>
+                            @endforeach
                             <td class="button-delete text-center">
                                 @if($user->isProtectedAdmin())
                                     <button class="btn btn-secondary btn-sm btn-protected" disabled 
@@ -161,6 +180,13 @@
                             <td class="export-col d-none">{{ trim(($user->title ? $user->title . ' ' : '') . $user->fname . ' ' . $user->lname) ?: $user->fname }}</td>
                             <td class="export-col d-none">{{ $user->email ?? '' }}</td>
                             <td class="export-col d-none">{{ $user->created_at ? \Carbon\Carbon::parse($user->created_at)->toDateTimeString() : '' }}</td>
+                            @foreach ($data['stations'] as $station)
+                                @php
+                                    $userStation = $user->stations[$station['id']] ?? null;
+                                    $isCompleted = !empty($userStation['value']);
+                                @endphp
+                                <td class="export-col d-none">{{ $isCompleted ? 'Yes' : 'No' }}</td>
+                            @endforeach
                         </tr>
                         @endforeach
                     </tbody>
@@ -519,7 +545,7 @@
         columnDefs: [
             {
                 orderable: false,
-                targets: 4 // Action/Delete column
+                targets: {{ 4 + count($data['stations']) }} // Action/Delete column
             }
         ],
 

@@ -49,108 +49,117 @@
 
 <body class="g-sidenav-show dashboard-style">
     <aside
-        class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border rounded-0  fixed-start "
+        class="fixed-start bg-white border rounded-0 sidenav navbar navbar-vertical navbar-expand-xs"
         id="sidenav-main">
-        <div class="sidenav-header border-bottom rounded-0 main-background ">
-            {{-- <i class="fas fa-times cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
+        <div class="border-bottom rounded-0 sidenav-header main-background">
+            {{-- <i class="top-0 position-absolute opacity-5 text-secondary cursor-pointer fas fa-times end-0 d-none d-xl-none"
                 aria-hidden="true" id="iconSidenav"></i> --}}
-            <a class="navbar-brand m-0 d-flex w-100 justify-content-center align-items-center" href="" target="_blank">
-                <img src="{{ asset('images/brand/logo.webp') }}" class="navbar-brand-img h-100" alt="main_logo" />
+            <a class="d-flex align-items-center justify-content-center m-0 w-100 navbar-brand" href="" target="_blank">
+                <img src="{{ asset('images/brand/logo.webp') }}" class="h-100 navbar-brand-img" alt="main_logo" />
             </a>
         </div>
-        <hr class="horizontal dark mt-0" />
+        <hr class="mt-0 horizontal dark" />
         <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
             <ul class="navbar-nav">
+
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('admin') ? 'active' : '' }}" href="{{ route('admin') }}">
                         <div
-                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fa-solid fa-gauge text-warning text-sm opacity-10"></i>
+                            class="d-flex align-items-center justify-content-center me-2 border-radius-md text-center icon icon-shape icon-sm">
+                            <i class="opacity-10 text-warning text-sm fa-solid fa-gauge"></i>
                         </div>
-                        <span class="nav-link-text ms-1">Dashboard</span>
+                        <span class="ms-1 nav-link-text">Dashboard</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('users') ? 'active' : '' }}" href="{{ route('users') }}">
                         <div
-                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fa-solid fa-users text-warning text-sm opacity-10"></i>
+                            class="d-flex align-items-center justify-content-center me-2 border-radius-md text-center icon icon-shape icon-sm">
+                            <i class="opacity-10 text-warning text-sm fa-solid fa-users"></i>
                         </div>
-                        <span class="nav-link-text ms-1">Users</span>
+                        <span class="ms-1 nav-link-text">Users</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('scanner') ? 'active' : '' }}" href="{{ route('scanner') }}">
+                        <div class="d-flex align-items-center justify-content-center me-2 border-radius-md text-center icon icon-shape icon-sm">
+                            <i class="opacity-10 text-warning text-sm fa-solid fa-qrcode"></i>
+                        </div>
+                        <span class="ms-1 nav-link-text">Scan</span>
                     </a>
                 </li>
             </ul>
         </div>
     </aside>
-    <main class="main-content position-relative border-radius-lg">
+    <main class="position-relative border-radius-lg main-content">
         <!-- Navbar -->
-        <nav class="navbar navbar-main navbar-expand-lg px-0 shadow-none bg-white mb-2 border rounded-0 sticky-top" id="navbarBlur"
+        <nav class="sticky-top bg-white shadow-none mb-2 px-0 border rounded-0 navbar navbar-main navbar-expand-lg" id="navbarBlur"
             data-scroll="false">
-            <div class="container-fluid py-1 px-4">
+            <div class="px-4 py-1 container-fluid">
                 <nav aria-label="breadcrumb">
-                    <div class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5 d-flex justify-content-start gap-2 align-items-center">
-                        <p class="font-weight-bolder mb-0  pr-3 mr-3 border px-3 py-1 rounded ">
+                    <div class="d-flex align-items-center justify-content-start gap-2 bg-transparent me-5 me-sm-6 mb-0 px-0 pt-1 pb-0 breadcrumb">
+                        <p class="mr-3 mb-0 px-3 py-1 pr-3 border rounded font-weight-bolder">
                              {{ ucfirst(Route::currentRouteName()) }}
                         </p>
-                        <p class="breadcrumb-item text-sm mb-0">
-                            <a class="opacity-5 " href="javascript:;">Home</a>
+                        <p class="mb-0 text-sm breadcrumb-item">
+                            <a class="opacity-5" href="javascript:;">Home</a>
                         </p>
-                        <p class="breadcrumb-item text-sm first-line:active mb-0" aria-current="page">
+                        <p class="mb-0 text-sm breadcrumb-item first-line:active" aria-current="page">
                               {{ ucfirst(Route::currentRouteName()) }}
                         </p>
                     </div>
                 </nav>
 
-                <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
-                    <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+                <div class="collapse navbar-collapse me-md-0 me-sm-4 mt-2 mt-sm-0" id="navbar">
+                    <div class="d-flex align-items-center ms-md-auto pe-md-3">
                         {{-- <div class="input-group">
                             <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
                             <input type="text" class="form-control" placeholder="Type here..." onfocus="focused(this)" onfocusout="defocused(this)">
                         </div> --}}
                     </div>
-                    <ul class="navbar-nav  justify-content-end">
-                        <li class="nav-item d-flex align-items-center">
+                    <ul class="justify-content-end navbar-nav">
+                        <li class="d-flex align-items-center nav-item">
                             <form role="form" method="post" action="{{route('admin.logout')}}" id="logout-form">
                                @csrf
                                 <a href="{{route('admin.logout')}}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                                class="nav-link font-weight-bold px-0">
-                                    <i class="fa fa-user me-sm-1"></i>
+                                class="px-0 font-weight-bold nav-link">
+                                    <i class="me-sm-1 fa fa-user"></i>
                                     <span class="d-sm-inline d-none">Log out</span>
                                 </a>
                             </form>
 
                         </li>
-                        <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
-                            <a href="javascript:;" class="nav-link p-0" id="iconNavbarSidenav">
+                        <li class="d-flex align-items-center ps-3 nav-item d-xl-none">
+                            <a href="javascript:;" class="p-0 nav-link" id="iconNavbarSidenav">
                                 <div class="sidenav-toggler-inner">
-                                    <i class="sidenav-toggler-line "></i>
-                                    <i class="sidenav-toggler-line "></i>
-                                    <i class="sidenav-toggler-line "></i>
+                                    <i class="sidenav-toggler-line"></i>
+                                    <i class="sidenav-toggler-line"></i>
+                                    <i class="sidenav-toggler-line"></i>
                                 </div>
                             </a>
                         </li>
-                        <li class="nav-item px-3 d-flex align-items-center d-none">
-                            <a href="javascript:;" class="nav-link p-0">
-                                <i class="fa fa-cog fixed-plugin-button-nav cursor-pointer"></i>
+                        <li class="d-flex align-items-center px-3 nav-item d-none">
+                            <a href="javascript:;" class="p-0 nav-link">
+                                <i class="fixed-plugin-button-nav cursor-pointer fa fa-cog"></i>
                             </a>
                         </li>
-                        <li class="nav-item dropdown pe-2 d-flex align-items-center d-none">
-                            <a href="javascript:;" class="nav-link p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fa fa-bell cursor-pointer"></i>
+                        <li class="d-flex align-items-center pe-2 nav-item dropdown d-none">
+                            <a href="javascript:;" class="p-0 nav-link" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="cursor-pointer fa fa-bell"></i>
                             </a>
-                            <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
+                            <ul class="me-sm-n4 px-2 py-3 dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
                                 <li class="mb-2">
-                                    <a class="dropdown-item border-radius-md" href="javascript:;">
+                                    <a class="border-radius-md dropdown-item" href="javascript:;">
                                         <div class="d-flex py-1">
                                             <div class="my-auto">
-                                                <img src="./img/team-2.jpg" class="avatar avatar-sm  me-3 ">
+                                                <img src="./img/team-2.jpg" class="me-3 avatar avatar-sm">
                                             </div>
                                             <div class="d-flex flex-column justify-content-center">
-                                                <h6 class="text-sm font-weight-normal mb-1">
+                                                <h6 class="mb-1 font-weight-normal text-sm">
                                                     <span class="font-weight-bold">New message</span> from Laur
                                                 </h6>
-                                                <p class="text-xs text-secondary mb-0">
-                                                    <i class="fa fa-clock me-1"></i>
+                                                <p class="mb-0 text-secondary text-xs">
+                                                    <i class="me-1 fa fa-clock"></i>
                                                     13 minutes ago
                                                 </p>
                                             </div>
@@ -158,17 +167,17 @@
                                     </a>
                                 </li>
                                 <li class="mb-2">
-                                    <a class="dropdown-item border-radius-md" href="javascript:;">
+                                    <a class="border-radius-md dropdown-item" href="javascript:;">
                                         <div class="d-flex py-1">
                                             <div class="my-auto">
-                                                <img src="./img/small-logos/logo-spotify.svg" class="avatar avatar-sm bg-gradient-dark  me-3 ">
+                                                <img src="./img/small-logos/logo-spotify.svg" class="bg-gradient-dark me-3 avatar avatar-sm">
                                             </div>
                                             <div class="d-flex flex-column justify-content-center">
-                                                <h6 class="text-sm font-weight-normal mb-1">
+                                                <h6 class="mb-1 font-weight-normal text-sm">
                                                     <span class="font-weight-bold">New album</span> by Travis Scott
                                                 </h6>
-                                                <p class="text-xs text-secondary mb-0">
-                                                    <i class="fa fa-clock me-1"></i>
+                                                <p class="mb-0 text-secondary text-xs">
+                                                    <i class="me-1 fa fa-clock"></i>
                                                     1 day
                                                 </p>
                                             </div>
@@ -176,9 +185,9 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item border-radius-md" href="javascript:;">
+                                    <a class="border-radius-md dropdown-item" href="javascript:;">
                                         <div class="d-flex py-1">
-                                            <div class="avatar avatar-sm bg-gradient-secondary  me-3  my-auto">
+                                            <div class="bg-gradient-secondary my-auto me-3 avatar avatar-sm">
                                                 <svg width="12px" height="12px" viewBox="0 0 43 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                                     <title>credit-card</title>
                                                     <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -195,11 +204,11 @@
                                                 </svg>
                                             </div>
                                             <div class="d-flex flex-column justify-content-center">
-                                                <h6 class="text-sm font-weight-normal mb-1">
+                                                <h6 class="mb-1 font-weight-normal text-sm">
                                                     Payment successfully completed
                                                 </h6>
-                                                <p class="text-xs text-secondary mb-0">
-                                                    <i class="fa fa-clock me-1"></i>
+                                                <p class="mb-0 text-secondary text-xs">
+                                                    <i class="me-1 fa fa-clock"></i>
                                                     2 days
                                                 </p>
                                             </div>
@@ -216,11 +225,11 @@
         <!-- End Navbar -->
         <div class="container-fluid">@yield('content')</div>
 
-        <footer class="footer py-3">
+        <footer class="py-3 footer">
             <div class="container-fluid">
-                <div class="row align-items-center justify-content-lg-between">
-                    <div class="col-lg-6 mb-lg-0 mb-4">
-                        <div class="copyright text-center text-sm text-muted text-lg-start">
+                <div class="justify-content-lg-between align-items-center row">
+                    <div class="mb-4 mb-lg-0 col-lg-6">
+                        <div class="text-muted text-sm text-lg-start text-center copyright">
                             <a href="https://wowsome.com.my/" class="font-weight-bold" target="_blank">Wowsome</a>
                             © Copyright 2025
                         </div>

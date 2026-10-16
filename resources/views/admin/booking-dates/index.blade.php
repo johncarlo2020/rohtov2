@@ -40,7 +40,17 @@
     </div>
 
     <div class="card">
-        <div class="card-header pb-0"><h6>Booking Dates</h6></div>
+        <div class="card-header pb-0 d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <h6 class="mb-0">Booking Dates</h6>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{{ route('bookings.export.spreadsheet') }}" class="btn btn-sm btn-outline-success mb-0">
+                    <i class="fa-solid fa-file-excel me-1"></i>Export Spreadsheet
+                </a>
+                <a href="{{ route('bookings.export.pdf') }}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-danger mb-0">
+                    <i class="fa-solid fa-file-pdf me-1"></i>Print / Save PDF
+                </a>
+            </div>
+        </div>
         <div class="card-body table-responsive">
             <table class="table align-items-center mb-0">
                 <thead>

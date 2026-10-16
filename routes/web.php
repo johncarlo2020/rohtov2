@@ -109,6 +109,8 @@ Route::group(['middleware' => ['admin']], function () {
     Route::delete('/admin/booking-dates/{bookingDate}', [BookingDateController::class, 'destroy'])->name('booking-dates.destroy');
 
     Route::get('/admin/bookings', [BookingController::class, 'index'])->name('bookings');
+    Route::get('/admin/bookings/export/spreadsheet', [BookingController::class, 'exportSpreadsheet'])->name('bookings.export.spreadsheet');
+    Route::get('/admin/bookings/export/pdf', [BookingController::class, 'exportPdf'])->name('bookings.export.pdf');
     Route::post('/admin/bookings/{id}/attend', [BookingController::class, 'markAttended'])->name('booking.attend');
     Route::delete('/admin/bookings/{id}', [BookingController::class, 'destroy'])->name('booking.destroy');
     Route::post('/admin/users', [\App\Http\Controllers\Admin\UserController::class, 'store'])->middleware('superadmin')->name('users.store');
@@ -231,6 +233,5 @@ Route::get('/resend-otp', 'App\Http\Controllers\StationController@resend')->name
 Route::post('/verify-otp', 'App\Http\Controllers\StationController@verify')->name('verify.otp');
 
 require __DIR__ . '/auth.php';
-
 
 

@@ -204,6 +204,14 @@
             </div>
             
             <div class="d-flex flex-wrap align-items-center gap-2">
+                <a href="{{ route('bookings.export.spreadsheet') }}" class="btn btn-outline-success btn-sm font-weight-bold shadow-sm mb-0 px-3 py-2 d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-file-excel"></i>
+                    <span>Export Spreadsheet</span>
+                </a>
+                <a href="{{ route('bookings.export.pdf') }}" target="_blank" rel="noopener" class="btn btn-outline-danger btn-sm font-weight-bold shadow-sm mb-0 px-3 py-2 d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-file-pdf"></i>
+                    <span>Print / Save PDF</span>
+                </a>
                 <button type="button" class="btn btn-warning btn-sm font-weight-bold text-dark shadow-sm mb-0 px-3 py-2 d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#vipBookingModal" onclick="openVipModal()">
                     <i class="fa-solid fa-crown text-dark"></i>
                     <span>+ VIP Reservation</span>

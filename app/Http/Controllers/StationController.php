@@ -462,7 +462,7 @@ class StationController extends Controller
     $excludedCustomerRoles = ["admin", "superadmin", "staff"];
 
     $withStations = \Schema::hasTable('station_users') ? ["stationUser"] : [];
-    $data["users"] = User::with($withStations)
+    $data["users"] = User::registeredFromDj()->with($withStations)
       ->orderBy("id", "desc")
       ->whereDoesntHave("roles", function ($q) use ($excludedRoles) {
         $q->whereIn("name", $excludedRoles);
@@ -474,7 +474,7 @@ class StationController extends Controller
       )
       ->get();
 
-    $data["usersCount"] = User::whereDate(
+    $data["usersCount"] = User::registeredFromDj()->whereDate(
       "created_at",
       ">=",
       $startDate->toDateString()
@@ -521,7 +521,7 @@ class StationController extends Controller
     $data['upcomingSummaryCount'] = $upcomingSummaryCount;
     $data['missedCount'] = $missedCount;
 
-    $data["userToday"] = User::whereDate("created_at", $today)
+    $data["userToday"] = User::registeredFromDj()->whereDate("created_at", $today)
       ->whereDoesntHave("roles", function ($q) use ($excludedCustomerRoles) {
         $q->whereIn("name", $excludedCustomerRoles);
       })
@@ -531,7 +531,7 @@ class StationController extends Controller
         $startDate->toDateString()
       )
       ->count();
-    $data["country"] = User::selectRaw("country , COUNT(*) as count")
+    $data["country"] = User::registeredFromDj()->selectRaw("country , COUNT(*) as count")
       ->whereDoesntHave("roles", function ($q) use ($excludedCustomerRoles) {
         $q->whereIn("name", $excludedCustomerRoles);
       })
@@ -549,7 +549,7 @@ class StationController extends Controller
     $totalStationsCount = \Schema::hasTable('stations') ? Station::count() : 8;
 
     $customersFinishedAll = \Schema::hasTable('station_users')
-      ? User::whereDoesntHave("roles", function ($q) use ($excludedCustomerRoles) {
+      ? User::registeredFromDj()->whereDoesntHave("roles", function ($q) use ($excludedCustomerRoles) {
           $q->whereIn("name", $excludedCustomerRoles);
         })
         ->whereDate("created_at", ">=", $startDate->toDateString())
@@ -567,7 +567,7 @@ class StationController extends Controller
     } else {
       $data["percentage"] = "0.00";
     }
-    $userCounts = User::selectRaw("DATE(created_at) as date, COUNT(*) as count")
+    $userCounts = User::registeredFromDj()->selectRaw("DATE(created_at) as date, COUNT(*) as count")
       ->whereDoesntHave("roles", function ($q) use ($excludedCustomerRoles) {
         $q->whereIn("name", $excludedCustomerRoles);
       })
@@ -577,7 +577,7 @@ class StationController extends Controller
       ->toArray();
 
     $userCountsArray = [];
-    $data["dates"] = User::select(
+    $data["dates"] = User::registeredFromDj()->select(
       DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as date')
     )
       ->whereDoesntHave("roles", function ($q) use ($excludedCustomerRoles) {
@@ -591,7 +591,7 @@ class StationController extends Controller
       ->groupBy("date")
       ->get();
 
-    $data["registrationsPerHour"] = User::select(
+    $data["registrationsPerHour"] = User::registeredFromDj()->select(
       DB::raw("DATE(created_at) as date"),
       DB::raw("HOUR(created_at) as hour_24"), // numeric sorting key
       DB::raw('LOWER(DATE_FORMAT(created_at, "%l%p")) as hour'),
@@ -621,7 +621,7 @@ class StationController extends Controller
     $stationList = $hasStations
       ? Station::orderBy('id')->get()->map(function ($stn) use ($hasStationUsers) {
           $stn->completed_users_count = $hasStationUsers
-            ? StationUser::where('station_id', $stn->id)->distinct('user_id')->count('user_id')
+            ? StationUser::where('station_id', $stn->id)->whereIn('user_id', User::registeredFromDj()->select('id'))->distinct('user_id')->count('user_id')
             : 0;
           return $stn;
         })
@@ -695,7 +695,7 @@ class StationController extends Controller
     $totalAveragePlaytime = $averagePlaytimeByUser->avg("total_playtime") ?? 0;
 
     // get all users race column for pie chart
-    $data["race"] = User::where("race", "!=", "admin")
+    $data["race"] = User::registeredFromDj()->where("race", "!=", "admin")
       ->whereDate("created_at", ">=", $startDate->toDateString())
       ->selectRaw("race, COUNT(*) as count")
       ->groupBy("race")
@@ -805,7 +805,7 @@ class StationController extends Controller
     $excludedRoles = $isAdmin ? ["admin", "superadmin"] : ["admin", "superadmin", "staff"];
     $excludedCustomerRoles = ["admin", "superadmin", "staff"];
 
-    $data["users"] = User::whereDate(
+    $data["users"] = User::registeredFromDj()->whereDate(
       "created_at",
       ">=",
       $startDate->toDateString()
@@ -819,7 +819,7 @@ class StationController extends Controller
       ->orderBy("id", "desc")
       ->get();
 
-    $data["usersCount"] = User::whereDate(
+    $data["usersCount"] = User::registeredFromDj()->whereDate(
       "created_at",
       ">=",
       $startDate->toDateString()
@@ -828,7 +828,7 @@ class StationController extends Controller
         $q->whereIn("name", $excludedCustomerRoles);
       })
       ->count();
-    $data["userToday"] = User::whereDate("created_at", $today)
+    $data["userToday"] = User::registeredFromDj()->whereDate("created_at", $today)
       ->whereDoesntHave("roles", function ($q) use ($excludedCustomerRoles) {
         $q->whereIn("name", $excludedCustomerRoles);
       })
@@ -837,7 +837,7 @@ class StationController extends Controller
     $totalStationsCount = \Schema::hasTable('stations') ? Station::count() : 8;
 
     $customersFinishedAll = \Schema::hasTable('station_users')
-      ? User::whereDate(
+      ? User::registeredFromDj()->whereDate(
           "created_at",
           ">=",
           $startDate->toDateString()

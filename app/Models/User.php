@@ -34,6 +34,7 @@ class User extends Authenticatable
         'otp',
         'company',
         'otp_verified',
+        'registered_from',
         'title',
         'fname',
         'lname',
@@ -130,5 +131,10 @@ class User extends Authenticatable
         $protectedEmails = ['admin@gmail.com', 'superadmin@gmail.com', 'manager@gmail.com', 'support@gmail.com'];
         
         return in_array(strtolower($this->email), $protectedEmails) || $this->isSuperAdmin() || $this->hasRole('admin') || $this->hasRole('staff');
+    }
+
+    public function scopeRegisteredFromDj($query)
+    {
+        return $query->where($query->getModel()->getTable() . '.registered_from', 'DJ');
     }
 }

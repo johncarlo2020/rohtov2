@@ -63,6 +63,7 @@ class RegisteredUserController extends Controller
                 'password' => Hash::make('password'),
                 'otp' => $otp,
                 'otp_verified' => 0,
+                'registered_from' => 'DJ',
                 'created_at' => Carbon::now(),
             ]);
 

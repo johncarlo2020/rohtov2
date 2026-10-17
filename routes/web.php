@@ -5,6 +5,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\IpadController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\Admin\BookingDateController;
 use App\Http\Controllers\VipController;
 use App\Http\Controllers\Api\GiftController;
 use App\Http\Controllers\BookingViewController;
@@ -101,7 +102,15 @@ Route::group(['middleware' => ['admin']], function () {
     // Route::post('/admin/gifts/{gift}/toggle', 'App\Http\Controllers\StationController@toggleGift')->name('admin.gifts.toggle');
     // Route::get('/admin/user-gifts', 'App\Http\Controllers\StationController@userGifts')->name('admin.user.gifts');
 
+    Route::get('/admin/booking-dates', [BookingDateController::class, 'index'])->name('booking-dates.index');
+    Route::post('/admin/booking-dates', [BookingDateController::class, 'store'])->name('booking-dates.store');
+    Route::get('/admin/booking-dates/{bookingDate}', [BookingDateController::class, 'show'])->name('booking-dates.show');
+    Route::put('/admin/booking-dates/{bookingDate}', [BookingDateController::class, 'update'])->name('booking-dates.update');
+    Route::delete('/admin/booking-dates/{bookingDate}', [BookingDateController::class, 'destroy'])->name('booking-dates.destroy');
+
     Route::get('/admin/bookings', [BookingController::class, 'index'])->name('bookings');
+    Route::get('/admin/bookings/export/spreadsheet', [BookingController::class, 'exportSpreadsheet'])->name('bookings.export.spreadsheet');
+    Route::get('/admin/bookings/export/pdf', [BookingController::class, 'exportPdf'])->name('bookings.export.pdf');
     Route::post('/admin/bookings/{id}/attend', [BookingController::class, 'markAttended'])->name('booking.attend');
     Route::delete('/admin/bookings/{id}', [BookingController::class, 'destroy'])->name('booking.destroy');
     Route::post('/admin/users', [\App\Http\Controllers\Admin\UserController::class, 'store'])->middleware('superadmin')->name('users.store');
@@ -224,6 +233,5 @@ Route::get('/resend-otp', 'App\Http\Controllers\StationController@resend')->name
 Route::post('/verify-otp', 'App\Http\Controllers\StationController@verify')->name('verify.otp');
 
 require __DIR__ . '/auth.php';
-
 
 

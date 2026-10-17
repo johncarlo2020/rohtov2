@@ -88,6 +88,14 @@
                         <span class="ms-1 nav-link-text">Scan</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('booking-dates.*') ? 'active' : '' }}" href="{{ route('booking-dates.index') }}">
+                        <div class="d-flex align-items-center justify-content-center me-2 border-radius-md text-center icon icon-shape icon-sm">
+                            <i class="opacity-10 text-warning text-sm fa-solid fa-calendar-days"></i>
+                        </div>
+                        <span class="ms-1 nav-link-text">Booking Dates</span>
+                    </a>
+                </li>
             </ul>
         </div>
     </aside>
@@ -231,7 +239,7 @@
                     <div class="mb-4 mb-lg-0 col-lg-6">
                         <div class="text-muted text-sm text-lg-start text-center copyright">
                             <a href="https://wowsome.com.my/" class="font-weight-bold" target="_blank">Wowsome</a>
-                            © Copyright 2025
+                            © Copyright {{ date('Y') }}
                         </div>
                     </div>
                 </div>

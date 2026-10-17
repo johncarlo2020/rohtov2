@@ -6,11 +6,13 @@ use App\Models\Booking;
 use App\Models\BookingDate;
 use App\Models\BookingSlot;
 use App\Models\User;
+use App\Exports\BookingsExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Carbon\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BookingController extends Controller
 {
@@ -207,6 +209,22 @@ class BookingController extends Controller
             'bookingDates',
             'vipGroups'
         ));
+    }
+
+    public function exportSpreadsheet()
+    {
+        $filename = 'bookings-' . now()->format('Y-m-d') . '.xlsx';
+
+        return Excel::download(new BookingsExport(), $filename);
+    }
+
+    public function exportPdf()
+    {
+        $bookings = Booking::with(['bookingDate', 'bookingSlot'])
+            ->orderByDesc('id')
+            ->get();
+
+        return view('admin.booking.export-pdf', compact('bookings'));
     }
 
     /**

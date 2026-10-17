@@ -116,40 +116,109 @@
     </div>
 
     {{-- SCREEN 3: INVALID QR CODE ERROR MODAL --}}
-    <div class="modal fade" id="invalidQrModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered px-3" style="max-width: 340px;margin:auto;">
-            <div class="modal-content text-center p-4" style="background-color: #FFFFFF; border-radius: 6px; border: 1px solid #111;">
-                <div class="mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; border-radius: 50%; border: 2px solid #D93838; color: #D93838; font-size: 1.4rem; font-weight: bold;">
-                    i
-                </div>
-                <div style="font-size: 0.9rem; font-weight: 700; letter-spacing: 1px; color: #111; margin-bottom: 1.5rem;">
-                    Invalid QR Code
-                </div>
-                <button type="button" class="mm-btn-black" data-bs-dismiss="modal" onclick="bootstrap.Modal.getInstance(document.getElementById('invalidQrModal'))?.hide();">
-                    DONE
-                </button>
+    <div id="invalidQrModal" class="qr-modal-overlay d-none" onclick="if(event.target === this) closeInvalidModal()">
+        <div class="qr-modal-card">
+            <div class="qr-modal-icon error">
+                i
             </div>
+            <div class="qr-modal-title">
+                Invalid QR Code
+            </div>
+            <button type="button" class="mm-btn-black" onclick="closeInvalidModal()">
+                DONE
+            </button>
         </div>
     </div>
 
     {{-- SCREEN 4: CHECK-IN SUCCESSFUL MODAL --}}
-    <div class="modal fade" id="successQrModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered px-3" style="max-width: 340px;margin:auto">
-            <div class="modal-content text-center p-4" style="background-color: #FFFFFF; border-radius: 6px; border: 1px solid #111;">
-                <div class="mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; border-radius: 50%; border: 2px solid #2E7D32; color: #2E7D32; font-size: 1.4rem; font-weight: bold;">
-                    ✓
-                </div>
-                <div style="font-size: 0.9rem; font-weight: 700; letter-spacing: 1px; color: #111; margin-bottom: 1.5rem;">
-                    Check-in Successful
-                </div>
-                <button id="successDoneBtn" type="button" class="mm-btn-black" onclick="window.location.reload();">
-                    DONE
-                </button>
+    <div id="successQrModal" class="qr-modal-overlay d-none">
+        <div class="qr-modal-card">
+            <div class="qr-modal-icon success">
+                ✓
             </div>
+            <div class="qr-modal-title">
+                Check-in Successful
+            </div>
+            <button id="successDoneBtn" type="button" class="mm-btn-black">
+                DONE
+            </button>
         </div>
     </div>
 
     <style>
+        .qr-modal-overlay {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            height: 100dvh !important;
+            background: rgba(0, 0, 0, 0.6) !important;
+            -webkit-backdrop-filter: blur(3px);
+            backdrop-filter: blur(3px);
+            z-index: 999999 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 1.25rem !important;
+            box-sizing: border-box !important;
+            touch-action: manipulation;
+        }
+        .qr-modal-overlay.d-none {
+            display: none !important;
+        }
+        .qr-modal-card {
+            background-color: #FFFFFF !important;
+            border-radius: 6px !important;
+            border: 1px solid #111111 !important;
+            max-width: 340px !important;
+            width: 100% !important;
+            padding: 1.75rem 1.5rem !important;
+            text-align: center !important;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35) !important;
+            position: relative !important;
+            z-index: 1000000 !important;
+            box-sizing: border-box !important;
+            animation: qrModalPop 0.2s ease-out;
+        }
+        @keyframes qrModalPop {
+            from {
+                opacity: 0;
+                transform: scale(0.92);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        .qr-modal-icon {
+            margin: 0 auto 0.85rem auto !important;
+            width: 44px !important;
+            height: 44px !important;
+            border-radius: 50% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 1.4rem !important;
+            font-weight: bold !important;
+        }
+        .qr-modal-icon.success {
+            border: 2px solid #2E7D32 !important;
+            color: #2E7D32 !important;
+        }
+        .qr-modal-icon.error {
+            border: 2px solid #D93838 !important;
+            color: #D93838 !important;
+        }
+        .qr-modal-title {
+            font-size: 0.95rem !important;
+            font-weight: 700 !important;
+            letter-spacing: 1px !important;
+            color: #111111 !important;
+            margin-bottom: 1.5rem !important;
+        }
         #reader {
             width: 100% !important;
             height: 100% !important;
@@ -305,41 +374,78 @@
                     throw new Error("Invalid");
                 }
 
-                // Stop camera ONLY on valid check-in success
-                if (html5QrCode) {
-                    html5QrCode.stop().catch(() => {});
-                    html5QrCode = null;
-                }
-
-                const modal = new bootstrap.Modal(document.getElementById('successQrModal'));
-                modal.show();
-
                 const targetUrl = data.redirect_url || "{{ route('station', ['station' => $station->id]) }}";
-
-                const doneBtn = document.getElementById('successDoneBtn');
-                if (doneBtn) {
-                    doneBtn.onclick = function() {
-                        window.location.href = targetUrl;
-                    };
-                }
+                showSuccessModal(targetUrl);
             })
             .catch(err => {
                 showInvalidModal();
             });
         }
 
-        function showInvalidModal() {
-            const modalEl = document.getElementById('invalidQrModal');
-            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+        function showSuccessModal(targetUrl) {
+            // Stop camera and hide scanner viewfinder
+            if (html5QrCode) {
+                html5QrCode.stop().catch(() => {});
+                html5QrCode = null;
+            }
+            document.getElementById('scannerSection').classList.add('d-none');
+            document.getElementById('stationDetailView').classList.remove('d-none');
 
-            const onModalHidden = function () {
-                modalEl.removeEventListener('hidden.bs.modal', onModalHidden);
-                resumeScanning();
-            };
-            modalEl.addEventListener('hidden.bs.modal', onModalHidden);
+            teleportModalsToBody();
 
-            modal.show();
+            const overlay = document.getElementById('successQrModal');
+            if (overlay) {
+                overlay.classList.remove('d-none');
+            }
+
+            const doneBtn = document.getElementById('successDoneBtn');
+            if (doneBtn) {
+                doneBtn.onclick = function() {
+                    if (overlay) overlay.classList.add('d-none');
+                    window.location.href = targetUrl;
+                };
+            }
         }
+
+        function showInvalidModal() {
+            teleportModalsToBody();
+            const overlay = document.getElementById('invalidQrModal');
+            if (overlay) {
+                overlay.classList.remove('d-none');
+            }
+        }
+
+        function closeInvalidModal() {
+            const overlay = document.getElementById('invalidQrModal');
+            if (overlay) {
+                overlay.classList.add('d-none');
+            }
+            resumeScanning();
+        }
+
+        function teleportModalsToBody() {
+            const s = document.getElementById('successQrModal');
+            const i = document.getElementById('invalidQrModal');
+            if (s && s.parentElement !== document.body) {
+                document.body.appendChild(s);
+            }
+            if (i && i.parentElement !== document.body) {
+                document.body.appendChild(i);
+            }
+            document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+            document.body.classList.remove('modal-open');
+        }
+
+        document.addEventListener('DOMContentLoaded', teleportModalsToBody);
+        window.addEventListener('pagehide', function() {
+            const s = document.getElementById('successQrModal');
+            const i = document.getElementById('invalidQrModal');
+            if (s) s.classList.add('d-none');
+            if (i) i.classList.add('d-none');
+            document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+            document.body.classList.remove('modal-open');
+        });
+        teleportModalsToBody();
     </script>
     @endpush
 </x-guest-layout>

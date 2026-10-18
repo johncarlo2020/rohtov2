@@ -87,6 +87,27 @@
                 </div>
             </div>
         </div>
+        <div class="col-xl-3 col-sm-6 mt-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-3">
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="numbers">
+                                <p class="text-xs mb-1 text-uppercase font-weight-bold text-muted">TODAY's COMPLIMENTARY GIFT</p>
+                                <h4 class="font-weight-bolder mb-0">
+                                    {{ $data['completedStation9'] }}
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="col-4 text-end">
+                            <div class="icon icon-shape bg-gradient-warning shadow-warning text-center rounded-circle">
+                                <i class="fa-solid fa-circle-check text-lg opacity-10" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     {{-- Stations Overview --}}

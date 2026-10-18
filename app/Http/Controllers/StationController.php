@@ -708,7 +708,18 @@ class StationController extends Controller
       })
       ->values()
       ->toArray();
+    
+    $usersWithStation9Today = $hasStationUsers
+    ? StationUser::with('user')
+        ->where('station_id', 9)
+        ->whereDate('created_at', today())
+        ->select('user_id')
+        ->distinct()
+        ->get()
+    : collect();
 
+    $data['completedStation9'] = $usersWithStation9Today->count();
+    
     $hasVouchers = \Schema::hasTable('vouchers');
     $hasVoucherClaims = \Schema::hasTable('voucher_claims');
 

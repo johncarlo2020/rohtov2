@@ -116,7 +116,24 @@ class StationController extends Controller
               ]);
           }
 
-          return redirect()->route('congrats');
+          $totalStations = Station::count();
+          $completedCount = StationUser::where('user_id', $userId)
+            ->distinct('station_id')
+            ->count('station_id');
+
+          $isAllCompleted = ($completedCount >= $totalStations);
+      return redirect()->route($isAllCompleted ? 'thankyou' : 'congrats');
+
+      // return response()->json([
+      //     'success' => true,
+      //     'message' => 'Station stamped successfully',
+      //     'is_all_completed' => $isAllCompleted,
+      //     'completed_count' => $completedCount,
+      //     'total_stations' => $totalStations,
+      //     'redirect_url' => $isAllCompleted ? route('thankyou') : route('dashboard'),
+      // ]);
+
+          // return redirect()->route('congrats');
       }
 
       return back()->with('error', 'Invalid OTP code. Please check and try again.');
@@ -173,7 +190,15 @@ class StationController extends Controller
       $completedNonRedemptionCount = $nonRedemptionStations->whereIn('id', $completedStationIds)->count();
       $isLastStationUnlocked = ($nonRedemptionCount > 0 && $completedNonRedemptionCount >= $nonRedemptionCount);
 
-      return view('dashboard', compact('stations', 'completedStationIds', 'completedCount', 'isLastStationUnlocked'));
+
+      $totalStations = Station::count();
+      $completedCount = StationUser::where('user_id', Auth::id())
+          ->distinct('station_id')
+          ->count('station_id');
+
+      $isAllCompleted = ($completedCount >= $totalStations);
+
+      return view('dashboard', compact('stations','isAllCompleted', 'completedStationIds', 'completedCount', 'isLastStationUnlocked'));
   }
 
   public function stamp(Request $request)

@@ -380,6 +380,11 @@
     @push('scripts')
     <script>
         const isLastStationUnlocked = {{ !empty($isLastStationUnlocked) ? 'true' : 'false' }};
+        const isAllCompleted = @json($isAllCompleted);
+
+        if (isAllCompleted) {
+            window.location.href = "{{ route('thankyou') }}";
+        }
 
         function showPassportView() {
             document.getElementById('mapViewSection').classList.add('d-none');

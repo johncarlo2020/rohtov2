@@ -2,40 +2,32 @@
     <style>
         .rsvp-registration { min-height: 100dvh; background: #f2efe9; color: #111; padding: 35px 31px 60px; font-family: 'Courier New', Courier, monospace; }
         .rsvp-registration-inner { max-width: 340px; margin: 0 auto; }
-        .rsvp-registration-logo { display: block; width: 220px; max-width: 85%; margin: 0 auto 46px; }
-        .rsvp-registration-title { text-align: center; font-family: inherit; font-size: 25px; font-weight: 400; line-height: 1.25; margin: 0 -10px 24px; }
-        .rsvp-registration-subtitle { text-align: center; font-family: inherit; font-size: 22px; font-weight: 400; margin: 0 0 26px; }
-        .rsvp-registration .mm-label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 5px; }
-        .rsvp-registration .mm-input { display: block; box-sizing: border-box; width: 100%; min-height: 41px; padding: 11px; background: #fff; border: 0; border-bottom: 1px solid #111; border-radius: 0; font-family: inherit; font-size: 11px; }
+        .rsvp-registration-logo { display: block; width: 200px; max-width: 85%; margin: 0 auto 46px; }
+        .rsvp-registration-title { text-align: center; font-family: inherit; font-size: 23px; font-weight: 400; line-height: 1.3; letter-spacing: .3px; margin: 0 -10px 24px; }
+        .rsvp-registration-subtitle { text-align: center; font-family: inherit; font-size: 21px; font-weight: 400; line-height: 1.3; letter-spacing: .5px; margin: 0 0 26px; }
+        .rsvp-registration .mm-label { display: block; font-size: 11px; font-weight: 700; letter-spacing: .2px; margin-bottom: 5px; }
+        .rsvp-registration .mm-input { display: block; box-sizing: border-box; width: 100%; min-height: 44px; padding: 10px; background: #fff; border: 0; border-bottom: 1px solid #111; border-radius: 0; font-family: inherit; font-size: 12px; }
         .rsvp-registration .mm-input::placeholder { color: #999; opacity: 1; }
-        .rsvp-registration .mm-helper-text, .rsvp-registration .mm-error-text { color: #ff5555; font-size: 10px; line-height: 1.6; margin-top: 9px; }
+        .rsvp-registration .mm-helper-text, .rsvp-registration .mm-error-text { color: #ff5555; font-size: 10px; line-height: 1.6; letter-spacing: .2px; margin-top: 9px; }
         .rsvp-registration .mm-checkbox-label { display: flex; align-items: flex-start; gap: 16px; }
         .rsvp-registration .mm-checkbox-label input { flex-shrink: 0; width: 17px; height: 17px; margin: 3px 0 0 5px; accent-color: #111; }
-        .rsvp-registration .rsvp-consent { font-family: inherit; font-size: 10px; color: #444; line-height: 1.5; }
+        .rsvp-registration .rsvp-consent { font-family: inherit; font-size: 9px; color: #444; line-height: 1.55; letter-spacing: .1px; }
         .rsvp-registration-divider { border-top: 1px solid #777; margin: 30px 0 34px; }
-        .rsvp-registration #submitBtn { display: block; width: 176px; max-width: 100%; min-height: 35px; margin: 0 auto; padding: 8px; background: #000; color: #fff; border: 0; border-radius: 6px; font-family: inherit; font-size: 13px; font-weight: 700; }
+        .rsvp-registration #submitBtn { display: block; width: 185px; max-width: 100%; min-height: 36px; margin: 0 auto; padding: 8px; background: #000; color: #fff; border: 0; border-radius: 6px; font-family: inherit; font-size: 12px; font-weight: 700; }
         .rsvp-registration #submitBtn:disabled { background: #999; cursor: not-allowed; opacity: 1; }
-        .rsvp-registration .mm-link-sub { text-align: center; font-size: 10px; letter-spacing: .5px; margin-top: 20px; }
-        @media (max-width: 767px) {
-            .rsvp-registration .mm-label { font-size: 14px; }
-            .rsvp-registration .mm-input { min-height: 48px; font-size: 16px; }
-            .rsvp-registration .mm-helper-text, .rsvp-registration .mm-error-text { font-size: 14px; }
-            .rsvp-registration .rsvp-consent { font-size: 14px; }
-            .rsvp-registration #submitBtn { min-height: 44px; font-size: 16px; }
-            .rsvp-registration .mm-link-sub { font-size: 13px; line-height: 1.5; }
-        }
+        .rsvp-registration .mm-link-sub { text-align: center; font-size: 9px; line-height: 1.5; letter-spacing: .5px; margin-top: 20px; }
         @media (min-width: 768px) {
             .rsvp-registration { padding-top: 35px; }
             .rsvp-registration-inner { max-width: 420px; }
-            .rsvp-registration-logo { width: 180px; margin-bottom: 46px; }
+            .rsvp-registration-logo { width: 200px; margin-bottom: 46px; }
             .rsvp-registration-title { font-size: 28px; margin-bottom: 22px; }
             .rsvp-registration-subtitle { font-size: 23px; margin-bottom: 25px; }
-            .rsvp-registration .mm-label { font-size: 14px; }
-            .rsvp-registration .mm-input { min-height: 48px; font-size: 14px; }
-            .rsvp-registration .mm-helper-text, .rsvp-registration .mm-error-text { font-size: 12px; }
-            .rsvp-registration .rsvp-consent { font-size: 12px; }
-            .rsvp-registration #submitBtn { width: 100%; min-height: 44px; font-size: 15px; }
-            .rsvp-registration .mm-link-sub { font-size: 12px; }
+            .rsvp-registration .mm-label { font-size: 12px; }
+            .rsvp-registration .mm-input { min-height: 46px; font-size: 13px; }
+            .rsvp-registration .mm-helper-text, .rsvp-registration .mm-error-text { font-size: 11px; }
+            .rsvp-registration .rsvp-consent { font-size: 10px; }
+            .rsvp-registration #submitBtn { width: 100%; min-height: 40px; font-size: 13px; }
+            .rsvp-registration .mm-link-sub { font-size: 10px; }
         }
     </style>
     <div class="rsvp-registration">

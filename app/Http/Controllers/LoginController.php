@@ -25,6 +25,14 @@ class LoginController extends Controller
 
         $user = User::where('email', $email)->first();
 
+        if ($user && $user->otp_verified) {
+            Auth::login($user);
+            $request->session()->regenerate();
+            $user->update(['last_login_at' => Carbon::now()]);
+
+            return redirect()->route('dashboard');
+        }
+
         $otp = (string) rand(100000, 999999);
 
         if (!$user) {

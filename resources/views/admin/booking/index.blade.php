@@ -722,7 +722,12 @@
                     <td><span class="text-xs text-muted">${b.email} | ${b.phone}</span></td>
                     <td class="text-center font-weight-bold text-xs">${b.pax || 1}</td>
                     <td class="text-center"><span class="badge ${badgeClass}">${statusText}</span></td>
-                    <td class="text-center">${actionBtn}</td>
+                    <td class="text-center">
+                        ${actionBtn}
+                        <button class="btn btn-xs btn-outline-danger ms-1" onclick="deleteBooking(${b.id})" title="Delete booking" aria-label="Delete booking">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
                 `;
                 tbody.appendChild(tr);
             });

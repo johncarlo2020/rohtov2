@@ -151,19 +151,6 @@ class StationController extends Controller
       $stations = Station::orderBy('id')->get(['id', 'name', 'slug', 'is_redemption']);
       $completedStationIds = [];
 
-      if (Auth::check()) {
-          // Default finish 1st station: REPLICA CAFE
-          $replicaStation = Station::where('slug', 'replica-cafe')->orWhere('name', 'REPLICA CAFE')->first();
-          StationUser::firstOrCreate([
-              'user_id' => Auth::id(),
-              'station_id' => $replicaStation ? $replicaStation->id : 1,
-          ]);
-
-          $completedStationIds = StationUser::where('user_id', Auth::id())
-              ->pluck('station_id')
-              ->toArray();
-      }
-
       $completedCount = count($completedStationIds);
 
       $nonRedemptionStations = $stations->filter(function ($s) {

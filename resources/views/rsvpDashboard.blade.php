@@ -1,67 +1,56 @@
 <x-guest-layout>
     <style>
-        .rsvp-dashboard { min-height: 100vh; background: #f2efe9; color: #111; font-family: 'Courier Prime', monospace; padding: 44px 30px 60px; }
-        .rsvp-content { max-width: 360px; margin: 0 auto; }
-        .rsvp-logo { display: block; width: 250px; max-width: 80%; margin: 0 auto 62px; }
-        .rsvp-title { font-family: inherit; font-size: 32px; line-height: 1.25; font-weight: 400; text-align: center; margin: 0 -10px 43px; }
-        .rsvp-greeting { font-family: inherit; font-size: 21px; font-weight: 400; text-align: center; margin-bottom: 20px; }
-        .rsvp-intro { font-size: 12px; line-height: 1.7; text-align: center; margin-bottom: 20px; }
-        .rsvp-notice { color: #ff5555; font-size: 12px; line-height: 1.8; }
-        .rsvp-availability { text-align: center; margin-bottom: 36px; }
-        .rsvp-label { display: block; font-size: 15px; font-weight: 700; letter-spacing: .5px; margin-bottom: 4px; }
-        .rsvp-select { width: 100%; min-height: 55px; border: 0; border-bottom: 1px solid #111; border-radius: 0; background-color: #fff; color: #333; font-family: inherit; font-size: 14px; padding: 12px 14px; }
+        .rsvp-dashboard { min-height: 100dvh; background: #f2efe9; color: #111; font-family: 'Courier Prime', monospace; padding: 35px 31px 60px; }
+        .rsvp-content { max-width: 340px; margin: 0 auto; }
+        .rsvp-logo { display: block; width: 200px; max-width: 85%; margin: 0 auto 46px; }
+        .rsvp-title { font-family: inherit; font-size: 23px; line-height: 1.3; letter-spacing: .3px; font-weight: 400; text-align: center; margin: 0 -10px 24px; }
+        .rsvp-greeting { font-family: inherit; font-size: 15px; line-height: 1.4; font-weight: 400; text-align: center; margin: 0 0 12px; }
+        .rsvp-intro { font-size: 11px; line-height: 1.6; letter-spacing: .1px; text-align: center; margin-bottom: 12px; }
+        .rsvp-notice { color: #ff5555; font-size: 10px; line-height: 1.6; letter-spacing: .1px; }
+        .rsvp-availability { text-align: center; margin-bottom: 26px; }
+        .rsvp-label { display: block; font-size: 11px; font-weight: 700; letter-spacing: .2px; margin-bottom: 5px; }
+        .rsvp-select { width: 100%; min-height: 44px; border: 0; border-bottom: 1px solid #111; border-radius: 0; background-color: #fff; color: #333; font-family: inherit; font-size: 12px; padding: 10px; }
         .rsvp-select:focus-visible, .rsvp-next:focus-visible { outline: 2px solid #111; outline-offset: 4px; }
-        .rsvp-time-label { margin-top: 25px; }
-        .rsvp-time { font-size: 15px; padding: 17px 14px 0; margin-bottom: 27px; }
-        .rsvp-next { display: block; width: 230px; max-width: 100%; margin: 28px auto 22px; padding: 12px; border: 0; border-radius: 8px; background: #000; color: #fff; font-family: inherit; font-size: 17px; font-weight: 700; }
+        .rsvp-time-label { margin-top: 20px; }
+        .rsvp-time { font-size: 12px; padding: 12px 10px 0; margin-bottom: 20px; }
+        .rsvp-next { display: block; width: 185px; max-width: 100%; min-height: 36px; margin: 22px auto 20px; padding: 8px; border: 0; border-radius: 6px; background: #000; color: #fff; font-family: inherit; font-size: 12px; font-weight: 700; }
         .rsvp-next:disabled { opacity: .4; cursor: not-allowed; }
-        .rsvp-confirmation { width: calc(100% - 60px); max-width: 380px; padding: 52px 22px 35px; border: 0; border-radius: 7px; background: #f2efe9; color: #111; text-align: center; font-family: 'Courier Prime', monospace; }
+        .rsvp-confirmation { box-sizing: border-box; width: min(340px, calc(100vw - 32px)); max-width: 100%; max-height: calc(100dvh - 32px); overflow-y: auto; padding: 25px 18px 18px; border: 0; border-radius: 5px; background: #f2efe9; color: #111; text-align: center; font-family: 'Courier Prime', monospace; }
         .rsvp-confirmation::backdrop { background: rgba(0, 0, 0, .53); }
-        .rsvp-confirmation h2 { font-family: inherit; font-size: 24px; font-weight: 700; margin-bottom: 26px; }
-        .rsvp-confirmation-intro { font-size: 14px; letter-spacing: 3px; line-height: 1.2; margin-bottom: 20px; }
-        .rsvp-confirmation dl { font-size: 15px; letter-spacing: 3px; line-height: 1.2; margin: 0; }
+        .rsvp-confirmation h2 { font-family: inherit; font-size: 12px; font-weight: 700; letter-spacing: 1.4px; line-height: 1.4; margin: 0 0 15px; }
+        .rsvp-confirmation-intro { font-size: 8px; letter-spacing: 1.2px; line-height: 1.35; text-transform: uppercase; margin: 0 0 12px; }
+        .rsvp-confirmation dl { font-size: 8px; letter-spacing: 1.2px; line-height: 1.4; text-transform: uppercase; margin: 0; }
         .rsvp-confirmation dt { font-weight: 400; }
-        .rsvp-confirmation dd { font-weight: 700; margin: 0 0 18px; }
-        .rsvp-back { background: transparent; border: 0; font-family: inherit; font-size: 13px; padding: 12px 20px; margin: 2px auto 10px; }
-        .rsvp-confirmation .rsvp-next { margin: 4px auto 0; }
-        .rsvp-terms { display: block; text-align: center; color: #111; text-decoration: none; font-size: 12px; font-weight: 700; letter-spacing: 1px; }
-        @media (max-width: 767px) {
-            .rsvp-intro { font-size: 16px; }
-            .rsvp-notice { font-size: 15px; }
-            .rsvp-label { font-size: 16px; }
-            .rsvp-select, .rsvp-time { font-size: 16px; }
-            .rsvp-terms { font-size: 14px; }
-            .rsvp-confirmation h2 { font-size: 26px; }
-            .rsvp-confirmation-intro, .rsvp-confirmation dl { font-size: 16px; letter-spacing: 1.5px; line-height: 1.5; }
-            .rsvp-back { font-size: 15px; }
-        }
-        @media (max-width: 380px) { .rsvp-dashboard { padding-left: 20px; padding-right: 20px; } .rsvp-title { font-size: 27px; } }
+        .rsvp-confirmation dd { font-weight: 700; margin: 0 0 9px; }
+        .rsvp-back { background: transparent; border: 0; font-family: inherit; font-size: 7px; letter-spacing: .5px; padding: 5px 12px; margin: 1px auto 8px; }
+        .rsvp-confirmation .rsvp-next { width: 125px; min-height: 24px; height: auto; margin: 4px auto 0; padding: 6px 8px; border-radius: 4px; font-size: 8px; letter-spacing: .3px; }
+        .rsvp-terms { display: block; text-align: center; color: #111; text-decoration: none; font-size: 9px; font-weight: 700; letter-spacing: .5px; }
+        @media (max-width: 380px) { .rsvp-dashboard { padding-left: 20px; padding-right: 20px; } }
         @media (min-width: 768px) {
             .rsvp-dashboard { min-height: 100dvh; padding: 35px 40px 50px; }
             .rsvp-content { max-width: 420px; }
-            .rsvp-logo { width: 180px; margin-bottom: 40px; }
-            .rsvp-title { font-size: 28px; margin: 0 0 28px; }
-            .rsvp-greeting { font-size: 20px; margin-bottom: 16px; }
-            .rsvp-intro { font-size: 14px; }
-            .rsvp-notice { font-size: 14px; }
-            .rsvp-availability { margin-bottom: 26px; }
-            .rsvp-label { font-size: 14px; }
-            .rsvp-select { min-height: 48px; font-size: 15px; }
-            .rsvp-time-label { margin-top: 22px; }
-            .rsvp-time { font-size: 15px; padding-top: 12px; margin-bottom: 22px; }
-            .rsvp-next { width: 100%; min-height: 44px; padding: 10px; border-radius: 5px; font-size: 16px; margin-top: 24px; }
-            .rsvp-confirmation { max-width: 480px; padding: 40px 40px 30px; max-height: calc(100dvh - 60px); overflow-y: auto; }
-            .rsvp-confirmation h2 { font-size: 26px; }
-            .rsvp-confirmation-intro { font-size: 16px; letter-spacing: 1.5px; line-height: 1.5; }
-            .rsvp-confirmation dl { font-size: 16px; letter-spacing: 1.5px; line-height: 1.5; }
-            .rsvp-back { font-size: 15px; }
-            .rsvp-confirmation .rsvp-next { width: 260px; }
-            .rsvp-terms { font-size: 13px; }
+            .rsvp-logo { width: 200px; margin-bottom: 46px; }
+            .rsvp-title { font-size: 28px; margin: 0 0 22px; }
+            .rsvp-greeting { font-size: 17px; margin-bottom: 14px; }
+            .rsvp-intro { font-size: 12px; }
+            .rsvp-notice { font-size: 11px; }
+            .rsvp-availability { margin-bottom: 24px; }
+            .rsvp-label { font-size: 12px; }
+            .rsvp-select { min-height: 46px; font-size: 13px; }
+            .rsvp-time-label { margin-top: 20px; }
+            .rsvp-time { font-size: 13px; padding-top: 12px; margin-bottom: 20px; }
+            .rsvp-next { width: 100%; min-height: 40px; padding: 10px; border-radius: 5px; font-size: 13px; margin-top: 22px; }
+            .rsvp-confirmation { width: min(360px, calc(100vw - 48px)); max-height: calc(100dvh - 48px); padding: 30px 24px 22px; }
+            .rsvp-confirmation h2 { font-size: 13px; }
+            .rsvp-confirmation-intro, .rsvp-confirmation dl { font-size: 9px; }
+            .rsvp-back { font-size: 8px; }
+            .rsvp-terms { font-size: 10px; }
         }
     </style>
 
     @php
-        $hasAvailableDates = $bookingDates->contains(fn ($date) => $date->remaining_slots > 0);
+        $availableBookingDates = $bookingDates->filter(fn ($date) => $date->remaining_slots > 0);
+        $hasAvailableDates = $availableBookingDates->isNotEmpty();
     @endphp
     <div class="rsvp-dashboard">
         <div class="rsvp-content">
@@ -81,8 +70,8 @@
                     @if (!$hasAvailableDates)
                         <option value="" selected>No dates available</option>
                     @endif
-                    @foreach ($bookingDates as $bookingDate)
-                        <option value="{{ $bookingDate->date->format('Y-m-d') }}" data-display-date="{{ $bookingDate->date->format('l, jS F Y') }}" @disabled($bookingDate->remaining_slots === 0)>
+                    @foreach ($availableBookingDates as $bookingDate)
+                        <option value="{{ $bookingDate->date->format('Y-m-d') }}" data-display-date="{{ $bookingDate->date->format('l, jS F Y') }}">
                             {{ $bookingDate->date->format('jS F') }} — {{ $bookingDate->remaining_slots }} {{ $bookingDate->remaining_slots === 1 ? 'slot' : 'slots' }} available
                         </option>
                     @endforeach

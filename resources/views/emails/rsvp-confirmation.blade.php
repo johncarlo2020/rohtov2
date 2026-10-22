@@ -13,13 +13,13 @@
                     <h1 style="font-size:18px;margin:0 0 30px;font-weight:bold;">YOUR VISIT IS CONFIRMED</h1>
                     <p style="font-size:12px;line-height:1.5;letter-spacing:1px;margin:0 0 14px;">Hi {{ explode(' ', $booking->customer_name)[0] }}, your slot is reserved.</p>
                     <p style="font-size:12px;line-height:1.5;letter-spacing:1px;margin:0 0 28px;">We look forward to welcoming you<br>to the House of Memories.</p>
-                    <p style="font-size:12px;line-height:1.6;letter-spacing:1px;margin:0 0 12px;">Date:<br>{{ $booking->bookingDate->date->format('l, jS F Y') }}</p>
-                    <p style="font-size:12px;line-height:1.6;letter-spacing:1px;margin:0 0 12px;">Time:<br>{{ $time }}</p>
-                    <p style="font-size:12px;line-height:1.6;letter-spacing:1px;margin:0 0 18px;">Venue:<br>{{ $booking->venue }}</p>
+                    <p style="font-size:12px;line-height:1.6;letter-spacing:1px;margin:0 0 12px;"><strong>Date:</strong><br>{{ $booking->bookingDate->date->format('l, jS F Y') }}</p>
+                    <p style="font-size:12px;line-height:1.6;letter-spacing:1px;margin:0 0 12px;"><strong>Time:</strong><br>{{ $time }}</p>
+                    <p style="font-size:12px;line-height:1.6;letter-spacing:1px;margin:0 0 18px;"><strong>Venue:</strong><br>{{ $booking->venue }}</p>
                     <table role="presentation" width="85%" align="center" cellspacing="0" cellpadding="0"><tr><td style="border-top:2px solid #b5b3ae;padding:26px 0 20px;">
                         <p style="font-size:12px;letter-spacing:1px;margin:0 0 26px;">Please present this QR code upon arrival</p>
                         <img src="{{ $qrCodeUrl }}" width="130" height="130" alt="Booking QR code: {{ $booking->reference_no }}" style="display:block;margin:0 auto;border:5px solid #fff;">
-                        <p style="font-size:10px;overflow-wrap:anywhere;">{{ $booking->reference_no }}</p>
+                       
                     </td></tr><tr><td style="border-top:1px solid #b5b3ae;padding-top:26px;">
                         <p style="font-size:12px;line-height:1.5;letter-spacing:.5px;margin:0 0 28px;">We look forward to welcoming you to Maison Margiela Fragrances House of Memories, where scents evoke moments, emotions and memories.</p>
                         <p style="font-size:12px;letter-spacing:1px;margin:0;">See you at the House of Memories.</p>

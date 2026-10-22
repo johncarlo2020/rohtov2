@@ -1,30 +1,35 @@
 <x-guest-layout>
     <style>
+        .rsvp-otp-page { min-height: 100dvh; background: #f2efe9; color: #111; padding: 35px 31px 60px; font-family: 'Courier Prime', monospace; }
+        .rsvp-otp-page .mm-mobile-container { max-width: 420px; min-height: auto; padding: 0; background: transparent; }
+        .rsvp-otp-page .branding { text-align: center; margin: 0 auto 40px; padding: 0; }
+        .rsvp-otp-page .branding .logo { display: block; width: 200px; max-width: 85%; height: auto; margin: 0 auto; }
+        .rsvp-otp-page .mm-page-title { font-family: inherit; font-size: 23px !important; font-weight: 400; letter-spacing: .3px; line-height: 1.3; margin: 0 0 24px !important; text-align: center; }
+        .rsvp-otp-page .rsvp-otp-label { font-family: inherit !important; font-size: 11px !important; letter-spacing: .5px !important; line-height: 1.4; margin-bottom: 8px !important; }
+        .rsvp-otp-page .rsvp-otp-copy { font-family: inherit !important; font-size: 10px !important; line-height: 1.6 !important; letter-spacing: .1px; margin: 0 0 8px !important; padding: 0 4px !important; }
+        .rsvp-otp-page .rsvp-otp-help { font-family: inherit !important; font-size: 10px !important; line-height: 1.6 !important; letter-spacing: .1px; margin: 0 0 18px !important; }
+        .rsvp-otp-page .rsvp-otp-status, .rsvp-otp-page .mm-error-text { font-size: 10px !important; line-height: 1.6; }
+        .rsvp-otp-page .rsvp-otp-timer, .rsvp-otp-page .rsvp-otp-resend { font-family: inherit !important; font-size: 10px !important; line-height: 1.5; }
+        .rsvp-otp-page .rsvp-otp-back { font-family: inherit !important; font-size: 10px !important; line-height: 1.5; }
+        .rsvp-otp-page .mm-otp-inputs { display: flex; justify-content: center; gap: 9px; margin: 24px 0 20px; }
+        .rsvp-otp-page .mm-otp-digit { box-sizing: border-box; width: 40px; height: 46px; border: 0; border-bottom: 1px solid #111; border-radius: 0; background: #fff; font-family: inherit; font-size: 20px; text-align: center; }
+        .rsvp-otp-page #verifyOtpBtn { width: 185px; max-width: 100%; min-height: 36px !important; height: auto !important; margin: 0 auto; padding: 8px !important; border-radius: 6px !important; font-family: inherit !important; font-size: 12px !important; letter-spacing: .5px; }
+        .rsvp-otp-page #verifyOtpBtn:disabled { background: #999; opacity: 1; }
         @media (max-width: 767px) {
-            .rsvp-otp-page .rsvp-otp-label { font-size: 1rem !important; }
-            .rsvp-otp-page .rsvp-otp-copy { font-size: .95rem !important; line-height: 1.5 !important; }
-            .rsvp-otp-page .rsvp-otp-help { font-size: .9rem !important; line-height: 1.5 !important; }
-            .rsvp-otp-page .rsvp-otp-status { font-size: .9rem !important; }
-            .rsvp-otp-page .rsvp-otp-timer, .rsvp-otp-page .rsvp-otp-resend { font-size: .9rem !important; }
-            .rsvp-otp-page .rsvp-otp-back { font-size: .95rem !important; }
-            .rsvp-otp-page .mm-otp-digit { font-size: 22px; }
+            .rsvp-otp-page .mm-mobile-container { width: 100%; }
         }
         @media (min-width: 768px) {
             .rsvp-otp-page { min-height: 100dvh; background: #f2efe9; padding: 35px 40px 50px; }
             .rsvp-otp-page .mm-mobile-container { max-width: 420px; min-height: auto; padding: 0; background: transparent; }
-            .rsvp-otp-page .branding { text-align: center; margin: 0 0 40px; padding: 0; }
-            .rsvp-otp-page .branding .logo { display: block; width: 180px; max-width: 100%; height: auto; margin: 0 auto; }
-            .rsvp-otp-page .mm-page-title { font-size: 28px; font-weight: 400; line-height: 1.25; margin: 0 0 28px; text-align: center; }
-            .rsvp-otp-page .rsvp-otp-label { font-size: 1rem !important; }
-            .rsvp-otp-page .rsvp-otp-copy { font-size: .9rem !important; }
-            .rsvp-otp-page .rsvp-otp-help { font-size: .85rem !important; }
-            .rsvp-otp-page .rsvp-otp-status, .rsvp-otp-page .mm-error-text { font-size: .875rem !important; }
-            .rsvp-otp-page .rsvp-otp-timer, .rsvp-otp-page .rsvp-otp-resend { font-size: .85rem !important; }
-            .rsvp-otp-page .rsvp-otp-back { font-size: .9rem !important; }
-            .rsvp-otp-page .mm-otp-inputs { display: flex; justify-content: center; gap: 12px; margin: 28px 0 24px; }
-            .rsvp-otp-page .mm-otp-digit { width: 48px; height: 52px; border: 0; border-bottom: 1px solid #111; border-radius: 0; background: #fff; text-align: center; font-size: 24px; }
-            .rsvp-otp-page #verifyOtpBtn { width: 100%; min-height: 44px; padding: 10px; border-radius: 5px; font-size: 16px; }
-            .rsvp-otp-page #verifyOtpBtn:disabled { background: #999; opacity: 1; }
+            .rsvp-otp-page .branding .logo { width: 200px; max-width: 100%; }
+            .rsvp-otp-page .mm-page-title { font-size: 28px !important; margin-bottom: 22px !important; }
+            .rsvp-otp-page .rsvp-otp-label { font-size: 12px !important; }
+            .rsvp-otp-page .rsvp-otp-copy, .rsvp-otp-page .rsvp-otp-help { font-size: 11px !important; }
+            .rsvp-otp-page .rsvp-otp-status, .rsvp-otp-page .mm-error-text { font-size: 11px !important; }
+            .rsvp-otp-page .rsvp-otp-timer, .rsvp-otp-page .rsvp-otp-resend, .rsvp-otp-page .rsvp-otp-back { font-size: 11px !important; }
+            .rsvp-otp-page .mm-otp-inputs { gap: 10px; margin: 26px 0 22px; }
+            .rsvp-otp-page .mm-otp-digit { width: 44px; height: 48px; font-size: 22px; }
+            .rsvp-otp-page #verifyOtpBtn { width: 100%; min-height: 40px !important; font-size: 13px !important; }
         }
     </style>
     <div class="rsvp-otp-page">

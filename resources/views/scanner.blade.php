@@ -63,6 +63,10 @@
 
                 <!-- Camera Container -->
                 <div id="reader" class="mb-3"></div>
+                <div id="camera-error" class="text-center mb-3" style="display:none;">
+                    <p class="text-danger small mb-2" id="camera-error-text"></p>
+                    <button type="button" class="btn btn-dark btn-sm" id="btn-start-camera">Open Camera</button>
+                </div>
             </div>
         </div>
     </div>
@@ -141,6 +145,7 @@
 
     document.addEventListener("DOMContentLoaded", function () {
         startScanner();
+        document.getElementById('btn-start-camera').addEventListener('click', startScanner);
 
         // Search Button click
         document.getElementById('btn-manual-search').addEventListener('click', function() {
@@ -176,27 +181,42 @@
         });
     });
 
-    function startScanner() {
-        if (isScanning) return;
-        
-        html5QrCode = new Html5Qrcode("reader");
-        html5QrCode.start(
-            { facingMode: "environment" },
-            { fps: 10, qrbox: 240 },
-            (qrCodeMessage) => {
-                isScanning = false;
-                html5QrCode.stop().then(() => {
-                    lookupBooking(qrCodeMessage);
-                }).catch(() => {
-                    lookupBooking(qrCodeMessage);
-                });
-            },
-            (errorMessage) => {}
-        ).then(() => {
+    let isStarting = false;
+
+    function showCameraError(msg) {
+        document.getElementById('camera-error-text').textContent = msg || '';
+        document.getElementById('camera-error').style.display = msg ? 'block' : 'none';
+    }
+
+    async function startScanner() {
+        if (isScanning || isStarting) return;
+        isStarting = true;
+        showCameraError('');
+
+        if (!html5QrCode) html5QrCode = new Html5Qrcode("reader");
+
+        const onScan = (qrCodeMessage) => {
+            if (!isScanning) return;
+            isScanning = false;
+            html5QrCode.stop().then(() => lookupBooking(qrCodeMessage)).catch(() => lookupBooking(qrCodeMessage));
+        };
+        const config = { fps: 10, qrbox: 240 };
+
+        try {
+            try {
+                await html5QrCode.start({ facingMode: "environment" }, config, onScan, () => {});
+            } catch (firstErr) {
+                const cameras = await Html5Qrcode.getCameras();
+                if (!cameras || !cameras.length) throw firstErr;
+                await html5QrCode.start(cameras[cameras.length - 1].id, config, onScan, () => {});
+            }
             isScanning = true;
-        }).catch(err => {
-            console.warn('Camera scanner fallback:', err);
-        });
+        } catch (err) {
+            console.warn('Camera start failed:', err);
+            showCameraError('Unable to open the camera. Allow camera access in your browser (HTTPS required), then tap Open Camera.');
+        } finally {
+            isStarting = false;
+        }
     }
 
     function lookupBooking(queryStr) {

@@ -49,6 +49,18 @@ We would like to extend our thanks to the following sponsors for funding Laravel
 - **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
 - **[Lendio](https://lendio.com)**
 
+## Runtime requirements
+
+Use PHP **8.3.36 or a newer 8.3 patch release**, Composer 2, and Laravel 12.
+PHP 8.3.36 includes the October 21, 2026 security fixes documented in the
+[official PHP advisory](https://www.php.net/archive/2026.php#2026-10-21-5).
+The `.php-version` file selects the minimum supported runtime for compatible version managers.
+
+Install dependencies with `composer install` using the committed `composer.lock`.
+Run `composer check-platform-reqs` and `php artisan test` before deployment.
+See [the deployment guide](DEPLOY_SCRIPT.md) for server upgrade steps; changing
+Composer requirements does not upgrade the PHP runtime on your server.
+
 ## Contributing
 
 Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).

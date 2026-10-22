@@ -14,7 +14,7 @@ class EarlyBirdImport implements ToCollection, WithHeadingRow
     public $skipped = 0;
     public $errors = [];
 
-    public function collection(Collection $rows)
+    public function collection(Collection $rows): void
     {
         foreach ($rows as $index => $row) {
 

@@ -5,13 +5,37 @@ Complete step-by-step guide to deploy this Laravel application on Ubuntu with Ap
 ## Prerequisites
 - Ubuntu server with sudo access
 - Apache2 installed
-- PHP 8.1+ installed with required extensions
+- PHP 8.3.36 or a newer 8.3 patch release installed with required extensions
 - MySQL/MariaDB installed
 - Composer installed
 - Node.js & NPM installed
 - Certbot installed for SSL
 
 ---
+
+## PHP runtime upgrade (existing servers)
+
+This application uses Laravel 12, Sanctum 4, and Laravel Excel 4.
+PHP 8.3.36 is the minimum, including the October 21, 2026 fixes for
+CVE-2026-109618 and CVE-2026-109619. See the
+[official PHP advisory](https://www.php.net/archive/2026.php#2026-10-21-5).
+
+Before deploying, install PHP 8.3.36 or a newer 8.3 patch from your server's
+package provider, including CLI, MySQL, mbstring, XML, curl, GD, ZIP, and intl
+extensions. Keep the extensions required by `composer check-platform-reqs` enabled.
+Switch both the CLI `php` command and Apache's PHP module (or the PHP-FPM
+handler in every HTTP/HTTPS virtual host) to the patched 8.3 runtime. The
+package and service commands depend on your Ubuntu version and PHP provider.
+
+Verify `php -v` reports the patched version. Verify the web runtime independently
+through your hosting panel or a temporary, access-restricted diagnostic endpoint,
+and remove that endpoint after checking. Restart Apache and any PHP-FPM services
+to replace all old web workers. Restart queue workers after deployment with
+`php artisan queue:restart`, and ensure cron and Supervisor use the updated PHP.
+Updating this repository alone does not patch the running web server.
+
+Back up the database and validate login, API tokens,
+booking, and CSV/XLSX imports in staging before deploying this framework and runtime upgrade.
 
 ## Step 1: Clone or Pull Repository
 
@@ -32,6 +56,7 @@ sudo git pull origin main
 ```bash
 cd /var/www/yslBeautyClub
 composer install --optimize-autoloader --no-dev
+composer check-platform-reqs --no-dev
 ```
 
 For development environment, use:
@@ -311,7 +336,7 @@ sudo supervisorctl start yslbeautyclub-worker:*
 ### PHP Warnings about Modules Already Loaded
 Edit PHP configuration files and remove duplicate extension entries:
 ```bash
-sudo nano /etc/php/8.1/cli/php.ini
+sudo nano /etc/php/8.3/cli/php.ini
 # Remove duplicate lines for: opcache, curl, mbstring
 ```
 
@@ -365,6 +390,7 @@ sudo git pull origin main
 
 # Update dependencies
 composer install --optimize-autoloader --no-dev
+composer check-platform-reqs --no-dev
 npm install
 npm run build
 
@@ -378,6 +404,7 @@ php artisan route:cache
 php artisan view:cache
 
 # Bring application back online
+php artisan queue:restart
 php artisan up
 ```
 
@@ -438,6 +465,6 @@ For issues or questions, refer to:
 
 ---
 
-**Last Updated:** January 16, 2026
-**Server:** Ubuntu with Apache2, PHP 8.1, MySQL
+**Last Updated:** October 22, 2026
+**Server:** Ubuntu with Apache2, PHP 8.3.36 or newer 8.3 patch, MySQL
 **Framework:** Laravel (version as per composer.json)

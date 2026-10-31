@@ -26,6 +26,9 @@
             <form id="otpForm" method="POST" action="{{ route('verify.otp') }}">
                 @csrf
 
+                @error('email')
+                    <div class="mm-error-text text-center mb-3">{{ $message }}</div>
+                @enderror
                 @if(session('error'))
                     <div class="mm-error-text text-center mb-3">{{ session('error') }}</div>
                 @endif
@@ -123,20 +126,22 @@
                 });
             });
 
-            // Countdown timer for 60s
-            let seconds = 60;
+            // Start from the server's per-email cooldown, including after refresh.
+            const remaining = @json(\App\Services\OtpCooldown::remaining(session('email') ?? session('otp_email')));
+            const deadline = Date.now() + remaining * 1000;
             const timerEl = document.getElementById('timer');
             const resendContainer = document.getElementById('resendContainer');
             const resendBtn = document.getElementById('resendBtn');
-
-            const countdown = setInterval(function () {
-                seconds--;
+            function updateCountdown() {
+                const seconds = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
                 if (timerEl) timerEl.textContent = seconds;
-                if (seconds <= 0) {
-                    clearInterval(countdown);
-                    if (resendContainer) resendContainer.classList.add('d-none');
-                    if (resendBtn) resendBtn.classList.remove('d-none');
-                }
+                if (resendContainer) resendContainer.classList.toggle('d-none', seconds === 0);
+                if (resendBtn) resendBtn.classList.toggle('d-none', seconds > 0);
+                return seconds;
+            }
+            updateCountdown();
+            const countdown = setInterval(function () {
+                if (updateCountdown() === 0) clearInterval(countdown);
             }, 1000);
         });
     </script>

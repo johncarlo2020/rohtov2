@@ -35,6 +35,7 @@ class RegisteredUserController extends Controller
         ]);
 
         $email = strtolower(trim($request->input('email')));
+        \App\Services\OtpCooldown::claim($email);
         $fname = $request->input('fname') ?? $request->input('name') ?? 'Guest';
         $otp = (string) rand(100000, 999999);
 

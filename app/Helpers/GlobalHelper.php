@@ -103,17 +103,36 @@ class GlobalHelper
     public static function sendOtpEmail($email, $otp, $name = null, $otpType = 'Verification')
     {
         $provider = config('services.mail_otp_provider', 'mailtrap');
-        \Log::info("[OTP EMAIL] Attempting to send OTP email to {$email} using provider [{$provider}]");
+        $startedAt = microtime(true);
+        $context = [
+            'request_id' => (string) \Illuminate\Support\Str::uuid(),
+            'email' => strtolower(trim($email)),
+            'provider' => $provider,
+            'otp_type' => $otpType,
+            'source' => app()->runningInConsole() ? 'console' : (request()->route()?->getName() ?? request()->path()),
+        ];
+        \Log::info('[OTP EMAIL] requested', $context + ['status' => 'requested']);
 
         try {
-            if ($provider === 'brevo') {
-                return self::sendOtpViaBrevo($email, $otp, $name, $otpType);
-            }
-            return self::sendOtpViaMailtrap($email, $otp, $name, $otpType);
+            $result = $provider === 'brevo'
+                ? self::sendOtpViaBrevo($email, $otp, $name, $otpType)
+                : self::sendOtpViaMailtrap($email, $otp, $name, $otpType);
+
+            // Provider acceptance does not establish delivery to the recipient's inbox.
+            \Log::info('[OTP EMAIL] accepted', $context + [
+                'status' => 'accepted',
+                'message_id' => is_array($result) ? ($result['messageId'] ?? null) : null,
+                'duration_ms' => (int) round((microtime(true) - $startedAt) * 1000),
+            ]);
+
+            return $result;
         } catch (\Throwable $e) {
-            \Log::error("[OTP EMAIL EXCEPTION] Failed sending OTP email to {$email}: " . $e->getMessage(), [
-                'email' => $email,
-                'provider' => $provider,
+            $status = $e instanceof \Illuminate\Http\Client\ConnectionException ? 'unknown' : 'failed';
+            \Log::error('[OTP EMAIL EXCEPTION] ' . $status, $context + [
+                'status' => $status,
+                'error_type' => get_class($e),
+                'error' => str_replace((string) $otp, '[redacted]', $e->getMessage()),
+                'duration_ms' => (int) round((microtime(true) - $startedAt) * 1000),
             ]);
             throw $e;
         }
@@ -202,8 +221,7 @@ class GlobalHelper
 
         \Log::info("[BREVO OTP REQUEST] Sending request to Brevo API for {$email}...", [
             'sender_email' => $fromEmail,
-            'sender_name' => $fromName,
-            'api_key_snippet' => substr($apiKey, 0, 10) . '...'
+            'sender_name' => $fromName
         ]);
 
         $response = Http::withHeaders([

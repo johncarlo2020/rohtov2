@@ -143,6 +143,10 @@ class StationController extends Controller
   {
       $otp = (string) rand(100000, 999999);
       $email = session('email') ?? session('otp_email') ?? (Auth::check() ? Auth::user()->email : null);
+      if (!$email) {
+          return back()->with('error', 'Please log in or register before requesting an OTP.');
+      }
+      \App\Services\OtpCooldown::claim($email);
       $userId = session('login_user_id');
       session(['otp' => $otp]);
 

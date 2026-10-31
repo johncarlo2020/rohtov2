@@ -815,6 +815,74 @@ class BookingSystemTest extends TestCase
     }
 
     /** @test */
+    public function admin_can_edit_a_booking_date_to_enable_or_disable_bookings()
+    {
+        $adminRole = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'admin']);
+        $admin = \App\Models\User::factory()->create(['email' => 'admin_edit_booking_date@example.com']);
+        $admin->assignRole($adminRole);
+        $date = BookingDate::create([
+            'date' => '2026-11-01',
+            'capacity' => 20,
+            'is_available' => true,
+        ]);
+
+        $indexResponse = $this->actingAs($admin)->get(route('booking-dates.index'));
+        $indexResponse->assertOk()->assertSee('Edit / Bookings');
+
+        $showUrl = route('booking-dates.show', $date);
+        $this->get($showUrl)->assertOk()->assertSee('name="is_available"', false);
+
+        $this->from($showUrl)->put(route('booking-dates.update', $date), [
+            'date' => '2026-11-01',
+            'capacity' => 20,
+            'is_available' => 0,
+        ])->assertRedirect($showUrl);
+        $this->assertDatabaseHas('booking_dates', [
+            'id' => $date->id,
+            'is_available' => false,
+        ]);
+
+        $this->from($showUrl)->put(route('booking-dates.update', $date), [
+            'date' => '2026-11-01',
+            'capacity' => 20,
+            'is_available' => 1,
+        ])->assertRedirect($showUrl);
+        $this->assertDatabaseHas('booking_dates', [
+            'id' => $date->id,
+            'is_available' => true,
+        ]);
+    }
+
+    /** @test */
+    public function it_allows_admin_to_delete_a_booking_from_its_booking_date()
+    {
+        $adminRole = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'admin']);
+        $admin = \App\Models\User::factory()->create(['email' => 'admin_date_del_booking@example.com']);
+        $admin->assignRole($adminRole);
+
+        $slotsResponse = $this->getJson('/api/booking/dates/2026-10-06/slots');
+        $slot = BookingSlot::find($slotsResponse->json()[0]['id']);
+        $booking = Booking::create([
+            'booking_date_id' => $slot->booking_date_id,
+            'booking_slot_id' => $slot->id,
+            'reference_no' => 'REF-DATE-DEL-123',
+            'customer_name' => 'Date Delete User',
+            'customer_email' => 'date-del@example.com',
+            'customer_phone' => '09123456789',
+            'status' => 'confirmed',
+        ]);
+        $slot->increment('booked_count');
+
+        $response = $this->actingAs($admin)->delete(
+            route('booking-dates.bookings.destroy', [$booking->bookingDate, $booking])
+        );
+
+        $response->assertRedirect(route('booking-dates.show', $booking->bookingDate));
+        $this->assertDatabaseMissing('bookings', ['id' => $booking->id]);
+        $this->assertEquals(0, $slot->fresh()->booked_count);
+    }
+
+    /** @test */
     public function it_prevents_modifying_or_cancelling_an_attended_booking()
     {
         $slotsResponse = $this->getJson('/api/booking/dates/2026-10-06/slots');
@@ -918,7 +986,4 @@ class BookingSystemTest extends TestCase
         $validRes->assertSessionHas('success');
     }
 }
-
-
-
 

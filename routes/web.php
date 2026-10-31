@@ -78,7 +78,7 @@ Route::group(['middleware' => ['admin']], function () {
     Route::get('/admin/scanner', [\App\Http\Controllers\Admin\BookingScanController::class, 'index'])->name('scanner');
     Route::post('/admin/scanner/scan', [\App\Http\Controllers\Admin\BookingScanController::class, 'store'])->name('admin.scanner.scan');
     Route::post('/admin/scanner/lookup', [BookingController::class, 'lookup'])->name('admin.scanner.lookup');
-    Route::post('/admin/scanner/attend', [BookingController::class, 'markAttendingNow'])->name('admin.scanner.attend');
+    Route::post('/admin/scanner/attend', [BookingController::class, 'confirmAttendanceByScan'])->name('admin.scanner.attend');
 
     Route::get('/admin/vip', [VipController::class, 'index'])->name('admin.vip');
     Route::post('/admin/vip', [VipController::class, 'store'])->name('admin.vip.store');
@@ -107,6 +107,7 @@ Route::group(['middleware' => ['admin']], function () {
     Route::get('/admin/booking-dates/{bookingDate}', [BookingDateController::class, 'show'])->name('booking-dates.show');
     Route::put('/admin/booking-dates/{bookingDate}', [BookingDateController::class, 'update'])->name('booking-dates.update');
     Route::delete('/admin/booking-dates/{bookingDate}', [BookingDateController::class, 'destroy'])->name('booking-dates.destroy');
+    Route::delete('/admin/booking-dates/{bookingDate}/bookings/{booking}', [BookingController::class, 'destroyFromDate'])->name('booking-dates.bookings.destroy');
 
     Route::get('/admin/bookings', [BookingController::class, 'index'])->name('bookings');
     Route::get('/admin/bookings/export/spreadsheet', [BookingController::class, 'exportSpreadsheet'])->name('bookings.export.spreadsheet');
@@ -233,5 +234,4 @@ Route::get('/resend-otp', 'App\Http\Controllers\StationController@resend')->name
 Route::post('/verify-otp', 'App\Http\Controllers\StationController@verify')->name('verify.otp');
 
 require __DIR__ . '/auth.php';
-
 

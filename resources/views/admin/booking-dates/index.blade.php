@@ -66,7 +66,7 @@
                         <td>{{ max(0, $d->capacity - $d->bookings_count) }}</td>
                         <td>{{ $d->reason }}</td>
                         <td class="text-end">
-                            <a href="{{ route('booking-dates.show', $d) }}" class="btn btn-sm btn-outline-primary mb-0">Bookings</a>
+                            <a href="{{ route('booking-dates.show', $d) }}" class="btn btn-sm btn-outline-primary mb-0">Edit / Bookings</a>
                             <form method="POST" action="{{ route('booking-dates.destroy', $d) }}" class="d-inline" onsubmit="return confirm('Delete this date?')">
                                 @csrf @method('DELETE')
                                 <button class="btn btn-sm btn-outline-danger mb-0">Delete</button>

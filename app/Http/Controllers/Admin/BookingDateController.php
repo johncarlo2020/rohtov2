@@ -45,6 +45,7 @@ class BookingDateController extends Controller
         $data = $request->validate([
             'date' => ['required', 'date', Rule::unique('booking_dates', 'date')->ignore($bookingDate->id)],
             'capacity' => ['required', 'integer', 'min:0'],
+            'is_available' => ['nullable', 'boolean'],
             'reason' => ['nullable', 'string', 'max:255'],
         ]);
         $data['is_available'] = $request->boolean('is_available');

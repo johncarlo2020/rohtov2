@@ -62,6 +62,7 @@
                 </div>
 
                 <!-- Camera Container -->
+                <div id="camera-permission-msg" class="alert alert-warning d-none text-center"></div>
                 <div id="reader" class="mb-3"></div>
             </div>
         </div>
@@ -118,13 +119,13 @@
                 <div id="modal-alert-msg" class="alert alert-info py-2 px-3 mt-3 mb-0 text-xs font-weight-bold text-center d-none"></div>
             </div>
 
-            <!-- 2 Buttons: Close & Attending Now -->
+            <!-- Cancel & Confirm -->
             <div class="modal-footer border-0 pt-0 pb-3 justify-content-center gap-2">
                 <button type="button" class="btn btn-secondary px-4 py-2 font-weight-bold" data-bs-dismiss="modal" id="btn-modal-close">
-                    Close
+                    Cancel
                 </button>
                 <button type="button" class="btn btn-success px-4 py-2 font-weight-bold shadow-sm" id="btn-modal-attending-now">
-                    <i class="fa-solid fa-user-check me-1"></i>Attending Now
+                    <i class="fa-solid fa-user-check me-1"></i>Confirm
                 </button>
             </div>
         </div>
@@ -136,6 +137,7 @@
 <script>
     let html5QrCode = null;
     let isScanning = false;
+    let scannerStarting = false;
     let currentBookingId = null;
     let currentRefNo = null;
 
@@ -176,27 +178,63 @@
         });
     });
 
+    let cameraRetryTimer = null;
+
+    function showCameraMessage(msg) {
+        const el = document.getElementById('camera-permission-msg');
+        if (!el) return;
+        el.textContent = msg || '';
+        el.classList.toggle('d-none', !msg);
+    }
+
+    function scheduleCameraRetry() {
+        if (cameraRetryTimer) return;
+        cameraRetryTimer = setTimeout(() => {
+            cameraRetryTimer = null;
+            startScanner();
+        }, 2000);
+    }
+
     function startScanner() {
-        if (isScanning) return;
-        
-        html5QrCode = new Html5Qrcode("reader");
-        html5QrCode.start(
-            { facingMode: "environment" },
-            { fps: 10, qrbox: 240 },
-            (qrCodeMessage) => {
-                isScanning = false;
-                html5QrCode.stop().then(() => {
-                    lookupBooking(qrCodeMessage);
-                }).catch(() => {
-                    lookupBooking(qrCodeMessage);
+        if (isScanning || scannerStarting) return;
+        scannerStarting = true;
+
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            scannerStarting = false;
+            showCameraMessage('Camera is not available. Use HTTPS and a supported browser.');
+            return;
+        }
+
+        // Prompt for permission, then release the probe stream before html5-qrcode opens the camera
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+            .then(stream => {
+                stream.getTracks().forEach(t => t.stop());
+                showCameraMessage('');
+                html5QrCode = new Html5Qrcode("reader");
+                return html5QrCode.start(
+                    { facingMode: "environment" },
+                    { fps: 10, qrbox: 240 },
+                    (qrCodeMessage) => {
+                        isScanning = false;
+                        html5QrCode.stop().then(() => {
+                            lookupBooking(qrCodeMessage);
+                        }).catch(() => {
+                            lookupBooking(qrCodeMessage);
+                        });
+                    },
+                    () => {}
+                ).then(() => {
+                    isScanning = true;
                 });
-            },
-            (errorMessage) => {}
-        ).then(() => {
-            isScanning = true;
-        }).catch(err => {
-            console.warn('Camera scanner fallback:', err);
-        });
+            })
+            .catch(err => {
+                console.warn('Camera error:', err);
+                showCameraMessage('Camera permission is required. Please allow camera access in your browser; retrying...');
+                scheduleCameraRetry();
+            })
+            .finally(() => {
+                scannerStarting = false;
+            });
     }
 
     function lookupBooking(queryStr) {
@@ -264,9 +302,9 @@
         } else if (status === 'Missed') {
             badgeElem.textContent = 'STATUS: MISSED';
             badgeElem.className = 'badge px-4 py-2 font-weight-bold text-uppercase status-badge-missed';
-            attendingBtn.disabled = false;
-            attendingBtn.classList.remove('opacity-50');
-            alertMsg.textContent = 'Time slot passed! Click "Attending Now" if customer is present late.';
+            attendingBtn.disabled = true;
+            attendingBtn.classList.add('opacity-50');
+            alertMsg.textContent = 'Time slot passed. This booking is marked as Missed.';
             alertMsg.classList.remove('d-none', 'alert-success', 'alert-warning');
             alertMsg.classList.add('alert-danger');
         } else {
@@ -296,7 +334,7 @@
         })
         .then(res => res.json())
         .then(data => {
-            attendingBtn.textContent = 'Attending Now';
+            attendingBtn.innerHTML = '<i class="fa-solid fa-user-check me-1"></i>Confirm';
             if (data.status === 'success') {
                 const badgeElem = document.getElementById('modal-status-badge');
                 badgeElem.textContent = 'STATUS: ATTENDED';
@@ -317,7 +355,7 @@
             console.error('Attendance Error:', err);
             alert('Server error confirming attendance.');
             attendingBtn.disabled = false;
-            attendingBtn.textContent = 'Attending Now';
+            attendingBtn.innerHTML = '<i class="fa-solid fa-user-check me-1"></i>Confirm';
         });
     }
 

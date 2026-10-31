@@ -45,7 +45,7 @@
         <div class="card-header pb-0"><h6>User Bookings ({{ $bookings->count() }})</h6></div>
         <div class="card-body table-responsive">
             <table class="table align-items-center mb-0">
-                <thead><tr><th>Ref</th><th>Name</th><th>Email</th><th>Phone</th><th>Venue</th><th>Status</th><th></th></tr></thead>
+                <thead><tr><th>Ref</th><th>Name</th><th>Email</th><th>Phone</th><th>Venue</th><th>Status</th><th>Actions</th></tr></thead>
                 <tbody>
                 @forelse($bookings as $b)
                     <tr>
@@ -59,6 +59,11 @@
                             @if($b->user)
                                 <a href="{{ route('userData', $b->user->id) }}" class="btn btn-sm btn-outline-primary mb-0">User</a>
                             @endif
+                            <form method="POST" action="{{ route('booking-dates.bookings.destroy', [$date, $b]) }}" class="d-inline" onsubmit="return confirm('Delete this booking?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-outline-danger mb-0">Delete</button>
+                            </form>
                         </td>
                     </tr>
                 @empty

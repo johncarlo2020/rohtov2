@@ -22,6 +22,7 @@ class LoginController extends Controller
         ]);
 
         $email = strtolower(trim($request->input('email')));
+        \App\Services\OtpCooldown::claim($email);
 
         $user = User::where('email', $email)->first();
 

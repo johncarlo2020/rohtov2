@@ -10,7 +10,7 @@ class BookingScanController extends Controller
 {
     public function index()
     {
-        return view('admin.booking-scan');
+        return view('scanner');
     }
 
     public function store(Request $request)

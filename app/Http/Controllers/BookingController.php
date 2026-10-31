@@ -325,6 +325,12 @@ class BookingController extends Controller
         $computedStatus = $booking->computed_status; // 'Attended', 'Missed', or 'Not Yet Attended'
         $isAttended = ($computedStatus === 'Attended');
 
+        // Persist the missed state once the booked slot has passed
+        if ($computedStatus === 'Missed' && strtolower((string) $booking->status) !== 'missed') {
+            $booking->status = 'missed';
+            $booking->save();
+        }
+
         $dateStr = 'N/A';
         $isToday = false;
         $rawDate = null;
@@ -395,6 +401,15 @@ class BookingController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => "Cannot mark attendance today. This booking is scheduled for {$formattedDate}."
+            ], 422);
+        }
+
+        if ($booking->computed_status === 'Missed') {
+            $booking->status = 'missed';
+            $booking->save();
+            return response()->json([
+                'status' => 'error',
+                'message' => 'The booked time slot has passed. This booking is marked as Missed.'
             ], 422);
         }
 
@@ -543,24 +558,7 @@ class BookingController extends Controller
     public function destroy($id)
     {
         $booking = Booking::with('bookingSlot')->findOrFail($id);
-        $refNo = $booking->reference_no;
-        $name = $booking->customer_name;
-
-        // Decrement slot booked count to restore capacity
-        if ($booking->bookingSlot) {
-            $decrementPax = max(1, (int)($booking->pax ?? 1));
-            $newCount = max(0, $booking->bookingSlot->booked_count - $decrementPax);
-            $booking->bookingSlot->update(['booked_count' => $newCount]);
-        }
-
-        $booking->delete();
-
-        \App\Services\HistoryLogService::log(
-            'DELETE_BOOKING',
-            "Deleted booking ({$refNo}) for {$name}",
-            'Booking',
-            $id
-        );
+        $this->deleteBookingRecord($booking);
 
         if (request()->wantsJson()) {
             return response()->json(['success' => true, 'message' => 'Booking deleted successfully.']);
@@ -569,5 +567,36 @@ class BookingController extends Controller
         return redirect()
             ->route('bookings')
             ->with('success', 'Booking deleted successfully.');
+    }
+
+    public function destroyFromDate(BookingDate $bookingDate, Booking $booking)
+    {
+        abort_unless($booking->booking_date_id === $bookingDate->id, 404);
+
+        $this->deleteBookingRecord($booking);
+
+        return redirect()
+            ->route('booking-dates.show', $bookingDate)
+            ->with('success', 'Booking deleted successfully.');
+    }
+
+    private function deleteBookingRecord(Booking $booking): void
+    {
+        $booking->load('bookingSlot');
+
+        if ($booking->bookingSlot) {
+            $decrementPax = max(1, (int) ($booking->pax ?? 1));
+            $newCount = max(0, $booking->bookingSlot->booked_count - $decrementPax);
+            $booking->bookingSlot->update(['booked_count' => $newCount]);
+        }
+
+        $booking->delete();
+
+        \App\Services\HistoryLogService::log(
+            'DELETE_BOOKING',
+            "Deleted booking ({$booking->reference_no}) for {$booking->customer_name}",
+            'Booking',
+            $booking->id
+        );
     }
 }

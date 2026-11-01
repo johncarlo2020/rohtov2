@@ -10,6 +10,8 @@ class Station extends Model
     use HasFactory;
     protected $fillable = [
         'name',
+        'subtitle',
+        'description',
         'question',
         'answer_id',
     ];

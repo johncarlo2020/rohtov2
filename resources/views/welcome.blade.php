@@ -88,7 +88,7 @@
                 <div class="col-12 text-center">
                     <div class="d-block  mb-2">
                         <div class="colanimate-entry delay-2 btn-wrapperx px-5 mt-4">
-                            <a href="{{ route('register') }}" class="custom-btn custom-btn-primary pulse-slow">
+                            <a href="{{ route('register') }}" class="custom-btn custom-btn-secondary pulse-slow">
                                 JOIN NOW
                             </a>
                         </div>

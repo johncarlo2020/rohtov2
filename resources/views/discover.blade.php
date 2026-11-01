@@ -12,7 +12,7 @@
                 </div>
                 
                 <div class="animate-entry">
-                <h2 class="text-title text-center fw-bold py-3" >LIBRE BERRY CRUSH <br>FREEDOM HAS TASTE</h2>
+                <h2 class="text-title text-center fw-bold py-3" >LET THE YSL SHOW BEGIN</h2>
                 </div>
                 <div id="banner" class="col-12 d-flex justify-content-center p-0 animate-entry">
                     <img class="discover_img w-100" src="{{ asset('images/brand/discover.webp') }}"
@@ -41,8 +41,8 @@
 
                 <div class="discover-text">
                     <p class="text-center px-3 py-4" style="font-size:14px;">
-                        Discover the latest twist on the iconic LIBRE fragrance.<br>
-Infused with juicy raspberry accord, creamy coconut accord, and the signature orange blossom-lavender heart.
+                        Step into the wildest party of the season.<br><br>
+                        Discover liberate boundless freedom and unaplogetic self-expression to be the part of the YSL Holiday Show.
                     </p>
                 </div>
 
@@ -50,8 +50,8 @@ Infused with juicy raspberry accord, creamy coconut accord, and the signature or
 
                     <a
                         href="{{ route('dashboard') }}"
-                        class="custom-btn custom-btn-primary animate-entry delay-3 px-4"
-                        ><strong>READY TO CRAVE?<strong></a
+                        class="custom-btn custom-btn-secondary animate-entry delay-3 px-4"
+                        ><strong>BEGIN YOUR JOURNEY</strong></a
                     >
                 </div>
             </div>

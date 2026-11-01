@@ -1,69 +1,19 @@
 <x-app-layout>
 <style>
-    .option-btn
-    {   
-        width: 100%;
+    #start-scanner {
+        width: min(90%, 360px);
         border-color: #ffffff;
-        border-radius: 5px;
+        border-radius: 7px;
         background-color: #ffffff;
-        padding: 0;
+        color: #000000 !important;
+        padding: clamp(12px, 2.5vh, 16px) clamp(16px, 5vw, 24px);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-weight: 600;
+        font-weight: 700;
         cursor: pointer;
-        color: #000000;
-
-        /* Subtle elevation */
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-
-        /* Animations */
-        animation: scannerIdle 2.8s ease-in-out infinite;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    /* hover */
-.option-btn:hover {
-    background: #f5f5f5;
-}
-
-/* selected (pink highlight) */
-.option-btn.selected {
-    background: linear-gradient(135deg, #deb4b4, #deb4b4);
-    border: #000000;
-    color: white;
-    transform: scale(1.05);
-}
-
-/* dimmed (other options) */
-.option-btn.dimmed {
-    opacity: 0.4;
-    filter: grayscale(40%);
-    transform: scale(0.98);
-}
-
-/* animation */
-@keyframes pinkFlash {
-    0% { background-color: #deb4b4; }
-    50% { background-color: #deb4b4; }
-    100% { background-color: #deb4b4; }
-}
-
-.option-btn.animate {
-    animation: pinkFlash 0.4s ease;
-}
-
-    #start-scanner,#start-quiz,#perfume-next-btn {
-        width: 50%;
-        border-color: #ffffff;
-        border-radius: 5px;
-        background-color: #ffffff;
-        padding: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 900;
-        cursor: pointer;
+        letter-spacing: 1.5px;
+        font-size: clamp(12px, 3.5vw, 14px);
 
         /* Subtle elevation */
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
@@ -85,44 +35,103 @@
         box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
     }
 
-    .main-content
-    {
-        padding-top: 0 !important;
-        padding-bottom: 0 !important;
+    /* Header & Branding consistency */
+    .branding-wrapper {
+        margin-bottom: clamp(49px, 8vh, 106px) !important;
+        text-align: center;
     }
 
-   /* Whole screen */
-#mainContainer {
-  min-height: 100vh;
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: clamp(12px, 3vh, 24px);
-  padding-block: clamp(12px, 3vh, 24px);
-}
+    .page-main-title {
+        font-weight: 700 !important;
+        letter-spacing: 2px;
+        line-height: 1.25;
+        font-size: clamp(1.15rem, 4.5vw, 1.45rem);
+        margin: 0 0 clamp(42px,5vh,98px) 0 !important;
+        text-align: center;
+        color: #fff;
+    }
 
-/* Main content */
-#mainContent {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  gap: clamp(12px, 3vh, 24px);
-}
+    .station-page {
+        min-height: 100svh;
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        padding-top: max(16px, env(safe-area-inset-top, 0px)) !important;
+        padding-bottom: max(24px, calc(env(safe-area-inset-bottom, 0px) + 20px)) !important;
+    }
 
-/* Title */
-/* #mainContent h2 {
-  font-size: clamp(1rem, 4.5vw, 1.4rem);
-  letter-spacing: clamp(1px, 0.4vw, 2px);
-} */
-/* Text */
-#mainContent p {
-  font-size: 16px;
-  max-width: 38ch;
-  line-height: 1.5;
-}
+    .grid-container-wrapper {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        width: 100%;
+    }
+
+    #mainContainer {
+        min-height: 100%;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+
+    #mainContent {
+        flex: 1;
+        width: 100%;
+        max-width: min(92vw, 420px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        margin: 0 auto;
+    }
+
+    .station-visual-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .station-image {
+        width: 100%;
+        max-width: min(88vw, 360px);
+        max-height: clamp(240px, 38vh, 360px);
+        aspect-ratio: 1 / 1;
+        object-fit: cover;
+        margin: 0 auto clamp(12px, 2vh, 18px) auto;
+        display: block;
+    }
+
+    .station-subtitle {
+        font-weight: 400 !important;
+        font-size: clamp(13px, 3.8vw, 16px);
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+        color: #fff;
+        line-height: 1.35;
+    }
+
+    .station-description {
+        font-size: clamp(13px, 3.8vw, 16px);
+        line-height: 1.45;
+        max-width: 36ch;
+        margin: 0 auto;
+        color: #fff;
+        font-weight: 400;
+    }
+
+    .station-actions-wrapper {
+        width: 100%;
+        margin-top: clamp(16px, 3vh, 26px);
+    }
 
 /* Buttons */
 .custom-btn-secondary {
@@ -187,86 +196,69 @@
                 </div>
             </div>
         </div>
-        <!-- <button
-            class="back-btn animate-entry"
-            onclick="window.location.href='{{ route('dashboard') }}'"
-            aria-label="Go back"
-        ></button> -->
         
         <div id="mainContainer">
 
             <!-- Branding -->
-            <div class="branding-container animate-entry px-4">
+            <div class="branding-wrapper animate-entry px-4 text-center">
                 @include('components.branding')
             </div>
 
             <!-- Main content -->
-            <div id="mainContent"
-                class="d-flex flex-column align-items-center justify-content-between animate-entry delay-3">
+            <div id="mainContent" class="animate-entry delay-3">
 
                 <!-- station name -->
-                <h2 class="text-title text-center fw-bold">{!! strtoupper($station->name) !!}</h2>
+                <h2 class="page-main-title">{!! strtoupper($station->name) !!}</h2>
 
-                <!-- station image -->
-                <img class="station-image"
-                    src="{{ asset('images/station/ST' . $station->id . '.webp') }}"
-                    alt="Station Image">
+                <!-- Visual Group (Image + Text) -->
+                <div class="station-visual-group text-center">
+                    <!-- station image -->
+                    <img class="station-image"
+                        src="{{ asset('images/station/ST' . $station->id . '.webp') }}"
+                        alt="Station Image">
 
-                <!-- description -->
-                <p class="text-center px-3">
-                    {!! $station->description !!}
-                </p>
+                    <div class="station-content-wrapper text-center px-3 my-3">
+                        @if (!empty($station->subtitle))
+                            <p class="station-subtitle text-uppercase mb-2">
+                                {{ $station->subtitle }}
+                            </p>
+                        @endif
+
+                        <!-- description -->
+                        <p class="station-description text-center">
+                            {!! $station->description !!}
+                        </p>
+                    </div>
+                </div>
 
                 <!-- actions -->
-                @if ($user)
-
-                    <!-- ✅ Already checked in -->
-                    <div class="checkedInContainer w-50 mx-auto">
-                        <p class="text-center mb-2">Checked In</p>
-                        <a href="{{ route('dashboard') }}"
-                        class="custom-btn custom-btn-secondary w-100">
-                            BACK
-                        </a>
-                    </div>
-
-                @elseif ($station->id == 1)
-
-                    <!-- ✅ Station 1 → Quiz -->
-                    <button id="start-quiz"
-                            class="text-dark custom-btn-secondary px-3 py-2">
-                        START THE QUIZ
-                    </button>
-
-                @else
-
-                    <!-- ✅ Other stations → Scanner -->
-                    <button id="start-scanner"
-                            class="text-dark custom-btn-secondary px-3 py-2">
-                        SCAN QR CODE TO PROCEED
-                    </button>
-
-                @endif
-            </div>
-
-            <div id="quizContainer" class="d-none">
-                <!-- Quiz content will be injected here by JavaScript -->
-                <div id="quiz-container" style="display:none; width:100%; max-width:360px;">
-                    <h3 id="question-title" class="mt-4 mb-2 text-center fw-bold"></h3>
-                    <h3 id="question-text" class="mb-5 text-uppercase text-center fw-bold"></h3>
-                    <div id="options"></div>
+                <div class="station-actions-wrapper text-center">
+                    @if ($user)
+                        <!-- ✅ Already checked in -->
+                        <div class="checkedInContainer w-75 mx-auto text-center">
+                            <p class="text-center mb-2" style="font-size: 13px;">Checked In</p>
+                            <a href="{{ route('dashboard') }}"
+                            class="custom-btn custom-btn-secondary w-100">
+                                BACK
+                            </a>
+                        </div>
+                    @else
+                        <!-- ✅ All stations → QR Scanner -->
+                        <button id="start-scanner"
+                                class="custom-btn custom-btn-secondary mx-auto">
+                            STEP INTO THE NEXT CHAPTER
+                        </button>
+                    @endif
                 </div>
             </div>
 
             <!-- Scanner -->
-            <!-- scanner-container --> 
             <div id="{{ $user ? '' : 'forceQr' }}" class="icon-container"></div> 
-                <div id="scannerContainer" class="scanner-container d-none"> 
-                    <!-- <button id="close" class="mx-auto mt-4 camera-btn">x</button> --> 
-                    <h2 class="text-center fw-bold mb-4">FREEDOM HAS TASTE</h2> 
-                    <div id="reader"></div> 
-                    <p class="mt-4 scanner-text text-center text-white">Find the QR code &<br> scan to continue your journey</p> 
-                </div> 
-            </div>
+            <div id="scannerContainer" class="scanner-container d-none"> 
+                <h2 class="text-center fw-bold mb-5">FREEDOM HAS TASTE</h2> 
+                <div id="reader"></div> 
+                <p class="mt-4 scanner-text text-center text-white">Find the QR code &<br> scan to continue your journey</p> 
+            </div> 
         </div>
     </div>
     
@@ -277,7 +269,6 @@
             window.stationConfig = {
                 urls: {
                     process_qr_code: '{{ route('process_qr_code') }}',
-                    submit_quiz: '{{ route('submit.quiz') }}',
                     congrats: '{{ route('congrats') }}',
                     dashboard: '{{ route('dashboard') }}'
                 },
@@ -287,7 +278,6 @@
                 },
                 station_id: {{ $station->id }},
                 station_name: `{!! strtoupper($station->name) !!}`,
-                perfumes: @json($perfumes),
                 asset_base: "{{ asset('') }}"
             };
 

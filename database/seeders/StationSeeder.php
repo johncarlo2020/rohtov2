@@ -20,48 +20,60 @@ class StationSeeder extends Seeder
      */
     public function run()
     {
-        Station::create([
-            'name' => 'Find your Libre',
-            'description' => 'Discover the LIBRE fragrance that perfectly embodies your unique personality and style.​ </br></br>
-            Complete this quiz to unlock your signature scent and embrace the freedom to be you.',
-        ]);
+        Station::updateOrCreate(
+            ['id' => 1],
+            [
+                'name' => 'The Burgundy Obsession',
+                'subtitle' => 'BURGUNDY SETS THE STAGE.',
+                'description' => 'Discover the new YSL HOLIDAY COLLECTORS,<br>a coveted curation of festive treasures, made to elevate your holiday ritual.',
+            ]
+        );
 
-        Station::create([
-            'name' => 'Refill your icons',
-            'description' => 'Refill you iconic LIBRE fragrance with the power of forever freedom.',
-        ]);
+        Station::updateOrCreate(
+            ['id' => 2],
+            [
+                'name' => 'Scents of the Season',
+                'subtitle' => 'DRESS IN YOUR SCENT.',
+                'description' => 'Discover MYSLF\'s modern intensity and LIBRE\'s bold signature—two iconic scents,<br>made for every festive moment.',
+            ]
+        );
 
-        Station::create([
-            'name' => 'Two Icons, <br> Now in Berry Crush',
-            'description' => 'From the floral fruity of LIBRE Berry Crush to juicy shine of YSL LOVESHINE Berry Crush, indulge in a double hit of freedom and 
-desire.',
-        ]);
+        Station::updateOrCreate(
+            ['id' => 3],
+            [
+                'name' => 'Own the Stage',
+                'subtitle' => 'BEAUTY TAKES THE SPOTLIGHT.',
+                'description' => 'Strike a post, share your HOLIDAY look on social media<br>& hashtag #YSLBeautyMY',
+            ]
+        );
 
-        Station::create([
-            'name' => 'Your Libre, <br>Your Freedom',
-            'description' => 'Strike a pose, post & hashtag #YSLBeautyMY',
-        ]);
+        Station::updateOrCreate(
+            ['id' => 4],
+            [
+                'name' => 'Your Holiday Treat',
+                'subtitle' => null,
+                'description' => 'Redeem your YSL Discovery Gift<br>at the gift redemption counter.',
+            ]
+        );
 
-        Station::create([
-            'name' => 'Gift Redemption',
-            'description' => 'Redeem your YSL Discovery Gift at the gift redemption counter.',
-        ]);
+        // Ensure only 4 stations exist
+        Station::where('id', '>', 4)->delete();
 
+        $clientRole = Role::firstOrCreate(['name' => 'client']);
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
 
+        $user = User::firstOrCreate(
+            ['email' => 'admin@gmail.com'],
+            [
+                'fname' => 'admin',
+                'number' => '0123456789',
+                'country' => 'Malaysia',
+                'password' => Hash::make('WowsomeYsl2026'),
+            ]
+        );
 
-
-        $role = Role::create(['name' => 'client']);
-
-        $role = Role::create(['name' => 'admin']);
-
-        $user = User::create([
-            'fname' => 'admin',
-            'number' => '0123456789',
-            'email' => 'admin@gmail.com',
-            'country' => 'Malaysia',
-            'password' => Hash::make('WowsomeYsl2026'),
-        ]);
-
-        $user->assignRole('admin');
+        if (!$user->hasRole('admin')) {
+            $user->assignRole('admin');
+        }
     }
 }

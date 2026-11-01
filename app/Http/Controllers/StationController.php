@@ -159,17 +159,18 @@ class StationController extends Controller
             ->where('station_id', $station->id)
             ->exists();
 
-        $perfumes = Perfume::select('id', 'title')->get();
-        
-        if ($station->id == 9 && $user == true) {
-            return view('congrats');
+        if ($station->id == 4) {
+            $completedStationIds = StationUser::where('user_id', auth()->id())->pluck('station_id')->toArray();
+            $canAccessStation4 = collect([1, 2, 3])->every(fn($id) => in_array($id, $completedStationIds));
+            if (!$canAccessStation4) {
+                return redirect()->route('dashboard');
+            }
+            if ($user == true) {
+                return redirect()->route('congrats');
+            }
         }
 
-        if($station->id == 2 && $user == true) {
-            return view('station', compact('station', 'user'));
-        }
-
-         return view('station', compact('station', 'user', 'perfumes'));
+        return view('station', compact('station', 'user'));
 
     }
 
@@ -317,30 +318,28 @@ class StationController extends Controller
 
         $user = User::with('stationUser')->where('id', $userId)->first();
 
-        $stationDone = $user->stationUser->count();
-        $stations = Station::get();
-
-        $completedStationIds = $user->stationUser->pluck('id')->toArray();
+        $stations = Station::where('id', '<=', 4)->orderBy('id')->get();
+        $completedStationIds = $user->stationUser->pluck('station_id')->toArray();
+        $stationDone = count($completedStationIds);
 
         // Add status flag to each station
         foreach ($stations as $station) {
-            $station->status = $user->stationUser->contains('station_id', $station->id);
+            $station->status = in_array($station->id, $completedStationIds);
         }
 
-        // Determine if stations 1-4 are all completed
-
-        $canAccessStation5 = $stations->filter(fn($s) => $s->id <= 5)->every(fn($s) => $s->status == true);
+        // Station 4 is accessible only after stations 1, 2, and 3 are completed
+        $canAccessStation4 = collect([1, 2, 3])->every(fn($id) => in_array($id, $completedStationIds));
 
         $isRedeemed = \App\Models\UserGift::where('user_id', $userId)
             ->where('is_redeemed', true)
             ->exists();
 
-        $nextStation = $stations->firstWhere(function ($station) use ($user) {
-            return !$user->stationUser()->where('station_id', $station->id)->exists();
+        $nextStation = $stations->firstWhere(function ($station) use ($completedStationIds) {
+            return !in_array($station->id, $completedStationIds);
         });
 
         if ($stationDone < 4) {
-             return view('dashboard', compact('stations', 'stationDone', 'canAccessStation5', 'completedStationIds', 'nextStation','isRedeemed'));
+             return view('dashboard', compact('stations', 'stationDone', 'canAccessStation4', 'completedStationIds', 'nextStation','isRedeemed'));
         } else {
             return redirect()->route('congrats');
         }
@@ -412,9 +411,19 @@ class StationController extends Controller
             //     $userGift->save();
             // }
 
+            $completedCount = StationUser::where('user_id', auth()->id())
+                ->whereIn('station_id', [1, 2, 3, 4])
+                ->distinct('station_id')
+                ->count('station_id');
+            $allCompleted = ($completedCount >= 4);
+
             DB::commit();
             // Success response
-            return response()->json(['message' => 'Station ID updated successfully'], 200);
+            return response()->json([
+                'message' => 'Station ID updated successfully',
+                'all_completed' => $allCompleted,
+                'station_id' => $station_id,
+            ], 200);
         } catch (\Exception $e) {
             DB::rollback();
 

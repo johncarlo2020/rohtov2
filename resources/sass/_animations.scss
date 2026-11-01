@@ -1,64 +1,20 @@
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes blink {
-    0%,
-    100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.2;
-    }
-}
-
-@keyframes breathing {
-    0% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.1);
-    }
-
-    100% {
-        transform: scale(1);
-    }
+/* Global Animation Disable */
+*,
+*::before,
+*::after {
+    animation: none !important;
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
 }
 
 .animate-entry {
-    animation: fadeInUp 0.8s ease-out forwards;
-    opacity: 0; // Start hidden, animation will make it visible
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
 }
 
-.blink {
-    animation: blink 1.5s linear infinite;
-}
-
-.breathing {
-    animation: breathing 2s infinite;
-}
-
-/* Animation Delay Utilities */
-.delay-1 {
-    animation-delay: 0.1s;
-}
-.delay-2 {
-    animation-delay: 0.2s;
-}
-.delay-3 {
-    animation-delay: 0.3s;
-}
-.delay-4 {
-    animation-delay: 0.4s;
-}
-.delay-5 {
-    animation-delay: 0.5s;
+.blink,
+.breathing,
+.pulse-slow {
+    animation: none !important;
 }

@@ -17,9 +17,6 @@
 
         /* Subtle elevation */
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-
-        /* Animations */
-        animation: scannerIdle 2.8s ease-in-out infinite;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
@@ -157,21 +154,6 @@
 .tile-title , .station_name  {
     text-transform: uppercase;
 }
-
-    /* Idle animation */
-    @keyframes scannerIdle {
-        0%   { transform: translateY(0); }
-        50%  { transform: translateY(-2px); }
-        100% { transform: translateY(0); }
-    }
-
-    /* Accessibility */
-    @media (prefers-reduced-motion: reduce) {
-        #start-scanner {
-            animation: none;
-            transition: none;
-        }
-    }
 </style>
     <div id="stationPage" class="station-page main-content main-background with-scroll px-0">
         <div class="modal fade custom-modal" id="scanCompleteModal" tabindex="-1">

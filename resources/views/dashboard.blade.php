@@ -1,14 +1,6 @@
 <x-app-layout>
     <style>
-    /* Floating idle animation */
-    @keyframes floatIdle {
-        0%   { transform: translateY(0); }
-        50%  { transform: translateY(-4px); }
-        100% { transform: translateY(0); }
-    }
-
     .station-card {
-        animation: floatIdle 3.5s ease-in-out infinite;
         transition: transform 0.25s ease, box-shadow 0.25s ease;
         cursor: pointer;
         display: flex;

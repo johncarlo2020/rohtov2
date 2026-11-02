@@ -42,7 +42,7 @@
         font-weight: 700 !important;
         letter-spacing: 2px;
         line-height: 1.25;
-        font-size: clamp(1.15rem, 4.5vw, 1.45rem);
+        font-size: clamp(1.5rem, 6vw, 2rem);
         margin: 0 0 clamp(42px,5vh,98px) 0 !important;
         text-align: center;
         color: #fff;

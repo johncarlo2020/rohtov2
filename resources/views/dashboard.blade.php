@@ -156,8 +156,8 @@
 
                             <!-- Text below image -->
                             <div class="station-caption">
-                                <span>{{ $station->id }}.</span>
-                                <span>{!! strtoupper($station->name) !!}</span>
+                                <span class="fw-bold">{{ $station->id }}.</span>
+                                <span class="fw-bold">{!! strtoupper($station->name) !!}</span>
                             </div>
 
                         </div>

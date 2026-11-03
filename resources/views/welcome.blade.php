@@ -65,11 +65,17 @@
             text-shadow: 0 3px 0 #f7a239;
         }
 
+        /* Header & Branding consistency matching dashboard */
+        .branding-wrapper {
+            margin-bottom: clamp(49px, 8vh, 106px) !important;
+            text-align: center;
+        }
+
         .page-main-title {
-            font-weight: 700 !important;
+            font-weight: 900 !important;
             letter-spacing: 2px;
             line-height: 1.25;
-            font-size: clamp(1.15rem, 4.5vw, 1.5rem);
+            font-size: clamp(1.5rem, 6vw, 2rem);
             margin: 0 !important;
             text-align: center;
             color: #fff;
@@ -80,18 +86,17 @@
 <body class="antialiased welcome-page" style="background-image:url('{{ asset('images/brand/landing_bg.webp') }}');">
 
     <div class="container-fluid main-content with-scroll py-4 px-0">
-        <div class="top-container">
-            <!-- Branding (top area) -->
-            <div class="row flex-grow-1">
-                <div class="col-12 animate-entry mb-4">
-                    @include('components.branding')
-                </div>
+        <!-- Header Section (Branding + Title) matching dashboard exactly -->
+        <div class="dashboard-header animate-entry">
+            <div class="branding-wrapper">
+                @include('components.branding')
             </div>
-            <div class="text-center animate-entry mb-3">
+
+            <div class="text-center">
                 <h2 class="page-main-title">THE HOLIDAY SHOW</h2>
             </div>
         </div>
-                <div id="banner" class="col-12 d-flex justify-content-center p-0 animate-entry">
+                <div id="banner" class="col-12 d-flex justify-content-center p-0 animate-entry" style="margin: clamp(42px, 5vh, 98px) 0px;">
                     <img class="discover_img w-100" src="{{ asset('images/brand/discover.webp') }}"
                         alt="" />
                 </div>
@@ -100,7 +105,7 @@
             <div class="row mb-5">
                 <div class="col-12 text-center">
                     <div class="d-block  mb-2">
-                        <div class="colanimate-entry delay-2 btn-wrapperx px-5 mt-4">
+                        <div class="colanimate-entry delay-2 btn-wrapperx px-5">
                             <a href="{{ route('register') }}" class="custom-btn custom-btn-secondary fw-bold pulse-slow">
                                 JOIN NOW
                             </a>

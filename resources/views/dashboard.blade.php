@@ -26,16 +26,6 @@
         transition: outline 0.15s ease, box-shadow 0.15s ease;
     }
 
-    /* Selection border */
-    .station-card:hover .tile-image-wrapper,
-    .station-card:focus .tile-image-wrapper,
-    .station-card:active .tile-image-wrapper,
-    .station-card.selected .tile-image-wrapper {
-        outline: 2px solid #00FF00;
-        outline-offset: -2px;
-        box-shadow: 0 0 10px rgba(0, 255, 0, 0.35);
-    }
-
     .tile-image-wrapper img {
         width: 100%;
         height: 100%;
@@ -71,7 +61,7 @@
         text-align: center;
         margin-top: clamp(8px, 1.8vh, 14px);
         font-size: clamp(11px, 3.2vw, 13px);
-        font-weight: 700;
+        font-weight: 900;
         letter-spacing: 1px;
         line-height: 1.35;
         text-transform: uppercase;
@@ -84,10 +74,10 @@
     }
 
     .page-main-title {
-        font-weight: 700 !important;
+        font-weight: 900 !important;
         letter-spacing: 2px;
         line-height: 1.25;
-        font-size: clamp(1.15rem, 4.5vw, 1.5rem);
+        font-size: clamp(1.5rem, 6vw, 2rem);
         margin: 0 !important;
         text-align: center;
         color: #fff;
@@ -166,8 +156,8 @@
 
                             <!-- Text below image -->
                             <div class="station-caption">
-                                <span>{{ $station->id }}.</span>
-                                <span>{!! strtoupper($station->name) !!}</span>
+                                <span class="fw-bold">{{ $station->id }}.</span>
+                                <span class="fw-bold">{!! strtoupper($station->name) !!}</span>
                             </div>
 
                         </div>

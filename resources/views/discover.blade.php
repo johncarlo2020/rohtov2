@@ -14,7 +14,7 @@
             font-weight: 700 !important;
             letter-spacing: 2px;
             line-height: 1.25;
-            font-size: clamp(1.15rem, 4.5vw, 1.5rem);
+            font-size: clamp(1.5rem, 6vw, 2rem);
             margin: 0 !important;
             text-align: center;
             color: #fff;
@@ -28,6 +28,8 @@
             justify-content: flex-start;
             padding-top: max(16px, env(safe-area-inset-top, 0px)) !important;
             padding-bottom: max(20px, calc(env(safe-area-inset-bottom, 0px) + 16px)) !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
         }
 
         .discover-content-wrapper {
@@ -38,11 +40,11 @@
             align-items: center;
             width: 100%;
             max-width: min(94vw, 460px);
-            margin: clamp(42px, 5vh, 98px) auto 0 auto;
+            margin: 0 auto;
         }
 
         .discover_img {
-            max-width: 100%;
+            width: 100%;
             height: auto;
             display: block;
         }
@@ -51,7 +53,7 @@
     <div class="map-page main-content main-background with-scroll discover-page">
 
         <!-- Header Section (Branding + Title) matching dashboard exactly -->
-        <div class="dashboard-header animate-entry">
+        <div class="dashboard-header animate-entry px-3">
             <div class="branding-wrapper">
                 @include('components.branding')
             </div>
@@ -61,13 +63,14 @@
             </div>
         </div>
 
-        <!-- Content Section with matching margin-top -->
-        <div class="discover-content-wrapper animate-entry">
-            <div id="banner" class="col-12 d-flex justify-content-center p-0">
-                <img class="discover_img w-100" src="{{ asset('images/brand/discover.webp') }}"
-                    alt="Discover" />
-            </div>
+        <!-- Banner image stretched edge-to-edge -->
+        <div id="banner" class="w-100 animate-entry p-0" style="margin-top: clamp(42px, 5vh, 98px);">
+            <img class="discover_img w-100" src="{{ asset('images/brand/discover.webp') }}"
+                alt="Discover" />
+        </div>
 
+        <!-- Content Section -->
+        <div class="discover-content-wrapper animate-entry">
             <div class="discover-text">
                 <p class="text-center px-3 py-4" style="font-size:14px; color:#fff;">
                     Step into the wildest party of the season.<br><br>

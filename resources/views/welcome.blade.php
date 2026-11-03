@@ -64,6 +64,16 @@
             margin-top: -5%;
             text-shadow: 0 3px 0 #f7a239;
         }
+
+        .page-main-title {
+            font-weight: 700 !important;
+            letter-spacing: 2px;
+            line-height: 1.25;
+            font-size: clamp(1.15rem, 4.5vw, 1.5rem);
+            margin: 0 !important;
+            text-align: center;
+            color: #fff;
+        }
     </style>
 </head>
 
@@ -77,6 +87,9 @@
                     @include('components.branding')
                 </div>
             </div>
+            <div class="text-center animate-entry mb-3">
+                <h2 class="page-main-title">THE HOLIDAY SHOW</h2>
+            </div>
         </div>
                 <div id="banner" class="col-12 d-flex justify-content-center p-0 animate-entry">
                     <img class="discover_img w-100" src="{{ asset('images/brand/discover.webp') }}"
@@ -88,7 +101,7 @@
                 <div class="col-12 text-center">
                     <div class="d-block  mb-2">
                         <div class="colanimate-entry delay-2 btn-wrapperx px-5 mt-4">
-                            <a href="{{ route('register') }}" class="custom-btn custom-btn-secondary pulse-slow">
+                            <a href="{{ route('register') }}" class="custom-btn custom-btn-secondary fw-bold pulse-slow">
                                 JOIN NOW
                             </a>
                         </div>

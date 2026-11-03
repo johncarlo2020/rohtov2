@@ -237,7 +237,7 @@
             <!-- Scanner -->
             <div id="{{ $user ? '' : 'forceQr' }}" class="icon-container"></div> 
             <div id="scannerContainer" class="scanner-container d-none"> 
-                <h2 class="text-center fw-bold mb-5">FREEDOM HAS TASTE</h2> 
+                <h2 class="page-main-title mb-5">THE HOLIDAY SHOW</h2> 
                 <div id="reader"></div> 
                 <p class="mt-4 scanner-text text-center text-white">Find the QR code &<br> scan to continue your journey</p> 
             </div> 

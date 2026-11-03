@@ -71,7 +71,7 @@
                         <div class="mb-0 row">
                             <div class="col-12 text-center">
                                 <button id="submitButton"
-                                    class="custom-btn custom-btn-primary animate-entry delay-3" style="font-weight:300;">
+                                    class="custom-btn custom-btn-primary fw-bold animate-entry delay-3">
                                     {{ __('Start Your Journey Now') }}
                                 </button>
                             </div>

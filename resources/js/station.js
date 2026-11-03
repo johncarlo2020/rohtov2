@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 $('#routeBtn')
                     .removeAttr('href')
                     .attr('onclick', `gotoStation(${stationId})`)
-                    .text('RETRY');
+                    .text('BACK');
             }
         });
     }

@@ -81,7 +81,6 @@
     #mainContent {
         flex: 1;
         width: 100%;
-        max-width: min(92vw, 420px);
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -98,12 +97,17 @@
 
     .station-image {
         width: 100%;
-        max-width: min(88vw, 360px);
-        max-height: clamp(240px, 38vh, 360px);
+        height: auto;
         aspect-ratio: 1 / 1;
         object-fit: cover;
         margin: 0 auto clamp(12px, 2vh, 18px) auto;
         display: block;
+    }
+
+    .station-content-wrapper {
+        width: 100%;
+        max-width: min(92vw, 420px);
+        margin: 0 auto;
     }
 
     .station-subtitle {
@@ -127,7 +131,8 @@
 
     .station-actions-wrapper {
         width: 100%;
-        margin-top: clamp(16px, 3vh, 26px);
+        max-width: min(92vw, 420px);
+        margin: clamp(16px, 3vh, 26px);
     }
 
 /* Buttons */
@@ -190,7 +195,7 @@
             <div id="mainContent" class="animate-entry delay-3">
 
                 <!-- station name -->
-                <h2 class="page-main-title">{!! strtoupper($station->name) !!}</h2>
+                <h2 class="page-main-title px-3">{!! strtoupper($station->name) !!}</h2>
 
                 <!-- Visual Group (Image + Text) -->
                 <div class="station-visual-group text-center">

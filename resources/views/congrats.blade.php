@@ -13,7 +13,7 @@
                 </div>
                 <div class="row text-center">
                     <span style="font-size: clamp(13px, 3.5vw, 15px);">Visit</span>
-                    <a href="https://www.yslbeauty.com.my/en_MY/holiday-gifts/holiday-gifts.html?srsltid=AYCX9vLUEKZFoQpHt5942QdSw-WsqGsAsGSzV7D_1iMH2te4-GLzlFBA" class="my-2 animate-entry" target="_blank" rel="noopener noreferrer">
+                    <a href="https://www.yslbeauty.com.my/en_MY/holiday-2026/holiday-2026.html" class="my-2 animate-entry" target="_blank" rel="noopener noreferrer">
                         <img class="logo w-50 m-auto"
                             src="{{ asset('images/brand/logo.webp') }}" alt="YSL Logo" />
                     </a>

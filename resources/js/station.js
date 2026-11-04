@@ -61,15 +61,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 $('.station_name').html(stationName);
                 $('.status-text').html('Check-in Successful');
 
-                // Confetti animation
-                if (typeof confetti === 'function') {
-                    confetti({
-                        particleCount: 80,
-                        spread: 60,
-                        origin: { y: 0.6 }
-                    });
-                }
-
                 // If station 4 (gift station) or all complete -> auto redirect to thank you page
                 const isFinalStation = (stationId === 4 || response.all_completed);
                 const nextUrl = isFinalStation ? congratsUrl : dashboardUrl;

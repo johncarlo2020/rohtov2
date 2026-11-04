@@ -74,7 +74,7 @@
             <div class="discover-text">
                 <p class="text-center px-3 py-4" style="font-size:14px; color:#fff;">
                     Step into the wildest party of the season.<br><br>
-                    Discover liberate boundless freedom and unapologetic self-expression to be the part of the YSL Holiday Show.
+                    Discover liberate boundless freedom and unapologetic self-expression to be the start of the YSL Holiday Show.
                 </p>
             </div>
 

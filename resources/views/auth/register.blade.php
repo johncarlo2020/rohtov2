@@ -5,10 +5,6 @@
     }
 
     /* Apply Poppins font to the register page */
-    /* .register-main * {
-        font-family: 'Poppins', sans-serif !important;
-    } */
-
     input#number::placeholder {
         font-family: 'Singulier';
         font-size: 16px;

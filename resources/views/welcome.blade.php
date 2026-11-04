@@ -9,6 +9,7 @@
     <title>{{ config('app.name', 'Loading ...') }}</title>
 
     <x-appCdnPackages />
+    @include('components.fonts')
     @vite(['resources/sass/app.scss'])
 
     <style>
@@ -93,7 +94,7 @@
             </div>
 
             <div class="text-center">
-                <h2 class="page-main-title">THE HOLIDAY SHOW</h2>
+                <h2 class="page-main-title">LET THE YSL SHOW BEGIN</h2>
             </div>
         </div>
                 <div id="banner" class="col-12 d-flex justify-content-center p-0 animate-entry" style="margin: clamp(42px, 5vh, 98px) 0px;">

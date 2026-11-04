@@ -928,12 +928,12 @@ input {
 
 input::placeholder,
 p.footer {
-    font-family: "Brevia";
+    font-family: $font-family;
     color: black; /* placeholder color */
 }
 
 .footer-wrapper p {
-    font-family: "Brevia";
+    font-family: $font-family;
     font-size: 10px;
     font-weight: 700;
 }

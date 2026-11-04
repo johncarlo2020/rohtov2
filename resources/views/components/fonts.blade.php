@@ -31,8 +31,12 @@
             font-display: swap;
         }
 
-        /* Optional global usage */
-        body {
-            font-family: 'Singulier', sans-serif;
+        :root {
+            --bs-font-sans-serif: 'Singulier', sans-serif;
+            --bs-body-font-family: 'Singulier', sans-serif;
+        }
+
+        *, body, button, input, optgroup, select, textarea {
+            font-family: 'Singulier', sans-serif !important;
         }
     </style>

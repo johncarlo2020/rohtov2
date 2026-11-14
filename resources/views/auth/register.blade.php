@@ -154,14 +154,18 @@
 
                         {{-- How did you find out --}}
                         <div class="mb-3">
-                            <label>HOW DID YOU FIND OUT ABOUT THE IPROPERTY BUMIPUTERA NEW HOMES EXPO AT SETIA CITY MALL, SHAH ALAM?</label>
+                            <label>HOW DID YOU FIND OUT ABOUT THE IPROPERTY NEW HOMES EXPO AT SETIA CITY MALL, SHAH ALAM?</label>
                             @php
                                 $socials = [
                                     'iProperty Facebook Ads',
                                     'Google Ads',
-                                    'Xiao Hong Shu (XHS) – KOC Post',
-                                    'iProperty Channels (EDM, Website)',
-                                    "Setia City Mall's Facebook / Instagram Post",
+                                    'Outdoor Street Buntings',
+                                    'Digital Billboard (Juru Auto City / Queensbay Mall)',
+                                    "Queensbay Mall's Ads (Facebook & Instagram)",
+                                    'Queensbay Mall (Digital Panel & Directory Panel)',
+                                    'Xiao Hong Shu',
+                                    'Penang Holiao (Facebook & Instagram)',
+                                    'iProperty Channels (EDM & Website)',
                                     'Developers Facebook Ads',
                                     'Event Brite',
                                     'Walk-in',

@@ -17,39 +17,77 @@ class DeveloperProjectSeeder extends Seeder
         $developers = [
 
             1 => [
-                'name' => 'L&G',
+                'name' => 'Malton Berhad',
                 'projects' => [
-                    ['The WYN Residences', 'Puchong Jaya'],
+                    ['River Park Bangsar South', 'Kuala Lumpur'],
                 ],
             ],
 
             2 => [
-                'name' => 'Paramount',
+                'name' => 'Paramount Property',
                 'projects' => [
-                    ['Uptown Residences 2 @ Berkeley Uptown', 'Bandar Klang'],
-                    ['Sejati Residences', 'Cyberjaya'],
-                    ['The Atera', 'Petaling Jaya'],
+                    ['Seiras Residences', 'Bandar Cassia, Batu Kawan'],
+                    ['Embun Hills', 'Bukit Mertajam'],
                 ],
             ],
 
             3 => [
-                'name' => 'Gamuda Land',
+                'name' => 'Kerjaya Prospek',
                 'projects' => [
-                    ['The Clove', 'Gamuda Cove'],
-                    ['Mori Pines', 'Gamuda Cove'],
-                    ['Mio Spring', 'Gamuda Cove'],
-                    ['Quayside Plazas', 'Gamuda Cove'],
-                    ['Luxura Designer Courtyard', 'twentyfive7'],
-                    ['Link Villas', 'twentyfive7'],
-                    ['Levane Residences', 'twentyfive7'],
-                    ['The Clove Signature', 'twentyfive7'],
+                    ['AndaBreeze Residences', 'Batu Kawan'],
                 ],
             ],
 
             4 => [
-                'name' => 'Tropicana Alam',
+                'name' => 'PDC Properties',
                 'projects' => [
-                    ['Avisa Residences', 'Puncak Alam, Selangor'],
+                    ['Taman Cassia Cempaka Fasa 2', 'Bandar Cassia, Batu Kawan'],
+                    ['Taman Cassia Cempaka Fasa 3', 'Bandar Cassia, Batu Kawan'],
+                    ['Taman Damai Lestari', 'Bertam, Kepala Batas'],
+                    ['(RMM) Dua Residensi', 'Teluk Kumbar, Bayan Lepas'],
+                    ['(RMM) Jiran Residensi', 'Kg Jawa, Butterworth'],
+                ],
+            ],
+
+            5 => [
+                'name' => 'Mah Sing Group',
+                'projects' => [
+                    ['M Amaya', 'Bayan Lepas'],
+                ],
+            ],
+
+            6 => [
+                'name' => 'Jayamas Property Group',
+                'projects' => [
+                    ['Ventus & Tradesmen', 'Batu Maung'],
+                ],
+            ],
+
+            7 => [
+                'name' => 'Airmas Group of Companies',
+                'projects' => [
+                    ['Alton Skyvillas', 'Jelutong'],
+                    ['Damai Springs', 'Jalan Residensi Harmoni, Bukit Mertajam'],
+                    ['Taman Tan Sai Gin', 'Jalan Tan Sai Gin, Bukit Mertajam'],
+                    ['Silkspring Residence', 'Jalan Telaga Air, Butterworth'],
+                    ['Taman Prima Emas', 'Permatang Pauh'],
+                ],
+            ],
+
+            8 => [
+                'name' => 'SkyWorld',
+                'projects' => [
+                    ['SkyWorld Cassia', 'Batu Kawan'],
+                    ['SkyWorld Pearlmont', 'Seberang Jaya'],
+                ],
+            ],
+
+            9 => [
+                'name' => 'GSD Group',
+                'projects' => [
+                    ["G'Vinton", 'Georgetown'],
+                    ["D'Harringttons", 'Jelutong'],
+                    ["D'Tiara", 'Bayan Lepas'],
                 ],
             ],
 

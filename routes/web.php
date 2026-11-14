@@ -96,6 +96,7 @@ Route::get('/congratsVote', 'App\Http\Controllers\StationController@congratsVote
 Route::group(['middleware' => ['admin']], function () {
     Route::get('/admin', 'App\Http\Controllers\StationController@admin')->name('admin');
 
+    Route::get('/admin/users/export', 'App\Http\Controllers\StationController@exportUsers')->name('users.export');
     Route::get('/admin/users', 'App\Http\Controllers\StationController@users')->name('users');
 
     Route::get('/admin/gifts', 'App\Http\Controllers\StationController@gifts')->name('gifts');

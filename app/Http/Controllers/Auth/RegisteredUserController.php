@@ -36,13 +36,22 @@ class RegisteredUserController extends Controller
 
     //April 30 - May 11
       $default = [
-          "Puchong Jaya",
-          "Bandar Klang",
-          "Cyberjaya",
-          "Petaling Jaya",
-          "Gamuda Cove",
-          "twentyfive7",
-          "Puncak Alam, Selangor",
+          "Bandar Cassia, Batu Kawan",
+          "Batu Kawan",
+          "Batu Maung",
+          "Bayan Lepas",
+          "Bertam, Kepala Batas",
+          "Bukit Mertajam",
+          "Georgetown",
+          "Jalan Residensi Harmoni, Bukit Mertajam",
+          "Jalan Tan Sai Gin, Bukit Mertajam",
+          "Jalan Telaga Air, Butterworth",
+          "Jelutong",
+          "Kg Jawa, Butterworth",
+          "Kuala Lumpur",
+          "Permatang Pauh",
+          "Seberang Jaya",
+          "Teluk Kumbar, Bayan Lepas",
       ];
     
       $allowedLocations = Project::query()
@@ -68,13 +77,22 @@ class RegisteredUserController extends Controller
   public function store(Request $request): RedirectResponse
   {
       $default = [
-          "Puchong Jaya",
-          "Bandar Klang",
-          "Cyberjaya",
-          "Petaling Jaya",
-          "Gamuda Cove",
-          "twentyfive7",
-          "Puncak Alam, Selangor",
+          "Bandar Cassia, Batu Kawan",
+          "Batu Kawan",
+          "Batu Maung",
+          "Bayan Lepas",
+          "Bertam, Kepala Batas",
+          "Bukit Mertajam",
+          "Georgetown",
+          "Jalan Residensi Harmoni, Bukit Mertajam",
+          "Jalan Tan Sai Gin, Bukit Mertajam",
+          "Jalan Telaga Air, Butterworth",
+          "Jelutong",
+          "Kg Jawa, Butterworth",
+          "Kuala Lumpur",
+          "Permatang Pauh",
+          "Seberang Jaya",
+          "Teluk Kumbar, Bayan Lepas",
       ];
 
       $allowedLocations = Project::query()

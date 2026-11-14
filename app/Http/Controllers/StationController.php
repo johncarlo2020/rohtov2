@@ -22,6 +22,7 @@ use App\Models\Vote;
 use App\Models\Voucher;
 use App\Models\VoucherClaim;
 use App\Providers\RouteServiceProvider;
+use App\Services\UserDatatableService;
 use Auth;
 use Carbon\Carbon;
 use DB;
@@ -192,12 +193,11 @@ class StationController extends Controller
 
 $user = auth()->user();
 
-$requiredStations = [3];
+$completedDevelopers = $user->developers && $user->developers->where('pivot.isCompleted', 1)->count() >= 3;
+$completedGame = $user->stationUser()->whereIn('station_id', [3, 4])->exists();
+$completedLuckyDraw = $user->stationUser()->where('station_id', 2)->exists();
 
-$completedJourney = $user->stationUser()
-    ->whereIn('station_id', $requiredStations)
-    ->distinct()
-    ->count('station_id') >= count($requiredStations);
+$completedJourney = $completedDevelopers && $completedGame && $completedLuckyDraw;
 
 $voucherRedeemed = VoucherClaim::where(
     'user_id',
@@ -772,126 +772,21 @@ if ($activeVoucher) {
     ]);
   }
 
-  public function users()
+  public function users(Request $request, UserDatatableService $userTableService)
   {
-  
-    $today = Carbon::today();
+    if ($request->ajax()) {
+      return response()->json($userTableService->getDataTable($request));
+    }
+
     $permission = auth()->user()->getPermissionNames()->first();
-
-    $startDate = Carbon::create(2025, 6, 17);
-    $data["users"] = User::whereDate(
-      "created_at",
-      ">=",
-      $startDate->toDateString()
-    )
-      ->whereDoesntHave("roles", function ($q) {
-        $q->where("name", "admin");
-      })
-      ->with("stationUser","developers","userGift.gift","developers.projects","voucherClaims.voucher")
-      ->orderBy("id", "desc")
-      ->get();
-
-
-    // dd($data["users"]);
-
-    $data["usersCount"] = User::whereDate(
-      "created_at",
-      ">=",
-      $startDate->toDateString()
-    )
-      ->whereDoesntHave("roles", function ($q) {
-        $q->where("name", "admin");
-      })
-      ->count();
-    $data["userToday"] = User::whereDate("created_at", $today)
-      ->whereDoesntHave("roles", function ($q) {
-        $q->where("name", "admin");
-      })
-      ->count();
-
-    $usersWithSixStationUsers = User::whereDate(
-      "created_at",
-      ">=",
-      $startDate->toDateString()
-    )
-      ->has("stationUser", ">=", 5)
-      ->count();
-    $data["completedUsers"] = $usersWithSixStationUsers;
-
-    if ($data["usersCount"] > 0) {
-      $data["percentage"] = number_format(
-        ($usersWithSixStationUsers / $data["usersCount"]) * 100,
-        2
-      );
-    } else {
-      $data["percentage"] = 0; // Avoid division by zero
-    }
-
-    $averageTimespentByStation = StationUser::select(
-      "station_id",
-      \DB::raw("AVG(time_spent) as average_timespent")
-    )
-      ->groupBy("station_id")
-      ->get()
-      ->keyBy("station_id");
-
-    $stations = Station::pluck('name', 'id');
-
-    $developers = Developer::where('id', '!=', 5)->pluck('name', 'id');
-    
-
-    foreach ($data["users"] as $user) {
-      $userStations = $user->stationUser->pluck("station_id")->toArray();
-      $user->stations = $stations->map(function ($name, $id) use (
-        $userStations,
-        $averageTimespentByStation
-      ) {
-        return [
-          "id" => $id,
-          "name" => $name,
-          "value" => in_array($id, $userStations),
-        ];
-      });
-
-      $userDevelopers = $user->developers->pluck("id")->toArray();
-
-      $user->developers_list = $developers->map(function ($name, $id) use ($userDevelopers) {
-          return [
-              "name" => $name,
-              "value" => in_array($id, $userDevelopers),
-          ];
-      });
-
- $user->locations = $user->developers
-        ->map(function ($dev) {
-            return optional($dev->projects->first())->address;
-        })
-        ->filter()   // remove null
-        ->unique()   // remove duplicates
-        ->values();
-
-    }
-    
-
-    $data["developers"] = $developers->map(function ($name, $id) {
-        return [
-            "name" => $name,
-        ];
-    });
-
-    $data["stations"] = $stations->map(function ($name, $id) use (
-      $averageTimespentByStation
-    ) {
-      return [
-        "name" => $name,
-        "average_timespent" => number_format(
-          ($averageTimespentByStation->get($id)["average_timespent"] ?? 0) / 60,
-          2
-        ),
-      ];
-    });
+    $data = $userTableService->getViewData();
 
     return view("users", compact("data", "permission"));
+  }
+
+  public function exportUsers(Request $request, UserDatatableService $userTableService)
+  {
+    return $userTableService->export($request);
   }
 
   public function gifts(Request $request)

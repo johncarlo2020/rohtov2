@@ -106,7 +106,7 @@
                     <div class="row">
                         <div class="col-12">
                             <h1 class="text-center text-white fw-bold mb-3" style="font-size: 1.85rem; line-height: 1.25;">
-                                iProperty Bumiputera<br>New Homes Expo
+                                iProperty<br>New Homes Expo
                             </h1>
                         </div>
                     </div>

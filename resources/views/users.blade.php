@@ -131,75 +131,7 @@
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @foreach ($data['users'] as $user)
-                        <tr data-user-id="{{ $user->id }}">
-                            <td>{{ $loop->iteration }}</td>
-                            <td>
-                                {{ $user->fname }}
-                            </td>
-                            <td>{{ $user->email }}</td>
-                            <td>
-                                @foreach ($user->locations as $location)
-                                    <div>{{ $location }}</div>
-                                @endforeach
-                            </td>
-                            <td>{{ $user->property_budget }}</td>
-                            <td>{{ $user->marketing }}</td>
-                            <td>{{ \Carbon\Carbon::parse($user->created_at)->toDayDateTimeString() }}</td>
-                           
-                            @foreach ($user['stations'] as $station)
-                                <td class="text-sm mb-0 {{ $station['value'] ? 'text-success' : 'text-danger' }}">
-                                    @if($station['id'] == 1)
-
-                                        {{ $station['value'] ? 'Yes' : 'No' }}
-
-                                        @if($user->is_early_bird && $user->source_of_channel)
-                                            <br>
-                                            <small class="text-muted">
-                                                Channel:{{ $user->source_of_channel }}
-                                            </small>
-                                        @endif
-
-                                   @elseif($station['id'] == 2 && $station['value'])
-
-                                        {{ $user->userGift?->gift?->name ?? 'No Gift' }}
-
-                                        <br>
-
-                                        <small class="text-muted">
-                                            {{ $user->userGift?->created_at?->toDayDateTimeString() ?? '-' }}
-                                        </small>
-
-                                    @else
-
-                                        {{ $station['value'] ? 'Yes' : 'No' }}
-
-                                    @endif
-
-                                </td>
-                            @endforeach
-
-                            @foreach ($user['developers_list'] ?? [] as $developer)
-                                <td class="{{ $developer['value'] ? 'text-success' : 'text-danger' }}">
-                                    {{ $developer['value'] ? 'Yes' : 'No' }}
-                                </td>
-                            @endforeach
-                            <td class="button-delete">
-                                @if($user->isProtectedAdmin())
-                                    <button class="btn btn-secondary btn-sm btn-protected" disabled 
-                                            title="This admin user is protected and cannot be deleted"
-                                            data-bs-toggle="tooltip" data-bs-placement="top">
-                                        <i class="fa fa-lock"></i> Protected
-                                    </button>
-                                @else
-                                    <button class="btn btn-danger btn-sm delete-user-btn" data-user-id="{{ $user->id }}"
-                                        data-user-name="{{ $user->name }}">Delete</button>
-                                @endif
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
+                    <tbody></tbody>
                 </table>
             </div>
         </div>
@@ -479,46 +411,32 @@
 <!-- Include DataTables Buttons JS -->
 
 <script>
-    // Show the loader
     $('.loader-container').show();
     $('#customer-table').hide();
 
     var permissionName = "{{ $permission }}";
-    let exportType = 'export';
-
+    let exportType = 'csv';
     const today = new Date().toISOString().split('T')[0];
 
-    /* ===================== DATATABLE INIT ===================== */
+    /* ===================== DATATABLE INIT (SERVER-SIDE) ===================== */
     var table = $('#customer-table').DataTable({
+        processing: true,
+        serverSide: true,
         responsive: true,
+        ajax: {
+            url: "{{ route('users') }}",
+            type: 'GET',
+            data: function (d) {
+                d.start_date = $('#startDate').length ? $('#startDate').val() : today;
+                d.end_date = $('#endDate').length ? $('#endDate').val() : today;
+            }
+        },
         dom: "<'row'<'col-12'B>>" +
             "<'row'<'col-sm-12 table-responsive custom-table' tr>>" +
             "<'row'<'d-flex justify-content-start col-sm-12 col-md-6 mt-3'i>" +
             "<'col-sm-12 col-md-6 mt-3 d-flex justify-content-end'p>>",
 
         buttons: [
-            {
-                extend: 'csvHtml5',
-                className: 'd-none btn-export-csv',
-                filename: function () {
-                    return exportFileName; // ✅ ALWAYS correct
-                },
-                exportOptions: {
-                    columns: ':not(:last-child)',
-                    modifier: { search: 'applied' }
-                }
-            },
-            {
-                extend: 'excelHtml5',
-                className: 'd-none btn-export-excel',
-                filename: function () {
-                    return exportFileName; // ✅ ALWAYS correct
-                },
-                exportOptions: {
-                    columns: ':not(:last-child)',
-                    modifier: { search: 'applied' }
-                }
-            },
             {
                 text: '<i class="fa fa-file-csv"></i> CSV',
                 className: 'btn btn-info',
@@ -542,7 +460,11 @@
         columnDefs: [
             {
                 orderable: false,
-                targets: -1 // Action/Delete column
+                targets: '_all'
+            },
+            {
+                orderable: true,
+                targets: [0, 1, 2, 4, 5, 6]
             },
             {
                 targets: 3, // Preferred Location
@@ -550,6 +472,20 @@
                 className: 'preferred-location-col'
             }
         ],
+
+        createdRow: function (row, data, dataIndex) {
+            var userId = $(row).find('[data-user-id]').data('user-id');
+            if (userId) {
+                $(row).attr('data-user-id', userId);
+            }
+        },
+
+        drawCallback: function () {
+            var tooltipTriggerList = [].slice.call(
+                document.querySelectorAll('[data-bs-toggle="tooltip"]')
+            );
+            tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
+        },
 
         initComplete: function () {
             var api = this.api();
@@ -567,11 +503,11 @@
                     <div id="date-filter-dropdown">
                         <div class="mb-2">
                             <label>From</label>
-                            <input type="date" id="startDate">
+                            <input type="date" id="startDate" value="${today}">
                         </div>
                         <div>
                             <label>To</label>
-                            <input type="date" id="endDate">
+                            <input type="date" id="endDate" value="${today}">
                         </div>
                         <div class="date-filter-actions">
                             <button id="applyDateFilter"><i class="fa fa-check me-1"></i> Apply</button>
@@ -580,11 +516,6 @@
                     </div>
                 </div>
             `);
-
-            // Set today as default and apply initial filter
-            $('#startDate').val(today);
-            $('#endDate').val(today);
-            api.draw();
 
             // Toggle dropdown
             $(document).on('click', '#date-filter-btn', function (e) {
@@ -617,7 +548,6 @@
                     alert('"To date" cannot be earlier than "From date".');
                     return;
                 }
-                console.log(table);
                 table.draw();
                 updateFilterLabel();
                 $('#date-filter-dropdown').removeClass('show');
@@ -666,12 +596,17 @@
                 </div>
             `);
 
-            // Wire custom search input to DataTable
+            // Wire custom search input with 350ms debounce
+            let searchTimeout;
             $('#custom-dt-search').on('input', function () {
-                api.search(this.value).draw();
+                clearTimeout(searchTimeout);
+                const val = this.value;
+                searchTimeout = setTimeout(function () {
+                    table.search(val).draw();
+                }, 350);
             });
 
-            // Apply mobile layout via inline styles (overrides all CSS specificity)
+            // Apply mobile layout via inline styles
             function applyToolbarLayout() {
                 var isMobile = window.innerWidth <= 768;
                 var $buttons = $('.dt-buttons');
@@ -704,71 +639,45 @@
             applyToolbarLayout();
             $(window).on('resize', applyToolbarLayout);
 
-            // Fix pagination & info font size directly
             setTimeout(function () {
-                // DataTables info (e.g. "Showing 1 to 10 of 50 entries")
                 $('[class*="dataTables_info"], [class*="dt-info"]').css('font-size', '13px');
-                // Pagination buttons
                 $('[class*="paginate_button"], [class*="dt-paging-button"], [class*="dataTables_paginate"] a, [class*="dataTables_paginate"] span').css('font-size', '13px');
             }, 100);
-
-            // Initialize Bootstrap tooltips
-            var tooltipTriggerList = [].slice.call(
-                document.querySelectorAll('[data-bs-toggle="tooltip"]')
-            );
-            tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
         }
     });
 
-    /* ===================== DATE RANGE FILTER ===================== */
-    $.fn.dataTable.ext.search.push(function (settings, data) {
-        let start = $('#startDate').val();
-        let end = $('#endDate').val();
-
-        // Registration Timestamp is always at column index 5
-        let rowDate = new Date(data[6]);
-
-        // Convert row date to YYYY-MM-DD (DATE ONLY)
-        let rowDateOnly = rowDate.getFullYear() + '-' +
-            String(rowDate.getMonth() + 1).padStart(2, '0') + '-' +
-            String(rowDate.getDate()).padStart(2, '0');
-
-        if (!start && !end) return true;
-
-        if (start && rowDateOnly < start) return false;
-        if (end && rowDateOnly > end) return false;
-
-        return true;
-    });
-
-    /* ===================== EXPORT CONFIRM ===================== */
+    /* ===================== SERVER-SIDE EXPORT ===================== */
     $('#confirmExport').on('click', function () {
-    // ✅ Store filename BEFORE triggering export
-    exportFileName = $('#exportFileName').val().trim();
+        exportFileName = $('#exportFileName').val().trim();
 
-    if (!exportFileName) {
-        alert('Please enter a file name');
-        return;
-    }
+        if (!exportFileName) {
+            alert('Please enter a file name');
+            return;
+        }
 
-    if (exportType === 'csv') {
-        table.button('.btn-export-csv').trigger();
-    }
+        const startDate = $('#startDate').val() || '';
+        const endDate   = $('#endDate').val() || '';
+        const search    = $('#custom-dt-search').val() || '';
 
-    if (exportType === 'excel') {
-        table.button('.btn-export-excel').trigger();
-    }
+        const exportUrl = "{{ route('users.export') }}" +
+            '?filename=' + encodeURIComponent(exportFileName) +
+            '&start_date=' + encodeURIComponent(startDate) +
+            '&end_date=' + encodeURIComponent(endDate) +
+            '&search=' + encodeURIComponent(search);
 
-    // ✅ Clear AFTER export
-    $('#exportModal').modal('hide');
-    $('#exportFileName').val('');
-});
+        window.location.href = exportUrl;
+
+        $('#exportModal').modal('hide');
+        $('#exportFileName').val('');
+    });
 
     /* ===================== ROW CLICK REDIRECT ===================== */
     $('#customer-table tbody').on('click', 'tr', function (e) {
-        if ($(e.target).closest('.delete-user-btn').length) return;
+        if ($(e.target).closest('.delete-user-btn, button, a').length) return;
 
-        var userId = $(this).data('user-id');
+        var userId = $(this).attr('data-user-id');
+        if (!userId) return;
+
         window.location.href = "{{ route('userData', ['user' => ':userId']) }}"
             .replace(':userId', userId);
     });
@@ -788,96 +697,6 @@
         $('#deleteUserModal').modal('show');
     });
 </script>
-
-<!-- <script>
-    // Show the loader
-    $('.loader-container').show();
-    $('#customer-table').hide();
-
-    var permissionName = "{{ $permission }}";
-    var table = $('#customer-table').DataTable({
-        responsive: true,
-        dom: "<'row'<'col-sm-12 col-md-6'B><'col-sm-12 col-md-6 d-flex justify-content-end'f>>" +
-            "<'row'<'col-sm-12 table-responsive custom-table' tr>>" +
-            "<'row'<'d-flex justify-content-start col-sm-12 col-md-6 mt-3'i><'col-sm-12 col-md-6 mt-3 d-flex justify-content-end'p>>",
-        buttons: [{
-            extend: 'csv',
-            text: '<i class="fa fa-file-csv"></i> CSV',
-            className: 'btn btn-info'
-        }, {
-            extend: 'excel',
-            text: '<i class="fa fa-file-excel"></i> Excel',
-            className: 'btn btn-success'
-        }, {
-            extend: 'pdf',
-            text: '<i class="fa fa-file-pdf"></i> PDF',
-            className: 'btn btn-danger'
-        }],
-        order: [
-            [0, 'desc']
-        ],
-        columnDefs: [{
-            orderable: false,
-            targets: -1
-        } // Disable sorting on last column (Action)
-        ],
-        initComplete: function (settings, json) {
-            $('.loader-container').hide();
-            $('#customer-table').show();
-            
-            // Initialize Bootstrap tooltips
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl);
-            });
-        }
-    });
-
-    $.fn.dataTable.ext.search.push(function (settings, data) {
-        let start = $('#startDate').val();
-        let end = $('#endDate').val();
-
-        // Timestamp column (2nd last column)
-        let rowDate = new Date(data[data.length - 2]);
-
-        if (!start && !end) return true;
-
-        start = start ? new Date(start) : null;
-        end = end ? new Date(end) : null;
-
-        return (!start || rowDate >= start) && (!end || rowDate <= end);
-    });
-
-
-    $('#customer-table tbody').on('click', 'tr', function (e) {
-        // Prevent redirect if the clicked target is inside a delete button
-        console.log('cliked');
-        if ($(e.target).closest('.delete-user-btn').length) {
-            return;
-        }
-
-        var userId = $(this).data('user-id');
-
-        window.location.href = "{{ route('userData', ['user' => ':userId']) }}".replace(
-            ':userId', userId);
-    });
-
-    // Use event delegation for delete button
-    $('#customer-table tbody').on('click', '.delete-user-btn', function (e) {
-        e.stopPropagation(); // Prevent row click
-        const userId = $(this).data('user-id');
-        const userName = $(this).data('user-name');
-
-        let deleteUrl = @json(route('users.destroy', ['id' => ':id']));
-    deleteUrl = deleteUrl.replace(':id', userId);
-
-    $('#deleteUserForm').attr('action', deleteUrl);
-    $('#deleteUserName').text(userName);
-    $('#deleteUserModal').modal('show');
-            });
-
-            
-</script> -->
 
 @if(session('success'))
 <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;">

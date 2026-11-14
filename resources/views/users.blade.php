@@ -164,11 +164,28 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Name Export File</h5>
+                <h5 class="modal-title" id="exportModalTitle">Export Customers</h5>
                 <button class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <input type="text" id="exportFileName" class="form-control" placeholder="Enter file name">
+                <div class="mb-3">
+                    <label for="exportFileName" class="form-label text-sm fw-bold">File Name</label>
+                    <input type="text" id="exportFileName" class="form-control" placeholder="Enter file name">
+                </div>
+                <div class="row g-2 mb-2">
+                    <div class="col-6">
+                        <label for="exportStartDate" class="form-label text-sm fw-bold">Date From</label>
+                        <input type="date" id="exportStartDate" class="form-control">
+                    </div>
+                    <div class="col-6">
+                        <label for="exportEndDate" class="form-label text-sm fw-bold">Date To</label>
+                        <input type="date" id="exportEndDate" class="form-control">
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end gap-2 mb-1">
+                    <button type="button" class="btn btn-xs btn-outline-secondary py-1 px-2" id="exportTodayBtn">Today</button>
+                    <button type="button" class="btn btn-xs btn-outline-secondary py-1 px-2" id="exportAllDatesBtn">All Dates</button>
+                </div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -418,6 +435,23 @@
     let exportType = 'csv';
     const today = new Date().toISOString().split('T')[0];
 
+    function openExportModal(type) {
+        exportType = type || 'csv';
+        const typeLabel = exportType === 'excel' ? 'Excel' : 'CSV';
+        $('#exportModalTitle').text(`Export Customers (${typeLabel})`);
+
+        if (!$('#exportFileName').val()) {
+            $('#exportFileName').val(`customers_${today}`);
+        }
+
+        const currentStart = $('#startDate').length ? $('#startDate').val() : today;
+        const currentEnd   = $('#endDate').length ? $('#endDate').val() : today;
+        $('#exportStartDate').val(currentStart);
+        $('#exportEndDate').val(currentEnd);
+
+        $('#exportModal').modal('show');
+    }
+
     /* ===================== DATATABLE INIT (SERVER-SIDE) ===================== */
     var table = $('#customer-table').DataTable({
         processing: true,
@@ -441,16 +475,14 @@
                 text: '<i class="fa fa-file-csv"></i> CSV',
                 className: 'btn btn-info',
                 action: function () {
-                    exportType = 'csv';
-                    $('#exportModal').modal('show');
+                    openExportModal('csv');
                 }
             },
             {
                 text: '<i class="fa fa-file-excel"></i> Excel',
                 className: 'btn btn-success',
                 action: function () {
-                    exportType = 'excel';
-                    $('#exportModal').modal('show');
+                    openExportModal('excel');
                 }
             }
         ],
@@ -648,19 +680,26 @@
 
     /* ===================== SERVER-SIDE EXPORT ===================== */
     $('#confirmExport').on('click', function () {
-        exportFileName = $('#exportFileName').val().trim();
+        const exportFileName = $('#exportFileName').val().trim();
 
         if (!exportFileName) {
             alert('Please enter a file name');
             return;
         }
 
-        const startDate = $('#startDate').val() || '';
-        const endDate   = $('#endDate').val() || '';
-        const search    = $('#custom-dt-search').val() || '';
+        const startDate = $('#exportStartDate').val() || '';
+        const endDate   = $('#exportEndDate').val() || '';
+
+        if (startDate && endDate && endDate < startDate) {
+            alert('"Date To" cannot be earlier than "Date From".');
+            return;
+        }
+
+        const search = $('#custom-dt-search').val() || '';
 
         const exportUrl = "{{ route('users.export') }}" +
-            '?filename=' + encodeURIComponent(exportFileName) +
+            '?type=' + encodeURIComponent(exportType) +
+            '&filename=' + encodeURIComponent(exportFileName) +
             '&start_date=' + encodeURIComponent(startDate) +
             '&end_date=' + encodeURIComponent(endDate) +
             '&search=' + encodeURIComponent(search);
@@ -668,7 +707,16 @@
         window.location.href = exportUrl;
 
         $('#exportModal').modal('hide');
-        $('#exportFileName').val('');
+    });
+
+    $(document).on('click', '#exportTodayBtn', function () {
+        $('#exportStartDate').val(today);
+        $('#exportEndDate').val(today);
+    });
+
+    $(document).on('click', '#exportAllDatesBtn', function () {
+        $('#exportStartDate').val('');
+        $('#exportEndDate').val('');
     });
 
     /* ===================== ROW CLICK REDIRECT ===================== */

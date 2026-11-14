@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exports\UsersExport;
 use App\Models\Developer;
 use App\Models\Station;
 use App\Models\StationUser;
@@ -9,6 +10,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class UserDatatableService
@@ -39,12 +41,20 @@ class UserDatatableService
     {
         $query = $this->baseQuery();
 
-        if ($request->filled('start_date')) {
-            $query->whereDate('created_at', '>=', $request->start_date);
+        $startDate = $request->input('start_date')
+            ?? $request->input('date_from')
+            ?? $request->input('from');
+
+        $endDate = $request->input('end_date')
+            ?? $request->input('date_to')
+            ?? $request->input('to');
+
+        if (!empty($startDate)) {
+            $query->where('created_at', '>=', Carbon::parse($startDate)->startOfDay());
         }
 
-        if ($request->filled('end_date')) {
-            $query->whereDate('created_at', '<=', $request->end_date);
+        if (!empty($endDate)) {
+            $query->where('created_at', '<=', Carbon::parse($endDate)->endOfDay());
         }
 
         $search = $request->input('search.value') ?? $request->input('search');
@@ -234,20 +244,28 @@ class UserDatatableService
     }
 
     /**
+     * Export filtered users as CSV or Excel download.
+     */
+    public function export(Request $request)
+    {
+        $type = strtolower((string) $request->input('type', 'csv'));
+        $rawName = trim((string) $request->input('filename')) ?: 'customers_export';
+        $baseName = preg_replace('/\.(csv|xlsx|xls)$/i', '', $rawName);
+
+        $query = $this->filteredQuery($request)->orderBy('id', 'desc');
+
+        if ($type === 'excel' || $type === 'xlsx') {
+            return Excel::download(new UsersExport($query), "{$baseName}.xlsx");
+        }
+
+        return $this->streamCsv($query, "{$baseName}.csv");
+    }
+
+    /**
      * Export filtered users as streaming CSV download.
      */
-    public function export(Request $request): StreamedResponse
+    protected function streamCsv(Builder $query, string $fileName): StreamedResponse
     {
-        $fileName = ($request->input('filename') ?: 'users_export') . '.csv';
-
-        $query = $this->filteredQuery($request)
-            ->with([
-                'stationUser',
-                'developers.projects',
-                'userGift.gift',
-            ])
-            ->orderBy('id', 'desc');
-
         $stations = Station::pluck('name', 'id');
         $developers = Developer::pluck('name', 'id');
 
@@ -308,8 +326,7 @@ class UserDatatableService
                                 $val .= " (Channel: {$user->source_of_channel})";
                             }
                         } elseif ($sId == 2 && $hasStation) {
-                            $gift = $user->userGift?->gift?->name ?? 'No Gift';
-                            $val = $gift;
+                            $val = $user->userGift?->gift?->name ?? 'No Gift';
                         } else {
                             $val = $hasStation ? 'Yes' : 'No';
                         }

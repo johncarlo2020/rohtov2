@@ -206,7 +206,7 @@ class UserDatatableService
                 if ($user->is_early_bird && $user->source_of_channel) {
                     $val .= '<br><small class="text-muted">Channel:' . e($user->source_of_channel) . '</small>';
                 }
-            } elseif ($sId == 2 && $hasStation) {
+            } elseif ($sId == 3 && $hasStation) {
                 $giftName = e($user->userGift?->gift?->name ?? 'No Gift');
                 $giftDate = $user->userGift?->created_at ? $user->userGift->created_at->toDayDateTimeString() : '-';
                 $val = $giftName . '<br><small class="text-muted">' . $giftDate . '</small>';
@@ -325,7 +325,7 @@ class UserDatatableService
                             if ($user->is_early_bird && $user->source_of_channel) {
                                 $val .= " (Channel: {$user->source_of_channel})";
                             }
-                        } elseif ($sId == 2 && $hasStation) {
+                        } elseif ($sId == 3 && $hasStation) {
                             $val = $user->userGift?->gift?->name ?? 'No Gift';
                         } else {
                             $val = $hasStation ? 'Yes' : 'No';

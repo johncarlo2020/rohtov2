@@ -232,8 +232,8 @@
                             BACK
                         </a>
                     </div>
-                @elseif ($station->id == 2 || $station->id == 1)
-                    <!-- ✅ Station 1 → Quiz -->
+                @elseif ($station->id == 3 || $station->id == 1)
+                    <!-- ✅ Station 1 & 3 → Scan QR code -->
                     <div class="scan-container mb-5">
                         <button id="start-scanner" class="scan-btn mb-4">
                             <span class="scan-icon">

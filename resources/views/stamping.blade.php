@@ -55,7 +55,7 @@
             Stamp Collected!</h2> --}}
         </div>
         <div class="station-selection-container mb-2 animate-entry delay-2">
-            @if(request()->segment(3) == 2)
+            @if((isset($station) && $station->id == 3) || request()->segment(2) == 3)
                 <h2 class="text-center mb-3 mt-5 booth-description">Lucky Draw Booth</h2>  
             @else
                <h2 class="text-center mb-3 mt-5 booth-description">Win the game and get a stamp <br> to unlock a prize</h2>

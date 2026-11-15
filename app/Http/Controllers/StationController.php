@@ -46,8 +46,8 @@ class StationController extends Controller
       return redirect()->route('dashboard');
     }
 
-    // Lucky Draw (Station 2): requires 3 developer quizzes (games are optional)
-    if ($station->id == 2) {
+    // Lucky Draw (Station 3): requires 3 developer quizzes (games are optional)
+    if ($station->id == 3) {
       $developersCompleted = auth()->user()->developers->isNotEmpty() && auth()->user()->developers->every(fn($d) => $d->pivot->isCompleted == 1);
       if (!$developersCompleted) {
         return redirect()->route('dashboard');
@@ -58,7 +58,7 @@ class StationController extends Controller
       return view("congrats");
     }
 
-    if ($station->id == 2 && $user == true) {
+    if ($station->id == 3 && $user == true) {
       return view("station", compact("station", "user"));
     }
 
@@ -194,8 +194,8 @@ class StationController extends Controller
 $user = auth()->user();
 
 $completedDevelopers = $user->developers && $user->developers->where('pivot.isCompleted', 1)->count() >= 3;
-$completedGame = $user->stationUser()->whereIn('station_id', [3, 4])->exists();
-$completedLuckyDraw = $user->stationUser()->where('station_id', 2)->exists();
+$completedGame = $user->stationUser()->where('station_id', 2)->exists();
+$completedLuckyDraw = $user->stationUser()->where('station_id', 3)->exists();
 
 $completedJourney = $completedDevelopers && $completedGame && $completedLuckyDraw;
 
@@ -210,9 +210,11 @@ $activeVoucher = Voucher::where('name', 'CHAGEE')
         $q->whereNull('ends_at')
             ->orWhere('ends_at', '>=', now());
     })
+    ->orderBy('starts_at', 'desc')
     ->first();
 
 $canSeeVoucher = false;
+$upcomingVoucher = null;
 
 $voucherStatus = 'Not Available';
 $voucherMessage = 'Voucher redemption is not available yet.';
@@ -220,10 +222,9 @@ $voucherMessage = 'Voucher redemption is not available yet.';
 if ($activeVoucher) {
 
     $claimedCount = VoucherClaim::where(
-    'voucher_id',
-    $activeVoucher->id
-)->count();
-    
+        'voucher_id',
+        $activeVoucher->id
+    )->count();
 
     $remaining = max(
         0,
@@ -231,19 +232,18 @@ if ($activeVoucher) {
     );
 
     if ($remaining <= 0) {
+        $nextSession = Voucher::where('name', 'CHAGEE')
+            ->where('session', '>', $activeVoucher->session)
+            ->first();
 
-        if ($activeVoucher->session == 1) {
-
-            $voucherStatus = 'Session 1 Full';
-            $voucherMessage = 'Session 1 quota has been reached. Please come back at 6:00 PM for Session 2.';
-
-        } 
-        else {
-
+        if ($nextSession) {
+            $nextTime = $nextSession->starts_at ? \Carbon\Carbon::parse($nextSession->starts_at)->format('g:i A') : '';
+            $voucherStatus = "Session {$activeVoucher->session} Full";
+            $voucherMessage = "Session {$activeVoucher->session} quota has been reached." . ($nextTime ? " Please come back at {$nextTime} for Session {$nextSession->session}." : '');
+        } else {
             $voucherStatus = 'Fully Redeemed';
             $voucherMessage = 'All CHAGEE vouchers have been claimed.';
         }
-
     } else {
 
         $voucherStatus = "Session {$activeVoucher->session}";
@@ -256,6 +256,17 @@ if ($activeVoucher) {
         $remaining > 0
     ) {
         $canSeeVoucher = true;
+    }
+} else {
+    $upcomingVoucher = Voucher::where('name', 'CHAGEE')
+        ->where('starts_at', '>', now())
+        ->orderBy('starts_at', 'asc')
+        ->first();
+
+    if ($upcomingVoucher) {
+        $startTime = \Carbon\Carbon::parse($upcomingVoucher->starts_at)->format('g:i A');
+        $voucherStatus = "Session {$upcomingVoucher->session} Upcoming";
+        $voucherMessage = "Session {$upcomingVoucher->session} will open at {$startTime}.";
     }
 }
 
@@ -273,7 +284,8 @@ if ($activeVoucher) {
         "voucherRedeemed",
         "voucherStatus",
         "voucherMessage",
-        "activeVoucher"
+        "activeVoucher",
+        "upcomingVoucher"
       )
     );
   }
@@ -333,9 +345,9 @@ if ($activeVoucher) {
         // ✅ Station check (only skip for prize maybe — your logic choice)
         $station_id = $request->station;
 
-        if ((int) $station_id === 2 && $isEarlyBird) {
+        if ((int) $station_id === 3 && $isEarlyBird) {
             return response()->json([
-                "message" => "Station 2 skipped",
+                "message" => "Station 3 skipped",
                 "status" => "success",
             ], 200);
         }
@@ -393,8 +405,8 @@ if ($activeVoucher) {
           "redirect_url" => route('congrats.redeemed'),
       ];
 
-        // Handle gift selection for station 1
-        if ($station_id == 2 && $route == 'prize') {
+        // Handle gift selection for station 3 (Lucky Draw prize)
+        if ($station_id == 3 && $route == 'prize') {
 
           $gift = \App\Models\Gifts::find($prize_id);
 
@@ -433,8 +445,8 @@ if ($activeVoucher) {
         }
 
      
-      // Special case: station 1
-      if ($station_id == 2) {
+      // Special case: station 3
+      if ($station_id == 3) {
           $response["type"] = "prize";
           $response["redirect_url"] = route('prize.id', ['prize_id' => $prize_id]);
       }
@@ -687,70 +699,28 @@ if ($activeVoucher) {
       ->values()
       ->toArray();
 
-    $session1 = Voucher::where('name', 'CHAGEE')
-    ->where('session', 1)
-    ->first();
-
-    $session1Claimed = $session1
-        ? VoucherClaim::where(
-            'voucher_id',
-            $session1->id
-        )->count()
-        : 0;
-
     $voucherSessions = Voucher::where('name', 'CHAGEE')
         ->orderBy('session')
         ->get()
-        ->map(function ($voucher) use ($session1, $session1Claimed) {
-
-            $claimedCount = VoucherClaim::where(
-                'voucher_id',
-                $voucher->id
-            )->count();
-
-            // Dynamic Session 2 quota
-            $displayQuota = $voucher->quota;
-
-            if (
-                  $voucher->session == 2 &&
-                  $session1 &&
-                  $session1->ends_at &&
-                  now()->gt($session1->ends_at)
-              ) {
-
-                  $carryOver = max(
-                      0,
-                      $session1->quota - $session1Claimed
-                  );
-
-                  $displayQuota =
-                      $voucher->quota + $carryOver;
-              }
+        ->map(function ($voucher) {
+            $claimedCount = VoucherClaim::where('voucher_id', $voucher->id)->count();
 
             if (now()->lt($voucher->starts_at)) {
-
                 $status = 'Upcoming';
-
-            } elseif (
-                $voucher->ends_at &&
-                now()->gt($voucher->ends_at)
-            ) {
-
+            } elseif ($voucher->ends_at && now()->gt($voucher->ends_at)) {
                 $status = 'Ended';
-
             } else {
-
                 $status = 'Active';
             }
 
             return [
                 'session' => $voucher->session,
                 'status' => $status,
-                'claimed' => "{$claimedCount}/{$displayQuota}",
+                'claimed' => "{$claimedCount}/{$voucher->quota}",
                 'starts_at' => $voucher->starts_at,
                 'ends_at' => $voucher->ends_at,
             ];
-    });
+        });
 
     return view("dashboardadmin", compact("data", "permission","voucherSessions"));
   }
@@ -1078,6 +1048,7 @@ if ($activeVoucher) {
             $q->whereNull('ends_at')
                 ->orWhere('ends_at', '>=', now());
         })
+        ->orderBy('starts_at', 'desc')
         ->first();
 
     if (!$activeVoucher) {
@@ -1116,36 +1087,6 @@ if ($activeVoucher) {
         'user_id' => auth()->id(),
         'claimed_at' => now(),
     ]);
-
-    $session1 = Voucher::where('name', 'CHAGEE')
-        ->where('session', 1)
-        ->first();
-
-    $session2 = Voucher::where('name', 'CHAGEE')
-        ->where('session', 2)
-        ->first();
-
-    if ($session1 && $session2) {
-
-        $session1Claimed = VoucherClaim::where(
-            'voucher_id',
-            $session1->id
-        )->count();
-
-        $session2Claimed = VoucherClaim::where(
-            'voucher_id',
-            $session2->id
-        )->count();
-
-        $remaining = max(
-            0,
-            $session1->quota - $session1Claimed
-        );
-
-        // $session2->update([
-        //     'quota' => $remaining + 1 // TESTING
-        // ]);
-    }
 
     return response()->json([
         'success' => true,

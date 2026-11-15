@@ -86,7 +86,7 @@ class UsersExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoSiz
                 if ($user->is_early_bird && $user->source_of_channel) {
                     $val .= " (Channel: {$user->source_of_channel})";
                 }
-            } elseif ($sId == 2 && $hasStation) {
+            } elseif ($sId == 3 && $hasStation) {
                 $val = $user->userGift?->gift?->name ?? 'No Gift';
             } else {
                 $val = $hasStation ? 'Yes' : 'No';

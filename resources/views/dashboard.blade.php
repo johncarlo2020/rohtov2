@@ -279,14 +279,9 @@
                                     CLAIM FREE CHAGEE!
                                 </p>
                                 <div class="mt-3 mb-4 text-content">
-                                    @if($activeVoucher)
-                                        <p><strong>{{ $voucherStatus }}</strong></p>
-                                        <p>{{ $voucherMessage }}</p>
-                                    @else
-                                        <p style="font-weight: 600; color: #205493; margin-bottom: 4px;">22 November 2026, Sunday</p>
-                                        <p style="font-weight: 500; color: #205493; margin-bottom: 8px;">50 cups, 11 am</p>
-                                        <p style="font-size: 0.8rem; color: #205493; margin-bottom: 0;">*First-come-first-served</p>
-                                    @endif
+                                    <p style="font-weight: 600; color: #205493; margin-bottom: 4px;">22 November 2026, Sunday</p>
+                                    <p style="font-weight: 500; color: #205493; margin-bottom: 8px;">50 cups, 11 am</p>
+                                    <p style="font-size: 0.8rem; color: #205493; margin-bottom: 0;">*First-come-first-served</p>
                                 </div>
                             @else
                                 <img class="stamping-image m-auto active"
@@ -422,7 +417,7 @@
                     @php
                         $image = asset("images/station/ST{$station->id}.webp");
 
-                        $isLocked = ($station->id == 2 && !$canAccessStation);
+                        $isLocked = ($station->id == 3 && !$canAccessStation);
                     @endphp
 
                     {{-- 🚫 HIDE station 1 if NOT early bird --}}
@@ -449,7 +444,7 @@
                         {{-- ✅ Status Overlay --}}
                         @if ($station->status)
                             <div class="overlay">
-                                <span class="text-white" style="font-size:10px;">{{ !in_array($station->id, [1, 2]) ? 'COMPLETED' : 'REDEEMED' }}</span>
+                                <span class="text-white" style="font-size:10px;">{{ !in_array($station->id, [1, 3]) ? 'COMPLETED' : 'REDEEMED' }}</span>
                             </div>
 
                         {{-- 🔒 LOCK (Station 3 or Video Booth) --}}
@@ -521,7 +516,7 @@
             };
 
             window.gotoStation = function(id) {
-                if (id == 2 && !canAccessStation) {
+                if (id == 3 && !canAccessStation) {
                     var modalEl = document.getElementById('notAllowedModal');
                     if (modalEl) {
                         var notAllowedModal = bootstrap.Modal.getOrCreateInstance(modalEl);

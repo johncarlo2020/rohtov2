@@ -38,17 +38,19 @@ class StationSeeder extends Seeder
 
 
 
-        $role = Role::create(['name' => 'client']);
+        Role::firstOrCreate(['name' => 'client']);
 
-        $role = Role::create(['name' => 'admin']);
+        Role::firstOrCreate(['name' => 'admin']);
 
-        $user = User::create([
-            'fname' => 'admin',
-            'number' => '0123456789',
-            'email' => 'admin@gmail.com',
-            'country' => 'Malaysia',
-            'password' => Hash::make('WowsomeIproperty2026'),
-        ]);
+        $user = User::firstOrCreate(
+            ['email' => 'admin@gmail.com'],
+            [
+                'fname' => 'admin',
+                'number' => '0123456789',
+                'country' => 'Malaysia',
+                'password' => Hash::make('WowsomeIproperty2026'),
+            ]
+        );
 
         $user->assignRole('admin');
     }

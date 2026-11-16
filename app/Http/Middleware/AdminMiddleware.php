@@ -21,6 +21,10 @@ class AdminMiddleware
             return $next($request);
         }
 
+        if ($request->ajax() || $request->wantsJson() || $request->has('draw')) {
+            return response()->json(['message' => 'Unauthenticated.'], 401);
+        }
+
         return redirect('/admin/login');
     }
 }

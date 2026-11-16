@@ -744,7 +744,7 @@ if ($activeVoucher) {
 
   public function users(Request $request, UserDatatableService $userTableService)
   {
-    if ($request->ajax()) {
+    if ($request->ajax() || $request->wantsJson() || $request->has('draw')) {
       return response()->json($userTableService->getDataTable($request));
     }
 

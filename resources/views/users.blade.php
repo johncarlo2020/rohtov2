@@ -458,11 +458,21 @@
         serverSide: true,
         responsive: true,
         ajax: {
-            url: "{{ route('users') }}",
+            url: "{{ route('users', [], false) }}",
             type: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            },
             data: function (d) {
                 d.start_date = $('#startDate').length ? $('#startDate').val() : today;
                 d.end_date = $('#endDate').length ? $('#endDate').val() : today;
+            },
+            error: function (xhr, error, code) {
+                console.error("DataTables Ajax Error:", xhr, error, code);
+                if (xhr.status === 401 || xhr.status === 419) {
+                    window.location.href = '/admin/login';
+                }
             }
         },
         dom: "<'row'<'col-12'B>>" +

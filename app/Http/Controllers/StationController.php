@@ -748,7 +748,7 @@ if ($activeVoucher) {
       return response()->json($userTableService->getDataTable($request));
     }
 
-    $permission = auth()->user()->getPermissionNames()->first();
+    $permission = auth()->user()?->getPermissionNames()?->first();
     $data = $userTableService->getViewData();
 
     return view("users", compact("data", "permission"));
@@ -777,7 +777,7 @@ if ($activeVoucher) {
     $averagePlaytimeByUser = StationUser::where("user_id", $user->id)->avg(
       "time_spent"
     );
-    $permission = auth()->user()->getPermissionNames()->first();
+    $permission = auth()->user()?->getPermissionNames()?->first();
 
     $stations = Station::pluck("name", "id");
 

@@ -413,10 +413,6 @@
 <script src="{{ asset('assets/js/plugins/perfect-scrollbar.min.js') }}"></script>
 <script src="{{ asset('assets/js/plugins/smooth-scrollbar.min.js') }}"></script>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
 <script src="https://cdn.datatables.net/buttons/3.0.2/js/dataTables.buttons.js"></script>
 <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.dataTables.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -444,8 +440,8 @@
             $('#exportFileName').val(`customers_${today}`);
         }
 
-        const currentStart = $('#startDate').length ? $('#startDate').val() : today;
-        const currentEnd   = $('#endDate').length ? $('#endDate').val() : today;
+        const currentStart = $('#startDate').val() || '';
+        const currentEnd   = $('#endDate').val() || '';
         $('#exportStartDate').val(currentStart);
         $('#exportEndDate').val(currentEnd);
 
@@ -465,8 +461,10 @@
                 'Accept': 'application/json'
             },
             data: function (d) {
-                d.start_date = $('#startDate').length ? $('#startDate').val() : today;
-                d.end_date = $('#endDate').length ? $('#endDate').val() : today;
+                const s = $('#startDate').val();
+                const e = $('#endDate').val();
+                if (s) d.start_date = s;
+                if (e) d.end_date = e;
             },
             error: function (xhr, error, code) {
                 console.error("DataTables Ajax Error:", xhr, error, code);
@@ -523,6 +521,8 @@
         },
 
         drawCallback: function () {
+            $('.loader-container').hide();
+            $('#customer-table').show();
             var tooltipTriggerList = [].slice.call(
                 document.querySelectorAll('[data-bs-toggle="tooltip"]')
             );
@@ -539,17 +539,17 @@
                 <div id="date-filter-wrapper">
                     <button id="date-filter-btn" title="Filter by date">
                         <i class="fa fa-calendar-alt"></i>
-                        <span id="date-filter-label">Today</span>
+                        <span id="date-filter-label">All dates</span>
                         <i class="fa fa-chevron-down" style="font-size:10px;opacity:.6;"></i>
                     </button>
                     <div id="date-filter-dropdown">
                         <div class="mb-2">
                             <label>From</label>
-                            <input type="date" id="startDate" value="${today}">
+                            <input type="date" id="startDate" value="">
                         </div>
                         <div>
                             <label>To</label>
-                            <input type="date" id="endDate" value="${today}">
+                            <input type="date" id="endDate" value="">
                         </div>
                         <div class="date-filter-actions">
                             <button id="applyDateFilter"><i class="fa fa-check me-1"></i> Apply</button>

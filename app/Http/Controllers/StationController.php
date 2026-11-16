@@ -745,7 +745,18 @@ if ($activeVoucher) {
   public function users(Request $request, UserDatatableService $userTableService)
   {
     if ($request->ajax() || $request->wantsJson() || $request->has('draw')) {
-      return response()->json($userTableService->getDataTable($request));
+      try {
+        return response()->json($userTableService->getDataTable($request));
+      } catch (\Throwable $e) {
+        \Log::error('Users datatable error: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
+        return response()->json([
+          'draw' => (int) $request->input('draw', 1),
+          'recordsTotal' => 0,
+          'recordsFiltered' => 0,
+          'data' => [],
+          'error' => $e->getMessage(),
+        ]);
+      }
     }
 
     $permission = auth()->user()?->getPermissionNames()?->first();

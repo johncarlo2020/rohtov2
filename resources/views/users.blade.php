@@ -468,6 +468,8 @@
             },
             error: function (xhr, error, code) {
                 console.error("DataTables Ajax Error:", xhr, error, code);
+                $('.loader-container').hide();
+                $('#customer-table').show();
                 if (xhr.status === 401 || xhr.status === 419) {
                     window.location.href = '/admin/login';
                 }

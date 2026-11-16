@@ -108,6 +108,7 @@ class User extends Authenticatable
     {
         $protectedEmails = ['admin@gmail.com', 'superadmin@gmail.com', 'manager@gmail.com', 'support@gmail.com'];
         
-        return in_array($this->email, $protectedEmails) || $this->hasRole('admin');
+        return in_array($this->email, $protectedEmails) 
+            || ($this->relationLoaded('roles') ? $this->roles->contains('name', 'admin') : $this->hasRole('admin'));
     }
 }

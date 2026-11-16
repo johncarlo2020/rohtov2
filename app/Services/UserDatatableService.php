@@ -185,16 +185,18 @@ class UserDatatableService
     protected function formatRow(User $user, int $iteration, $stations, $developers): array
     {
         $locations = $user->developers
-            ->map(fn($dev) => optional($dev->projects->first())->address)
-            ->filter()
-            ->unique()
-            ->values();
+            ? $user->developers
+                ->map(fn($dev) => optional($dev->projects?->first())->address)
+                ->filter()
+                ->unique()
+                ->values()
+            : collect();
 
         $locHtml = $locations->isEmpty()
             ? '-'
             : $locations->map(fn($loc) => '<div>' . e($loc) . '</div>')->implode('');
 
-        $userStationIds = $user->stationUser->pluck('station_id')->all();
+        $userStationIds = $user->stationUser ? $user->stationUser->pluck('station_id')->all() : [];
         $stationCols = [];
 
         foreach ($stations as $sId => $sName) {
@@ -208,7 +210,7 @@ class UserDatatableService
                 }
             } elseif ($sId == 3 && $hasStation) {
                 $giftName = e($user->userGift?->gift?->name ?? 'No Gift');
-                $giftDate = $user->userGift?->created_at ? $user->userGift->created_at->toDayDateTimeString() : '-';
+                $giftDate = $user->userGift?->created_at ? Carbon::parse($user->userGift->created_at)->toDayDateTimeString() : '-';
                 $val = $giftName . '<br><small class="text-muted">' . $giftDate . '</small>';
             } else {
                 $val = $hasStation ? 'Yes' : 'No';
@@ -217,7 +219,7 @@ class UserDatatableService
             $stationCols[] = '<span class="text-sm mb-0 ' . $class . '">' . $val . '</span>';
         }
 
-        $userDevIds = $user->developers->pluck('id')->all();
+        $userDevIds = $user->developers ? $user->developers->pluck('id')->all() : [];
         $devCols = [];
 
         foreach ($developers as $dId => $dName) {
@@ -239,7 +241,7 @@ class UserDatatableService
             $locHtml,
             e($user->property_budget ?? '-'),
             e($user->marketing ?? '-'),
-            Carbon::parse($user->created_at)->toDayDateTimeString(),
+            $user->created_at ? Carbon::parse($user->created_at)->toDayDateTimeString() : '-',
         ], $stationCols, $devCols, [$actionHtml]);
     }
 

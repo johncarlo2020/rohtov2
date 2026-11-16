@@ -57,7 +57,11 @@ class UserDatatableService
             $query->where('created_at', '<=', Carbon::parse($endDate)->endOfDay());
         }
 
-        $search = $request->input('search.value') ?? $request->input('search');
+        $search = $request->input('search.value');
+        if (!is_string($search) || trim($search) === '') {
+            $search = is_string($request->input('search')) ? trim($request->input('search')) : '';
+        }
+
         if (!empty($search)) {
             $query->where(function ($q) use ($search) {
                 $q->where('fname', 'like', "%{$search}%")
@@ -234,13 +238,18 @@ class UserDatatableService
             $actionHtml = '<button class="btn btn-danger btn-sm delete-user-btn" data-user-id="' . $user->id . '" data-user-name="' . e($user->fname) . '">Delete</button>';
         }
 
+        $budget = is_array($user->property_budget) ? implode(', ', $user->property_budget) : ($user->property_budget ?? '-');
+        $marketing = is_array($user->marketing) ? implode(', ', $user->marketing) : ($user->marketing ?? '-');
+        $fname = is_array($user->fname) ? implode(' ', $user->fname) : (string)$user->fname;
+        $email = is_array($user->email) ? implode(', ', $user->email) : (string)$user->email;
+
         return array_merge([
             '<span class="d-none user-id-holder" data-user-id="' . $user->id . '"></span>' . $iteration,
-            e($user->fname),
-            e($user->email),
+            e($fname),
+            e($email),
             $locHtml,
-            e($user->property_budget ?? '-'),
-            e($user->marketing ?? '-'),
+            e($budget),
+            e($marketing),
             $user->created_at ? Carbon::parse($user->created_at)->toDayDateTimeString() : '-',
         ], $stationCols, $devCols, [$actionHtml]);
     }

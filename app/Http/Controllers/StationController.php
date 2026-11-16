@@ -246,7 +246,7 @@ if ($activeVoucher) {
         }
     } else {
 
-        $voucherStatus = "Session {$activeVoucher->session}";
+        $voucherStatus = "Active";
         $voucherMessage = "{$remaining} voucher(s) remaining.";
     }
 
@@ -265,8 +265,8 @@ if ($activeVoucher) {
 
     if ($upcomingVoucher) {
         $startTime = \Carbon\Carbon::parse($upcomingVoucher->starts_at)->format('g:i A');
-        $voucherStatus = "Session {$upcomingVoucher->session} Upcoming";
-        $voucherMessage = "Session {$upcomingVoucher->session} will open at {$startTime}.";
+        $voucherStatus = "Upcoming";
+        $voucherMessage = "Voucher redemption will open at {$startTime}.";
     }
 }
 

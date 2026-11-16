@@ -11,6 +11,8 @@ class VoucherSeeder extends Seeder
 {
     public function run(): void
     {
+        Voucher::where('name', 'CHAGEE')->where('session', '>', 1)->delete();
+
         Voucher::updateOrCreate(
             [
                 'name' => 'CHAGEE',
@@ -19,18 +21,6 @@ class VoucherSeeder extends Seeder
             [
                 'quota' => 50,
                 'starts_at' => Carbon::create(2026, 11, 22, 11, 0, 0),
-                'ends_at'   => Carbon::create(2026, 11, 22, 17, 59, 59),
-            ]
-        );
-
-        Voucher::updateOrCreate(
-            [
-                'name' => 'CHAGEE',
-                'session' => 2,
-            ],
-            [
-                'quota' => 50,
-                'starts_at' => Carbon::create(2026, 11, 22, 18, 0, 0),
                 'ends_at'   => Carbon::create(2026, 11, 22, 23, 59, 59),
             ]
         );

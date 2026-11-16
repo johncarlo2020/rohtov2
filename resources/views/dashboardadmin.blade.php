@@ -104,7 +104,7 @@
     <div class="row mt-4">
         <p>CHAGEE Voucher</p>
         @foreach ($voucherSessions as $session)
-            <div class="col-6">
+            <div class="{{ count($voucherSessions) > 1 ? 'col-6' : 'col-12 col-md-6' }}">
                 <div class="card mb-3">
                     <div class="card-body d-flex justify-content-between rounded p-3">
                         <div class="d-flex align-items-center w-100">
@@ -116,7 +116,7 @@
                             </div>
                             <div class="d-flex flex-column ms-2">
                                 <h6 class="mb-1 text-sm">
-                                    SESSION {{ $session['session'] }}
+                                    {{ count($voucherSessions) > 1 ? 'SESSION ' . $session['session'] : 'CHAGEE VOUCHER' }}
                                 </h6>
                                 <span class="text-xs">
                                     <strong>Starts:</strong>

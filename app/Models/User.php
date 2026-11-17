@@ -77,6 +77,14 @@ class User extends Authenticatable
         return $this->hasMany(StationUser::class);
     }
 
+    public function hasCompletedAllStations(): bool
+    {
+        $completed = $this->stationUser()->distinct('station_id')->count();
+        $totalRequired = $this->is_early_bird ? 3 : 2;
+
+        return $completed >= $totalRequired;
+    }
+
     public function userGift()
     {
         return $this->hasOne(UserGift::class);

@@ -14,7 +14,7 @@
                     </div>
                     {{-- home button --}}
                     <div class="col-8 colanimate-entry delay-2 mt-4 mb-5">
-                        <a href="{{ route('dashboard') }}" class="custom-btn custom-btn-primary">
+                        <a href="{{ auth()->user()?->hasCompletedAllStations() ? route('congrats') : route('dashboard') }}" class="custom-btn custom-btn-primary">
                             HOME
                         </a>
                     </div>

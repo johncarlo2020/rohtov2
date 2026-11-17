@@ -962,13 +962,11 @@ if ($activeVoucher) {
       ->where("station_id", $station->id)
       ->exists();
 
-    // $choices = Station::with('answers', 'correctAnswer')
-    //     ->where('id', $station->id)
-    //     ->first();
+    $redirectUrl = auth()->user()?->hasCompletedAllStations()
+      ? route('congrats')
+      : route('dashboard');
 
-    // $gifts = \App\Models\Gifts::get();
-
-    return view("stamping", compact("station", "user"));
+    return view("stamping", compact("station", "user", "redirectUrl"));
   }
 
   public function discover()
@@ -1140,28 +1138,12 @@ if ($activeVoucher) {
 
       $user = auth()->user();
 
-      // count completed
-      $completed = $user->stationUser()->distinct("station_id")->count();
-
-      $today = now()->format('m-d');
-      $videoBoothDates = ['05-01', '05-09', '05-10'];
-
-      $isVideoBoothDay = in_array($today, $videoBoothDates);
-
-      $totalRequired = $user->is_early_bird ? 4 : 3;
-
       DB::commit();
-      // 🎉 CHECK IF FINISHED
 
-      if ($completed >= $totalRequired) {
-        return response()->json([
-            "redirect_url" => route("congrats"),
-        ]);
-      }
-
-      // otherwise go dashboard
       return response()->json([
-        "redirect_url" => route("dashboard"),
+        "redirect_url" => auth()->user()->hasCompletedAllStations()
+            ? route("congrats")
+            : route("dashboard"),
       ]);
 
     } catch (\Exception $e) {
@@ -1299,16 +1281,9 @@ if ($activeVoucher) {
   }
   public function prizeDone()
   {
-      $user = auth()->user();
-
-      $completed = $user->stationUser()->distinct("station_id")->count();
-      $totalRequired = $user->is_early_bird ? 3 : 2;
-
-      if ($completed >= $totalRequired) {
-          return redirect()->route('congrats');
-      }
-
-      return redirect()->route('dashboard');
+      return auth()->user()->hasCompletedAllStations()
+          ? redirect()->route('congrats')
+          : redirect()->route('dashboard');
   }
 
   public function updateStock(Request $request, $id)

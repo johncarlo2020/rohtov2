@@ -58,7 +58,7 @@
             @if((isset($station) && $station->id == 3) || request()->segment(2) == 3)
                 <h2 class="text-center mb-3 mt-5 booth-description">Lucky Draw Booth</h2>  
             @else
-               <h2 class="text-center mb-3 mt-5 booth-description">Win the game and get a stamp <br> to unlock a prize</h2>
+               <h2 class="text-center mb-3 mt-5 booth-description">Win the game and get a stamp <br> to unlock a prize.</h2>
             @endif
             <!-- Center image (middle area) -->
             <div class="row">
@@ -72,7 +72,7 @@
                 </div>
             </div>
             
-            <p class="text-center mt-4 mb-5 done-booth">Please get the stamp from our crew</p> 
+            <p class="text-center mt-4 mb-5 done-booth">Please get the stamp from our crew.</p> 
             <div id="countDisplay" class="text-center mt-3 d-none">
                 Touches inside count: <span id="countNum">0</span>
             </div>
@@ -84,7 +84,7 @@
                     <div class="d-block">
                         <div class="col mb-3 animate-entry delay-2">
                             <button type="button" class="custom-btn custom-btn-primary d-none nextBtn">
-                                NEXT
+                                DONE
                             </button>
                         </div>
                     </div>
@@ -101,39 +101,35 @@
             const activeInside = new Map();
             let hasStamped = false;
             const user = @json($user);
-            isStamped();  
+            const redirectUrl = @json($redirectUrl ?? route('dashboard'));
 
-            function isStamped()
-            {
-                if(user)
-                {
-                    hasStamped = true;
-                    stampingPage.classList.add("active");
-                    const text = document.querySelector(".booth-description");
-                    const doneBooth = document.querySelector(".done-booth");
-                        if(stationid == 3 || stationid == 4)
-                        {
-                            text.innerHTML = "Conratulations!<br>You've won the game.";
-                            doneBooth.innerHTML = "Please redeem the prize from our crew";
+            function applyStampedUI(url) {
+                hasStamped = true;
+                if (stampingPage) stampingPage.classList.add("active");
+                const text = document.querySelector(".booth-description");
+                const doneBooth = document.querySelector(".done-booth");
 
-                            console.log(doneBooth);
-                        }
-                        else 
-                        {
-                            text.innerHTML = "Congratulations";
-                        }
-                        
-                        // text.classList.remove("d-none");
-                            const button = document.querySelector(".nextBtn");
-                            if (button) {
-                                button.classList.remove("d-none");
-                                button.style.pointerEvents = "auto";
-                                console.log('test');
-                                $('.nextBtn').on('click', function () {
-                                        window.location.href = '{{ route('dashboard') }}';
-                                    });
-                            }
+                if (text) {
+                    text.innerHTML = "Congratulations!<br>You've won the game.";
                 }
+                if (doneBooth) {
+                    doneBooth.innerHTML = "Please redeem the prize from our crew.";
+                }
+
+                const button = document.querySelector(".nextBtn");
+                if (button) {
+                    button.classList.remove("d-none");
+                    button.style.pointerEvents = "auto";
+                    if (url) {
+                        $('.nextBtn').off('click').on('click', function () {
+                            window.location.href = url;
+                        });
+                    }
+                }
+            }
+
+            if (user) {
+                applyStampedUI(redirectUrl);
             }
 
             function isInside(event, element) {
@@ -148,80 +144,32 @@
 
             function updateDisplay() {
                 countDisplay.textContent = activeInside.size;
-                // Toggle grayscale removal
-                // Only trigger once
 
                 let requiredCount = 1;
 
-                // if (stationid == 2) 
-                // {
-                //     requiredCount = 3;//4
-                // }
-                // else
-                // {
-                //     requiredCount = 3;//3
-                // }
-                
-                console.log(requiredCount);
-                console.log('activeInside.size:', activeInside.size, 'requiredCount:', requiredCount, 'hasStamped:', hasStamped);
+                if (!hasStamped && activeInside.size === requiredCount) {
+                    applyStampedUI();
 
-                    if (!hasStamped && activeInside.size === requiredCount ) {
-                      console.log('activeInside.size:', activeInside.size, 'requiredCount:', requiredCount, 'hasStamped:', hasStamped);
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                    const stampId = stampingPage ? parseInt(stampingPage.dataset.id) : null;
 
-                        hasStamped = true;
-                        stampingPage.classList.add("active");
-
-                        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-                        const stampImage = document.querySelector('.stamping-image');
-                        const stampId = stampingPage ? parseInt(stampingPage.dataset.id) : null;
-                        
-                            $.ajax({
-                                url: '{{ route('process_stamp') }}',
-                                type: 'POST',
-                                headers: {
-                                    'X-CSRF-TOKEN': csrfToken,
-                                },
-                                data: {
-                                    station: stampId,
-                                },
-                                success: function (response) {
-                                    $('.nextBtn').removeClass('d-none');
-                                    console.log('response.redirect_url:', response.redirect_url); // ✅ log the redirect URL
-                                    // ✅ attach redirect dynamically
-                                    $('.nextBtn').on('click', function () {
-                                        window.location.href = response.redirect_url;
-                                    });
-                                },
-                                error: function (xhr, status, error) {
-                                    console.error('Error sending QR Code message:', error);
-                                }
-                            });
-                            const text = document.querySelector(".booth-description");
-                            const doneBooth = document.querySelector(".done-booth");
-
-                            if(stationid == 3 || stationid == 4)
-                            {
-                                text.innerHTML = "Congratulations!<br>You've won the game.";
-                                doneBooth.innerHTML = "Please redeem the prize from our crew";
-                            }
-                            else 
-                            {
-                                text.innerHTML = "Congratulations";
-                            }
-
-                            // text.textContent = "Stamp Collected!";  
-                            const button = document.querySelector(".nextBtn");
-                            if (button) {
-                                button.classList.remove("d-none");
-                                button.style.pointerEvents = "auto";
-                                console.log('test');
-                            }
-                    }
-                    else 
-                    {
-                        console.log('invalid touchpoint');
-                    }
-                    
+                    $.ajax({
+                        url: '{{ route('process_stamp') }}',
+                        type: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken,
+                        },
+                        data: {
+                            station: stampId,
+                        },
+                        success: function (response) {
+                            applyStampedUI(response.redirect_url || redirectUrl);
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error sending QR Code message:', error);
+                        }
+                    });
+                }
             }
 
             document.addEventListener("pointerdown", (event) => {

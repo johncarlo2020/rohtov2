@@ -23,9 +23,7 @@ Route::get('/concierge', function () {
     return redirect('/concierge/login');
 });
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('welcome');
+Route::get('/', [\App\Http\Controllers\PorscheController::class, 'index'])->name('welcome');
 
 
 
@@ -216,3 +214,9 @@ Route::group(['middleware' => ['client']], function () {
 
 
 require __DIR__ . '/auth.php';
+
+// Porsche Campaign Endpoints
+Route::get('/register', [\App\Http\Controllers\PorscheController::class, 'registerView'])->name('register');
+Route::post('/register', [\App\Http\Controllers\PorscheController::class, 'register'])->name('porsche.register');
+Route::post('/quiz/submit', [\App\Http\Controllers\PorscheController::class, 'submitQuiz'])->name('porsche.quiz.submit');
+Route::get('/porsche', fn() => redirect('/'));

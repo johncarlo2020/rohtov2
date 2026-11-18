@@ -15,7 +15,11 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'Porsche Cayenne'),
+
+    'logo' => env('APP_LOGO', 'porsche/images/PORSCHE_logo_2x.webp'),
+
+    'background' => env('APP_BACKGROUND', 'porsche/images/01 PORSCHE_landing_2x.webp'),
 
     /*
     |--------------------------------------------------------------------------

@@ -43,6 +43,17 @@ class PorscheAdminTest extends TestCase
         $response->assertRedirect('/admin/login');
     }
 
+    public function test_admin_can_authenticate_with_credentials(): void
+    {
+        $response = $this->post('/admin/login', [
+            'email' => 'admin@gmail.com',
+            'password' => 'WowsomePorsche2026',
+        ]);
+
+        $response->assertRedirect('/admin');
+        $this->assertAuthenticated();
+    }
+
     public function test_admin_can_access_overview_and_sees_metrics(): void
     {
         $reg = PorscheRegistration::create([

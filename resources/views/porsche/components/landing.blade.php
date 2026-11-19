@@ -1,5 +1,4 @@
 <section class="porsche-screen porsche-landing-screen active" id="screen-landing" style="background-image: url('{{ asset(config('porsche.campaign.landing_bg')) }}');">
-    <div class="porsche-overlay"></div>
     <div class="porsche-content-wrapper porsche-content-landing">
         @include('porsche.components.header')
 

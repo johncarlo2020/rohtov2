@@ -48,11 +48,11 @@ return [
         4 => [
             'id' => 4,
             'number' => 4,
-            'question' => "What matters most when you're faced with unpredictable Malaysian roads?",
+            'question' => 'What are you most likely to remember long after a journey ends?',
             'options' => [
-                'A' => 'Unshakable grip and body stability, no matter the road',
-                'B' => 'Immediate shift and throttle response for that perfect drive',
-                'C' => 'The perfect balance of driving performance and uncompromising comfort for everyone',
+                'A' => 'The unexpected discoveries along the way',
+                'B' => 'The inspiring experiences that gave a new perspective',
+                'C' => 'The moments shared along the way',
             ],
         ],
     ],

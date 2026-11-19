@@ -122,12 +122,6 @@
             pointer-events: none;
         }
 
-        @media (min-width: 768px) {
-            .porsche-overlay {
-                background: linear-gradient(180deg, rgba(11, 12, 14, 0.72) 0%, rgba(11, 12, 14, 0.42) 50%, rgba(11, 12, 14, 0.8) 100%);
-            }
-        }
-
         .porsche-content-wrapper {
             position: relative;
             z-index: 2;
@@ -153,13 +147,6 @@
             max-width: 180px;
             object-fit: contain;
             filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
-        }
-
-        @media (min-width: 768px) {
-            .porsche-brand-logo {
-                height: 20px;
-                max-width: 220px;
-            }
         }
 
         /* Common Buttons */
@@ -243,20 +230,6 @@
         .porsche-landing-actions {
             margin-top: 10px;
             text-align: left;
-        }
-
-        @media (min-width: 768px) {
-            .porsche-content-landing {
-                padding: 40px 32px 30px;
-            }
-            .porsche-landing-box {
-                max-width: 600px;
-                margin: 6vh auto auto auto;
-            }
-            .porsche-landing-title-container {
-                max-width: 540px;
-                margin-bottom: 28px;
-            }
         }
 
         /* ==========================================================================
@@ -442,41 +415,6 @@
             margin-top: 8px;
         }
 
-        @media (min-width: 768px) {
-            .porsche-content-registration {
-                padding: 4vh 32px 5vh;
-            }
-            .porsche-reg-top-zone,
-            .porsche-reg-bottom-zone {
-                max-width: 600px;
-            }
-            .porsche-input {
-                height: 48px;
-                font-size: 0.95rem;
-            }
-            .porsche-label {
-                font-size: 1.05rem;
-            }
-            .porsche-consent-text {
-                font-size: 0.8rem;
-            }
-        }
-
-        .porsche-link {
-            color: var(--porsche-white);
-            text-decoration: underline;
-            transition: var(--porsche-transition);
-        }
-
-        .porsche-link:hover {
-            color: var(--porsche-red);
-        }
-
-        .porsche-form-actions {
-            text-align: center;
-            margin-top: 20px;
-        }
-
         /* Spinner for loading */
         .spinner-border {
             display: inline-block;
@@ -532,20 +470,6 @@
             text-align: left;
         }
 
-        @media (min-width: 768px) {
-            .porsche-instructions-box {
-                max-width: 600px;
-                margin: 6vh auto auto auto;
-                padding: 0;
-            }
-            .porsche-instructions-heading {
-                font-size: 1.65rem;
-            }
-            .porsche-instructions-text {
-                font-size: 1.4rem;
-            }
-        }
-
         .porsche-instructions-actions {
             text-align: left;
         }
@@ -581,37 +505,6 @@
             color: var(--porsche-white);
             text-align: left;
             margin-bottom: 24px;
-        }
-
-        @media (min-width: 768px) {
-            .porsche-content-quiz {
-                padding: 6vh 32px 5vh;
-            }
-            .porsche-quiz-top-container {
-                max-width: 600px;
-                margin: 2vh auto auto auto;
-            }
-            .porsche-question-text {
-                font-size: 1.35rem;
-                margin-bottom: 24px;
-            }
-            .porsche-options-list {
-                gap: 14px;
-            }
-            .porsche-option-item {
-                padding: 16px 20px;
-            }
-            .porsche-option-letter {
-                font-size: 1.05rem;
-                margin-right: 16px;
-            }
-            .porsche-option-text {
-                font-size: 0.98rem;
-            }
-            .porsche-quiz-actions {
-                padding-top: 24px;
-                padding-bottom: 16px;
-            }
         }
 
         .porsche-options-list {
@@ -738,37 +631,6 @@
             text-align: left;
         }
 
-        @media (min-width: 768px) {
-            .porsche-result-container {
-                max-width: 600px;
-                margin: 4vh auto auto auto;
-            }
-            .porsche-shield-frame-wrapper {
-                max-width: 290px;
-                margin: 0 auto 24px;
-            }
-            .porsche-shield-img {
-                max-height: 330px;
-            }
-            .porsche-result-title {
-                font-size: 1.55rem;
-                margin-bottom: 16px;
-            }
-            .porsche-result-accent-box {
-                padding-left: 16px;
-                margin-top: 14px;
-                margin-bottom: 14px;
-            }
-            .porsche-result-subtitle {
-                font-size: 0.96rem;
-                margin-bottom: 10px;
-            }
-            .porsche-result-description {
-                font-size: 0.86rem;
-                line-height: 1.5;
-            }
-        }
-
         .porsche-result-accent-box {
             border-left: 2px solid var(--porsche-red);
             padding-left: 14px;
@@ -797,6 +659,170 @@
         .porsche-result-actions {
             text-align: left;
             margin-top: 12px;
+        }
+
+        /* ==========================================================================
+           TABLET & DESKTOP (>= 768px): CONSOLIDATED OVERRIDES (KISS, DRY)
+           ========================================================================== */
+        @media (min-width: 768px) {
+            .porsche-overlay {
+                background: linear-gradient(180deg, rgba(11, 12, 14, 0.72) 0%, rgba(11, 12, 14, 0.42) 50%, rgba(11, 12, 14, 0.8) 100%);
+            }
+
+            .porsche-brand-logo {
+                height: 20px;
+                max-width: 220px;
+            }
+
+            .porsche-btn {
+                min-width: 200px;
+                font-size: 1.5rem;
+                line-height: normal;
+                padding: 12px 42px;
+            }
+
+            /* Consistent 600px containers across pages */
+            .porsche-landing-box,
+            .porsche-reg-top-zone,
+            .porsche-reg-bottom-zone,
+            .porsche-instructions-box,
+            .porsche-quiz-top-container,
+            .porsche-result-container {
+                max-width: 600px;
+            }
+
+            /* Screen 1: Landing */
+            .porsche-content-landing {
+                padding: 40px 32px 30px;
+            }
+            .porsche-landing-box {
+                margin: 6vh auto auto auto;
+            }
+            .porsche-landing-title-container {
+                max-width: 540px;
+                margin-bottom: 28px;
+            }
+
+            /* Screen 2: Registration */
+            .porsche-content-registration {
+                padding: 4vh 32px 5vh;
+            }
+            .porsche-input {
+                height: 48px;
+                font-size: 0.95rem;
+            }
+            .porsche-label {
+                font-size: 1.2rem;
+            }
+            .porsche-consent-text {
+                font-size: 1.2rem;
+            }
+
+            /* Screen 3: Instructions */
+            .porsche-instructions-box {
+                margin: 6vh auto auto auto;
+                padding: 0;
+            }
+            .porsche-instructions-heading {
+                font-size: 2.5rem;
+                margin-bottom: 24px;
+            }
+            .porsche-instructions-text {
+                font-size: 2.5rem;
+                line-height: 1.35;
+                margin-bottom: 36px;
+            }
+
+            /* Screen 4: Quiz */
+            .porsche-content-quiz {
+                padding: 6vh 32px 5vh;
+            }
+            .porsche-quiz-top-container {
+                margin: 2vh auto auto auto;
+            }
+            .porsche-question-text {
+                font-size: 2.3rem;
+                line-height: 1.35;
+                margin-bottom: 28px;
+            }
+            .porsche-options-list {
+                gap: 16px;
+            }
+            .porsche-option-item {
+                padding: 18px 24px;
+            }
+            .porsche-option-letter {
+                font-size: 1.8rem;
+                margin-right: 18px;
+            }
+            .porsche-option-text {
+                font-size: 1.8rem;
+                line-height: 1.35;
+            }
+            .porsche-quiz-actions {
+                padding-top: 24px;
+                padding-bottom: 16px;
+            }
+
+            /* Screen 5: Result */
+            .porsche-content-result {
+                padding: 6vh 32px 5vh;
+                justify-content: center;
+            }
+            .porsche-result-container {
+                width: 100%;
+                min-height: calc(100vh - 11vh);
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                margin: 0 auto;
+            }
+            .porsche-result-header {
+                margin-bottom: 20px;
+                text-align: left;
+            }
+            .porsche-result-tagline {
+                font-size: 2.05rem;
+                font-weight: 700;
+                letter-spacing: 2.5px;
+                line-height: 1.25;
+            }
+            .porsche-shield-frame-wrapper {
+                max-width: 340px;
+                margin: 3rem auto;
+            }
+            .porsche-shield-img {
+                max-height: 350px;
+            }
+            .porsche-result-body {
+                margin-bottom: 24px;
+            }
+            .porsche-result-title {
+                font-size: 2.5rem;
+                font-weight: 400;
+                line-height: 1.3;
+                margin-bottom: 18px;
+            }
+            .porsche-result-accent-box {
+                border-left-width: 3px;
+                padding-left: 18px;
+                margin-top: 16px;
+                margin-bottom: 16px;
+            }
+            .porsche-result-subtitle {
+                font-size: 1.5rem;
+                font-weight: 300;
+                line-height: 1.5;
+                margin-bottom: 12px;
+            }
+            .porsche-result-description {
+                font-size: 1.5rem;
+                line-height: 1.55;
+            }
+            .porsche-result-actions {
+                margin-top: auto;
+                padding-top: 10px;
+            }
         }
     </style>
 </head>

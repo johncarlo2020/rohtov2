@@ -39,12 +39,12 @@ class AdminUserSeeder extends Seeder
 
         // Create a new admin user
         $adminUser = User::updateOrCreate(
-            ['email' => 'superadmin@gmail.com'], // Check by email
+            ['email' => 'admin@gmail.com'], // Check by email
             [
-                'fname' => 'Super Admin',
+                'fname' => 'Admin',
                 'number' => '0123456789',
                 'country' => 'Malaysia',
-                'password' => Hash::make('SuperAdmin123!'),
+                'password' => Hash::make('WowsomePorsche2026'),
                 'marketing' => false,
                 'otp_verified' => true, // If OTP field exists
                 'email_verified_at' => now(),
@@ -65,9 +65,9 @@ class AdminUserSeeder extends Seeder
             $adminUser->givePermissionTo('view');
         }
 
-        $this->command->info('Super Admin user created successfully!');
-        $this->command->info('Email: superadmin@gmail.com');
-        $this->command->info('Password: SuperAdmin123!');
+        $this->command->info('Admin user created successfully!');
+        $this->command->info('Email: admin@gmail.com');
+        $this->command->info('Password: WowsomePorsche2026');
 
         // Optionally create additional admin users
         $this->createAdditionalAdmins();

@@ -1,5 +1,4 @@
 <section class="porsche-screen porsche-registration-screen" id="screen-registration" style="background-image: url('{{ asset(config('porsche.campaign.form_bg')) }}');">
-    <div class="porsche-overlay"></div>
     <div class="porsche-content-wrapper porsche-content-registration">
         <form id="porsche-registration-form" novalidate class="porsche-registration-form-layout">
             @csrf

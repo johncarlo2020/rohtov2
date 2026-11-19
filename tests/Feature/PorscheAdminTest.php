@@ -45,6 +45,18 @@ class PorscheAdminTest extends TestCase
 
     public function test_admin_can_authenticate_with_credentials(): void
     {
+        $admin = User::updateOrCreate(
+            ['email' => 'admin@gmail.com'],
+            [
+                'fname' => 'Admin',
+                'password' => bcrypt('WowsomePorsche2026'),
+            ]
+        );
+        $role = Role::firstOrCreate(['name' => 'admin']);
+        if (!$admin->hasRole('admin')) {
+            $admin->assignRole($role);
+        }
+
         $response = $this->post('/admin/login', [
             'email' => 'admin@gmail.com',
             'password' => 'WowsomePorsche2026',
@@ -267,15 +279,23 @@ class PorscheAdminTest extends TestCase
             'completed_at' => Carbon::now(),
         ]);
 
-        // Export Participants
+        // Export Participants (all and filtered)
         $partResponse = $this->actingAs($this->adminUser)->get('/admin/reports/export-participants');
         $partResponse->assertStatus(200);
         $this->assertStringContainsString('text/csv', $partResponse->headers->get('Content-Type'));
 
-        // Export Entries
+        $partFiltered = $this->actingAs($this->adminUser)->get('/admin/reports/export-participants?date_from=' . Carbon::today()->toDateString() . '&date_to=' . Carbon::today()->toDateString());
+        $partFiltered->assertStatus(200);
+        $this->assertStringContainsString('text/csv', $partFiltered->headers->get('Content-Type'));
+
+        // Export Entries (all and filtered)
         $entryResponse = $this->actingAs($this->adminUser)->get('/admin/reports/export-entries');
         $entryResponse->assertStatus(200);
         $this->assertStringContainsString('text/csv', $entryResponse->headers->get('Content-Type'));
+
+        $entryFiltered = $this->actingAs($this->adminUser)->get('/admin/reports/export-entries?result_type=A&date_from=' . Carbon::today()->toDateString() . '&date_to=' . Carbon::today()->toDateString());
+        $entryFiltered->assertStatus(200);
+        $this->assertStringContainsString('text/csv', $entryFiltered->headers->get('Content-Type'));
     }
 
     public function test_admin_can_view_and_update_campaign_settings(): void
@@ -294,5 +314,38 @@ class PorscheAdminTest extends TestCase
 
         $postResponse->assertRedirect('/admin/settings');
         $postResponse->assertSessionHas('success');
+    }
+
+    public function test_visitor_cannot_register_with_duplicate_email_or_number(): void
+    {
+        // 1. Initial successful registration
+        $first = $this->postJson('/register', [
+            'full_name' => 'Ferdinand Porsche',
+            'contact_number' => '0129998888',
+            'email' => 'ferdinand@porsche.com',
+            'consent' => 1,
+        ]);
+        $first->assertStatus(200);
+        $first->assertJson(['success' => true]);
+
+        // 2. Attempt with duplicate email
+        $dupEmail = $this->postJson('/register', [
+            'full_name' => 'Another User',
+            'contact_number' => '0121112222',
+            'email' => 'ferdinand@porsche.com',
+            'consent' => 1,
+        ]);
+        $dupEmail->assertStatus(422);
+        $dupEmail->assertJsonValidationErrors(['email']);
+
+        // 3. Attempt with duplicate phone number
+        $dupPhone = $this->postJson('/register', [
+            'full_name' => 'Yet Another User',
+            'contact_number' => '0129998888',
+            'email' => 'unique_user@porsche.com',
+            'consent' => 1,
+        ]);
+        $dupPhone->assertStatus(422);
+        $dupPhone->assertJsonValidationErrors(['contact_number']);
     }
 }

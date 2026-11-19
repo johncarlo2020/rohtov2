@@ -93,7 +93,7 @@
         <div class="card h-100">
             <div class="card-header pb-0 p-3">
                 <div class="d-flex align-items-center">
-                    <div class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle me-3 d-flex align-items-center justify-content-center">
+                    <div class="icon icon-shape bg-gradient-dark shadow-dark text-center rounded-circle me-3">
                         <i class="fa-solid fa-users text-white opacity-10"></i>
                     </div>
                     <div>
@@ -104,15 +104,19 @@
             </div>
             <div class="card-body p-3">
                 <form method="GET" action="{{ route('admin.reports.export.participants') }}">
-                    <div class="row g-2 mb-3">
+                    <div class="row g-2 mb-2">
                         <div class="col-sm-6">
                             <label class="form-control-label text-sm">Date From</label>
-                            <input type="date" name="date_from" class="form-control">
+                            <input type="date" name="date_from" id="reportPartDateFrom" class="form-control">
                         </div>
                         <div class="col-sm-6">
                             <label class="form-control-label text-sm">Date To</label>
-                            <input type="date" name="date_to" class="form-control">
+                            <input type="date" name="date_to" id="reportPartDateTo" class="form-control">
                         </div>
+                    </div>
+                    <div class="d-flex justify-content-end gap-2 mb-3">
+                        <button type="button" class="btn btn-xs btn-outline-secondary py-1 px-2" onclick="document.getElementById('reportPartDateFrom').value=new Date().toISOString().split('T')[0];document.getElementById('reportPartDateTo').value=new Date().toISOString().split('T')[0];">Today</button>
+                        <button type="button" class="btn btn-xs btn-outline-secondary py-1 px-2" onclick="document.getElementById('reportPartDateFrom').value='';document.getElementById('reportPartDateTo').value='';">All Dates</button>
                     </div>
                     <button type="submit" class="btn btn-primary w-100 mb-0">
                         <i class="fa fa-file-csv me-1"></i> Download Participants CSV
@@ -127,7 +131,7 @@
         <div class="card h-100">
             <div class="card-header pb-0 p-3">
                 <div class="d-flex align-items-center">
-                    <div class="icon icon-shape bg-gradient-dark shadow-dark text-center rounded-circle me-3 d-flex align-items-center justify-content-center">
+                    <div class="icon icon-shape bg-gradient-dark shadow-dark text-center rounded-circle me-3">
                         <i class="fa-solid fa-list-check text-white opacity-10"></i>
                     </div>
                     <div>
@@ -150,12 +154,16 @@
                         </div>
                         <div class="col-sm-6">
                             <label class="form-control-label text-sm">Date From</label>
-                            <input type="date" name="date_from" class="form-control">
+                            <input type="date" name="date_from" id="reportEntryDateFrom" class="form-control">
                         </div>
                         <div class="col-sm-6">
                             <label class="form-control-label text-sm">Date To</label>
-                            <input type="date" name="date_to" class="form-control">
+                            <input type="date" name="date_to" id="reportEntryDateTo" class="form-control">
                         </div>
+                    </div>
+                    <div class="d-flex justify-content-end gap-2 mb-3">
+                        <button type="button" class="btn btn-xs btn-outline-secondary py-1 px-2" onclick="document.getElementById('reportEntryDateFrom').value=new Date().toISOString().split('T')[0];document.getElementById('reportEntryDateTo').value=new Date().toISOString().split('T')[0];">Today</button>
+                        <button type="button" class="btn btn-xs btn-outline-secondary py-1 px-2" onclick="document.getElementById('reportEntryDateFrom').value='';document.getElementById('reportEntryDateTo').value='';">All Dates</button>
                     </div>
                     <button type="submit" class="btn btn-dark w-100 mb-0">
                         <i class="fa fa-file-csv me-1"></i> Download Quiz Entries CSV

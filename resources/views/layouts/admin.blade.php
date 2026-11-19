@@ -54,6 +54,36 @@
                 transform: translateX(0) !important;
             }
         }
+        .table-responsive {
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch;
+            width: 100%;
+        }
+        @media (max-width: 767.98px) {
+            .dt-container .dt-layout-row {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 10px;
+                margin-bottom: 12px;
+            }
+            .dt-container .dt-layout-cell {
+                text-align: center !important;
+                width: 100% !important;
+            }
+            .dt-container .dt-search input {
+                width: 100% !important;
+                display: block;
+            }
+            .dt-container .dt-length select {
+                margin: 0 auto;
+            }
+            .dt-container .dt-paging {
+                display: flex !important;
+                justify-content: center !important;
+                flex-wrap: wrap !important;
+            }
+        }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
@@ -105,14 +135,14 @@
                         <span class="nav-link-text ms-1">Reports</span>
                     </a>
                 </li>
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('admin.settings*') ? 'active' : '' }}" href="{{ route('admin.settings') }}">
                         <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="fa-solid fa-sliders text-primary text-sm opacity-10"></i>
                         </div>
                         <span class="nav-link-text ms-1">Campaign Settings</span>
                     </a>
-                </li>
+                </li> --}}
             </ul>
         </div>
     </aside>
@@ -209,6 +239,8 @@
     </script>
     <!-- Github buttons -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <script src="{{ asset('assets/js/core/popper.min.js') }}"></script>
+    <script src="{{ asset('assets/js/core/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/perfect-scrollbar.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/smooth-scrollbar.min.js') }}"></script>
     @vite(['resources/js/argon-dashboard.js'])

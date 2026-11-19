@@ -187,9 +187,14 @@
         <div class="col-lg-12 mb-lg-3 mb-4">
             <div class="card h-100 p-3 mb-3">
                 <div class="card-header pb-0 px-3 pt-0">
-                    <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                         <h6 class="mb-2 card-header-text">Recent Completed Entries</h6>
-                        <a href="{{ route('admin.entries') }}" class="btn btn-sm btn-link text-primary mb-0 p-0">View All</a>
+                        <div class="d-flex align-items-center gap-2">
+                            <a href="{{ route('admin.reports.export.entries') }}" class="btn btn-sm btn-outline-dark mb-0 py-1 px-3">
+                                <i class="fa fa-download me-1"></i> Export Entries
+                            </a>
+                            <a href="{{ route('admin.entries') }}" class="btn btn-sm btn-link text-primary mb-0 p-0">View All</a>
+                        </div>
                     </div>
                 </div>
                 <div class="table-responsive">

@@ -60,13 +60,13 @@
                         <input type="date" id="filterDateTo" class="form-control form-control-sm w-auto" placeholder="To">
                         <button type="button" id="btnFilter" class="btn btn-sm btn-dark mb-0 py-1 px-3">Filter</button>
                         <button type="button" id="btnReset" class="btn btn-sm btn-outline-secondary mb-0 py-1 px-2">Reset</button>
-                        <button type="button" class="btn btn-primary btn-sm mb-0 py-1 px-3" data-bs-toggle="modal" data-bs-target="#exportModal">
+                        <button type="button" id="btnExport" class="btn btn-primary btn-sm mb-0 py-1 px-3">
                             <i class="fa fa-download me-1"></i> Export
                         </button>
                     </div>
                 </div>
             </div>
-            <div class="p-3 px-4">
+            <div class="table-responsive p-3 px-md-4">
                 <table id="customer-table" class="display nowrap border" style="width: 100%;">
                     <thead>
                         <tr>
@@ -85,43 +85,6 @@
     </div>
 </div>
 
-{{-- Export Modal matching users.blade.php style --}}
-<div class="modal fade" id="exportModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Export Quiz Entries</h5>
-                <button class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label class="form-label text-sm fw-bold">Result Type</label>
-                    <select id="exportResultType" class="form-select">
-                        <option value="">All Results</option>
-                        <option value="A">Result A</option>
-                        <option value="B">Result B</option>
-                        <option value="C">Result C</option>
-                    </select>
-                </div>
-                <div class="row g-2 mb-2">
-                    <div class="col-6">
-                        <label class="form-label text-sm fw-bold">Date From</label>
-                        <input type="date" id="exportStartDate" class="form-control">
-                    </div>
-                    <div class="col-6">
-                        <label class="form-label text-sm fw-bold">Date To</label>
-                        <input type="date" id="exportEndDate" class="form-control">
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button id="confirmExport" class="btn btn-primary">Export CSV</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- Include DataTables CSS -->
 <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.css">
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -133,6 +96,7 @@ $(document).ready(function () {
         serverSide: true,
         searching: true,
         ordering: true,
+        scrollX: true,
         pageLength: 10,
         lengthMenu: [10, 25, 50, 100],
         ajax: {
@@ -180,10 +144,11 @@ $(document).ready(function () {
         table.ajax.reload();
     });
 
-    $('#confirmExport').on('click', function () {
-        const resultType = $('#exportResultType').val();
-        const from = $('#exportStartDate').val();
-        const to = $('#exportEndDate').val();
+    $('#btnExport').on('click', function (e) {
+        e.preventDefault();
+        const resultType = $('#filterResultType').val();
+        const from = $('#filterDateFrom').val();
+        const to = $('#filterDateTo').val();
         let url = "{{ route('admin.reports.export.entries') }}";
         const params = new URLSearchParams();
         if (resultType) params.append('result_type', resultType);
@@ -193,7 +158,6 @@ $(document).ready(function () {
             url += '?' + params.toString();
         }
         window.location.href = url;
-        bootstrap.Modal.getInstance(document.getElementById('exportModal')).hide();
     });
 });
 </script>

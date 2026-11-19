@@ -91,8 +91,11 @@
             {{-- Completed Quiz History Table --}}
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header pb-0 px-3 pt-3">
+                    <div class="card-header pb-0 px-3 pt-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
                         <h6 class="mb-0">Quiz Attempts History</h6>
+                        <a href="{{ route('admin.reports.export.entries') }}" class="btn btn-sm btn-outline-dark mb-0 py-1 px-3">
+                            <i class="fa fa-download me-1"></i> Export Entries
+                        </a>
                     </div>
                     <div class="card-body px-0 pt-0 pb-2">
                         <div class="table-responsive p-3">

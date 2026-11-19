@@ -26,7 +26,7 @@
     <div class="col-lg-8">
         <div class="card mb-4">
             <div class="card-header pb-0 p-3">
-                <h6 class="mb-0">Campaign Configuration</h6>
+                <h6 class="mb-0">Campaign Settings</h6>
                 <p class="text-xs text-muted mb-0">General rules for quiz submissions and participant registration</p>
             </div>
             <div class="card-body p-3">

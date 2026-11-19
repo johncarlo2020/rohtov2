@@ -83,9 +83,11 @@ class PorscheQuizService
     public function recordAttempt(int $registrationId, array $answers): PorscheQuizAttempt
     {
         $calculated = $this->calculateResult($answers);
+        $nextAttemptNumber = PorscheQuizAttempt::where('porsche_registration_id', $registrationId)->count() + 1;
 
         return PorscheQuizAttempt::create([
             'porsche_registration_id' => $registrationId,
+            'attempt_number' => $nextAttemptNumber,
             'question_1_answer' => strtoupper($answers[1] ?? 'A'),
             'question_2_answer' => strtoupper($answers[2] ?? 'A'),
             'question_3_answer' => strtoupper($answers[3] ?? 'A'),

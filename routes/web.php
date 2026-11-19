@@ -6,6 +6,7 @@ use App\Http\Controllers\IpadController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\Api\GiftController;
+use App\Http\Controllers\Admin\PorscheAdminController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -92,39 +93,33 @@ Route::get('/voteData', 'App\Http\Controllers\StationController@voteData')->name
 Route::get('/congratsVote', 'App\Http\Controllers\StationController@congratsVote')->name('congratsVote');
 
 Route::group(['middleware' => ['admin']], function () {
-    Route::get('/admin', 'App\Http\Controllers\StationController@admin')->name('admin');
+    // Module A: Overview Dashboard
+    Route::get('/admin', [PorscheAdminController::class, 'overview'])->name('admin');
+    Route::get('/admin/overview', [PorscheAdminController::class, 'overview'])->name('admin.overview');
 
-    Route::get('/admin/users/export', 'App\Http\Controllers\StationController@exportUsers')->name('users.export');
-    Route::get('/admin/users', 'App\Http\Controllers\StationController@users')->name('users');
+    // Module B: Participants
+    Route::get('/admin/participants', [PorscheAdminController::class, 'participants'])->name('admin.participants');
+    Route::get('/admin/participants/{id}', [PorscheAdminController::class, 'participantShow'])->name('admin.participants.show');
 
-    Route::get('/admin/gifts', 'App\Http\Controllers\StationController@gifts')->name('gifts');
-    Route::put('/admin/gifts/{id}', 'App\Http\Controllers\StationController@updateStock')->name('gifts.update');
-    Route::get('/admin/gifts/{id}/report', 'App\Http\Controllers\StationController@giftReport')->name('gifts.report');
+    // Module C: Quiz Entries
+    Route::get('/admin/entries', [PorscheAdminController::class, 'entries'])->name('admin.entries');
+    Route::get('/admin/entries/{id}/detail', [PorscheAdminController::class, 'entryDetail'])->name('admin.entries.detail');
 
-    Route::get('/admin/earlybird', 'App\Http\Controllers\StationController@earlybird')->name('earlybird');
+    // Module D: Reports & Exports
+    Route::get('/admin/reports', [PorscheAdminController::class, 'reports'])->name('admin.reports');
+    Route::get('/admin/reports/export-participants', [PorscheAdminController::class, 'exportParticipants'])->name('admin.reports.export.participants');
+    Route::get('/admin/reports/export-entries', [PorscheAdminController::class, 'exportEntries'])->name('admin.reports.export.entries');
 
-    Route::get('/admin/scanner', 'App\Http\Controllers\StationController@scanner')->name('scanner');
+    // Module E: Campaign Settings
+    Route::get('/admin/settings', [PorscheAdminController::class, 'settings'])->name('admin.settings');
+    Route::post('/admin/settings', [PorscheAdminController::class, 'updateSettings'])->name('admin.settings.update');
 
-    Route::post('verify-otp-admin', 'App\Http\Controllers\StationController@verifyAdmin')->name('verifyAdmin');
+    // Backward compatibility aliases
+    Route::get('/admin/users', [PorscheAdminController::class, 'participants'])->name('users');
+    Route::get('/admin/users/export', [PorscheAdminController::class, 'exportParticipants'])->name('users.export');
 
-    Route::post('/workshop/scan', 'App\Http\Controllers\WorkshopController@scan')->name('workshop.scan');
-
+    // Auth
     Route::post('/admin/logout', 'App\Http\Controllers\LoginController@destroy')->name('admin.logout');
-
-    // Admin Gifts Management Routes
-    // Route::get('/admin/gifts', 'App\Http\Controllers\StationController@adminGifts')->name('admin.gifts');
-    // Route::post('/admin/gifts/{gift}/toggle', 'App\Http\Controllers\StationController@toggleGift')->name('admin.gifts.toggle');
-    // Route::get('/admin/user-gifts', 'App\Http\Controllers\StationController@userGifts')->name('admin.user.gifts');
-
-    Route::get('/admin/bookings', [BookingController::class, 'index'])->name('bookings');
-    Route::delete('/admin/bookings/{id}', [BookingController::class, 'destroy'])->name('booking.destroy');
-    Route::get('/admin/{user}', 'App\Http\Controllers\StationController@userData')->name('userData');
-    Route::post('/admin/check', 'App\Http\Controllers\StationController@check')->name('check');
-    Route::delete('/admin/users/{id}', 'App\Http\Controllers\StationController@userDelete')->name('users.destroy');
-    Route::post('/editUser', 'App\Http\Controllers\StationController@editUser')->name('editUser');
-
-    Route::post('/earlybird/import', [StationController::class, 'import'])->name('earlybird.import');
-
 });
 
 Route::group(['middleware' => ['concierge']],function(){

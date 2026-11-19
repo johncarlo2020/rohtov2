@@ -13,10 +13,10 @@
      46▕ }
      47▕
 
-  1   vendor\psy\psysh\src\CodeCleaner.php:657
+  1   vendor\psy\psysh\src\CodeCleaner.php:488
       Psy\Exception\ParseErrorException::fromParseError(Object(PhpParser\Error))
 
-  2   vendor\psy\psysh\src\CodeCleaner.php:273
-      Psy\CodeCleaner::parse("<?php dump(App\Models\Developer::with('projects')-;
+  2   vendor\psy\psysh\src\CodeCleaner.php:269
+      Psy\CodeCleaner::parse("<?php print_r(App\Models\User::pluck('email')-;
 ")
 

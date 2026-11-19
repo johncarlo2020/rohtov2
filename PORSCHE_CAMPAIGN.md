@@ -38,7 +38,7 @@ APP_LOGO="porsche/images/PORSCHE_logo_2x.webp"
 APP_BACKGROUND="porsche/images/01 PORSCHE_landing_2x.webp"
 
 # Optional External Privacy Policy Override
-PORSCHE_PRIVACY_POLICY_URL="https://www.porsche.com/malaysia/en/privacy-policy/"
+PORSCHE_PRIVACY_POLICY_URL="https://dealer.porsche.com/my/malaysia/en-GB/Privacy-Policy"
 ```
 
 - **Title**: Displayed as `Welcome to {APP_NAME} Admin Panel` on `/admin/login`.

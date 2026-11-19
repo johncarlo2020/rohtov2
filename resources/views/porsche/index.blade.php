@@ -399,15 +399,14 @@
             text-align: left;
         }
 
-        .porsche-link {
-            color: var(--porsche-white);
+        .porsche-link,
+        .porsche-link:visited,
+        .porsche-link:hover,
+        .porsche-link:active,
+        .porsche-link:focus {
+            color: #ffffff !important;
             text-decoration: underline;
             font-weight: 700;
-            transition: var(--porsche-transition);
-        }
-
-        .porsche-link:hover {
-            color: var(--porsche-red);
         }
 
         .porsche-form-actions {

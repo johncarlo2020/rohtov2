@@ -9,7 +9,7 @@ return [
         'form_bg' => 'porsche/images/02 PORSCHE_form_2x.webp',
         'instruction_bg' => 'porsche/images/03 PORSCHE_instruction_2x.webp',
         'quiz_bg' => 'porsche/images/04 PORSCHE_question_2x.webp',
-        'privacy_policy_url' => env('PORSCHE_PRIVACY_POLICY_URL', 'https://www.porsche.com/malaysia/en/privacy-policy/'),
+        'privacy_policy_url' => env('PORSCHE_PRIVACY_POLICY_URL', 'https://dealer.porsche.com/my/malaysia/en-GB/Privacy-Policy'),
         'consent_statement' => 'I consent to the collection, use and/or disclosure of my personal data by Sime Darby Auto Performance Sdn Bhd, its related corporations and affiliates, and their authorised service providers and relevant third parties in accordance with the Privacy Policy.',
         'accent_color' => '#d5001c', // Porsche Red
     ],

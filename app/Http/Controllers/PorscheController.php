@@ -19,8 +19,15 @@ class PorscheController extends Controller
     /**
      * Display the Porsche Cayenne interactive microsite.
      */
-    public function index(Request $request): View
+    public function index(Request $request): View|JsonResponse
     {
+        if ($request->has('reset')) {
+            session()->forget('porsche_registration_id');
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json(['success' => true]);
+            }
+        }
+
         $config = config('porsche');
         $registrationId = session('porsche_registration_id');
         $registration = $registrationId ? PorscheRegistration::find($registrationId) : null;

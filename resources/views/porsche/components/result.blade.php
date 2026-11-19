@@ -26,7 +26,7 @@
 
             <div class="porsche-result-actions">
                 <button type="button" class="porsche-btn porsche-btn-outline" id="btn-try-again">
-                    Try again
+                    DONE
                 </button>
             </div>
         </div>

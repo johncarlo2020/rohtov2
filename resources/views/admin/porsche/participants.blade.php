@@ -68,6 +68,12 @@
                             <th>Full Name</th>
                             <th>Contact Number</th>
                             <th>Email</th>
+                            <th class="text-center">Consent</th>
+                            <th class="text-center">Q1</th>
+                            <th class="text-center">Q2</th>
+                            <th class="text-center">Q3</th>
+                            <th class="text-center">Q4</th>
+                            <th class="text-center">Result</th>
                             <th class="text-center">Total Entries</th>
                             <th class="text-center">Registered At</th>
                             <th class="text-center">Last Activity</th>
@@ -107,6 +113,12 @@ $(document).ready(function () {
             { data: 'full_name', name: 'full_name' },
             { data: 'contact_number', name: 'contact_number' },
             { data: 'email', name: 'email' },
+            { data: 'consent', name: 'consent_given', className: 'text-center' },
+            { data: 'q1', name: 'q1', className: 'text-center', orderable: false, searchable: false },
+            { data: 'q2', name: 'q2', className: 'text-center', orderable: false, searchable: false },
+            { data: 'q3', name: 'q3', className: 'text-center', orderable: false, searchable: false },
+            { data: 'q4', name: 'q4', className: 'text-center', orderable: false, searchable: false },
+            { data: 'result', name: 'result', className: 'text-center', orderable: false, searchable: false },
             { data: 'total_entries', name: 'total_entries', className: 'text-center', orderable: false },
             { data: 'registered_at', name: 'registered_at', className: 'text-center' },
             { data: 'last_activity', name: 'last_activity', className: 'text-center', orderable: false },

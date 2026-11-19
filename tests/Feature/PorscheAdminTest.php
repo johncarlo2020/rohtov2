@@ -108,6 +108,36 @@ class PorscheAdminTest extends TestCase
             'registered_at' => Carbon::now(),
         ]);
 
+        // First attempt
+        PorscheQuizAttempt::create([
+            'porsche_registration_id' => $reg->id,
+            'attempt_number' => 1,
+            'question_1_answer' => 'A',
+            'question_2_answer' => 'A',
+            'question_3_answer' => 'A',
+            'question_4_answer' => 'A',
+            'score_a' => 4,
+            'score_b' => 0,
+            'score_c' => 0,
+            'result_type' => 'A',
+            'completed_at' => Carbon::now()->subHour(),
+        ]);
+
+        // Second attempt (latest: B, C, A, B)
+        PorscheQuizAttempt::create([
+            'porsche_registration_id' => $reg->id,
+            'attempt_number' => 2,
+            'question_1_answer' => 'B',
+            'question_2_answer' => 'C',
+            'question_3_answer' => 'A',
+            'question_4_answer' => 'B',
+            'score_a' => 1,
+            'score_b' => 2,
+            'score_c' => 1,
+            'result_type' => 'B',
+            'completed_at' => Carbon::now(),
+        ]);
+
         // HTML view
         $htmlResponse = $this->actingAs($this->adminUser)->get('/admin/participants');
         $htmlResponse->assertStatus(200);
@@ -133,6 +163,13 @@ class PorscheAdminTest extends TestCase
         ]);
         $ajaxResponse->assertJsonFragment([
             'email' => 'sally@carrera.com',
+            'consent' => 'Yes',
+            'q1' => 'B',
+            'q2' => 'C',
+            'q3' => 'A',
+            'q4' => 'B',
+            'result' => 'Result B',
+            'total_entries' => 2,
         ]);
     }
 
@@ -283,6 +320,11 @@ class PorscheAdminTest extends TestCase
         $partResponse = $this->actingAs($this->adminUser)->get('/admin/reports/export-participants');
         $partResponse->assertStatus(200);
         $this->assertStringContainsString('text/csv', $partResponse->headers->get('Content-Type'));
+        ob_start();
+        $partResponse->sendContent();
+        $csvContent = ob_get_clean();
+        $this->assertStringContainsString('Q1 Answer', $csvContent);
+        $this->assertStringContainsString('Q4 Answer', $csvContent);
 
         $partFiltered = $this->actingAs($this->adminUser)->get('/admin/reports/export-participants?date_from=' . Carbon::today()->toDateString() . '&date_to=' . Carbon::today()->toDateString());
         $partFiltered->assertStatus(200);

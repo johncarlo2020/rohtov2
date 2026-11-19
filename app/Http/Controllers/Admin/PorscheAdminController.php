@@ -176,8 +176,9 @@ class PorscheAdminController extends Controller
                     1 => 'full_name',
                     2 => 'contact_number',
                     3 => 'email',
-                    4 => 'quiz_attempts_count',
-                    5 => 'registered_at',
+                    4 => 'consent_given',
+                    5 => 'quiz_attempts_count',
+                    6 => 'registered_at',
                 ];
 
                 $orderColIndex = $request->input('order.0.column', 0);
@@ -197,14 +198,22 @@ class PorscheAdminController extends Controller
 
                 $data = [];
                 foreach ($participants as $p) {
+                    $latest = $p->latestAttempt;
+
                     $data[] = [
                         'id' => '#' . $p->id,
                         'full_name' => e($p->full_name),
                         'contact_number' => e($p->contact_number),
                         'email' => e($p->email),
-                        'total_entries' => '<span class="badge bg-gradient-dark">' . $p->quiz_attempts_count . '</span>',
+                        'consent' => $p->consent_given ? 'Yes' : 'No',
+                        'q1' => $latest?->question_1_answer ?? '-',
+                        'q2' => $latest?->question_2_answer ?? '-',
+                        'q3' => $latest?->question_3_answer ?? '-',
+                        'q4' => $latest?->question_4_answer ?? '-',
+                        'result' => $latest?->result_type ? 'Result ' . $latest->result_type : '-',
+                        'total_entries' => (int) $p->quiz_attempts_count,
                         'registered_at' => $p->registered_at ? $p->registered_at->format('Y-m-d H:i') : '-',
-                        'last_activity' => $p->latestAttempt?->completed_at ? $p->latestAttempt->completed_at->format('Y-m-d H:i') : '-',
+                        'last_activity' => $latest?->completed_at ? $latest->completed_at->format('Y-m-d H:i') : '-',
                         'actions' => '<a href="' . route('admin.participants.show', $p->id) . '" class="btn btn-xs btn-outline-dark mb-0"><i class="fa fa-eye me-1"></i> View</a>',
                     ];
                 }
@@ -429,10 +438,14 @@ class PorscheAdminController extends Controller
                 'Contact Number',
                 'Email',
                 'Consent Given',
-                'Registered At',
-                'Total Completed Attempts',
+                'Q1 Answer',
+                'Q2 Answer',
+                'Q3 Answer',
+                'Q4 Answer',
                 'Latest Result Type',
                 'Latest Result Title',
+                'Total Completed Attempts',
+                'Registered At',
                 'Latest Activity At',
             ]);
 
@@ -451,10 +464,14 @@ class PorscheAdminController extends Controller
                         $p->contact_number,
                         $p->email,
                         $p->consent_given ? 'Yes' : 'No',
-                        $p->registered_at?->format('Y-m-d H:i:s') ?? '',
-                        $p->quizAttempts->count(),
+                        $latest?->question_1_answer ?? '-',
+                        $latest?->question_2_answer ?? '-',
+                        $latest?->question_3_answer ?? '-',
+                        $latest?->question_4_answer ?? '-',
                         $latest?->result_type ?? 'None',
                         $latest?->result_title ?? 'N/A',
+                        $p->quizAttempts->count(),
+                        $p->registered_at?->format('Y-m-d H:i:s') ?? '',
                         $latest?->completed_at?->format('Y-m-d H:i:s') ?? '',
                     ]);
                 }

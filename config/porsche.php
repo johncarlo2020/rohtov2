@@ -66,7 +66,7 @@ return [
             'description' => 'Hidden discoveries and unexpected tours are what make the journey worthwhile.',
             'background_image' => 'porsche/images/05-1 PORSCHE_result 1_2x.webp',
             'shield_image' => 'porsche/images/Result (1)_2x.webp',
-            'button_text' => 'Try again',
+            'button_text' => 'DONE',
         ],
         'B' => [
             'id' => 'B',
@@ -76,7 +76,7 @@ return [
             'description' => 'Because some journeys stay with you long after the drive ends.',
             'background_image' => 'porsche/images/05-1 PORSCHE_result 2_2x.webp',
             'shield_image' => 'porsche/images/Result (2)_2x.webp',
-            'button_text' => 'Try again',
+            'button_text' => 'DONE',
         ],
         'C' => [
             'id' => 'C',
@@ -86,7 +86,7 @@ return [
             'description' => 'Because the greatest memories are those experienced together.',
             'background_image' => 'porsche/images/05-3 PORSCHE_result 3_2x.webp',
             'shield_image' => 'porsche/images/Result (3)_2x.webp',
-            'button_text' => 'Try again',
+            'button_text' => 'DONE',
         ],
     ],
 ];

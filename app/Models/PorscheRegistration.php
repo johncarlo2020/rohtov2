@@ -34,7 +34,7 @@ class PorscheRegistration extends Model
 
     public function latestAttempt(): HasOne
     {
-        return $this->hasOne(PorscheQuizAttempt::class, 'porsche_registration_id')->latestOfMany();
+        return $this->hasOne(PorscheQuizAttempt::class, 'porsche_registration_id')->latestOfMany('id');
     }
 
     /**

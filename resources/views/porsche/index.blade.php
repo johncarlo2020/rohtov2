@@ -1148,20 +1148,36 @@
 
                 // Update full-screen background
                 screens.result.style.backgroundImage = `url('{{ asset('') }}${result.background_image}')`;
+                btnTryAgain.textContent = result.button_text || 'DONE';
             }
 
             // =========================================================================
-            // TRY AGAIN / RESTART FUNCTIONALITY
+            // DONE / RETURN TO LANDING FUNCTIONALITY
             // =========================================================================
             function restartQuiz() {
                 // Clear quiz answers & reset index
                 state.answers = {};
                 state.currentQuestionIndex = 1;
                 state.resultData = null;
+                state.registrationId = null;
+                state.registrationData = null;
 
-                // Retain registration info (do NOT ask user to register again!)
-                renderCurrentQuestion();
-                switchScreen('quiz');
+                if (registrationForm) {
+                    registrationForm.reset();
+                    clearErrors();
+                }
+
+                if (btnQuizNext) {
+                    btnQuizNext.disabled = true;
+                    btnQuizNext.textContent = 'Continue';
+                }
+
+                // Forget backend session
+                fetch('{{ route('welcome') }}?reset=1', { headers: { 'X-Requested-With': 'XMLHttpRequest' } }).catch(() => {});
+
+                // Navigate back to landing screen
+                switchScreen('landing');
+                window.history.replaceState({}, document.title, '{{ route('welcome') }}');
             }
 
             // =========================================================================

@@ -250,11 +250,11 @@
                 padding: 40px 32px 30px;
             }
             .porsche-landing-box {
-                max-width: 500px;
+                max-width: 600px;
                 margin: 6vh auto auto auto;
             }
             .porsche-landing-title-container {
-                max-width: 440px;
+                max-width: 540px;
                 margin-bottom: 28px;
             }
         }
@@ -448,7 +448,7 @@
             }
             .porsche-reg-top-zone,
             .porsche-reg-bottom-zone {
-                max-width: 480px;
+                max-width: 600px;
             }
             .porsche-input {
                 height: 48px;
@@ -533,6 +533,11 @@
         }
 
         @media (min-width: 768px) {
+            .porsche-instructions-box {
+                max-width: 600px;
+                margin: 6vh auto auto auto;
+                padding: 0;
+            }
             .porsche-instructions-heading {
                 font-size: 1.65rem;
             }
@@ -583,7 +588,7 @@
                 padding: 6vh 32px 5vh;
             }
             .porsche-quiz-top-container {
-                max-width: 540px;
+                max-width: 600px;
                 margin: 2vh auto auto auto;
             }
             .porsche-question-text {
@@ -735,7 +740,7 @@
 
         @media (min-width: 768px) {
             .porsche-result-container {
-                max-width: 460px;
+                max-width: 600px;
                 margin: 4vh auto auto auto;
             }
             .porsche-shield-frame-wrapper {

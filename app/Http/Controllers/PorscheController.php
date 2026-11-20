@@ -68,23 +68,19 @@ class PorscheController extends Controller
                 'min:8',
                 'max:20',
                 'regex:/^[0-9+\s\-()]+$/',
-                'unique:porsche_registrations,contact_number',
             ],
             'email' => [
                 'required',
                 'email',
                 'max:255',
-                'unique:porsche_registrations,email',
             ],
             'consent' => 'required|accepted',
         ], [
             'full_name.required' => 'Please enter your full name.',
             'contact_number.required' => 'Please enter your phone number.',
             'contact_number.regex' => 'Please enter a valid phone number.',
-            'contact_number.unique' => 'This contact number has already been registered.',
             'email.required' => 'Please enter your email address.',
             'email.email' => 'Please enter a valid email address.',
-            'email.unique' => 'This email address has already been registered.',
             'consent.accepted' => 'You must agree to the privacy policy to continue.',
         ]);
 

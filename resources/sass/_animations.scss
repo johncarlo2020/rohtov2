@@ -19,7 +19,7 @@
     }
 }
 
-.animate-entry {
+.animate-entry:not(.modal) {
     animation: fadeInUp 0.8s ease-out forwards;
     opacity: 0; // Start hidden, animation will make it visible
 }

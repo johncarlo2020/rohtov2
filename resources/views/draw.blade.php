@@ -580,8 +580,7 @@ html, body {
   box-shadow: 0 6px 16px rgba(47, 98, 175, 0.25);
 }
 
-.qr-box img,
-.qr-box canvas {
+.qr-box img {
   width: 100%;
   height: 100%;
   object-fit: contain;
@@ -699,6 +698,7 @@ body.countdown-active #screen-shuffle .shuffle-hint {
   <!-- ░░ SCREEN 1 – START ░░ -->
   <section id="screen-start" class="screen active">
     <button class="btn btn--white" id="btn-start">START</button>
+    <p id="draw-unavailable" role="status" hidden>No prizes are currently available.</p>
   </section>
 
   <!-- ░░ SCREEN 2 – GUIDE ░░ -->
@@ -743,9 +743,8 @@ body.countdown-active #screen-shuffle .shuffle-hint {
     <button class="btn btn--blue btn--wide" id="btn-finish">FINISH</button>
     <div class="qr-card">
       <p class="qr-instruction">Scan this QR<br/>to claim your prize.</p>
-      <div class="qr-box">
-        <img id="qr-image" src="" alt="QR Code" onerror="this.style.display='none'" />
-        <canvas id="qr-canvas"></canvas>
+      <div class="qr-box" id="qr-box">
+        <p id="qr-status" role="status"></p>
       </div>
       <button class="btn btn--blue btn--sm" id="btn-redraw">REDRAW</button>
     </div>
@@ -784,7 +783,7 @@ const STOCKS_BY_NAME = new Map(
 );
 
 // ─────────────────────────────────────────────
-// CONFIG  (edit this to change prizes / weights)
+// CONFIG
 // ─────────────────────────────────────────────
 const CONFIG = {
   shuffleIntervalMs:  80,    // speed of slot-machine highlight
@@ -805,92 +804,93 @@ const CONFIG = {
 };
 
 /**
- * Prize list – extend or replace freely.
+ * Prize display details matched to database gifts by name.
  * `image` can be a file path or a data URI.
  * `emoji` is shown as a fallback when the image fails to load.
- * `weight` controls relative probability (higher = more likely).
  */
 const prizes = [
   {
     id: 'aeon',
-    dbId: 1,
-    dbName: 'AEON RM 10 Gift Voucher',
+    dbName: 'AEON Voucher RM10',
     name: 'AEON RM10 Gift Voucher',
     image: `${GIFT_IMAGE_BASE}/AEON RM 10 Gift Voucher_2x.webp`,
     emoji: '🛒',
     color: '#E8F5E9',
-    weight: 12,
   },
   {
     id: 'br',
-    dbId: 2,
-    dbName: 'Baskin Robbins Voucher',
+    dbName: 'Baskin Robbins RM5',
     name: 'Baskin Robbins Voucher',
     image: `${GIFT_IMAGE_BASE}/Baskin Robbins Voucher_2x.webp`,
     emoji: '🍦',
     color: '#FFF3E0',
-    weight: 12,
   },
   {
     id: 'lanyard',
-    dbId: 9,
-    dbName: 'iProperty Phone Lanyard',
+    dbName: 'Phone Lanyard',
     name: 'iProperty Phone Lanyard',
     image: `${GIFT_IMAGE_BASE}/iProperty  Phone Lanyard_2x.webp`,
     emoji: '📱',
     color: '#E8F0FF',
-    weight: 12,
   },
   {
     id: 'notebook',
-    dbId: 4,
-    dbName: 'iProperty Notebook',
+    dbName: 'Notebook',
     name: 'iProperty Notebook',
     image: `${GIFT_IMAGE_BASE}/iProperty Notebook_2x.webp`,
     emoji: '📓',
     color: '#EDE7F6',
-    weight: 12,
   },
   {
     id: 'fan',
-    dbId: 3,
     dbName: 'Neck Fan',
     name: 'Neck Fan',
     image: `${GIFT_IMAGE_BASE}/Neck Fan_2x.webp`,
     emoji: '💨',
     color: '#E3F2FD',
-    weight: 13,
   },
   {
     id: 'texas',
-    dbId: 7,
-    dbName: 'Texas Chicken RM 5 Cash Voucher',
+    dbName: 'Texas / SF Voucher RM5',
     name: 'Texas Chicken RM5 Cash Voucher',
     image: `${GIFT_IMAGE_BASE}/Texas Chicken RM 5 Cash Voucher_2x.webp`,
     emoji: '🍗',
     color: '#FFF3E0',
-    weight: 13,
   },
   {
     id: 'watsons',
-    dbId: 8,
-    dbName: 'Watsons RM 10 Gift Voucher',
+    dbName: 'Watsons RM10',
     name: 'Watsons RM10 Gift Voucher',
     image: `${GIFT_IMAGE_BASE}/Watsons RM 10 Gift Voucher _2x.webp`,
     emoji: '🧴',
     color: '#E8F5E9',
-    weight: 13,
   },
-].map((prize) => ({
-  ...prize,
-  dbId: STOCKS_BY_NAME.get(normalizeGiftName(prize.dbName ?? prize.name))?.id ?? prize.dbId,
-}));
+  {
+    id: 'oriental',
+    dbName: 'Oriental Kopi RM10',
+    name: 'Oriental Kopi RM10 Cash Voucher',
+    image: `${GIFT_IMAGE_BASE}/Oriental Kopi  RM 10 Cash Voucher_2x.webp`,
+    emoji: '☕',
+    color: '#FFF3E0',
+  },
+  {
+    id: 'bonuslink',
+    dbName: 'BonusLink Giftcard',
+    name: 'BonusLink Giftcard',
+    image: `${GIFT_IMAGE_BASE}/BonusLink  Giftcard_2x.webp`,
+    emoji: '🎁',
+    color: '#E8F0FF',
+  },
+].flatMap((prize) => {
+  const gift = STOCKS_BY_NAME.get(normalizeGiftName(prize.dbName));
+  return gift ? [{ ...prize, dbId: gift.id }] : [];
+}).sort((a, b) => a.dbId - b.dbId);
 
 // ─────────────────────────────────────────────
-// ACTIVE PRIZES  (populated from API before each draw)
+// ACTIVE PRIZES  (based on stock from the database)
 // ─────────────────────────────────────────────
-let activePrizes   = [...prizes]; // in-stock only – used for winner selection
-let displayPrizes  = [...prizes]; // all prizes – used for carousel display
+let activePrizes = []; // in-stock only – used for winner selection
+const displayPrizes = prizes; // all matched prizes – used for carousel display
 
 /**
  * Apply stock levels embedded in the initial Blade response.
@@ -901,11 +901,11 @@ function applyInitialStocks() {
     stockMap[item.id] = parseInt(item.stock_level, 10) || 0;
   }
 
-  const filtered = prizes
+  activePrizes = prizes
     .filter(p => (stockMap[p.dbId] ?? 0) > 0)
     .map(p => ({ ...p, weight: stockMap[p.dbId] }));
-  activePrizes  = filtered.length > 0 ? filtered : [...prizes];
-  displayPrizes = [...prizes];
+  $('btn-start').disabled = activePrizes.length === 0;
+  $('draw-unavailable').hidden = activePrizes.length > 0;
 
   // ── Debug: log all stocks and current draw probabilities ──
   const totalStock = activePrizes.reduce((s, p) => s + p.weight, 0);
@@ -1099,6 +1099,7 @@ function slideToNext(onDone) {
 }
 
 function startShuffle() {
+  state.winnerPrize   = null;
   state.shuffleActive  = true;
   state.canTap         = true;
   state.highlightIndex = 0;
@@ -1143,8 +1144,7 @@ function stopShuffle() {
         setTimeout(decelStep, SLIDE_MS * 2); // wait for slide to finish
       }, delay);
     } else {
-      const winner      = pickWeightedRandom(activePrizes);
-      state.winnerPrize = winner;
+      const winner = pickWeightedRandom(activePrizes);
 
       state.shuffleTimer = setTimeout(() => {
         slideToNext(() => {
@@ -1181,6 +1181,9 @@ function pickWeightedRandom(items) {
 // RESULT SCREEN
 // ─────────────────────────────────────────────
 function showResult(prize) {
+  if (state.currentScreen !== 'shuffle' || state.winnerPrize) return;
+
+  state.winnerPrize = prize;
   playRevealSfx();
 
   const img = $('result-img');
@@ -1238,76 +1241,31 @@ function spawnConfetti() {
 // QR SCREEN
 // ─────────────────────────────────────────────
 function showQR(prize) {
-  const prizeUrl  = `${CONFIG.qrClaimUrl}/${prize.dbId}`;
-  const claimUrl  = encodeURIComponent(prizeUrl);
-  const qrSrc     = `${CONFIG.qrBaseUrl}${claimUrl}`;
+  const prizeUrl = `${CONFIG.qrClaimUrl}/${prize.dbId}`;
+  const qrBox = $('qr-box');
+  const status = $('qr-status');
+  const image = new Image();
 
-  const qrImg     = $('qr-image');
-  const qrCanvas  = $('qr-canvas');
+  image.alt = `Claim QR code for ${prize.name}`;
+  image.hidden = true;
+  status.hidden = false;
+  status.textContent = 'Loading prize QR code…';
+  qrBox.replaceChildren(status, image);
 
-  // Try remote QR image first; fall back to inline canvas QR
-  qrImg.style.display = 'block';
-  qrCanvas.style.display = 'none';
-  qrImg.src = qrSrc;
-  qrImg.onerror = () => {
-    qrImg.style.display = 'none';
-    qrCanvas.style.display = 'block';
-    drawCanvasQR(qrCanvas, prizeUrl);
+  image.onload = () => {
+    if (!image.isConnected || state.currentScreen !== 'qr' || state.winnerPrize !== prize) return;
+
+    status.hidden = true;
+    image.hidden = false;
+  };
+  image.onerror = () => {
+    if (!image.isConnected || state.currentScreen !== 'qr' || state.winnerPrize !== prize) return;
+
+    status.textContent = 'The prize QR code could not load. Use Finish to exit.';
   };
 
   showScreen('qr');
-}
-
-/**
- * Minimal QR-code-like placeholder drawn on canvas
- * (replace with a real QR library such as qrcode.js for production)
- */
-function drawCanvasQR(canvas, text) {
-  const size = 170;
-  canvas.width  = size;
-  canvas.height = size;
-  const ctx = canvas.getContext('2d');
-
-  // White background
-  ctx.fillStyle = '#fff';
-  ctx.fillRect(0, 0, size, size);
-
-  // Deterministic-ish "QR-like" grid from text hash
-  const hash = simpleHash(text);
-  const cells = 21;
-  const cell  = Math.floor(size / cells);
-
-  ctx.fillStyle = '#111';
-  for (let r = 0; r < cells; r++) {
-    for (let c = 0; c < cells; c++) {
-      const isCorner = isFinderPattern(r, c, cells);
-      const bit = isCorner || ((hash >> ((r * cells + c) % 32)) & 1);
-      if (bit) ctx.fillRect(c * cell, r * cell, cell - 1, cell - 1);
-    }
-  }
-
-  // Label
-  ctx.fillStyle = '#333';
-  ctx.font = '9px sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('SCAN TO CLAIM', size / 2, size - 3);
-}
-
-function isFinderPattern(r, c, n) {
-  const inCorner = (rr, cc) =>
-    (rr <= 6 && cc <= 6) ||
-    (rr <= 6 && cc >= n - 7) ||
-    (rr >= n - 7 && cc <= 6);
-  return inCorner(r, c);
-}
-
-function simpleHash(str) {
-  let h = 0x811c9dc5;
-  for (let i = 0; i < str.length; i++) {
-    h ^= str.charCodeAt(i);
-    h = (h * 0x01000193) >>> 0;
-  }
-  return h;
+  image.src = `${CONFIG.qrBaseUrl}${encodeURIComponent(prizeUrl)}`;
 }
 
 // ─────────────────────────────────────────────
@@ -1373,6 +1331,8 @@ function initEventListeners() {
   });
 
   $('btn-ready').addEventListener('click', () => {
+    if (state.currentScreen !== 'guide') return;
+
     playButtonSfx();
     showScreen('shuffle');
     setCarouselCard(displayPrizes[0] ?? prizes[0]);
@@ -1387,11 +1347,16 @@ function initEventListeners() {
   $('screen-shuffle').addEventListener('click', onCardTap);
 
   $('btn-continue').addEventListener('click', () => {
+    if (state.currentScreen !== 'result' || !state.winnerPrize) return;
+
     playButtonSfx();
     showQR(state.winnerPrize);
   });
 
   $('btn-redraw').addEventListener('click', () => {
+    if (state.currentScreen !== 'qr') return;
+
+    $('qr-box').replaceChildren($('qr-status'));
     playButtonSfx();
     applyInitialStocks();
     showScreen('shuffle');
@@ -1399,6 +1364,7 @@ function initEventListeners() {
   });
 
   $('btn-finish').addEventListener('click', () => {
+    $('qr-box').replaceChildren($('qr-status'));
     playButtonSfx();
     resetGame();
   });

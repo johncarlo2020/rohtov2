@@ -154,7 +154,7 @@
 
                         {{-- How did you find out --}}
                         <div class="mb-3">
-                            <label>HOW DID YOU FIND OUT ABOUT THE IPROPERTY NEW HOMES EXPO AT SETIA CITY MALL, SHAH ALAM?</label>
+                            <label>HOW DID YOU FIND OUT ABOUT THE IPROPERTY NEW HOMES EXPO AT Queensbay Mall, Penang?</label>
                             @php
                                 $socials = [
                                     'iProperty Facebook Ads',

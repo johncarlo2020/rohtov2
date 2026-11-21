@@ -2,6 +2,13 @@ import './bootstrap';
 import * as bootstrap from 'bootstrap';
 window.bootstrap = bootstrap;
 
+document.addEventListener('show.bs.modal', ({ target: modal, defaultPrevented }) => {
+    // Keep the modal and its Bootstrap backdrop in the same stacking context.
+    if (!defaultPrevented && modal.matches('.modal') && modal.parentElement !== document.body) {
+        document.body.append(modal);
+    }
+});
+
 import Alpine from 'alpinejs';
 
 window.Alpine = Alpine;

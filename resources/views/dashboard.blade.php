@@ -463,39 +463,43 @@
             </div>
         </div>
 
-        @php
-            $earlyBird = auth()->user()->is_early_bird;
-            $completedStation4 = auth()->user()->stationUser()->where('station_id', 1)->exists();
-            $showEarlyBirdModal = $earlyBird;
-        @endphp
+    </div>
 
-        <div class="modal fade" id="earlyBirdModal" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="p-4 text-center modal-content">
+    @php
+        $earlyBird = auth()->user()->is_early_bird;
+        $completedStation4 = auth()->user()->stationUser()->where('station_id', 1)->exists();
+        $showEarlyBirdModal = $earlyBird;
+    @endphp
 
-                    <h5>Hello!</h5>
+    <div class="modal fade" id="earlyBirdModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="p-4 text-center modal-content">
 
-                    <p class="mb-4">
-                        We see you've pre-registered!<br>
-                        <br>
-                        Tap the <b>'Early Bird'</b> button below<br>
-                        and grab your special reward!
-                    </p>
+                <h5>Hello!</h5>
 
-                    <button class="m-auto w-75 custom-btn custom-btn-primary" data-bs-dismiss="modal">
-                        CLOSE
-                    </button>
+                <p class="mb-4">
+                    We see you've pre-registered!<br>
+                    <br>
+                    Tap the <b>'Early Bird'</b> button below<br>
+                    and grab your special reward!
+                </p>
 
-                </div>
+                <button type="button" id="earlyBirdModalClose" class="m-auto w-75 custom-btn custom-btn-primary">
+                    CLOSE
+                </button>
+
             </div>
         </div>
-
     </div>
+
     @push('scripts')
         @if ($showEarlyBirdModal && !$completedStation4)
             <script>
                 document.addEventListener('DOMContentLoaded', function() {
-                    let modal = new bootstrap.Modal(document.getElementById('earlyBirdModal'));
+                    const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('earlyBirdModal'));
+                    document.getElementById('earlyBirdModalClose').addEventListener('click', function() {
+                        modal.hide();
+                    });
                     modal.show();
                 });
             </script>

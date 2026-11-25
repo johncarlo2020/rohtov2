@@ -26,13 +26,20 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        $validated = $request->validated();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $newName = $validated['fname'] ?? $validated['name'] ?? null;
+        if (!empty($newName)) {
+            $user->fname = $newName;
         }
 
-        $request->user()->save();
+        // Member ID is editable ONLY IF user doesn't already have one
+        if (empty($user->grc_id) && !empty($validated['grc_id'])) {
+            $user->grc_id = trim($validated['grc_id']);
+        }
+
+        $user->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }

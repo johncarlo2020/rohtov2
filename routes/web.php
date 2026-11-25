@@ -27,6 +27,10 @@ Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
+Route::get('/faq', function () {
+    return view('faq');
+})->name('faq');
+
 
 
 Route::get('/upload-baby', function () {
@@ -138,6 +142,9 @@ Route::group(['middleware' => ['concierge']],function(){
 // Public endpoint used by the registration frontend to check if a phone exists
 Route::post('/checkExisting', 'App\Http\Controllers\StationController@checkExisting')->name('checkExisting');
 
+Route::get('/discover', 'App\Http\Controllers\StationController@discover')->name('discover');
+Route::get('/instructions', 'App\Http\Controllers\StationController@discover')->name('instructions');
+
 Route::group(['middleware' => ['client']], function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -155,7 +162,6 @@ Route::group(['middleware' => ['client']], function () {
     Route::get('/developer/{developer}/quiz', 'App\Http\Controllers\StationController@quiz')->name('developer.quiz');
 
     Route::get('/dashboard', 'App\Http\Controllers\StationController@welcome')->name('dashboard');
-    Route::get('/discover', 'App\Http\Controllers\StationController@discover')->name('discover');
     Route::get('/giftselection', 'App\Http\Controllers\StationController@giftSelection')->name('station.giftselection');
     Route::post('/giftselection/redeem', 'App\Http\Controllers\StationController@redeemGift')->name('giftselection.redeem');
     

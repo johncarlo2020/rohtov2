@@ -1,314 +1,484 @@
 <x-app-layout>
+@push('styles')
+    <link rel="preload" as="image" href="{{ asset('images/rwg/RWG_Station ' . $station->id . '_2x.webp') }}" fetchpriority="high" />
+@endpush
 <style>
-    .option-btn
-    {   
+    .station-page {
+        min-height: 100vh;
+        min-height: 100dvh;
+        background-color: #120924;
+        background-image: url('{{ asset('images/rwg/01 RW Genting Winter_background_2x.webp') }}');
+        background-size: cover;
+        background-position: center top;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        color: #ffffff;
+        font-family: 'Brown', 'Mulish', sans-serif;
+    }
+
+    #mainContainer {
+        min-height: 100vh;
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 2rem);
+    }
+
+    #mainContent {
+        flex: 1;
         width: 100%;
-        border-color: #ffffff;
-        border-radius: 5px;
-        background-color: #ffffff;
-        padding: 0;
         display: flex;
+        flex-direction: column;
         align-items: center;
-        justify-content: center;
-        font-weight: 900;
-        cursor: pointer;
-
-        /* Subtle elevation */
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-
-        /* Animations */
-        animation: scannerIdle 2.8s ease-in-out infinite;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        justify-content: space-between;
     }
 
-    #start-scanner,#start-quiz,#perfume-next-btn {
-        width: 50%;
-        margin: auto;
-        border-color: #ffffff;
+    .scan-btn {
+        background: transparent;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 0;
+    }
+
+    .scan-icon {
+        width: 88px;
+        height: 44px;
+        background: #E8C88B;
         border-radius: 30px;
-        background-color: #ffffff;
-        padding: 0;
-        display: flex;
+        display: inline-flex;
         align-items: center;
         justify-content: center;
-        font-weight: 900;
-        cursor: pointer;
-
-        /* Subtle elevation */
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-
-        /* Animations */
-        animation: scannerIdle 2.8s ease-in-out infinite;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
-    /* Hover / Active */
-    #start-scanner:hover {
-        animation-play-state: paused;
-        transform: translateY(-2px) scale(1.03);
-        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+    .scan-icon i {
+        font-size: 20px;
+        color: #1E0B2B;
     }
 
-    #start-scanner:active {
-        transform: translateY(0) scale(0.98);
-        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    .scan-btn:hover .scan-icon {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(232, 200, 139, 0.45);
     }
 
-    .main-content
-    {
-        padding-top: 0 !important;
-        padding-bottom: 0 !important;
+    .scan-label {
+        color: #ffffff;
+        font-size: 0.95rem;
+        font-weight: 600;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
     }
 
-   /* Whole screen */
-#mainContainer {
-  min-height: 100vh;
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: clamp(12px, 3vh, 24px);
-  padding-block: clamp(12px, 3vh, 24px);
-}
-
-/* Main content */
-#mainContent {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  gap: clamp(12px, 3vh, 24px);
-}
-
-/* Buttons */
-.custom-btn-secondary {
-  font-size: 16px;
-  padding: clamp(12px, 3vh, 16px) clamp(16px, 6vw, 24px);
-  width: min(90%, 360px);
-}
-
-/* Scanner */
-.scanner-wrapper {
-  width: 100%;
-}
-
-.scanner-container {
-  padding: clamp(16px, 4vh, 32px);
-}
-
-#reader {
-  width: min(90vw, 360px);
-  aspect-ratio: 1 / 1;
-}
-
-.tile-title , .station_name  {
-    text-transform: uppercase;
-}
-
-.scan-btn {
-    background: transparent;
-    border: none;
-    outline: none;
-    cursor: pointer;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-}
-
-/* pill icon */
-.scan-icon {
-    width: 80px;
-    height: 40px;
-
-    background: rgba(255,255,255,0.6);
-    border-radius: 30px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-
-    transition: 0.25s ease;
-}
-
-/* icon */
-.scan-icon i {
-    font-size: 18px;
-    color: #2f5ea8;
-}
-
-/* text */
-.scan-label {
-    color: #2f5ea8;
-    font-size: 14px;
-    font-weight: 500;
-}
-
-/* hover effect */
-.scan-btn:hover .scan-icon {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 14px rgba(0,0,0,0.15);
-}
-
-    /* Idle animation */
-    @keyframes scannerIdle {
-        0%   { transform: translateY(0); }
-        50%  { transform: translateY(-2px); }
-        100% { transform: translateY(0); }
+    /* Square Scanner Viewfinder Box */
+    .scanner-dark-box {
+        width: min(90vw, 350px);
+        height: min(90vw, 350px);
+        margin: 0 auto;
+        position: relative;
+        background: rgba(0, 0, 0, 0.85);
+        border-radius: 0px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.5);
     }
 
-    /* Accessibility */
-    @media (prefers-reduced-motion: reduce) {
-        #start-scanner {
-            animation: none;
-            transition: none;
-        }
+    #reader {
+        width: 100% !important;
+        height: 100% !important;
+        border: none !important;
+        background: transparent !important;
+    }
+
+    #reader video {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        border-radius: 0px !important;
+    }
+
+    #reader__scan_region {
+        background: transparent !important;
+    }
+
+    /* Suppress duplicate built-in white corner lines generated by html5-qrcode */
+    #qr-shaded-region > div,
+    #qr-shaded-region svg,
+    #reader__scan_region svg,
+    #reader__scan_region > div > div {
+        display: none !important;
+    }
+
+    #reader__dashboard_section_csr,
+    #reader__dashboard_section_swaplink {
+        display: none !important;
+    }
+
+    /* Scanner Viewfinder Corner Brackets Overlay */
+    .scanner-brackets-overlay {
+        position: absolute;
+        width: 240px;
+        height: 240px;
+        max-width: 69%;
+        max-height: 69%;
+        pointer-events: none;
+        z-index: 10;
+    }
+
+    .corner-bracket {
+        position: absolute;
+        width: 38px;
+        height: 38px;
+        border-color: #ffffff;
+        border-style: solid;
+        border-radius: 0;
+    }
+
+    .corner-bracket.top-left {
+        top: 0;
+        left: 0;
+        border-width: 4px 0 0 4px;
+    }
+
+    .corner-bracket.top-right {
+        top: 0;
+        right: 0;
+        border-width: 4px 4px 0 0;
+    }
+
+    .corner-bracket.bottom-left {
+        bottom: 0;
+        left: 0;
+        border-width: 0 0 4px 4px;
+    }
+
+    .corner-bracket.bottom-right {
+        bottom: 0;
+        right: 0;
+        border-width: 0 4px 4px 0;
+    }
+
+    .rwg-btn-gold {
+        background: #E8C88B;
+        color: #1E0B2B;
+        font-weight: 700;
+        font-size: 0.98rem;
+        letter-spacing: 0.5px;
+        padding: 0.8rem 2.5rem;
+        border-radius: 25px;
+        border: none;
+        box-shadow: 0 4px 15px rgba(232, 200, 139, 0.4);
+        transition: all 0.2s ease;
+        display: inline-block;
+        text-align: center;
+    }
+
+    .rwg-btn-gold:hover,
+    .rwg-btn-gold:focus {
+        background: #dfbc77;
+        color: #1E0B2B;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(232, 200, 139, 0.6);
     }
 </style>
-    <div id="stationPage" class="station-page main-content main-background with-scroll px-0">
-        <div class="modal fade custom-modal" id="scanCompleteModal" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content modal-parent rounded-1">
-                    <div class="modal-body">
-                        <div class="text-center">
-                            <img class="check mx-auto mb-4" id="badge" src="">
-                            <div class="text-content mt-0">
-                                <p class="mb-2 message station_name text-dark"></p>
-                                <p class="status-text my-4 text-dark">
-                                </p>
-                            </div>
-                            <div class="text-content mt-3">
-                                <a href="{{ route('dashboard') }}" id="routeBtn"
-                                    class="custom-btn px-5 fw-regular custom-btn-primary w-50">
-                                    BACK
-                                </a>
-                            </div>
+
+<div id="stationPage" class="station-page main-content main-background with-scroll px-0">
+    <!-- Modal 1: Station Unlocked / Status Modal -->
+    <div class="modal fade custom-modal" id="scanCompleteModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 360px;">
+            <div class="modal-content rounded-4 border-0 p-4 shadow-lg text-center" style="background: #ffffff; color: #1E0B2B;">
+                <div class="modal-body p-0">
+                    <div class="mb-3 d-flex justify-content-center">
+                        <div id="modalIconSuccess" class="rounded-circle d-flex align-items-center justify-content-center"
+                             style="width: 58px; height: 58px; border: 3px solid #28a745; background: rgba(40, 167, 69, 0.08);">
+                            <i class="fa-solid fa-check text-success" style="font-size: 28px;"></i>
                         </div>
+                        <div id="modalIconError" class="rounded-circle d-none align-items-center justify-content-center"
+                             style="width: 58px; height: 58px; border: 3px solid #dc3545; background: rgba(220, 53, 69, 0.08);">
+                            <i class="fa-solid fa-xmark text-danger" style="font-size: 28px;"></i>
+                        </div>
+                    </div>
+
+                    <h4 id="modalTitle" class="fw-bold mb-2 message station_name" style="font-size: 1.25rem; color: #1E0B2B;">
+                        🎉 Station Unlocked! ❄️
+                    </h4>
+
+                    <p id="modalBody" class="status-text mb-4 text-secondary small" style="font-size: 0.88rem; line-height: 1.55;">
+                        Great job! You've successfully checked in and logged this location on your map. Keep exploring—more frozen treasures await! 🎁
+                    </p>
+
+                    <a href="{{ route('dashboard') }}" id="routeBtn" class="rwg-btn-gold text-decoration-none d-inline-block w-100 py-3">
+                        VIEW MY MAP
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: Can't Scan QR Code / Camera Troubleshooting Guide -->
+    <div class="modal fade" id="cantScanModal" tabindex="-1" aria-labelledby="cantScanModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 380px; margin: 1.5rem auto;">
+            <div class="modal-content border-0 shadow-lg text-white"
+                 style="background: rgba(14, 5, 26, 0.94); backdrop-filter: blur(14px); border: 1px solid rgba(255, 255, 255, 0.18) !important; border-radius: 24px; padding: 1.75rem 1.4rem;">
+                <div class="modal-body p-0">
+                    <!-- Red Exclamation Circle -->
+                    <div class="text-center mb-3">
+                        <div class="rounded-circle d-inline-flex align-items-center justify-content-center"
+                             style="width: 52px; height: 52px; border: 2.5px solid #E53E3E; color: #E53E3E;">
+                            <i class="fa-solid fa-exclamation" style="font-size: 24px; font-weight: bold;"></i>
+                        </div>
+                    </div>
+
+                    <!-- Header Text -->
+                    <p class="text-center fw-bold text-white mb-4" style="font-size: 1.02rem; line-height: 1.45;">
+                        If your camera isn't opening, you just need to allow camera access for your browser.<br>
+                        Here is how to fix it quickly:
+                    </p>
+
+                    <!-- iOS Section -->
+                    <div class="mb-4 text-start">
+                        <h6 class="text-white fw-bold mb-2" style="font-size: 0.95rem;">
+                            For iOS (iPhone/iPad) Users
+                        </h6>
+                        <ol class="ps-3 mb-0 small" style="color: rgba(255, 255, 255, 0.9); font-size: 0.88rem; line-height: 1.65;">
+                            <li>Open your iPhone Settings.</li>
+                            <li>Scroll down and tap on your browser (e.g., Safari or Chrome).</li>
+                            <li>Toggle the Camera switch to On (Green).</li>
+                            <li>Refresh this page and try again!</li>
+                        </ol>
+                    </div>
+
+                    <!-- Android Section -->
+                    <div class="text-start mb-3">
+                        <h6 class="text-white fw-bold mb-2" style="font-size: 0.95rem;">
+                            For Android Users
+                        </h6>
+                        <ol class="ps-3 mb-0 small" style="color: rgba(255, 255, 255, 0.9); font-size: 0.88rem; line-height: 1.65;">
+                            <li>Open your phone Settings &gt; Apps (or Apps &amp; Notifications).</li>
+                            <li>Tap on your browser (e.g., Chrome).</li>
+                            <li>Tap Permissions &gt; Camera.</li>
+                            <li>Choose Allow (or "Allow only while using the app").</li>
+                            <li>Refresh this page and try again!</li>
+                        </ol>
+                    </div>
+
+                    <!-- Close button -->
+                    <div class="text-center mt-4">
+                        <button type="button" class="btn btn-sm btn-outline-light rounded-pill px-4" data-bs-dismiss="modal">
+                            Close
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- <button
-            class="back-btn animate-entry"
-            onclick="window.location.href='{{ route('dashboard') }}'"
-            aria-label="Go back"
-        ></button> -->
-        
-        <div id="mainContainer">
+    </div>
 
-            <!-- Branding -->
-            <div class="branding-container animate-entry px-4">
+    <div id="mainContainer" class="w-100" style="max-width: 480px; margin: 0 auto;">
+        <!-- Top Bar: Back, Brand, Menu -->
+        <div class="d-flex align-items-center justify-content-between w-100 mb-3 pt-2 px-3">
+            <a href="{{ route('dashboard') }}" class="text-white text-decoration-none p-2" aria-label="Back to Map">
+                <i class="fa-solid fa-chevron-left fs-4"></i>
+            </a>
+            <div class="flex-grow-1 text-center">
                 @include('components.branding')
             </div>
-
-            <!-- Main content -->
-            <div id="mainContent"
-                class="d-flex flex-column align-items-center justify-content-between animate-entry delay-3">
-
-                <div class="img-container text-center">
-                    <!-- station image -->
-                    <img class="station-image w-50 mx-auto my-5"
-                        src="{{ asset('images/station/ST' . $station->id . '.webp') }}"
-                        alt="Station Image">
-
-                    <!-- description -->
-                    <h2 class="text-center px-3 fw-bold">
-                        {!! $station->description !!}
-                    </h2>
+            <div class="dropdown rwg-menu-dropdown-wrapper">
+                <button type="button"
+                        class="rwg-menu-btn"
+                        id="rwgBurgerMenuBtn"
+                        data-bs-toggle="dropdown"
+                        data-bs-display="static"
+                        aria-expanded="false"
+                        aria-label="Toggle Menu">
+                    <i class="fa-solid fa-bars text-white fs-5"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end rwg-burger-dropdown" aria-labelledby="rwgBurgerMenuBtn">
+                    <div class="rwg-dropdown-header d-flex justify-content-between align-items-center mb-3">
+                        <span class="rwg-dropdown-title">Menu</span>
+                        <button type="button" class="rwg-dropdown-close" data-bs-dismiss="dropdown" aria-label="Close">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                    <div class="d-flex flex-column gap-2">
+                        <a href="{{ route('dashboard') }}" class="rwg-dropdown-item">
+                            <span>MY MAP</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                        <a href="{{ route('profile.edit') }}" class="rwg-dropdown-item">
+                            <span>MY PROFILE</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                        <a href="{{ route('faq') }}" class="rwg-dropdown-item">
+                            <span>FAQ</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
                 </div>
-                
-                <!-- actions -->
-                @if ($user)
+            </div>
+        </div>
 
-                    <!-- ✅ Already checked in -->
-                    <div class="checkedInContainer w-50 mx-auto">
-                        <p class="text-center mb-2">Checked In</p>
-                        <a href="{{ route('dashboard') }}"
-                        class="custom-btn custom-btn-secondary w-100">
+        @php
+            $stationLabels = [
+                1 => 'Madison Square 麦迪逊广场 (户外, 云星剧场旁)',
+                2 => 'Arena of Stars 云星剧场',
+                3 => 'Genting SkyWorlds Theme Park (Studio Plaza) 云顶天际世界主题乐园 (演播广场)',
+                4 => 'Kimhua Atrium 金华中庭',
+                5 => 'Pavilion Hall (Near Skytropolis Indoor Theme Park) 展馆大厅 (近天城室内主题乐园)',
+                6 => "SkyAvenue (Near Level 1 Swensen's) 云天大道 (近1楼 Swensen's)",
+            ];
+            $displayLabel = $stationLabels[$station->id] ?? $station->description ?? $station->name;
+            $stationImg = file_exists(public_path('images/rwg/RWG_Station ' . $station->id . '_2x.webp'))
+                ? asset('images/rwg/RWG_Station ' . $station->id . '_2x.webp')
+                : asset('images/station/ST' . $station->id . '.webp');
+        @endphp
+
+        <!-- Main Content -->
+        <div id="mainContent" class="px-3">
+            <div class="w-100 text-center">
+                <!-- Station photo with translucent bottom caption -->
+                <div class="position-relative overflow-hidden rounded-4 shadow-lg mx-auto" style="max-width: 380px; width: 100%;">
+                    <img class="station-image w-100 d-block" style="height: 220px; object-fit: cover;"
+                         src="{{ $stationImg }}"
+                         alt="{{ $station->name }}"
+                         fetchpriority="high"
+                         decoding="async">
+                    <div class="position-absolute bottom-0 start-0 end-0 px-3 py-2 text-center"
+                         style="background: rgba(45, 20, 65, 0.78); backdrop-filter: blur(4px);">
+                        <span class="text-white fw-bold small" style="letter-spacing: 0.3px; font-size: 0.82rem;">
+                            {{ $displayLabel }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Text below image -->
+                <p class="text-white text-center fw-bold mt-4 mb-0" style="font-size: 1.05rem; text-shadow: 0 1px 3px rgba(0,0,0,0.5);">
+                    Proceed to hunt the QR code.
+                </p>
+            </div>
+
+            <!-- Actions -->
+            <div class="w-100 text-center my-4">
+                @if ($user)
+                    <div class="checkedInContainer text-center">
+                        <p class="text-white fw-bold mb-3" style="font-size: 1.1rem; text-shadow: 0 1px 3px rgba(0,0,0,0.5);">
+                            Checked In
+                        </p>
+                        <a href="{{ route('dashboard') }}" class="rwg-btn-gold text-decoration-none d-inline-block px-5">
                             BACK
                         </a>
                     </div>
-                @elseif ($station->id == 3 || $station->id == 1)
-                    <!-- ✅ Station 1 & 3 → Scan QR code -->
-                    <div class="scan-container mb-5">
-                        <button id="start-scanner" class="scan-btn mb-4">
+                @else
+                    <div class="scan-container text-center">
+                        <button id="start-scanner" class="scan-btn mb-2 mx-auto" type="button">
                             <span class="scan-icon">
                                 <i class="fa-solid fa-camera"></i>
                             </span>
                         </button>
-                        <span class="scan-label">
+                        <span class="scan-label text-white d-block mt-2">
                             Scan the QR code to proceed
                         </span>
                     </div>
-                @else
-                    <div class="text-content mt-3">
-                        <a href="{{ route('station.stamping', $station->id);}}" id="routeBtn"
-                            class="custom-btn w-auto px-5 fw-regular custom-btn-primary text-white">
-                            I'M THERE
-                        </a>
-                    </div>
                 @endif
             </div>
+        </div>
 
-            <div id="quizContainer" class="d-none">
-                <!-- Quiz content will be injected here by JavaScript -->
-                <div id="quiz-container" style="display:none; width:100%; max-width:360px;">
-                    <h3 id="question-text" class="text-center mb-3"></h3>
-                    <div id="options"></div>
+        <!-- Quiz Container (compatibility) -->
+        <div id="quizContainer" class="d-none">
+            <div id="quiz-container" style="display:none; width:100%; max-width:360px;">
+                <h3 id="question-text" class="text-center mb-3"></h3>
+                <div id="options"></div>
+            </div>
+        </div>
+
+        <!-- Scanner Camera Container -->
+        <div id="{{ $user ? '' : 'forceQr' }}" class="icon-container"></div>
+        <div id="scannerContainer" class="scanner-container d-none w-100 px-3 pt-1 pb-4 text-center">
+            <!-- Station Title above Scanner Box (matching reference layout) -->
+            <h2 class="text-center fw-bold text-white mb-3 px-3" style="font-size: 1.35rem; letter-spacing: 0.5px; text-shadow: 0 1px 4px rgba(0,0,0,0.6);">
+                {{ $station->name }}
+            </h2>
+
+            <!-- Dark Scanner Viewfinder Box with White Corner Brackets -->
+            <div class="scanner-dark-box position-relative mx-auto mb-3">
+                <div id="reader"></div>
+                <div class="scanner-brackets-overlay">
+                    <span class="corner-bracket top-left"></span>
+                    <span class="corner-bracket top-right"></span>
+                    <span class="corner-bracket bottom-left"></span>
+                    <span class="corner-bracket bottom-right"></span>
                 </div>
             </div>
 
-            <!-- Scanner -->
-            <!-- scanner-container --> 
-            <div id="{{ $user ? '' : 'forceQr' }}" class="icon-container"></div> 
-                <div id="scannerContainer" class="scanner-container d-none"> 
-                    <!-- <button id="close" class="mx-auto mt-4 camera-btn">x</button> --> 
-                    <div class="img-container">
-                        <img class="station-image w-25 mx-auto"
-                            src="{{ asset('images/station/ST' . $station->id . '.webp') }}"
-                        alt="Station Image">
-                    </div>
-                    <h2 class="text-center fw-bold mb-4">{!! $station->description !!}</h2> 
-                    <div id="reader"></div> 
-                    <p class="mt-4 scanner-text text-center">Find the QR code &<br> scan to continue your journey</p> 
-                </div> 
+            <p class="text-white text-center fw-medium mt-2 mb-4" style="font-size: 0.95rem; text-shadow: 0 1px 3px rgba(0,0,0,0.5);">
+                Find the QR code &amp; scan to proceed
+            </p>
+
+            <div class="text-center mb-3">
+                <button type="button" id="closeScannerBtn" class="rwg-btn-gold border-0 w-100" style="max-width: 280px;">
+                    CANCEL
+                </button>
+            </div>
+
+            <div class="text-center pb-3">
+                <a href="javascript:void(0)" id="cantScanLink"
+                   class="text-white-50 text-decoration-underline small"
+                   data-bs-toggle="modal" data-bs-target="#cantScanModal">
+                    Can't scan the QR code?
+                </a>
             </div>
         </div>
     </div>
-    
-    @push('scripts')
-        <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-        <script>
-            // Pass data from Blade to JavaScript
-            window.stationConfig = {
-                urls: {
-                    process_qr_code: '{{ route('process_qr_code') }}',
-                    submit_quiz: '{{ route('submit.answer') }}',
-                    congrats: '{{ route('congrats.redeemed') }}'
-                },
-                assets: {
-                    check_image: '{{ asset('images/check.png') }}',
-                    error_image: '{{ asset('images/error.png') }}'
-                },
-                station_id: {{ $station->id }},
-                station_name: `{!! strtoupper($station->name) !!}`,
-                asset_base: "{{ asset('') }}"
-            };
+</div>
 
-            window.gotoStation = function(id,) {
-                    var url = "{{ route('station', ['station' => ':id']) }}".replace(
-                        ":id",
-                        id
-                    );
+@push('scripts')
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+<script>
+    window.stationConfig = {
+        urls: {
+            process_qr_code: '{{ route('process_qr_code') }}',
+            submit_quiz: '{{ route('submit.answer') }}',
+            congrats: '{{ route('congrats') }}',
+            dashboard: '{{ route('dashboard') }}'
+        },
+        assets: {
+            check_image: '{{ asset('images/check.png') }}',
+            error_image: '{{ asset('images/error.png') }}'
+        },
+        station_id: {{ $station->id }},
+        station_name: `{!! strtoupper($station->name) !!}`,
+        asset_base: "{{ asset('') }}"
+    };
 
-                    // Redirect to the generated URL
-                    window.location.href = url;
+    window.gotoStation = function(id) {
+        var url = "{{ route('station', ['station' => ':id']) }}".replace(":id", id);
+        window.location.href = url;
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const closeBtn = document.getElementById('closeScannerBtn');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (window.currentHtml5QrCode) {
+                    try { window.currentHtml5QrCode.stop(); } catch(err) {}
                 }
-        </script>
-        @vite(['resources/js/station.js'])
-    @endpush
+                const scannerContainer = document.getElementById('scannerContainer');
+                const mainContent = document.getElementById('mainContent');
+                if (scannerContainer && mainContent) {
+                    scannerContainer.classList.add('d-none');
+                    mainContent.classList.remove('d-none');
+                }
+            });
+        }
+    });
+</script>
+@vite(['resources/js/station.js'])
+@endpush
 </x-app-layout>

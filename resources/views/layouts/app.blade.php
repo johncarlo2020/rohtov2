@@ -17,6 +17,9 @@
     <!-- Page Title -->
     <title>{{ config('app.name', 'Loading ...') }}</title>
 
+    <!-- Preload critical background image -->
+    <link rel="preload" as="image" href="{{ asset('images/rwg/01 RW Genting Winter_background_2x.webp') }}" fetchpriority="high" />
+
     <!-- Common CDN packages (CSS, etc.) -->
     <x-appCdnPackages />
     {{-- @include('components.fonts') --}}
@@ -25,9 +28,15 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 
-<body class="{{ str_replace('.', '-', Route::currentRouteName() ?? 'unknown-route') }}">
+<body class="{{ str_replace('.', '-', Route::currentRouteName() ?? 'unknown-route') }} min-vh-100 d-flex flex-column">
     <!-- Main content area where page-specific content will be injected -->
-     {{ $slot }}
+    <main class="flex-grow-1 d-flex flex-column">
+        {{ $slot }}
+    </main>
+
+    @if(auth()->check() && auth()->user()->isUnder18())
+        <x-age-verification-modal :show="true" />
+    @endif
 
     @include('components.footer')
 

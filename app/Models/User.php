@@ -50,6 +50,9 @@ class User extends Authenticatable
         'property_budget',
         'is_early_bird',
         'chagee_redeemed',
+        'grc_id',
+        'guardian_consent',
+        'terms_accepted_at',
     ];
     /**
      * The attributes that should be hidden for serialization.
@@ -79,10 +82,17 @@ class User extends Authenticatable
 
     public function hasCompletedAllStations(): bool
     {
-        $completed = $this->stationUser()->distinct('station_id')->count();
-        $totalRequired = $this->is_early_bird ? 3 : 2;
+        $completed = $this->stationUser()->distinct('station_id')->count('station_id');
+        return $completed >= 6;
+    }
 
-        return $completed >= $totalRequired;
+    public function isUnder18(): bool
+    {
+        if (empty($this->dob)) {
+            return false;
+        }
+
+        return Carbon::parse($this->dob)->age < 18;
     }
 
     public function userGift()
@@ -107,6 +117,19 @@ class User extends Authenticatable
     public function voucherClaims()
     {
         return $this->hasMany(VoucherClaim::class);
+    }
+
+    /**
+     * Name accessor / mutator mapping to fname
+     */
+    public function getNameAttribute(): ?string
+    {
+        return $this->fname;
+    }
+
+    public function setNameAttribute($value): void
+    {
+        $this->attributes['fname'] = $value;
     }
 
     /**

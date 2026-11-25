@@ -1,6 +1,6 @@
 //colors
-$primary: #285CA9;
-$accent:#005eab;
+$primary: #D4952B;
+$accent: #6C3082;
 $white: #ffffff;
 $gray: #cacacc;
 $gray-light: #f5f5f5;
@@ -10,10 +10,10 @@ $secondary: #ffff;
 $green: #40a355;
 
 $card-text: #61646B;
-$text: $primary;
+$text: #2c1654;
 
 // main font
-$font-family:'Mulish', sans-serif;
+$font-family: 'Brown', 'Mulish', sans-serif;
 
 //Text size
 
@@ -26,22 +26,22 @@ $line-height: 1.2;
 $letter-spacing: 0;
 
 // buttons
-$button-height: 40px;
+$button-height: 44px;
 $button-width: 100%;
-$button-radius: 20px;
-$button-padding: 20px 10px;
-$button-font-size: 14px;
+$button-radius: 25px;
+$button-padding: 12px 20px;
+$button-font-size: 15px;
 $button-font-weight: 700;
-$button-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+$button-shadow: rgba(0, 0, 0, 0.15) 0px 4px 12px;
 
 
 //images
-$main-background: url('../images/landing_bg.webp');
-$dashboard-background:url('../images/landing_bg2.webp');
-$stamping-background: url('../images/landing_bg.webp');
-$weekday-background: url('../images/landing_bg.webp');
-$weekend-background: url('../images/landing_bg.webp');
-$referral-background: url('../images/landing_bg.webp');
+$main-background: url('/images/rwg/01 RW Genting Winter_background_2x.webp');
+$dashboard-background: url('/images/rwg/01 RW Genting Winter_background_2x.webp');
+$stamping-background: url('/images/rwg/01 RW Genting Winter_background_2x.webp');
+$weekday-background: url('/images/rwg/01 RW Genting Winter_background_2x.webp');
+$weekend-background: url('/images/rwg/01 RW Genting Winter_background_2x.webp');
+$referral-background: url('/images/rwg/01 RW Genting Winter_background_2x.webp');
 
 $back-btn-img: url('../images/backbtn.webp');
 //content

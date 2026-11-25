@@ -24,12 +24,14 @@ html {
     font-size: $paragraph;
     // A standard line-height for readability
     line-height: $line-height;
-    color: $text;
+    color: #ffffff;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
+    width: 100%;
+    min-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 // Make images responsive by default.
@@ -78,7 +80,7 @@ input,
 textarea,
 select {
     font-family: $font-family;
-    color: $text;
+    color: inherit;
     line-height: $line-height;
     margin: 0;
     letter-spacing: $letter-spacing;

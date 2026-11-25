@@ -39,30 +39,7 @@ class StationController extends Controller
       ->where("station_id", $station->id)
       ->exists();
 
-    $perfumes = Perfume::select("id", "title")->get();
-
-    // Early Bird (Station 1): only pre-registered early bird users can access
-    if ($station->id == 1 && !auth()->user()->is_early_bird) {
-      return redirect()->route('dashboard');
-    }
-
-    // Lucky Draw (Station 3): requires 3 developer quizzes (games are optional)
-    if ($station->id == 3) {
-      $developersCompleted = auth()->user()->developers->isNotEmpty() && auth()->user()->developers->every(fn($d) => $d->pivot->isCompleted == 1);
-      if (!$developersCompleted) {
-        return redirect()->route('dashboard');
-      }
-    }
-
-    if ($station->id == 9 && $user == true) {
-      return view("congrats");
-    }
-
-    if ($station->id == 3 && $user == true) {
-      return view("station", compact("station", "user"));
-    }
-
-    return view("station", compact("station", "user", "perfumes"));
+    return view("station", compact("station", "user"));
   }
 
   public function developer(Request $request, $developerId)
@@ -144,150 +121,54 @@ class StationController extends Controller
   public function welcome()
   {
     $userId = Auth::id();
+    $user = User::with(["stationUser"])->findOrFail($userId);
 
-    // $user = User::with('stationUser')->where('id', $userId)->first();
-    $user = User::with(["stationUser", "developers"])
-      ->where("id", $userId)
-      ->first();
-
-    $stationDone = $user->stationUser->count();
-    $stations = Station::get();
-
-    $completedStationIds = $user->stationUser->pluck("id")->toArray();
-
-    // Add status flag to each station
-    foreach ($stations as $station) {
-      $station->status = $user->stationUser->contains(
-        "station_id",
-        $station->id
-      );
+    // Show instructions page first before the dashboard for stations
+    if (request()->has('start')) {
+      session(['instructions_seen' => true]);
+    } elseif (!session('instructions_seen') && $user->stationUser->isEmpty()) {
+      return redirect()->route('instructions');
     }
 
-    // Determine if stations 1-4 are all completed
+    $stations = Station::orderBy('id')->get();
 
-    $canAccessStation5 = $stations
-      ->filter(fn($s) => $s->id <= 5)
-      ->every(fn($s) => $s->status == true);
+    // Mark completion status for each station
+    $completedStationIds = $user->stationUser->pluck("station_id")->toArray();
+    foreach ($stations as $station) {
+      $station->status = in_array($station->id, $completedStationIds);
+    }
 
+    $completedCount = count($completedStationIds);
+    $totalStations = $stations->count();
+    $allCompleted = $completedCount >= 6;
+
+    // Check if user has redeemed gift
     $isRedeemed = \App\Models\UserGift::where("user_id", $userId)
       ->where("is_redeemed", true)
       ->exists();
 
-    $nextStation = $stations->firstWhere(function ($station) use ($user) {
-      return !$user->stationUser()->where("station_id", $station->id)->exists();
-    });
+    // Check today's redemption limit (300)
+    $today = \Carbon\Carbon::today();
+    $todayRedeemedCount = \App\Models\UserGift::whereDate('redeemed_at', $today)
+      ->where('is_redeemed', true)
+      ->count();
+    $dailyLimit = 300;
+    $dailyQuotaRemaining = max(0, $dailyLimit - $todayRedeemedCount);
+    $isDailyQuotaFull = $dailyQuotaRemaining <= 0;
 
-    $developersCompleted = auth()->user()->developers->isNotEmpty() && auth()->user()->developers->every(function ($developer) {
-      return $developer->pivot->isCompleted == 1;
-    });
-
-    $canAccessStation = $developersCompleted;
-    
-    // $first50UserIds = User::orderBy('created_at')
-    //     ->skip(4)
-    //     ->take(50)
-    //     ->pluck('id');
-
-    // $canSeeVoucher = $first50UserIds->contains(auth()->id());
-    // $voucherRedemeed = auth()->user()->chagee_redeemed;
-
-$user = auth()->user();
-
-$completedDevelopers = $user->developers && $user->developers->where('pivot.isCompleted', 1)->count() >= 3;
-$completedGame = $user->stationUser()->where('station_id', 2)->exists();
-$completedLuckyDraw = $user->stationUser()->where('station_id', 3)->exists();
-
-$completedJourney = $completedDevelopers && $completedGame && $completedLuckyDraw;
-
-$voucherRedeemed = VoucherClaim::where(
-    'user_id',
-    $user->id
-)->exists();
-
-$activeVoucher = Voucher::where('name', 'CHAGEE')
-    ->where('starts_at', '<=', now())
-    ->where(function ($q) {
-        $q->whereNull('ends_at')
-            ->orWhere('ends_at', '>=', now());
-    })
-    ->orderBy('starts_at', 'desc')
-    ->first();
-
-$canSeeVoucher = false;
-$upcomingVoucher = null;
-
-$voucherStatus = 'Not Available';
-$voucherMessage = 'Voucher redemption is not available yet.';
-
-if ($activeVoucher) {
-
-    $claimedCount = VoucherClaim::where(
-        'voucher_id',
-        $activeVoucher->id
-    )->count();
-
-    $remaining = max(
-        0,
-        $activeVoucher->quota - $claimedCount
-    );
-
-    if ($remaining <= 0) {
-        $nextSession = Voucher::where('name', 'CHAGEE')
-            ->where('session', '>', $activeVoucher->session)
-            ->first();
-
-        if ($nextSession) {
-            $nextTime = $nextSession->starts_at ? \Carbon\Carbon::parse($nextSession->starts_at)->format('g:i A') : '';
-            $voucherStatus = "Session {$activeVoucher->session} Full";
-            $voucherMessage = "Session {$activeVoucher->session} quota has been reached." . ($nextTime ? " Please come back at {$nextTime} for Session {$nextSession->session}." : '');
-        } else {
-            $voucherStatus = 'Fully Redeemed';
-            $voucherMessage = 'All CHAGEE vouchers have been claimed.';
-        }
-    } else {
-
-        $voucherStatus = "Active";
-        $voucherMessage = "{$remaining} voucher(s) remaining.";
-    }
-
-    if (
-        !$voucherRedeemed &&
-        $completedJourney &&
-        $remaining > 0
-    ) {
-        $canSeeVoucher = true;
-    }
-} else {
-    $upcomingVoucher = Voucher::where('name', 'CHAGEE')
-        ->where('starts_at', '>', now())
-        ->orderBy('starts_at', 'asc')
-        ->first();
-
-    if ($upcomingVoucher) {
-        $startTime = \Carbon\Carbon::parse($upcomingVoucher->starts_at)->format('g:i A');
-        $voucherStatus = "Upcoming";
-        $voucherMessage = "Voucher redemption will open at {$startTime}.";
-    }
-}
-
-    return view(
-      "dashboard",
-      compact(
-        "stations",
-        "stationDone",
-        "canAccessStation5",
-        "completedStationIds",
-        "nextStation",
-        "isRedeemed",
-        "canAccessStation",
-        "canSeeVoucher",
-        "voucherRedeemed",
-        "voucherStatus",
-        "voucherMessage",
-        "activeVoucher",
-        "upcomingVoucher"
-      )
-    );
+    return view("dashboard", compact(
+      "user",
+      "stations",
+      "completedStationIds",
+      "completedCount",
+      "totalStations",
+      "allCompleted",
+      "isRedeemed",
+      "todayRedeemedCount",
+      "dailyLimit",
+      "dailyQuotaRemaining",
+      "isDailyQuotaFull"
+    ));
   }
 
   public function scanner()
@@ -317,146 +198,82 @@ if ($activeVoucher) {
 
   public function scan(Request $request)
   {
-        $qrCodeMessage = trim($request->qrCodeMessage);
+    $qrCodeMessage = trim((string) $request->qrCodeMessage);
+    $station_id = (int) $request->station;
 
-        // Parse URL
-        $path = parse_url($qrCodeMessage, PHP_URL_PATH);
-        $query = parse_url($qrCodeMessage, PHP_URL_QUERY);
+    // Validate station exists
+    $station = Station::find($station_id);
+    if (!$station) {
+      return response()->json([
+        "status" => "error",
+        "message" => "Station not found.",
+      ], 404);
+    }
 
+    // Token validation:
+    // QR can be: full URL matching this station (e.g. /station/1), "RWG_STATION_1", "station/1", "1", or token matching the station.
+    $isValidToken = str_contains($qrCodeMessage, "station/{$station_id}")
+      || str_contains($qrCodeMessage, "station={$station_id}")
+      || str_contains($qrCodeMessage, "STATION_{$station_id}")
+      || str_contains($qrCodeMessage, "ST{$station_id}")
+      || $qrCodeMessage === (string) $station_id;
 
-        $segments = explode('/', trim($path, '/'));
-        $route = $segments[0] ?? null;
-        $prize_id = $segments[1] ?? null;  // "5"
+    if (!$isValidToken) {
+      return response()->json([
+        "status" => "error",
+        "message" => "Invalid QR code for this station.",
+      ], 400);
+    }
 
-        // Parse query params properly
-        parse_str($query, $queryParams);
+    $userId = auth()->id();
 
-        // Detect types
-        $isEarlyBird = isset($queryParams['earlybird=1']) || $route === 'earlybird=1';
-        $isPrize = $route === 'prize';
+    // Check if already completed this station
+    $alreadyCompleted = StationUser::where("user_id", $userId)
+      ->where("station_id", $station_id)
+      ->exists();
 
-        if (!$isEarlyBird && !$isPrize) {
-            return response()->json([
-                "message" => "Invalid QR",
-                "status" => "error",
-            ], 400);
-        }
-
-        // ✅ Station check (only skip for prize maybe — your logic choice)
-        $station_id = $request->station;
-
-        if ((int) $station_id === 3 && $isEarlyBird) {
-            return response()->json([
-                "message" => "Station 3 skipped",
-                "status" => "success",
-            ], 200);
-        }
+    if ($alreadyCompleted) {
+      return response()->json([
+        "status" => "error",
+        "message" => "You have already collected the stamp for this station.",
+      ], 400);
+    }
 
     try {
       DB::beginTransaction();
 
-        // ✅ CHECK: already redeemed
-        $alreadyRedeemed = UserGift::where('user_id', auth()->id())
-              ->where('gift_id', $prize_id)
-              ->exists();
-
-        if ($alreadyRedeemed) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'You have already redeemed this gift'
-            ], 400);
-        }
-
-      $lastStation = StationUser::where("user_id", auth()->id())
+      $lastStation = StationUser::where("user_id", $userId)
         ->orderBy("id", "desc")
         ->first();
 
-      if (empty($lastStation)) {
-        $lastLoginTime = Auth::user()->last_login_at;
-        $currentDateTime = Carbon::now();
-        $timeSpent = $currentDateTime->diff($lastLoginTime);
-        $minutesSpent = $timeSpent->i; // Minutes spent
-        $secondsDifference = $timeSpent->s; // Seconds
+      $lastTime = $lastStation ? $lastStation->created_at : (Auth::user()->last_login_at ?? Carbon::now());
+      $secondsSpent = max(1, Carbon::now()->diffInSeconds($lastTime));
 
-        // Convert minutes to seconds
-        $secondsSpent = $minutesSpent * 60 + $secondsDifference;
-      } else {
-        $lastLoginTime = $lastStation->created_at;
-        $currentDateTime = Carbon::now();
-        $timeSpent = $currentDateTime->diff($lastLoginTime);
-        $minutesSpent = $timeSpent->i; // Minutes spent
-        $secondsDifference = $timeSpent->s; // Seconds
-        // Convert minutes to seconds
-        $secondsSpent = $minutesSpent * 60 + $secondsDifference;
-      }
+      $stationUser = StationUser::firstOrCreate(
+        ['user_id' => $userId, 'station_id' => $station_id],
+        ['time_spent' => (string) $secondsSpent]
+      );
 
-      $stationUser = new StationUser();
-      $stationUser->user_id = auth()->id();
-      $stationUser->station_id = $station_id;
-      $stationUser->time_spent = $secondsSpent;
-      $stationUser->save();
       DB::commit();
 
-       $response = [
-          "type" => "station",
-          "message" => "Station ID updated successfully",
-          "station_id" => $station_id,
-          "prizeId" => $prize_id,
-          "redirect_url" => route('congrats.redeemed'),
-      ];
+      $user = User::with('stationUser')->find($userId);
+      $allDone = $user->hasCompletedAllStations();
 
-        // Handle gift selection for station 3 (Lucky Draw prize)
-        if ($station_id == 3 && $route == 'prize') {
-
-          $gift = \App\Models\Gifts::find($prize_id);
-
-          if (!$gift) {
-              return response()->json([
-                  'status' => 'error',
-                  'message' => 'Gift not found'
-              ], 404);
-          }
-
-          if ($gift->stock_level <= 0) {
-              return response()->json([
-                  'status' => 'error',
-                  'message' => 'Out of stock'
-              ], 400);
-          }
-
-          $beforeStock = $gift->stock_level;
-
-        $gift->decrement('stock_level');
-
-            $userGift = new \App\Models\UserGift();
-            $userGift->user_id = auth()->id();
-            $userGift->gift_id = $prize_id;
-            $userGift->is_redeemed = true;
-            $userGift->save();
-
-          GiftStockLog::create([
-              'gift_id' => $gift->id,
-              'user_id' => auth()->id(),
-              'action' => 'redeem',
-              'quantity' => 1,
-              'stock_before' => $beforeStock,
-              'stock_after' => $gift->stock_level,
-          ]);
-        }
-
-     
-      // Special case: station 3
-      if ($station_id == 3) {
-          $response["type"] = "prize";
-          $response["redirect_url"] = route('prize.id', ['prize_id' => $prize_id]);
-      }
-
-      return response()->json($response, 200);
+      return response()->json([
+        "status" => "success",
+        "type" => "station",
+        "message" => "Stamp collected successfully for {$station->name}!",
+        "station_id" => $station_id,
+        "all_completed" => $allDone,
+        "redirect_url" => route('dashboard'),
+      ], 200);
     } catch (\Exception $e) {
       DB::rollback();
-
-      // Handle the error, log it, or return an appropriate response
-      return response()->json(["error" => $e], 500);
+      return response()->json([
+        "status" => "error",
+        "message" => "Could not record check-in. Please try again.",
+        "debug" => $e->getMessage(),
+      ], 500);
     }
   }
 
@@ -1157,36 +974,65 @@ if ($activeVoucher) {
   public function redeemGift(Request $request)
   {
     $userId = auth()->id();
+    $user = User::with('stationUser')->findOrFail($userId);
 
-    // Check if already redeemed
-    $existingGift = \App\Models\UserGift::where("user_id", $userId)
-      ->where("is_redeemed", true)
-      ->first();
-
-    if ($existingGift) {
-      return response()->json(
-        [
-          "success" => false,
-          "message" => "You have already redeemed your gift.",
-        ],
-        200
-      );
+    // Rule 1: All 6 stations must be completed
+    if (!$user->hasCompletedAllStations()) {
+      return response()->json([
+        'success' => false,
+        'message' => 'You must complete all 6 stations before unlocking gift redemption.',
+      ], 403);
     }
 
-    // Create new redeemed gift record
-    $userGift = new \App\Models\UserGift();
-    $userGift->user_id = $userId;
-    $userGift->is_redeemed = true;
-    $userGift->save();
+    // Rule 2: Cannot redeem more than once
+    $alreadyRedeemed = UserGift::where('user_id', $userId)
+      ->where('is_redeemed', true)
+      ->exists();
 
-    return response()->json(
-      [
-        "success" => true,
-        "message" => "Gift redeemed successfully! ",
-        "redirect" => route("congrats"),
-      ],
-      200
-    );
+    if ($alreadyRedeemed) {
+      return response()->json([
+        'success' => false,
+        'message' => 'You have already redeemed your gift.',
+      ], 400);
+    }
+
+    // Rule 3: Concurrency-safe daily allocation of 300 gifts
+    return DB::transaction(function () use ($userId) {
+      $today = Carbon::today();
+
+      $gift = Gifts::where('id', 1)->lockForUpdate()->first();
+
+      $todayRedeemedCount = UserGift::whereDate('redeemed_at', $today)
+        ->where('is_redeemed', true)
+        ->lockForUpdate()
+        ->count();
+
+      $dailyLimit = 300;
+      if ($todayRedeemedCount >= $dailyLimit || ($gift && $gift->stock_level <= 0)) {
+        return response()->json([
+          'success' => false,
+          'quota_full' => true,
+          'message' => "Today's daily allocation of 300 gifts has been fully redeemed. Please try again tomorrow!",
+        ], 200);
+      }
+
+      if ($gift) {
+        $gift->decrement('stock_level');
+      }
+
+      UserGift::create([
+        'user_id' => $userId,
+        'gift_id' => $gift ? $gift->id : 1,
+        'is_redeemed' => true,
+        'redeemed_at' => now(),
+      ]);
+
+      return response()->json([
+        'success' => true,
+        'message' => 'Gift redeemed successfully!',
+        'redirect' => route('congrats'),
+      ], 200);
+    });
   }
 
   public function checkExisting(Request $request)

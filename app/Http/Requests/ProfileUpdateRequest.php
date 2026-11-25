@@ -15,9 +15,17 @@ class ProfileUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],
+        $rules = [
+            'fname' => ['nullable', 'string', 'max:255'],
+            'name' => ['nullable', 'string', 'max:255'],
+            'email' => ['nullable', 'string', 'lowercase', 'email', 'max:255'],
         ];
+
+        // Member ID is editable ONLY IF the user does not already have a GRC Member ID
+        if (empty($this->user()->grc_id)) {
+            $rules['grc_id'] = ['nullable', 'string', 'max:50'];
+        }
+
+        return $rules;
     }
 }

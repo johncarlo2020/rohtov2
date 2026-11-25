@@ -3,140 +3,168 @@
 
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{{ config('app.name', 'Resorts World Genting – Christmas Trail Challenge') }}</title>
 
-    <title>{{ config('app.name', 'Loading ...') }}</title>
+    <link rel="preload" as="image" href="{{ asset('images/rwg/01 RW Genting Winter_background_2x.webp') }}" fetchpriority="high" />
+    <link rel="preload" as="image" href="{{ asset('images/rwg/RWG WHITE_LOGO_2x.webp') }}" fetchpriority="high" />
 
     <x-appCdnPackages />
     @vite(['resources/sass/app.scss'])
 
     <style>
         html, body {
-            height: 100%;
+            min-height: 100%;
             margin: 0;
             padding: 0;
-            overflow: hidden; /* Removes scrolling */
+            overflow-x: hidden;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            font-family: 'Brown', 'Mulish', sans-serif;
+            background-color: #120924;
         }
 
         .welcome-page {
-            width: 100vw;
-            height: 100vh;
-            height: 100dvh; /* Correct for iOS Safari dynamic viewport */
+            width: 100%;
+            min-height: 100vh;
+            min-height: 100dvh;
+            background-image: url('{{ asset('images/rwg/01 RW Genting Winter_background_2x.webp') }}');
             background-size: cover;
             background-repeat: no-repeat;
-            background-position: center;
+            background-position: center top;
             display: flex;
             flex-direction: column;
+            position: relative;
         }
 
         .main-content {
             flex: 1;
             display: flex;
             flex-direction: column;
-            justify-content: start;
-            padding-top: env(safe-area-inset-top);
-            padding-bottom: env(safe-area-inset-bottom);
-            height:100svh;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: calc(env(safe-area-inset-top) + 2rem);
+            padding-bottom: calc(env(safe-area-inset-bottom) + 3.5rem);
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+            z-index: 2;
         }
 
-        .welcome_img_store {
+        .welcome-logo {
+            max-height: 54px;
+            width: auto;
             object-fit: contain;
-            max-height: 40vh; /* Responsive height */
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
         }
 
-        .bottom-text-welcome {
-            position: relative;
-            z-index: 10;
+        .welcome-headline {
+            color: #ffffff;
+            font-size: clamp(1.6rem, 5vw, 1.95rem);
+            font-weight: 700;
+            line-height: 1.25;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+            margin-bottom: 0.25rem;
         }
 
-        .btn-wrapper 
-        {
-            margin-top: -5%;
+        .welcome-subhead {
+            color: #ffffff;
+            font-size: clamp(1.05rem, 3.5vw, 1.2rem);
+            font-weight: 700;
+            margin-top: 1.25rem;
+            margin-bottom: 0.6rem;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
         }
 
-        .continue-btn
-        {
-            -webkit-text-stroke: 1px #733412;
-            font-size: 24px;
-            font-weight: 900;
+        .welcome-body-text {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: clamp(0.85rem, 2.8vw, 0.95rem);
+            line-height: 1.45;
+            max-width: 330px;
+            margin: 0 auto;
+            text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+            font-weight: 400;
+        }
+
+        .btn-begin-journey {
+            background-color: #DFB773;
+            background: linear-gradient(180deg, #E8C88B 0%, #D8A95C 100%);
+            color: #251610;
+            font-family: 'Brown', 'Mulish', sans-serif;
+            font-weight: 800;
+            font-size: 0.95rem;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            padding: 0.95rem 2rem;
+            border-radius: 40px;
+            border: none;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
             text-decoration: none;
-            margin-top: -5%;
-            text-shadow: 0 3px 0 #f7a239;
+            display: inline-block;
+            width: 85%;
+            max-width: 320px;
+            text-align: center;
         }
 
-        #banner .top{
-            margin: 25% 0%;
-        }
-        
-        .welcome-page .welcome_img_bottom {
-            -o-object-fit: contain;
-            object-fit: contain;
-            width: 100%;
-            height: auto;
-            position: fixed;
-            bottom: 0;
-            left: 0;
+        .btn-begin-journey:hover, .btn-begin-journey:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+            color: #1A0D08;
         }
     </style>
 </head>
 
-<body class="antialiased welcome-page" style="background-image:url('{{ asset('images/brand/landing_bg2.webp') }}');">
-    <img class="welcome_img_bottom" src="{{ asset('images/brand/welcome_img.webp') }}" alt="Welcome Image">
-    <div class="container-fluid main-content with-scroll py-4 px-0">
-        <div class="top-container">
-            <!-- Branding (top area) -->
-            <div class="row flex-grow-1">
-                <div class="col-12 animate-entry mb-4">
-                    <div>
-                        <div class="branding">
-                            <img onclick="window.location.href='{{ route('dashboard') }}'" class="logo" src="{{ asset('images/brand/logo_white.webp') }}" alt="Brand Logo" />
-                        </div>
-                    </div>
-                </div>
+<body class="antialiased welcome-page">
+    <div class="container main-content text-center">
+        <!-- Top Section: Logo & Text Header -->
+        <div class="w-100 animate-entry">
+            <!-- Resorts World Genting Logo -->
+            <div class="mb-4">
+                <img class="welcome-logo mx-auto d-block" 
+                     src="{{ asset('images/rwg/RWG WHITE_LOGO_2x.webp') }}" 
+                     alt="Resorts World Genting"
+                     width="200" height="40"
+                     fetchpriority="high"
+                     decoding="async" />
+            </div>
+
+            <!-- Title & Subtitle -->
+            <div class="px-2">
+                <h1 class="welcome-headline mb-0">
+                    Welcome to the
+                </h1>
+                <h2 class="welcome-headline mb-0">
+                    Christmas Trail Challenge
+                </h2>
+
+                <p class="welcome-subhead">
+                    The ultimate festive quest begins now.
+                </p>
+
+                <p class="welcome-body-text">
+                    We are thrilled to have you join us for this year's magic. A world of frosty adventure awaits, and some incredible rewards are waiting just for you!
+                </p>
             </div>
         </div>
-                <div id="banner" class="col-10 mx-auto d-flex flex-column justify-content-center animate-entry">
-                <div class="top">
-                    <div class="row">
-                        <div class="col-12">
-                            <h3 class="text-center text-white mb-2">Welcome to the journey of</h3>
-                            <h1 class="text-center text-white fw-bold mb-3" style="font-size: 1.85rem; line-height: 1.25;">
-                                iProperty<br>New Homes Expo
-                            </h1>
-                        </div>
-                    </div>
-                </div>
-                        <!-- Bottom CTA -->
-                <div class="row mb-5">
-                    <div class="col-12 text-center">
-                        <div class="d-block  mb-2">
-                            <div class="colanimate-entry delay-2 btn-wrapperx px-5 mt-4">
-                                <a href="{{ route('register') }}" class="custom-btn custom-btn-secondary">
-                                    JOIN NOW
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                </div>
-        <div class="bottom-container">
-            <!-- Bottom CTA -->
-            <div class="row mb-5">
-                <div class="col-12 text-center">
-                    <div class="d-block  mb-2">
-                        <div class="colanimate-entry delay-2 btn-wrapperx px-5 mt-4 d-none">
-                            <a href="{{ route('register') }}" class="custom-btn custom-btn-seconday">
-                                JOIN NOW
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
+        <!-- Bottom Section: Call To Action -->
+        <div class="w-100 animate-entry delay-2 mb-2">
+            @auth
+                <a href="{{ route('instructions') }}" class="btn-begin-journey rwg-btn-gold">
+                    BEGIN THE JOURNEY
+                </a>
+            @else
+                <a href="{{ route('register') }}" class="btn-begin-journey rwg-btn-gold">
+                    BEGIN THE JOURNEY
+                </a>
+            @endauth
         </div>
     </div>
 
-    <x-scriptPackages />
+    @if(auth()->check() && auth()->user()->isUnder18())
+        <x-age-verification-modal :show="true" />
+    @endif
 
+    <x-scriptPackages />
 </body>
 </html>

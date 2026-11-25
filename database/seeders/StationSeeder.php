@@ -20,27 +20,42 @@ class StationSeeder extends Seeder
      */
     public function run()
     {
+        $stations = [
+            1 => [
+                'name' => 'Madison Square',
+                'description' => 'Madison Square',
+            ],
+            2 => [
+                'name' => 'Arena of Stars',
+                'description' => 'Arena of Stars',
+            ],
+            3 => [
+                'name' => 'Genting SkyWorlds Theme Park – Studio Plaza',
+                'description' => 'Genting SkyWorlds Theme Park<br>Studio Plaza',
+            ],
+            4 => [
+                'name' => 'Kimhua Atrium',
+                'description' => 'Kimhua Atrium',
+            ],
+            5 => [
+                'name' => 'Pavilion Hall',
+                'description' => 'Pavilion Hall<br>Near Skyropolis Indoor Theme Park',
+            ],
+            6 => [
+                'name' => "SkyAvenue",
+                'description' => "SkyAvenue<br>Near Level 1, Swensen's",
+            ],
+        ];
 
-        Station::updateOrCreate(['id' => 1], [
-            'name' => 'Early Bird',
-            'description' => 'Redeem your <br> pre-registration gift!',
-        ]);
-
-        Station::updateOrCreate(['id' => 2], [
-            'name' => 'Catch the Beat',
-            'description' => 'Visit our game booth <br> to join the fun!',
-        ]);
-
-        Station::updateOrCreate(['id' => 3], [
-            'name' => 'Lucky Draw',
-            'description' => 'Visit our lucky draw <br> to claim your prizes!',
-        ]);
-
-
+        foreach ($stations as $id => $data) {
+            Station::updateOrCreate(['id' => $id], $data);
+        }
 
         Role::firstOrCreate(['name' => 'client']);
-
         Role::firstOrCreate(['name' => 'admin']);
+        Role::firstOrCreate(['name' => 'Super Admin']);
+        Role::firstOrCreate(['name' => 'Campaign Admin']);
+        Role::firstOrCreate(['name' => 'Redemption Staff']);
 
         $user = User::firstOrCreate(
             ['email' => 'admin@gmail.com'],
@@ -53,5 +68,15 @@ class StationSeeder extends Seeder
         );
 
         $user->assignRole('admin');
+        $user->assignRole('Super Admin');
+
+        // Seed Default Campaign Gift with 300 daily quota
+        \App\Models\Gifts::updateOrCreate(
+            ['id' => 1],
+            [
+                'name' => 'Winter Wonderland Treasure Hunt Reward',
+                'stock_level' => 300,
+            ]
+        );
     }
 }

@@ -252,19 +252,21 @@ document.addEventListener('DOMContentLoaded', function () {
             scannerContainer.classList.remove('d-none');
 
             const html5QrCode = new Html5Qrcode("reader");
+            window.currentHtml5QrCode = html5QrCode;
 
             html5QrCode.start(
                 { facingMode: "environment" },
-                { fps: 10, qrbox: 200, aspectRatio: 1.0 },
+                { fps: 10, qrbox: { width: 240, height: 240 }, aspectRatio: 1.0 },
                 (qrCodeMessage) => {
                     sendMessage(qrCodeMessage);
-                    html5QrCode.stop();
+                    try { html5QrCode.stop(); } catch (e) {}
                 },
                 (errorMessage) => {
                     // console.log(`QR Code no longer in front of camera.`);
                 }
             ).catch((err) => {
                 console.log(`Unable to start scanning, error: ${err}`);
+                $('#cantScanModal').modal('show');
             });
     });
 
@@ -304,52 +306,45 @@ document.addEventListener('DOMContentLoaded', function () {
                 developer: developerId,
             },
             success: function (response) {
-                const confettiCanvas = document.createElement('canvas');
-                // ... (confetti logic from original file)
-
-                window.location.href = response.redirect_url;
-                
-                const trimmedMessage = message.trim();
-                const lastCharacter = trimmedMessage.charAt(trimmedMessage.length - 1);
-
-                $('.station_id').html(lastCharacter);
-                $('.station_name').html(stationName);
-                $('.status-text').html('Check-in Successful');
-                $('#routeBtn').text('NEXT');
-
-                if (lastCharacter == 5 ) {
-                    document.getElementById('routeBtn').setAttribute('href', congratsUrl);
+                if (typeof confetti === 'function') {
+                    try {
+                        confetti({
+                            particleCount: 80,
+                            spread: 70,
+                            origin: { y: 0.6 }
+                        });
+                    } catch (e) {}
                 }
-                else 
-                {
-                    const stationParsed = parseInt(lastCharacter);
-                    const nextStation = stationParsed  + 1;
-                }
+
+                $('#modalIconSuccess').removeClass('d-none').addClass('d-flex');
+                $('#modalIconError').addClass('d-none').removeClass('d-flex');
+                $('#modalTitle').html('🎉 Station Unlocked! ❄️');
+                $('#modalBody').html("Great job! You've successfully checked in and logged this location on your map. Keep exploring—more frozen treasures await! 🎁");
+                $('#routeBtn').text('VIEW MY MAP')
+                    .attr('href', response.redirect_url || dashboardUrl)
+                    .removeAttr('onclick');
+
+                $('#scanCompleteModal').modal('show');
             },
             error: function (xhr, status, error) {
                 console.error('Error sending QR Code message:', error);
 
-                $('.modal-icon').addClass('d-none');
-                $('.station_name_container').addClass('d-none');
-                // $('.station-text').html('Failed');
-                
                 let message = 'Something went wrong';
-
-                // ✅ safest handling
                 if (xhr.responseJSON && xhr.responseJSON.message) {
                     message = xhr.responseJSON.message;
                 } else if (xhr.responseText) {
                     message = xhr.responseText;
                 }
 
-                $('.message').html(message);
+                $('#modalIconSuccess').addClass('d-none').removeClass('d-flex');
+                $('#modalIconError').removeClass('d-none').addClass('d-flex');
+                $('#modalTitle').html('Unable to Check In');
+                $('#modalBody').html(message);
+                $('#routeBtn').text('TRY AGAIN')
+                    .removeAttr('href')
+                    .attr('onclick', `gotoStation(${stationId || developerId})`);
 
-                $('.check').attr('src', errorImageUrl);
                 $('#scanCompleteModal').modal('show');
-                $('#routeBtn')
-                .removeAttr('href') // remove href if it exists
-                .attr('onclick', `gotoStation(${stationId || developerId})`);
-                
             }
         });
     }

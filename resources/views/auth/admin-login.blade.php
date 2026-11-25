@@ -18,7 +18,7 @@
                         {{-- <div class="branding-container w-100 d-flex d-lg-none justify-content-center align-items-center mb-4 animate-entry delay-2">
                             @include('components.branding')
                         </div> --}}
-                        <h4 class="mb-4 text-center">Welcome to {{ env('APP_NAME') }} Admin Panel</h4>
+                        <h4 class="mb-4 text-center">Welcome to {{ config('app.name', 'Resorts World Genting') }} Admin Panel</h4>
                         <div class="mb-4 input-group">
                             <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                             <input placeholder="Enter your email" type="email" name="email" class="form-control"

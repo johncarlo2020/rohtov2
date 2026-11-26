@@ -485,23 +485,7 @@ class StationController extends Controller
     $today = Carbon::today();
     $startDate = Carbon::create(2025, 11, 17);
 
-    $currentUser = auth()->user();
-    $isAdmin = $currentUser && ($currentUser->isSuperAdmin() || $currentUser->hasRole('admin') || $currentUser->isProtectedAdmin() || $currentUser->isAdminOrStaff());
-    $excludedRoles = $isAdmin ? ["admin", "superadmin"] : ["admin", "superadmin", "staff"];
     $excludedCustomerRoles = ["admin", "superadmin", "staff"];
-
-    $withStations = \Schema::hasTable('station_users') ? ["stationUser"] : [];
-    $data["users"] = User::registeredFromDj()->with($withStations)
-      ->orderBy("id", "desc")
-      ->whereDoesntHave("roles", function ($q) use ($excludedRoles) {
-        $q->whereIn("name", $excludedRoles);
-      })
-      ->where(
-        DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'),
-        ">=",
-        $startDate->toDateString()
-      )
-      ->get();
 
     $data["usersCount"] = User::registeredFromDj()->whereDate(
       "created_at",
@@ -656,72 +640,6 @@ class StationController extends Controller
         })
       : collect();
     $data['stationList'] = $stationList;
-
-    $averageTimespentByStation = $hasStationUsers
-      ? StationUser::select(
-          "station_id",
-          \DB::raw("AVG(time_spent) as average_timespent")
-        )
-          ->groupBy("station_id")
-          ->get()
-          ->keyBy("station_id")
-      : collect();
-
-    $stations = $hasStations ? Station::pluck('name', 'id') : collect();
-
-    foreach ($data["users"] as $user) {
-      $userStations = ($hasStationUsers && $user->relationLoaded('stationUser'))
-        ? $user->stationUser->pluck("station_id")->toArray()
-        : [];
-      $numStations = count($userStations);
-
-      $user->stations = $stations->map(function ($name, $id) use (
-        $userStations
-      ) {
-        return [
-          "name" => $name,
-          "value" => in_array($id, $userStations),
-          "id" => $id,
-        ];
-      });
-
-      // Add completed_count to the user
-      $user->completed_count = $numStations;
-    }
-
-    $stationCounts = ($hasStationUsers)
-      ? collect($data['users'])->flatMap(function ($user) {
-          return $user->relationLoaded('stationUser') ? $user->stationUser->pluck('station_id') : [];
-        })->countBy()
-      : collect();
-
-    $data["stations"] = $stations->map(function ($name, $id) use (
-      $averageTimespentByStation,
-      $stationCounts
-    ) {
-      return [
-        "name" => $name,
-        "average_timespent" => number_format(
-          ($averageTimespentByStation->get($id)["average_timespent"] ?? 0) / 60,
-          2
-        ),
-        "id" => $id,
-        "total_users" => $stationCounts->get($id, 0),
-      ];
-    });
-
-    $data["developers"] = collect();
-
-    $averagePlaytimeByUser = $hasStationUsers
-      ? StationUser::select(
-          "user_id",
-          DB::raw("SUM(time_spent) / 60 as total_playtime")
-        )
-          ->groupBy("user_id")
-          ->get()
-      : collect();
-
-    $totalAveragePlaytime = $averagePlaytimeByUser->avg("total_playtime") ?? 0;
 
     // get all users race column for pie chart
     $data["race"] = User::registeredFromDj()->where("race", "!=", "admin")

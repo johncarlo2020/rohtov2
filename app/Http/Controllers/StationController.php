@@ -747,196 +747,136 @@ class StationController extends Controller
     ]);
   }
 
-  public function users()
+  public function users(Request $request)
   {
+    $pageSizes = [10, 20, 50, 100];
+    $filters = $request->validate([
+      'q' => 'nullable|string|max:200',
+      'per_page' => 'nullable|integer|in:' . implode(',', $pageSizes),
+      'from' => 'nullable|date_format:Y-m-d',
+      'to' => 'nullable|date_format:Y-m-d',
+      'sort' => 'nullable|string|max:24',
+      'direction' => 'nullable|in:asc,desc',
+      'export' => 'nullable|in:csv,xlsx',
+      'filename' => 'nullable|string|max:100',
+    ]);
+
     $today = Carbon::today();
-    $permission = auth()->user() ? auth()->user()->getPermissionNames()->first() : null;
-
-    $startDate = Carbon::create(2025, 6, 17);
-    $withRelations = [];
-    if (\Schema::hasTable('station_users')) $withRelations[] = 'stationUser';
-    if (\Schema::hasTable('user_gifts')) $withRelations[] = 'userGift.gift';
-    if (\Schema::hasTable('vouchers')) $withRelations[] = 'voucherClaims.voucher';
-
-    $currentUser = auth()->user();
-    $isAdmin = $currentUser && ($currentUser->isSuperAdmin() || $currentUser->hasRole('admin') || $currentUser->isProtectedAdmin() || $currentUser->isAdminOrStaff());
-    $excludedRoles = $isAdmin ? ["admin", "superadmin"] : ["admin", "superadmin", "staff"];
-    $excludedCustomerRoles = ["admin", "superadmin", "staff"];
-
-    $data["users"] = User::registeredFromDj()->whereDate(
-      "created_at",
-      ">=",
-      $startDate->toDateString()
-    )
-      ->whereDoesntHave("roles", function ($q) use ($excludedRoles) {
-        $q->whereIn("name", $excludedRoles);
-      })
-      ->when(!empty($withRelations), function ($q) use ($withRelations) {
-        $q->with($withRelations);
-      })
-      ->orderBy("id", "desc")
-      ->get();
-
-    $data["usersCount"] = User::registeredFromDj()->whereDate(
-      "created_at",
-      ">=",
-      $startDate->toDateString()
-    )
-      ->whereDoesntHave("roles", function ($q) use ($excludedCustomerRoles) {
-        $q->whereIn("name", $excludedCustomerRoles);
-      })
-      ->count();
-    $data["userToday"] = User::registeredFromDj()->whereDate("created_at", $today)
-      ->whereDoesntHave("roles", function ($q) use ($excludedCustomerRoles) {
-        $q->whereIn("name", $excludedCustomerRoles);
-      })
-      ->count();
-
-    $totalStationsCount = \Schema::hasTable('stations') ? Station::count() : 8;
-
-    $customersFinishedAll = \Schema::hasTable('station_users')
-      ? User::registeredFromDj()->whereDate(
-          "created_at",
-          ">=",
-          $startDate->toDateString()
-        )
-        ->whereDoesntHave("roles", function ($q) use ($excludedCustomerRoles) {
-          $q->whereIn("name", $excludedCustomerRoles);
-        })
-        ->has("stationUser", ">=", $totalStationsCount)
-        ->count()
-      : 0;
-    $data["completedUsers"] = $customersFinishedAll;
-
-    if ($data["usersCount"] > 0) {
-      $data["percentage"] = number_format(
-        ($customersFinishedAll / $data["usersCount"]) * 100,
-        2
-      );
-    } else {
-      $data["percentage"] = "0.00"; // Avoid division by zero
+    $startDate = '2025-06-17';
+    $search = trim($filters['q'] ?? '');
+    $hasDateFilter = array_key_exists('from', $filters) || array_key_exists('to', $filters);
+    $from = $hasDateFilter ? ($filters['from'] ?? null) : $today->toDateString();
+    $to = $hasDateFilter ? ($filters['to'] ?? null) : $today->toDateString();
+    if ($from && $to && $from > $to) {
+      [$from, $to] = [$to, $from];
     }
-
-    $averageTimespentByStation = \Schema::hasTable('station_users')
-      ? StationUser::select(
-          "station_id",
-          \DB::raw("AVG(time_spent) as average_timespent")
-        )
-          ->groupBy("station_id")
-          ->get()
-          ->keyBy("station_id")
-      : collect();
-
-    $stations = \Schema::hasTable('stations') ? Station::orderBy('id')->pluck('name', 'id') : collect();
-
-    $developers = collect();
-    
 
     $hasStationUsers = \Schema::hasTable('station_users');
-    foreach ($data["users"] as $user) {
-      $userStations = $hasStationUsers
-        ? ($user->relationLoaded('stationUser')
-            ? $user->stationUser->pluck("station_id")->toArray()
-            : $user->stationUser()->pluck("station_id")->toArray())
-        : [];
-      $user->stations = $stations->map(function ($name, $id) use (
-        $userStations
-      ) {
-        return [
-          "id" => $id,
-          "name" => $name,
-          "value" => in_array($id, $userStations),
-        ];
-      });
+    $hasStations = \Schema::hasTable('stations');
+    $stations = $hasStations ? Station::orderBy('id')->pluck('name', 'id') : collect();
+    $baseQuery = User::registeredFromDj()->where('created_at', '>=', $startDate);
+    $customerQuery = (clone $baseQuery)->whereDoesntHave('roles', function ($query) {
+      $query->whereIn('name', ['admin', 'superadmin', 'staff']);
+    });
+    // The admin middleware already restricts this route to authorized staff.
+    $users = (clone $baseQuery)->whereDoesntHave('roles', function ($query) {
+      $query->whereIn('name', ['admin', 'superadmin']);
+    });
 
-      $latestBooking = null;
-      if (!empty($user->email) || (!empty($user->number) && $user->number !== '-')) {
-          $latestBooking = \App\Models\Booking::with(['bookingDate', 'bookingSlot'])
-              ->where(function ($q) use ($user) {
-                  $hasCond = false;
-                  if (!empty($user->email)) {
-                      $q->where('customer_email', $user->email);
-                      $hasCond = true;
-                  }
-                  if (!empty($user->number) && $user->number !== '-') {
-                      if ($hasCond) {
-                          $q->orWhere('customer_phone', $user->number);
-                      } else {
-                          $q->where('customer_phone', $user->number);
-                      }
-                  }
-              })
-              ->latest()
-              ->first();
-      }
-
-      $user->booking_ref = $latestBooking ? $latestBooking->reference_no : null;
-      $user->booking_date_text = ($latestBooking && $latestBooking->bookingDate) ? $latestBooking->bookingDate->display_date : 'No Booking';
-      $user->booking_time_text = ($latestBooking && $latestBooking->bookingSlot) ? $latestBooking->bookingSlot->display_time : 'N/A';
-      $user->booking_time_from = ($latestBooking && $latestBooking->bookingSlot && $latestBooking->bookingSlot->start_time)
-        ? strtoupper(\Carbon\Carbon::parse($latestBooking->bookingSlot->start_time)->format('g:i A'))
-        : 'N/A';
-      $user->booking_time_to = ($latestBooking && $latestBooking->bookingSlot && $latestBooking->bookingSlot->end_time)
-        ? strtoupper(\Carbon\Carbon::parse($latestBooking->bookingSlot->end_time)->format('g:i A'))
-        : 'N/A';
-      $user->booking_venue = $latestBooking ? ($latestBooking->venue ?? 'LONGCHAMP POP UP STORE THE GARDENS MALL') : 'N/A';
-      $user->is_attended = $latestBooking ? ($latestBooking->status === 'attended' || $latestBooking->status === 'completed' || !is_null($latestBooking->attended_at)) : false;
-      $user->attended_at_text = $latestBooking && $latestBooking->attended_at ? \Carbon\Carbon::parse($latestBooking->attended_at)->format('M d, Y h:i A') : null;
-
-      if ($user->is_attended) {
-          $user->attendance_status = 'attended';
-      } elseif ($latestBooking) {
-          if ($latestBooking->status === 'cancelled') {
-              $user->attendance_status = 'cancelled';
-          } elseif ($latestBooking->status === 'missed') {
-              $user->attendance_status = 'missed';
-          } else {
-              $bookingDate = $latestBooking->bookingDate ? $latestBooking->bookingDate->date : null;
-              if ($bookingDate) {
-                  $dateStr = \Carbon\Carbon::parse($bookingDate)->format('Y-m-d');
-                  $timeStr = ($latestBooking->bookingSlot && $latestBooking->bookingSlot->end_time)
-                      ? \Carbon\Carbon::parse($latestBooking->bookingSlot->end_time)->format('H:i:s')
-                      : (($latestBooking->bookingSlot && $latestBooking->bookingSlot->start_time) ? \Carbon\Carbon::parse($latestBooking->bookingSlot->start_time)->format('H:i:s') : '23:59:59');
-
-                  if (\Carbon\Carbon::parse($dateStr . ' ' . $timeStr)->isPast()) {
-                      $user->attendance_status = 'missed';
-                  } else {
-                      $user->attendance_status = 'upcoming';
-                  }
-              } else {
-                  $user->attendance_status = 'upcoming';
-              }
-          }
-      } else {
-          $user->attendance_status = 'upcoming';
-      }
-
-      $user->developers_list = collect();
-      $user->locations = collect();
-
+    if ($from) {
+      $users->where('created_at', '>=', $from);
     }
-    
+    if ($to) {
+      $users->where('created_at', '<', Carbon::parse($to)->addDay()->toDateString());
+    }
 
-    $data["developers"] = $developers->map(function ($name, $id) {
-        return [
-            "name" => $name,
-        ];
-    });
+    foreach (preg_split('/\s+/u', $search, -1, PREG_SPLIT_NO_EMPTY) ?: [] as $term) {
+      $pattern = '%' . strtr($term, ['!' => '!!', '%' => '!%', '_' => '!_']) . '%';
+      $users->where(function ($query) use ($pattern, $term) {
+        foreach (['title', 'fname', 'lname', 'email', 'number'] as $column) {
+          $query->orWhereRaw($column . " LIKE ? ESCAPE '!'", [$pattern]);
+        }
+        if (ctype_digit($term) && strlen($term) < 19) {
+          $query->orWhere('id', $term);
+        }
+      });
+    }
 
-    $data["stations"] = $stations->map(function ($name, $id) use (
-      $averageTimespentByStation
-    ) {
-      return [
-        "id" => $id,
-        "name" => $name,
-        "average_timespent" => number_format(
-          ($averageTimespentByStation->get($id)["average_timespent"] ?? 0) / 60,
-          2
-        ),
-      ];
-    });
+    $sort = $filters['sort'] ?? 'id';
+    $direction = $filters['direction'] ?? 'desc';
+    if ($sort === 'name') {
+      $users->orderByRaw("CONCAT_WS(' ', NULLIF(title, ''), fname, lname) " . $direction);
+    } elseif (in_array($sort, ['id', 'email', 'created_at'], true)) {
+      $users->orderBy($sort, $direction);
+    } elseif (str_starts_with($sort, 'station_') && $stations->has(substr($sort, 8))) {
+      if ($hasStationUsers) {
+        $users->withExists(['stationUser as station_completed' => function ($query) use ($sort) {
+          $query->where('station_id', substr($sort, 8));
+        }])->orderBy('station_completed', $direction);
+      }
+    } else {
+      $sort = 'id';
+      $direction = 'desc';
+      $users->orderByDesc('id');
+    }
+    if ($sort !== 'id') {
+      $users->orderByDesc('id');
+    }
 
-    return view("users", compact("data", "permission"));
+    if ($hasStationUsers) {
+      $users->with('stationUser:id,user_id,station_id');
+    }
+
+    if (!empty($filters['export'])) {
+      $export = new \App\Exports\UsersExport($users, $stations, $hasStationUsers);
+      $filename = trim(preg_replace('/[^a-zA-Z0-9 _.-]/', '_', $filters['filename'] ?? ''), ' .');
+      $filename = ($filename ?: 'users') . '.' . $filters['export'];
+
+      if ($filters['export'] === 'xlsx') {
+        return Excel::download($export, $filename);
+      }
+
+      return response()->streamDownload(function () use ($export) {
+        $output = fopen('php://output', 'w');
+        fwrite($output, "\xEF\xBB\xBF");
+        fputcsv($output, $export->headings(), ',', '"', '');
+        foreach ($export->query()->lazy(500) as $user) {
+          $row = array_map(static function ($value) {
+            return is_string($value) && preg_match('/^(?:[\x00-\x20]*[=+@-]|[\t\r\n])/', $value)
+              ? "'" . $value
+              : $value;
+          }, $export->map($user));
+          fputcsv($output, $row, ',', '"', '');
+        }
+        fclose($output);
+      }, $filename, ['Content-Type' => 'text/csv; charset=UTF-8']);
+    }
+
+    $queryParameters = [
+      'q' => $search,
+      'per_page' => (int) ($filters['per_page'] ?? 20),
+      'from' => $from ?? '',
+      'to' => $to ?? '',
+      'sort' => $sort,
+      'direction' => $direction,
+    ];
+    $data['users'] = $users->with('roles')->paginate($queryParameters['per_page'])->appends($queryParameters);
+    $data['stations'] = $stations;
+    $data['hasStationUsers'] = $hasStationUsers;
+    $data['usersCount'] = (clone $customerQuery)->count();
+    $data['userToday'] = (clone $customerQuery)
+      ->where('created_at', '>=', $today)
+      ->where('created_at', '<', $today->copy()->addDay())
+      ->count();
+    $data['completedUsers'] = $hasStationUsers
+      ? (clone $customerQuery)->has('stationUser', '>=', $hasStations ? $stations->count() : 8)->count()
+      : 0;
+    $data['percentage'] = number_format(
+      $data['usersCount'] > 0 ? 100 * $data['completedUsers'] / $data['usersCount'] : 0,
+      2
+    );
+
+    return view('users', compact('data', 'queryParameters', 'pageSizes'));
   }
 
   public function gifts(Request $request)
